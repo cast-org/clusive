@@ -2,6 +2,11 @@
 
 This repository contains the [Django-based](https://www.djangoproject.com/) "fall pilots" web application for the CISL project, Clusive.
 
+## Quick Links for Further Reading
+
+* [Django's documentation](https://docs.djangoproject.com/en/2.2/)
+  * [Customizing authentication in Django](https://docs.djangoproject.com/en/2.2/topics/auth/customizing/), a specific need of the project
+
 ## Setting up the Development Environment
 
 ### Prerequisites
@@ -30,8 +35,9 @@ The current configuration (for initial development) uses sqlite3, so no database
 
 ### Create a superuser
 * `python manage.py createsuperuser`
-* Confirm the superuser can log in via `http://localhost:8000/admin/` (after launching server)
 
-## Common Operations
+### Basic Verification
 
 * Launch the server: `python manage.py runserver`
+* Confirm you see the Django success page at `http://localhost:8000`
+* Confirm the superuser can log in at `http://localhost:8000/admin/` 
