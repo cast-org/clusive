@@ -1,6 +1,6 @@
 # Clusive Django Web Application
 
-This repository contains the [Django-based](https://www.djangoproject.com/) "fall pilots" web application for the CISL project, Clusive.
+This repository contains the [Django-based](https://www.djangoproject.com/) "fall pilot" web application for the CISL project, Clusive.
 
 ## Quick Links for Further Reading
 
@@ -13,13 +13,14 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
 
 * [Python 3](https://www.python.org/downloads/)
 * [virtualenv](https://virtualenv.pypa.io/en/stable/installation/) (strongly recommended for maintaining an isolated environment and dependencies)
-
+  
 ### Create and activitate virtualenv for the project
 
 * Create: `virtualenv ENV`
+  - Alternatively, use [Intellij's support for virtualenv](https://www.jetbrains.com/help/idea/creating-virtual-environment.html)
 * Activate: 
   - Windows: `.\ENV\Scripts\activate`
-  - Mac/Linux: `source ENV\Scripts\activate`
+  - Mac/Linux: `source ENV/bin/activate`
 
 You'll need to activate the environment each time you're working on the project in order to continue using the isolated environment.
 
