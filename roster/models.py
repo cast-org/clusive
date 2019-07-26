@@ -9,9 +9,9 @@ class Site(models.Model):
     location = models.TextField(max_length=500)
 
     # TODO: should these three be restricted by choices?
-    language_code = models.CharField(max_length=2)
-    country_code = models.CharField(max_length=2)
-    timezone = models.CharField(max_length=30)
+    language_code = models.CharField(max_length=2, default='EN')
+    country_code = models.CharField(max_length=2, default='US')
+    timezone = models.CharField(max_length=30, default='EST')
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.site_id)
