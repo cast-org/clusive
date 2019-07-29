@@ -44,7 +44,7 @@ class ClusiveUser(models.Model):
 
     # TODO: consider creating a separate "Roles" model to store 
     # roles, and refer to them with a Foreignkey - see comment 
-    # about "hacking choices to be dymaic" at https://docs.djangoproject.com/en/2.2/ref/models/fields/#choices
+    # about "hacking choices to be dynamic" at https://docs.djangoproject.com/en/2.2/ref/models/fields/#choices
     #
 
     GUEST = 'GU'
