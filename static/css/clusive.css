@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.header {
+    background-color: #ea6550;
+    padding: 1em;
+}
+
+.content {
+    margin: 1em;
+}
