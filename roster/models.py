@@ -1,6 +1,14 @@
 from django.db import models
 from uuid import uuid4
 from django.contrib.auth.models import User
+from pytz import country_timezones
+
+# TODO: Should we include timezones other than US + Canada?
+available_timezones = sorted(country_timezones('us') + country_timezones('ca'))
+available_timezones_friendly = []
+for tz in available_timezones:
+    tz_friendly = tz.replace("_", " ")
+    available_timezones_friendly.append(tz_friendly)
 
 class Site(models.Model):
     name = models.CharField(max_length=100)
@@ -8,10 +16,13 @@ class Site(models.Model):
     # TODO: is this an address field? Should it be managed as such?
     location = models.TextField(max_length=500)
 
-    # TODO: should these three be restricted by choices?
-    language_code = models.CharField(max_length=2, default='EN')
-    country_code = models.CharField(max_length=2, default='US')
-    timezone = models.CharField(max_length=30, default='EST')
+    # TODO: should these two be restricted by choices?
+    language_code = models.CharField(max_length=2, default='en')
+    country_code = models.CharField(max_length=2, default='us')
+
+    TIMEZONE_CHOICES = list(zip(available_timezones, available_timezones_friendly))
+
+    timezone = models.CharField(max_length=30, default='America/New York', choices=TIMEZONE_CHOICES)
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.site_id)

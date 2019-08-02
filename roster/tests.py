@@ -9,9 +9,9 @@ class SiteTestCase(TestCase):
         """ A newly created site has expected defaults """
 
         cast_collegiate = Site.objects.get(name="CAST Collegiate")
-        self.assertEqual(cast_collegiate.language_code, 'EN')
-        self.assertEqual(cast_collegiate.country_code, 'US')
-        self.assertEqual(cast_collegiate.timezone, 'EST')
+        self.assertEqual(cast_collegiate.language_code, 'en')
+        self.assertEqual(cast_collegiate.country_code, 'us')
+        self.assertEqual(cast_collegiate.timezone, 'America/New York')
 
     def test_period_assignment_to_site(self):
         """ Multiple periods can created and assigned to the same site"""
