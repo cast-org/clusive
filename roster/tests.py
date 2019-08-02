@@ -34,4 +34,4 @@ class SiteTestCase(TestCase):
 
         cast_collegiate.delete()
 
-        self.assertEqual(Period.objects.count(), 0)
+        self.assertEqual(Period.objects.count(), 0)        

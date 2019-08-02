@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Site(models.Model):
     name = models.CharField(max_length=100)
-    site_id = models.CharField(unique=True, default=uuid4, max_length=36)
+    anon_id = models.CharField(unique=True, default=uuid4, max_length=36)
     # TODO: is this an address field? Should it be managed as such?
     location = models.TextField(max_length=500)
 
@@ -19,7 +19,7 @@ class Site(models.Model):
 class Period(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    class_id = models.CharField(unique=True, default=uuid4, max_length=36)
+    anon_id = models.CharField(unique=True, default=uuid4, max_length=36)
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.class_id)
@@ -34,7 +34,7 @@ class ClusiveUser(models.Model):
     # - email
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    subject_id = models.CharField(unique=True, default=uuid4, max_length=36)
+    anon_id = models.CharField(unique=True, default=uuid4, max_length=36)
 
     # TODO: should this be an enum of states, as per comment 
     # at https://wiki.cast.org/display/CISL/User+model+development?
