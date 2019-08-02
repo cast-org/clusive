@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import Site, Period, ClusiveUser
+from django.core.exceptions import ValidationError
 
 class SiteTestCase(TestCase):
     def setUp(self):
@@ -13,6 +14,17 @@ class SiteTestCase(TestCase):
         self.assertEqual(cast_collegiate.country_code, 'us')
         self.assertEqual(cast_collegiate.timezone, 'America/New York')
 
+    def test_site_timezone_validation(self):
+        """ A site won't accept an invalid timezone"""
+
+        cast_collegiate = Site.objects.get(name="CAST Collegiate")
+        cast_collegiate.timezone = "America/Boston"
+
+        try:
+            cast_collegiate.full_clean()
+        except ValidationError as e:                    
+            self.assertEqual(e.message_dict["timezone"][0], "Value 'America/Boston' is not a valid choice.")
+        
     def test_period_assignment_to_site(self):
         """ Multiple periods can created and assigned to the same site"""
         cast_collegiate = Site.objects.get(name="CAST Collegiate")
