@@ -15,8 +15,6 @@ class Site(models.Model):
     # TODO: is this an address field? Should it be managed as such?
     location = models.TextField(max_length=500)
 
-    # TODO: should these two be restricted by choices?
-    language_code = models.CharField(max_length=2, default='en')
     country_code = models.CharField(max_length=2, default='us')
 
     TIMEZONE_CHOICES = list(zip(available_timezones, available_timezones_friendly))

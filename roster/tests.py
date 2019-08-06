@@ -10,8 +10,7 @@ class SiteTestCase(TestCase):
     def test_site_defaults(self):
         """ A newly created site has expected defaults """
 
-        cast_collegiate = Site.objects.get(name="CAST Collegiate")
-        self.assertEqual(cast_collegiate.language_code, 'en')
+        cast_collegiate = Site.objects.get(name="CAST Collegiate")        
         self.assertEqual(cast_collegiate.country_code, 'us')
         self.assertEqual(cast_collegiate.timezone, 'America/New_York')
         self.assertEqual(cast_collegiate.anon_id, None)
