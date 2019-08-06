@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 class SiteTestCase(TestCase):
     def setUp(self):
         cast_collegiate = Site.objects.create(name="CAST Collegiate", location="Wakefield, MA")
+        idrc_institute = Site.objects.create(name="IDRC Institute", location="Toronto, ON", country_code="ca")
 
     def test_site_defaults(self):
         """ A newly created site has expected defaults """
@@ -12,7 +13,36 @@ class SiteTestCase(TestCase):
         cast_collegiate = Site.objects.get(name="CAST Collegiate")
         self.assertEqual(cast_collegiate.language_code, 'en')
         self.assertEqual(cast_collegiate.country_code, 'us')
-        self.assertEqual(cast_collegiate.timezone, 'America/New York')
+        self.assertEqual(cast_collegiate.timezone, 'America/New_York')
+        self.assertEqual(cast_collegiate.anon_id, None)
+
+    def test_site_anon_id(self):
+        """ A site can have an anon_id set manually """
+        cast_collegiate = Site.objects.get(name="CAST Collegiate")
+        cast_collegiate.anon_id = "Site1"        
+        
+        try:
+            cast_collegiate.full_clean()
+        except ValidationError as e:
+            self.fail("Validation should not have failed")            
+
+        self.assertEqual(cast_collegiate.anon_id, "Site1")        
+
+    def test_site_anon_id_unique(self):
+        """ Two sites cannot have the same anon_id"""
+
+        cast_collegiate = Site.objects.get(name="CAST Collegiate")
+        idrc_institute = Site.objects.get(name="IDRC Institute")
+        cast_collegiate.anon_id = "Site1"
+        cast_collegiate.save()
+
+        idrc_institute.anon_id = "Site1"
+
+        try:
+            idrc_institute.full_clean()
+            self.fail("Validation should have failed due to same anon_id")
+        except ValidationError as e:                    
+            self.assertEqual(e.message_dict["anon_id"][0], "Site with this Anon id already exists.")        
 
     def test_site_timezone_validation(self):
         """ A site won't accept an invalid timezone"""
@@ -21,7 +51,7 @@ class SiteTestCase(TestCase):
         cast_collegiate.timezone = "America/Boston"
 
         try:
-            cast_collegiate.full_clean()
+            cast_collegiate.full_clean()            
         except ValidationError as e:                    
             self.assertEqual(e.message_dict["timezone"][0], "Value 'America/Boston' is not a valid choice.")
         
@@ -46,4 +76,4 @@ class SiteTestCase(TestCase):
 
         cast_collegiate.delete()
 
-        self.assertEqual(Period.objects.count(), 0)        
+        self.assertEqual(Period.objects.count(), 0)                
