@@ -17,7 +17,7 @@ class SiteTestCase(TestCase):
         create_idrc_institute()
         create_underdetailed_university()
 
-    def test_site_defaults(self):
+    def test_defaults(self):
         """ A created site has expected defaults if not set """
         underdetailed_university = Site.objects.get(name="Underdetailed University")
                   
@@ -27,7 +27,7 @@ class SiteTestCase(TestCase):
         self.assertEqual(underdetailed_university.state_or_province, "")
         self.assertEqual(underdetailed_university.country, "")
 
-    def test_site_anon_id(self):
+    def test_manual_anon_id(self):
         """ A site can have an anon_id set manually """
         cast_collegiate = Site.objects.get(name="CAST Collegiate")
         cast_collegiate.anon_id = "Site1"        
@@ -39,7 +39,7 @@ class SiteTestCase(TestCase):
 
         self.assertEqual(cast_collegiate.anon_id, "Site1")        
 
-    def test_site_anon_id_unique(self):
+    def test_anon_id_unique_enforcement(self):
         """ Two sites cannot have the same anon_id"""
 
         cast_collegiate = Site.objects.get(name="CAST Collegiate")
@@ -55,7 +55,7 @@ class SiteTestCase(TestCase):
         except ValidationError as e:                    
             self.assertEqual(e.message_dict["anon_id"][0], "Site with this Anon id already exists.")        
 
-    def test_site_timezone_validation(self):
+    def test_timezone_validation(self):
         """ A site won't accept an invalid timezone"""
 
         cast_collegiate = Site.objects.get(name="CAST Collegiate")
@@ -66,7 +66,7 @@ class SiteTestCase(TestCase):
         except ValidationError as e:                    
             self.assertEqual(e.message_dict["timezone"][0], "Value 'America/Boston' is not a valid choice.")
         
-    def test_period_assignment_to_site(self):
+    def test_period_assignment(self):
         """ Multiple periods can created and assigned to the same site"""
         cast_collegiate = Site.objects.get(name="CAST Collegiate")
         udl_101 = Period.objects.create(name="Universal Design For Learning 101", site=cast_collegiate)
