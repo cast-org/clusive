@@ -12,10 +12,10 @@ for tz in available_timezones:
 class Site(models.Model):
     name = models.CharField(max_length=100)
     anon_id = models.CharField(max_length=30, unique=True, null=True)
-    # TODO: is this an address field? Should it be managed as such?
-    location = models.TextField(max_length=500)
-
-    country_code = models.CharField(max_length=2, default='us')
+        
+    city = models.CharField(max_length=50, default="")
+    state_or_province = models.CharField(max_length=50, default="")
+    country = models.CharField(max_length=50, default="")
 
     TIMEZONE_CHOICES = list(zip(available_timezones, available_timezones_friendly))
 

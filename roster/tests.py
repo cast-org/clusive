@@ -2,18 +2,30 @@ from django.test import TestCase
 from .models import Site, Period, ClusiveUser
 from django.core.exceptions import ValidationError
 
+def create_cast_collegiate():
+    return Site.objects.create(name="CAST Collegiate", city="Wakefield", state_or_province="MA", country="USA")
+
+def create_idrc_institute():    
+    return Site.objects.create(name="IDRC Institute", city="Toronto", state_or_province="ON", country="Canada")
+
+def create_underdetailed_university():
+    return Site.objects.create(name="Underdetailed University")
+
 class SiteTestCase(TestCase):
     def setUp(self):
-        cast_collegiate = Site.objects.create(name="CAST Collegiate", location="Wakefield, MA")
-        idrc_institute = Site.objects.create(name="IDRC Institute", location="Toronto, ON", country_code="ca")
+        create_cast_collegiate()
+        create_idrc_institute()
+        create_underdetailed_university()
 
     def test_site_defaults(self):
-        """ A newly created site has expected defaults """
-
-        cast_collegiate = Site.objects.get(name="CAST Collegiate")        
-        self.assertEqual(cast_collegiate.country_code, 'us')
-        self.assertEqual(cast_collegiate.timezone, 'America/New_York')
-        self.assertEqual(cast_collegiate.anon_id, None)
+        """ A created site has expected defaults if not set """
+        underdetailed_university = Site.objects.get(name="Underdetailed University")
+                  
+        self.assertEqual(underdetailed_university.timezone, 'America/New_York')
+        self.assertEqual(underdetailed_university.anon_id, None)
+        self.assertEqual(underdetailed_university.city, "")
+        self.assertEqual(underdetailed_university.state_or_province, "")
+        self.assertEqual(underdetailed_university.country, "")
 
     def test_site_anon_id(self):
         """ A site can have an anon_id set manually """
