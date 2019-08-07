@@ -44,6 +44,7 @@ class ClusiveUser(models.Model):
 
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
+    # TODO: refactor this into a dict or similar
     PERMISSIONED = 'PE'
     PENDING = 'PD'
     DECLINED = 'DC'
@@ -58,6 +59,10 @@ class ClusiveUser(models.Model):
         (TEST_ACCOUNT, 'Test Account')
     ]
 
+    @property 
+    def is_permissioned(self):
+        return self.permission == ClusiveUser.PERMISSIONED
+
     permission = models.CharField(
         max_length=2,
         choices=PERMISSION_CHOICES,
@@ -66,11 +71,7 @@ class ClusiveUser(models.Model):
 
     periods = models.ManyToManyField(Period)
 
-    # TODO: consider creating a separate "Roles" model to store 
-    # roles, and refer to them with a Foreignkey - see comment 
-    # about "hacking choices to be dynamic" at https://docs.djangoproject.com/en/2.2/ref/models/fields/#choices
-    #
-
+    # TODO: refactor this into a dict or similar
     GUEST = 'GU'
     STUDENT = 'ST'
     PARENT = 'PA'

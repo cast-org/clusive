@@ -171,3 +171,23 @@ class ClusiveUserTestCase(TestCase):
             self.fail("Validation should have failed due to same anon_id")
         except ValidationError as e:                    
             self.assertEqual(e.message_dict["anon_id"][0], "Clusive user with this Anon id already exists.")                                     
+
+    def test_permissioned_property(self):
+        """ The 'is_permissioned' property function returns TRUE for 'permissioned' state and 'false' for all others """
+        clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
+        clusive_user_2 = ClusiveUser.objects.get(anon_id="Student2")
+
+        clusive_user_1.permission = ClusiveUser.PERMISSIONED
+
+        self.assertTrue(clusive_user_1.is_permissioned)        
+        
+        nonpermissioned_states = [
+            ClusiveUser.TEST_ACCOUNT,
+            ClusiveUser.PENDING,
+            ClusiveUser.WITHDREW,
+            ClusiveUser.DECLINED
+        ]
+
+        for state in nonpermissioned_states:
+            clusive_user_2.permission = state 
+            self.assertFalse(clusive_user_2.is_permissioned)
