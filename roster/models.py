@@ -44,9 +44,25 @@ class ClusiveUser(models.Model):
 
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    # TODO: should this be an enum of states, as per comment 
-    # at https://wiki.cast.org/display/CISL/User+model+development?
-    permission = models.BooleanField(default=False)        
+    PERMISSIONED = 'PE'
+    PENDING = 'PD'
+    DECLINED = 'DC'
+    WITHDREW = 'WD'
+    TEST_ACCOUNT = 'TA'
+
+    PERMISSION_CHOICES = [
+        (PERMISSIONED, 'Permissioned'),
+        (PENDING, 'Pending'),
+        (DECLINED, 'Declined'),
+        (WITHDREW, 'Withdrew'),
+        (TEST_ACCOUNT, 'Test Account')
+    ]
+
+    permission = models.CharField(
+        max_length=2,
+        choices=PERMISSION_CHOICES,
+        default=TEST_ACCOUNT
+    )
 
     periods = models.ManyToManyField(Period)
 
@@ -57,6 +73,7 @@ class ClusiveUser(models.Model):
 
     GUEST = 'GU'
     STUDENT = 'ST'
+    PARENT = 'PA'
     TEACHER = 'TE'
     RESEARCHER = 'RE'
     ADMIN = 'AD'
@@ -64,6 +81,7 @@ class ClusiveUser(models.Model):
     ROLE_CHOICES = [
         (GUEST, 'Guest'),
         (STUDENT, 'Student'),
+        (PARENT, 'Parent'),
         (TEACHER, 'Teacher'),
         (RESEARCHER, 'Researcher'),        
         (ADMIN, 'Admin')
