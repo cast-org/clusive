@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from .models import Site, Period, ClusiveUser
 from django.core.exceptions import ValidationError
 
+# TODO: make sure all tests have helpful messages
+
 def set_up_test_sites():
     Site.objects.create(name="CAST Collegiate", city="Wakefield", state_or_province="MA", country="USA").save()
     Site.objects.create(name="IDRC Institute", city="Toronto", state_or_province="ON", country="Canada").save()
@@ -142,7 +144,7 @@ class ClusiveUserTestCase(TestCase):
         new_clusive_user = ClusiveUser.objects.create(user=new_user)
 
         self.assertEqual(new_clusive_user.anon_id, None)
-        self.assertEqual(new_clusive_user.permission, ClusiveUser.TEST_ACCOUNT)
+        self.assertEqual(new_clusive_user.permission, ClusiveUser.ResearchPermissions.TEST_ACCOUNT)
         self.assertEqual(new_clusive_user.role, ClusiveUser.GUEST)
 
     def test_manual_anon_id(self):
@@ -177,15 +179,15 @@ class ClusiveUserTestCase(TestCase):
         clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
         clusive_user_2 = ClusiveUser.objects.get(anon_id="Student2")
 
-        clusive_user_1.permission = ClusiveUser.PERMISSIONED
+        clusive_user_1.permission = ClusiveUser.ResearchPermissions.PERMISSIONED
 
         self.assertTrue(clusive_user_1.is_permissioned)        
         
         nonpermissioned_states = [
-            ClusiveUser.TEST_ACCOUNT,
-            ClusiveUser.PENDING,
-            ClusiveUser.WITHDREW,
-            ClusiveUser.DECLINED
+            ClusiveUser.ResearchPermissions.TEST_ACCOUNT,
+            ClusiveUser.ResearchPermissions.PENDING,
+            ClusiveUser.ResearchPermissions.WITHDREW,
+            ClusiveUser.ResearchPermissions.DECLINED
         ]
 
         for state in nonpermissioned_states:

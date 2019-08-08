@@ -44,29 +44,29 @@ class ClusiveUser(models.Model):
 
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    # TODO: refactor this into a dict or similar
-    PERMISSIONED = 'PE'
-    PENDING = 'PD'
-    DECLINED = 'DC'
-    WITHDREW = 'WD'
-    TEST_ACCOUNT = 'TA'
+    class ResearchPermissions:
+        PERMISSIONED = 'PE'
+        PENDING = 'PD'
+        DECLINED = 'DC'
+        WITHDREW = 'WD'
+        TEST_ACCOUNT = 'TA'
 
-    PERMISSION_CHOICES = [
+        CHOICES = [
         (PERMISSIONED, 'Permissioned'),
         (PENDING, 'Pending'),
         (DECLINED, 'Declined'),
         (WITHDREW, 'Withdrew'),
         (TEST_ACCOUNT, 'Test Account')
-    ]
+        ]
 
     @property 
     def is_permissioned(self):
-        return self.permission == ClusiveUser.PERMISSIONED
+        return self.permission == ClusiveUser.ResearchPermissions.PERMISSIONED
 
     permission = models.CharField(
         max_length=2,
-        choices=PERMISSION_CHOICES,
-        default=TEST_ACCOUNT
+        choices=ResearchPermissions.CHOICES,
+        default=ResearchPermissions.TEST_ACCOUNT
     )
 
     periods = models.ManyToManyField(Period)
