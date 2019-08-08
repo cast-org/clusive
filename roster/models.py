@@ -44,6 +44,8 @@ class ClusiveUser(models.Model):
 
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
+    periods = models.ManyToManyField(Period)
+
     class ResearchPermissions:
         PERMISSIONED = 'PE'
         PENDING = 'PD'
@@ -68,8 +70,6 @@ class ClusiveUser(models.Model):
         choices=ResearchPermissions.CHOICES,
         default=ResearchPermissions.TEST_ACCOUNT
     )
-
-    periods = models.ManyToManyField(Period)
 
     # TODO: refactor this into a dict or similar
     GUEST = 'GU'
