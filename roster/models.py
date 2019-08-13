@@ -71,27 +71,27 @@ class ClusiveUser(models.Model):
         default=ResearchPermissions.TEST_ACCOUNT
     )
 
-    # TODO: refactor this into a dict or similar
-    GUEST = 'GU'
-    STUDENT = 'ST'
-    PARENT = 'PA'
-    TEACHER = 'TE'
-    RESEARCHER = 'RE'
-    ADMIN = 'AD'
+    class Roles:
+        GUEST = 'GU'
+        STUDENT = 'ST'
+        PARENT = 'PA'
+        TEACHER = 'TE'
+        RESEARCHER = 'RE'
+        ADMIN = 'AD'
 
-    ROLE_CHOICES = [
-        (GUEST, 'Guest'),
-        (STUDENT, 'Student'),
-        (PARENT, 'Parent'),
-        (TEACHER, 'Teacher'),
-        (RESEARCHER, 'Researcher'),        
-        (ADMIN, 'Admin')
-    ]
+        ROLE_CHOICES = [
+            (GUEST, 'Guest'),
+            (STUDENT, 'Student'),
+            (PARENT, 'Parent'),
+            (TEACHER, 'Teacher'),
+            (RESEARCHER, 'Researcher'),        
+            (ADMIN, 'Admin')
+        ]
 
     role = models.CharField(
         max_length=2,
-        choices=ROLE_CHOICES,
-        default=GUEST
+        choices=Roles.ROLE_CHOICES,
+        default=Roles.GUEST
     )    
 
     def __str__(self):

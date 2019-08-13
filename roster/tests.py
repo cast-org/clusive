@@ -145,7 +145,7 @@ class ClusiveUserTestCase(TestCase):
 
         self.assertEqual(new_clusive_user.anon_id, None)
         self.assertEqual(new_clusive_user.permission, ClusiveUser.ResearchPermissions.TEST_ACCOUNT)
-        self.assertEqual(new_clusive_user.role, ClusiveUser.GUEST)
+        self.assertEqual(new_clusive_user.role, ClusiveUser.Roles.GUEST)
 
     def test_manual_anon_id(self):
         """ A user can have an anon_id set manually """
