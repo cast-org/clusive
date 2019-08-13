@@ -44,35 +44,54 @@ class ClusiveUser(models.Model):
 
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    # TODO: should this be an enum of states, as per comment 
-    # at https://wiki.cast.org/display/CISL/User+model+development?
-    permission = models.BooleanField(default=False)        
-
     periods = models.ManyToManyField(Period)
 
-    # TODO: consider creating a separate "Roles" model to store 
-    # roles, and refer to them with a Foreignkey - see comment 
-    # about "hacking choices to be dynamic" at https://docs.djangoproject.com/en/2.2/ref/models/fields/#choices
-    #
+    class ResearchPermissions:
+        PERMISSIONED = 'PE'
+        PENDING = 'PD'
+        DECLINED = 'DC'
+        WITHDREW = 'WD'
+        TEST_ACCOUNT = 'TA'
 
-    GUEST = 'GU'
-    STUDENT = 'ST'
-    TEACHER = 'TE'
-    RESEARCHER = 'RE'
-    ADMIN = 'AD'
+        CHOICES = [
+        (PERMISSIONED, 'Permissioned'),
+        (PENDING, 'Pending'),
+        (DECLINED, 'Declined'),
+        (WITHDREW, 'Withdrew'),
+        (TEST_ACCOUNT, 'Test Account')
+        ]
 
-    ROLE_CHOICES = [
-        (GUEST, 'Guest'),
-        (STUDENT, 'Student'),
-        (TEACHER, 'Teacher'),
-        (RESEARCHER, 'Researcher'),        
-        (ADMIN, 'Admin')
-    ]
+    @property 
+    def is_permissioned(self):
+        return self.permission == ClusiveUser.ResearchPermissions.PERMISSIONED
+
+    permission = models.CharField(
+        max_length=2,
+        choices=ResearchPermissions.CHOICES,
+        default=ResearchPermissions.TEST_ACCOUNT
+    )
+
+    class Roles:
+        GUEST = 'GU'
+        STUDENT = 'ST'
+        PARENT = 'PA'
+        TEACHER = 'TE'
+        RESEARCHER = 'RE'
+        ADMIN = 'AD'
+
+        ROLE_CHOICES = [
+            (GUEST, 'Guest'),
+            (STUDENT, 'Student'),
+            (PARENT, 'Parent'),
+            (TEACHER, 'Teacher'),
+            (RESEARCHER, 'Researcher'),        
+            (ADMIN, 'Admin')
+        ]
 
     role = models.CharField(
         max_length=2,
-        choices=ROLE_CHOICES,
-        default=GUEST
+        choices=Roles.ROLE_CHOICES,
+        default=Roles.GUEST
     )    
 
     def __str__(self):

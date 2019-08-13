@@ -1,16 +1,26 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from .models import Site, Period, ClusiveUser
 from django.core.exceptions import ValidationError
 
+# TODO: make sure all tests have helpful messages
+
 def set_up_test_sites():
-        Site.objects.create(name="CAST Collegiate", city="Wakefield", state_or_province="MA", country="USA")
-        Site.objects.create(name="IDRC Institute", city="Toronto", state_or_province="ON", country="Canada")
-        Site.objects.create(name="Underdetailed University")
+    Site.objects.create(name="CAST Collegiate", city="Wakefield", state_or_province="MA", country="USA").save()
+    Site.objects.create(name="IDRC Institute", city="Toronto", state_or_province="ON", country="Canada").save()
 
 def set_up_test_periods():
-        cast_collegiate = Site.objects.get(name="CAST Collegiate")
-        Period.objects.create(name="Universal Design For Learning 101", site=cast_collegiate)
-        Period.objects.create(name="Universal Design For Learning 201", site=cast_collegiate)
+    cast_collegiate = Site.objects.get(name="CAST Collegiate")
+    Period.objects.create(name="Universal Design For Learning 101", site=cast_collegiate).save()
+    Period.objects.create(name="Universal Design For Learning 201", site=cast_collegiate).save()
+
+def set_up_test_users():
+    user_1 = User.objects.create_user(username="user1", password="password1")
+    user_1.save()
+    user_2 = User.objects.create_user(username="user2", password="password2")
+    user_2.save()
+    ClusiveUser.objects.create(anon_id="Student1", user=user_1).save()
+    ClusiveUser.objects.create(anon_id="Student2", user=user_2).save()
 
 class SiteTestCase(TestCase):
     def setUp(self):
@@ -18,7 +28,7 @@ class SiteTestCase(TestCase):
 
     def test_defaults(self):
         """ A created site has expected defaults if not set """
-        underdetailed_university = Site.objects.get(name="Underdetailed University")
+        underdetailed_university = Site.objects.create(name="Underdetailed University")
                   
         self.assertEqual(underdetailed_university.timezone, 'America/New_York')
         self.assertEqual(underdetailed_university.anon_id, None)
@@ -122,3 +132,64 @@ class PeriodTestCase(TestCase):
             self.fail("Validation should have failed due to same anon_id")
         except ValidationError as e:                    
             self.assertEqual(e.message_dict["anon_id"][0], "Period with this Anon id already exists.")                
+
+class ClusiveUserTestCase(TestCase):
+
+    def setUp(self):
+        set_up_test_users()
+
+    def test_defaults(self):
+        """ A user has the expected defaults, if not set """
+        new_user = User.objects.create_user(username="newuser")
+        new_clusive_user = ClusiveUser.objects.create(user=new_user)
+
+        self.assertEqual(new_clusive_user.anon_id, None)
+        self.assertEqual(new_clusive_user.permission, ClusiveUser.ResearchPermissions.TEST_ACCOUNT)
+        self.assertEqual(new_clusive_user.role, ClusiveUser.Roles.GUEST)
+
+    def test_manual_anon_id(self):
+        """ A user can have an anon_id set manually """
+        clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
+        clusive_user_1.anon_id = "Student3"
+
+        try:
+            clusive_user_1.full_clean()
+        except ValidationError as e:
+            self.fail("Validation should not have failed")            
+
+        self.assertEqual(clusive_user_1.anon_id, "Student3")        
+            
+    def test_anon_id_unique_enforcement(self):
+        """ Two users cannot have the same anon_id """
+        clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
+        clusive_user_2 = ClusiveUser.objects.get(anon_id="Student2")
+        clusive_user_1.anon_id = "Student3"
+        clusive_user_1.save()
+
+        clusive_user_2.anon_id = "Student3"        
+
+        try:
+            clusive_user_2.full_clean()
+            self.fail("Validation should have failed due to same anon_id")
+        except ValidationError as e:                    
+            self.assertEqual(e.message_dict["anon_id"][0], "Clusive user with this Anon id already exists.")                                     
+
+    def test_permissioned_property(self):
+        """ The 'is_permissioned' property function returns TRUE for 'permissioned' state and 'false' for all others """
+        clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
+        clusive_user_2 = ClusiveUser.objects.get(anon_id="Student2")
+
+        clusive_user_1.permission = ClusiveUser.ResearchPermissions.PERMISSIONED
+
+        self.assertTrue(clusive_user_1.is_permissioned)        
+        
+        nonpermissioned_states = [
+            ClusiveUser.ResearchPermissions.TEST_ACCOUNT,
+            ClusiveUser.ResearchPermissions.PENDING,
+            ClusiveUser.ResearchPermissions.WITHDREW,
+            ClusiveUser.ResearchPermissions.DECLINED
+        ]
+
+        for state in nonpermissioned_states:
+            clusive_user_2.permission = state 
+            self.assertFalse(clusive_user_2.is_permissioned)
