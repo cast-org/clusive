@@ -4,11 +4,11 @@
 <html lang="en">
     <head>
         <title>{% block title %}Clusive{% endblock %}</title>
-        <link href="{% static "css/clusive.css" %}" rel="stylesheet">
+        <link href="{% static "clusive/css/clusive.css" %}" rel="stylesheet">
     </head>
     <body>
         <div class="header">
-            <img src="{% static "images/reader-logo-transparent.png" %}" alt="CISL Reader" />
+            <img src="{% static "clusive/images/reader-logo-transparent.png" %}" alt="CISL Reader" />
         </div>
         <div class="content">
             {% block content %}{% endblock %}
