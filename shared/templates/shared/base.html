@@ -7,7 +7,9 @@
     </head>
     <body>
         <div class="header">
-            <img src="{% static "shared/images/reader-logo-transparent.png" %}" alt="CISL Reader" />            
+            <a href="{% url 'index' %}">
+                <img src="{% static "shared/images/reader-logo-transparent.png" %}" alt="CISL Reader" />            
+            </a>
             <div class="login-status">
                 {% if not user.is_anonymous %}                
                         Logged in as {{ user }} | <a href="{% url 'logout' %}">Logout</a>

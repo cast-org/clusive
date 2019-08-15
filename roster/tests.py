@@ -198,7 +198,15 @@ class ClusiveUserTestCase(TestCase):
 
 class PageTestCases(TestCase):
         def test_login_page(self):                              
-            response = self.client.get(reverse('login'))
+            url = reverse('login')
+            response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
             html = response.content.decode('utf8')        
-            self.assertIn('<h1>Login to Clusive</h1>', html)        
+            self.assertIn('<h1>Login to Clusive</h1>', html)   
+
+        def test_logout_page(self):                              
+            url = reverse('logout')
+            response = self.client.get(url, follow=True)
+            self.assertEqual(response.status_code, 200)
+            html = response.content.decode('utf8')        
+            self.assertIn('<h1>Welcome to Clusive</h1>', html)        
