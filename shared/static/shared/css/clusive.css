@@ -11,3 +11,7 @@ body {
 .content {
     margin: 1em;
 }
+
+.login-status {
+    float: right;
+}
