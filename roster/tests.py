@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Site, Period, ClusiveUser
 from django.core.exceptions import ValidationError
+from django.test import Client
+from django.urls import reverse
 
 # TODO: make sure all tests have helpful messages
 
@@ -193,3 +195,10 @@ class ClusiveUserTestCase(TestCase):
         for state in nonpermissioned_states:
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
+
+class PageTestCases(TestCase):
+        def test_login_page(self):                              
+            response = self.client.get(reverse('login'))
+            self.assertEqual(response.status_code, 200)
+            html = response.content.decode('utf8')        
+            self.assertIn('<h1>Login to Clusive</h1>', html)        
