@@ -220,7 +220,12 @@ class PageTestCases(TestCase):
         def test_logout_url(self):                              
             login = self.client.login(username='user1', password='password1')                          
             self.assertTrue(login)
-            
+
+            url = reverse('index')
+            response = self.client.get(url)
+            html = response.content.decode('utf8')                    
+            self.assertIn('Logged in as user1', html)            
+
             url = reverse('logout')
             response = self.client.get(url, follow=True)
             
