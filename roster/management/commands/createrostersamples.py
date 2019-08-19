@@ -49,8 +49,8 @@ sample_users = {
         'django_user': {
             'first_name': 'Theresa',
             'last_name': 'Teacher',
-            'username': 'tteacher',
-            'password': 'tteacher_pass'
+            'username': 'theresateacher',
+            'password': 'theresateacher_pass'
         },
         'clusive_user': {
             'anon_id': 'user1',
@@ -65,8 +65,8 @@ sample_users = {
         'django_user': {
             'first_name': 'Samuel',
             'last_name': 'Student',
-            'username': 'sstudent',
-            'password': 'sstudent_pass'
+            'username': 'samstudent',
+            'password': 'samstudent_pass'
         },
         'clusive_user': {
             'anon_id': 'user2',
@@ -76,6 +76,22 @@ sample_users = {
                 'period2'
             ]
         }
+    },
+    'sarah_student': {
+        'django_user': {
+            'first_name': 'Sarah',
+            'last_name': 'Student',
+            'username': 'sarahstudent',
+            'password': 'sarahstudent_pass'
+        },
+        'clusive_user': {
+            'anon_id': 'user3',
+            'permission': 'TA',
+            'role': 'ST',
+            'period_anon_ids': [
+                'period1'
+            ]
+        }        
     }
 }
 
