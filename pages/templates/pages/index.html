@@ -3,6 +3,5 @@
 {% block title %}Welcome to Clusive{% endblock %}
 
 {% block content %}
-<h1>Welcome to Clusive</h1>
-
+<h1>Welcome to Clusive{% if not user.is_anonymous %}, {{ user.first_name }}{% endif %}</h1>
 {% endblock %}
