@@ -4,6 +4,7 @@ from .models import Site, Period, ClusiveUser
 from django.core.exceptions import ValidationError
 from django.test import Client
 from django.urls import reverse
+from django.contrib.auth import authenticate, login
 
 # TODO: make sure all tests have helpful messages
 
@@ -197,16 +198,32 @@ class ClusiveUserTestCase(TestCase):
             self.assertFalse(clusive_user_2.is_permissioned)
 
 class PageTestCases(TestCase):
-        def test_login_page(self):                              
+
+        def setUp(self):
+            set_up_test_users()
+
+        def test_login_page(self):                
             url = reverse('login')
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
-            html = response.content.decode('utf8')        
+            html = response.content.decode('utf8')                    
             self.assertIn('<h1>Login to Clusive</h1>', html)   
 
-        def test_logout_page(self):                              
+        def test_logged_in_message(self):
+            login = self.client.login(username='user1', password='password1')                          
+            self.assertTrue(login)
+            url = reverse('index')
+            response = self.client.get(url)
+            html = response.content.decode('utf8')                    
+            self.assertIn('Logged in as user1', html)
+
+        def test_logout_url(self):                              
+            login = self.client.login(username='user1', password='password1')                          
+            self.assertTrue(login)
+            
             url = reverse('logout')
             response = self.client.get(url, follow=True)
+            
             self.assertEqual(response.status_code, 200)
             html = response.content.decode('utf8')        
-            self.assertIn('<h1>Welcome to Clusive</h1>', html)        
+            self.assertIn('Login', html)        
