@@ -1,5 +1,4 @@
 from django.test import TestCase
-from .views import index
 from django.test import Client
 from django.urls import reverse
 
