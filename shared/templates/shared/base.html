@@ -4,10 +4,26 @@
     <head>
         <title>{% block title %}Clusive{% endblock %}</title>
         <link href="{% static "shared/css/clusive.css" %}" rel="stylesheet">
+        
+        <!-- Reader CSS -->
+        <link rel="stylesheet" href="{% static "reader/viewer/reader.css" %}" />
+
+        <!-- Reader Javascripts -->
+        <script> var exports = {}; </script>
+        <script src="{% static "reader/viewer/reader.js" %}"></script>
+        <script src="{% static "reader/viewer/fetch.js" %}"></script>
+
+        <!-- Material Icons-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!-- Material CSS -->
+        <link rel="stylesheet" href="{% static "reader/viewer/material.css" %}"  />
+
     </head>
     <body>
         <div class="header">
             <img src="{% static "shared/images/reader-logo-transparent.png" %}" alt="CISL Reader" />
+            {% block header %}{% endblock %}
         </div>
         <div class="content">
             {% block content %}{% endblock %}

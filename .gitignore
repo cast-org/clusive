@@ -141,3 +141,5 @@ dmypy.json
 # Editor config files 
 
 .vscode
+shared/static/reader/explodedEpubs
+shared/static/reader/viewer
