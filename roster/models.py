@@ -44,7 +44,7 @@ class ClusiveUser(models.Model):
 
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    periods = models.ManyToManyField(Period)
+    periods = models.ManyToManyField(Period, blank=True)
 
     class ResearchPermissions:
         PERMISSIONED = 'PE'
