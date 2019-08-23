@@ -3,10 +3,12 @@ from eventlog.models import Session, Event
 
 class SessionAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'user', 'startedAtTime', 'endedAtTime')
-#    list_filter= ('event_id', 'event_time', 'user')
+    list_filter= ('user', 'startedAtTime')
+    ordering = ('-startedAtTime',)
 
-# class EventAdmin(admin.ModelAdmin):
-#     readonly_fields = ('id')
+class EventAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'session')
+    ordering = ('-eventTime',)
 
 admin.site.register(Session, SessionAdmin)
-admin.site.register(Event)
+admin.site.register(Event, EventAdmin)
