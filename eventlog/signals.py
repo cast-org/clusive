@@ -10,7 +10,7 @@ def log_login(sender, **kwargs):
     django_user = kwargs['user']
     try:
         clusive_user = ClusiveUser.objects.get(user=django_user)
-        session = Session(user =clusive_user)
+        session = Session(user=clusive_user, userAgent=kwargs['request'].META['HTTP_USER_AGENT'])
         session.save()
         # Put the ID of the database object into the HTTP session so that we know which one to close later.
         kwargs['request'].session['db_session_id'] = session.id.__str__()

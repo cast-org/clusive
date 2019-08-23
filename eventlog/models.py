@@ -11,7 +11,7 @@ class Session(models.Model):
     startedAtTime = models.DateTimeField(auto_now_add=True)
     endedAtTime = models.DateTimeField(null=True)  # time stamp when session ended (logout or timeout)
     # TODO appVersion: the current version of the Clusive application that the user is interacting with
-    # TODO userAgent: the user-agent string that the browser identifies itself with - gives us browser type, version, operating system, etc.
+    userAgent = models.CharField(max_length=256)
 
     def __str__(self):
         return '%s [%s - %s] (%s)' % (self.user.anon_id, self.startedAtTime, self.endedAtTime, self.id)
