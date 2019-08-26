@@ -1,6 +1,6 @@
 from django.db import models
 from uuid import uuid4
-from roster.models import ClusiveUser
+from roster.models import Period, ClusiveUser, Roles
 from django.utils import timezone
 import caliper
 
@@ -20,8 +20,12 @@ class Event(models.Model):
     id = models.CharField(primary_key=True, default=uuid4, max_length=36)
     session = models.ForeignKey(to=Session, on_delete=models.CASCADE)
     actor = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE)
-    # TODO group
-    # TODO membership
+    group = models.ForeignKey(to=Period, null=True, on_delete=models.SET_NULL)
+    membership = models.CharField(
+        max_length=2,
+        choices=Roles.ROLE_CHOICES,
+        default=Roles.GUEST
+    )
     eventTime = models.DateTimeField(default=timezone.now)
     # TODO eventEndTime
     type = models.CharField(max_length=8, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])

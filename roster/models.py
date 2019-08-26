@@ -32,6 +32,23 @@ class Period(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
 
+class Roles:
+    GUEST = 'GU'
+    STUDENT = 'ST'
+    PARENT = 'PA'
+    TEACHER = 'TE'
+    RESEARCHER = 'RE'
+    ADMIN = 'AD'
+
+    ROLE_CHOICES = [
+        (GUEST, 'Guest'),
+        (STUDENT, 'Student'),
+        (PARENT, 'Parent'),
+        (TEACHER, 'Teacher'),
+        (RESEARCHER, 'Researcher'),
+        (ADMIN, 'Admin')
+    ]
+
 class ClusiveUser(models.Model):
     
     # Django standard user class contains the following fields already
@@ -70,23 +87,6 @@ class ClusiveUser(models.Model):
         choices=ResearchPermissions.CHOICES,
         default=ResearchPermissions.TEST_ACCOUNT
     )
-
-    class Roles:
-        GUEST = 'GU'
-        STUDENT = 'ST'
-        PARENT = 'PA'
-        TEACHER = 'TE'
-        RESEARCHER = 'RE'
-        ADMIN = 'AD'
-
-        ROLE_CHOICES = [
-            (GUEST, 'Guest'),
-            (STUDENT, 'Student'),
-            (PARENT, 'Parent'),
-            (TEACHER, 'Teacher'),
-            (RESEARCHER, 'Researcher'),        
-            (ADMIN, 'Admin')
-        ]
 
     role = models.CharField(
         max_length=2,
