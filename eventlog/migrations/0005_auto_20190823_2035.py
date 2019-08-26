@@ -8,6 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('eventlog', '0004_auto_20190823_1737'),
+        ('roster', '__first__'),
     ]
 
     operations = [
