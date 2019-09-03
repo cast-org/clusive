@@ -1,5 +1,5 @@
 from django.contrib import admin
-from eventlog.models import Session, Event
+from eventlog.models import LoginSession, Event
 
 class SessionAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'user', 'startedAtTime', 'endedAtTime', 'userAgent')
@@ -12,5 +12,5 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('id', 'eventTime', 'actor', 'type', 'action')
     ordering = ('-eventTime',)
 
-admin.site.register(Session, SessionAdmin)
+admin.site.register(LoginSession, SessionAdmin)
 admin.site.register(Event, EventAdmin)

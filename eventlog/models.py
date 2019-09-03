@@ -5,9 +5,9 @@ from django.utils import timezone
 import caliper
 
 # A user session
-class Session(models.Model):
+class LoginSession(models.Model):
     id = models.CharField(primary_key=True, default=uuid4, max_length=36)
-    user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
     startedAtTime = models.DateTimeField(auto_now_add=True)
     endedAtTime = models.DateTimeField(null=True)  # time stamp when session ended (logout or timeout)
     # TODO appVersion: the current version of the Clusive application that the user is interacting with
@@ -18,9 +18,9 @@ class Session(models.Model):
 
 class Event(models.Model):
     id = models.CharField(primary_key=True, default=uuid4, max_length=36)
-    session = models.ForeignKey(to=Session, on_delete=models.CASCADE)
-    actor = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE)
-    group = models.ForeignKey(to=Period, null=True, on_delete=models.SET_NULL)
+    session = models.ForeignKey(to=LoginSession, on_delete=models.PROTECT)
+    actor = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
+    group = models.ForeignKey(to=Period, null=True, on_delete=models.PROTECT)
     membership = models.CharField(
         max_length=2,
         choices=Roles.ROLE_CHOICES,

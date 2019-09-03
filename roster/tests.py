@@ -22,8 +22,8 @@ def set_up_test_users():
     user_1.save()
     user_2 = User.objects.create_user(username="user2", password="password2")
     user_2.save()
-    ClusiveUser.objects.create(anon_id="Student1", user=user_1).save()
-    ClusiveUser.objects.create(anon_id="Student2", user=user_2).save()
+    ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
+    ClusiveUser.objects.create(anon_id="Student2", user=user_2, role='ST').save()
 
 class SiteTestCase(TestCase):
     def setUp(self):
@@ -210,11 +210,11 @@ class PageTestCases(TestCase):
             self.assertIn('<h1>Login to Clusive</h1>', html)   
 
         def test_logged_in_message(self):
-            login = self.client.login(username='user1', password='password1')                          
+            login = self.client.login(username='user1', password='password1')
             self.assertTrue(login)
             url = reverse('index')
             response = self.client.get(url)
-            html = response.content.decode('utf8')                    
+            html = response.content.decode('utf8')
             self.assertIn('Logged in as user1', html)
 
         def test_logout_url(self):                              

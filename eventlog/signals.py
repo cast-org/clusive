@@ -1,8 +1,11 @@
 from django.dispatch import receiver
 from django.contrib.auth import user_logged_in, user_logged_out
-from eventlog.models import Session, Event
+from eventlog.models import LoginSession, Event
 from roster.models import Period, ClusiveUser
 from django.utils import timezone
+import logging
+
+logger = logging.getLogger(__name__)
 
 @receiver(user_logged_in)
 def log_login(sender, **kwargs):
@@ -11,7 +14,7 @@ def log_login(sender, **kwargs):
     try:
         clusive_user = ClusiveUser.objects.get(user=django_user)
         user_agent = kwargs['request'].META.get('HTTP_USER_AGENT', '')
-        session = Session(user=clusive_user, userAgent=user_agent)
+        session = LoginSession(user=clusive_user, userAgent=user_agent)
         session.save()
         # Put the ID of the database object into the HTTP session so that we know which one to close later.
         http_session = kwargs['request'].session
@@ -32,15 +35,16 @@ def log_login(sender, **kwargs):
                       membership=clusive_user.role,
                       )
         event.save()
+        logger.info("Login by user %s", clusive_user)
     except ClusiveUser.DoesNotExist:
-        print("Login by a non-Clusive user")
+        logger.warning("Login by a non-Clusive user: %s", django_user)
 
 @receiver(user_logged_out)
 def log_logout(sender, **kwargs):
     """A user has logged out. Find the Session object in the database and set the end time."""
     session_id = kwargs['request'].session.get('db_session_id', None)
     if (session_id):
-        session = Session.objects.get(id=session_id)
+        session = LoginSession.objects.get(id=session_id)
         # Create an event
         clusive_user = ClusiveUser.objects.get(user=kwargs['user'])
         periods = clusive_user.periods.all()
@@ -56,3 +60,4 @@ def log_logout(sender, **kwargs):
         # Close out session
         session.endedAtTime = timezone.now()
         session.save()
+        logger.info("Logout user %s", clusive_user)
