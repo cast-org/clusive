@@ -141,3 +141,7 @@ dmypy.json
 # Editor config files 
 
 .vscode
+
+# NPM build artifacts
+
+node_modules
