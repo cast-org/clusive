@@ -132,7 +132,7 @@
         gradeNames: ["fluid.prefs.separatedPanel"],
         iframeRenderer: {
             markupProps: {
-                src: djangoStaticPrefix + "shared/js/lib/infusion/src/framework/preferences/html/SeparatedPanelPrefsEditorFrame.html"
+                src: djangoStaticPrefix + "shared/html/SeparatedPanelPrefsEditorFrame.html"
             }
         },
         distributeOptions: {
