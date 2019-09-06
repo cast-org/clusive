@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html  lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+        <link rel="stylesheet" type="text/css" href="../lib/infusion/src/lib/normalize/css/normalize.css" />
+        <link rel="stylesheet" type="text/css" href="../lib/infusion/src/framework/core/css/fluid.css" />
+
+        <!-- Component styles -->
+        <link rel="stylesheet" type="text/css" href="../lib/infusion/dist/assets/src/framework/preferences/css/Enactors.css" />
+        <link rel="stylesheet" type="text/css" href="../lib/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css" />
+        <link rel="stylesheet" type="text/css" href="../lib/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditorFrame.css" />
+
+        <!-- CISL styles -->
+        <link rel="stylesheet" href="../css/cisl-demo.css" />
+        <link rel="stylesheet" href="../lib/figuration/css/figuration.css" />
+
+        <title>Preferences Editor</title>
+     </head>
+
+    <body class="fl-prefsEditor-separatedPanel fl-focus bg-uibase-500">        
+            <!--
+                TODO: Rather than injecting hidden containers, we should be able to exclude enactors from executing
+                in the panel.
+            -->
+            <div class="flc-toc-tocContainer fl-hidden"></div>
+            <div class="flc-orator-controller fl-hidden"></div>
+            <div class="flc-orator-content fl-hidden"></div>
+    </body>
+
+</html>

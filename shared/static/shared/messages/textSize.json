@@ -1,0 +1,8 @@
+{
+    "label": "Text Size",
+    "description": "Adjust text size",
+    "textSize-small": "Small",
+    "textSize-medium": "Medium",
+    "textSize-large": "Large",
+    "textSize-x-large": "Extra Large"
+}
