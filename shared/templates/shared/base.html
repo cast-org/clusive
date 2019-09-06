@@ -3,12 +3,13 @@
 <html lang="en">
     <head>
         <title>{% block title %}Clusive{% endblock %}</title>
-        <link href="{% static "shared/css/clusive.css" %}" rel="stylesheet">
+        <link href="{% static 'shared/css/clusive.css' %}" rel="stylesheet">
+        <script type="javascript" src="{% static 'shared/js/main.js' %}"></script>
     </head>
     <body>
         <div class="header">
             <a href="{% url 'index' %}">
-                <img src="{% static "shared/images/reader-logo-transparent.png" %}" alt="CISL Reader" />            
+                <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />            
             </a>
             <div class="login-status">
                 {% if not user.is_anonymous %}                
