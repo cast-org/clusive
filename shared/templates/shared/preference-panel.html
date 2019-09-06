@@ -1,5 +1,6 @@
 {% load static %}
     <!-- BEGIN markup for Preference Editor -->
+    
     <div class="flc-prefsEditor-separatedPanel fl-prefsEditor-separatedPanel">
         <!--
             This div is for the sliding panel bar that shows and hides the Preference Editor controls in the mobile view.
@@ -29,17 +30,28 @@
     <!-- END markup for Preference Editor -->
     <script>            
         
+        {% if prefs_include_glossary %}
+        var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditor.html' %}";
+        var buildGradeNames =  [
+                            "cisl.prefs.auxSchema.starter", // starter set
+                            "fluid.prefs.auxSchema.letterSpace", // letter space
+                            "cisl.prefs.auxSchema.glossary.demo" // glossary
+                            ]
+        {% elif not prefs_include_glossary %}                            
+        var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
+        var buildGradeNames =  [
+                            "cisl.prefs.auxSchema.starter", // starter set
+                            "fluid.prefs.auxSchema.letterSpace", // letter space
+                            ]        
+        {% endif %}
+
         $(document).ready(function () {            
             var prefsEditor = fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
                     build: {
-                        gradeNames: [                            
-                            "cisl.prefs.auxSchema.starter", // this will add the starter set
-                            "fluid.prefs.auxSchema.letterSpace", // this will add the letter space adjuster and enactor
-                            // "cisl.prefs.auxSchema.glossary.demo" // adds the glossary
-                        ],
+                        gradeNames: buildGradeNames,
                         auxiliarySchema: {
                             "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
-                            "template": "{% static 'shared/html/SeparatedPanelPrefsEditor.html' %}",
+                            "template": buildAuxiliarySchemaTemplate,
                             "terms": {
                                 "templatePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/html' %}",
                                 "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",
@@ -48,19 +60,5 @@
                     }
                 });            
         });
-{% comment %} 
-		$(document).ready(function () {
-            
-		    var uio = fluid.uiOptions.prefsEditor(".flc-prefsEditor-separatedPanel", {
-		        terms: {
-		            "templatePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/html' %}",
-		            "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",
-		        },
-		        "tocTemplate": "lib/infusion/src/components/tableOfContents/html/TableOfContents.html",
-		        "ignoreForToC": {
-		            "overviewPanel": ".flc-overviewPanel"
-		        }
-		    });
-		}); {% endcomment %}
 	        
     </script>

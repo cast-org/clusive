@@ -13,7 +13,7 @@
         <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>     
     </head>
     <body>
-        {% include "shared/preference-panel.html" %}
+        {% block preference_panel %} {% include "shared/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
         <div class="header">
             <a href="{% url 'index' %}">
                 <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />            
