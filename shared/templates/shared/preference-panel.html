@@ -34,12 +34,12 @@
                     build: {
                         gradeNames: [                            
                             "cisl.prefs.auxSchema.starter", // this will add the starter set
-                            // "fluid.prefs.auxSchema.letterSpace", // this will add the letter space adjuster and enactor
+                            "fluid.prefs.auxSchema.letterSpace", // this will add the letter space adjuster and enactor
                             // "cisl.prefs.auxSchema.glossary.demo" // adds the glossary
                         ],
                         auxiliarySchema: {
                             "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
-                            "template": "{% static 'shared/js/lib/infusion/src/framework/preferences/html/SeparatedPanelPrefsEditor.html' %}",
+                            "template": "{% static 'shared/html/SeparatedPanelPrefsEditor.html' %}",
                             "terms": {
                                 "templatePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/html' %}",
                                 "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",

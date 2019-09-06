@@ -26,8 +26,8 @@
                 },
                 "panel": {
                     type: "cisl.prefs.panel.textSize",
-                    template: djangoStaticPrefix + "shared/js/lib/infusion/src/framework/preferences/html/PrefsEditorTemplate-textSize.html",
-                    message: djangoStaticPrefix + "shared/js/lib/infusion/src/framework/preferences/messages/textSize.json"
+                    template: djangoStaticPrefix + "shared/html/PrefsEditorTemplate-textSize.html",
+                    message: djangoStaticPrefix + "shared/messages/textSize.json"
                 },
                 "enactor": {
                     type: "cisl.prefs.enactor.textSize"
@@ -135,19 +135,6 @@
                 "type": "string",
                 "default": "default",
                 "enum": ["default", "bw", "wb", "lgdg", "gw", "bbr"]
-            }
-        }
-    });
-
-    // Redefine the existing textfont schema used by the starter,
-    // adding the Open Dyslexic font
-    fluid.defaults("fluid.prefs.schemas.textFont", {
-        gradeNames: ["fluid.prefs.schemas"],
-        schema: {
-            "fluid.prefs.textFont": {
-                "type": "string",
-                "default": "default",
-                "enum": ["default", "times", "comic", "open-dyslexic", "arial", "verdana"]
             }
         }
     });
