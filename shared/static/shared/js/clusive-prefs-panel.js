@@ -32,17 +32,6 @@
                 "enactor": {
                     type: "cisl.prefs.enactor.textSize"
                 }
-            },
-            "textFont": {
-                "classes": {
-                    "open-dyslexic": "cisl-font-open-dyslexic",
-                },
-                "panel": {
-                    stringArrayIndex: {
-                        textFont: ["textFont-default", "textFont-times", "textFont-comic", "textFont-open-dyslexic", "textFont-arial", "textFont-verdana"],
-                    },
-                    message: djangoStaticPrefix + "shared/js/lib/infusion/src/framework/preferences/messages/textFont.json"
-                }
             }
         }
     });
