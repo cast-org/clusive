@@ -4,9 +4,15 @@
     <head>
         <title>{% block title %}Clusive{% endblock %}</title>
         <link href="{% static 'shared/css/clusive.css' %}" rel="stylesheet">
-        <script type="javascript" src="{% static 'shared/js/main.js' %}"></script>
+        
+        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/Enactors.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditor.css' %}" />
+
+        <script src="{% static 'shared/js/lib/main.js' %}"></script>     
     </head>
     <body>
+        {% include "shared/uio-panel.html" %}
         <div class="header">
             <a href="{% url 'index' %}">
                 <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />            

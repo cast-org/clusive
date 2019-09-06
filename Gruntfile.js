@@ -10,7 +10,24 @@ module.exports = function (grunt) {
             prod: Object.assign(webpackConfig, {mode: "production"})
         },
         clean: {
-            target: "shared/static/shared/js"
+            target: "shared/static/shared/js/lib"
+        },
+        copy: {
+            lib: {
+                files: [
+                {
+                    expand: true,
+                    cwd: "node_modules/infusion/dist",
+                    src: "**",
+                    dest: "shared/static/shared/js/lib/infusion/dist"
+                },
+                {
+                    expand: true,
+                    cwd: "node_modules/infusion/src",
+                    src: "**",
+                    dest: "shared/static/shared/js/lib/infusion/src"
+                }]
+            }
         }
     })
 

@@ -6,7 +6,7 @@ module.exports = {
   entry: './index.js',
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'shared/static/shared/js')
+    path: path.resolve(__dirname, 'shared/static/shared/js/lib')
     },
   resolve: {
       alias: {
