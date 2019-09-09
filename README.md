@@ -37,7 +37,7 @@ You'll need to activate the environment each time you're working on the project 
 
 ### Do the Initial Database Migrations
 
-The current configuration (for initial development) uses sqlite3, so no database setup is required.
+The current configuration (for development) uses sqlite3, so no database setup is required.
 
 * `python manage.py migrate`
 

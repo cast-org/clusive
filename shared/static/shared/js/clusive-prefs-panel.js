@@ -134,9 +134,6 @@
             markupProps: {
                 src: djangoStaticPrefix + "shared/html/SeparatedPanelPrefsEditorFrame.html"
             }
-        },
-        distributeOptions: {
-
         }
     });
 
@@ -145,8 +142,8 @@
         auxiliarySchema: {
             glossary: {
                 panel: {
-                    template: djangoStaticPrefix + "shared/js/lib/infusion/src/framework/preferences/html/PrefsEditorTemplate-glossaryToggle.html",
-                    message: djangoStaticPrefix + "shared/js/lib/infusion/src/framework/preferences/messages/glossary.json"
+                    template: djangoStaticPrefix + "shared/html/PrefsEditorTemplate-glossaryToggle.html",
+                    message: djangoStaticPrefix + "shared/messages/glossary.json"
                 },
                 enactor: {
                     type: "cisl.prefs.enactor.glossary.demo"
@@ -167,7 +164,7 @@
         }
     });
 
-    cisl.prefs.enactor.glossary.demo.applyGlossary = function(enableGlossary, that) {
+    cisl.prefs.enactor.glossary.demo.applyGlossary = function(enableGlossary, that) {        
         // Apply glossary step
         cisl.prefs.enactor.glossary.applyGlossary(enableGlossary, that);
     };

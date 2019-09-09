@@ -34,8 +34,8 @@
         var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditor.html' %}";
         var buildGradeNames =  [
                             "cisl.prefs.auxSchema.starter", // starter set
-                            "fluid.prefs.auxSchema.letterSpace", // letter space
-                            "cisl.prefs.auxSchema.glossary.demo" // glossary
+                            "cisl.prefs.auxSchema.glossary.demo", // glossary
+                            "fluid.prefs.auxSchema.letterSpace" // letter space                            
                             ]
         {% elif not prefs_include_glossary %}                            
         var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
@@ -58,7 +58,7 @@
                             },
                         }
                     }
-                });            
+                });                       
         });
 	        
     </script>

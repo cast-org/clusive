@@ -11,6 +11,11 @@
 
         <script src="{% static 'shared/js/lib/main.js' %}"></script>     
         <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>     
+        <script src="{% static 'shared/js/Glossary.js' %}"></script>
+        <script src="{% static 'shared/js/GlossarySchema.js' %}"></script>
+        <script src="{% static 'shared/js/GlossaryEnactor.js' %}"></script>
+        <script src="{% static 'shared/js/GlossaryPanel.js' %}"></script>        
+        <script src="{% static 'shared/js/images.js' %}"></script>
     </head>
     <body>
         {% block preference_panel %} {% include "shared/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
