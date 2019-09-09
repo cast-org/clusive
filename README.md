@@ -15,6 +15,7 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
   * On Mac, Homebrew is the easiest way to do this (OS X comes with Python 2.7); you'll need to use the *python3* and *pip3* commands to distinguish Python 2 and Python 3, or change your aliases
 * [virtualenv](https://virtualenv.pypa.io/en/stable/installation/) (strongly recommended for maintaining an isolated environment and dependencies)
 * [Postgres](https://www.postgresql.org/) may be necessary for the psycopg2 dependency (Homebrew on OS X can take care of this)
+* [npm](https://www.npmjs.com/), as the front-end dependencies are managed with it
 
 ### Create and activitate virtualenv for the project
 
@@ -24,6 +25,11 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
   - Mac/Linux: `source ENV\bin\activate`
 
 You'll need to activate the environment each time you're working on the project in order to continue using the isolated environment.
+
+### Build front-end Javascript
+
+* `npm install`
+* `grunt build`
 
 ### Install Python Dependencies 
 
