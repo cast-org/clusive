@@ -26,10 +26,15 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
 
 You'll need to activate the environment each time you're working on the project in order to continue using the isolated environment.
 
-### Build front-end Javascript
+### Build front-end Javascript dependencies
 
 * `npm install`
 * `grunt build`
+
+#### Notes
+
+* Front-end JS libraries are combined with Webpack and end up in `shared\static\shared\js\lib\main.js`
+* Front-end assets for infusion and figuration (CSS, etc) are copied to `shared\static\shared\js\lib\` in their own directories
 
 ### Install Python Dependencies 
 
