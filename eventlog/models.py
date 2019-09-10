@@ -35,5 +35,17 @@ class Event(models.Model):
     # TODO preference
     # TODO context (current settings, version of text (eg lexile level), list of glossary words highlighted)
 
+    @classmethod
+    def build(cls, type, action, login_session, group):
+        clusive_user = login_session.user
+        event = cls(type=type,
+                    action=action,
+                    actor=clusive_user,
+                    membership=clusive_user.role,
+                    session=login_session,
+                    group=group)
+        return event
+
+
     def __str__(self):
         return '%s:%s (%s)' % (self.actor.anon_id, self.action, self.id)

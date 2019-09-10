@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'roster.apps.RosterConfig',
     'pages.apps.PagesConfig',
     'eventlog.apps.EventlogConfig',
+    'django_session_timeout.apps.SessionTimeoutConfig',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -149,5 +151,9 @@ LOGGING = {
     }
 }
 
-# Drop session cookie when user closes the browser.
+# Session settings
+SESSION_EXPIRE_SECONDS = 1800   # 30 minutes, in seconds
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+LOGIN_URL = '/account/login'
