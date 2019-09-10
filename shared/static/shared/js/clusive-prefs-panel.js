@@ -3,8 +3,6 @@
 (function (fluid) {
     "use strict";
 
-    var djangoStaticPrefix = "/static/"
-
     // This removes the tableOfContents and
     // enhanceInputs preferences from the
     // default Infusion starter auxiliary schema
@@ -26,8 +24,8 @@
                 },
                 "panel": {
                     type: "cisl.prefs.panel.textSize",
-                    template: djangoStaticPrefix + "shared/html/PrefsEditorTemplate-textSize.html",
-                    message: djangoStaticPrefix + "shared/messages/textSize.json"
+                    template: DJANGO_STATIC_ROOT + "shared/html/PrefsEditorTemplate-textSize.html",
+                    message: DJANGO_STATIC_ROOT + "shared/messages/textSize.json"
                 },
                 "enactor": {
                     type: "cisl.prefs.enactor.textSize"
@@ -132,7 +130,7 @@
         gradeNames: ["fluid.prefs.separatedPanel"],
         iframeRenderer: {
             markupProps: {
-                src: djangoStaticPrefix + "shared/html/SeparatedPanelPrefsEditorFrame.html"
+                src: DJANGO_STATIC_ROOT + "shared/html/SeparatedPanelPrefsEditorFrame.html"
             }
         }
     });
@@ -142,8 +140,8 @@
         auxiliarySchema: {
             glossary: {
                 panel: {
-                    template: djangoStaticPrefix + "shared/html/PrefsEditorTemplate-glossaryToggle.html",
-                    message: djangoStaticPrefix + "shared/messages/glossary.json"
+                    template: DJANGO_STATIC_ROOT + "shared/html/PrefsEditorTemplate-glossaryToggle.html",
+                    message: DJANGO_STATIC_ROOT + "shared/messages/glossary.json"
                 },
                 enactor: {
                     type: "cisl.prefs.enactor.glossary.demo"
