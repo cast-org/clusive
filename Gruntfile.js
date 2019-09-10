@@ -26,6 +26,12 @@ module.exports = function (grunt) {
                     cwd: "node_modules/infusion/src",
                     src: "**",
                     dest: "shared/static/shared/js/lib/infusion/src"
+                },
+                {
+                    expand: true,
+                    cwd: "node_modules/figuration/dist",
+                    src: "**",
+                    dest: "shared/static/shared/js/lib/figuration"
                 }]
             }
         }
