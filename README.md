@@ -35,6 +35,7 @@ You'll need to activate the environment each time you're working on the project 
 
 * Front-end JS libraries are combined with Webpack and end up in `shared\static\shared\js\lib\main.js`
 * Front-end assets for infusion and figuration (CSS, etc) are copied to `shared\static\shared\js\lib\` in their own directories
+* The Django template at `shared\templates\shared\base.html` sets a Javascript global called `DJANGO_STATIC_ROOT` for the use of client-side Javascript needing to construct references to static content
 
 ### Install Python Dependencies 
 
