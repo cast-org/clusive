@@ -13,5 +13,7 @@ body {
 }
 
 .login-status {
+    margin-top: 2em;
     float: right;
+    clear: right;
 }
