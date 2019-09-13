@@ -3,14 +3,14 @@
 <html lang="en">
     <head>
         <title>{% block title %}Clusive{% endblock %}</title>
-         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" />
-         
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" />
+
         <link href="{% static 'shared/css/clusive.css' %}" rel="stylesheet">
-        
+
         <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/Enactors.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditor.css' %}" />
-        
+
         {% comment %}
         Sets constants based on Django's environment in order to make them available
         to client-side Javascript
@@ -19,27 +19,39 @@
         var DJANGO_STATIC_ROOT = "{% static '' %}"
         </script>
 
-        <script src="{% static 'shared/js/lib/main.js' %}"></script>     
-        <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>     
+        <script src="{% static 'shared/js/lib/main.js' %}"></script>
+        <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>
         <script src="{% static 'shared/js/Glossary.js' %}"></script>
         <script src="{% static 'shared/js/GlossarySchema.js' %}"></script>
         <script src="{% static 'shared/js/GlossaryEnactor.js' %}"></script>
-        <script src="{% static 'shared/js/GlossaryPanel.js' %}"></script>        
+        <script src="{% static 'shared/js/GlossaryPanel.js' %}"></script>
         <script src="{% static 'shared/js/images.js' %}"></script>
     </head>
     <body>
+        <div class="header-cast">
+            <div class="container-fluid">
+                <div class="navbar">
+                    <a href="http://www.cast.org" class="header-cast-logo navbar-brand">
+                        <img src="{% static 'shared/images/cast/logo-header.svg' %}" alt="">
+                        <div class="header-cast-title">CAST</div>
+                        <div class="header-cast-tagline"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         {% block preference_panel %} {% include "shared/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
         <div class="header">
             <a href="{% url 'index' %}">
-                <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />            
+                <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />
             </a>
             <div class="login-status">
-                {% if not user.is_anonymous %}                
+                {% if not user.is_anonymous %}
                         Logged in as {{ user }} | <a href="{% url 'logout' %}">Logout</a>
                 {% else %}
                         <a href="{% url 'login' %}">Login</a>
-                {% endif %}         
-            </div>   
+                {% endif %}
+            </div>
         </div>
         <div class="content">
             {% block content %}{% endblock %}

@@ -17,5 +17,6 @@ import execJQueryUIDraggable from "script-loader!jquery-ui/ui/widgets/draggable.
 import execJQueryUITooltip from "script-loader!jquery-ui/ui/widgets/tooltip.js"
 
 import execInfusion from 'script-loader!infusion';
+import execPopperJs from 'script-loader!popper.js';
 import execFiguration from 'script-loader!figuration';
 import execMarkJs from 'script-loader!mark.js';
