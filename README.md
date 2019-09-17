@@ -31,11 +31,20 @@ You'll need to activate the environment each time you're working on the project 
 * `npm install`
 * `grunt build`
 
-#### Notes
+#### Notes on front-end dependencies generally
 
 * Front-end JS libraries are combined with Webpack and end up in `shared\static\shared\js\lib\main.js`
 * Front-end assets for infusion and figuration (CSS, etc) are copied to `shared\static\shared\js\lib\` in their own directories
 * The Django template at `shared\templates\shared\base.html` sets a Javascript global called `DJANGO_STATIC_ROOT` for the use of client-side Javascript needing to construct references to static content
+
+#### Notes on Readium dependencies
+
+Until the `@dita/reader` repo is made public, you'll need to do the following to have the Readium code properly integrated and building:
+
+1. Check out a local copy of ` https://github.com/d-i-t-a/R2D2BC.git`, install / build it, and run `npm link` in that repo's directory
+2. Run `npm link @dita/reader` in this repo's directory
+
+The above process creates a package link between this project's `node_modules` directory (in `@dita/reader`) and the local directory containing the reader code, so it can be pulled in by the build scripts
 
 ### Install Python Dependencies 
 

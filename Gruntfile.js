@@ -32,6 +32,11 @@ module.exports = function (grunt) {
                     cwd: "node_modules/figuration/dist",
                     src: "**",
                     dest: "shared/static/shared/js/lib/figuration"
+                }, {
+                    expand: true,
+                    cwd: "node_modules/@dita/reader/dist",
+                    src: "**",
+                    dest: "shared/static/shared/js/lib/reader"
                 }]
             }
         }
