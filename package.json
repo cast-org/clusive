@@ -1,0 +1,34 @@
+{
+  "name": "clusive",
+  "version": "0.0.1",
+  "description": "Front-end JS management for Django-based Clusive web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cast-org/clusive.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cast-org/clusive/issues"
+  },
+  "homepage": "https://github.com/cast-org/clusive#readme",
+  "dependencies": {
+    "grunt": "1.0.4",
+    "grunt-contrib-clean": "2.0.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-webpack": "3.1.3",
+    "script-loader": "0.7.2",
+    "expose-loader": "0.7.5",
+    "webpack": "4.26.1",
+    "webpack-cli": "3.1.2",
+    "figuration": "https://github.com/cast-org/figuration.git#v4-tooltip-iframe",
+    "infusion": " 3.0.0-dev.20190820T145526Z.389bd6937.FLUID-6394",
+    "jquery": "3.2.1",
+    "jquery-ui": "1.12.1",
+    "mark.js": "8.11.1"
+  }
+}

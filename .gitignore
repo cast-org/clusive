@@ -142,3 +142,11 @@ dmypy.json
 .idea
 
 .vscode
+
+# NPM build artifacts
+
+node_modules
+
+# Webpack JS build artifacts
+
+shared/static/shared/js/main.js
