@@ -54,24 +54,3 @@
 
 // Additional site specific items
 @import "site";
-
-
-body {
-    margin: 0;
-    font-family: 'Source Sans Pro', sans-serif;
-}
-
-.header {
-    background-color: #ea6550;
-    padding: 1em;
-}
-
-.content {
-    margin: 1em;
-}
-
-.login-status {
-    margin-top: 2em;
-    float: right;
-    clear: right;
-}

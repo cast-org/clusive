@@ -1,4 +1,5 @@
 // Override some Figuration's generated CSS
+// =====
 
 // Global
 $enable-palette:                    false;
@@ -92,3 +93,14 @@ $enable-utility-spacing:            false;
 $enable-utility-text:               false;
 $enable-utility-valign:             false;
 $enable-utility-visibility:         false;
+
+
+// Default Figuration setting overrides
+// =====
+
+$font-family-sans-serif:    "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+// Clusive specific settings
+// =====
+
+$clusive-orange:            #ea6550;
