@@ -1,0 +1,106 @@
+// Override some Figuration's generated CSS
+// =====
+
+// Global
+$enable-palette:                    false;
+$enable-print-styles:               false;
+$enable-sizing:                     false;
+
+// Content
+$enable-root:                       false;
+$enable-typography-lead:            false;
+$enable-typography-mark:            false;
+$enable-typography-initialism:      false;
+$enable-typography-blockquote:      false;
+$enable-code:                       false;
+$enable-img-thumbnail:              false;
+$enable-figure:                     false;
+$enable-table:                      false;
+$enable-btn-outline:                false;
+$enable-btn-outline-colors:         false;
+$enable-btn-block:                  false;
+$enable-form-control-sizing:        false;
+$enable-form-control-static:        false;
+$enable-form-label-sizing:          false;
+$enable-form-text:                  false;
+$enable-form-file:                  false;
+$enable-form-color:                 false;
+$enable-form-row:                   false;
+$enable-form-inline:                false;
+$enable-form-validation-tooltip:    false;
+$enable-form-validation-icon:       false;
+
+// Components
+$enable-alert:                      false;
+$enable-badge:                      false;
+$enable-breadcrumb:                 false;
+$enable-btn-group:                  false;
+$enable-card-title:                 false;
+$enable-card-subtitle:              false;
+$enable-card-text:                  false;
+$enable-card-link:                  false;
+$enable-card-list:                  false;
+$enable-card-table:                 false;
+$enable-card-header-tabs:           false;
+$enable-card-header-pills:          false;
+$enable-card-img-overlay:           false;
+$enable-card-img-horizontal:        false;
+$enable-card-group:                 false;
+$enable-card-columns:               false;
+$enable-input-group:                false;
+$enable-jumbotron:                  false;
+$enable-list-bulleted:              false;
+$enable-list-ordered:               false;
+$enable-list-group:                 false;
+$enable-list-horizontal:            false;
+$enable-list-item-colors:           false;
+$enable-media:                      false;
+$enable-navbar-text:                false;
+$enable-navbar-divider:             false;
+$enable-navbar-collapse:            false;
+$enable-navbar-toggle:              false;
+$enable-navbar-light:               false;
+$enable-navbar-dark:                false;
+$enable-nav-tabs:                   false;
+$enable-nav-pills:                  false;
+$enable-nav-vertical:               false;
+$enable-nav-fill:                   false;
+$enable-nav-justify:                false;
+$enable-tab-content:                false;
+$enable-pagination:                 false;
+$enable-progress:                   false;
+
+// Widgets
+$enable-dropdown:                   false;
+$enable-modal:                      false;
+$enable-popover:                    false;
+$enable-tooltip:                    false;
+
+// Utilities
+$enable-utility-bg:                 false;
+$enable-utility-border:             false;
+$enable-utility-clearfix:           false;
+$enable-utility-display:            false;
+$enable-utility-embed:              false;
+$enable-utility-flex:               false;
+$enable-utility-float:              false;
+$enable-utility-drag:               false;
+$enable-utility-overflow:           false;
+$enable-utility-position:           false;
+$enable-utility-shadow:             false;
+$enable-utility-sizing:             false;
+$enable-utility-spacing:            false;
+$enable-utility-text:               false;
+$enable-utility-valign:             false;
+$enable-utility-visibility:         false;
+
+
+// Default Figuration setting overrides
+// =====
+
+$font-family-sans-serif:    "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+// Clusive specific settings
+// =====
+
+$clusive-orange:            #ea6550;
