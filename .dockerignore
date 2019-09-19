@@ -1,0 +1,9 @@
+.idea
+.git*
+.browserlistrc
+.dockerignore
+.gitignore
+db.sqlite3
+Dockerfile
+venv
+node_modules

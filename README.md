@@ -22,7 +22,7 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
 * Create: `virtualenv ENV`
 * Activate: 
   - Windows: `.\ENV\Scripts\activate`
-  - Mac/Linux: `source ENV\bin\activate`
+  - Mac/Linux: `source ENV/bin/activate`
 
 You'll need to activate the environment each time you're working on the project in order to continue using the isolated environment.
 
