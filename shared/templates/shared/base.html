@@ -26,6 +26,11 @@
         <script src="{% static 'shared/js/GlossaryEnactor.js' %}"></script>
         <script src="{% static 'shared/js/GlossaryPanel.js' %}"></script>        
         <script src="{% static 'shared/js/images.js' %}"></script>
+
+        {% comment %} 
+        For injection of additional markup into the head are
+        {% endcomment %}
+        {% block head_additional %}{% endblock %}
     </head>
     <body>
         {% block preference_panel %} {% include "shared/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
