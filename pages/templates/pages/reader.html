@@ -52,7 +52,8 @@ var exports = {};
                         fontFamily: true,
                         fontSize: true,
                         appearance: true,
-                        scroll: true
+                        scroll: true,
+                        lineHeight: true
                     },
                 },
                 rights: {
@@ -83,10 +84,8 @@ var exports = {};
                 console.log("instance.bookmarkModule ", instance.bookmarkModule)
             }).catch(error => {
                 console.error("error.message ", error.message);
-            });
-        // })();
+            });        
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
 {% endblock %}
