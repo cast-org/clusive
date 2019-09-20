@@ -1,0 +1,14 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Welcome to Clusive{% endblock %}
+
+{% block content %}
+<h1>Available Publications</h1>
+<ul>
+{% for pub_id in pubs %}
+<li>
+<a href="{% url 'reader' pub_id=pub_id%}">{{ pub_id }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}
