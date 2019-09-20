@@ -1,12 +1,9 @@
 # Build docker image
-#   After 'npm run build':
-#   docker build . -t dockerreg.cast.org/corgi:latest -t dockerreg.cast.org/corgi:`git rev-parse HEAD` -t us.gcr.io/acoustic-art-180717/corgi:`git rev-parse HEAD`
-#   docker run -p 3000:80 -e APP_CONFIG=qa dockerreg.cast.org/corgi
-
-### This is a multi-stage build
+#   docker build . -t clusive
+#   docker run -p 8000:8000 -e DJANGO_CONFIG=local clusive
 
 ###
-### The builder image
+### The builder image (first of two stages)
 ###
 
 FROM python:3.7-alpine as base
@@ -27,7 +24,7 @@ RUN ./node_modules/grunt-cli/bin/grunt build
 RUN rm -rf node_modules Grunt* package*
 
 ###
-### The image for deployment
+### Construct the slim image for deployment (second stage)
 ###
 
 FROM python:3.7-alpine
