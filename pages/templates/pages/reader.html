@@ -29,34 +29,11 @@ var exports = {};
             </div>
         </main>
 
-        <a id="previous-chapter" rel="prev" role="button" aria-labelledby="previous-label" style="top: 105px;left: 50%;position: fixed;color: #000;height: 24px;background: #d3d3d33b; width: 150px;transform: translate(-50%, 0); display: none">
-            <i class="material-icons black-text" style="left: calc(50% - 12px);
-            position: relative;">keyboard_arrow_up</i>
-        </a>
-        <a id="next-chapter" rel="next" role="button" aria-labelledby="next-label" style="bottom: 0;left: 50%;position: fixed;color: #000;height: 24px;background: #d3d3d33b; width: 150px;transform: translate(-50%, 0); display: none">
-            <i class="material-icons black-text" style="left: calc(50% - 12px);
-            position: relative;">keyboard_arrow_down</i>
-        </a>
-
-    </div>
-
-    <footer id="footerMenu">
-        <a rel="prev" class="disabled" role="button" aria-labelledby="previous-label" style="top: 50%;left:0;position: fixed;height: 100px;
-                background: lightgray;">
-            <i class="material-icons black-text" style="top: calc(50% - 12px);
-                    position: relative;">keyboard_arrow_left</i>
-        </a>
-        <a rel="next" class="disabled" role="button" aria-labelledby="next-label" style="top: 50%;right:0;position: fixed;height: 100px;
-                background: lightgray;">
-            <i class="material-icons black-text" style="top: calc(50% - 12px);
-                    position: relative;">keyboard_arrow_right</i>
-        </a>
-    </footer>
-
     <script>
-        var url = "http://localhost:8000/static/shared/pubs/serp-eating-meat/manifest.json";
-        
+        var url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "{% static 'shared/pubs/serp-eating-meat/manifest.json' %}"        
+        console.log(url)
         var injectables = [
+            {type:'style', url: '{% static 'shared/css/cusive-reader-content.css' %}'}
             /* {type:'style', url: 'http://localhost:4444/viewer/readium-css/ReadiumCSS-before.css', r2before: true},
             {type:'style', url: 'http://localhost:4444/viewer/readium-css/ReadiumCSS-default.css', r2default: true},
             {type:'style', url: 'http://localhost:4444/viewer/readium-css/ReadiumCSS-after.css', r2after: true},
