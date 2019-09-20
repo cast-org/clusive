@@ -29,6 +29,7 @@
     "infusion": " 3.0.0-dev.20190820T145526Z.389bd6937.FLUID-6394",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
-    "mark.js": "8.11.1"
+    "mark.js": "8.11.1",
+    "readium-css": "https://github.com/readium/readium-css.git#bd6462780d1ed724181df4fce3d3a22b2f15ab45"
   }
 }

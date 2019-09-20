@@ -37,6 +37,11 @@ module.exports = function (grunt) {
                     cwd: "node_modules/@dita/reader/dist",
                     src: "**",
                     dest: "shared/static/shared/js/lib/reader"
+                }, {
+                    expand: true,
+                    cwd: "node_modules/readium-css/css/dist",
+                    src: "**",
+                    dest: "shared/static/shared/js/lib/readium-css"
                 }]
             }
         }
