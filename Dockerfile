@@ -32,6 +32,8 @@ RUN rm -rf node_modules Grunt* package*
 
 FROM python:3.7-alpine
 
+RUN apk add --no-cache postgresql-libs
+
 # No point caching bytecode for single run
 ENV PYTHONDONTWRITEBYTECODE 1
 
@@ -51,6 +53,8 @@ COPY --from=base /app /app
 RUN chown -R app:app /app
 
 USER app
+
+RUN python manage.py collectstatic --no-input
 
 EXPOSE 8000
 STOPSIGNAL SIGINT

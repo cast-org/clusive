@@ -145,8 +145,10 @@ dmypy.json
 
 # NPM build artifacts
 
-node_modules
+/node_modules
 
 # Webpack JS build artifacts
 
-shared/static/shared/js/main.js
+/shared/static/shared/js/main.js
+
+/staticfiles
