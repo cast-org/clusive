@@ -41,7 +41,6 @@ You'll need to activate the environment each time you're working on the project 
 
 Until the `@dita/reader` repo is made public, you'll need to do the following to have the Readium code properly integrated and building:
 
-
 **Note**: This needs to be done after every run of `npm install`, because the install delinks any linked packages (see https://github.com/npm/npm/issues/17287)
 
 1. Check out a local copy of ` https://github.com/d-i-t-a/R2D2BC.git`, install / build it, and run `npm link` in that repo's directory
