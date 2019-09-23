@@ -22,7 +22,7 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
 * Create: `virtualenv ENV`
 * Activate: 
   - Windows: `.\ENV\Scripts\activate`
-  - Mac/Linux: `source ENV\bin\activate`
+  - Mac/Linux: `source ENV/bin/activate`
 
 You'll need to activate the environment each time you're working on the project in order to continue using the isolated environment.
 
@@ -66,3 +66,24 @@ The current configuration (for development) uses sqlite3, so no database setup i
 * Launch the server: `python manage.py runserver`
 * Confirm you see the Django success page at `http://localhost:8000`
 * Confirm the superuser can log in at `http://localhost:8000/admin/` 
+
+## Running under Docker
+
+Build:
+ 
+`docker build . -t clusive`
+
+Run for local development (creates an empty sqlite database at each run):
+
+`docker run -e DJANGO_CONFIG=local -p 8000:8000 clusive` 
+
+Run with production settings and Postgres database:
+
+```
+docker run -p 8000:8000 \\
+  -e DJANGO_CONFIG=prod -e DJANGO_SECRET_KEY=<key>  \\
+  -e DJANGO_DB_HOST=<host> -e DJANGO_DB_NAME=<name> \\
+  -e DJANGO_DB_USER=<user> -e DJANGO_DB_PASSWORD=<password> \\
+  clusive
+```
+
