@@ -7,7 +7,7 @@
         gradeNames: ["fluid.modelComponent"],        
         model: {
             // Must be linked to a preferences editor model instance
-            preferences: null
+            preferences: null,
         },
         modelListeners: {
             "preferences.fluid_prefs_textSize": {
@@ -21,7 +21,7 @@
             "preferences.fluid_prefs_lineSpace": {
                 func: "{that}.enactReaderLineSpace",
                 args: ["{change}.value"]
-        }                                                                                        
+            }                                                                                     
         },
         invokers: {
             enactReaderTextSize: {
@@ -67,13 +67,11 @@
             reader.applyUserSettings({letterSpacing: change - 0.999})            
         }
     }
-
-    // This one doesn't currently work because the lineheight pref
+    
     cisl.prefs.reader.enactReaderLineSpace = function (change) {   
         var reader = cisl.prefs.reader.getReaderInstance();
         if(reader) {            
-            reader.applyUserSettings({lineHeight: change})
-            console.log("enactReaderLineSpace", change)
+            reader.applyUserSettings({lineHeight: change})            
         }        
     }
 
