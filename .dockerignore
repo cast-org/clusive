@@ -8,3 +8,4 @@ Dockerfile
 venv
 node_modules
 staticfiles
+db.sqlite3
