@@ -1,0 +1,88 @@
+[
+    {
+        "word": "symbolic",
+        "definition": "Representative  of something else, such as an idea.",
+        "alternateForms": [ "symbol", "symbolize"],
+        "contextSentence": "A nation’s flag is symbolic of that country or its national pride.",
+        "images": [
+            {
+                "src": "images/glossary/symbolic-1.jpg",
+                "alt": "Photo of section of an American flag.",
+                "description": "Photo of part of an American flag. A square blue section with white stars is in the upper left quarter of the picture. Vertical stripes alternating between red and white make up the rest of the picture.",
+                "caption": "The American flag is a symbol of the United States."
+            },
+            {
+                "src": "images/glossary/symbolic-2.png",
+                "alt": "Drawing of a peace sign.",
+                "description": "A circle outlined in black, with a vertical line going from the top to the bottom points of the circle.A short line goes from the center of the circle diagonally to a point on the lower left of the circle edge. Another short line goes from the same center point diagonally to a point on the lower right of the circle.",
+                "caption": "This sign is a symbol for peace."
+            }
+        ]
+    },
+    {
+        "word": "exports",
+        "definition": "A good or service sent to another country for sale.",
+        "alternateForms": [ "export", "exported", "exporting" ],
+        "contextSentence": "China exports many things so that people around the world can buy them.",
+        "images": [
+            {
+                "src": "images/glossary/exports-1.jpg",
+                "alt": "Photo of a large ship moving through water.",
+                "description": "A long, large ship seen from the stern, or back of the ship. The front, or bow, if the ship is toward the left side of the photo. White waves and foam can be seen at the front and trailing from the back of the ship. On the flat horizontal surface, or deck, of the ship are columns of large rectangular boxes. These boxes are stacked on top of each other in columns five or six boxes high, and the entire surface of the ship’s deck is covered with these rectangular boxes.", 
+                "caption": "Large ships are a way that exports are moved around the world."
+            },
+            {
+                "src": "images/glossary/exports-2.jpg",
+                "alt": "Map with lines showing location of U.S. exports and imports.",
+                "description": "Old map with North and South American in the center. A thick red line connects an area labeled “United States” to an area labeled “Europe.” Thinner red lines connect “United States” with Mexico, Cuba, Central America, South America, Africa, areas labeled “Asia” and Australia. A thick blue line connects United States to Europe. Thinner blue lines connect United States to Mexico, Cuba, Central America, South America, Africa, Hawaii, areas labeled “Asia” and Australia. At the bottom of the map is a map key with red labeled “Exports,” and blue labeled “Imports.”",
+                "caption": "This map shows that most U.S. exports went to Europe in 1899."
+            }
+        ]
+    },
+    {
+        "word": "domestic",
+        "definition": "Made in, done in, or otherwise related to one’s own country.",
+        "alternateForms": [ "domesticate" ],
+        "contextSentence": "An imported product is something that comes from another country. A domestic product comes from the country you live in.",
+        "images": [
+            {
+                "src": "images/glossary/domestic-1.jpg",
+                "alt": "Photo of the front section of a car.",
+                "description": "Photo showing the front of a red car, facing toward the left. Two headlights are on either side of a center section, in which is a metal figure of a horse. On the hood area above the lights and metal horse area are the letters “F O R D”. Part of the car’s windshield can be seen in the background of the photo in the upper right.", 
+                "caption": "Ford is a domestic car company in the U.S."
+            }
+        ]
+    },
+    {
+        "word": "nutrients",
+        "definition": "The substances in food that are important for energy, growth, development, and reproduction.",
+        "alternateForms": [ "nutrient" ],
+        "contextSentence": "Milk has important nutrients, like calcium and Vitamin D, that are important for healthy teeth and bones.",
+        "images": [
+            {
+                "src": "images/glossary/nutrients-1.jpg",
+                "alt": "Photo of vegetables, fruits, herbs, and nuts.",
+                "description": "A variety of foods arranged on a white background. Foods pictured include, from the top left and moving clockwise, grapes, yellow tomato, leafy greens, carrots,  red tomato, rosemary, chard, baby carrot, raspberries, nuts, and greens.",
+                "caption": "Different foods provide different combinations of nutrients."
+            }
+        ]
+    },
+    {
+        "word": "consumption",
+        "definition": "The using up of something.",
+        "alternateForms": [
+            "consume",
+            "consumed",
+            "consuming"
+        ],
+        "contextSentence": "The quick consumption of the cake by the children meant that there was no cake left for the adults.",
+        "images": [
+            {
+                "src": "images/glossary/nutrients-1.jpg",
+                "alt": "Photo of a child eating food.",
+                "description": "A small child sits in a chair with an attached tray in front. A plate filled with food is on the tray. The child holds one of the pieces of food on the tray and is putting it in her mouth.",
+                "caption": "Consuming a range of foods is the basis of a healthy diet."
+            }
+        ]
+    }
+]

@@ -1,0 +1,32 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "https://schema.org/Article",
+        "headline": "Battle of Lexington",
+        "publisher": "CAST",
+        "language": "en",
+        "modified": "2019-01-09"
+    },
+    "readingOrder": [
+        {"href": "lexington.html", "type": "text/html"}
+    ],
+    "resources": [
+        {"href": "images/plastic-bags-duncan-hull.jpg", "type": "image/jpeg", "attribution": {
+            "title": "1 million plastic bags are in use every minute",
+            "author": "Duncan Hull",
+            "source": "Flickr (https://www.flickr.com/photos/dullhunk/14516738482)",
+            "license": "CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/)"
+            }},
+        {"href": "images/plastic-bags-evelyngiggles.jpg", "type": "image/jpeg", "attribution": {
+            "title": "plastic bags awaiting recycling",
+            "author": "EvelynGiggles",
+            "source": "Flickr (https://www.flickr.com/photos/evelynishere/2840300715)",
+            "license": "CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/)"
+        }},
+        {"href": "images/recycle-symbol.jpg", "type": "image/jpeg"}
+    ],
+    "links": [
+        {"title": "Original", "rel": "self", "href": "cast-lexington", "type": "application/webpub+json"},
+        {"title": "Modern", "rel": "alternate", "href": "cast-lexington-modern", "type":  "application/webpub+json"}
+    ]
+}

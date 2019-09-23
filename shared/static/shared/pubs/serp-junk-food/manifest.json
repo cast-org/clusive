@@ -1,0 +1,27 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "https://schema.org/Article",
+        "headline": "Junk food: Should schools sell it?",
+        "publisher": "Word Generation",
+        "language": "en",
+        "modified": "2019-01-09"
+    },
+    "readingOrder": [
+        {"href": "junk-food.html", "type": "text/html"}
+    ],
+    "resources": [
+        {"href": "images/junk1-skeeze.jpg", "type": "image/jpeg", "attribution": {
+            "title": "junk1",
+            "author": "skeeze",
+            "source": "Pixabay (https://pixabay.com/en/food-candy-sugar-confection-3195571/)",
+            "license": "Pixabay license (https://pixabay.com/en/service/license/)"
+            }},
+        {"href": "images/junk2-tesa-photography.jpg", "type": "image/jpeg", "attribution": {
+            "title": "junk2",
+            "author":"Tesa Photography",
+            "source": "Pixabay (https://pixabay.com/en/diabetes-finger-glucose-test-776999/)",
+            "license": "Pixabay license (https://pixabay.com/en/service/license/)"
+        }}
+        ]
+    }

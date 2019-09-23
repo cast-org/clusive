@@ -1,0 +1,50 @@
+[
+    {
+        "word": "incorporate",
+        "definition": "to include.",
+        "alternateForms": [ "incorporates", "incorporated"],
+        "usage": "When you make pancakes, you need to stir and incorporate all the ingredients together until the batter is smooth.",
+        "images": [
+            {
+                "src": "images/glossary/incorporate1.jpg",
+                "alt": "Photo of fruits, leaves, and two filled glasses.",
+                "description": "Photo of two glasses, filled with thick liquid. One glass is filled with pink liquid and has a strawberry slice on its rim. The other glass is filled with green liquid and has a slice of green kiwi on its rim. Around the base of the glasses are kiwis, strawberries, and sprigs of plant leaves.",
+                "caption": "Fruits and vegetables are incorporated together to make delicious smoothies."
+            }
+        ]
+    },
+    {
+        "word": "initiative",
+        "definition": "Plan or strategy to solve a problem",
+        "alternateForms": [ "initiatives" ],
+        "usage": "The principal’s new initiative gives laptops to every student as a way to help students to learn."
+    },
+    {
+        "word": "nutritious",
+        "definition": "Having substances needed to ensure health, growth, development, and reproduction.",
+        "alternateForms": [ "nutrition" ],
+        "usage": "Vitamins and minerals in vegetables make them nutritious and part of a healthy diet for people.",
+        "images": [
+            {
+                "src": "images/glossary/nutritious1.jpg",
+                "alt": "Photo of a basket filled with mixed fruits.",
+                "description": "A basket filled with a mix of whole fruits, including bananas, oranges, apples, plums, grapes and pears.", 
+                "caption": "Schools could fill snack machines with nutritious foods like fruit, vegetables, and nuts."
+            }
+        ]
+    },
+    {
+        "word": "encourage",
+        "definition": "to attempt to convince or inspire a thought or action.",
+        "alternateForms": [ "encourages", "encouraged", "encouraging" ],
+        "usage": "Her parents encourage her to practice so she will get better at soccer.",
+        "images": [
+            {
+                "src": "images/glossary/encourage1.jpg",
+                "alt": "Photo of a coach and player during a ballgame.",
+                "description": "Photo of two people standing, facing away from the viewer. The person on the left is older, is talking to the person on her right, and has her hand on that person’s back. The person on the right is dressed in a uniform, wears a helmet, and holds a bat.",
+                "caption": "A coach takes time to talk and encourage a player during a pause in the game."
+            }
+        ]
+    }
+]

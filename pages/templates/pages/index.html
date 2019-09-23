@@ -4,4 +4,5 @@
 
 {% block content %}
 <h1>Welcome to Clusive{% if not user.is_anonymous %}, {{ user.first_name }}{% endif %}</h1>
+<a href="{% url 'reader_index' %}">Browse Available Publications</a>
 {% endblock %}
