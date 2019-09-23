@@ -27,34 +27,40 @@ module.exports = function (grunt) {
                 {
                     expand: true,
                     cwd: "node_modules/infusion/dist",
+                    nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/infusion/dist"
                 },
                 {
                     expand: true,
                     cwd: "node_modules/infusion/src",
+                    nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/infusion/src"
                 },
                 {
                     expand: true,
                     cwd: "node_modules/figuration/dist",
+                    nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/figuration"
                 }, {
                     expand: true,
                     cwd: "node_modules/@dita/reader/dist",
+                    nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/reader"
                 }, {
                     expand: true,
                     cwd: "node_modules/readium-css/css/dist",
+                    nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/readium-css"
                 },
                 {
                     expand: true,
                     cwd: "node_modules/popper.js/dist/",
+                    nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/popper.js"
                 }]
