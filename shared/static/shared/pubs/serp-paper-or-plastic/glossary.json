@@ -1,0 +1,84 @@
+[
+    {
+        "word": "applaud",
+        "definition": "To show that you strongly approve of a person or action.",
+        "alternateForms": [ "applauds", "applauding", "applauded"],
+        "images": [
+            {
+                "src": "images/glossary/applaud-1.jpg",
+                "alt": "Photo of people clapping.",
+                "description": "Two people, one in the foreground and one in the background, are shown clapping and smiling."
+            },
+            {
+                "src": "images/glossary/applaud-3.jpg",
+                "alt": "Photo of people with thumbs up.",
+                "description": "Two people stand together, smiling at the viewer. Each person holds their hand up with fingers curled into a fist and a thumb pointing up."
+            }
+        ]
+    },
+    {
+        "word": "ban",
+        "definition": "To forbid something from happening.",
+        "alternateForms": [ "bans", "banned", "banning" ]
+    },
+    {
+        "word": "biodegradable",
+        "definition": "Something that can decompose or break down naturally.",
+        "alternateForms": [ "biodegrade", "biodegrades", "biodegradables" ]
+    },
+    {
+        "word": "landfill",
+        "definition": "An area where trash that has been collected is brought and buried underground.",
+        "alternateForms": [ "landfills" ],
+        "images": [
+            {
+                "src": "images/glossary/landfill-1.jpg",
+                "alt": "Photo of a large pile of trash.",
+                "description": "A large pile of trash made up of plastic, metal, paper, wood, garbage, plants, and more. The materials are mixed together into a single, large heap of material."
+            }
+        ]
+    },
+    {
+        "word": "overstep",
+        "definition": "Going beyond accepted limits.",
+        "alternateForms": [ "oversteps", "overstepped", "overstepping" ]
+    },
+    {
+        "word": "petroleum",
+        "definition": "Another word for oil, petroleum is a fuel that is made up of the decomposed remains of living things. There is a limited amount of petroleum in the world.",
+        "alternateForms": [],
+        "images": [
+            {
+                "src": "images/glossary/petroleum-2.jpg",
+                "alt": "Photo of an ship built to transport oil.",
+                "description": "A very long, large ship is shown moving over water, away from the viewer. The deck, or top surface, of the ship is large and flat. A  structure of several stories rises from the flat deck at the back of the ship."
+            }
+        ]
+
+
+    },
+    {
+        "word": "pigment",
+        "definition": "A powder that, when mixed with a liquid, creates an ink, paint, or dye.",
+        "alternateForms": [ "pigments" ],
+        "images": [
+            {
+                "src": "images/glossary/pigment-1",
+                "alt": "Photo of pieces of colored chalk.",
+                "description": "Six rectangular shaped pieces of chalk on a flat surface. There is one piece of chalk in the foreground, and each remaining piece of chalk is lined up behind the one before it. Each piece of chalk is a different color. From front to back, the colors of the pieces of chalk are: red, orange, yellow, green, blue, purple."
+            }
+        ]
+    },
+    {
+        "word": "resource",
+        "definition": "Things that are needed for a society or organization to run well. Natural resources are things from nature that are needed for human society to run well.",
+        "alternateForms": [ "resources" ],
+        "images": [
+            {
+                "src": "images/glossary/resource-1.jpg",
+                "alt": "Photo of water with tree-covered hill in background.",
+                "description": "Mist rises from an area of water. The water has many colors in it, including yellow, gray, white, and brown. A tree-covered hill is in the background, partly hidden by the mist rising from the water."
+            }
+        ]
+    }
+]

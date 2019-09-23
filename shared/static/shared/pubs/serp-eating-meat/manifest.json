@@ -1,0 +1,27 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "https://schema.org/Article",
+        "headline": "Should people continue to eat meat?",
+        "publisher": "Word Generation",
+        "language": "en",
+        "modified": "2019-01-09"
+    },
+    "readingOrder": [
+        {"href": "meat.html", "type": "text/html"}
+    ],
+    "resources": [
+        {"href": "images/meat1-public-domain.jpg", "type": "image/jpeg", "attribution": {
+            "title": "meat 1",
+            "author": "Public Domain Pictures",
+            "source": "Pixabay (https://pixabay.com/en/agriculture-animal-baby-cute-84702/)",
+            "license": "Pixabay license (https://pixabay.com/en/service/license/)"
+            }},
+        {"href": "images/meat2-pointnshoot-photography.jpg", "type": "image/jpeg", "attribution": {
+            "title": "⅓ lb. bacon burger with fries at Hegenburger",
+            "author": "pointnshoot",
+            "source": "Flickr (https://www.flickr.com/photos/pointnshoot/678872722)",
+            "license": "CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/)"
+        }}
+    ]
+}

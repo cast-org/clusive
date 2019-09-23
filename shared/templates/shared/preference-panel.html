@@ -47,7 +47,7 @@
 
         $(document).ready(function () {            
             var prefsEditor = fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
-                    build: {
+                    build: {                        
                         gradeNames: buildGradeNames,
                         auxiliarySchema: {
                             "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
@@ -57,7 +57,34 @@
                                 "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",
                             },
                         }
+                    },
+                    prefsEditor: {
+                        components: {
+                            prefsEditorLoader: {
+                                options: {
+                                    listeners: {
+                                        "onCreate.log": {
+                                            "this": "console",
+                                            "method": "log",
+                                            "args": ["Created prefsEditorLoader", "{that}"]
+                                        }
+                                    },
+                                    components: {
+                                        readerPrefs: {
+                                            type: "cisl.prefs.reader",
+                                            createOnEvent: "{prefsEditorLoader}.events.onReady",
+                                            options: {
+                                                model: {
+                                                    preferences: "{prefsEditorLoader}.model.preferences"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                });                       
+                });                                       
         });	        
+
     </script>

@@ -19,13 +19,20 @@
         var DJANGO_STATIC_ROOT = "{% static '' %}"
         </script>
 
-        <script src="{% static 'shared/js/lib/main.js' %}"></script>
-        <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>
+        <script src="{% static 'shared/js/lib/main.js' %}"></script>     
+        <script src="{% static 'shared/js/clusive-reader-prefs.js' %}"></script>     
+        <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>     
+
         <script src="{% static 'shared/js/Glossary.js' %}"></script>
         <script src="{% static 'shared/js/GlossarySchema.js' %}"></script>
         <script src="{% static 'shared/js/GlossaryEnactor.js' %}"></script>
         <script src="{% static 'shared/js/GlossaryPanel.js' %}"></script>
         <script src="{% static 'shared/js/images.js' %}"></script>
+
+        {% comment %} 
+        For injection of additional markup into the head are
+        {% endcomment %}
+        {% block head_additional %}{% endblock %}
     </head>
     <body>
         <div class="header-cast">

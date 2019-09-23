@@ -149,6 +149,12 @@ dmypy.json
 
 # Webpack JS build artifacts
 
-/shared/static/shared/js/main.js
+shared/static/shared/js/main.js
+
+# Pip install from Git files
+
+src/django-session-timeout
+src/imsglobal-caliper
+src/pip-delete-this-directory.txt
 
 /staticfiles
