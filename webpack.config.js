@@ -2,7 +2,7 @@ var webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-  mode: 'development',  
+  mode: 'development',
   entry: './index.js',
   output: {
     filename: 'main.js',
@@ -11,6 +11,7 @@ module.exports = {
   resolve: {
       alias: {
           infusion: "infusion/dist/infusion-uio-no-jquery.min.js",
+          "popper.js": "popper.js/dist/umd/popper.min.js",
           figuration: "figuration/dist/js/figuration.min.js",
           "mark.js": "mark.js/dist/jquery.mark.min.js"
       }

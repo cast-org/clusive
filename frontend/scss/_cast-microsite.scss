@@ -1,0 +1,331 @@
+// CAST Microsite Header and Footer
+
+// Header settings
+// =====
+$header-cast-padding:               .375rem 0 !default;
+$header-cast-bg:                    #242d2e !default;
+$header-cast-color:                 #fff !default;
+$header-cast-border-width:          3px !default;
+$header-cast-border-color:          #fff !default;
+
+$header-cast-link-color:            #fff !default;
+$header-cast-link-hover-color:      #f0f0f0 !default;
+
+$header-cast-logo-width:            3.625rem !default;
+$header-cast-logo-height:           1.125rem !default;
+$header-cast-md-logo-width:         4.8125rem !default;
+$header-cast-md-logo-height:        1.5rem !default;
+
+$header-cast-title-visible:         false !default;
+$header-cast-tagline-visible:       false !default;
+
+// Footer settings
+// =====
+$footer-cast-padding:               1rem 0 !default;
+$footer-cast-bg:                    $header-cast-bg !default;
+$footer-cast-color:                 $header-cast-color !default;
+$footer-cast-border-width:          0 !default;
+$footer-cast-border-color:          $header-cast-border-color !default;
+
+$footer-cast-link-color:            #85d4e6 !default;
+$footer-cast-link-decoration:       underline !default;
+$footer-cast-link-underline-pos:    auto !default;
+$footer-cast-link-hover-color:      #fff !default;
+$footer-cast-link-hover-decoration: underline !default;
+
+$footer-cast-brand-margin-bottom:   .5rem !default;
+$footer-cast-logo-width:            18rem !default;
+$footer-cast-logo-height:           1.75rem !default;
+$footer-cast-lg-logo-width:         22.75rem !default;
+$footer-cast-lg-logo-height:        1.875rem !default;
+
+$footer-cast-title-visible:         false !default;
+$footer-cast-tagline-visible:       false !default;
+
+$footer-cast-row-margin-bottom:     1rem !default;
+$footer-cast-row-margin-x:          0 !default;
+$footer-cast-row-gutter-width:      2rem !default;
+$footer-cast-col-margin-y:          1rem !default;
+
+$footer-cast-divider-width:         1px !default;
+$footer-cast-divider-color:         #444 !default;
+
+$footer-cast-header-margin-y:       .25rem !default;
+$footer-cast-header-font-size:      1rem !default;
+$footer-cast-header-font-weight:    $font-weight-bold !default;
+
+$footer-cast-list-margin-bottom:    .25rem !default;
+$footer-cast-list-item-margin-y:    .75rem !default;
+$footer-cast-list-line-height:      1.25 !default;
+$footer-cast-list-object-margin-x:  .75rem !default;
+
+$footer-cast-media-color:           #bcb9ad !default;
+$footer-cast-media-font-size:       .875rem !default;
+$footer-cast-media-object-width:    6rem !default;
+$footer-cast-media-object-margin-x: 1rem !default;
+
+$footer-cast-social-font-size:      1.5rem !default;
+$footer-cast-social-color:          #84d4e5 !default;
+$footer-cast-social-hover-color:    #fff !default;
+
+$footer-cast-copy-font-size:        .875rem !default;
+
+
+// Donate button
+// =====
+$footer-cast-btn-donate: (
+    "base": #84d4e5,
+    "bg": #84d4e5,
+    "color": #2b2b2b,
+    "border-color": #84d4e5,
+    "hover-bg": #77bdcd,
+    "hover-color": #2b2b2b,
+    "hover-border-color": #77bdcd,
+    "active-bg": #77bdcd,
+    "active-color": #2b2b2b,
+    "active-border-color": #77bdcd
+) !default;
+
+
+// Header rules
+// =====
+.header-cast {
+    color: $header-cast-color;
+    background-color: $header-cast-bg;
+    border-bottom: $header-cast-border-width solid $header-cast-border-color;
+
+    .navbar {
+        padding: $header-cast-padding;
+    }
+}
+
+.header-cast-logo {
+    display: inline-block;
+    width: $header-cast-logo-width;
+    height: $header-cast-logo-height;
+    padding: 0;
+
+    img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    @include media-breakpoint-up(md) {
+        width: $header-cast-md-logo-width;
+        height: $header-cast-md-logo-height;
+    }
+}
+
+.header-cast-title {
+    @if not $header-cast-title-visible {
+        @include sr-only();
+    }
+}
+
+.header-cast-tagline {
+    @if not $header-cast-tagline-visible {
+        @include sr-only();
+    }
+}
+
+
+// Footer rules
+// =====
+.footer-cast {
+    padding: $footer-cast-padding;
+    clear: both;
+    color: $footer-cast-color;
+    background-color: $footer-cast-bg;
+    border-top: $footer-cast-border-width solid $footer-cast-border-color;
+
+    a:not(.btn) {
+        color: $footer-cast-link-color;
+        text-decoration: $footer-cast-link-decoration;
+        text-underline-position: $footer-cast-link-underline-pos;
+
+        @include hover-focus() {
+            color: $footer-cast-link-hover-color;
+            text-decoration: $footer-cast-link-hover-decoration;
+        }
+    }
+}
+
+.footer-cast-brand {
+    margin-bottom: $footer-cast-brand-margin-bottom;
+}
+
+.footer-cast-row {
+    margin: 0 $footer-cast-row-margin-x $footer-cast-row-margin-bottom;
+    border-top: $footer-cast-divider-width solid $footer-cast-divider-color;
+    border-bottom: $footer-cast-divider-width solid $footer-cast-divider-color;
+
+    & + .footer-row {
+        margin-top: -$footer-cast-row-margin-bottom;
+        border-top: 0;
+    }
+
+    .list-unstyled {
+        margin-bottom: $footer-cast-list-margin-bottom;
+
+        li {
+            margin-bottom: $footer-cast-list-item-margin-y;
+            line-height: $footer-cast-list-line-height;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        .media-object {
+            margin-right: $footer-cast-list-object-margin-x;
+        }
+    }
+
+    > .col {
+        margin-top: $footer-cast-col-margin-y;
+        margin-bottom: $footer-cast-col-margin-y;
+        border-right: $footer-cast-divider-width solid $footer-cast-divider-color;
+
+        &:first-child {
+            padding-left: 0;
+        }
+        &:last-child {
+            padding-right: 0;
+            border-right: 0;
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        > .col {
+            flex-basis: 100%;
+            max-width: 100%;
+            padding-right: 0;
+            padding-left: 0;
+            border-right: 0;
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        .col {
+            padding-right: ($footer-cast-row-gutter-width / 2);
+            padding-left: ($footer-cast-row-gutter-width / 2);
+        }
+    }
+
+    @include media-breakpoint-only(md) {
+        > .col {
+            flex-basis: 50%;
+            max-width: 50%;
+
+            & + .col:nth-child(odd) {
+                padding-left: 0;
+            }
+            & + .col:nth-child(even) {
+                padding-right: 0;
+                border-right: 0;
+            }
+        }
+    }
+}
+
+.footer-cast-header {
+    margin-bottom: $footer-cast-header-margin-y;
+    @include font-size($footer-cast-header-font-size);
+    font-weight: $footer-cast-header-font-weight;
+}
+
+.footer-cast-media {
+    color: $footer-cast-media-color;
+
+    .media-object {
+        width: $footer-cast-media-object-width;
+        max-width: $footer-cast-media-object-width;
+        margin-right: $footer-cast-media-object-margin-x;
+    }
+    .media-body {
+        @include font-size( $footer-cast-media-font-size);
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.footer-cast-copy {
+    align-items: baseline;
+    justify-content: space-between;
+    @include font-size($footer-cast-copy-font-size);
+
+    > .col {
+        @include media-breakpoint-down(md) {
+            flex-basis: 100%;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        @include media-breakpoint-up(lg) {
+            &:last-child {
+                text-align: right;
+            }
+        }
+    }
+
+    .list-horizontal {
+        align-items: baseline;
+
+        .list-item:not(:last-child) {
+            margin-right: 1em;
+        }
+
+        @include media-breakpoint-down(xs) {
+            flex-direction: column;
+            margin-bottom: 0;
+
+            .list-item {
+                margin-right: 0;
+                margin-bottom: .75rem;
+            }
+        }
+    }
+}
+
+.footer-cast-social {
+    @include font-size($footer-cast-social-font-size);
+    color: $footer-cast-social-color;
+
+    @include hover-focus() {
+        color: $footer-cast-social-hover-color;
+    }
+}
+
+// Donation button
+@include button-variant-control(".footer-cast-btn-donate", $footer-cast-btn-donate);
+
+.footer-cast-logo {
+    display: inline-block;
+    width: $footer-cast-logo-width;
+    height: $footer-cast-logo-height;
+
+    img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    @include media-breakpoint-up(lg) {
+        width: $footer-cast-lg-logo-width;
+        height: $footer-cast-lg-logo-height;
+    }
+}
+
+.footer-cast-title {
+    @if not $footer-cast-title-visible {
+        @include sr-only();
+    }
+}
+
+.footer-cast-tagline {
+    @if not $footer-cast-tagline-visible {
+        @include sr-only();
+    }
+}
