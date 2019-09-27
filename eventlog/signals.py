@@ -64,21 +64,22 @@ def log_logout(sender, **kwargs):
 @receiver(user_timed_out)
 def log_timeout(sender, **kwargs):
     """A user's session has been timed out after some period of inactivity"""
-    django_session = kwargs['session']
-    login_session_id = django_session.get(SESSION_ID_KEY, None)
-    period_id        = django_session.get(PERIOD_KEY, None)
-    try:
-        clusive_user = ClusiveUser.objects.get(user=(kwargs['user']))   # should match what's in loginsession
-        login_session = LoginSession.objects.get(id=login_session_id)
-        # Create an event
-        event = Event.build(type='SESSION_EVENT',
-                            action='TIMED_OUT',
-                            login_session=login_session,
-                            group=Period.objects.get(id=period_id))
-        event.save()
-        # Close out session
-        login_session.endedAtTime = timezone.now()
-        login_session.save()
-        logger.debug("Timeout user %s", clusive_user)
-    except ClusiveUser.DoesNotExist:
-        logger.warning("Timeout of non-Clusive user session: %s", kwargs['user'])
+    if(kwargs['user'].is_authenticated):
+        django_session = kwargs['session']
+        login_session_id = django_session.get(SESSION_ID_KEY, None)
+        period_id        = django_session.get(PERIOD_KEY, None)
+        try:
+            clusive_user = ClusiveUser.objects.get(user=kwargs['user'])   # should match what's in loginsession
+            login_session = LoginSession.objects.get(id=login_session_id)
+            # Create an event
+            event = Event.build(type='SESSION_EVENT',
+                                action='TIMED_OUT',
+                                login_session=login_session,
+                                group=Period.objects.get(id=period_id))
+            event.save()
+            # Close out session
+            login_session.endedAtTime = timezone.now()
+            login_session.save()
+            logger.debug("Timeout user %s", clusive_user)
+        except ClusiveUser.DoesNotExist:
+            logger.debug("Timeout of non-Clusive user session: %s", kwargs['user'])
