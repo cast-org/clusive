@@ -21,7 +21,11 @@
             "preferences.fluid_prefs_lineSpace": {
                 func: "{that}.enactReaderLineSpace",
                 args: ["{change}.value"]
-            }                                                                                     
+            },
+            "preferences.fluid_prefs_textFont": {
+                func: "{that}.enactReaderTextFont",
+                args: ["{change}.value"]
+            }            
         },
         invokers: {
             enactReaderTextSize: {
@@ -35,7 +39,11 @@
             enactReaderLineSpace: {
                 funcName: "cisl.prefs.reader.enactReaderLineSpace",
                 args: ["{arguments}.0"]                
-            }            
+            },
+            enactReaderTextFont: {
+                funcName: "cisl.prefs.reader.enactReaderTextFont",
+                args: ["{arguments}.0"]                
+            }                        
         }
     });
 
@@ -75,10 +83,29 @@
         }        
     }
 
+    cisl.prefs.reader.enactReaderTextFont = function (change) {
+        
+        var reader = cisl.prefs.reader.getReaderInstance();
+
+        var fontFamilyMap = {
+            "default": "Original",
+            "times": "Georgia, Times, Times New Roman, serif",
+            "arial": "Arial",
+            "verdana": "Verdana",
+            "comic": "Comic Sans MS, sans-serif",
+            "open-dyslexic": "opendyslexic"
+        };
+        
+        if(reader) {            
+            cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontFamily", fontFamilyMap[change]);            
+        }
+    }
+
+    cisl.prefs.reader.setReadiumCSSUserVariable = function (name, value) {
+        var readerHtmlElem = $("#D2Reader-Container").find("iframe").contents().find("html");
+        readerHtmlElem.css(name, value);            
+    }
+
 })(fluid_3_0_0);
 
 // fluid_prefs_contrast: "default"
-
-// fluid_prefs_lineSpace: 1
-// ​​​
-// fluid_prefs_textFont: "verdana"
