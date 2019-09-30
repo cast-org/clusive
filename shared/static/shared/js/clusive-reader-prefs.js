@@ -11,16 +11,16 @@
         },
         modelListeners: {
             "preferences.fluid_prefs_textSize": {
-                    func: "cisl.prefs.reader.enactPreferenceMappedToReader",
-                    args: ["{change}.value", "fontSize", "{that}.options.settingMaps.textSizeToFontScale", "* 100"]
+                func: "cisl.prefs.reader.enactPreferenceToReader",
+                args: ["{change}.value", "fontSize", "{that}.options.settingMaps.textSizeToFontScale", "* 100"]
             },                      
             "preferences.fluid_prefs_letterSpace": {
-                    func: "{that}.enactReaderLetterSpace",
-                    args: ["{change}.value"]
+                func: "cisl.prefs.reader.enactPreferenceToReader",                
+                args: ["{change}.value", "letterSpacing", null, "- 0.999"]
             },
             "preferences.fluid_prefs_lineSpace": {
-                func: "{that}.enactReaderLineSpace",
-                args: ["{change}.value"]
+                func: "cisl.prefs.reader.enactPreferenceToReader",                
+                args: ["{change}.value", "lineHeight", null, "- 0"]
             },
             "preferences.fluid_prefs_textFont": {
                 func: "{that}.enactReaderTextFont",
@@ -40,14 +40,6 @@
             }
         },
         invokers: {
-            enactReaderLetterSpace: {
-                funcName: "cisl.prefs.reader.enactReaderLetterSpace",
-                args: ["{arguments}.0"]                
-            },
-            enactReaderLineSpace: {
-                funcName: "cisl.prefs.reader.enactReaderLineSpace",
-                args: ["{arguments}.0"]                
-            },
             enactReaderTextFont: {
                 funcName: "cisl.prefs.reader.enactReaderTextFont",
                 args: ["{arguments}.0"]                
@@ -84,23 +76,12 @@
         }    
     }
 
-    cisl.prefs.reader.enactPreferenceMappedToReader = function (change, readerSetting, settingsMap, rhStatement) {     
-        cisl.prefs.reader.applyUserSetting(readerSetting, eval("settingsMap[change] " + rhStatement));        
-    }
-
-    cisl.prefs.reader.enactReaderLetterSpace = function (change) {    
-        var reader = cisl.prefs.reader.getReaderInstance();    
-        if(reader) {
-            // Reader won't change on a 0 value for this setting
-            reader.applyUserSettings({letterSpacing: change - 0.999})            
+    cisl.prefs.reader.enactPreferenceToReader = function (change, readerSetting, settingsMap, rhStatement) {     
+        if(settingsMap) {
+            cisl.prefs.reader.applyUserSetting(readerSetting, eval("settingsMap[change] " + rhStatement));        
+        } else {
+            cisl.prefs.reader.applyUserSetting(readerSetting, eval("[change] " + rhStatement));
         }
-    }
-    
-    cisl.prefs.reader.enactReaderLineSpace = function (change) {   
-        var reader = cisl.prefs.reader.getReaderInstance();
-        if(reader) {            
-            reader.applyUserSettings({lineHeight: change})            
-        }        
     }
 
     cisl.prefs.reader.enactReaderTextFont = function (change) {
@@ -115,7 +96,10 @@
             "comic": "Comic Sans MS, sans-serif",
             "open-dyslexic": "opendyslexic"
         };
-        
+
+        // TODO: have to find another way to do this - gets reset by the 
+        // reader whenever applyUserSettings is called, though works
+        // when preference is itself applied from the panel
         if(reader) {                                    
             cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontOverride", "readium-font-on");
             cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontFamily", fontFamilyMap[change]);
