@@ -11,8 +11,8 @@
         },
         modelListeners: {
             "preferences.fluid_prefs_textSize": {
-                    func: "cisl.prefs.reader.enactReaderTextSize",
-                    args: ["{change}.value", "{that}.options.settingMaps.textSizeToFontScale"]
+                    func: "cisl.prefs.reader.enactPreferenceMappedToReader",
+                    args: ["{change}.value", "fontSize", "{that}.options.settingMaps.textSizeToFontScale", "* 100"]
             },                      
             "preferences.fluid_prefs_letterSpace": {
                     func: "{that}.enactReaderLetterSpace",
@@ -84,8 +84,8 @@
         }    
     }
 
-    cisl.prefs.reader.enactReaderTextSize = function (change, settingsMap) {     
-        cisl.prefs.reader.applyUserSetting("fontSize", settingsMap[change] * 100);        
+    cisl.prefs.reader.enactPreferenceMappedToReader = function (change, readerSetting, settingsMap, rhStatement) {     
+        cisl.prefs.reader.applyUserSetting(readerSetting, eval("settingsMap[change] " + rhStatement));        
     }
 
     cisl.prefs.reader.enactReaderLetterSpace = function (change) {    
@@ -116,8 +116,9 @@
             "open-dyslexic": "opendyslexic"
         };
         
-        if(reader) {            
-            cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontFamily", fontFamilyMap[change]);            
+        if(reader) {                                    
+            cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontOverride", "readium-font-on");
+            cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontFamily", fontFamilyMap[change]);
         }
     }
 
