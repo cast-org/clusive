@@ -64,7 +64,7 @@ def log_logout(sender, **kwargs):
 @receiver(user_timed_out)
 def log_timeout(sender, **kwargs):
     """A user's session has been timed out after some period of inactivity"""
-    if(kwargs['user'].is_authenticated):
+    if(kwargs['user'] and kwargs['user'].is_authenticated):
         django_session = kwargs['session']
         login_session_id = django_session.get(SESSION_ID_KEY, None)
         period_id        = django_session.get(PERIOD_KEY, None)

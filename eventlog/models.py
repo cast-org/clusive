@@ -28,7 +28,7 @@ class Event(models.Model):
     )
     eventTime = models.DateTimeField(default=timezone.now)
     # TODO eventEndTime
-    type = models.CharField(max_length=8, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
+    type = models.CharField(max_length=32, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
     action = models.CharField(max_length=32, choices=[(k,v) for k, v in caliper.constants.CALIPER_ACTIONS.items()])
     # TODO page
     # TODO article
