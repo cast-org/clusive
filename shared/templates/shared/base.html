@@ -10,7 +10,7 @@
         <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/Enactors.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditor.css' %}" />
-
+        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/figuration/css/figuration.css' %}" />
         {% comment %}
         Sets constants based on Django's environment in order to make them available
         to client-side Javascript
@@ -53,6 +53,9 @@
                 <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />
             </a>
             <div class="login-status">
+                <button id="glossaryButton" class="btn btn-small btn-secondary" data-cfw="popover" data-cfw-popover-target="#glossaryPop" data-cfw-popover-placement="reverse">
+                    Lookup
+                </button>
                 {% if not user.is_anonymous %}
                         Logged in as {{ user }} | <a href="{% url 'logout' %}">Logout</a>
                 {% else %}
@@ -62,6 +65,12 @@
         </div>
         <div class="content">
             {% block content %}{% endblock %}
+        </div>
+        <div class="popover" id="glossaryPop">
+            <div id="glossaryTitle" class="popover-header">Glossary</div>
+            <div class="popover-body">
+                <p id="glossaryBody"> body content&hellip;</p>
+            </div>
         </div>
     </body>
 </html>

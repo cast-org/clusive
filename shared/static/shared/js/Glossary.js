@@ -1,5 +1,47 @@
 // Glossary functionality
 
+// When lookup button is clicked, try to show a definition in the popover.
+$(function() {
+    $('#glossaryButton').on('beforeShow.cfw.popover', function () {
+        // Look for selected text, first in the reader iframe, then in the top-level frame.
+        var sel = null, word = null;
+        var reader = $('#D2Reader-Container iframe');
+        if(reader.length)
+            sel = reader.get(0).contentDocument.getSelection();
+        if (sel==null || !sel.rangeCount) {
+            sel = window.getSelection();
+        }
+        if (sel!=null && sel.rangeCount) {
+            var text = sel.toString();
+            var match = text.match('\\w+');
+            if (match) {
+                word = match[0];
+            } else {
+                console.log("Did not find any word in selection: ", text);
+            }
+        } else {
+            console.log("No text selection found");
+        }
+        var title, body;
+        if (word) {
+            title = word;
+            body = "This would be a definition of " + word;
+        } else {
+            title = "Glossary";
+            body = "Select a word, then click 'lookup' to see a definition";
+        }
+        $('#glossaryTitle').html(title);
+        $('#glossaryBody').html(body);
+    });
+});
+
+
+///
+/// Code below is just copied over from demo, not used, needs rewrite
+///
+
+
+
 // List of glossary words
 // TODO when we have user login, this would be persistent data for the user.
 var userGlossary = [];
