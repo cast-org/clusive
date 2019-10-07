@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('account/', include('roster.urls')),
     path('sessions/', include('django_session_timeout.urls')),
+    path('glossary/', include('glossary.urls')),
 ]

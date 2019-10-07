@@ -25,7 +25,16 @@ $(function() {
         var title, body;
         if (word) {
             title = word;
-            body = "This would be a definition of " + word;
+            $.get('/glossary/glossdef/'+word)
+                .done(function(data, status) {
+                    console.log("success: ", data);
+                    $('#glossaryBody').html(data);
+                })
+                .fail(function(err) {
+                    console.log(err);
+                    $('#glossaryBody').html(err.responseText);
+                });
+            body = "Loading...";
         } else {
             title = "Glossary";
             body = "Select a word, then click 'lookup' to see a definition";

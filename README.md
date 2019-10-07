@@ -52,6 +52,10 @@ The above process creates a package link between this project's `node_modules` d
 
 * `pip install -r requirements.txt`
 
+### Download Wordnet data
+
+* `python -m nltk.downloader wordnet`
+
 ### Do the Initial Database Migrations
 
 The current configuration (for development) uses sqlite3, so no database setup is required.
