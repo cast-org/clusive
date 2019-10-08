@@ -3,55 +3,117 @@
 (function (fluid) {
     "use strict";
     
-    fluid.defaults("cisl.prefs.reader", {
+    fluid.defaults("cisl.prefs.readerPreferencesBridge", {
         gradeNames: ["fluid.modelComponent"],        
         model: {
             // Must be linked to a preferences editor model instance
             preferences: null,
+            // Contains values mapped from the preferences editor model 
+            // to the Reader equivalents, with transforms as defined 
+            // in model relay block
+            readerPreferences: {                
+            }
+        },    
+        modelRelay: {
+            "readerPrefences.fontSize": {
+                target: "readerPreferences.fontSize",
+                backward: {
+                    excludeSource: "*"
+                },
+                singleTransform: {
+                    type: "fluid.transforms.valueMapper",
+                    defaultInput: "{that}.model.preferences.fluid_prefs_textSize",
+                    match: [
+                        {
+                            inputValue: "small",
+                            outputValue: 75
+                        },
+                        {
+                            inputValue: "medium",
+                            outputValue: 100
+                        },
+                        {
+                            inputValue: "large",
+                            outputValue: 150
+                        },                        {
+                            inputValue: "x-large",
+                            outputValue: 200
+                        }
+                    ]
+                }
+            },
+            "readerPreferences.letterSpacing": {
+                target: "readerPreferences.letterSpacing",
+                backward: {
+                    excludeSource: "*"
+                },
+                singleTransform: {
+                    type: "fluid.transforms.binaryOp",
+                    "left": "{that}.model.preferences.fluid_prefs_letterSpace",
+                    "operator": "-",                    
+                    "right": 0.999
+                }
+            },
+            "readerPreferences.lineHeight": {
+                target: "readerPreferences.lineHeight",
+                backward: {
+                    excludeSource: "*"
+                },
+                singleTransform: {
+                    type: "fluid.transforms.value",
+                    "input": "{that}.model.preferences.fluid_prefs_lineSpace"
+                }
+            },
+            "readerPreferences.appearance": {
+                target: "readerPreferences.appearance",
+                backward: {
+                    excludeSource: "*"
+                },
+                singleTransform: {
+                    type: "fluid.transforms.valueMapper",
+                    defaultInput: "{that}.model.preferences.fluid_prefs_contrast",
+                    match: [
+                        {
+                            inputValue: "default",
+                            outputValue: "day"
+                        },
+                        {
+                            inputValue: "wb",
+                            outputValue: "night"
+                        },
+                        {
+                            inputValue: "bw",
+                            outputValue: "day"
+                        }
+                    ]
+                }                
+            }
         },
         modelListeners: {
-            "preferences.fluid_prefs_textSize": {
-                func: "cisl.prefs.reader.enactPreferenceToReader",
-                args: ["{change}.value", "fontSize", "{that}.options.settingMaps.textSizeToFontScale", "* 100"]
+            "readerPreferences.fontSize": {
+                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",
+                args: ["{change}.value", "fontSize"]
             },                      
-            "preferences.fluid_prefs_letterSpace": {
-                func: "cisl.prefs.reader.enactPreferenceToReader",                
-                args: ["{change}.value", "letterSpacing", null, "- 0.999"]
+            "readerPreferences.letterSpacing": {
+                 func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
+                 args: ["{change}.value", "letterSpacing"]
             },
-            "preferences.fluid_prefs_lineSpace": {
-                func: "cisl.prefs.reader.enactPreferenceToReader",                
-                args: ["{change}.value", "lineHeight", null, "- 0"]
-            },
+            "readerPreferences.lineHeight": {
+                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
+                args: ["{change}.value", "lineHeight"]
+           },
             "preferences.fluid_prefs_textFont": {
-                func: "{that}.enactReaderTextFont",
+                func: "cisl.prefs.readerPreferencesBridge.enactReaderTextFont",
                 args: ["{change}.value"]
             },
-            "preferences.fluid_prefs_contrast": {
-                func: "{that}.enactReaderContrast",
-                args: ["{change}.value"]
+            "readerPreferences.appearance": {
+                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
+                args: ["{change}.value", "appearance"]
             }            
-        },
-        settingMaps: {
-            textSizeToFontScale: {
-                "small": 0.75,
-                "medium": 1,
-                "large": 1.5,
-                "x-large": 2                
-            }
-        },
-        invokers: {
-            enactReaderTextFont: {
-                funcName: "cisl.prefs.reader.enactReaderTextFont",
-                args: ["{arguments}.0"]                
-            },
-            enactReaderContrast: {
-                funcName: "cisl.prefs.reader.enactReaderContrast",
-                args: ["{arguments}.0"]                       
-            }
         }
     });
 
-    cisl.prefs.reader.getReaderInstance = function () {
+    cisl.prefs.readerPreferencesBridge.getReaderInstance = function () {
         var readerDefined = typeof D2Reader;      
         
         if(readerDefined !== "undefined") {
@@ -59,14 +121,13 @@
         } else return null;
     }
 
-
-    cisl.prefs.reader.setReadiumCSSUserVariable = function (name, value) {
+    cisl.prefs.readerPreferencesBridge.setReadiumCSSUserVariable = function (name, value) {
         var readerHtmlElem = $("#D2Reader-Container").find("iframe").contents().find("html");
         readerHtmlElem.css(name, value);            
     }
 
-    cisl.prefs.reader.applyUserSetting = function (settingName, settingValue) {
-        var reader = cisl.prefs.reader.getReaderInstance();
+    cisl.prefs.readerPreferencesBridge.applyUserSetting = function (settingName, settingValue) {
+        var reader = cisl.prefs.readerPreferencesBridge.getReaderInstance();
         if(reader) {                      
             var settingsObj = 
             {
@@ -76,17 +137,13 @@
         }    
     }
 
-    cisl.prefs.reader.enactPreferenceToReader = function (change, readerSetting, settingsMap, rhStatement) {     
-        if(settingsMap) {
-            cisl.prefs.reader.applyUserSetting(readerSetting, eval("settingsMap[change] " + rhStatement));        
-        } else {
-            cisl.prefs.reader.applyUserSetting(readerSetting, eval("[change] " + rhStatement));
-        }
+    cisl.prefs.readerPreferencesBridge.enactPreferenceToReader = function (changeValue, readerSetting) {             
+        cisl.prefs.readerPreferencesBridge.applyUserSetting(readerSetting, changeValue);
     }
 
-    cisl.prefs.reader.enactReaderTextFont = function (change) {
+    cisl.prefs.readerPreferencesBridge.enactReaderTextFont = function (change) {
         
-        var reader = cisl.prefs.reader.getReaderInstance();
+        var reader = cisl.prefs.readerPreferencesBridge.getReaderInstance();
 
         var fontFamilyMap = {
             "default": "Original",
@@ -101,26 +158,9 @@
         // reader whenever applyUserSettings is called, though works
         // when preference is itself applied from the panel
         if(reader) {                                    
-            cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontOverride", "readium-font-on");
-            cisl.prefs.reader.setReadiumCSSUserVariable("--USER__fontFamily", fontFamilyMap[change]);
-        }
-    }
-
-    cisl.prefs.reader.enactReaderContrast = function (change) {
-        var reader = cisl.prefs.reader.getReaderInstance();
-        console.log("enactReaderContrast", change);
-
-        var contrastMap = {
-            "default": "day",
-            "bw": "day",
-            "wb": "night"
-        }
-
-        if(reader) {            
-            reader.applyUserSettings({appearance: contrastMap[change]})            
+            cisl.prefs.readerPreferencesBridge.setReadiumCSSUserVariable("--USER__fontOverride", "readium-font-on");
+            cisl.prefs.readerPreferencesBridge.setReadiumCSSUserVariable("--USER__fontFamily", fontFamilyMap[change]);
         }
     }
 
 })(fluid_3_0_0);
-
-// fluid_prefs_contrast: "default"
