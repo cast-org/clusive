@@ -33,6 +33,9 @@ $(function() {
                 .fail(function(err) {
                     console.log(err);
                     $('#glossaryBody').html(err.responseText);
+                })
+                .always(function() {
+                    $('#glossaryPop').CFW_Popover('locateUpdate');
                 });
             body = "Loading...";
         } else {
