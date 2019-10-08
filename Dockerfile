@@ -26,6 +26,8 @@ USER app
 
 WORKDIR /app
 
+RUN python -m nltk.downloader wordnet
+
 COPY . .
 
 RUN python manage.py collectstatic --no-input
