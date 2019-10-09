@@ -148,18 +148,18 @@
         var fontFamilyMap = {
             "default": "Original",
             "times": "Georgia, Times, Times New Roman, serif",
-            "arial": "Arial",
+            "arial": "Arial, Helvetica",
             "verdana": "Verdana",
             "comic": "Comic Sans MS, sans-serif",
             "open-dyslexic": "opendyslexic"
         };
+        
 
         // TODO: have to find another way to do this - gets reset by the 
         // reader whenever applyUserSettings is called, though works
         // when preference is itself applied from the panel
         if(reader) {                                    
-            cisl.prefs.readerPreferencesBridge.setReadiumCSSUserVariable("--USER__fontOverride", "readium-font-on");
-            cisl.prefs.readerPreferencesBridge.setReadiumCSSUserVariable("--USER__fontFamily", fontFamilyMap[change]);
+            cisl.prefs.readerPreferencesBridge.applyUserSetting("fontFamily", fontFamilyMap[change]);
         }
     }
 

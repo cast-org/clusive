@@ -50,7 +50,15 @@ module.exports = function (grunt) {
                     nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/reader"
-                }, {
+                }, 
+                {
+                    expand: true,
+                    cwd: "node_modules/@dita/reader/viewer/fonts",
+                    nonull: true,
+                    src: "**",
+                    dest: "shared/static/shared/js/lib/reader/fonts"
+                },
+                {
                     expand: true,
                     cwd: "node_modules/readium-css/css/dist",
                     nonull: true,
