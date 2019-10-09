@@ -125,24 +125,24 @@
         },
         modelListeners: {
             "readerPreferences.fontSize": {
-                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",
-                args: ["{change}.value", "fontSize"]
+                func: "cisl.prefs.readerPreferencesBridge.applyUserSetting",
+                args: [ "fontSize", "{change}.value"]
             },           
             "readerPreferences.fontFamily": {
-                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",
-                args: ["{change}.value", "fontFamily"]
+                func: "cisl.prefs.readerPreferencesBridge.applyUserSetting",
+                args: ["fontFamily", "{change}.value"]
             },                                  
             "readerPreferences.letterSpacing": {
-                 func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
-                 args: ["{change}.value", "letterSpacing"]
+                 func: "cisl.prefs.readerPreferencesBridge.applyUserSetting",                
+                 args: ["letterSpacing", "{change}.value"]
             },
             "readerPreferences.lineHeight": {
-                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
-                args: ["{change}.value", "lineHeight"]
+                func: "cisl.prefs.readerPreferencesBridge.applyUserSetting",                
+                args: ["lineHeight", "{change}.value"]
            },
             "readerPreferences.appearance": {
-                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
-                args: ["{change}.value", "appearance"]
+                func: "cisl.prefs.readerPreferencesBridge.applyUserSetting",                
+                args: ["appearance", "{change}.value"]
             }            
         }
     });
@@ -164,10 +164,6 @@
             };
             reader.applyUserSettings(settingsObj);
         }    
-    }
-
-    cisl.prefs.readerPreferencesBridge.enactPreferenceToReader = function (changeValue, readerSetting) {             
-        cisl.prefs.readerPreferencesBridge.applyUserSetting(readerSetting, changeValue);
     }
 
 })(fluid_3_0_0);
