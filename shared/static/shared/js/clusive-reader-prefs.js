@@ -42,6 +42,40 @@
                     ]
                 }
             },
+            "readerPreferences.fontFamily": {
+                target: "readerPreferences.fontFamily",
+                backward: {
+                    excludeSource: "*"
+                },
+                singleTransform: {
+                    type: "fluid.transforms.valueMapper",
+                    defaultInput: "{that}.model.preferences.fluid_prefs_textFont",
+                    match: [
+                        {
+                            inputValue: "default",
+                            outputValue: "Original"
+                        },
+                        {
+                            inputValue: "times",
+                            outputValue: "Georgia, Times, Times New Roman, serif"
+                        },
+                        {
+                            inputValue: "arial",
+                            outputValue: "Arial, Helvetica"
+                        },                        {
+                            inputValue: "verdana",
+                            outputValue: "Verdana"
+                        },
+                        {
+                            inputValue: "comic",
+                            outputValue: "Comic Sans MS, sans-serif"
+                        },                        {
+                            inputValue: "open-dyslexic",
+                            outputValue: "opendyslexic"
+                        }                        
+                    ]
+                }                       
+            },
             "readerPreferences.letterSpacing": {
                 target: "readerPreferences.letterSpacing",
                 backward: {
@@ -93,7 +127,11 @@
             "readerPreferences.fontSize": {
                 func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",
                 args: ["{change}.value", "fontSize"]
-            },                      
+            },           
+            "readerPreferences.fontFamily": {
+                func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",
+                args: ["{change}.value", "fontFamily"]
+            },                                  
             "readerPreferences.letterSpacing": {
                  func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
                  args: ["{change}.value", "letterSpacing"]
@@ -102,10 +140,6 @@
                 func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
                 args: ["{change}.value", "lineHeight"]
            },
-            "preferences.fluid_prefs_textFont": {
-                func: "cisl.prefs.readerPreferencesBridge.enactReaderTextFont",
-                args: ["{change}.value"]
-            },
             "readerPreferences.appearance": {
                 func: "cisl.prefs.readerPreferencesBridge.enactPreferenceToReader",                
                 args: ["{change}.value", "appearance"]
@@ -121,11 +155,6 @@
         } else return null;
     }
 
-    cisl.prefs.readerPreferencesBridge.setReadiumCSSUserVariable = function (name, value) {
-        var readerHtmlElem = $("#D2Reader-Container").find("iframe").contents().find("html");
-        readerHtmlElem.css(name, value);            
-    }
-
     cisl.prefs.readerPreferencesBridge.applyUserSetting = function (settingName, settingValue) {
         var reader = cisl.prefs.readerPreferencesBridge.getReaderInstance();
         if(reader) {                      
@@ -139,28 +168,6 @@
 
     cisl.prefs.readerPreferencesBridge.enactPreferenceToReader = function (changeValue, readerSetting) {             
         cisl.prefs.readerPreferencesBridge.applyUserSetting(readerSetting, changeValue);
-    }
-
-    cisl.prefs.readerPreferencesBridge.enactReaderTextFont = function (change) {
-        
-        var reader = cisl.prefs.readerPreferencesBridge.getReaderInstance();
-
-        var fontFamilyMap = {
-            "default": "Original",
-            "times": "Georgia, Times, Times New Roman, serif",
-            "arial": "Arial, Helvetica",
-            "verdana": "Verdana",
-            "comic": "Comic Sans MS, sans-serif",
-            "open-dyslexic": "opendyslexic"
-        };
-        
-
-        // TODO: have to find another way to do this - gets reset by the 
-        // reader whenever applyUserSettings is called, though works
-        // when preference is itself applied from the panel
-        if(reader) {                                    
-            cisl.prefs.readerPreferencesBridge.applyUserSetting("fontFamily", fontFamilyMap[change]);
-        }
     }
 
 })(fluid_3_0_0);
