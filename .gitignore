@@ -138,7 +138,7 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/django
 
-# Editor config files 
+# Editor config files
 .idea
 
 .vscode
@@ -158,3 +158,5 @@ src/imsglobal-caliper
 src/pip-delete-this-directory.txt
 
 /staticfiles
+
+!frontend/dist

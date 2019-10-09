@@ -1,0 +1,53 @@
+.setting-modal {
+    .modal-body {
+        padding: 0 0 1rem;
+    }
+}
+.setting {
+    padding: $setting-padding;
+
+    &:not(:first-of-type) {
+        border-top: $setting-border-width solid $setting-border-color;
+    }
+}
+
+.setting-title {
+    margin-bottom: $setting-title-margin-bottom;
+    @include font-size($setting-title-font-size);
+    font-weight: $setting-title-font-weight;
+    color: $setting-title-color;
+}
+
+.setting-btn-row {
+    display: flex;
+    justify-content: space-around;
+}
+
+// Options
+// =====
+
+.option-font-size {
+    position: relative;
+    margin-bottom: 1.25rem;
+
+    &::before,
+    &::after {
+        position: absolute;
+        display: inline-block;
+        //stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+        font-family: Fontello;
+        color: #111;
+        content: "\e801";
+    }
+
+    &::before {
+        top: 1.5rem;
+        left: 0;
+        @include font-size(.875rem);
+    }
+    &::after{
+        top: 1.25rem;
+        right: 0;
+        @include font-size(1.25rem);
+    }
+}

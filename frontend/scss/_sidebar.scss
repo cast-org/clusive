@@ -1,0 +1,67 @@
+.sidebar {
+    display: flex;
+    flex-basis: 3rem;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    background-color: $sidebar-bg;
+    @include border-radius($sidebar-border-radius);
+
+    @include media-breakpoint-up(sm) {
+        flex-basis: 4rem;
+    }
+
+    @supports (position: sticky) {
+        position: sticky;
+        top: $body-padding;
+        height: calc(100vh - #{$body-padding * 2});
+    }
+
+    .btn-glossary {
+        position: absolute;
+        top: 50%;
+        right: -2.125rem;
+        font-weight: $font-weight-bold;
+        transform: rotate(-90deg) translateY(-50%);
+        transform-origin: top center;
+    }
+
+    .btn-help {
+        margin-top: auto;
+        margin-right: -1rem;
+
+        @include media-breakpoint-up(sm) {
+            margin-right: -2rem;
+        }
+    }
+}
+
+.sidebar-start {
+    margin-right: 1rem;
+
+    .btn + .btn:not(.btn-help):not(.btn-glossary) {
+        margin-top: .5rem;
+    }
+}
+
+.sidebar-end {
+    order: 1;
+    margin-left: 1rem;
+    background-color: $sidebar-end-bg;
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        line-height: 1;
+        @include font-size(1.75rem);
+        @include border-radius(10rem);
+    }
+
+    .btn + .btn {
+        margin-top: 1rem;
+    }
+}

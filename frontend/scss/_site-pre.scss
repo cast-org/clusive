@@ -5,6 +5,7 @@
 $enable-palette:                    false;
 $enable-print-styles:               false;
 $enable-sizing:                     false;
+$enable-shadows:                    true;
 
 // Content
 $enable-root:                       false;
@@ -35,9 +36,9 @@ $enable-alert:                      false;
 $enable-badge:                      false;
 $enable-breadcrumb:                 false;
 $enable-btn-group:                  false;
-$enable-card-title:                 false;
+//$enable-card-title:                 false;
 $enable-card-subtitle:              false;
-$enable-card-text:                  false;
+//$enable-card-text:                  false;
 $enable-card-link:                  false;
 $enable-card-list:                  false;
 $enable-card-table:                 false;
@@ -72,7 +73,7 @@ $enable-progress:                   false;
 
 // Widgets
 $enable-dropdown:                   false;
-$enable-modal:                      false;
+$enable-modal-centered:             false;
 $enable-popover:                    false;
 $enable-tooltip:                    false;
 
@@ -98,9 +99,118 @@ $enable-utility-visibility:         false;
 // Default Figuration setting overrides
 // =====
 
-$font-family-sans-serif:    "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+// Disable some default box-shadows
+$thumbnail-box-shadow:                  0 0 transparent;
+$kbd-box-shadow:                        0 0 transparent;
+$btn-box-shadow:                        0 0 transparent;
+$btn-active-box-shadow:                 0 0 transparent;
+$input-box-shadow:                      0 0 transparent;
+//$input-focus-box-shadow:                null;
+$form-checkradio-box-shadow:            0 0 transparent;
+$form-switch-track-box-shadow:          null;
+//$form-switch-track-focus-box-shadow:    0 0 transparent;
+$form-switch-thumb-box-shadow:          null;
+//$form-switch-thumb-focus-box-shadow:    0 0 transparent;
+$form-range-track-box-shadow:           0 0 transparent;
+$progress-box-shadow:                   0 0 transparent;
+$progress-bar-box-shadow:               0 0 transparent;
+$dropdown-box-shadow:                   0 0 transparent;
+$popover-box-shadow:                    0 0 transparent;
+$modal-content-box-shadow:              0 0 transparent;
 
-// Clusive specific settings
+$white:                         #fff;
+
+$primary:                       #66faff; //#72c0b2;
+$secondary:                     rgba(#abfcef, .7); //rgba(#66faff, .75);
+$tertiary:                      rgba(#7d89ac, .4);
+$clusive-orange:                #ea6550;
+
+$palette-interval-light:        .2%;
+$palette-interval-dark:         .15%;
+
+$body-color:                    #111;
+$body-padding:                  .625rem;
+
+//$link-color:                    #00399c;
+$link-color:                    #b8330f;
+$link-hover-color:              palette($link-color, 700);
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif:        "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$grid-row-columns:              4;
+
+$btn-focus-box-shadow-alpha:    .5;
+
+$form-checkradio-border-width:          1px;
+$form-checkradio-border-color:          #7e8aad;
+$form-checkradio-checked-border-color:  #40998b;
+$form-checkradio-radio-icon:            none;
+$form-checkradio-focus-border-color:    #40998b;
+$form-checkradio-focus-box-shadow:      0 0 0 .1875rem rgba(#40998b, .9);
+
+$form-range-track-height:       .325rem;
+$form-range-track-bg:           #d3cfc9;
+$form-range-thumb-width:        1.25rem;
+$form-range-thumb-bg:           $primary;
+$form-range-thumb-box-shadow:   .125rem .125rem 0 .025rem rgba(#40998b, .9);
+$form-range-thumb-focus-box-shadow: 0 0 0 .1875rem rgba(#40998b, .9) !default;
+$form-range-thumb-active-bg:    $primary;
+
+$form-switch-width:                         3rem;
+$form-switch-gutter:                        calc(#{$form-switch-width} + .125em) !default;
+$form-switch-track-height:                  1.75rem;
+$form-switch-track-bg:                      #ded9c4;
+$form-switch-track-border-color:            #7e8aad; //#40998b;
+$form-switch-track-border-radius:           $form-switch-track-height;
+$form-switch-track-focus-border-color:      #40998b;
+$form-switch-track-focus-box-shadow:        0 0 0 .1875rem rgba(#40998b, .9);
+$form-switch-track-checked-bg:              $primary;
+$form-switch-track-checked-border-color:    #40998b;
+$form-switch-track-checked-box-shadow:      null;
+
+$form-switch-thumb-width:                   1.375em;
+$form-switch-thumb-height:                  1.375em;
+$form-switch-thumb-bg:                      $white;
+$form-switch-thumb-box-shadow:              .1875rem 0 0 .025rem rgba(#7e8aad, .9);
+$form-switch-thumb-focus-bg:                $white;
+$form-switch-thumb-checked-bg:              $white;
+$form-switch-thumb-checked-border-color:    $white;
+$form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(#40998b, .9);
+
+$card-bg:                       #ebe6d2;
+$card-padding-y:                .5rem;
+$card-padding-x:                .75rem;
+$card-title-margin-bottom:      .25rem;
+$card-border-color:             #ebe6d2;
+$card-border-radius:            .5rem;
+
+$modal-content-bg:              #ebe6d2;
+$modal-content-border-width:    3px;
+$modal-content-border-color:    #72c0b2;
+$modal-border-radius:           .5rem;
+$modal-header-border-color:     #d3cfc9;
+$modal-header-border-width:     3px;
+$modal-footer-border-color:     #d3cfc9;
+$modal-footer-border-width:     3px;
+
+// Clusive specific items
 // =====
 
-$clusive-orange:            #ea6550;
+$sidebar-bg:                    rgba(99, 176, 162, .4);
+$sidebar-end-bg:                #5fb29f;
+$sidebar-border-radius:         1rem;
+
+$library-bg:                    #72c0b2;
+$library-grid-gutter:           2rem;
+$library-sidebar-bg:            rgba(28, 84, 71, .4);
+$library-sidebar-end-bg:        #636b82;
+
+$setting-padding:               .75rem 1rem;
+$setting-border-width:          3px;
+$setting-border-color:          #d3cfc9;
+
+$setting-title-margin-bottom:   .25rem;
+$setting-title-color:           #666;
+$setting-title-font-size:       .875rem;
+$setting-title-font-weight:     700;
