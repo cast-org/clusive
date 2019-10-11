@@ -8,8 +8,8 @@
     }
 
     .sidebar-end {
-        background-color: $library-sidebar-end-bg;
-        background-image: none;
+        //background-color: $library-sidebar-end-bg;
+        background-image: linear-gradient(180deg, $library-sidebar-end-bg, $library-sidebar-end-bg-alt);
 
         .btn {
             width: 3.25rem;
@@ -57,7 +57,7 @@
 }
 
 .card-library {
-    box-shadow: -.125rem -.5rem 0 .125rem rgba(255, 255, 255, 1), -.125rem -.125rem 0 .125rem rgba(255, 255, 255, 1);
+    box-shadow: -.125rem -.5rem 0 .125rem rgba(#fbfbfb, 1), -.125rem -.125rem 0 .125rem rgba(#fbfbfb, 1);
 
     .link-stretch {
         color: inherit;

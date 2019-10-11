@@ -1055,40 +1055,77 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
-.btn-primary {
+.btn-setting {
   color: #ff554d;
   background-color: rgba(171, 252, 239, 0.85);
   border-color: transparent;
 }
 
-.btn-primary:hover {
+.btn-setting:hover {
   color: #ff554d;
   background-color: #abfcef;
   border-color: transparent;
 }
 
-.btn-primary:focus, .btn-check-input:focus ~ .btn-primary {
+.btn-setting:focus, .btn-check-input:focus ~ .btn-setting {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
-.btn-primary.disabled,
-.btn-primary:disabled, .btn-check-input[disabled] ~ .btn-primary {
+.btn-setting.disabled,
+.btn-setting:disabled, .btn-check-input[disabled] ~ .btn-setting {
   color: #ff554d;
   background-color: rgba(171, 252, 239, 0.85);
   border-color: transparent;
 }
 
-.btn-primary:active,
-.btn-primary.active,
-.btn-primary.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-primary {
+.btn-setting:active,
+.btn-setting.active,
+.btn-setting.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-setting {
   color: #ff554d;
   background-color: #91d6cb;
   border-color: transparent;
 }
 
-.btn-primary:active:focus,
-.btn-primary.active:focus,
-.btn-primary.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-primary {
+.btn-setting:active:focus,
+.btn-setting.active:focus,
+.btn-setting.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-setting {
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+}
+
+.btn-tool {
+  color: #636b82;
+  background-color: rgba(171, 252, 239, 0.85);
+  border-color: transparent;
+}
+
+.btn-tool:hover {
+  color: #636b82;
+  background-color: #abfcef;
+  border-color: transparent;
+}
+
+.btn-tool:focus, .btn-check-input:focus ~ .btn-tool {
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+}
+
+.btn-tool.disabled,
+.btn-tool:disabled, .btn-check-input[disabled] ~ .btn-tool {
+  color: #636b82;
+  background-color: rgba(171, 252, 239, 0.85);
+  border-color: transparent;
+}
+
+.btn-tool:active,
+.btn-tool.active,
+.btn-tool.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-tool {
+  color: #636b82;
+  background-color: #91d6cb;
+  border-color: transparent;
+}
+
+.btn-tool:active:focus,
+.btn-tool.active:focus,
+.btn-tool.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-tool {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
@@ -3282,16 +3319,23 @@ button.list-item-action {
   padding: 1.25rem 1rem;
   margin-bottom: 1rem;
   background-image: linear-gradient(90deg, rgba(99, 107, 130, 0.5) 0%, rgba(99, 107, 130, 0) 65%);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
 }
 
 .site-header .page-header {
+  margin-bottom: 0;
   margin-left: 1rem;
   vertical-align: middle;
 }
 
 .site-header-logo {
   display: inline-block;
+  font-size: 2.25rem;
+  vertical-align: middle;
+}
+
+.site-header-logo .icon-logo-clusive-toggle {
+  color: #fbfbfb;
 }
 
 .site-header-text {
@@ -3349,7 +3393,7 @@ body {
   align-items: center;
   padding: 1rem 0;
   background-image: linear-gradient(180deg, rgba(99, 174, 161, 0.35) 0%, rgba(99, 174, 161, 0.5) 100%);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
 }
 
 @media (min-width: 36em) {
@@ -3433,12 +3477,11 @@ body {
 
 .library .sidebar {
   flex-basis: 3rem;
-  background-color: rgba(28, 84, 71, 0.4);
+  background-color: rgba(28, 84, 71, 0.35);
 }
 
 .library .sidebar-end {
-  background-color: #636b82;
-  background-image: none;
+  background-image: linear-gradient(180deg, rgba(99, 107, 130, 0.8), #636b82);
 }
 
 .library .sidebar-end .btn {
@@ -3487,7 +3530,7 @@ body {
 }
 
 .card-library {
-  box-shadow: -0.125rem -0.5rem 0 0.125rem white, -0.125rem -0.125rem 0 0.125rem white;
+  box-shadow: -0.125rem -0.5rem 0 0.125rem #fbfbfb, -0.125rem -0.125rem 0 0.125rem #fbfbfb;
 }
 
 .card-library .link-stretch {
@@ -3504,12 +3547,12 @@ body {
   text-align: center;
 }
 
-.btn-primary {
-  text-shadow: 0.0625em 0.0625em 0 rgba(99, 107, 129, 0.75);
+.btn-setting {
+  text-shadow: 0.0625em 0.0625em 0 rgba(91, 119, 153, 0.75);
 }
 
-.btn-primary [class^="icon-"]::before,
-.btn-primary [class*=" icon-"]::before {
+.btn-setting [class^="icon-"]::before,
+.btn-setting [class*=" icon-"]::before {
   position: relative;
   top: -.03125em;
 }

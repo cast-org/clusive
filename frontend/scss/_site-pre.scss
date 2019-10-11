@@ -201,12 +201,13 @@ $sidebar-bg:                    rgba(#63aea1, .35);
 $sidebar-bg-alt:                rgba(#63aea1, .5);
 $sidebar-end-bg:                #5fb29f;
 $sidebar-end-bg-alt:            #429887;
-$sidebar-border-radius:         1rem;
+$sidebar-border-radius:         .5rem;
 
 $library-bg:                    #72c0b2;
 $library-grid-gutter:           2rem;
-$library-sidebar-bg:            rgba(#1c5447, .4);
-$library-sidebar-end-bg:        #636b82;
+$library-sidebar-bg:            rgba(#1c5447, .35);
+$library-sidebar-end-bg:        rgba(#636b82, .8); //5b7799;
+$library-sidebar-end-bg-alt:    rgba(#636b82, 1);
 
 $setting-padding:               .75rem 1rem 1rem;
 $setting-border-width:          3px;

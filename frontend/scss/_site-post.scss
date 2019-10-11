@@ -56,7 +56,7 @@ $btn-colors: ();
 $btn-themes: map-merge(
     $btn-themes,
     (
-        "primary":
+        "setting":
         (
             "base": #40998b,
             "bg": rgba(#abfcef, .85),
@@ -67,6 +67,19 @@ $btn-themes: map-merge(
             "hover-border-color": transparent,
             "active-bg": palette(#abfcef, 600),
             "active-color": #ff554d,
+            "active-border-color": transparent
+        ),
+        "tool":
+        (
+            "base": #40998b,
+            "bg": rgba(#abfcef, .85),
+            "color": #636b82,
+            "border-color": transparent,
+            "hover-bg": rgba(#abfcef, 1),
+            "hover-color": #636b82,
+            "hover-border-color": transparent,
+            "active-bg": palette(#abfcef, 600),
+            "active-color": #636b82,
             "active-border-color": transparent
         ),
         "secondary":

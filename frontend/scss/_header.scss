@@ -7,6 +7,7 @@
     @include border-radius($sidebar-border-radius);
 
     .page-header {
+        margin-bottom: 0;
         margin-left: 1rem;
         vertical-align: middle;
     }
@@ -14,6 +15,12 @@
 
 .site-header-logo {
     display: inline-block;
+    @include font-size(2.25rem);
+    vertical-align: middle;
+
+    .icon-logo-clusive-toggle {
+        color: #fbfbfb;
+    }
 }
 
 .site-header-text {
