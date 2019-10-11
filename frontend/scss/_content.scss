@@ -9,40 +9,13 @@ body {
 .content {
     padding-right: 1rem;
     padding-left: 1rem;
+    outline: 0;
 }
 
 .login-status {
     float: right;
     margin-top: 2em;
     clear: right;
-}
-
-.btn-primary,
-.btn-secondary,
-.btn-tertiary {
-    border-color: transparent;
-
-    @include hover-focus() {
-        border-color: transparent;
-    }
-}
-
-.btn-help {
-    [class^="icon-"],
-    [class*=" icon-"] {
-        position: relative;
-        display: inline-block;
-        transform: rotate(15deg);
-
-        &:first-child {
-            left: .125rem;
-            margin-left: -.125rem;
-        }
-        &:last-child {
-            left: -.125rem;
-            margin-left: -.125rem;
-        }
-    }
 }
 
 .form-check-input:checked ~ .form-check-label {

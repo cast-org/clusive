@@ -28,10 +28,10 @@
 
     .btn-help {
         margin-top: auto;
-        margin-right: -1rem;
+        margin-right: -.5rem;
 
         @include media-breakpoint-up(sm) {
-            margin-right: -2rem;
+            margin-right: -1.5rem;
         }
     }
 }

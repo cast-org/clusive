@@ -1,6 +1,6 @@
 .setting-modal {
     .modal-body {
-        padding: 0 0 1rem;
+        padding: 0;
     }
 }
 .setting {
@@ -37,7 +37,7 @@
         //stylelint-disable-next-line font-family-no-missing-generic-family-keyword
         font-family: Fontello;
         color: #111;
-        content: "\e801";
+        content: "\e812";
     }
 
     &::before {
@@ -49,5 +49,11 @@
         top: 1.25rem;
         right: 0;
         @include font-size(1.25rem);
+    }
+}
+
+.option-color-theme {
+    .btn {
+        padding: 1rem 1.5rem;
     }
 }

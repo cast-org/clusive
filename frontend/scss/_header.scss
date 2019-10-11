@@ -1,8 +1,32 @@
-.page-header {
-    //something
+.site-header {
+    position: relative;
+    left: -4.5rem;
+    padding: 1.25rem 1rem;
+    margin-bottom: 1rem;
+    background-image: linear-gradient(90deg, rgba(#636b82, .5) 0%, rgba(#636b82, 0) 65%);
+    @include border-radius($sidebar-border-radius);
+
+    .page-header {
+        margin-left: 1rem;
+        vertical-align: middle;
+    }
 }
 
-.header {
-    padding: 1rem;
-    background-color: $clusive-orange;
+.site-header-logo {
+    display: inline-block;
+}
+
+.site-header-text {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+    @include font-size(2.5rem);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.page-header {
+    display: inline-block;
+    @include font-size(1.3125rem);
+    border-bottom: 3px solid #66faff;
 }
