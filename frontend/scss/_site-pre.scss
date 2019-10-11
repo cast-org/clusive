@@ -107,12 +107,9 @@ $kbd-box-shadow:                        0 0 transparent;
 $btn-box-shadow:                        0 0 transparent;
 $btn-active-box-shadow:                 0 0 transparent;
 $input-box-shadow:                      0 0 transparent;
-//$input-focus-box-shadow:                null;
 $form-checkradio-box-shadow:            0 0 transparent;
 $form-switch-track-box-shadow:          null;
-//$form-switch-track-focus-box-shadow:    0 0 transparent;
 $form-switch-thumb-box-shadow:          null;
-//$form-switch-thumb-focus-box-shadow:    0 0 transparent;
 $form-range-track-box-shadow:           0 0 transparent;
 $progress-box-shadow:                   0 0 transparent;
 $progress-bar-box-shadow:               0 0 transparent;
@@ -142,12 +139,11 @@ $font-family-sans-serif:        "Source Sans Pro", -apple-system, BlinkMacSystem
 
 $grid-row-columns:              4;
 
-//$btn-primary:                   rgba(#66faff, .7);
-//$btn-secondary:                 rgba(#7d89ac, .4);
 $btn-focus-box-shadow-alpha:    .8;
 
 $form-checkradio-border-width:          1px;
 $form-checkradio-border-color:          #7e8aad;
+$form-checkradio-checked-bg:            #66faff;
 $form-checkradio-checked-border-color:  #40998b;
 $form-checkradio-radio-icon:            none;
 $form-checkradio-focus-border-color:    #40998b;
@@ -156,7 +152,7 @@ $form-checkradio-focus-box-shadow:      0 0 0 .1875rem rgba(#40998b, .9);
 $form-range-track-height:       .325rem;
 $form-range-track-bg:           #d3cfc9;
 $form-range-thumb-width:        1.25rem;
-$form-range-thumb-bg:           #40998b;
+$form-range-thumb-bg:           #66faff;
 $form-range-thumb-box-shadow:   .125rem .125rem 0 .025rem rgba(#40998b, .9);
 $form-range-thumb-focus-box-shadow: 0 0 0 .1875rem rgba(#40998b, .9) !default;
 $form-range-thumb-active-bg:    #40998b;
@@ -165,11 +161,11 @@ $form-switch-width:                         3rem;
 $form-switch-gutter:                        calc(#{$form-switch-width} + .125em) !default;
 $form-switch-track-height:                  1.75rem;
 $form-switch-track-bg:                      #ded9c4;
-$form-switch-track-border-color:            #7e8aad; //#40998b;
+$form-switch-track-border-color:            #7e8aad;
 $form-switch-track-border-radius:           $form-switch-track-height;
 $form-switch-track-focus-border-color:      #40998b;
 $form-switch-track-focus-box-shadow:        0 0 0 .1875rem rgba(#40998b, .9);
-$form-switch-track-checked-bg:              #40998b;
+$form-switch-track-checked-bg:              #66faff;
 $form-switch-track-checked-border-color:    #40998b;
 $form-switch-track-checked-box-shadow:      null;
 
@@ -201,13 +197,15 @@ $modal-footer-border-width:     3px;
 // Clusive specific items
 // =====
 
-$sidebar-bg:                    rgba(99, 176, 162, .4);
+$sidebar-bg:                    rgba(#63aea1, .35);
+$sidebar-bg-alt:                rgba(#63aea1, .5);
 $sidebar-end-bg:                #5fb29f;
+$sidebar-end-bg-alt:            #429887;
 $sidebar-border-radius:         1rem;
 
 $library-bg:                    #72c0b2;
 $library-grid-gutter:           2rem;
-$library-sidebar-bg:            rgba(28, 84, 71, .4);
+$library-sidebar-bg:            rgba(#1c5447, .4);
 $library-sidebar-end-bg:        #636b82;
 
 $setting-padding:               .75rem 1rem 1rem;

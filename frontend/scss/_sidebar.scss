@@ -4,7 +4,8 @@
     flex-direction: column;
     align-items: center;
     padding: 1rem 0;
-    background-color: $sidebar-bg;
+    //background-color: $sidebar-bg;
+    background-image: linear-gradient(180deg, $sidebar-bg 0%, $sidebar-bg-alt 100%);
     @include border-radius($sidebar-border-radius);
 
     @include media-breakpoint-up(sm) {
@@ -27,13 +28,17 @@
     }
 
     .btn-help {
-        margin-top: auto;
-        margin-right: -.5rem;
-
-        @include media-breakpoint-up(sm) {
-            margin-right: -1.5rem;
-        }
+        position: absolute;
+        right: -.5rem;
+        bottom: 1rem;
     }
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-basis: 3rem;
+    flex-direction: column;
+    align-items: center;
 }
 
 .sidebar-start {
@@ -42,12 +47,21 @@
     .btn + .btn:not(.btn-help):not(.btn-glossary) {
         margin-top: .5rem;
     }
+
+    .btn-link {
+        color: #111;
+
+        &:hover {
+            color: #000;
+        }
+    }
 }
 
 .sidebar-end {
     order: 1;
     margin-left: 1rem;
-    background-color: $sidebar-end-bg;
+    //background-color: $sidebar-end-bg;
+    background-image: linear-gradient(180deg, $sidebar-end-bg 0%, $sidebar-end-bg-alt 100%);
 
     .btn {
         display: inline-flex;

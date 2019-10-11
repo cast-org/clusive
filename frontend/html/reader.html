@@ -35,44 +35,59 @@
 <div class="container-xl">
     <div class="row">
         <div class="col-auto sidebar sidebar-start">
-            <button type="button" class="btn btn-link" aria-label="Contents">
-                <span class="icon-menu" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-link" aria-label="Previous page">
-                <span class="icon-chevron-left" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-link" aria-label="Next page">
-                <span class="icon-chevron-right" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-secondary btn-glossary" aria-label="Glossary">
-                <span aria-hidden="true">Glossary</span>
-            </button>
-            <button type="button" class="btn btn-secondary btn-xlarge btn-icon btn-help" aria-label="Help/Information">
-                <span class="icon-help" aria-hidden="true"></span>
-                <span class="icon-attention" aria-hidden="true"></span>
-            </button>
+            <nav class="sidebar-nav" aria-label="Article">
+                <a href="./library.html" class="btn btn-link" aria-label="Back to library">
+                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                </a>
+                <button type="button" class="btn btn-link" aria-label="Contents">
+                    <span class="icon-menu" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-link" aria-label="Previous page">
+                    <span class="icon-chevron-left" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-link" aria-label="Next page">
+                    <span class="icon-chevron-right" aria-hidden="true"></span>
+                </button>
+            </nav>
+            <div role="region" aria-label="Supports">
+                <button type="button" class="btn btn-secondary btn-glossary" aria-label="Glossary">
+                    <span aria-hidden="true">Glossary</span>
+                </button>
+                <button type="button" class="btn btn-secondary btn-xlarge btn-icon btn-help" aria-label="Help/Information">
+                    <span class="icon-help" aria-hidden="true"></span>
+                    <span class="icon-attention" aria-hidden="true"></span>
+                </button>
+            </div>
         </div>
 
-        <div class="col-auto sidebar sidebar-end">
+        <div class="col-auto sidebar sidebar-end" role="region" aria-label="Reading tools">
             <button type="button" class="btn btn-primary" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
                 <span class="icon-settings" aria-hidden="true"></span>
             </button>
             <button type="button" class="btn btn-primary" aria-label="Read aloud">
                 <span class="icon-play" aria-hidden="true"></span>
             </button>
-            <button type="button" class="btn btn-primary" aria-label="Lookup">
+            <button type="button" class="btn btn-primary" aria-label="Lookup definition">
                 <span class="icon-book" aria-hidden="true"></span>
             </button>
         </div>
 
         <div id="content" class="col content" tabindex="-1">
-            <h1 class="page-header">Reader</h1>
+            <header>
+                <h1 class="page-header">Reader</h1>
+            </header>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim. Curabitur sit amet ante odio. In eleifend lacinia ipsum, eu eleifend diam tempor et. Nullam iaculis lobortis sollicitudin. Maecenas interdum libero sit amet quam cursus, et dapibus enim facilisis. Donec non leo dapibus, elementum velit non, laoreet nisl. Sed in lacinia tortor. Suspendisse eget accumsan erat. Phasellus vel est eu ligula hendrerit condimentum sed quis nulla. Nam dignissim dolor in ipsum dapibus sagittis.</p>
-            <p>Aliquam auctor, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, feugiat id porta nec, tincidunt eget quam.</p>
-            <p>Nam varius justo ac malesuada sollicitudin. Donec quis metus nec velit interdum rhoncus in non nulla. In sollicitudin nibh ac lectus malesuada, a facilisis enim volutpat. Quisque felis odio, lacinia eu nisi at, fringilla tempor nulla. Nulla sollicitudin lacus vel velit sollicitudin, in ornare augue consectetur. Sed accumsan neque ac nisi porta, non aliquam odio porttitor. Aenean vel mollis metus, id pulvinar tellus. Nullam sodales egestas arcu lacinia pretium. Sed at orci iaculis, sagittis eros in, pharetra libero. In quis nulla lobortis urna mollis pretium. Praesent vehicula, massa sit amet semper cursus, purus tellus ullamcorper sem, et lobortis turpis purus nec nisi. Aenean purus neque, malesuada et ipsum a, suscipit bibendum erat. Vestibulum suscipit rutrum elit quis dictum. Nunc facilisis felis velit, eu mollis mauris volutpat et.</p>
-            <p>Suspendisse pulvinar est maximus lacus faucibus gravida. Nunc sit amet condimentum est, in vulputate ipsum. Suspendisse ac dui vel risus pulvinar volutpat eu ut metus. Pellentesque at congue augue, non tincidunt orci. Aliquam ut est vitae justo auctor posuere non at metus. Ut malesuada dui vel enim ultrices, nec tristique nisl gravida. Morbi at lacus elit. Donec interdum lorem at neque aliquam, sit amet ornare augue faucibus. Morbi imperdiet pellentesque ligula tincidunt cursus. Fusce lacus ex, vestibulum ac erat vitae, ullamcorper dignissim arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <p>Nam faucibus tristique odio, a lobortis ipsum faucibus eleifend. Etiam pretium diam sed turpis faucibus commodo. Integer cursus, felis placerat cursus aliquam, sapien nisl euismod ex, vestibulum pulvinar nibh lectus vitae dui. Sed volutpat tincidunt felis non venenatis. Nulla et vulputate augue, sed egestas lacus. Nunc pellentesque magna eget eleifend volutpat. Vestibulum porttitor diam at erat ultrices vestibulum. Etiam ultricies erat in ante iaculis sagittis. Morbi dignissim aliquet iaculis. Cras aliquam fermentum lobortis. Curabitur non massa felis. Nullam maximus justo at eros efficitur pulvinar. Morbi fermentum dui quis mi condimentum sollicitudin. Curabitur vel varius elit. Duis ornare tortor suscipit imperdiet aliquam. Phasellus sit amet ornare dolor.</p>
+            <main>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim. Curabitur sit amet ante odio. In eleifend lacinia ipsum, eu eleifend diam tempor et. Nullam iaculis lobortis sollicitudin. Maecenas interdum libero sit amet quam cursus, et dapibus enim facilisis. Donec non leo dapibus, elementum velit non, laoreet nisl. Sed in lacinia tortor. Suspendisse eget accumsan erat. Phasellus vel est eu ligula hendrerit condimentum sed quis nulla. Nam dignissim dolor in ipsum dapibus sagittis.</p>
+                <p>Aliquam auctor, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, feugiat id porta nec, tincidunt eget quam.</p>
+                <p>Nam varius justo ac malesuada sollicitudin. Donec quis metus nec velit interdum rhoncus in non nulla. In sollicitudin nibh ac lectus malesuada, a facilisis enim volutpat. Quisque felis odio, lacinia eu nisi at, fringilla tempor nulla. Nulla sollicitudin lacus vel velit sollicitudin, in ornare augue consectetur. Sed accumsan neque ac nisi porta, non aliquam odio porttitor. Aenean vel mollis metus, id pulvinar tellus. Nullam sodales egestas arcu lacinia pretium. Sed at orci iaculis, sagittis eros in, pharetra libero. In quis nulla lobortis urna mollis pretium. Praesent vehicula, massa sit amet semper cursus, purus tellus ullamcorper sem, et lobortis turpis purus nec nisi. Aenean purus neque, malesuada et ipsum a, suscipit bibendum erat. Vestibulum suscipit rutrum elit quis dictum. Nunc facilisis felis velit, eu mollis mauris volutpat et.</p>
+                <p>Suspendisse pulvinar est maximus lacus faucibus gravida. Nunc sit amet condimentum est, in vulputate ipsum. Suspendisse ac dui vel risus pulvinar volutpat eu ut metus. Pellentesque at congue augue, non tincidunt orci. Aliquam ut est vitae justo auctor posuere non at metus. Ut malesuada dui vel enim ultrices, nec tristique nisl gravida. Morbi at lacus elit. Donec interdum lorem at neque aliquam, sit amet ornare augue faucibus. Morbi imperdiet pellentesque ligula tincidunt cursus. Fusce lacus ex, vestibulum ac erat vitae, ullamcorper dignissim arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Nam faucibus tristique odio, a lobortis ipsum faucibus eleifend. Etiam pretium diam sed turpis faucibus commodo. Integer cursus, felis placerat cursus aliquam, sapien nisl euismod ex, vestibulum pulvinar nibh lectus vitae dui. Sed volutpat tincidunt felis non venenatis. Nulla et vulputate augue, sed egestas lacus. Nunc pellentesque magna eget eleifend volutpat. Vestibulum porttitor diam at erat ultrices vestibulum. Etiam ultricies erat in ante iaculis sagittis. Morbi dignissim aliquet iaculis. Cras aliquam fermentum lobortis. Curabitur non massa felis. Nullam maximus justo at eros efficitur pulvinar. Morbi fermentum dui quis mi condimentum sollicitudin. Curabitur vel varius elit. Duis ornare tortor suscipit imperdiet aliquam. Phasellus sit amet ornare dolor.</p>
+            </main>
+
+            <footer>
+                <!-- anything here? -->
+            </footer>
         </div>
     </div>
 </div>

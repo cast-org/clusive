@@ -4,16 +4,28 @@
     .sidebar {
         flex-basis: 3rem;
         background-color: $library-sidebar-bg;
+        //background-image: none;
     }
 
     .sidebar-end {
         background-color: $library-sidebar-end-bg;
+        background-image: none;
 
         .btn {
             width: 3.25rem;
             height: 3.25rem;
             margin-left: -2rem;
             @include font-size(2.5rem);
+        }
+    }
+
+    .site-footer {
+        a {
+            color: #00399c;
+
+            @include hover() {
+                color: palette(#00399c, 700);
+            }
         }
     }
 }
