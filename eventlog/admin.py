@@ -8,7 +8,8 @@ class SessionAdmin(admin.ModelAdmin):
     ordering = ('-startedAtTime',)
 
 class EventAdmin(admin.ModelAdmin):
-    readonly_fields = ('id', 'eventTime', 'actor', 'group', 'membership', 'type', 'action', 'session', )
+    readonly_fields = ('id', 'eventTime', 'actor', 'group', 'membership', 'type', 'action', 'session',
+                       'document', 'page', 'control', 'value')
     list_display = ('id', 'eventTime', 'actor', 'type', 'action')
     ordering = ('-eventTime',)
 
