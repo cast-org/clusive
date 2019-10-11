@@ -1,0 +1,8 @@
+<strong>{{headword}}</strong>
+{% for m in meanings %}
+<p>({{m.pos}}) {{m.definition}}<br />
+    {% for e in m.examples %}
+    <em>{{e}}</em><br/>
+    {% endfor %}
+</p>
+{% endfor %}
