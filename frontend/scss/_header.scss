@@ -2,6 +2,7 @@
     position: relative;
     left: -4.5rem;
     padding: 1.25rem 1rem;
+    margin-right: -4.5rem;
     margin-bottom: 1rem;
     background-image: linear-gradient(90deg, rgba(#636b82, .5) 0%, rgba(#636b82, 0) 65%);
     @include border-radius($sidebar-border-radius);
@@ -15,11 +16,16 @@
 
 .site-header-logo {
     display: inline-block;
-    @include font-size(2.25rem);
+    @include font-size(1.75rem);
+    white-space: nowrap;
     vertical-align: middle;
 
     .icon-logo-clusive-toggle {
         color: #fbfbfb;
+    }
+
+    @include media-breakpoint-up(md) {
+        @include font-size(2.25rem);
     }
 }
 
