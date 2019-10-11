@@ -1,8 +1,16 @@
+import logging
+
 from django.db import models
 from uuid import uuid4
 from roster.models import Period, ClusiveUser, Roles
 from django.utils import timezone
 import caliper
+
+logger = logging.getLogger(__name__)
+
+# Keys for data we store in the session
+PERIOD_KEY = 'current_period'
+SESSION_ID_KEY = 'db_session_id'
 
 # A user session
 class LoginSession(models.Model):
@@ -28,23 +36,57 @@ class Event(models.Model):
     )
     eventTime = models.DateTimeField(default=timezone.now)
     # TODO eventEndTime
+    # type of the event, based on Caliper spec
     type = models.CharField(max_length=32, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
+    # action of the event, based on Caliper spec
     action = models.CharField(max_length=32, choices=[(k,v) for k, v in caliper.constants.CALIPER_ACTIONS.items()])
-    # TODO page
-    # TODO article
+    # What document the user was looking at; null if none (eg, the library page)
+    document = models.CharField(max_length=128, null=True)
+    # If in a document, what page of the document the user was looking at; if not, the name of the application page
+    page = models.CharField(max_length=128, null=True)
+    # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
+    control = models.CharField(max_length=32, null=True)
+    # For events that operate on text (lookup, highlight), the actual text looked up or highlighted
+    # For preferences, the new value chosen for the preference
+    value = models.CharField(max_length=128, null=True)
     # TODO preference
     # TODO context (current settings, version of text (eg lexile level), list of glossary words highlighted)
 
     @classmethod
-    def build(cls, type, action, login_session, group):
-        clusive_user = login_session.user
-        event = cls(type=type,
-                    action=action,
-                    actor=clusive_user,
-                    membership=clusive_user.role,
-                    session=login_session,
-                    group=group)
-        return event
+    def build(cls, type, action,
+              session=None, login_session=None, group=None,
+              document=None, page=None,
+              control=None, value=None):
+        """Create an event based on the data provided."""
+        if not session and not login_session:
+            logger.error("Either a session object or a login_session must be provided")
+            return None
+        try:
+            if session and not login_session:
+                login_session_id = session.get(SESSION_ID_KEY, None)
+                login_session = LoginSession.objects.get(id=login_session_id)
+            if session and not group:
+                period_id = session.get(PERIOD_KEY, None)
+                group = Period.objects.get(id=period_id)
+            clusive_user = login_session.user
+            event = cls(type=type,
+                        action=action,
+                        actor=clusive_user,
+                        membership=clusive_user.role,
+                        session=login_session,
+                        group=group,
+                        document=document,
+                        page=page,
+                        control=control,
+                        value=value)
+            return event
+        except ClusiveUser.DoesNotExist:
+            logger.warning("Event could not be stored - no Clusive user found: %s/%s", type, action)
+        except LoginSession.DoesNotExist:
+            logger.warning("Event could not be stored - no LoginSession: %s/%s", type, action)
+        except Period.DoesNotExist:
+            logger.warning("Event could not be stored - period id %s not found", period_id)
+        return None
 
 
     def __str__(self):
