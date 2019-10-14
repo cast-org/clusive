@@ -6,5 +6,5 @@ from . import views
 urlpatterns = [
     path('', TemplateView.as_view(template_name='pages/index.html'), name='index'),
     path('reader/<str:pub_id>', TemplateView.as_view(template_name='pages/reader.html'), name='reader'),
-    path('reader', views.reader_index, name='reader_index'),
+    path('reader', views.LibraryView.as_view(), name='reader_index'),
 ]
