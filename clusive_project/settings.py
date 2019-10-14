@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'roster.apps.RosterConfig',
     'pages.apps.PagesConfig',
     'eventlog.apps.EventlogConfig',
+    'library.apps.LibraryConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
 ]
 
