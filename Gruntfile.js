@@ -86,7 +86,8 @@ module.exports = function (grunt) {
             core: {
                 files: {
                     'shared/static/shared/css/<%= pkg.name %>.css': 'frontend/scss/<%= pkg.name %>.scss',
-                    'shared/static/shared/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss'
+                    'shared/static/shared/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',                    
+                    'shared/static/shared/css/<%= pkg.name %>-reader-theme-bw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bw.scss',                    
                 }
             }
         },

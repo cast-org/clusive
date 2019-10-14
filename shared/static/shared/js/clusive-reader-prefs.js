@@ -118,6 +118,10 @@
                         {
                             inputValue: "bw",
                             outputValue: "day"
+                        },
+                        {
+                            inputValue: "lgdg",
+                            outputValue: "lgdg"
                         }
                     ]
                 }                
