@@ -1,24 +1,19 @@
-/* CONFIG */
-
+@charset "UTF-8";
 :root[style*="lgdg"] {
   --RS__backgroundColor: #555;
   --RS__textColor: #bdbdbb;
-
-  --RS__linkColor: #0000EE;
+  --RS__linkColor: #bdbdbb;
   --RS__visitedColor: #551A8B;
-
   /* This can be customized but initial will re-use default value of the browser */
   --RS__selectionBackgroundColor: #b4d8fe;
   --RS__selectionTextColor: inherit;
-
-  --RS__maxLineLength: 40.01rem; /* Forcing a reflow in Blink/Webkit so that blend mode can work */
+  --RS__maxLineLength: 40.01rem;
+  /* Forcing a reflow in Blink/Webkit so that blend mode can work */
 }
 
 /* we don’t need to redeclare bg-color and color for :root since we will inherit and update from day/default mode */
-
 :root[style*="lgdg"] body {
   /* Should be transparent but Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=711955&q=mix-blend-mode&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified */
-
   color: inherit;
   background-color: var(--RS__backgroundColor);
 }
