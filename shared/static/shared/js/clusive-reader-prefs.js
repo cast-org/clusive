@@ -122,7 +122,11 @@
                         {
                             inputValue: "lgdg",
                             outputValue: "lgdg"
-                        }
+                        },
+                        {
+                            inputValue: "bbr",
+                            outputValue: "bbr"
+                        }                        
                     ]
                 }                
             }

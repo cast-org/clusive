@@ -3,7 +3,7 @@
   --RS__textColor: #{$textColor};
 
   --RS__linkColor: #{$textColor};
-  --RS__visitedColor: #551A8B;
+  --RS__visitedColor: #{$textColor};
 
   /* This can be customized but initial will re-use default value of the browser */
   --RS__selectionBackgroundColor: #b4d8fe;
@@ -23,7 +23,7 @@
 
 :root[style*="#{$themeName}"] a:link,
 :root[style*="#{$themeName}"] a:link * {
-  color: var(--RS__linkColor);
+  color: var(--RS__linkColor);  
 }
 
 :root[style*="#{$themeName}"] a:visited,
