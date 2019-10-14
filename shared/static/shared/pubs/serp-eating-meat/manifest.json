@@ -11,7 +11,8 @@
         {"href": "meat.html", "type": "text/html"}
     ],
     "resources": [
-        {"href": "images/meat1-public-domain.jpg", "type": "image/jpeg", "attribution": {
+        {"rel": "cover",
+            "href": "images/meat1-public-domain.jpg", "type": "image/jpeg", "attribution": {
             "title": "meat 1",
             "author": "Public Domain Pictures",
             "source": "Pixabay (https://pixabay.com/en/agriculture-animal-baby-cute-84702/)",

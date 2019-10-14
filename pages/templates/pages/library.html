@@ -1,14 +1,17 @@
 {% extends "shared/base.html" %}
+{% load static %}
 
 {% block title %}Welcome to Clusive{% endblock %}
 
 {% block content %}
 <h1>Available Publications</h1>
-<ul>
 {% for pub in book_list %}
-    <li>
+    <div style="border: 1px solid black; padding: 1em; margin: 1em;">
+        {% if pub.cover %}
+            <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{ pub.cover }}" alt="Cover picture for {{ pub.title }}" style="max-width: 200px; max-height: 200px;" />
+        {% endif %}
         <a href="{% url 'reader' pub_id=pub.path%}">{{ pub.title }}</a>
-    </li>
+    </div>
 {% endfor %}
 </ul>
 {% endblock %}

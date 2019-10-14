@@ -15,9 +15,15 @@ def load_static_books(apps, schema_editor):
         with open(os.path.join(book_dir, 'manifest.json'), 'r') as file:
             manifest = json.load(file)
             title = manifest['metadata']['headline']
-            # TODO for cover picture, scan manifest['resources'] for one with rel='cover'
-            b = Book(path=book_dir.name, title=title)
+            cover = find_cover(manifest)
+            b = Book(path=book_dir.name, title=title, cover=cover)
             b.save()
+
+def find_cover(manifest):
+    for item in manifest['resources']:
+        if item.get('rel') == 'cover':
+            return item.get('href')
+    return None
 
 # Not sure if this is the best strategy.
 # Fine for use while testing, but will fail if there are references to books in the DB.

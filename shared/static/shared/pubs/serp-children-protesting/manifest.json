@@ -11,7 +11,8 @@
         {"href": "children-protesting.html", "type": "text/html"}
     ],
     "resources": [
-        {"href": "images/childprotesting1.jpg", "type:": "image/jpeg", "attribution": {
+        {"rel": "cover",
+            "href": "images/childprotesting1.jpg", "type:": "image/jpeg", "attribution": {
             "title": "Ferguson Garner Protest Seattle",
             "author": "Scott Lum",
             "source": "Creative Commons (https://ccsearch.creativecommons.org/photos/bdacb350-d435-4d69-aca7-c73344e50bc8)",
