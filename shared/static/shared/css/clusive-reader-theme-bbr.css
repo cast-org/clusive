@@ -1,4 +1,5 @@
 @charset "UTF-8";
+/* Used to generate new Readium themes ("appearances") */
 :root[style*="bbr"] {
   --RS__backgroundColor: #b96;
   --RS__textColor: #000;
