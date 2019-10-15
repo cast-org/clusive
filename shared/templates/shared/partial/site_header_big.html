@@ -1,0 +1,16 @@
+{% load static %}
+<div class="header">
+    <a href="{% url 'index' %}">
+        <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />
+    </a>
+    <div class="login-status">
+        <button id="glossaryButton" class="btn btn-small btn-secondary" data-cfw="popover" data-cfw-popover-target="#glossaryPop" data-cfw-popover-placement="reverse">
+            Lookup
+        </button>
+        {% if not user.is_anonymous %}
+                Logged in as {{ user }} | <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+                <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+</div>

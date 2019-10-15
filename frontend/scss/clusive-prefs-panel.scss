@@ -1,9 +1,17 @@
 // disable linting for now - this file is most likely going away
 // stylelint-disable
 
+.flc-prefsEditor-separatedPanel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
 .fl-prefsEditor-separatedPanel {
     /* Match Figuration .bg-uibase-500 */
-    background-color: #5e7182;
+    //background-color: #5e7182;
 }
 
 /* Figuration's CSS reset sets legend to 1.5rem in font-size, so we have
@@ -68,9 +76,13 @@ the panels to match the demo's desired appearance*/
 
 @media screen and (min-width: 40em) {
     .fl-prefsEditor-separatedPanel .fl-panelBar .fl-prefsEditor-buttons {
-        padding: .25rem;
-        border-radius: 0 0 1.5rem 1.5rem !important;
-        box-shadow: none !important;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+
+        //padding: .25rem;
+        //border-radius: 0 0 1.5rem 1.5rem !important;
+        //box-shadow: none !important;
     }
     .fl-prefsEditor-separatedPanel .fl-prefsEditor-showHide, .fl-prefsEditor-separatedPanel .fl-prefsEditor-reset {
         font-size: 1rem;
