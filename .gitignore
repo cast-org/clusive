@@ -158,5 +158,3 @@ src/imsglobal-caliper
 src/pip-delete-this-directory.txt
 
 /staticfiles
-
-!frontend/dist
