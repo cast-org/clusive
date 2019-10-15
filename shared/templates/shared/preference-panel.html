@@ -62,16 +62,9 @@
                         components: {
                             prefsEditorLoader: {
                                 options: {
-                                    listeners: {
-                                        "onCreate.log": {
-                                            "this": "console",
-                                            "method": "log",
-                                            "args": ["Created prefsEditorLoader", "{that}"]
-                                        }
-                                    },
                                     components: {
                                         readerPrefs: {
-                                            type: "cisl.prefs.reader",
+                                            type: "cisl.prefs.readerPreferencesBridge",
                                             createOnEvent: "{prefsEditorLoader}.events.onReady",
                                             options: {
                                                 model: {
