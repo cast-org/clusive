@@ -1,1 +1,167 @@
-// Placeholder
+$component-sizes: (
+    "xsmall": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * .75),
+        "line-height":   null,
+        "border-radius": .25rem
+    ),
+    "small": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * .875),
+        "line-height":   null,
+        "border-radius": .25rem
+    ),
+    "large": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * 1.125),
+        "line-height":   null,
+        "border-radius": .5rem
+    ),
+    "xlarge": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * 1.25),
+        "line-height":   null,
+        "border-radius": .5rem
+    )
+);
+
+$utility-bg-colors: map-remove($utility-bg-colors, "secondary", "info", "success", "warning", "danger", "light", "dark");
+
+$usbp: map-remove($grid-breakpoints, "xl");
+$utility-spacing-breakpoints: map-keys($usbp);
+$spacers-margin: map-remove($spacers, "2");
+
+$level-btn: (
+    "bg":                   500,
+    "color":                -1,
+    "border-color":         500,
+    "hover-bg":             600,
+    "hover-color":          -1,
+    "hover-border-color":   600,
+    "active-bg":            700,
+    "active-color":         -1,
+    "active-border-color":  700
+);
+$btn-levels: $level-btn;
+$btn-colors: ();
+//$btn-colors: (
+//    "primary":   $primary,
+//    "secondary": $secondary,
+//    "tertiary":  $tertiary
+//);
+$btn-themes: map-merge(
+    $btn-themes,
+    (
+        "setting":
+        (
+            "base": #40998b,
+            "bg": rgba(#abfcef, .85),
+            "color": #ff554d,
+            "border-color": transparent,
+            "hover-bg": rgba(#abfcef, 1),
+            "hover-color": #ff554d,
+            "hover-border-color": transparent,
+            "active-bg": palette(#abfcef, 600),
+            "active-color": #ff554d,
+            "active-border-color": transparent
+        ),
+        "tool":
+        (
+            "base": #40998b,
+            "bg": rgba(#abfcef, .85),
+            "color": #636b82,
+            "border-color": transparent,
+            "hover-bg": rgba(#abfcef, 1),
+            "hover-color": #636b82,
+            "hover-border-color": transparent,
+            "active-bg": palette(#abfcef, 600),
+            "active-color": #636b82,
+            "active-border-color": transparent
+        ),
+        "secondary":
+        (
+            "base": #40998b,
+            "bg": rgba(#7d89ac, .35),
+            "color": #111,
+            "border-color": transparent,
+            "hover-bg": rgba(#7d89ac, .7),
+            "hover-color": #111,
+            "hover-border-color": transparent,
+            "active-bg": rgba(#7d89ac, .9),
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "option":
+        (
+            "base": #40998b,
+            "bg": $white,
+            "color": #636b81,
+            "border-color": transparent,
+            "hover-bg": $white,
+            "hover-color": #636b81,
+            "hover-border-color": #40998b,
+            "active-bg": #66faff,
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "day":
+        (
+            "base": #40998b,
+            "bg": $white,
+            "color": #111,
+            "border-color": transparent,
+            "hover-bg": $white,
+            "hover-color": #111,
+            "hover-border-color": #40998b,
+            "active-bg": $white,
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "sepia":
+        (
+            "base": #40998b,
+            "bg": #ded9c4,
+            "color": #111,
+            "border-color": #7e8aad,
+            "hover-bg": #ded9c4,
+            "hover-color": #111,
+            "hover-border-color": #40998b,
+            "active-bg": #ded9c4,
+            "active-color": #111,
+            "active-border-color": #7e8aad
+        ),
+        "night":
+        (
+            "base": #40998b,
+            "bg": #636b81,
+            "color": #fff,
+            "border-color": transparent,
+            "hover-bg": #636b81,
+            "hover-color": #fff,
+            "hover-border-color": #40998b,
+            "active-bg": #636b81,
+            "active-color": #fff,
+            "active-border-color": transparent
+        )
+    )
+);
+$btn-sizes: (
+    "large": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * 1.125),
+        "line-height":   null,
+        "border-radius": .5rem
+    ),
+    "xlarge": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * 1.25),
+        "line-height":   null,
+        "border-radius": .5rem
+    )
+);

@@ -11,7 +11,7 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
 
 ### Prerequisites
 
-* [Python 3](https://www.python.org/downloads/) 
+* [Python 3](https://www.python.org/downloads/)
   * On Mac, Homebrew is the easiest way to do this (OS X comes with Python 2.7); you'll need to use the *python3* and *pip3* commands to distinguish Python 2 and Python 3, or change your aliases
 * [virtualenv](https://virtualenv.pypa.io/en/stable/installation/) (strongly recommended for maintaining an isolated environment and dependencies)
 * [Postgres](https://www.postgresql.org/) may be necessary for the psycopg2 dependency (Homebrew on OS X can take care of this)
@@ -20,7 +20,7 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
 ### Create and activitate virtualenv for the project
 
 * Create: `virtualenv ENV`
-* Activate: 
+* Activate:
   - Windows: `.\ENV\Scripts\activate`
   - Mac/Linux: `source ENV/bin/activate`
 
@@ -39,16 +39,16 @@ You'll need to activate the environment each time you're working on the project 
 
 #### Notes on Readium dependencies
 
-Until the `@dita/reader` repo is made public, you'll need to do the following to have the Readium code properly integrated and building:
+Until the `@d-i-t-a/reader` repo is made public, you'll need to do the following to have the Readium code properly integrated and building:
 
 **Note**: This needs to be done after every run of `npm install`, because the install delinks any linked packages (see https://github.com/npm/npm/issues/17287)
 
 1. Check out a local copy of ` https://github.com/d-i-t-a/R2D2BC.git`, install / build it, and run `npm link` in that repo's directory
-2. Run `npm link @dita/reader` in this repo's directory
+2. Run `npm link @d-i-t-a/reader` in this repo's directory
 
-The above process creates a package link between this project's `node_modules` directory (in `@dita/reader`) and the local directory containing the reader code, so it can be pulled in by the build scripts
+The above process creates a package link between this project's `node_modules` directory (in `@d-i-t-a/reader`) and the local directory containing the reader code, so it can be pulled in by the build scripts
 
-### Install Python Dependencies 
+### Install Python Dependencies
 
 * `pip install -r requirements.txt`
 
@@ -69,17 +69,17 @@ The current configuration (for development) uses sqlite3, so no database setup i
 
 * Launch the server: `python manage.py runserver`
 * Confirm you see the Django success page at `http://localhost:8000`
-* Confirm the superuser can log in at `http://localhost:8000/admin/` 
+* Confirm the superuser can log in at `http://localhost:8000/admin/`
 
 ## Running under Docker
 
 Build:
- 
+
 `docker build . -t clusive`
 
 Run for local development (creates an empty sqlite database at each run):
 
-`docker run -e DJANGO_CONFIG=local -p 8000:8000 clusive` 
+`docker run -e DJANGO_CONFIG=local -p 8000:8000 clusive`
 
 Run with production settings and Postgres database:
 

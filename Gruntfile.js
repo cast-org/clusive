@@ -18,7 +18,7 @@ module.exports = function (grunt) {
         clean: {
             target: [
                 "shared/static/shared/js/lib",
-                "shared/static/shared/css"
+                "shared/static/shared/css/*.css"
             ]
         },
         copy: {
@@ -46,14 +46,14 @@ module.exports = function (grunt) {
                     dest: "shared/static/shared/js/lib/figuration"
                 }, {
                     expand: true,
-                    cwd: "node_modules/@dita/reader/dist",
+                    cwd: "node_modules/@d-i-t-a/reader/dist",
                     nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/reader"
-                }, 
+                },
                 {
                     expand: true,
-                    cwd: "node_modules/@dita/reader/viewer/fonts",
+                    cwd: "node_modules/@d-i-t-a/reader/viewer/fonts",
                     nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/reader/fonts"
@@ -72,6 +72,22 @@ module.exports = function (grunt) {
                     src: "**",
                     dest: "shared/static/shared/js/lib/popper.js"
                 }]
+            },
+            frontend: {
+                expand: true,
+                cwd: 'frontend/dist/css/',
+                nonull: true,
+                src: ['**/*'],
+                dest: 'shared/static/shared/css/'
+            }
+
+        },
+        stylelint: {
+            frontend: {
+                options: {
+                    configFile: 'frontend/scss/.stylelintrc'
+                },
+                src: ['frontend/scss/**/*.scss']
             }
         },
         sass: {
@@ -83,23 +99,23 @@ module.exports = function (grunt) {
                 sourceMap: false,
                 outputStyle: 'expanded'
             },
-            core: {
+            frontend: {
                 files: {
-                    'shared/static/shared/css/<%= pkg.name %>.css': 'frontend/scss/<%= pkg.name %>.scss',
-                    'shared/static/shared/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',                    
-                    'shared/static/shared/css/<%= pkg.name %>-reader-theme-lgdg.css': 'frontend/scss/<%= pkg.name %>-reader-theme-lgdg.scss',                    
-                    'shared/static/shared/css/<%= pkg.name %>-reader-theme-bbr.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bbr.scss',
-                    'shared/static/shared/css/<%= pkg.name %>-reader-theme-gw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-gw.scss'                                                              
+                    'frontend/dist/css/<%= pkg.name %>.css': 'frontend/scss/<%= pkg.name %>.scss',
+                    'frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-lgdg.css': 'frontend/scss/<%= pkg.name %>-reader-theme-lgdg.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-bbr.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bbr.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-gw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-gw.scss'
                 }
             }
         },
         postcss: {
-            core: {
+            frontend: {
                 options: {
                     map: false,
                     processors: [flexbugs, calc, autoprefixer]
                 },
-                src: ['shared/static/shared/css/*.css', '!shared/static/shared/css/*.min.css']
+                src: ['frontend/dist/css/*.css', '!frontend/dist/css/*.min.css']
             }
         },
         cssmin: {
@@ -109,31 +125,33 @@ module.exports = function (grunt) {
                 sourceMap: false,
                 advanced: false
             },
-            core: {
+            frontend: {
                 files: [
                     {
                         expand: true,
-                        cwd: 'shared/static/shared/css',
+                        cwd: 'frontend/dist/css',
                         src: ['*.css', '!*.min.css'],
-                        dest: 'shared/static/shared/css',
+                        dest: 'frontend/dist/css',
                         ext: '.min.css'
                     }
                 ]
             }
         }
-    })
+    });
 
     // Load the plugin(s):
+    grunt.loadNpmTasks("@lodder/grunt-postcss");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
-    grunt.loadNpmTasks("@lodder/grunt-postcss");
     grunt.loadNpmTasks("grunt-sass");
+    grunt.loadNpmTasks("grunt-stylelint");
     grunt.loadNpmTasks("grunt-webpack");
 
     // Custom tasks:
     grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules", ["clean:target", "webpack:dev", "css-dist", "copy:lib"]);
 
     // CSS build task
-    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['sass:core', 'postcss:core', 'cssmin:core']);
+    grunt.registerTask('css-test', "Lint front end CSS", ['stylelint:frontend']);
+    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['sass:frontend', 'postcss:frontend', 'cssmin:frontend', 'copy:frontend']);
 }

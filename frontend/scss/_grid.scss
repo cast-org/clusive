@@ -1,0 +1,42 @@
+// Responsive containers that are 100% wide until a breakpoint
+@each $breakpoint, $container-max-width in $container-max-widths {
+    .container-#{$breakpoint} {
+        @extend .container-fluid;
+    }
+
+    @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+        %responsive-container-#{$breakpoint} {
+            max-width: $container-max-width;
+        }
+
+        @each $name, $width in $grid-breakpoints {
+            @if (rem($container-max-width) > rem($width) or $breakpoint == $name) {
+                .container#{breakpoint-designator($name, $grid-breakpoints)} {
+                    @extend %responsive-container-#{$breakpoint};
+                }
+            }
+        }
+    }
+}
+
+// Row columns
+//
+// Specify on a parent element(e.g., .row) to force immediate children into NN
+// number of columns. Supports wrapping to new lines, but does not do a Masonry
+// style grid.
+@mixin row-cols($count) {
+    & > * {
+        flex: 0 0 100% / $count;
+        max-width: 100% / $count;
+    }
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+        @for $i from 1 through $grid-row-columns {
+            .row-cols#{breakpoint-designator($breakpoint, $grid-breakpoints)}-#{$i} {
+                @include row-cols($i);
+            }
+        }
+    }
+}
