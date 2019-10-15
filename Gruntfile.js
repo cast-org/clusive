@@ -50,7 +50,15 @@ module.exports = function (grunt) {
                     nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/reader"
-                }, {
+                },
+                {
+                    expand: true,
+                    cwd: "node_modules/@d-i-t-a/reader/viewer/fonts",
+                    nonull: true,
+                    src: "**",
+                    dest: "shared/static/shared/js/lib/reader/fonts"
+                },
+                {
                     expand: true,
                     cwd: "node_modules/readium-css/css/dist",
                     nonull: true,
@@ -94,7 +102,10 @@ module.exports = function (grunt) {
             frontend: {
                 files: {
                     'frontend/dist/css/<%= pkg.name %>.css': 'frontend/scss/<%= pkg.name %>.scss',
-                    'frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss'
+                    'frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-lgdg.css': 'frontend/scss/<%= pkg.name %>-reader-theme-lgdg.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-bbr.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bbr.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-gw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-gw.scss'
                 }
             }
         },

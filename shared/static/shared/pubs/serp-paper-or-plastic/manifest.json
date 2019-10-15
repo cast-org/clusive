@@ -11,7 +11,8 @@
         {"href": "paper-or-plastic.html", "type": "text/html"}
     ],
     "resources": [
-        {"href": "images/plastic-bags-duncan-hull.jpg", "type": "image/jpeg", "attribution": {
+        {"rel": "cover",
+            "href": "images/plastic-bags-duncan-hull.jpg", "type": "image/jpeg", "attribution": {
             "title": "1 million plastic bags are in use every minute",
             "author": "Duncan Hull",
             "source": "Flickr (https://www.flickr.com/photos/dullhunk/14516738482)",

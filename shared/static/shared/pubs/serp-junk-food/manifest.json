@@ -11,13 +11,14 @@
         {"href": "junk-food.html", "type": "text/html"}
     ],
     "resources": [
-        {"href": "images/junk1-skeeze.jpg", "type": "image/jpeg", "attribution": {
+        {"rel": "cover",
+            "href": "images/junkfood1.jpg", "type": "image/jpeg", "attribution": {
             "title": "junk1",
             "author": "skeeze",
             "source": "Pixabay (https://pixabay.com/en/food-candy-sugar-confection-3195571/)",
             "license": "Pixabay license (https://pixabay.com/en/service/license/)"
             }},
-        {"href": "images/junk2-tesa-photography.jpg", "type": "image/jpeg", "attribution": {
+        {"href": "images/junkfood2.jpg", "type": "image/jpeg", "attribution": {
             "title": "junk2",
             "author":"Tesa Photography",
             "source": "Pixabay (https://pixabay.com/en/diabetes-finger-glucose-test-776999/)",

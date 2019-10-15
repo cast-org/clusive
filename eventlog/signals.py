@@ -1,16 +1,37 @@
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 from django.contrib.auth import user_logged_in, user_logged_out
 from django_session_timeout.signals import user_timed_out
-from eventlog.models import LoginSession, Event
+from eventlog.models import LoginSession, Event, SESSION_ID_KEY, PERIOD_KEY
 from roster.models import Period, ClusiveUser
 from django.utils import timezone
 import logging
 
-PERIOD_KEY = 'current_period'
-
-SESSION_ID_KEY = 'db_session_id'
-
 logger = logging.getLogger(__name__)
+
+#
+# Custom signals that we recognize for event logging
+#
+
+vocab_lookup = Signal(providing_args=[])
+
+#
+# Signal handlers that log specific events
+#
+
+@receiver(vocab_lookup)
+def log_vocab_lookup(sender, **kwargs):
+    """User looks up a vocabulary word"""
+    # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one
+    # TODO: differentiate lookup button from clicking a linked word to look it up.
+    # TODO: indicate document and page where the event occurred
+    event = Event.build(type='TOOL_USE_EVENT',
+                        action='USED',
+                        control='lookup',
+                        value=kwargs['value'],
+                        session=kwargs['session'])
+    if (event):
+        event.save()
+
 
 @receiver(user_logged_in)
 def log_login(sender, **kwargs):
@@ -30,7 +51,8 @@ def log_login(sender, **kwargs):
         # as stored in the session so that event logging will use the correct one.
         periods = clusive_user.periods.all()
         current_period = periods.first() if periods else None
-        django_session[PERIOD_KEY] = current_period.id
+        if (current_period):
+            django_session[PERIOD_KEY] = current_period.id
         # Create an event
         event = Event.build(type='SESSION_EVENT',
                             action='LOGGED_IN',
@@ -46,15 +68,14 @@ def log_logout(sender, **kwargs):
     """A user has logged out. Find the Session object in the database and set the end time."""
     django_session = kwargs['request'].session
     login_session_id = django_session.get(SESSION_ID_KEY, None)
-    period_id        = django_session.get(PERIOD_KEY, None)
     if (login_session_id):
         login_session = LoginSession.objects.get(id=login_session_id)
         # Create an event
         event = Event.build(type='SESSION_EVENT',
                             action='LOGGED_OUT',
-                            login_session=login_session,
-                            group=Period.objects.get(id=period_id))
-        event.save()
+                            session=django_session)
+        if event:
+            event.save()
         # Close out session
         login_session.endedAtTime = timezone.now()
         login_session.save()

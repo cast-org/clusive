@@ -36,8 +36,14 @@ var exports = {};
             {type:'style', url: '{% static 'shared/js/lib/readium-css/ReadiumCSS-default.css' %}', r2default: true},
             {type:'style', url: '{% static 'shared/js/lib/readium-css/ReadiumCSS-after.css' %}', r2after: true},
             {type:'style', url: '{% static 'shared/css/clusive.css' %}'},
-            {type:'style', url: '{% static 'shared/css/fonts/opendyslexic/opendyslexic.css' %}', fontFamily: 'opendyslexic'},
-            {type:'style', url: '{% static 'shared/css/fonts/arial/arial.css' %}', fontFamily: 'Arial, Helvetica'}
+            {type:'style', url: '{% static 'shared/js/lib/reader/fonts/opendyslexic/opendyslexic.css' %}', fontFamily: 'opendyslexic'},
+            {type:'style', systemFont: true, fontFamily: 'Arial, Helvetica'},
+            {type: 'style', systemFont: true, fontFamily: 'Georgia, Times, Times New Roman, serif'},
+            {type: 'style', systemFont: true, fontFamily: 'Verdana'},
+            {type: 'style', systemFont: true, fontFamily: 'Comic Sans MS, sans-serif'},
+            {type: 'style', url: '{% static 'shared/css/clusive-reader-theme-lgdg.css' %}', r2after: true, appearance: 'lgdg'},
+            {type: 'style', url: '{% static 'shared/css/clusive-reader-theme-bbr.css' %}', r2after: true, appearance: 'bbr'},
+            {type: 'style', url: '{% static 'shared/css/clusive-reader-theme-gw.css' %}', r2after: true, appearance: 'gw'}            
             // {type:'script', url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML&latest'},
             // {type:'style', url: 'http://localhost:4444/viewer/fonts/opendyslexic/opendyslexic.css', fontFamily: 'opendyslexic'}, */
         ]
