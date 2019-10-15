@@ -88,7 +88,8 @@ module.exports = function (grunt) {
                     'shared/static/shared/css/<%= pkg.name %>.css': 'frontend/scss/<%= pkg.name %>.scss',
                     'shared/static/shared/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',                    
                     'shared/static/shared/css/<%= pkg.name %>-reader-theme-lgdg.css': 'frontend/scss/<%= pkg.name %>-reader-theme-lgdg.scss',                    
-                    'shared/static/shared/css/<%= pkg.name %>-reader-theme-bbr.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bbr.scss'                                       
+                    'shared/static/shared/css/<%= pkg.name %>-reader-theme-bbr.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bbr.scss',
+                    'shared/static/shared/css/<%= pkg.name %>-reader-theme-gw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-gw.scss'                                                              
                 }
             }
         },

@@ -126,6 +126,10 @@
                         {
                             inputValue: "bbr",
                             outputValue: "bbr"
+                        },
+                        {
+                            inputValue: "gw",
+                            outputValue: "gw"
                         }                        
                     ]
                 }                
