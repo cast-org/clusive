@@ -12,26 +12,19 @@ function imgCheckPortrait($img) {
     }
 }
 
-// Lazy image load integration for height constraint
-/*
-function imgHeightConstrain() {
-    'use strict';
-
-    $('.card-img').on('afterShow.cfw.lazy', 'img', function(e) {
-        var $img = $(e.currentTarget);
-        imgCheckPortrait($img);
-    });
-}
-*/
-
 $(window).ready(function() {
     'use strict';
 
-    /*
-    imgHeightConstrain();
-    */
+    var $imgs = $('.card-img img');
+    for (var i = 0; i < $imgs.length; i++) {
+        var $img = $($imgs[i]);
 
-    $('.card-img img').each(function() {
-        imgCheckPortrait($(this));
-    });
+        /* eslint-disable no-loop-func */
+        var callback = function() {
+            imgCheckPortrait($img);
+        };
+        /* eslint-enable no-loop-func */
+
+        $.CFW_imageLoaded($img, i, callback);
+    }
 });
