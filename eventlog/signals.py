@@ -5,6 +5,7 @@ from eventlog.models import LoginSession, Event, SESSION_ID_KEY, PERIOD_KEY
 from roster.models import Period, ClusiveUser
 from django.utils import timezone
 import logging
+import caliper
 
 logger = logging.getLogger(__name__)
 
@@ -12,11 +13,26 @@ logger = logging.getLogger(__name__)
 # Custom signals that we recognize for event logging
 #
 
-vocab_lookup = Signal(providing_args=[])
+page_viewed = Signal(providing_args=['session', 'document', 'page'])
+vocab_lookup = Signal(providing_args=['session', 'value'])
 
 #
 # Signal handlers that log specific events
 #
+
+
+@receiver(page_viewed)
+def log_page_viewed(sender, **kwargs):
+    """User views a page of a book"""
+    event = Event.build(type='VIEW_EVENT',
+                        action='VIEWED',
+                        document=kwargs.get('document'),
+                        page=kwargs.get('page'),
+                        session=kwargs.get('session'))
+    logger.info("event for %s: %s", kwargs.get('session'), event)
+    if event:
+        event.save()
+
 
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
@@ -29,7 +45,7 @@ def log_vocab_lookup(sender, **kwargs):
                         control='lookup',
                         value=kwargs['value'],
                         session=kwargs['session'])
-    if (event):
+    if event:
         event.save()
 
 
@@ -63,6 +79,7 @@ def log_login(sender, **kwargs):
     except ClusiveUser.DoesNotExist:
         logger.warning("Login by a non-Clusive user: %s", django_user)
 
+
 @receiver(user_logged_out)
 def log_logout(sender, **kwargs):
     """A user has logged out. Find the Session object in the database and set the end time."""
@@ -81,6 +98,7 @@ def log_logout(sender, **kwargs):
         login_session.save()
         clusive_user = login_session.user
         logger.debug("Logout user %s", clusive_user)
+
 
 @receiver(user_timed_out)
 def log_timeout(sender, **kwargs):
