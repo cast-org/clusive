@@ -18,9 +18,13 @@
     <div class="container-xl">
         <div class="row">
             <div class="col-auto sidebar sidebar-start">
+                {% block sidebar_start %}
+                {% endblock%}
             </div>
 
             <div class="col-auto sidebar sidebar-end">
+                {% block sidebar_end %}
+                {% endblock%}
             </div>
 
             <div id="content" class="col content" tabindex="-1">
@@ -31,11 +35,7 @@
         </div>
     </div>
 
-    <div class="popover" id="glossaryPop">
-        <div id="glossaryTitle" class="popover-header">Glossary</div>
-        <div class="popover-body">
-            <p id="glossaryBody"> body content&hellip;</p>
-        </div>
-    </div>
+    {% include "shared/partial/modal_settings.html" %}
+    {% include "shared/partial/popover_glossary.html" %}
 </body>
 </html>

@@ -4,10 +4,16 @@
 {% block bodyClass %}library{% endblock %}
 {% block title %}Library | Clusive{% endblock %}
 
-{% block content %}
-{% include "shared/partial/site_header_big.html" %}
+{% block sidebar_start %}
+    {% include "shared/partial/sidebar_start.html" with nav=false %}
+{% endblock %}
 
-<h1>Library</h1>
+{% block sidebar_end %}
+    {% include "shared/partial/sidebar_end.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "shared/partial/site_header.html" with page_title="Library"%}
 
 {% if book_list|length == 0 %}
     No articles found.
