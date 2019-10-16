@@ -23,7 +23,7 @@
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
     "mark.js": "8.11.1",
-    "popper.js": "^1.16.0",
+    "popper.js": "^1.15.0",
     "readium-css": "https://github.com/readium/readium-css.git#bd6462780d1ed724181df4fce3d3a22b2f15ab45",
     "script-loader": "0.7.2"
   },
