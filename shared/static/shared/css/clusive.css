@@ -3765,6 +3765,12 @@ body {
   background-color: #70afa7;
 }
 
+.card-img .is-portrait {
+  width: auto;
+  max-width: none;
+  max-height: 10rem;
+}
+
 .btn-setting {
   text-shadow: 0.0625em 0.0625em 0 rgba(91, 119, 153, 0.75);
 }

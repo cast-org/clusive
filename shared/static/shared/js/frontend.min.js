@@ -1,0 +1,1 @@
+function imgCheckPortrait(t){"use strict";var i=!1;t[0].naturalWidth/t[0].naturalHeight<1&&(i=!0),i&&t.addClass("is-portrait")}$(window).ready(function(){"use strict";$(".card-img img").each(function(){imgCheckPortrait($(this))})});
