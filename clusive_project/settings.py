@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'eventlog.apps.EventlogConfig',
     'library.apps.LibraryConfig',
+    'glossary.apps.GlossaryConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
 ]
 

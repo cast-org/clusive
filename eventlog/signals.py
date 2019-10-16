@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 # Custom signals that we recognize for event logging
 #
 
-page_viewed = Signal(providing_args=['session', 'document', 'page'])
-vocab_lookup = Signal(providing_args=['session', 'value'])
+page_viewed = Signal(providing_args=['request', 'document', 'page'])
+vocab_lookup = Signal(providing_args=['request', 'word'])
 
 #
 # Signal handlers that log specific events
@@ -28,7 +28,7 @@ def log_page_viewed(sender, **kwargs):
                         action='VIEWED',
                         document=kwargs.get('document'),
                         page=kwargs.get('page'),
-                        session=kwargs.get('session'))
+                        session=kwargs.get('request').session)
     logger.info("event for %s: %s", kwargs.get('session'), event)
     if event:
         event.save()
@@ -43,8 +43,8 @@ def log_vocab_lookup(sender, **kwargs):
     event = Event.build(type='TOOL_USE_EVENT',
                         action='USED',
                         control='lookup',
-                        value=kwargs['value'],
-                        session=kwargs['session'])
+                        value=kwargs['word'],
+                        session=kwargs['request'].session)
     if event:
         event.save()
 

@@ -13,7 +13,7 @@ class LibraryView(LoginRequiredMixin,ListView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            page_viewed.send(self.__class__, session=request.session, page='library')
+            page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
 
 
@@ -24,5 +24,5 @@ class ReaderView(LoginRequiredMixin,TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             context = self.get_context_data(**kwargs)
-            page_viewed.send(self.__class__, session=request.session, document=context.get('pub_id'))
+            page_viewed.send(self.__class__, request=request, document=context.get('pub_id'))
         return super().get(request, *args, **kwargs)
