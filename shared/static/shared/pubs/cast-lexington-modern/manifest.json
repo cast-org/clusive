@@ -10,7 +10,15 @@
     "readingOrder": [
         {"href": "lexington-modern.html", "type": "text/html"}
     ],
-    "resources": [ ],
+    "resources": [
+        { "rel": "cover",
+            "href": "images/etching_source.jpg",
+            "type": "image/jpeg",
+            "attribution": {
+                "title": "Etching created in 1775 showing the Battle of Lexington",
+                "author": "Thomas Doolittle"
+            }}
+    ],
     "links": [
         {"title": "Original", "rel": "alternate", "href": "cast-lexington", "type": "application/webpub+json"},
         {"title": "Modern", "rel": "self", "href": "cast-lexington-modern", "type":  "application/webpub+json"}
