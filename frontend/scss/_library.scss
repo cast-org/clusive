@@ -7,10 +7,17 @@
         //background-image: none;
     }
 
-    .sidebar-end {
-        //background-color: $library-sidebar-end-bg;
-        background-image: linear-gradient(180deg, $library-sidebar-end-bg, $library-sidebar-end-bg-alt);
+    .sidebar-start {
+        .btn-link {
+            color: #434a5a;
+        }
+    }
 
+    .sidebar-end {
+        background-image: linear-gradient(180deg, $library-sidebar-end-bg, $library-sidebar-end-bg-alt);
+    }
+
+    .sidebar-tool {
         .btn {
             width: 3.25rem;
             height: 3.25rem;

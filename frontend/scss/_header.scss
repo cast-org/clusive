@@ -1,16 +1,20 @@
 .site-header {
     position: relative;
-    left: -4.5rem;
-    padding: 1.25rem 1rem;
-    margin-right: -4.5rem;
+    left: -5.5rem;
+    padding: 1.375rem 1rem;
+    margin-right: -5.5rem;
     margin-bottom: 1rem;
+    line-height: 1;
+    pointer-events: none;
     background-image: linear-gradient(90deg, rgba(#636b82, .5) 0%, rgba(#636b82, 0) 65%);
     @include border-radius($sidebar-border-radius);
 
-    .page-header {
+    .page-title {
+        display: inline-block;
         margin-bottom: 0;
         margin-left: 1rem;
         vertical-align: middle;
+        border-bottom: 3px solid #66faff;
     }
 }
 
@@ -19,9 +23,15 @@
     @include font-size(1.75rem);
     white-space: nowrap;
     vertical-align: middle;
+    pointer-events: auto;
 
     .icon-logo-clusive-toggle {
         color: #fbfbfb;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
     }
 
     @include media-breakpoint-up(md) {
@@ -29,17 +39,28 @@
     }
 }
 
-.site-header-text {
-    display: inline-block;
-    margin-top: 0;
-    margin-bottom: 0;
-    @include font-size(2.5rem);
-    font-weight: 700;
-    line-height: 1;
+.site-header-small {
+    left: -6rem;
+    padding: 1.125rem 1rem 1.125rem 5rem;
+    margin-right: -6rem;
+    background-image: linear-gradient(90deg, rgba(#636b82, .25) 0%, rgba(#636b82, 0) 65%);
+
+    .site-header-logo {
+        @include font-size(1rem);
+        line-height: 1;
+        color: #636b82;
+    }
 }
 
-.page-header {
-    display: inline-block;
+.page-title {
     @include font-size(1.3125rem);
-    border-bottom: 3px solid #66faff;
+}
+
+.user-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
+    @include font-size(.875rem);
+    pointer-events: auto;
 }

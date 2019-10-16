@@ -1,17 +1,28 @@
 {% extends "shared/base.html" %}
 {% load static %}
 
-{% block title %}Welcome to Clusive{% endblock %}
+{% block bodyClass %}library{% endblock %}
+{% block title %}Library | Clusive{% endblock %}
 
 {% block content %}
-<h1>Available Publications</h1>
-{% for pub in book_list %}
-    <div style="border: 1px solid black; padding: 1em; margin: 1em;">
-        {% if pub.cover %}
-            <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{ pub.cover }}" alt="Cover picture for {{ pub.title }}" style="max-width: 200px; max-height: 200px;" />
-        {% endif %}
-        <a href="{% url 'reader' pub_id=pub.path%}">{{ pub.title }}</a>
+{% include "shared/partial/site_header.html" with page_title="Library"%}
+
+{% if book_list|length == 0 %}
+    No articles found.
+{% else %}
+    <div class="library-grid">
+    {% for pub in book_list %}
+        <div class="card card-library">
+            {% if pub.cover %}
+            <div class="card-img card-img-top">
+                <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{ pub.cover }}" alt="Cover picture for {{ pub.title }}" class="img-fluid" />
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <a href="{% url 'reader' pub_id=pub.path%}" class="link-stretch"><h2 class="card-title h5">{{ pub.title }}</h2></a>
+            </div>
+        </div>
+    {% endfor %}
     </div>
-{% endfor %}
-</ul>
+{% endif %}
 {% endblock %}

@@ -19,7 +19,10 @@ module.exports = function (grunt) {
             target: [
                 "shared/static/shared/js/lib",
                 "shared/static/shared/css/*.css"
-            ]
+            ],
+            frontend: "frontend/dist",
+            frontendcss: "frontend/dist/css",
+            frontendjs: "frontend/dist/js"
         },
         copy: {
             lib: {
@@ -73,12 +76,36 @@ module.exports = function (grunt) {
                     dest: "shared/static/shared/js/lib/popper.js"
                 }]
             },
-            frontend: {
+            frontendcss: {
                 expand: true,
-                cwd: 'frontend/dist/css/',
+                cwd: 'frontend/dist/css',
                 nonull: true,
                 src: ['**/*'],
-                dest: 'shared/static/shared/css/'
+                dest: 'shared/static/shared/css'
+            },
+            frontendjs: {
+                files: [
+                {
+                    expand: true,
+                    cwd: 'frontend/js',
+                    nonull: true,
+                    src: ['**/*'],
+                    dest: 'frontend/dist/js'
+                },
+                {
+                    expand: true,
+                    cwd: 'frontend/dist/js',
+                    nonull: true,
+                    src: ['**/*'],
+                    dest: 'shared/static/shared/js'
+                }]
+            },
+            frontendfont: {
+                expand: true,
+                cwd: 'frontend/html/font/',
+                nonull: true,
+                src: ['**/*'],
+                dest: 'shared/static/shared/font/'
             }
 
         },
@@ -126,15 +153,51 @@ module.exports = function (grunt) {
                 advanced: false
             },
             frontend: {
-                files: [
-                    {
+                files: [{
                         expand: true,
                         cwd: 'frontend/dist/css',
                         src: ['*.css', '!*.min.css'],
                         dest: 'frontend/dist/css',
                         ext: '.min.css'
+                }]
+            },
+            frontendfont: {
+                files: [{
+                        expand: true,
+                        cwd: 'frontend/html/font',
+                        src: ['**/*.css', '!**/*.min.css'],
+                        dest: 'frontend/html/font',
+                        ext: '.min.css'
+                }]
+            }
+        },
+        eslint: {
+            frontend: {
+                options: {
+                    config: 'frontend/.eslintrc.json',
+                    reportUnusedDisableDirectives: 'true',
+                },
+                src: 'frontend/js/*.js'
+            }
+        },
+        uglify: {
+            frontend: {
+                options: {
+                    mangle: true,
+                    output: {
+                        comments: /^!|@preserve|@license|@cc_on/i
                     }
-                ]
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'frontend/js',
+                    src: ['*.js', '!*.min.js'],
+                    dest: 'frontend/dist/js',
+                    rename: function (dst, src) {
+                        // Keep source js files and make new files as `*.min.js`:
+                       return dst + '/' + src.replace('.js', '.min.js');
+                    }
+                }]
             }
         }
     });
@@ -144,14 +207,21 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-eslint");
     grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-stylelint");
     grunt.loadNpmTasks("grunt-webpack");
 
     // Custom tasks:
-    grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules", ["clean:target", "webpack:dev", "css-dist", "copy:lib"]);
+    grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules", ["clean:target", "webpack:dev", "frontend-dist", "copy:lib"]);
 
-    // CSS build task
+    // Frontend build tasks
+    grunt.registerTask('frontend-test', ['css-test', 'js-test']);
+    grunt.registerTask('frontend-dist', ['css-dist', 'js-dist', 'font-dist']);
     grunt.registerTask('css-test', "Lint front end CSS", ['stylelint:frontend']);
-    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['sass:frontend', 'postcss:frontend', 'cssmin:frontend', 'copy:frontend']);
+    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['clean:frontendcss', 'sass:frontend', 'postcss:frontend', 'cssmin:frontend', 'copy:frontendcss']);
+    grunt.registerTask('js-test', "Lint front end JS", ['eslint:frontend']);
+    grunt.registerTask('js-dist', "Build front end JS and copy to static assets", ['clean:frontendjs', 'uglify:frontend', 'copy:frontendjs']);
+    grunt.registerTask('font-dist', "Build front end font and copy to static assets", ['cssmin:frontendfont', 'copy:frontendfont']);
 }

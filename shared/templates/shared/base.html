@@ -1,76 +1,42 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>{% block title %}Clusive{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" />
+<head>
+    <title>{% block title %}Clusive{% endblock %}</title>
+    {% include "shared/partial/head.html" %}
 
-        <link href="{% static 'shared/css/clusive.css' %}" rel="stylesheet">
+    {% comment %}
+    For injection of additional markup into the head are
+    {% endcomment %}
+    {% block head_additional %}{% endblock %}
+</head>
+<body class="{% block bodyClass %}{% endblock %}">
+    {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
 
-        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/Enactors.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditor.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'shared/js/lib/figuration/css/figuration.css' %}" />
-        {% comment %}
-        Sets constants based on Django's environment in order to make them available
-        to client-side Javascript
-        {% endcomment %}
-        <script>
-        var DJANGO_STATIC_ROOT = "{% static '' %}"
-        </script>
+    <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-        <script src="{% static 'shared/js/lib/main.js' %}"></script>     
-        <script src="{% static 'shared/js/clusive-reader-prefs.js' %}"></script>     
-        <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>     
+    <div class="container-xl">
+        <div class="row">
+            <div class="col-auto sidebar sidebar-start">
+                {% block sidebar_start %}
+                {% include "shared/partial/sidebar_start.html" with nav=0 %}
+                {% endblock%}
+            </div>
 
-        <script src="{% static 'shared/js/Glossary.js' %}"></script>
-        <script src="{% static 'shared/js/GlossarySchema.js' %}"></script>
-        <script src="{% static 'shared/js/GlossaryEnactor.js' %}"></script>
-        <script src="{% static 'shared/js/GlossaryPanel.js' %}"></script>
-        <script src="{% static 'shared/js/images.js' %}"></script>
+            <div class="col-auto sidebar sidebar-end">
+                {% block sidebar_end %}
+                {% include "shared/partial/sidebar_end.html" %}
+                {% endblock%}
+            </div>
 
-        {% comment %} 
-        For injection of additional markup into the head are
-        {% endcomment %}
-        {% block head_additional %}{% endblock %}
-    </head>
-    <body>
-        <div class="header-cast">
-            <div class="container-fluid">
-                <div class="navbar">
-                    <a href="http://www.cast.org" class="header-cast-logo navbar-brand">
-                        <img src="{% static 'shared/images/cast/logo-header.svg' %}" alt="">
-                        <div class="header-cast-title">CAST</div>
-                        <div class="header-cast-tagline"></div>
-                    </a>
-                </div>
+            <div id="content" class="col content" tabindex="-1">
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
+    </div>
 
-        {% block preference_panel %} {% include "shared/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
-        <div class="header">
-            <a href="{% url 'index' %}">
-                <img src="{% static 'shared/images/reader-logo-transparent.png' %}" alt="CISL Reader" />
-            </a>
-            <div class="login-status">
-                <button id="glossaryButton" class="btn btn-small btn-secondary" data-cfw="popover" data-cfw-popover-target="#glossaryPop" data-cfw-popover-placement="reverse">
-                    Lookup
-                </button>
-                {% if not user.is_anonymous %}
-                        Logged in as {{ user }} | <a href="{% url 'logout' %}">Logout</a>
-                {% else %}
-                        <a href="{% url 'login' %}">Login</a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="content">
-            {% block content %}{% endblock %}
-        </div>
-        <div class="popover" id="glossaryPop">
-            <div id="glossaryTitle" class="popover-header">Glossary</div>
-            <div class="popover-body">
-                <p id="glossaryBody"> body content&hellip;</p>
-            </div>
-        </div>
-    </body>
+    {% include "shared/partial/modal_settings.html" %}
+    {% include "shared/partial/popover_glossary.html" %}
+</body>
 </html>

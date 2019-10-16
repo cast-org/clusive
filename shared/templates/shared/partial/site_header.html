@@ -1,0 +1,22 @@
+{% load static %}
+<header class="site-header">
+    <div class="site-header-logo">
+        <a href="{% url 'index' %}">
+            <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+        </a>
+        <span class="icon-logo-clusive" aria-hidden="true"></span>
+        <span class="sr-only">Clusive</span>
+    </div>
+
+    <h1 class="page-title">{{ page_title }}</h1>
+
+    <div class="user-actions">
+        <a href="#">My glossary</a>
+        |
+        {% if not user.is_anonymous %}
+        {{ user }} | <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+</header>

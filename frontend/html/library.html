@@ -18,6 +18,8 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.15.0/dist/umd/popper.min.js" integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.1/dist/js/figuration.min.js" integrity="sha384-DrdWrMNeApnhVY4UgXQhKObnNAhkqMxJra/LyQTa2BHGg8XFsv+PlMWenTy0K1ZP" crossorigin="anonymous"></script>
+<!--<script src="../dist/js/frontend.js"></script>-->
+<script src="../js/frontend.js"></script>
 
 <style>
 .img-test {
@@ -37,22 +39,22 @@
         <div class="col-auto sidebar sidebar-start">
             <!--
             <nav class="sidebar-nav" aria-label="Article">
-                <button type="button" class="btn btn-icon btn-link" aria-label="Contents">
+                <a href="./library.html" class="btn btn-link" aria-label="Back to library">
+                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                </a>
+                <button type="button" class="btn btn-link" aria-label="Contents">
                     <span class="icon-menu" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-icon btn-link" aria-label="Previous page">
+                <button type="button" class="btn btn-link" aria-label="Previous page">
                     <span class="icon-chevron-left" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-icon btn-link" aria-label="Next page">
+                <button type="button" class="btn btn-link" aria-label="Next page">
                     <span class="icon-chevron-right" aria-hidden="true"></span>
                 </button>
             </nav>
             -->
-            <div role="region" aria-label="Supports">
-                <button type="button" class="btn btn-secondary btn-glossary" aria-label="Glossary">
-                    <span aria-hidden="true">Glossary</span>
-                </button>
-                <button type="button" class="btn btn-secondary btn-xlarge btn-icon btn-help" aria-label="Help/Information">
+            <div class="sidebar-support" role="region" aria-label="Support">
+                <button type="button" class="btn btn-link btn-help" aria-label="Help/Information">
                     <span class="icon-help" aria-hidden="true"></span>
                     <span class="icon-attention" aria-hidden="true"></span>
                 </button>
@@ -60,36 +62,44 @@
         </div>
 
         <div class="col-auto sidebar sidebar-end" role="region" aria-label="Reading tools">
-            <button type="button" class="btn btn-setting" aria-label="Settings">
-                <span class="icon-settings" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-tool" aria-label="Read aloud">
-                <span class="icon-play" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-tool" aria-label="Lookup definition">
-                <span class="icon-book" aria-hidden="true"></span>
-            </button>
+            <div class="sidebar-tool" role="region" aria-label="Reading tools">
+                <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
+                    <span class="icon-settings" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tool" aria-label="Read aloud">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tool" aria-label="Lookup definition">
+                    <span class="icon-book" aria-hidden="true"></span>
+                </button>
+            </div>
         </div>
 
         <div id="content" class="col content" tabindex="-1">
 
             <header class="site-header">
                 <div class="site-header-logo">
-                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                    <a href="#">
+                        <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                    </a>
                     <span class="icon-logo-clusive" aria-hidden="true"></span>
-                </div>
-                <div class="site-header-text">
                     <span class="sr-only">Clusive</span>
                 </div>
 
-                <h1 class="page-header">Library</h1>
+                <h1 class="page-title">Library</h1>
+
+                <div class="user-actions" role="region" aria-label="">
+                    <a href="#">My glossary</a> |
+                    Username
+                    <a href="#">Logout</a>
+                </div>
             </header>
 
             <main>
                 <div class="library-grid">
                     <div class="card card-library">
-                        <div class="card-img">
-                            <img class="img-fluid card-img-top" src="./img/sample-1.jpg" alt="">
+                        <div class="card-img card-img-top">
+                            <img class="img-fluid" src="./img/sample-1.jpg" alt="">
                         </div>
                         <div class="card-body">
                             <a href="#" class="link-stretch"><h2 class="card-title h5">Some article title</h2></a>
@@ -97,8 +107,8 @@
                         </div>
                     </div>
                     <div class="card card-library">
-                        <div class="card-img">
-                            <img class="img-fluid card-img-top" src="./img/sample-2.jpg" alt="">
+                        <div class="card-img card-img-top">
+                            <img class="img-fluid" src="./img/sample-2.jpg" alt="">
                         </div>
                         <div class="card-body">
                             <a href="#" class="link-stretch"><h2 class="card-title h5">Some longer article title with question?</h2></a>
@@ -106,8 +116,8 @@
                         </div>
                     </div>
                     <div class="card card-library">
-                        <div class="card-img">
-                            <img class="img-fluid card-img-top" src="./img/sample-3.jpg" alt="">
+                        <div class="card-img card-img-top">
+                            <img class="img-fluid" src="./img/sample-3.jpg" alt="">
                         </div>
                         <div class="card-body">
                             <a href="#" class="link-stretch"><h2 class="card-title h5">Some article title</h2></a>
@@ -115,12 +125,22 @@
                         </div>
                     </div>
                     <div class="card card-library">
-                        <div class="card-img">
-                            <img class="img-fluid card-img-top" src="./img/sample-4.jpg" alt="">
+                        <div class="card-img card-img-top">
+                            <img class="img-fluid" src="./img/sample-4.jpg" alt="">
                         </div>
                         <div class="card-body">
                             <a href="#" class="link-stretch"><h2 class="card-title h5">Some longer article title with question?</h2></a>
                             <p>Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                        </div>
+                    </div>
+                    <div class="card card-library">
+                        <div class="card-img card-img-top">
+                            <!--<img class="img-fluid" data-cfw-lazy-src="./img/crane.jpg" data-cfw="lazy" alt="">-->
+                            <img class="img-fluid" src="./img/crane.jpg" alt="">
+                        </div>
+                        <div class="card-body">
+                            <a href="#" class="link-stretch"><h2 class="card-title h5">Some article title</h2></a>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                         </div>
                     </div>
                 </div>
