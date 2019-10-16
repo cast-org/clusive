@@ -5,6 +5,7 @@
     margin-right: -5.5rem;
     margin-bottom: 1rem;
     line-height: 1;
+    pointer-events: none;
     background-image: linear-gradient(90deg, rgba(#636b82, .5) 0%, rgba(#636b82, 0) 65%);
     @include border-radius($sidebar-border-radius);
 
@@ -22,9 +23,15 @@
     @include font-size(1.75rem);
     white-space: nowrap;
     vertical-align: middle;
+    pointer-events: auto;
 
     .icon-logo-clusive-toggle {
         color: #fbfbfb;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
     }
 
     @include media-breakpoint-up(md) {
@@ -55,4 +62,5 @@
     right: 0;
     display: inline-block;
     @include font-size(.875rem);
+    pointer-events: auto;
 }

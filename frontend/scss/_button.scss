@@ -48,12 +48,12 @@
         transform: rotate(10deg);
 
         &:first-child {
-            left: .1875em;
-            margin-left: -.1875em;
+            left: .25em;
+            margin-left: -.25em;
         }
         &:last-child {
-            left: -.1875em;
-            margin-right: -.1875em;
+            left: -.25em;
+            margin-right: -.25em;
         }
     }
 }

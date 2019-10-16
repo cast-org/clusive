@@ -19,17 +19,18 @@
         <div class="row">
             <div class="col-auto sidebar sidebar-start">
                 {% block sidebar_start %}
+                {% include "shared/partial/sidebar_start.html" with nav=0 %}
                 {% endblock%}
             </div>
 
             <div class="col-auto sidebar sidebar-end">
                 {% block sidebar_end %}
+                {% include "shared/partial/sidebar_end.html" %}
                 {% endblock%}
             </div>
 
             <div id="content" class="col content" tabindex="-1">
                 {% block content %}
-                    {% include "shared/partial/header.html" %}
                 {% endblock %}
             </div>
         </div>

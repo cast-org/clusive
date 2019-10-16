@@ -79,6 +79,13 @@ module.exports = function (grunt) {
                 nonull: true,
                 src: ['**/*'],
                 dest: 'shared/static/shared/css/'
+            },
+            frontendfont: {
+                expand: true,
+                cwd: 'frontend/html/font/',
+                nonull: true,
+                src: ['**/*'],
+                dest: 'shared/static/shared/font/'
             }
 
         },
@@ -135,6 +142,17 @@ module.exports = function (grunt) {
                         ext: '.min.css'
                     }
                 ]
+            },
+            frontendfont: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'frontend/html/font',
+                        src: ['**/*.css', '!**/*.min.css'],
+                        dest: 'frontend/html/font',
+                        ext: '.min.css'
+                    }
+                ]
             }
         }
     });
@@ -149,9 +167,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-webpack");
 
     // Custom tasks:
-    grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules", ["clean:target", "webpack:dev", "css-dist", "copy:lib"]);
+    grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules", ["clean:target", "webpack:dev", "css-dist", "font-dist", "copy:lib"]);
 
-    // CSS build task
+    // CSS build tasks
     grunt.registerTask('css-test', "Lint front end CSS", ['stylelint:frontend']);
     grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['sass:frontend', 'postcss:frontend', 'cssmin:frontend', 'copy:frontend']);
+
+    // Frontend font build tasks
+    grunt.registerTask('font-dist', "Build front end font and copy to static assets", ['cssmin:frontendfont', 'copy:frontendfont']);
 }
