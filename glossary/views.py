@@ -27,8 +27,8 @@ def glossdef(request, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
     defs = wordnetutil.lookup(word)
     vocab_lookup.send(sender=GlossaryConfig.__class__,
-                      session=request.session,
-                      value=word,
+                      request=request,
+                      word=word,
                       )
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
