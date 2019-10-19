@@ -25,7 +25,7 @@ $(function() {
         var title, body;
         if (word) {
             title = word;
-            $.get('/glossary/glossdef/'+word)
+            $.get('/glossary/glossdef/'+window.pub_id+'/'+word)
                 .done(function(data, status) {
                     console.log("success: ", data);
                     $('#glossaryBody').html(data);

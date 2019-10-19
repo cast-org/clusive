@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseNotFound
 
 from glossary.apps import GlossaryConfig
+from glossary.bookglossary import BookGlossary
 from wordnet import util as wordnetutil
 from eventlog.signals import vocab_lookup
 
@@ -22,10 +23,20 @@ def lookup(request, word):
     else:
         return HttpResponseNotFound("<p>No definition found</p>")
 
+book_glossaries = {}
 
-def glossdef(request, word):
+def glossdef(request, document, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
-    defs = wordnetutil.lookup(word)
+
+    # First try to find in a book glossary
+    if not book_glossaries.get(document):
+        book_glossaries[document] = BookGlossary(document)
+    defs = book_glossaries[document].lookup(word)
+
+    # Next try Wordnet
+    if not defs:
+        defs = wordnetutil.lookup(word)
+
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=word,
@@ -35,3 +46,4 @@ def glossdef(request, word):
         return render(request, 'glossary/glossdef.html', context=defs)
     else:
         return HttpResponseNotFound("<p>No definition found</p>")
+
