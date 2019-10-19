@@ -24,7 +24,7 @@ def load_static_books(apps, schema_editor):
                 b = Book(path=book_dir.name, title=title, cover=cover)
                 b.save()
         else:
-            logger.warn("Ignoring directory without manifest: %s", book_dir)
+            logger.warning("Ignoring directory without manifest: %s", book_dir)
 
 
 def find_cover(manifest):
