@@ -1,8 +1,21 @@
-<strong>{{headword}}</strong>
-{% for m in meanings %}
+{% load static %}
+<strong>{{defs.headword}}</strong>
+
+{% for m in defs.meanings %}
 <p>({{m.pos}}) {{m.definition}}<br />
     {% for e in m.examples %}
-    <em>{{e}}</em><br/>
+        <em>{{e}}</em><br/>
     {% endfor %}
 </p>
+{% endfor %}
+
+{% for m in defs.meanings %}
+    {% for img in m.images %}
+        <figure class="figure">
+            <img class="figure-img img-fluid" src="{% static 'shared/pubs/' %}{{ pub_id }}/{{img.src}}" alt="{{img.alt}}" />
+            <div class="figure-caption">
+                {{img.caption}}
+            </div>
+        </figure>
+    {% endfor %}
 {% endfor %}

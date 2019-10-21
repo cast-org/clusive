@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 #
 
 page_viewed = Signal(providing_args=['request', 'document', 'page'])
-vocab_lookup = Signal(providing_args=['request', 'word'])
+vocab_lookup = Signal(providing_args=['request', 'word', 'source'])
 
 #
 # Signal handlers that log specific events
