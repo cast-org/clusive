@@ -14,36 +14,31 @@ logger = logging.getLogger(__name__)
 # Eventually, the goal is to have multiple possible backends and a way to
 # configure which one(s) to use.
 
-def lookup(request, word):
-    """Generic lookup function that returns JSON data.
-    Currently unused."""
-    defs = wordnetutil.lookup(word)
-    if defs:
-        return JsonResponse(defs)
-    else:
-        return HttpResponseNotFound("<p>No definition found</p>")
-
 book_glossaries = {}
 
 def glossdef(request, document, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
+    source = None
 
     # First try to find in a book glossary
     if not book_glossaries.get(document):
         book_glossaries[document] = BookGlossary(document)
     defs = book_glossaries[document].lookup(word)
-
-    # Next try Wordnet
-    if not defs:
+    if (defs):
+        source = 'Book'
+    else:
+        # Next try Wordnet
         defs = wordnetutil.lookup(word)
+        source = 'Wordnet'
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=word,
-                      )
+                      source = source)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
-        return render(request, 'glossary/glossdef.html', context=defs)
+        context = {'defs': defs, 'pub_id': document}
+        return render(request, 'glossary/glossdef.html', context=context)
     else:
         return HttpResponseNotFound("<p>No definition found</p>")
 

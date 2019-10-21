@@ -49,7 +49,7 @@ class Event(models.Model):
     # For events that operate on text (lookup, highlight), the actual text looked up or highlighted
     # For preferences, the new value chosen for the preference
     value = models.CharField(max_length=128, null=True)
-    # TODO preference
+    # TODO log source of glossary definitions?
     # TODO context (current settings, version of text (eg lexile level), list of glossary words highlighted)
 
     @classmethod
