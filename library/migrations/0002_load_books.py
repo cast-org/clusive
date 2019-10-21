@@ -19,7 +19,9 @@ def load_static_books(apps, schema_editor):
         if os.path.exists(manifestfile):
             with open(manifestfile, 'r') as file:
                 manifest = json.load(file)
-                title = manifest['metadata']['headline']
+                title = manifest['metadata'].get('title')
+                if not title:
+                    title = manifest['metadata'].get('headline')
                 cover = find_cover(manifest)
                 b = Book(path=book_dir.name, title=title, cover=cover)
                 b.save()
