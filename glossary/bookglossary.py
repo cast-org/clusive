@@ -18,6 +18,7 @@ class BookGlossary:
         self.book = book
 
     def init_data(self):
+        self.data = {}
         pubs_directory = finders.find('shared/pubs')
         book_dir = os.path.join(pubs_directory, self.book)
         try:
@@ -33,7 +34,7 @@ class BookGlossary:
             logger.error("Failed to read glossary data")
 
     def lookup(self, word):
-        if not self.data:
+        if self.data is None:
             self.init_data()
         return self.data.get(word.lower())
 
