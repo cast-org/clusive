@@ -79,9 +79,8 @@ made part of the application's static files:
 * In r2-shared-js directory:
   * `npm run cli file.epub output-dir`
 * Copy the file in output-dir to `clusive/shared/static/shared/pubs/short-name-for-new-pub`
-* In clusive directory:
-  * `python manage.py migrate library zero`
-  * `python manage.py migrate library`
+* Log in as administrator, and in the "Books" page of the admin site, click "Rescan books"
+  (or alternatively, re-run the library database migrations)
 
 ## Running under Docker
 
