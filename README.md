@@ -71,6 +71,17 @@ The current configuration (for development) uses sqlite3, so no database setup i
 * Confirm you see the Django success page at `http://localhost:8000`
 * Confirm the superuser can log in at `http://localhost:8000/admin/`
 
+### Import content
+
+For now, EPUB content must be unpacked, a manifest generated, and the files manually 
+made part of the application's static files:
+* Clone [r2-shared-js](https://github.com/readium/r2-shared-js)
+* In r2-shared-js directory:
+  * `npm run cli file.epub output-dir`
+* Copy the file in output-dir to `clusive/shared/static/shared/pubs/short-name-for-new-pub`
+* Log in as administrator, and in the "Books" page of the admin site, click "Rescan books"
+  (or alternatively, re-run the library database migrations)
+
 ## Running under Docker
 
 Build:
