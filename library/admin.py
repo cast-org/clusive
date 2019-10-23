@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 from library.models import Book
+from library.parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ def load_static_books():
                 b.title = find_title(manifest)
                 b.cover = find_cover(manifest)
                 b.glossary_words = find_glossary_words(book_dir)
+                b.all_words = find_all_words(book_dir, manifest)
                 b.save()
         else:
             logger.warning("Ignoring directory without manifest: %s", book_dir)
@@ -74,3 +76,14 @@ def find_glossary_words(book_dir):
             return json.dumps(words)
     else:
         return "[]"
+
+
+def find_all_words(book_dir, manifest):
+    # Look up content files in manifest
+    # For each one, gather words
+    # Format word set as JSON and return it for storage in database
+    te = TextExtractor()
+    for file_info in manifest['readingOrder']:
+        te.feed_file(os.path.join(book_dir, file_info['href']))
+    return te.get_word_set()
+
