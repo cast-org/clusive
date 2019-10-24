@@ -85,5 +85,5 @@ def find_all_words(book_dir, manifest):
     te = TextExtractor()
     for file_info in manifest['readingOrder']:
         te.feed_file(os.path.join(book_dir, file_info['href']))
-    return te.get_word_set()
+    return json.dumps(sorted(te.get_word_set()))
 
