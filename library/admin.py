@@ -68,7 +68,7 @@ def find_cover(manifest):
 def find_glossary_words(book_dir):
     glossaryfile = os.path.join(book_dir, 'glossary.json')
     if os.path.exists(glossaryfile):
-        with open(glossaryfile, 'r') as file:
+        with open(glossaryfile, 'r', encoding='utf-8') as file:
             glossary = json.load(file)
             words = [e['headword'] for e in glossary]
             return json.dumps(words)
