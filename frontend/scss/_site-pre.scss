@@ -141,6 +141,13 @@ $grid-row-columns:              4;
 
 $btn-focus-box-shadow-alpha:    .8;
 
+$input-bg:                      #fbfbfb;
+$input-focus-box-shadow-size:   0 0 0 .1875rem;
+$input-focus-box-shadow-alpha:  .9;
+$input-focus-box-shadow:        $input-focus-box-shadow-size rgba(#40998b, $input-focus-box-shadow-alpha) !default;
+
+$form-group-margin-bottom:      .5rem;
+
 $form-checkradio-border-width:          1px;
 $form-checkradio-border-color:          #7e8aad;
 $form-checkradio-checked-bg:            #66faff;

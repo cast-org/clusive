@@ -1,29 +1,64 @@
 {% extends "shared/base.html" %}
+{% load static %}
 
-{% block title %}Login to Clusive{% endblock %}
+{% block bodyClass %}home{% endblock %}
+{% block title %}Welcome to Clusive{% endblock %}
+
+{% block sidebar_start %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% endblock %}
 
 {% block content %}
+{% include "shared/partial/site_header.html" %}
 
-<h1>Login to Clusive</h1>
+<h1>Welcome to Clusive</h1>
+<p>This is the <a href="http://cisl.cast.org">Center on Inclusive Software for Learning</a>'s flexible, adaptive, and customizable digital reader.</p>
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+<div class="row">
+    <div class="col-sm-6">
+        <h2>Curious?</h2>
+        <p>Try out all that Clusive has to offer.</p>
+        <a href="{% url 'reader_index' %}" class="btn btn-tertiary btn-splash">Try Clusive!</a>
 
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
+        <div class="home-create">
+            <p>Create a free account to keep your settings.</p>
+            <a href="#" class="btn btn-primary">Create an account</a>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card card-login">
+            <div class="card-body">
 
-<input type="submit" value="login">
-<input type="hidden" name="next" value="{% url 'index' %}">
-</form>
+                {% if form.errors %}
+                <div class="card-login-error">
+                    Your username and password didn't match. Please try again.
+                </div>
+                {% else %}
+                <h2>I already have an account.</h2>
+                {% endif %}
+
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}:</label>
+                        <input id="{{ form.username.id_for_label }}" name="{{ form.username.html_name }}" type="text" class="form-control" required{% if form.username.value != None %} value="{{ form.username.value }}"{% endif %}>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}:</label>
+                        <input id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" type="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="next" value="{% url 'reader_index' %}">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body card-login-forgot">
+                <a href="#">I forgot my username or password.</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

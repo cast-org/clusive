@@ -1,8 +1,14 @@
 .library {
     background-color: $library-bg;
 
+    .site-header-small {
+        left: -5rem;
+        margin-right: -5rem;
+    }
+
     .sidebar {
         flex-basis: 3rem;
+        max-width: 3rem;
         background-color: $library-sidebar-bg;
         //background-image: none;
     }
@@ -26,8 +32,9 @@
         }
     }
 
+    .user-actions,
     .site-footer {
-        a {
+        a:not(.btn) {
             color: #00399c;
 
             @include hover() {
