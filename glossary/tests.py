@@ -32,8 +32,17 @@ class GlossaryTestCase(TestCase):
                                 "In %s word %s, missing definition in %s" % (glossfile, entry['headword'], m)
                             assert 'examples' in m, \
                                 "In %s word %s, missing examples in %s" % (glossfile, entry['headword'], m)
-                            # assert 'images' in m, \
-                            #     "In %s word %s, missing images in %s" % (glossfile, entry['headword'], m)
+                            if 'images' in m:
+                                for i in m['images']:
+                                    assert 'src' in i, "In %s word %s, missing src for image" % (glossfile, entry['headword'])
+                                    assert os.path.exists(os.path.join(book_dir, i['src'])), \
+                                        "In %s word %s, image doesn't exist: %s" % (glossfile, entry['headword'], os.path.join(book_dir, i['src']))
+                                    assert 'alt' in i, "In %s word %s, missing alt for image" % (glossfile, entry['headword'])
+                                    assert 'description' in i, "In %s word %s, missing description for image" % (glossfile, entry['headword'])
+                                    # optional for now
+                                    # assert 'caption' in i, "In %s word %s, missing caption for image" % (glossfile, entry['headword'])
+                                    # assert 'source' in i, "In %s word %s, missing source for image" % (glossfile, entry['headword'])
 
-            else:
+
+        else:
                 logger.error("Book directory has no glossary: %s", book_dir)

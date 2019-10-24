@@ -1,0 +1,272 @@
+[
+    {
+        "headword": "alter",
+        "alternateForms": ["alters", "altered", "altering" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To change.",
+                "examples": [ "Taking steroids can alter the human brain and make people violent toward others for no reason."]
+
+            }
+        ]
+    },
+ {
+        "headword": "compounds",
+        "alternateForms": [ "compounds", "compounded", "compounding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To complicate by adding to.",
+                "examples": [ "Don’t compound the problem of forgetting your homework by being rude to your teacher." ]
+
+            }
+        ]
+    },
+ {
+        "headword": "conflicted",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Undecided, or having feelings that clash or do not agree.",
+                "examples": [ "Mussa was conflicted about whether to save his money or spend it on a new game." ]
+
+            }
+        ]
+    },
+ {
+        "headword": "fundamental",
+        "alternateForms": ["fundamentals" ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Central, essential, or basic.",
+                "examples": [ "A fundamental part of being able to read well is knowing a lot of vocabulary words." ]
+
+            }
+        ]
+    },
+ {
+        "headword": "substitute",
+        "alternateForms": ["substitutes", "substituted", "substituting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "to replace.",
+                "examples": [ "When Terry mistakenly substituted salt for sugar in the brownie recipe, the brownies tasted terrible!" ]
+
+            }
+        ]
+    },
+    {
+        "headword": "ban",
+        "alternateForms": [ "banned", "bans"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To officially or legally forbid.",
+                "examples": [ "Use of cell phones was banned in class because people were too distracted by them. " ]
+
+            }
+        ]
+    },
+    {
+        "headword": "illicit",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Forbidden by custom or law. ",
+                "examples": [ "Paul got in trouble for selling illicit and stolen goods out of the trunk of his car." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "prohibit",
+        "alternateForms": ["prohibited", "prohibits", "prohibited" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To officially or legally forbid.",
+                "examples": [ "Dogs are prohibited from most parks and beaches." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "clandestine",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Done in secret, usually because it is against the law.",
+                "examples": [ "The protestors gathered in a hidden park for their clandestine meetings. " ]
+
+            }
+        ]
+    },
+    {
+        "headword": "detectable",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Able to be recognized found or discovered.",
+                "examples": [ "The taste of cinnamon was detectable in the apple pie."],
+                "images": [
+                    {
+                        "src": "images/glossary/detectable1.jpg",
+                        "alt": "Photo of stamp enlarged through a magnifying glass.",
+                        "description": "A pair of metal tweezers holds a stamp below a magnifying glass. The magnifying glass makes the end of the tweezers and the stamp larger and more detail is visible. Other stamps are in the background of the photo.",
+                        "caption": "With a magnifying glass, the details of this stamp are detectable. ",
+ 		"source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Magnifying_glass2.jpg",
+                            "title": "Magnifying glass2.jpg",
+                            "author": "Heptagon",
+                            "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Heptagon&action=edit&redlink=1",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                       }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "engage",
+        "alternateForms": [ "engaging"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To participate or become involved in.",
+                "examples": [ "Engaging in positive behaviors, like exercise and eating well, keeps you healthy."],
+                "images": [
+                    {
+                        "src": "images/glossary/engage1.jpg",
+                        "alt": "Photo of a person running on a track.",
+                        "description": "A woman runs a long a track from right to left. In the background, several other people stand and look to the right or left, and two people look at the runner. One of the people looking at the runner is clapping and has her mouth open, as though she is speaking.",
+                        "caption": "People engaging in sports: running and cheering on the athletes.",
+ 		"source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:US_Navy_060523-N-5608F-002_Personnel_Specialist_2nd_Class_Chanetta_Williamson,_left,_assigned_to_Personnel_Support_Detachment_Anacostia_and_Seaman_Cameron_Kisselbaugh,_right,_assigned_to_the_Anacostia_Navy_Ceremonial_Guard_Uni.jpg",
+                            "title": "US Navy 060523-N-5608F-002 Personnel Specialist 2nd Class Chanetta Williamson, left, assigned to Personnel Support Detachment Anacostia and Seaman Cameron Kisselbaugh, right, assigned to the Anacostia Navy Ceremonial Guard Uni.jpg",
+                            "author": "U.S. Navy photo by Journalist 1st Class Kristin Fitzsimmons",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": "https://commons.wikimedia.org/wiki/File:US_Navy_060523-N-5608F-002_Personnel_Specialist_2nd_Class_Chanetta_Williamson,_left,_assigned_to_Personnel_Support_Detachment_Anacostia_and_Seaman_Cameron_Kisselbaugh,_right,_assigned_to_the_Anacostia_Navy_Ceremonial_Guard_Uni.jpg"
+                       }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "aggression",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Violent actions or thoughts toward another.",
+                "examples": [ "People who used to be Trey's friends stayed away now because of the aggression he showed to others."],
+                "images": [
+                    {
+                        "src": "images/glossary/aggression1.jpg",
+                        "alt": "Photo of two animals fighting.",
+                        "description": "Two deer-like animals are at the center of the photo. The animal on the left faces toward the center. The animal on the right has its head down and against the ground. The animal on the left has its head and antlers pressed against the neck of the animal on the right. Trees and grass are in the background of the photo.",
+                        "caption": "One animal showing agression toward another",
+ 		"source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Nilgais_fighting,_Lakeshwari,_Gwalior_district,_India.jpg",
+                            "title": "Nilgais fighting, Lakeshwari, Gwalior district, India.jpg",
+                            "author": "Yann",
+                            "author_url": "https://commons.wikimedia.org/wiki/User:Yann",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                       }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "identifiable",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Able to be recognized, found or discovered.",
+                "examples": [ "The people in the old picture were all still identifiable to their children."],
+                "images": [
+                    {
+                        "src": "images/glossary/identifiable1.jpg",
+                        "alt": "Photo of stamp enlarged through a magnifying glass.",
+                        "description": "A pair of metal tweezers holds a stamp below a magnifying glass. The magnifying glass makes the end of the tweezers and the stamp larger and more detail is visible. Other stamps are in the background of the photo.",
+                        "caption": "With a magnifying glass, the details of this stamp are identifiable. ",
+ 		"source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Magnifying_glass2.jpg",
+                            "title": "Magnifying glass2.jpg",
+                            "author": "Heptagon",
+                            "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Heptagon&action=edit&redlink=1",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                       }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "partake",
+        "alternateForms": ["partakes", "partaking" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To participate or become involved in.",
+                "examples": [ "People who like sports often like to partake in dancing, too."],
+                "images": [
+                    {
+                        "src": "images/glossary/partake2.jpg",
+                        "alt": "Photo of a large group of people walking together on a brick walkway.",
+                        "description": "Photo shows a group of people dressed in the same style of uniform. Each person is carrying a musical instrument. The group of people is walking across a brick walkway. ",
+                        "caption": "Members of a high school band partaking in a walk.",
+ 		"source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:High_Bridge_re-opening_Inwood_High_School_Marching_Band_leaving_opening_ceremony.jpg",
+                            "title": "High Bridge re-opening Inwood High School Marching Band leaving opening ceremony.jpg",
+                            "author": "Beyond My Ken",
+                            "author_url": "https://commons.wikimedia.org/wiki/User:Beyond_My_Ken",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                       }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "belligerence",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Violent actions or thoughts toward another.",
+                "examples": [ "Her belligerence toward others made it hard for her to make friends."],
+                "images": [
+                    {
+                        "src": "images/glossary/belligerence1.jpg",
+                        "alt": "Photo of two men fighting in a street.",
+                        "description": "Photo of two men. One man is bent forward and has his arm around the neck of the other man. The other man is holding the man with one hand. His other arm is raised and his hand is clenched into a fist. ",
+                        "caption": "These people are showing their belligerence toward each other by fighting in the street. ",
+ 		"source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Twin01cloth.jpg",
+                            "title": "Twin01cloth.jpg",
+                            "author": "Triante2009",
+                            "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Triante2009&action=edit&redlink=1",
+                            "license": "Public Domain",
+                            "license_url": "https://commons.wikimedia.org/wiki/File:Twin01cloth.jpg"
+                       }
+                    }
+                ]
+            }
+        ]
+    }
+]
