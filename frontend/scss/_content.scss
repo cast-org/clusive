@@ -6,6 +6,27 @@ body {
     }
 }
 
+h1,
+.h1,
+h2,
+.h2 {
+    font-family: Arial, sans-serif;
+    font-weight: 900;
+}
+
+h1,
+.h1 {
+    @include font-size(1.375rem);
+}
+h2,
+.h2 {
+    @include font-size(1.125rem);
+}
+h3,
+.h3 {
+    @include font-size(1rem);
+}
+
 .content {
     padding-right: 1rem;
     padding-left: 1rem;

@@ -1,0 +1,54 @@
+.home {
+    background-color: $library-bg;
+
+    .site-header {
+        left: 0;
+        margin-right: 0;
+    }
+
+    @include media-breakpoint-up(sm) {
+        .site-header {
+            left: -5rem;
+            margin-right: -5rem;
+        }
+
+        .site-header-small {
+            left: -5.25rem;
+            margin-right: -5.25rem;
+        }
+    }
+
+    .sidebar {
+        flex-basis: 3rem;
+        max-width: 3rem;
+        background-color: transparent;
+        background-image: none;
+
+        @include media-breakpoint-down(sm) {
+            display: none;
+        }
+    }
+
+    .user-actions,
+    .content,
+    .site-footer {
+        a:not(.btn) {
+            color: #00399c;
+
+            @include hover() {
+                color: palette(#00399c, 700);
+            }
+        }
+    }
+}
+
+.home-create {
+    padding-top: .5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border-top: 3px solid rgba(#636b82, .25);
+
+    @include media-breakpoint-up(sm) {
+        margin-bottom: 1rem;
+    }
+}
