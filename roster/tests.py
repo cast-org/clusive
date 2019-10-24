@@ -161,7 +161,7 @@ class ClusiveUserTestCase(TestCase):
             self.fail("Validation should not have failed")            
 
         self.assertEqual(clusive_user_1.anon_id, "Student3")        
-            
+
     def test_anon_id_unique_enforcement(self):
         """ Two users cannot have the same anon_id """
         clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
@@ -175,7 +175,7 @@ class ClusiveUserTestCase(TestCase):
             clusive_user_2.full_clean()
             self.fail("Validation should have failed due to same anon_id")
         except ValidationError as e:                    
-            self.assertEqual(e.message_dict["anon_id"][0], "Clusive user with this Anon id already exists.")                                     
+            self.assertEqual(e.message_dict["anon_id"][0], "Clusive user with this Anon id already exists.")
 
     def test_permissioned_property(self):
         """ The 'is_permissioned' property function returns TRUE for 'permissioned' state and 'false' for all others """
@@ -197,6 +197,7 @@ class ClusiveUserTestCase(TestCase):
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
 
+
 class PageTestCases(TestCase):
 
         def setUp(self):
@@ -206,24 +207,25 @@ class PageTestCases(TestCase):
             url = reverse('login')
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
-            html = response.content.decode('utf8')                    
-            self.assertIn('<h1>Login to Clusive</h1>', html)   
+            html = response.content.decode('utf8')
+            self.assertIn('Username', html)
+            self.assertIn('Password', html)
 
         def test_logged_in_message(self):
             login = self.client.login(username='user1', password='password1')
             self.assertTrue(login)
             url = reverse('index')
-            response = self.client.get(url)
+            response = self.client.get(url, follow=True)
             html = response.content.decode('utf8')
             self.assertIn('user1', html)
-            self.assertIn('Welcome to Clusive', html)
+            self.assertIn('Library | Clusive', html)
 
         def test_logout_url(self):                              
             login = self.client.login(username='user1', password='password1')                          
             self.assertTrue(login)
 
             url = reverse('index')
-            response = self.client.get(url)
+            response = self.client.get(url, follow=True)
             html = response.content.decode('utf8')                    
             self.assertIn('user1', html)
 
@@ -232,4 +234,5 @@ class PageTestCases(TestCase):
             
             self.assertEqual(response.status_code, 200)
             html = response.content.decode('utf8')        
-            self.assertIn('Login', html)        
+            self.assertIn('Username', html)
+            self.assertIn('Password', html)
