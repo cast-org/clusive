@@ -1,0 +1,9 @@
+<div class="user-actions">
+    <a href="#">Word bank</a>
+    |
+    {% if not user.is_anonymous %}
+    {{ user }} | <a href="{% url 'logout' %}">Log out</a>
+    {% else %}
+    <a href="{% url 'login' %}">Log in</a> | <a href="{% url 'login' %}">Create an account</a>
+    {% endif %}
+</div>

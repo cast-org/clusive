@@ -8,15 +8,11 @@
         <span class="sr-only">Clusive</span>
     </div>
 
+    {% if page_title.length > 0 %}
     <h1 class="page-title">{{ page_title }}</h1>
+    {% endif %}
 
-    <div class="user-actions">
-        <a href="#">My glossary</a>
-        |
-        {% if not user.is_anonymous %}
-        {{ user }} | <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-        <a href="{% url 'login' %}">Login</a>
-        {% endif %}
-    </div>
+    {% if user_actions %}
+    {% include "shared/partial/site_header_actions.html" %}
+    {% endif %}
 </header>

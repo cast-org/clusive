@@ -3,7 +3,7 @@
 
 {% block head_additional %}
 {% comment %} Readium reader dependencies {% endcomment %}
-<!-- The reader.css should probabluy only be included within the iframe,
+<!-- The reader.css should probably only be included within the iframe,
 not the parent document -->
 <!--
 <link rel="stylesheet" href="{% static 'shared/js/lib/reader/reader.css' %}" />
@@ -19,7 +19,7 @@ var pub_id = "{{ pub_id }}";
 {% block title %}Welcome to Clusive{% endblock %}
 
 {% block sidebar_start %}
-{% include "shared/partial/sidebar_start.html" with nav=1 %}
+{% include "shared/partial/sidebar_start.html" with index_reader=True nav=True %}
 {% endblock %}
 
 {% block sidebar_end %}
@@ -27,7 +27,7 @@ var pub_id = "{{ pub_id }}";
 {% endblock %}
 
 {% block content %}
-{% include "shared/partial/site_header_small.html" %}
+{% include "shared/partial/site_header_small.html" with user_actions=True %}
 
 <div id="D2Reader-Container" style="position: relative;">
     <main style="overflow: hidden" tabindex=-1 id="iframe-wrapper">
