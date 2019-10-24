@@ -22,7 +22,7 @@ class BookGlossary:
         pubs_directory = finders.find('shared/pubs')
         book_dir = os.path.join(pubs_directory, self.book)
         try:
-            with open(os.path.join(book_dir, 'glossary.json'), 'r') as file:
+            with open(os.path.join(book_dir, 'glossary.json'), 'r', encoding='utf-8') as file:
                 logger.debug("Reading glossary %s", file.name)
                 rawdata = json.load(file)
                 self.data = {}

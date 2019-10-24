@@ -16,7 +16,7 @@ class GlossaryTestCase(TestCase):
         for book_dir in book_dirs:
             glossfile = os.path.join(book_dir, 'glossary.json')
             if os.path.exists(glossfile):
-                with open(glossfile, 'r') as file:
+                with open(glossfile, 'r', encoding='utf-8') as file:
                     glossary = json.load(file)
                     for entry in glossary:
                         assert 'headword' in entry, \
