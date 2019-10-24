@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path('glossdef/<document>/<word>', views.glossdef, name='glossdef'),
+    path('cuelist/<document>', views.cuelist, name='cuelist'),
 ]
