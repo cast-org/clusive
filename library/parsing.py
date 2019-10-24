@@ -37,12 +37,12 @@ class TextExtractor(HTMLParser):
 
     def handle_endtag(self, tag):
         if not tag in self.element_stack:
-            logger.info("Warning: close tag for element that is not open: %s in %s; file=",
+            logger.warning("Warning: close tag for element that is not open: %s in %s; file=",
                         tag, self.element_stack, self.file)
             return
         index = self.element_stack.index(tag)
         if index > 0:
-            logger.info("Warning: improper nesting of end tag %s in %s; file=%s",
+            logger.warning("Warning: improper nesting of end tag %s in %s; file=%s",
                         tag, self.element_stack, self.file)
         del self.element_stack[0:index+1]
 

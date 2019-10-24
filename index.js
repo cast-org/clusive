@@ -1,6 +1,6 @@
 // TODO: this should include the other JS dependencies
 
-import execJQuery from 'script-loader!jquery';
+// import execJQuery from 'script-loader!jquery';
 
 import execJQueryUIVersions from "script-loader!jquery-ui/ui/version";
 import execJQueryUIWidget from "script-loader!jquery-ui/ui/widget.js";
@@ -19,4 +19,4 @@ import execJQueryUITooltip from "script-loader!jquery-ui/ui/widgets/tooltip.js"
 import execInfusion from 'script-loader!infusion';
 import execPopperJs from 'script-loader!popper.js';
 import execFiguration from 'script-loader!figuration';
-import execMarkJs from 'script-loader!mark.js';
+// import execMarkJs from 'script-loader!mark.js';

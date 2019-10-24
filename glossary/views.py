@@ -1,3 +1,4 @@
+import json
 import logging
 from django.shortcuts import render
 
@@ -5,6 +6,7 @@ from django.http import JsonResponse, HttpResponseNotFound
 
 from glossary.apps import GlossaryConfig
 from glossary.bookglossary import BookGlossary
+from library.models import Book
 from wordnet import util as wordnetutil
 from eventlog.signals import vocab_lookup
 
@@ -15,6 +17,14 @@ logger = logging.getLogger(__name__)
 # configure which one(s) to use.
 
 book_glossaries = {}
+
+
+def cuelist(request, document):
+    """Return the list of words that should be cued in this document for this user"""
+    book = Book.objects.get(path=document)
+    # TODO: should customize this list for the user.  For now, just returning all glossary words
+    return JsonResponse({'words': json.loads(book.glossary_words)})
+
 
 def glossdef(request, document, word):
     """Return a formatted HTML representation of a word's meaning(s)."""

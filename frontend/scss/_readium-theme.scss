@@ -39,3 +39,11 @@
     background-color: transparent !important;
     mix-blend-mode: multiply;
 }
+
+a.gloss, a.gloss:hover {
+    color: inherit;
+    text-decoration-color: blue;
+    text-decoration-line: underline;
+    text-decoration-style: double;
+    text-decoration-width: 2px;
+}
