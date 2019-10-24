@@ -16,7 +16,7 @@ class TextExtractor(HTMLParser):
 
     def feed_file(self, file):
         self.file = file
-        with open(file, 'r') as html:
+        with open(file, 'r', encoding='utf-8') as html:
             for line in html:
                 self.feed(line)
         self.file = None
