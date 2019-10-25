@@ -95,8 +95,13 @@
             },
             modalLetterSpacing: {
                 "default": 1,
-                "wide": 1.5,
-                "wider": 2
+                "wide": 1.2,
+                "wider": 1.4
+            },
+            modalColor: {
+                "default": "default",
+                "night": "wb",
+                "sepia": "bbr"
             }
         },
         modelListeners: {
@@ -108,28 +113,37 @@
             "modalSettings.lineSpacing": {
                 funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
                 args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLineSpacing)", "preferences.fluid_prefs_lineSpace", "{that}"],
+                excludeSource: "init"
             },
             "modalSettings.letterSpacing": {
                 funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
                 args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLetterSpacing)", "preferences.fluid_prefs_letterSpace", "{that}"],
+                excludeSource: "init"
             },            
             "modalSettings.font": {
                 funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
                 args: ["{change}.value", "preferences.fluid_prefs_textFont", "{that}"],
                 excludeSource: "init"
-            }     
+            },
+            "modalSettings.color": {
+                funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
+                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalColor)", "preferences.fluid_prefs_contrast", "{that}"],
+                excludeSource: "init"
+            }                 
         },
         selectors: {
             textSize: ".cislc-modalSettings-textSize",
             lineSpacing: ".cislc-modalSettings-lineSpacing",
             letterSpacing: ".cislc-modalSettings-letterSpacing",
-            font: ".cislc-modalSettings-font"
+            font: ".cislc-modalSettings-font",
+            color: ".cislc-modalSettings-color"
         },
         bindings: {
             textSize: "modalSettings.textSize",
             lineSpacing: "modalSettings.lineSpacing",
             letterSpacing: "modalSettings.letterSpacing",
-            font: "modalSettings.font"
+            font: "modalSettings.font",
+            color: "modalSettings.color"
         }
     })
 
