@@ -45,8 +45,9 @@
                             ]        
         {% endif %}
 
+        var prefsEditor;
         $(document).ready(function () {            
-            var prefsEditor = fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
+            prefsEditor = fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
                     build: {                        
                         gradeNames: buildGradeNames,
                         auxiliarySchema: {
@@ -71,6 +72,16 @@
                                                     preferences: "{prefsEditorLoader}.model.preferences"
                                                 }
                                             }
+                                        },
+                                        modalSettings: {
+                                            type: "cisl.prefs.modalSettings",
+                                            createOnEvent: "{prefsEditorLoader}.events.onReady",
+                                            container: "#modalSettings",
+                                            options: {
+                                                model: {
+                                                    "preferences": "{prefsEditorLoader}.model.preferences"
+                                                }    
+                                            }                                        
                                         }
                                     }
                                 }

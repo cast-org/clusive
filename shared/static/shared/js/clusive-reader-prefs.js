@@ -21,25 +21,10 @@
                     excludeSource: "*"
                 },
                 singleTransform: {
-                    type: "fluid.transforms.valueMapper",
-                    defaultInput: "{that}.model.preferences.fluid_prefs_textSize",
-                    match: [
-                        {
-                            inputValue: "small",
-                            outputValue: 75
-                        },
-                        {
-                            inputValue: "medium",
-                            outputValue: 100
-                        },
-                        {
-                            inputValue: "large",
-                            outputValue: 150
-                        },                        {
-                            inputValue: "x-large",
-                            outputValue: 200
-                        }
-                    ]
+                    type: "fluid.transforms.binaryOp",
+                    "left": "{that}.model.preferences.fluid_prefs_textSize",
+                    "operator": "*",                    
+                    "right": 100                  
                 }
             },
             "readerPreferences.fontFamily": {

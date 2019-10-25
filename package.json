@@ -19,6 +19,7 @@
   "dependencies": {
     "expose-loader": "0.7.5",
     "figuration": "4.0.0-beta.1",
+    "gpii-binder": "https://github.com/GPII/gpii-binder.git",
     "infusion": " 3.0.0-dev.20190820T145526Z.389bd6937.FLUID-6394",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
