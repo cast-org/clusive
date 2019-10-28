@@ -3,11 +3,6 @@
 
 {% block head_additional %}
 {% comment %} Readium reader dependencies {% endcomment %}
-<!-- The reader.css should probably only be included within the iframe,
-not the parent document -->
-<!--
-<link rel="stylesheet" href="{% static 'shared/js/lib/reader/reader.css' %}" />
--->
 
 <script>
 var exports = {};
@@ -51,7 +46,7 @@ var pub_id = "{{ pub_id }}";
             {type:'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-before.css" %}', r2before: true},
             {type:'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-default.css" %}', r2default: true},
             {type:'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-after.css" %}', r2after: true},
-            {type:'style', url: '{% static "shared/css/clusive.css" %}'},
+            {type:'style', url: '{% static "shared/css/reader-frame.css" %}'},
             {type:'style', url: '{% static "shared/js/lib/reader/fonts/opendyslexic/opendyslexic.css" %}', fontFamily: 'opendyslexic'},
             {type:'style', systemFont: true, fontFamily: 'Arial, Helvetica'},
             {type: 'style', systemFont: true, fontFamily: 'Georgia, Times, Times New Roman, serif'},

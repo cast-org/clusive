@@ -1,0 +1,13 @@
+figcaption,
+.figure-caption,
+.caption {
+  padding: .5rem;
+  background-color: #ebe6d2;
+}
+
+a.gloss,
+a.gloss:hover {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 3px solid #40998b;
+}
