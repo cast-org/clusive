@@ -23,11 +23,11 @@ function find_selected_word() {
     return word;
 }
 
-function load_definition(word) {
+function load_definition(cued, word) {
     var title, body;
     if (word) {
         title = word;
-        $.get('/glossary/glossdef/'+window.pub_id+'/'+word)
+        $.get('/glossary/glossdef/'+window.pub_id+'/'+cued+'/'+word)
             .done(function(data, status) {
                 $('#glossaryBody').html(data);
             })
@@ -50,7 +50,7 @@ function load_definition(word) {
 // When lookup button is clicked, try to show a definition in the popover.
 $(function() {
     $('#glossaryButton').on('click', function () {
-        load_definition(find_selected_word());
+        load_definition(0, find_selected_word());
         $(this).CFW_Popover('show');
     });
 });

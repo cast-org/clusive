@@ -57,7 +57,7 @@ def cuelist(request, document):
         logger.warning("Could not fetch cue words, no Clusive user: %s", request.user)
         return JsonResponse({'words': []})
 
-def glossdef(request, document, word):
+def glossdef(request, document, cued, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
     source = None
 
@@ -75,6 +75,7 @@ def glossdef(request, document, word):
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=word,
+                      cued=cued,
                       source = source)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
