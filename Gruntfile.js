@@ -132,7 +132,8 @@ module.exports = function (grunt) {
                     'frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',
                     'frontend/dist/css/<%= pkg.name %>-reader-theme-lgdg.css': 'frontend/scss/<%= pkg.name %>-reader-theme-lgdg.scss',
                     'frontend/dist/css/<%= pkg.name %>-reader-theme-bbr.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bbr.scss',
-                    'frontend/dist/css/<%= pkg.name %>-reader-theme-gw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-gw.scss'
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-gw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-gw.scss',
+                    'frontend/dist/css/reader-frame.css': 'frontend/scss/reader-frame.scss'
                 }
             }
         },

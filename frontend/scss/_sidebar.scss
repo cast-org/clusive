@@ -2,8 +2,8 @@
     display: flex;
     flex: 0 0 3rem;
     justify-content: center;
-    padding: .75rem 0;
     width: 3rem;
+    padding: .75rem 0;
     //background-color: $sidebar-bg;
     background-image: linear-gradient(180deg, $sidebar-bg 0%, $sidebar-bg-alt 100%);
     @include border-radius($sidebar-border-radius);
