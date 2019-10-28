@@ -11,4 +11,5 @@ urlpatterns = [
             next_page='index'
         ), 
         name='logout'),
+    path('guest_login', views.guest_login, name='guest_login'),
 ]
