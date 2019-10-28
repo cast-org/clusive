@@ -1,5 +1,5 @@
 <div class="user-actions">
-    <a href="#">Word bank</a>
+    <a href="{% url 'word_bank' %}">Word bank</a>
     |
     {% if not user.is_anonymous %}
     {{ user }} | <a href="{% url 'logout' %}">Log out</a>

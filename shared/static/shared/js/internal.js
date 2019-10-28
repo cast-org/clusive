@@ -60,7 +60,7 @@ $(function() {
         e.stopPropagation();
         let word = $(this).text();
         console.log('clicked ', word);
-        window.parent.load_definition(word);
+        window.parent.load_definition(1, word);
         window.parent.$('#glossaryButton').CFW_Popover('show');
     })
 });
