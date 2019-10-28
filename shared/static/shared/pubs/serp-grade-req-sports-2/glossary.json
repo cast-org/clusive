@@ -1,299 +1,299 @@
 [
-    {
-        "headword": "participation",
-        "alternateForms": [ ],
-        "meanings": [
-            {
-                "pos": "noun",
-                "definition": "To become involved or share in the activities of a group.",
-                "examples": [ "When Jaden participated in class discussion, everyone could hear his interesting thoughts."],
-                "images": [
-                    {
-                        "src": "images/glossary/participation1.jpg",
-                        "alt": "Photo of children playing soccer.",
-                        "description": "A group of teens and young adults play soccer on a stone-paved street. A soccer ball is in the center of the photo. A boy kicks the ball around another player, who is sprawled on the ground. Three other players run behind the player with the ball. In the background, people watch the players. ",
-                        "caption": "Many people can participate in a soccer game.",
- 		"source": {
-                            "url": "https://commons.wikimedia.org/wiki/File:Boys_playing_street_football_in_Egypt.jpg",
-                            "title": "Boys playing street football in Egypt.jpg",
-                            "author": "Mohamed Hozyen Ahmed",
-                            "author_url": "https://commons.wikimedia.org/wiki/User:Hozyen",
-                            "license": "CC BY-SA 4.0",
-                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
-                       }
-                    }
-                ]
+  {
+    "headword": "participation",
+    "alternateForms": [ ],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "To become involved or share in the activities of a group.",
+        "examples": [ "When Jaden participated in class discussion, everyone could hear his interesting thoughts."],
+        "images": [
+          {
+            "src": "images/glossary/participation1.jpg",
+            "alt": "Photo of children playing soccer.",
+            "description": "A group of teens and young adults play soccer on a stone-paved street. A soccer ball is in the center of the photo. A boy kicks the ball around another player, who is sprawled on the ground. Three other players run behind the player with the ball. In the background, people watch the players. ",
+            "caption": "Many people can participate in a soccer game.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Boys_playing_street_football_in_Egypt.jpg",
+              "title": "Boys playing street football in Egypt",
+              "author": "Mohamed Hozyen Ahmed",
+              "author_url": "https://commons.wikimedia.org/wiki/User:Hozyen",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
             }
+          }
         ]
-    },
-    {
-        "headword": "improved",
-        "alternateForms": [ ],
-        "meanings": [
-            {
-                "pos": "adjective",
-                "definition": "Having become or been made better.",
-                "examples": [ "Jana practiced with kicking the soccer ball with both feet and improved her soccer skills." ]
+      }
+    ]
+  },
+  {
+    "headword": "improved",
+    "alternateForms": [ ],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Having become or been made better.",
+        "examples": [ "Jana practiced with kicking the soccer ball with both feet and improved her soccer skills." ]
 
-            }
-        ]
-    },
-    {
-        "headword": "motivate",
-        "alternateForms": [ "motivates", "motivated", "motivating" ],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "To want to or to make someone want to do something.",
-                "examples": ["Wanting to stay healthy motivates me to exercise and eat well every day."]
+      }
+    ]
+  },
+  {
+    "headword": "motivate",
+    "alternateForms": [ "motivates", "motivated", "motivating" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To want to or to make someone want to do something.",
+        "examples": ["Wanting to stay healthy motivates me to exercise and eat well every day."]
 
-            }
-        ]
-    },
-    {
-        "headword": "ameliorate",
-        "alternateForms": [ "ameliorated", "ameliorates", "ameliorating" ],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "having become or been made better.",
-                "examples": ["Putting soothing cream on the sunburn ameliorated the pain that Juna was feeling. "]
+      }
+    ]
+  },
+  {
+    "headword": "ameliorate",
+    "alternateForms": [ "ameliorated", "ameliorates", "ameliorating" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "having become or been made better.",
+        "examples": ["Putting soothing cream on the sunburn ameliorated the pain that Juna was feeling. "]
 
+      }
+    ]
+  },
+  {
+    "headword": "challenging",
+    "alternateForms": [  ],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Difficult; testing one's skills or abilities. ",
+        "examples": ["When I do something challenging, I see that I can accomplish more than I had thought."],
+        "images": [
+          {
+            "src": "images/glossary/challenging1.jpg",
+            "alt": "Photo of person climbing a snowy mountain.",
+            "description": "In the background are snow covered mountains. In the foreground is a steep slope of rock and snow. A person is on the steep slope, facing the mountain. Footprints lead from the bottom edge of the photo to the person. The person is connected to a rope and is wearing a helmet, climbing gear, and a backpack. The person has their arms extended forward toward the snowy slope of the mountain and one leg is straight down, while the other is bent toward the mountain.",
+            "caption": "Mountain climbing in the snow is even more challenging than regular mountain climbing. ",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Princess_Mountain_NE_Ridge_with_Bill_Pilling_climbing.jpg",
+              "title": "Princess Mountain NE Ridge with Bill Pilling climbing",
+              "author": "Rayborbon",
+              "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Rayborbon&action=edit&redlink=1",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
             }
+          }
         ]
-    },
-    {
-        "headword": "challenging",
-        "alternateForms": [  ],
-        "meanings": [
-            {
-                "pos": "adjective",
-                "definition": "Difficult; testing one's skills or abilities. ",
-                "examples": ["When I do something challenging, I see that I can accomplish more than I had thought."],
-                "images": [
-                    {
-                        "src": "images/glossary/challenging1.jpg",
-                        "alt": "Photo of person climbing a snowy mountain.",
-                        "description": "In the background are snow covered mountains. In the foreground is a steep slope of rock and snow. A person is on the steep slope, facing the mountain. Footprints lead from the bottom edge of the photo to the person. The person is connected to a rope and is wearing a helmet, climbing gear, and a backpack. The person has their arms extended forward toward the snowy slope of the mountain and one leg is straight down, while the other is bent toward the mountain.",
-                        "caption": "Mountain climbing in the snow is even more challenging than regular mountain climbing. ",
- 		"source": {
-                            "url": "https://commons.wikimedia.org/wiki/File:Princess_Mountain_NE_Ridge_with_Bill_Pilling_climbing.jpg",
-                            "title": "Princess Mountain NE Ridge with Bill Pilling climbing.jpg",
-                            "author": "Rayborbon",
-                            "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Rayborbon&action=edit&redlink=1",
-                            "license": "CC BY-SA 4.0",
-                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
-                       }
-                    }
-                ]
+      }
+    ]
+  },
+  {
+    "headword": "partake",
+    "alternateForms": [ "partaking", "partakes"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To become involved or share in.",
+        "examples": ["Stefani decided to join her friends and partake in afterschool activities." ],
+        "images": [
+          {
+            "src": "images/glossary/partake1.jpg",
+            "alt": "Photo of children playing soccer.",
+            "description": "A group of teens and young adults play soccer on a stone-paved street. A soccer ball is in the center of the photo. A boy kicks the ball around another player, who is sprawled on the ground. Three other players run behind the player with the ball. In the background, people watch the players. ",
+            "caption": "Many people can partake in a game of soccer. ",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Boys_playing_street_football_in_Egypt.jpg",
+              "title": "Boys playing street football in Egypt",
+              "author": "Mohamed Hozyen Ahmed",
+              "author_url": "https://commons.wikimedia.org/wiki/User:Hozyen",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
             }
+          }
         ]
-    },
- {
-        "headword": "partake",
-        "alternateForms": [ "partaking", "partakes"],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "To become involved or share in.",
-                "examples": ["Stefani decided to join her friends and partake in afterschool activities." ],
-                "images": [
-                    {
-                        "src": "images/glossary/partake1.jpg",
-                        "alt": "Photo of children playing soccer.",
-                        "description": "A group of teens and young adults play soccer on a stone-paved street. A soccer ball is in the center of the photo. A boy kicks the ball around another player, who is sprawled on the ground. Three other players run behind the player with the ball. In the background, people watch the players. ",
-                        "caption": "Many people can partake in a game of soccer. ",
- 		"source": {
-                            "url": "https://commons.wikimedia.org/wiki/File:Boys_playing_street_football_in_Egypt.jpg",
-                            "title": "Boys playing street football in Egypt.jpg",
-                            "author": "Mohamed Hozyen Ahmed",
-                            "author_url": "https://commons.wikimedia.org/wiki/User:Hozyen",
-                            "license": "CC BY-SA 4.0",
-                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
-                       }
-                    }
-                ]
 
+      }
+    ]
+  },
+  {
+    "headword": "encourage",
+    "alternateForms": [ "encourages", "encouraged", "encouraging" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To convince, persuade, influence, or support, especially as to actions to take.",
+        "examples": [ "Luis' parents encourage him to read new books and not just re-read ones he already knows." ],
+        "images": [
+          {
+            "src": "images/glossary/encourage1.jpg",
+            "alt": "Photo of a bicyclist moving by cheering fans. ",
+            "description": "In the foreground is a cyclist. The cyclist is blurry because they are moving. In the background is a crowd of people. Some people look at the cyclist and applaud as they pass. Other people are applauding, looking at an area behind the cyclist in the picture.",
+            "caption": "Fans encourage cyclists to race to the finish.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Jubilant_fans_cheer_on_triathletes_(7741300024).jpg",
+              "title": "Jubilant fans cheer on triathletes",
+              "author": "The Department for Culture, Media and Sport",
+              "author_url": "https://www.flickr.com/people/49429730@N08",
+              "license": "CC BY 2.0",
+              "license_url": "https://creativecommons.org/licenses/by/2.0/"
             }
+          }
         ]
-    },
- {
-        "headword": "encourage",
-        "alternateForms": [ "encourages", "encouraged", "encouraging" ],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "To convince, persuade, influence, or support, especially as to actions to take.",
-                "examples": [ "Luis' parents encourage him to read new books and not just re-read ones he already knows." ],
-                "images": [
-                    {
-                        "src": "images/glossary/encourage1.jpg",
-                        "alt": "Photo of a bicyclist moving by cheering fans. ",
-                        "description": "In the foreground is a cyclist. The cyclist is blurry because they are moving. In the background is a crowd of people. Some people look at the cyclist and applaud as they pass. Other people are applauding, looking at an area behind the cyclist in the picture.",
-                        "caption": "Fans encourage cyclists to race to the finish.",
-		 "source": {
-                            "url": "https://commons.wikimedia.org/wiki/File:Jubilant_fans_cheer_on_triathletes_(7741300024).jpg",
-                            "title": "Jubilant fans cheer on triathletes (7741300024).jpg",
-                            "author": "The Department for Culture, Media and Sport",
-                            "author_url": "https://www.flickr.com/people/49429730@N08",
-                            "license": "CC BY 2.0",
-                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
-                       }
-                    }
-                ]
+      }
+    ]
+  },
+  {
+    "headword": "compel",
+    "alternateForms": [ "compels", "compelled", "compelling"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "causes something to happen. ",
+        "examples": ["The store hopes that the ad compels people to come in and buy new products." ],
+        "images": [
+          {
+            "src": "images/glossary/compel1.jpg",
+            "alt": "Photo of riders on horses running on a racecourse.",
+            "description": "Horses are shown running on a grassy race course, moving from left to right. Three horses are fully visible, and one horse is entering the photo at the far left. One rider is on each horse. People are in the background watching the riders and horses.",
+            "caption": "The riders use different ways to compel the horses to run fast during a race.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Black_Eyed_Susan_Day_At_Pimlico_(34435500490).jpg",
+              "title": "Black Eyed Susan Day At Pimlico",
+              "author": "Maryland GovPics",
+              "author_url": "https://www.flickr.com/people/64018555@N03",
+              "license": "CC BY 2.0",
+              "license_url": "https://creativecommons.org/licenses/by/2.0/"
             }
+          }
         ]
-    },
- {
-        "headword": "compel",
-        "alternateForms": [ "compels", "compelled", "compelling"],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "causes something to happen. ",
-                "examples": ["The store hopes that the ad compels people to come in and buy new products." ],      
-                "images": [
-                    {
-                        "src": "images/glossary/compel1.jpg",
-                        "alt": "Photo of riders on horses running on a racecourse.",
-                        "description": "Horses are shown running on a grassy race course, moving from left to right. Three horses are fully visible, and one horse is entering the photo at the far left. One rider is on each horse. People are in the background watching the riders and horses.",
-                        "caption": "The riders use different ways to compel the horses to run fast during a race.",
-		 "source": {
-                            "url": "https://commons.wikimedia.org/wiki/File:Black_Eyed_Susan_Day_At_Pimlico_(34435500490).jpg",
-                            "title": "Black Eyed Susan Day At Pimlico (34435500490).jpg",
-                            "author": "Maryland GovPics",
-                            "author_url": "https://www.flickr.com/people/64018555@N03",
-                            "license": "CC BY 2.0",
-                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
-                       }
-                    }
-                ]
+      }
+    ]
+  },
+  {
+    "headword": "arduous",
+    "alternateForms": [ ],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Difficult; testing one's skills or abilities.",
+        "examples": ["High level classes can be arduous, but are worth the effort." ],
+        "images": [
+          {
+            "src": "images/glossary/arduous1.jpg",
+            "alt": "Photo of moving trash and bags to roadside. ",
+            "description": "This photo shows a road. On either side of the road are piles of filled trashbags, broken pieces of buildings, and other trash. A bulldozer is in the road, its front scoop filled with trash. People are along the sides of the road standing near the trash piles. ",
+            "caption": "After hurricanes and other natural disasters, people begin the arduous process of cleaning up.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:FEMA_-_39032_-_Cleanup_after_Hurricane_Ike_in_Galveston,_Texas.jpg",
+              "title": "FEMA Cleanup after Hurricane Ike in Galveston, Texas",
+              "author": "Robert Kaufmann",
+              "author_url": "",
+              "license": "Public Domain",
+              "license_url": ""
             }
+          }
         ]
-    },
- {
-        "headword": "arduous",
-        "alternateForms": [ ],
-        "meanings": [
-            {
-                "pos": "adjective",
-                "definition": "Difficult; testing one's skills or abilities.",
-                "examples": ["High level classes can be arduous, but are worth the effort." ],
-                "images": [
-                    {
-                        "src": "images/glossary/arduous1.jpg",
-                        "alt": "Photo of moving trash and bags to roadside. ",
-                        "description": "This photo shows a road. On either side of the road are piles of filled trashbags, broken pieces of buildings, and other trash. A bulldozer is in the road, its front scoop filled with trash. People are along the sides of the road standing near the trash piles. ",
-                        "caption": "After hurricanes and other natural disasters, people begin the arduous process of cleaning up.",
-		 "source": {
-                            "url": "https://commons.wikimedia.org/wiki/File:FEMA_-_39032_-_Cleanup_after_Hurricane_Ike_in_Galveston,_Texas.jpg",
-                            "title": "FEMA - 39032 - Cleanup after Hurricane Ike in Galveston, Texas.jpg",
-                            "author": "Robert Kaufmann",
-                            "author_url": "",
-                            "license": "Public Domain",
-                            "license_url": "https://commons.wikimedia.org/wiki/File:FEMA_-_39032_-_Cleanup_after_Hurricane_Ike_in_Galveston,_Texas.jpg"
-                       }
-                    }
-                ]
+      }
+    ]
+  },
+  {
+    "headword": "induce",
+    "alternateForms": ["induces", "induced", "inducing"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To persuade, influence, or support, especially as to actions to take.",
+        "examples": ["What could induce someone to break the law and commit a crime?" ]
+      }
+    ]
+  },
+  {
+    "headword": "affect",
+    "alternateForms": [ "affects", "affected", "affecting" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make a difference or have an impact on.",
+        "examples": [ "Being kind to others can affect how other people act toward you." ],
+        "images": [
+          {
+            "src": "images/glossary/affect1.jpg",
+            "alt": "Photo of ripples on water surface.",
+            "description": "Drop of water falling onto water surface, causing concentric circles to form on the surface of the water. The small inner circle forms the center. Surrounding circles become larger as they move further from the center circle.",
+            "caption": "Objects dropped into water show one kind of impact. ",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/a9b1e2fb-79d1-45d1-a299-5689830fee93",
+              "title": "Waterdrop falling into water",
+              "author": "jcarlosn",
+              "author_url": "https://www.flickr.com/photos/24085128@N02",
+              "license": "CC BY-NC-SA 2.0 ",
+              "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
             }
+          }
         ]
-    },
- {
-        "headword": "induce",
-        "alternateForms": ["induces", "induced", "inducing"],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "To persuade, influence, or support, especially as to actions to take.",
-                "examples": ["What could induce someone to break the law and commit a crime?" ]
+      }
+    ]
+  },
+  {
+    "headword": "previous",
+    "alternateForms": [ ],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Coming just before; earlier",
+        "examples": [ "We played a lot better last night than we had in our previous game." ]
+      }
+    ]
+  },
+  {
+    "headword": "prerequisite",
+    "alternateForms": [ "prerequisites"],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Something that must be done before moving on.",
+        "examples": [ "Taking an introduction to Spanish is a prerequisite for taking more advanced Spanish classes." ]
+      }
+    ]
+  },
+  {
+    "headword": "maintain",
+    "alternateForms": ["maintains", "maintained", "maintaining" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To continue in a certain state, position, or activity; to sustain",
+        "examples": [ "Raphael got a 100% on the quiz, which allowed him to maintain his A+ average in class." ],
+        "images": [
+          {
+            "src": "images/glossary/maintain1.jpg",
+            "alt": "Photo of people fixing a small car.",
+            "description": "A small car is at the center of the photo. Four people surround the car. On the far left, a person holds a small box that is connected to the car with a cable. On the upper right, a person is next to the car working on a computer. At the middle right are two people putting a front tire onto the car. ",
+            "caption": "People need to maintain cars to keep them running well.",
+            "source": {
+              "url": "https://ccsearch.creativecommons.org/photos/2303864c-188d-4d65-8781-66c8ba90836f",
+              "title": "Working on the EPM 08",
+              "author": "JcMaco",
+              "author_url": "https://www.flickr.com/photos/14724747@N00",
+              "license": " CC BY-NC 2.0",
+              "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
             }
+          }
         ]
-    },
- {
-        "headword": "affect",
-        "alternateForms": [ "affects", "affected", "affecting" ],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "To make a difference or have an impact on.",
-                "examples": [ "Being kind to others can affect how other people act toward you." ],
-                "images": [
-                    {
-                        "src": "images/glossary/affect1.jpg",
-                        "alt": "Photo of ripples on water surface.",
-                        "description": "Drop of water falling onto water surface, causing concentric circles to form on the surface of the water. The small inner circle forms the center. Surrounding circles become larger as they move further from the center circle.",
-                        "caption": "Objects dropped into water show one kind of impact. ",
- 		"source": {
-                            "url": "https://search.creativecommons.org/photos/a9b1e2fb-79d1-45d1-a299-5689830fee93",
-                            "title": "waterdrop falling into water",
-                            "author": "jcarlosn",
-                            "author_url": "https://www.flickr.com/photos/24085128@N02",
-                            "license": "CC BY-NC-SA 2.0 ",
-                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
-                       }
-                    }
-                ]
-            }
-        ]
-    },
- {
-        "headword": "previous",
-        "alternateForms": [ ],
-        "meanings": [
-            {
-                "pos": "adjective",
-                "definition": "Coming just before; earlier",
-                "examples": [ "We played a lot better last night than we had in our previous game." ]
-            }
-        ]
-    },
- {
-        "headword": "prerequisite",
-        "alternateForms": [ "prerequisites"],
-        "meanings": [
-            {
-                "pos": "adjective",
-                "definition": "Something that must be done before moving on.",
-                "examples": [ "Taking an introduction to Spanish is a prerequisite for taking more advanced Spanish classes." ]
-            }
-        ]
-    },
- {
-        "headword": "maintain",
-        "alternateForms": ["maintains", "maintained", "maintaining" ],
-        "meanings": [
-            {
-                "pos": "verb",
-                "definition": "To continue in a certain state, position, or activity; to sustain",
-                "examples": [ "Raphael got a 100% on the quiz, which allowed him to maintain his A+ average in class." ],
-                "images": [
-                    {
-                        "src": "images/glossary/maintain1.jpg",
-                        "alt": "Photo of people fixing a small car.",
-                        "description": "A small car is at the center of the photo. Four people surround the car. On the far left, a person holds a small box that is connected to the car with a cable. On the upper right, a person is next to the car working on a computer. At the middle right are two people putting a front tire onto the car. ",
-                        "caption": "People need to maintain cars to keep them running well.",
- "source": {
-                            "url": "https://ccsearch.creativecommons.org/photos/2303864c-188d-4d65-8781-66c8ba90836f",
-                            "title": "Working on the EPM 08",
-                            "author": "JcMaco",
-                            "author_url": "https://www.flickr.com/photos/14724747@N00",
-                            "license": " CC BY-NC 2.0",
-                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
-                       }
-                    }
-                ]
-            }
-        ]
-    },
- {
-        "headword": "eligible",
-        "alternateForms": [ ],
-        "meanings": [
-            {
-                "pos": "adjective",
-                "definition": "Having the required things that allow you to do or be chosen for something.",
-                "examples": [ "To be eligible to go on the school field trip, a student must bring in a signed permission slip."]
-            }
-        ]
-    }
+      }
+    ]
+  },
+  {
+    "headword": "eligible",
+    "alternateForms": [ ],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Having the required things that allow you to do or be chosen for something.",
+        "examples": [ "To be eligible to go on the school field trip, a student must bring in a signed permission slip."]
+      }
+    ]
+  }
 ]

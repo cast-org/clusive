@@ -9,7 +9,7 @@
         "examples": [ "Because there had been so little rain, everyone had to conserve water."],
         "images": [
           {
-            "src": "OEBPS/images/glossary/conserve1.jpg",
+            "src": "images/glossary/conserve1.jpg",
             "alt": "Drawing of recycling symbol with text.",
             "description": "In the upper right corner of the drawing is a triangle made up of three arrows. In the area in the center of the triangle is a circle made up of drawings of small objects, such as a bicycle, leafs, trees, a house, and more. A drawing of an open trash can is in the center of the circle. To the left of the triangle are three words, arranged in three rows with one word on each row. The words are: REUSE, REDUCE, and RECYCLE. The first two letters of each word are in bold text.",
             "caption": "A triangle made from three arrows is the symbol for recycling, a form of conservation.",
@@ -72,7 +72,7 @@
         "examples": ["Renewable resources include air, plants, water, and animals, and other things that are replaceable within a person's lifetime."],
         "images": [
           {
-            "src": "OEBPS/images/glossary/renewable1.jpg",
+            "src": "images/glossary/renewable1.jpg",
             "alt": "Photo of solar panels in a field.",
             "description": "Three rows of solar panels extend from the foreground of the picture to the background, up to a barrier of trees.",
             "caption": "Solar power and wind power are renewable resources.",
@@ -111,7 +111,7 @@
         "examples": [ "Dumping oil or other trash into a stream will pollute the water." ],
         "images": [
           {
-            "src": "OEBPS/images/glossary/pollute1.jpg",
+            "src": "images/glossary/pollute1.jpg",
             "alt": "Photo of black smoke over a city.",
             "description": "In the foreground, this photo shows buildings and the sky above a city. In the distance a large area of black smoke covers the sky. To the right and left of the black smoke, in the sky but near the horizon, is an area of yellow-green haze. Above the black smoke is an area of blue sky.",
             "caption": "Thick black smoke pollutes the air around a city.",
@@ -149,7 +149,7 @@
         "examples": [ "Hand sanitizers have been installed in all our classrooms so that we can clean our hands." ],
         "images": [
           {
-            "src": "OEBPS/images/glossary/install1.jpg",
+            "src": "images/glossary/install1.jpg",
             "alt": "Photo of a park with statues of elephants and rainbows.",
             "description": "Photo of a park with a small building and benches in the background, and grass, trees, and bushes throughout. In the park are two gray statues, in the shape of a small and a large elephant, and three rainbow arches: one small rainbow arch and two larger rainbow arches.",
             "caption": "Statues of elephants and rainbows installed as an art exhibition. ",
@@ -187,7 +187,7 @@
         "examples": [ "Dumping oil and toxic chemicals into the river contaminated the water." ],
         "images": [
           {
-            "src": "OEBPS/images/glossary/contaminate1.jpg",
+            "src": "images/glossary/contaminate1.jpg",
             "alt": "Photo of water, workers, and containment barriers.",
             "description": "Photo showing two workers in the background, wearing boots, gloves, and coveralls. The workers stand on the far side of a body of water. The ground they stand on is black. Plastic bags filled with trash are scattered around on either side of the body of water. Floating on the water are long tubes, some partially covered in black.",
             "caption": "Special crews work to clean a river contaminated by an oil spill.",
@@ -214,7 +214,7 @@
         "examples": [ "Facts about the event are emerging and giving us a better idea of what really happened." ],
         "images": [
           {
-            "src": "OEBPS/images/glossary/emerging1.jpg",
+            "src": "images/glossary/emerging1.jpg",
             "alt": "Photo of bridge with heavy clouds below and around it. ",
             "description": "San Francisco's Golden Gate Bridge is pictured. Thick white clouds are below the bridge and cover the far end so that where the bridge connects to the land is not visible. A city can be seen in the background of the photo.",
             "caption": "A bridge seems to be emerging out of the clouds.",
@@ -241,7 +241,7 @@
         "examples": [ "Our apartment is situated on the 3rd floor of the building." ],
         "images": [
           {
-            "src": "OEBPS/images/glossary/situate1.jpg",
+            "src": "images/glossary/situate1.jpg",
             "alt": "Photo of a park with statues of elephants and rainbows.",
             "description": "Photo of a park with a small building and benches in the background, and grass, trees, and bushes throughout. In the park are two gray statues, in the shape of a small and a large elephant, and three rainbow arches: one small rainbow arch and two larger rainbow arches.",
             "caption": "Statues of elephants and rainbows installed as an art exhibition. ",
@@ -268,7 +268,7 @@
         "examples": [ "Small children need close supervision so that they stay safe." ],
         "images": [
           {
-            "src": "OEBPS/images/glossary/supervision1.jpg",
+            "src": "images/glossary/supervision1.jpg",
             "alt": "Photo of people voting while an observer monitors the process.",
             "description": "Photo of a person holding a clipboard in the foreground. The person is watching another person, in the background, putting a piece of paper in a tall silver box.",
             "caption": "Election supervision makes sure that voting is fair and accurate.",
