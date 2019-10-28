@@ -110,11 +110,12 @@ def log_timeout(sender, **kwargs):
         try:
             clusive_user = ClusiveUser.objects.get(user=kwargs['user'])   # should match what's in loginsession
             login_session = LoginSession.objects.get(id=login_session_id)
+            period = Period.objects.filter(id=period_id).first() # May be null
             # Create an event
             event = Event.build(type='SESSION_EVENT',
                                 action='TIMED_OUT',
                                 login_session=login_session,
-                                group=Period.objects.get(id=period_id))
+                                group=period)
             event.save()
             # Close out session
             login_session.endedAtTime = timezone.now()

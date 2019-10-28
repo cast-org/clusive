@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
 
-# Create your views here.
+from roster.models import ClusiveUser
+
+
+def guest_login(request):
+    clusive_user = ClusiveUser.make_guest()
+    login(request, clusive_user.user)
+    return redirect('reader_index')

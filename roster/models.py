@@ -1,6 +1,10 @@
-from django.db import models
+import logging
+
 from django.contrib.auth.models import User
+from django.db import models
 from pytz import country_timezones
+
+logger = logging.getLogger(__name__)
 
 # TODO: Should we include timezones other than US + Canada?
 available_timezones = sorted(country_timezones('us') + country_timezones('ca'))
@@ -69,13 +73,15 @@ class ClusiveUser(models.Model):
         DECLINED = 'DC'
         WITHDREW = 'WD'
         TEST_ACCOUNT = 'TA'
+        GUEST = 'GU'
 
         CHOICES = [
-        (PERMISSIONED, 'Permissioned'),
-        (PENDING, 'Pending'),
-        (DECLINED, 'Declined'),
-        (WITHDREW, 'Withdrew'),
-        (TEST_ACCOUNT, 'Test Account')
+            (PERMISSIONED, 'Permissioned'),
+            (PENDING, 'Pending'),
+            (DECLINED, 'Declined'),
+            (WITHDREW, 'Withdrew'),
+            (TEST_ACCOUNT, 'Test Account'),
+            (GUEST, 'Guest Account')
         ]
 
     @property 
@@ -93,6 +99,28 @@ class ClusiveUser(models.Model):
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
     )    
+
+    guest_serial_number = 0
+
+    @classmethod
+    def next_guest_username(cls):
+        cls.guest_serial_number += 1
+        return 'guest%d' % (cls.guest_serial_number)
+
+    @classmethod
+    def make_guest(cls):
+        username = cls.next_guest_username()
+        while User.objects.filter(username=username).exists():
+            username = cls.next_guest_username()
+        logger.info("Creating guest user: %s", username)
+        django_user = User.objects.create_user(username=username,
+                                               first_name='Guest',
+                                               last_name=str(cls.guest_serial_number))
+        clusive_user = ClusiveUser.objects.create(user=django_user,
+                                                  role=Roles.GUEST,
+                                                  permission=cls.ResearchPermissions.GUEST,
+                                                  anon_id=username)
+        return clusive_user
 
     def __str__(self):
         return '%s' % (self.anon_id)
