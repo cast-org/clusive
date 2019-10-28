@@ -42,7 +42,5 @@ class GlossaryTestCase(TestCase):
                                     # optional for now
                                     # assert 'caption' in i, "In %s word %s, missing caption for image" % (glossfile, entry['headword'])
                                     # assert 'source' in i, "In %s word %s, missing source for image" % (glossfile, entry['headword'])
-
-
-        else:
+            else:
                 logger.error("Book directory has no glossary: %s", book_dir)
