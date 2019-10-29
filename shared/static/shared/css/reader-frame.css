@@ -1,3 +1,15 @@
+@media (max-width: 47.98em) {
+  :root {
+    --RS__pageGutter: 10px;
+  }
+}
+
+@media (max-width: 35.98em) {
+  :root {
+    --RS__pageGutter: 0;
+  }
+}
+
 figcaption,
 .figure-caption,
 .caption {
