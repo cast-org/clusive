@@ -88,20 +88,25 @@
             preferences: null
         },
         mappedValues: {
-            modalLineSpacing: {
+            modalLineSpacingToPreference: {
                 "default": 1,
                 "tall": 1.5,
                 "taller": 2
             },
-            modalLetterSpacing: {
+            preferenceLineSpaceToModal: {
+              1: "default",
+              1.5: "tall",
+              2: "taller"
+            },
+            modalLetterSpacingToPreference: {
                 "default": 1,
                 "wide": 1.2,
                 "wider": 1.4
             },
-            modalColor: {
-                "default": "default",
-                "wb": "wb",
-                "bbr": "bbr"
+            preferenceLetterSpaceToModal: {
+                1: "default",
+                1.2: "wide",
+                1.4: "wider"
             }
         },
         modelListeners: {
@@ -112,12 +117,12 @@
             },
             "modalSettings.lineSpacing": {
                 funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
-                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLineSpacing)", "preferences.fluid_prefs_lineSpace", "{that}"],
+                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLineSpacingToPreference)", "preferences.fluid_prefs_lineSpace", "{that}"],
                 excludeSource: "init"
             },
             "modalSettings.letterSpacing": {
                 funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
-                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLetterSpacing)", "preferences.fluid_prefs_letterSpace", "{that}"],
+                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLetterSpacingToPreference)", "preferences.fluid_prefs_letterSpace", "{that}"],
                 excludeSource: "init"
             },            
             "modalSettings.font": {
@@ -127,8 +132,13 @@
             },
             "modalSettings.color": {
                 funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
-                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalColor)", "preferences.fluid_prefs_contrast", "{that}"],
+                args: ["{change}.value", "preferences.fluid_prefs_contrast", "{that}"],
                 excludeSource: "init"
+            },
+            "preferences": {
+                funcName: "cisl.prefs.modalSettings.setModalSettingsByPreferences",
+                args: ["{that}.model.preferences", "{that}"],
+                includeSource: "init"
             }                 
         },
         selectors: {
@@ -149,13 +159,28 @@
     })
 
     cisl.prefs.modalSettings.getMappedValue = function (changedValue, map) {
-        console.log("getMappedValue", changedValue, map)
+        // console.log("getMappedValue", changedValue, map)
         return map[changedValue];
     };
 
     cisl.prefs.modalSettings.applyModalSettingToPreference = function (changedValue, path, that) {
-        console.log("applyModalSetting", changedValue, path, that);
+        // console.log("applyModalSetting", changedValue, path, that);
         that.applier.change(path, changedValue);
+    }
+
+    cisl.prefs.modalSettings.setModalSettingsByPreferences = function (preferences, that) {
+        console.log("cisl.prefs.modalSettings.setModalSettingsByPreferences", preferences)
+        
+        that.applier.change("modalSettings.textSize", fluid.get(preferences, "fluid_prefs_textSize", ));
+        
+        that.applier.change("modalSettings.font", fluid.get(preferences, "fluid_prefs_textFont", ));
+        
+        that.applier.change("modalSettings.lineSpacing", cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, "fluid_prefs_lineSpace"), that.options.mappedValues.preferenceLineSpaceToModal));
+
+        that.applier.change("modalSettings.letterSpacing", cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, "fluid_prefs_letterSpace"), that.options.mappedValues.preferenceLetterSpaceToModal));
+
+        that.applier.change("modalSettings.color", fluid.get(preferences, "fluid_prefs_contrast", ));
+
     }
 
 })(fluid_3_0_0);
