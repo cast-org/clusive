@@ -67,7 +67,7 @@ class Event(models.Model):
                 login_session = LoginSession.objects.get(id=login_session_id)
             if session and not group:
                 period_id = session.get(PERIOD_KEY, None)
-                group = Period.objects.get(id=period_id)
+                group = Period.objects.filter(id=period_id).first()
             clusive_user = login_session.user
             event = cls(type=type,
                         action=action,

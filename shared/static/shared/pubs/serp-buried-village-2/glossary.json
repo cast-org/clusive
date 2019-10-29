@@ -1,0 +1,405 @@
+[
+    {
+        "headword": "artifact",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Any object made by human beings.",
+                "examples": [ "A few examples of an artifact are carving, jewelry, or even a drawing you have made. " ],
+                "images": [
+                    {
+                        "src": "images/glossary/artifact1.jpg",
+                        "alt": "Photo of a five-sided clay pot.",
+                        "description": "A pot with flat sides and a narrow, round opening at the top. The pot is orange-red in color with dark speckles on its surface. The pot is shown on a flat surface with other pots and vessles nearby.",
+                        "caption": "Artifacts from an old civilization.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/6efc3085-fa4b-48bf-9de0-2966283916df",
+                            "title": "Vessel with Five Sides",
+                            "author": "Beesnest McClain",
+                            "author_url": "https://www.flickr.com/photos/35619509@N03",
+                            "license": " CC by 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "churn",
+        "alternateForms": ["churns", "churned", "churning" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To move or stir powerfully.",
+                "examples": [ "Waves churn up rocks and sand and change the shoreline. " ],
+                "images": [
+                    {
+                        "src": "images/glossary/churn1.jpg",
+                        "alt": "Photo of a wave cresting onto a sandy beach. ",
+                        "description": "A large wave curls and crashes onto a sandy shore. Foam can be seen on the surface of the water, side of the wave, and on the beach where the wave is about to crash. Dark rocks and seaweed is on the beach along the edge of where the wave is crashing.",
+                        "caption": "Churning water moves the sand and rocks near the shore.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/7d6b9cd8-c32a-4419-972d-2823bc5d35bd",
+                            "title": "wave",
+                            "author": "Tom McCabe",
+                            "author_url": "https://www.flickr.com/photos/59307270@N07",
+                            "license": " CC by-nc 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "archaeologist",
+        "alternateForms": ["archaeologists" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A scientist who studies the objects that humans in the past have left behind. ",
+                "examples": [ "The archaeologist carefully brushed away the layers of dirt to uncover the buried coins. " ],
+                "images": [
+                    {
+                        "src": "images/glossary/archaeologist1.jpg",
+                        "alt": "Photo of person digging in a shallow hole.",
+                        "description": "The background of the photo shows mountains and blue sky in the distance. In the foreground is a person using a small chisel to dig at the side of a shallow hole in the ground. Tools, including a spade, adze, wheelbarrow are near the person digging. A bit further away are large construction vehicles. ",
+                        "caption": "Archaeologists carefully dig to uncover evidence from the past.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/98a36436-f2c3-4bc6-a9c8-676748390872",
+                            "title": "Arqueologas",
+                            "author": "Loulomar",
+                            "author_url": "",
+                            "license": " CC by-sa 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "charred",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "when something has been burned until the surface is black.",
+                "examples": [ "When the campfire had burned out, the only thing left were bits of charred wood and ash." ],
+                "images": [
+                    {
+                        "src": "images/glossary/charred1.jpg",
+                        "alt": "Photo of remaing walls of a burned building.",
+                        "description": "This photo shows a building that has burned down. The photo looks up from the front of the building, through the empty windows. The blue sky can be seen through the windows, where the ceiling and roof would have been before the building burned. The wood around the windows and on the sdie of the house is black and breaking into pieces. ",
+                        "caption": "The charred remains of a burned building.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Charred_house,_cherepovets.JPG#file",
+                            "title": "Charred house",
+                            "author": "",
+                            "author_url": "",
+                            "license": "CC BY-SA 3.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/3.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "fossilized",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "When something living becomes preserved as stone over a long period of time. ",
+                "examples": [ "The fossilized bones, leaves, and shells from prehistoric times give us an idea of what life was like long ago. " ],
+                "images": [
+                    {
+                        "src": "images/glossary/fossilized1.jpg",
+                        "alt": "Photo of rock surface with a fossilized leaf. ",
+                        "description": "The photo shows an oval-shaped light brown and orange rock with a leaf shape clearly visible on its surface. The leaf portion of the fossil is brown with dark brown leaf veins visible on its surface. The stem of the leaf extends down below the leaf and is light brown outlined with a darker brown color. ",
+                        "caption": "Leaves from millions of years ago became fossilized in this rock.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/80edf17f-ac3d-4eb2-8a8d-da69117fd678",
+                            "title": "Fossil leaf",
+                            "author": "James St. John",
+                            "author_url": "https://www.flickr.com/photos/47445767@N05",
+                            "license": " CC by 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "remains",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The parts left over after other parts have been removed, used or destroyed.",
+                "examples": [ "After the party ended, the food remains needed to be put away." ],
+                "images": [
+                    {
+                        "src": "images/glossary/remains1.jpg",
+                        "alt": "Photo of a bowl filled with vegetables.",
+                        "description": "This photo shows a variety of vegetables and liquid combined together in a bowl.",
+                        "caption": "The remains of a meal can be recombined to make a delicious lunch.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Hot_and_Spicy_Leftovers.jpg",
+                            "title": "Hot and Spicy Leftovers",
+                            "author": " Alpha from Melbourne, Australia",
+                            "author_url": "",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "disturbed",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "bothered, interrupted, or having the normal arrangement mixed up. ",
+                "examples": [ "The thick layer of dust was disturbed when I blew on it." ],
+                "images": [
+                    {
+                        "src": "images/glossary/disturbed1.jpg",
+                        "alt": "Photo of a large dust cloud behind buildings.",
+                        "description": "Photo shows buildings arranged along streets, and a large cloud of dust billowing up from the ground behind the buildings. The dust cloud is more than three times the size of the houses. The dust cloud is so thick that nothing can be seen through it to the other side. ",
+                        "caption": "Wind disturbed dirt on the ground and caused this enormous dust cloud. ",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Dust_Storm_Texas_1935.jpg",
+                            "title": "Dust Storm Texas 1935",
+                            "author": "NOAA George E. Marsh Album, theb1365, Historic C&GS Collection",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "disarrange",
+        "alternateForms": ["disarranged", "disarranges", "disarranging" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be bothered, interrupted, or having the normal arrangement mixed up. ",
+                "examples": [ "The wind disarranged the papers that had been on the table." ],
+                "images": [
+                    {
+                        "src": "images/glossary/disarrange1.jpg",
+                        "alt": "Photo of a large dust cloud behind buildings.",
+                        "description": "Photo shows buildings arranged along streets, and a large cloud of dust billowing up from the ground behind the buildings. The dust cloud is more than three times the size of the houses. The dust cloud is so thick that nothing can be seen through it to the other side. ",
+                        "caption": "Dirt disarranged by wind, resulting in a giant dust cloud. ",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Dust_Storm_Texas_1935.jpg",
+                            "title": "Dust Storm Texas 1935",
+                            "author": "NOAA George E. Marsh Album, theb1365, Historic C&GS Collection",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "remnant",
+        "alternateForms": ["remnants" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "the parts left over after other parts have been removed, used or destroyed.",
+                "examples": [ "Quinn remained to clean up the remnants after the party. " ],
+                "images": [
+                    {
+                        "src": "images/glossary/remnant1.jpg",
+                        "alt": "Photo of a partially broken low wall.",
+                        "description": "The image shows a rectangular space surrounded by a low, and partially broken, wall. Areas of rocks and partial walls can be seen around the main rectangular space. An unbroken wall is in the background of the photo.",
+                        "caption": "The remnants of an ancient building.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Remnants_of_Artemision,_Corfu.jpg",
+                            "title": "Remnants of Artemision, Corfu",
+                            "author": " Zde",
+                            "author_url": "https://commons.wikimedia.org/wiki/User:Zde",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "settlement",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A specific place occupied by people.",
+                "examples": [ "Plymouth is an example of an early English settlement in America." ],
+                "images": [
+                    {
+                        "src": "images/glossary/settlement1.jpg",
+                        "alt": "Photo of people standing near small, rectangular ponds.",
+                        "description": "This photo shows a series of rectangular areas of brown water arranged in a row. The areas are separated by narrow bands of land. People walk along the narrow bands of land between the areas of water. Tall palm trees and low bushes can be seen in the foreground and background.",
+                        "caption": "This community has created fish farming ponds to support all members of the settlement.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Community_fish-farming_ponds_in_the_rural_town_of_Masi_Manimba,_DRC_(7609946524).jpg",
+                            "title": "Community fish-farming ponds in the rural town of Masi Manimba, DRC",
+                            "author": "DFID - UK Department for International Development",
+                            "author_url": "https://www.flickr.com/people/14214150@N02",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "community",
+        "alternateForms": ["communities" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A specific place occupied by people.",
+                "examples": [ "Plymouth is an example of an early English community in America." ],
+                "images": [
+                    {
+                        "src": "images/glossary/community1.jpg",
+                        "alt": "Photo of people standing near small, rectangular ponds.",
+                        "description": "This photo shows a series of rectangular areas of brown water arranged in a row. The areas are separated by narrow bands of land. People walk along the narrow bands of land between the areas of water. Tall palm trees and low bushes can be seen in the foreground and background.",
+                        "caption": "This community has created fish farming ponds to support all members of the settlement.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Community_fish-farming_ponds_in_the_rural_town_of_Masi_Manimba,_DRC_(7609946524).jpg",
+                            "title": "Community fish-farming ponds in the rural town of Masi Manimba, DRC",
+                            "author": "DFID - UK Department for International Development",
+                            "author_url": "https://www.flickr.com/people/14214150@N02",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "sample",
+        "alternateForms": ["samples" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A small part that is meant to show what the whole is like.",
+                "examples": [ "Luiz showed his teacher a sample of his classwork this semester.  " ],
+                "images": [
+                    {
+                        "src": "images/glossary/sample1.jpg",
+                        "alt": "Photo of scientists taking water samples.",
+                        "description": "The photo shows a body of water and two people. One person is on the shore, writing on paper. The other person is partially in the water, with a hand extended down toward the water surface. A box of tools is on the shore near the two people.",
+                        "caption": "Biologists take a small amount of water as a sample to test the water quality of the river. ",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:California-fish-and-game-biologists-take-water-samples-from-goose-flats-section-of-the-colorado-river-may-1972_7006616598_o.jpg",
+                            "title": "California fish and game biologists take water samples",
+                            "author": " Charles O'Rear",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "representative section",
+        "alternateForms": ["representative sections" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A small part that is meant to show what the whole is like.",
+                "examples": [ "Luiz showed his teacher a representative section of the work he was currently doing." ],
+                "images": [
+                    {
+                        "src": "images/glossary/representative_section1.jpg",
+                        "alt": "Photo of scientists taking water samples.",
+                        "description": "The photo shows a body of water and two people. One person is on the shore, writing on paper. The other person is partially in the water, with a hand extended down toward the water surface. A box of tools is on the shore near the two people.",
+                        "caption": "Biologists take a small amount of water as a sample to test the water quality of the river. ",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:California-fish-and-game-biologists-take-water-samples-from-goose-flats-section-of-the-colorado-river-may-1972_7006616598_o.jpg",
+                            "title": "California fish and game biologists take water samples",
+                            "author": " Charles O'Rear",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "rare",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not often found or seen.",
+                "examples": [ "I have never seen a blue lobsters because they are very rare.  " ]
+
+            }
+        ]
+    },
+
+    {
+        "headword": "contained",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "Had or held. ",
+                "examples": [ "The box contained a pair of new shoes." ]
+
+            }
+        ]
+    },
+
+    {
+        "headword": "uncommon",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not often found or seen. ",
+                "examples": [ "It is uncommon to see flowers growing outside during the cold winter months. " ]
+
+            }
+        ]
+    },
+
+    {
+        "headword": "possess",
+        "alternateForms": ["possessed", "possesses", "possessing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To have or hold. ",
+                "examples": [ "Each student possessed a backpack to carry materials to school. " ]
+
+            }
+        ]
+    }
+]

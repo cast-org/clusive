@@ -1,9 +1,12 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, get_object_or_404
+from django.views import View
 from django.views.generic import ListView, TemplateView
 
 from eventlog.signals import page_viewed
+from glossary.models import WordModel
 from library.models import Book
+from roster.models import ClusiveUser
 
 
 class LibraryView(LoginRequiredMixin,ListView):
@@ -26,3 +29,11 @@ class ReaderView(LoginRequiredMixin,TemplateView):
             context = self.get_context_data(**kwargs)
             page_viewed.send(self.__class__, request=request, document=context.get('pub_id'))
         return super().get(request, *args, **kwargs)
+
+
+class WordBankView(LoginRequiredMixin,View):
+
+    def get(self, request, *args, **kwargs):
+        clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+        context = { 'words': WordModel.objects.filter(user=clusive_user).order_by('word') }
+        return render(request, 'pages/wordbank.html', context=context)
