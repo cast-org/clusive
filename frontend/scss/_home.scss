@@ -1,6 +1,11 @@
 .home {
     background-color: $library-bg;
 
+    .content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     .site-header {
         left: 0;
         margin-right: 0;

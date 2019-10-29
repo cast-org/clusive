@@ -3788,6 +3788,11 @@ h3, .h3,
   background-color: #72c0b2;
 }
 
+.home .content {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .home .site-header {
   left: 0;
   margin-right: 0;
