@@ -100,8 +100,8 @@
             },
             modalColor: {
                 "default": "default",
-                "night": "wb",
-                "sepia": "bbr"
+                "wb": "wb",
+                "bbr": "bbr"
             }
         },
         modelListeners: {
