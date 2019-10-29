@@ -57,10 +57,10 @@
                                 "templatePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/html' %}",
                                 "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",
                             },
-                        }
+                        },
                     },
-                    prefsEditor: {
-                        components: {
+                    prefsEditor: {   
+                        components: {                         
                             prefsEditorLoader: {
                                 options: {
                                     components: {
@@ -80,6 +80,13 @@
                                             options: {
                                                 model: {
                                                     "preferences": "{prefsEditorLoader}.model.preferences"
+                                                },
+                                                listeners: {
+                                                    "onCreate.bindReset": {
+                                                        "this": "{that}.dom.reset",
+                                                        "method": "click",
+                                                        "args": "{prefsEditorLoader}.prefsEditor.reset"
+                                                    }
                                                 }    
                                             }                                        
                                         }

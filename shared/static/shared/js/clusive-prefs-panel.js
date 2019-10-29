@@ -136,7 +136,8 @@
             lineSpacing: ".cislc-modalSettings-lineSpacing",
             letterSpacing: ".cislc-modalSettings-letterSpacing",
             font: ".cislc-modalSettings-font",
-            color: ".cislc-modalSettings-color"
+            color: ".cislc-modalSettings-color",
+            reset: ".cislc-modalSettings-reset"
         },
         bindings: {
             textSize: "modalSettings.textSize",
