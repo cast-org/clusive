@@ -4023,6 +4023,10 @@ h3, .h3,
   margin-right: -.25em;
 }
 
+#modalSettings {
+  background-color: transparent !important;
+}
+
 .setting-modal .modal-body {
   padding: 0;
 }
