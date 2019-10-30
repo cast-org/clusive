@@ -3670,6 +3670,13 @@ h3, .h3,
   outline: 0;
 }
 
+@media (max-width: 47.98em) {
+  .content {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
 .login-status {
   float: right;
   margin-top: 2em;
@@ -3779,6 +3786,11 @@ h3, .h3,
 
 .home {
   background-color: #72c0b2;
+}
+
+.home .content {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .home .site-header {
