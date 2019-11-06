@@ -48,7 +48,7 @@ function isImageLoaded($img, instance, callback) {
         .off('load.cfw.imageLoaded' + instance)
         .one('load.cfw.imageLoaded' + instance, _doCallback);
     proxyImg.src = img.src;
-};
+}
 
 $(window).ready(function() {
     'use strict';
