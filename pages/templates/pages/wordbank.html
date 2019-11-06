@@ -20,27 +20,33 @@
 {% block content %}
 {% include "shared/partial/site_header_small.html" with user_actions=True %}
 
-<table class="table">
-    <tr>
-        <th>Word</th>
-        <th>Self-rating</th>
-        <th>Lookups: cued</th>
-        <th>Lookups: uncued</th>
-        <th>Cues</th>
-        <th>Knowledge estimate</th>
-        <th>Interest estimate</th>
-    </tr>
-    {% for wm in words %}
-    <tr>
-        <td>{{wm.word}}</td>
-        <td>{{wm.rating}}</td>
-        <td>{{wm.cued_lookups}}</td>
-        <td>{{wm.free_lookups}}</td>
-        <td>{{wm.cued}}</td>
-        <td>{{wm.knowledge_est}}</td>
-        <td>{{wm.interest_est}}</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="table-scroll">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>Word</th>
+                <th>Self-rating</th>
+                <th>Lookups: cued</th>
+                <th>Lookups: uncued</th>
+                <th>Cues</th>
+                <th>Knowledge estimate</th>
+                <th>Interest estimate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for wm in words %}
+            <tr>
+                <td>{{wm.word}}</td>
+                <td>{{wm.rating}}</td>
+                <td>{{wm.cued_lookups}}</td>
+                <td>{{wm.free_lookups}}</td>
+                <td>{{wm.cued}}</td>
+                <td>{{wm.knowledge_est}}</td>
+                <td>{{wm.interest_est}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
