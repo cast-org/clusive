@@ -2,10 +2,10 @@
 @import "../../node_modules/figuration/scss/functions";
 
 // Settings variables
-@import "site-pre";
+@import "site/site-pre";
 @import "../../node_modules/figuration/scss/settings";
 @import "../../node_modules/figuration/scss/settings-options";
-@import "site-post";
+@import "site/site-post";
 
 // Mixins
 @import "../../node_modules/figuration/scss/mixins";
@@ -53,4 +53,4 @@
 @import "../../node_modules/figuration/scss/core/print";
 
 // Additional site specific items
-@import "site";
+@import "site/site";
