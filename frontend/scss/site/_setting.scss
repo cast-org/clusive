@@ -1,8 +1,6 @@
-#modalSettings {
-    background-color: transparent !important;
-}
-
 .setting-modal {
+    background-color: transparent !important;   // stylelint-disable-line declaration-no-important
+
     .modal-body {
         padding: 0;
     }

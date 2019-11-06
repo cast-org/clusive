@@ -114,26 +114,26 @@ $btn-themes: map-merge(
         "bbr":
         (
             "base": #40998b,
-            "bg": #bb9966 !important,
-            "color": #000000,
+            "bg": #b96 !important,
+            "color": #000,
             "border-color": #7e8aad,
             "hover-bg": #ded9c4 !important,
-            "hover-color": #000000,
+            "hover-color": #000,
             "hover-border-color": #40998b,
-            "active-bg": #bb9966 !important,
-            "active-color": #000000,
+            "active-bg": #b96 !important,
+            "active-color": #000,
             "active-border-color": #7e8aad
         ),
         "wb":
         (
             "base": #40998b,
-            "bg": #000000 !important,
+            "bg": #000 !important,
             "color": #fff,
             "border-color": transparent,
-            "hover-bg": #000000 !important,
+            "hover-bg": #000 !important,
             "hover-color": #fff,
             "hover-border-color": #40998b,
-            "active-bg": #000000 !important,
+            "active-bg": #000 !important,
             "active-color": #fff,
             "active-border-color": transparent
         )
