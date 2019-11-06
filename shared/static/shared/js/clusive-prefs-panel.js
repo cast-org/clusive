@@ -14,102 +14,7 @@
         },
         auxiliarySchema: {
             "tableOfContents": null,
-            "enhanceInputs": null,
-            "textSize": {
-                "classes": {
-                    "small": "cisl-textSize-small",
-                    "medium": "cisl-textSize-medium",
-                    "large": "cisl-textSize-large",
-                    "x-large": "cisl-textSize-x-large"
-                },
-                "panel": {
-                    type: "cisl.prefs.panel.textSize",
-                    template: DJANGO_STATIC_ROOT + "shared/html/PrefsEditorTemplate-textSize.html",
-                    message: DJANGO_STATIC_ROOT + "shared/messages/textSize.json"
-                },
-                "enactor": {
-                    type: "cisl.prefs.enactor.textSize"
-                }
-            }
-        }
-    });
-
-    // TODO: there is probably a better way to do these
-    // modifications to the starter schemas, but this is
-    // reasonably fast
-
-    fluid.defaults("fluid.prefs.schemas.textSize", {
-    gradeNames: ["fluid.prefs.schemas"],
-    schema: {
-        "fluid.prefs.textSize": {
-            "type": "string",
-            "default": "medium",
-            "enum": ["small", "medium", "large", "x-large"]
-            }
-        }
-    });
-
-    fluid.defaults("cisl.prefs.enactor.textSize", {
-        gradeNames: "fluid.prefs.enactor.textSize",
-        fontScaleMap: {
-            "small": "0.75",
-            "medium": "1",
-            "large": "1.5",
-            "x-large": "2"
-        },
-        invokers: {
-            set: {
-                funcName: "cisl.prefs.enactor.textSize.set",
-                args: ["{arguments}.0", "{that}", "{that}.options.fontScaleMap", "{that}.getTextSizeInPx"]
-            }
-    }
-    });
-
-    cisl.prefs.enactor.textSize.set = function (size, that, fontScaleMap, getTextSizeInPxFunc) {
-        // translate the selection choice into a times multiplier
-        var times = fontScaleMap[size];
-        // delegate to the standard fluid.prefs function
-        fluid.prefs.enactor.textSize.set(times, that, getTextSizeInPxFunc);
-    };
-
-    fluid.defaults("cisl.prefs.panel.textSize", {
-        gradeNames: ["fluid.prefs.panel.themePicker"],
-        preferenceMap: {
-            "fluid.prefs.textSize": {
-                "model.value": "value",
-                "controlValues.theme": "enum"
-                }
-        },
-        "classnameMap": {
-            "theme": {
-                "small": "cisl-textSize-small",
-                "medium": "cisl-textSize-medium",
-                "large": "cisl-textSize-large",
-                "x-large": "cisl-textSize-x-large"
-            }
-        },
-        selectors: {
-            header: ".flc-prefsEditor-textSize-header",
-            themeRow: ".flc-prefsEditor-themeRow",
-            themeLabel: ".flc-prefsEditor-theme-label",
-            themeInput: ".flc-prefsEditor-themeInput",
-            label: ".flc-prefsEditor-themePicker-label",
-            textFontDescr: ".flc-prefsEditor-themePicker-descr"
-        },
-        selectorsToIgnore: ["header"],
-        styles: {
-            defaultThemeLabel: "fl-prefsEditor-themePicker-defaultThemeLabel"
-        },
-        stringArrayIndex: {
-            theme: [
-                "textSize-small",
-                "textSize-medium",
-                "textSize-large",
-                "textSize-x-large"
-            ]
-        },
-        controlValues: {
-            theme: ["small", "medium", "large", "x-large"]
+            "enhanceInputs": null,       
         }
     });
 
@@ -166,5 +71,116 @@
         // Apply glossary step
         cisl.prefs.enactor.glossary.applyGlossary(enableGlossary, that);
     };
+
+    fluid.defaults("cisl.prefs.modalSettings", {
+        gradeNames: ["gpii.binder.bindOnCreate"],
+        listeners: {
+            "onCreate.log": {
+                "this": "console",
+                "method": "log",
+                "args": ["{that}"]
+            }
+        },
+        model: {
+            modalSettings: {                
+            },
+            // Linked to preferences editor preferences
+            preferences: null
+        },
+        mappedValues: {
+            modalLineSpacingToPreference: {
+                "default": 1,
+                "tall": 1.5,
+                "taller": 2
+            },
+            preferenceLineSpaceToModal: {
+              1: "default",
+              1.5: "tall",
+              2: "taller"
+            },
+            modalLetterSpacingToPreference: {
+                "default": 1,
+                "wide": 1.2,
+                "wider": 1.4
+            },
+            preferenceLetterSpaceToModal: {
+                1: "default",
+                1.2: "wide",
+                1.4: "wider"
+            }
+        },
+        modelListeners: {
+            "modalSettings.textSize": {
+                funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
+                args: ["{change}.value", "preferences.fluid_prefs_textSize", "{that}"],
+                excludeSource: "init"
+            },
+            "modalSettings.lineSpacing": {
+                funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
+                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLineSpacingToPreference)", "preferences.fluid_prefs_lineSpace", "{that}"],
+                excludeSource: "init"
+            },
+            "modalSettings.letterSpacing": {
+                funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
+                args: ["@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLetterSpacingToPreference)", "preferences.fluid_prefs_letterSpace", "{that}"],
+                excludeSource: "init"
+            },            
+            "modalSettings.font": {
+                funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
+                args: ["{change}.value", "preferences.fluid_prefs_textFont", "{that}"],
+                excludeSource: "init"
+            },
+            "modalSettings.color": {
+                funcName: "cisl.prefs.modalSettings.applyModalSettingToPreference",
+                args: ["{change}.value", "preferences.fluid_prefs_contrast", "{that}"],
+                excludeSource: "init"
+            },
+            "preferences": {
+                funcName: "cisl.prefs.modalSettings.setModalSettingsByPreferences",
+                args: ["{that}.model.preferences", "{that}"],
+                includeSource: "init"
+            }                 
+        },
+        selectors: {
+            textSize: ".cislc-modalSettings-textSize",
+            lineSpacing: ".cislc-modalSettings-lineSpacing",
+            letterSpacing: ".cislc-modalSettings-letterSpacing",
+            font: ".cislc-modalSettings-font",
+            color: ".cislc-modalSettings-color",
+            reset: ".cislc-modalSettings-reset"
+        },
+        bindings: {
+            textSize: "modalSettings.textSize",
+            lineSpacing: "modalSettings.lineSpacing",
+            letterSpacing: "modalSettings.letterSpacing",
+            font: "modalSettings.font",
+            color: "modalSettings.color"
+        }
+    })
+
+    cisl.prefs.modalSettings.getMappedValue = function (changedValue, map) {
+        // console.log("getMappedValue", changedValue, map)
+        return map[changedValue];
+    };
+
+    cisl.prefs.modalSettings.applyModalSettingToPreference = function (changedValue, path, that) {
+        // console.log("applyModalSetting", changedValue, path, that);
+        that.applier.change(path, changedValue);
+    }
+
+    cisl.prefs.modalSettings.setModalSettingsByPreferences = function (preferences, that) {
+        console.log("cisl.prefs.modalSettings.setModalSettingsByPreferences", preferences)
+        
+        that.applier.change("modalSettings.textSize", fluid.get(preferences, "fluid_prefs_textSize", ));
+        
+        that.applier.change("modalSettings.font", fluid.get(preferences, "fluid_prefs_textFont", ));
+        
+        that.applier.change("modalSettings.lineSpacing", cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, "fluid_prefs_lineSpace"), that.options.mappedValues.preferenceLineSpaceToModal));
+
+        that.applier.change("modalSettings.letterSpacing", cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, "fluid_prefs_letterSpace"), that.options.mappedValues.preferenceLetterSpaceToModal));
+
+        that.applier.change("modalSettings.color", fluid.get(preferences, "fluid_prefs_contrast", ));
+
+    }
 
 })(fluid_3_0_0);
