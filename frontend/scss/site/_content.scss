@@ -28,11 +28,14 @@ h3,
 }
 
 .content {
+    max-width: calc(100vw - 10.625rem);
     padding-right: 1rem;
     padding-left: 1rem;
     outline: 0;
 
     @include media-breakpoint-down(sm) {
+        max-width: calc(100vw - 7.625rem);
+        padding-top: .625rem;
         padding-right: 0;
         padding-left: 0;
     }

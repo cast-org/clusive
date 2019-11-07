@@ -16,7 +16,11 @@ $enable-typography-blockquote:      false;
 $enable-code:                       false;
 $enable-img-thumbnail:              false;
 $enable-figure:                     false;
-$enable-table:                      false;
+$enable-table-striped:              false;
+$enable-table-hover:                false;
+$enable-table-active:               false;
+$enable-table-colors:               false;
+$enable-table-scroll-responsive:    false;
 $enable-btn-outline:                false;
 $enable-btn-outline-colors:         false;
 $enable-btn-sizing:                 true;
@@ -87,7 +91,6 @@ $enable-utility-display:            false;
 $enable-utility-embed:              false;
 $enable-utility-flex:               false;
 $enable-utility-float:              false;
-$enable-utility-drag:               false;
 $enable-utility-overflow:           false;
 $enable-utility-position:           false;
 $enable-utility-shadow:             false;
@@ -133,6 +136,8 @@ $body-padding:                  .625rem;
 //$link-color:                    #00399c;
 $link-color:                    #b8330f;
 $link-hover-color:              palette($link-color, 700);
+
+$drag-font-weight:              400;
 
 // stylelint-disable value-keyword-case
 $font-family-sans-serif:        "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -192,6 +197,22 @@ $card-title-margin-bottom:      .25rem;
 $card-border-color:             #ebe6d2;
 $card-border-radius:            .5rem;
 
+$popover-border-width:          3px;
+$popover-border-radius:         .5rem;
+$popover-border-color:          #7c88ac;
+$popover-header-padding-y:      .25rem;
+$popover-header-bg:             #acfcef;
+$popover-header-border-color:   #e2e2e2;
+$popover-footer-padding-y:      .25rem;
+$popover-footer-padding-x:      .75rem;
+$popover-footer-font-size:      .875rem;
+$popover-footer-color:          $body-color;
+$popover-footer-bg:             #acfcef;
+$popover-footer-border-width:   1px;
+$popover-footer-border-color:   #e2e2e2;
+$popover-section-border-width:  3px;
+$popover-section-border-color:  #d3cfc9;
+
 $modal-content-bg:              #ebe6d2;
 $modal-content-border-width:    3px;
 $modal-content-border-color:    #72c0b2;
@@ -224,3 +245,10 @@ $setting-title-margin-bottom:   .25rem;
 $setting-title-color:           #666;
 $setting-title-font-size:       .875rem;
 $setting-title-font-weight:     700;
+
+$ranking-margin-x:              .375em;
+$ranking-margin-bottom:         1.75em;
+$ranking-font-size:             1.5rem;
+$ranking-border-width:          4px;
+$ranking-border-color:          #d3cfc9;
+$ranking-label-font-size:       .875rem;

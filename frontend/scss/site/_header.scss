@@ -1,11 +1,12 @@
 .site-header {
     position: relative;
     left: -5rem;
+    z-index: 1;
     padding: 1.375rem 1rem;
     margin-right: -5rem;
     margin-bottom: 1rem;
     line-height: 1;
-    pointer-events: none;
+    //pointer-events: none;
     background-image: linear-gradient(90deg, rgba(#636b82, .5) 0%, rgba(#636b82, 0) 65%);
     @include border-radius($sidebar-border-radius);
 
@@ -23,7 +24,7 @@
     @include font-size(1.75rem);
     white-space: nowrap;
     vertical-align: middle;
-    pointer-events: auto;
+    //pointer-events: auto;
 
     .icon-logo-clusive-toggle {
         color: #fbfbfb;
@@ -41,6 +42,7 @@
 
 .site-header-small {
     left: -6rem;
+    z-index: 0;
     padding: 1.125rem 1rem 1.125rem 5rem;
     margin-right: -6rem;
     background-image: linear-gradient(90deg, rgba(#636b82, .25) 0%, rgba(#636b82, 0) 65%);
@@ -66,5 +68,5 @@
     right: 0;
     display: inline-block;
     @include font-size(.875rem);
-    pointer-events: auto;
+    //pointer-events: auto;
 }

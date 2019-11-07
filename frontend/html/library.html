@@ -168,6 +168,50 @@
                 <p>Nam varius justo ac malesuada sollicitudin. Donec quis metus nec velit interdum rhoncus in non nulla. In sollicitudin nibh ac lectus malesuada, a facilisis enim volutpat. Quisque felis odio, lacinia eu nisi at, fringilla tempor nulla. Nulla sollicitudin lacus vel velit sollicitudin, in ornare augue consectetur. Sed accumsan neque ac nisi porta, non aliquam odio porttitor. Aenean vel mollis metus, id pulvinar tellus. Nullam sodales egestas arcu lacinia pretium. Sed at orci iaculis, sagittis eros in, pharetra libero. In quis nulla lobortis urna mollis pretium. Praesent vehicula, massa sit amet semper cursus, purus tellus ullamcorper sem, et lobortis turpis purus nec nisi. Aenean purus neque, malesuada et ipsum a, suscipit bibendum erat. Vestibulum suscipit rutrum elit quis dictum. Nunc facilisis felis velit, eu mollis mauris volutpat et.</p>
                 <p>Suspendisse pulvinar est maximus lacus faucibus gravida. Nunc sit amet condimentum est, in vulputate ipsum. Suspendisse ac dui vel risus pulvinar volutpat eu ut metus. Pellentesque at congue augue, non tincidunt orci. Aliquam ut est vitae justo auctor posuere non at metus. Ut malesuada dui vel enim ultrices, nec tristique nisl gravida. Morbi at lacus elit. Donec interdum lorem at neque aliquam, sit amet ornare augue faucibus. Morbi imperdiet pellentesque ligula tincidunt cursus. Fusce lacus ex, vestibulum ac erat vitae, ullamcorper dignissim arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 <p>Nam faucibus tristique odio, a lobortis ipsum faucibus eleifend. Etiam pretium diam sed turpis faucibus commodo. Integer cursus, felis placerat cursus aliquam, sapien nisl euismod ex, vestibulum pulvinar nibh lectus vitae dui. Sed volutpat tincidunt felis non venenatis. Nulla et vulputate augue, sed egestas lacus. Nunc pellentesque magna eget eleifend volutpat. Vestibulum porttitor diam at erat ultrices vestibulum. Etiam ultricies erat in ante iaculis sagittis. Morbi dignissim aliquet iaculis. Cras aliquam fermentum lobortis. Curabitur non massa felis. Nullam maximus justo at eros efficitur pulvinar. Morbi fermentum dui quis mi condimentum sollicitudin. Curabitur vel varius elit. Duis ornare tortor suscipit imperdiet aliquam. Phasellus sit amet ornare dolor.</p>
+
+<div class="popover popover-glossary popover-scrollable" style="position: relative; display: block; height: 15rem;">
+    <div role="document" style="height: 100%;">
+        <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+        <div class="popover-header">
+            <strong id="glossaryTitle">
+                Glossary
+            </strong>
+        </div>
+        <div class="popover-body">
+            <p id="glossaryBody">body content&hellip;</p>
+            <div class="popover-section">
+                <fieldset>
+                    <legend class="ranking-legend">How well do you know this word?</legend>
+                    <div class="ranking">
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-0" name="ranking0" aria-label="Never heard it">
+                            <label class="form-check-label" for="ranking0-0"></label>
+                            <label class="ranking-label" for="ranking0-0" aria-hidden="true">Never heard it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-1" name="ranking0" aria-label="Heard it">
+                            <label class="form-check-label" for="ranking0-1"></label>
+                            <label class="ranking-label" for="ranking0-1" aria-hidden="true">Heard it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-2" name="ranking0" aria-label="Know it">
+                            <label class="form-check-label" for="ranking0-1"></label>
+                            <label class="ranking-label" for="ranking0-2"  aria-hidden="true">Know it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-3" name="ranking0" aria-label="Use it">
+                            <label class="form-check-label" for="ranking0-3"></label>
+                            <label class="ranking-label" for="ranking0-3" aria-hidden="true">Use it</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div id="glossaryFooter" class="popover-footer">
+            Added to <a href="{% url 'word_bank' %}">word bank</a>
+        </div>
+    </div>
+</div>
             </main>
 
             <footer>

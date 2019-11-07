@@ -21,9 +21,9 @@
     border-color: #40998b;
 }
 .btn-option,
-.btn-day,
-.btn-sepia,
-.btn-night {
+.btn-default,
+.btn-bbr,
+.btn-wb {
     &:active,
     &.active,
     &.open[data-cfw="dropdown"] {

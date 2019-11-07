@@ -36,7 +36,9 @@ function load_definition(cued, word) {
                 $('#glossaryBody').html(err.responseText);
             })
             .always(function() {
-                $('#glossaryPop').CFW_Popover('locateUpdate');
+                if ($('#glossaryPop').is(':visible') && !glossaryBeenDragged) {
+                    $('#glossaryPop').CFW_Popover('locateUpdate');
+                }
             });
         body = "Loading...";
     } else {

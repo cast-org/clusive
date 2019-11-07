@@ -1,6 +1,6 @@
 """
 Django settings for Clusive PRODUCTION and QA servers.
-This file is read when the APP_CONFIG environment variable is set to "prod".
+This file is read when the DJANGO_CONFIG environment variable is set to "prod".
 """
 import os
 
@@ -19,6 +19,7 @@ ALLOWED_HOSTS = ['clusive.cast.org',
                  'cisl-demo.qa.cast.org',
                  'localhost',
                  '127.0.0.1',
+                 '10.*',
                  '[::1]']
 
 
