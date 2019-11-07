@@ -2,7 +2,8 @@
     "@context": "https://readium.org/webpub-manifest/context.jsonld",
     "metadata": {
         "@type": "https://schema.org/Article",
-        "headline": "Should people continue to eat meat?",
+        "title": "Should people continue to eat meat?",
+        "description": "Is eating meat an unhealthy tradition whose time has come to an end?",
         "publisher": "Word Generation",
         "language": "en",
         "modified": "2019-01-09"

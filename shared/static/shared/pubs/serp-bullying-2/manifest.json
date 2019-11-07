@@ -3,6 +3,7 @@
   "metadata": {
     "@type": "http://schema.org/Book",
     "title": "Are kids responsible for stepping in to prevent bullying?",
+    "description": "Should kids step in to prevent bullying, even if that puts them in danger?",
     "identifier": "https://staging.oercommons.org/courseware/lesson/17544",
     "author": "Kristin Robinson",
     "language": "en",

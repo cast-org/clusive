@@ -45,6 +45,7 @@ def load_static_books():
                 b, created = Book.objects.get_or_create(path=book_dir.name)
                 manifest = json.load(file)
                 b.title = find_title(manifest)
+                b.description = find_description(manifest)
                 b.cover = find_cover(manifest)
                 b.glossary_words = find_glossary_words(book_dir)
                 b.all_words = find_all_words(book_dir, manifest)
@@ -58,6 +59,10 @@ def find_title(manifest):
     if not title:
         title = manifest['metadata'].get('headline')
     return title
+
+
+def find_description(manifest):
+    return manifest['metadata'].get('description') or ""
 
 
 def find_cover(manifest):

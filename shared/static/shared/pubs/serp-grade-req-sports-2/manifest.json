@@ -3,6 +3,7 @@
   "metadata": {
     "@type": "http://schema.org/Book",
     "title": "Should there be a grade requirement to participate in sports?",
+    "description": "Should your school grades decide if you can participate in sports?",
     "identifier": "https://staging.oercommons.org/courseware/lesson/17546",
     "author": "Kristin Robinson",
     "language": "en",

@@ -3,6 +3,7 @@
   "metadata": {
     "@type": "http://schema.org/Book",
     "title": "Are green technologies worth the investment?",
+    "description": "Green technologies reduce pollution, but are they worth their high cost?",
     "identifier": "https://staging.oercommons.org/courseware/lesson/17543",
     "author": "Kristin Robinson",
     "language": "en",

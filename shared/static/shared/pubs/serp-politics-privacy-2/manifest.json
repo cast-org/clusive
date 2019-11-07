@@ -3,6 +3,7 @@
   "metadata": {
     "@type": "http://schema.org/Book",
     "title": "Politics and Privacy",
+    "description": "How much about a candidate’s private life does the public have a right to know?",
     "identifier": "https://staging.oercommons.org/courseware/lesson/17545",
     "author": "Kristin Robinson",
     "language": "en",
