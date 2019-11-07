@@ -3,6 +3,7 @@
   "metadata": {
     "@type": "http://schema.org/Book",
     "title": "Escape Artist",
+    "description": "Find out about how a super-smart animal hides from predators.",
     "identifier": "https://staging.oercommons.org/courseware/lesson/17542",
     "author": "Kristin Robinson",
     "language": "en",

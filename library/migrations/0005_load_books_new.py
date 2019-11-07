@@ -8,10 +8,6 @@ from library.admin import load_static_books
 logger = logging.getLogger(__name__)
 
 
-def add_static_books(apps, schema_editor):
-    load_static_books()
-
-
 class Migration(migrations.Migration):
 
     initial = True
@@ -21,5 +17,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_static_books)
     ]

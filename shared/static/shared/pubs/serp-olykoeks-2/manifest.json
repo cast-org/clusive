@@ -3,6 +3,7 @@
   "metadata": {
     "@type": "http://schema.org/Book",
     "title": "Olykoeks",
+    "description": "Round, straight, frosted or plain, doughnuts have an interesting story.",
     "identifier": "https://staging.oercommons.org/courseware/lesson/17548",
     "author": "Kristin Robinson",
     "language": "en",

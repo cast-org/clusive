@@ -3,6 +3,7 @@
   "metadata": {
     "@type": "http://schema.org/Book",
     "title": "Penguins are funny birds",
+    "description": "Find out about these amazing animals that live in the harshest climate on Earth.",
     "identifier": "https://staging.oercommons.org/courseware/lesson/17549",
     "author": "Kristin Robinson",
     "language": "en",

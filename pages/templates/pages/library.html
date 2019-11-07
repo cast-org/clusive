@@ -20,6 +20,7 @@
             {% endif %}
             <div class="card-body">
                 <a href="{% url 'reader' pub_id=pub.path%}" class="link-stretch"><h2 class="card-title h5">{{ pub.title }}</h2></a>
+                {% if pub.description %}<p>{{ pub.description }}</p>{% endif %}
             </div>
         </div>
     {% endfor %}

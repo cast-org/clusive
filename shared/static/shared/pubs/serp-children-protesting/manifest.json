@@ -2,7 +2,8 @@
     "@context": "https://readium.org/webpub-manifest/context.jsonld",
     "metadata": {
         "@type": "https://schema.org/Article",
-        "headline": "Children protesting: duty or danger?",
+        "title": "Children protesting: duty or danger?",
+        "description": "Should kids protest, even when they might get hurt?",
         "publisher": "Word Generation",
         "language": "en",
         "modified": "2019-01-19"
