@@ -56,10 +56,10 @@ module.exports = function (grunt) {
                 },
                 {
                     expand: true,
-                    cwd: "node_modules/@d-i-t-a/reader/viewer/fonts",
+                    cwd: "node_modules/open-dyslexic",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/reader/fonts"
+                    dest: "shared/static/shared/js/lib/reader/fonts/open-dyslexic"
                 },
                 {
                     expand: true,
