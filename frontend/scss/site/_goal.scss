@@ -1,0 +1,51 @@
+.goal-modal {
+    .modal-title {
+        @include font-size($goal-modal-title-font-size);
+        font-style: $goal-modal-title-font-style;
+        font-weight: $goal-modal-title-font-weight;
+        color: $goal-modal-title-color;
+    }
+    .modal-subtitle {
+        @include font-size($goal-modal-subtitle-font-size);
+        font-style: $goal-modal-subtitle-font-style;
+        font-weight: $goal-modal-subtitle-font-weight;
+        color: $goal-modal-subtitle-color;
+    }
+    .modal-footer {
+        justify-content: flex-start;
+        //padding: $goal-modal-footer-padding-y $goal-modal-footer-padding-x;
+        @include font-size($goal-modal-footer-font-size);
+    }
+
+    .ranking {
+        margin-right: 2rem;
+        margin-left: 2rem;
+
+        &::before {
+            background-color: $goal-ranking-border-color;
+        }
+    }
+
+    .goal-nav {
+        @include font-size(.875rem);
+        margin-bottom: .5rem;
+    }
+    .goal-word {
+        margin-bottom: 1rem;
+        @include font-size(1.375rem);
+        font-weight: 700;
+        text-align: center;
+    }
+    .goal-thanks {
+        padding-right: .5rem;
+        @include font-size(.875rem);
+    }
+
+    a:not(.btn) {
+        color: #00399c;
+
+        @include hover() {
+            color: palette(#00399c, 700);
+        }
+    }
+}

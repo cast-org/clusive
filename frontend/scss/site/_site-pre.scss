@@ -79,8 +79,6 @@ $enable-progress:                   false;
 
 // Widgets
 $enable-dropdown:                   false;
-$enable-modal-centered:             false;
-//$enable-popover:                    false;
 $enable-tooltip:                    false;
 
 // Utilities
@@ -96,7 +94,23 @@ $enable-utility-position:           false;
 $enable-utility-shadow:             false;
 $enable-utility-sizing:             false;
 $enable-utility-spacing:            false;
-$enable-utility-text:               false;
+$enable-utility-text-justify:       false;
+$enable-utility-text-wrap:          false;
+$enable-utility-text-nowrap:        false;
+$enable-utility-text-align:         true;
+$enable-utility-text-transform:     false;
+$enable-utility-text-weight:        false;
+$enable-utility-text-style:         false;
+$enable-utility-text-family:        false;
+$enable-utility-text-truncate:      false;
+$enable-utility-text-decoration:    false;
+$enable-utility-text-break:         false;
+$enable-utility-text-colors:        false;
+$enable-utility-text-palette:       false;
+$enable-utility-text-special:       false;
+$enable-utility-text-reset:         false;
+$enable-utility-text-height:        false;
+$enable-utility-text-size:          false;
 $enable-utility-valign:             false;
 $enable-utility-visibility:         false;
 
@@ -156,12 +170,13 @@ $form-group-margin-bottom:      .5rem;
 $form-checkradio-border-width:          1px;
 $form-checkradio-border-color:          #7e8aad;
 $form-checkradio-checked-bg:            #66faff;
-$form-checkradio-checked-border-color:  #40998b;
+$form-checkradio-checked-border-color:  #66faff;
 $form-checkradio-radio-icon:            none;
 $form-checkradio-focus-border-color:    #40998b;
 $form-checkradio-focus-box-shadow:      0 0 0 .1875rem rgba(#40998b, .9);
+$form-checkradio-checked-box-shadow:    .0625em .0625em 0 .03125em rgba(64, 153, 139, .9);
 
-$form-range-track-height:       .325rem;
+$form-range-track-height:       .375rem;
 $form-range-track-bg:           #d3cfc9;
 $form-range-thumb-width:        1.25rem;
 $form-range-thumb-bg:           #66faff;
@@ -213,14 +228,28 @@ $popover-footer-border-color:   #e2e2e2;
 $popover-section-border-width:  3px;
 $popover-section-border-color:  #d3cfc9;
 
-$modal-content-bg:              #ebe6d2;
+$modal-content-bg:              #94dfd3;
 $modal-content-border-width:    3px;
-$modal-content-border-color:    #72c0b2;
+$modal-content-border-color:    #7e8aad;
 $modal-border-radius:           .5rem;
-$modal-header-border-color:     #d3cfc9;
-$modal-header-border-width:     3px;
-$modal-footer-border-color:     #d3cfc9;
-$modal-footer-border-width:     3px;
+
+$modal-header-padding-y:        .5rem;
+$modal-header-padding-x:        .75rem;
+$modal-header-bg:               #acfcef;
+$modal-header-border-color:     transparent;
+$modal-header-border-width:     1px;
+
+$modal-close-padding-y:         .25rem;
+$modal-close-padding-x:         .25rem;
+
+$modal-body-padding-y:          .5rem;
+$modal-body-padding-x:          .75rem;
+
+$modal-footer-padding-y:        .25rem;
+$modal-footer-padding-x:        .75rem;
+$modal-footer-bg:               #80c6ba;
+$modal-footer-border-color:     transparent;
+$modal-footer-border-width:     1px;
 
 // Clusive specific items
 // =====
@@ -246,9 +275,29 @@ $setting-title-color:           #666;
 $setting-title-font-size:       .875rem;
 $setting-title-font-weight:     700;
 
+$setting-modal-content-bg:              #ebe6d2;
+$setting-modal-content-border-color:    #72c0b2;
+$setting-modal-header-bg:               transparent;
+$setting-modal-header-border-color:     #d3cfc9;
+$setting-modal-header-border-width:     3px;
+$setting-modal-footer-bg:               transparent;
+$setting-modal-footer-border-color:     #d3cfc9;
+$setting-modal-footer-border-width:     3px;
+
 $ranking-margin-x:              .375em;
 $ranking-margin-bottom:         1.75em;
 $ranking-font-size:             1.5rem;
 $ranking-border-width:          4px;
 $ranking-border-color:          #d3cfc9;
 $ranking-label-font-size:       .875rem;
+
+$goal-modal-title-color:            null;
+$goal-modal-title-font-size:        .875rem;
+$goal-modal-title-font-weight:      400;
+$goal-modal-title-font-style:       italic;
+$goal-modal-subtitle-color:         null;
+$goal-modal-subtitle-font-size:     1rem;
+$goal-modal-subtitle-font-weight:   700;
+$goal-modal-subtitle-font-style:    null;
+$goal-modal-footer-font-size:       .875rem;
+$goal-ranking-border-color:         #75b7b0;

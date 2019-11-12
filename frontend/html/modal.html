@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Reader - Clusive Mockup</title>
+<title>Modals - Clusive Mockup</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap" rel="stylesheet">
@@ -30,75 +30,17 @@
 </style>
 
 </head>
-<body class="">
+<body class="library">
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
 <div class="container-xl">
     <div class="row">
-        <div class="col-auto sidebar sidebar-start">
-            <nav class="sidebar-nav" aria-label="Article">
-                <a href="./library.html" class="btn btn-link" aria-label="Back to library">
-                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-                </a>
-                <button type="button" class="btn btn-link" aria-label="Contents">
-                    <span class="icon-menu" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-link" aria-label="Previous page">
-                    <span class="icon-chevron-left" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-link" aria-label="Next page">
-                    <span class="icon-chevron-right" aria-hidden="true"></span>
-                </button>
-            </nav>
-            <div class="sidebar-support" role="region" aria-label="Support">
-                <button type="button" class="btn btn-link btn-help" aria-label="Help/Information">
-                    <span class="icon-help" aria-hidden="true"></span>
-                    <span class="icon-attention" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-
-        <div class="col-auto sidebar sidebar-end">
-            <div class="sidebar-tool" role="region" aria-label="Reading tools">
-                <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
-                    <span class="icon-settings" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-tool" aria-label="Read aloud">
-                    <span class="icon-play" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-tool" aria-label="Lookup definition">
-                    <span class="icon-book" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
 
         <div id="content" class="col content" tabindex="-1">
-            <header class="site-header site-header-small">
-                <div class="site-header-logo">
-                    <span class="icon-logo-clusive" aria-hidden="true"></span>
-                    <span class="sr-only">Clusive</span>
-                </div>
+            <main>
 
-                <div class="user-actions" role="region" aria-label="">
-                    <a href="#">Word bank</a> |
-                    Username
-                    <a href="#">Log out</a>
-                </div>
-            </header>
-
-            <!--
-            <h1 class="page-title">Lorem ipsum dolor sit amet</h1>
-            -->
-
-             <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; border: 0px; display: block; opacity: 1;" width="1133px" height="1189" src="./reader-frame.html" class=""></iframe>
-
-            <footer>
-                <!-- anything here? -->
-            </footer>
-        </div>
-    </div>
-</div>
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalSettings">Settings</button>
 
 <div id="modalSettings" class="modal setting-modal">
     <div class="modal-dialog modal-dialog-side-end modal-dialog-scrollable modal-sm">
@@ -258,8 +200,186 @@
                     </div>
                 </form>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Reset</button>
+            </div>
         </div>
     </div>
+</div>
+
+<hr>
+
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalGoal0">Goal 0</button>
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalGoal1">Goal 1</button>
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalGoal2">Goal 2</button>
+
+<div id="modalGoal0" class="modal goal-modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">First, why did you choose this piece?</h2>
+                    <div class="modal-subtitle">Pick the one that most closely matches your goal.</div>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <fieldset>
+                        <legend class="sr-only">Your goal</legend>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="goal0-0" name="goal0">
+                            <label class="form-check-label" for="goal0-0">I'm interested in the topic</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="goal0-1" name="goal0">
+                            <label class="form-check-label" for="goal0-1">I'm doing this for class</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="goal0-2" name="goal0">
+                            <label class="form-check-label" for="goal0-2">I'm cramming for a test</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="goal0-3" name="goal0">
+                            <label class="form-check-label" for="goal0-3">I want to build my vocabulary</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="goal0-4" name="goal0">
+                            <label class="form-check-label" for="goal0-4">Other</label>
+                        </div>
+                    </fieldset>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Next <span class="aria-hidden">&gt;</span></button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                Skip this&mdash;<a href="#" class="link-next">Take me to the article</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalGoal1" class="modal goal-modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">Get your just-right challenge!</h2>
+                    <div class="modal-subtitle">Tell us how well you know 5 words, and we aill recommend a personalized version of the article.</div>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="goal-nav">
+                    <a href="#" class="link-prev">back</a> | Word # of 5
+                </div>
+                <div class="goal-word">
+                    someword
+                </div>
+                <form>
+                     <fieldset>
+                        <legend class="ranking-legend">How well do you know this word?</legend>
+                        <div class="ranking">
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal1-0" name="goal1" aria-label="Never heard it">
+                                <label class="form-check-label" for="goal1-0"></label>
+                                <label class="ranking-label" for="goal1-0" aria-hidden="true">Never heard it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal1-1" name="goal1" aria-label="Heard it">
+                                <label class="form-check-label" for="goal1-1"></label>
+                                <label class="ranking-label" for="goal1-1" aria-hidden="true">Heard it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal1-2" name="goal1" aria-label="Know it">
+                                <label class="form-check-label" for="goal1-2"></label>
+                                <label class="ranking-label" for="goal1-2"  aria-hidden="true">Know it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal1-3" name="goal1" aria-label="Use it">
+                                <label class="form-check-label" for="goal1-3"></label>
+                                <label class="ranking-label" for="goal1-3" aria-hidden="true">Use it</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary" disabled>Next <span class="aria-hidden">&gt;</span></button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                Skip this&mdash;<a href="#" class="link-next">Take me to the article</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalGoal2" class="modal goal-modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">Get your just-right challenge!</h2>
+                    <div class="modal-subtitle">Tell us how well you know 5 words, and we aill recommend a personalized version of the article.</div>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="goal-nav">
+                    <a href="#" class="link-prev">back</a> | Word # of 5
+                </div>
+                <div class="goal-word">
+                    lastword
+                </div>
+                <form>
+                     <fieldset>
+                        <legend class="ranking-legend">How well do you know this word?</legend>
+                        <div class="ranking">
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal2-0" name="goal2" aria-label="Never heard it">
+                                <label class="form-check-label" for="goal2-0"></label>
+                                <label class="ranking-label" for="goal2-0" aria-hidden="true">Never heard it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal2-1" name="goal2" aria-label="Heard it" checked>
+                                <label class="form-check-label" for="goal2-1"></label>
+                                <label class="ranking-label" for="goal2-1" aria-hidden="true">Heard it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal2-2" name="goal2" aria-label="Know it">
+                                <label class="form-check-label" for="goal2-2"></label>
+                                <label class="ranking-label" for="goal2-2"  aria-hidden="true">Know it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="goal2-3" name="goal2" aria-label="Use it">
+                                <label class="form-check-label" for="goal2-3"></label>
+                                <label class="ranking-label" for="goal2-3" aria-hidden="true">Use it</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="text-end">
+                        <span class="goal-thanks">Thanks for cluing us in!</span>
+                        <button type="submit" class="btn btn-tertiary">All set! <span class="aria-hidden">&gt;</span></button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                Skip this&mdash;<a href="#" class="link-next">Take me to the article</a>
+            </div>
+        </div>
+    </div>
+</div>
+            </main>
+        </div>
+    </div>
+
 </div>
 
 </body>
