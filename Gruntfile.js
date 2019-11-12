@@ -55,6 +55,8 @@ module.exports = function (grunt) {
                     dest: "shared/static/shared/js/lib/reader"
                 },
                 {
+                    // FIXME this seems like an odd place for this, leaving it where it was before
+                    // since I'm not sure where else it should go.
                     expand: true,
                     cwd: "node_modules/open-dyslexic",
                     nonull: true,
