@@ -97,11 +97,11 @@
                                 <input id="option-font-family-4" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="verdana" type="radio">
                                 <label for="option-font-family-4" class="form-check-label">Verdana</label>
                             </div>
-                            
+
                             <div class="form-check form-checkradio">
                                 <input id="option-font-family-5" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="open-dyslexic" type="radio">
                                 <label for="option-font-family-5" class="form-check-label">Open Dyslexic</label>
-                            </div>                            
+                            </div>
 
                         </fieldset>
                     </div>
@@ -130,13 +130,8 @@
                             </div>
                         </fieldset>
                     </div>
+                    {% comment %}
                     <div class="setting">
-                        <div class="setting-btn-row">                            
-                            <button class="cislc-modalSettings-reset" type="reset">Reset</button>                            
-                        </div>
-
-                    </div>
-                    {% comment %} <div class="setting">
                         <fieldset>
                             <legend class="setting-title">Columns</legend>
                             <div class="setting-btn-row">
@@ -165,8 +160,12 @@
                                 <label for="option-lookup" class="form-check-label">Enable</label>
                             </div>
                         </fieldset>
-                    </div> {% endcomment %}
+                    </div>
+                    {% endcomment %}
                 </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary cislc-modalSettings-reset" type="reset">Reset</button>
             </div>
         </div>
     </div>
