@@ -17,7 +17,7 @@ RUN \
   python -m pip wheel -r /requirements.txt --no-cache-dir --no-deps --wheel-dir /wheels
 
 WORKDIR /app
-COPY package*.json ./
+COPY package*.json .npmrc ./
 RUN npm install
 
 COPY . .
@@ -44,15 +44,16 @@ COPY --from=base /wheels /wheels
 RUN pip install --no-cache /wheels/*
 
 # Don't run as root
-RUN mkdir -p /home/app
+RUN mkdir -p /app /home/app
 RUN addgroup -S app && adduser -S -G app app
+USER app
 
 WORKDIR /app
 
+RUN python -m nltk.downloader wordnet
+
 COPY --from=base /app /app
 RUN chown -R app:app /app
-
-USER app
 
 RUN python manage.py collectstatic --no-input
 
