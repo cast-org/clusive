@@ -305,6 +305,18 @@
       "css": "move",
       "code": 61511,
       "src": "fontawesome"
+    },
+    {
+      "uid": "186dec7a13156bbe2550790c158fb85d",
+      "css": "crown",
+      "code": 59460,
+      "src": "fontelico"
+    },
+    {
+      "uid": "fee6e00f36e8ca8ef3e4a62caa213bf6",
+      "css": "volume-down",
+      "code": 59405,
+      "src": "fontawesome"
     }
   ]
 }
