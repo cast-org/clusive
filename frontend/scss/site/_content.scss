@@ -34,8 +34,7 @@ h3,
     outline: 0;
 
     @include media-breakpoint-down(sm) {
-        max-width: calc(100vw - 7.625rem);
-        padding-top: .625rem;
+        max-width: calc(100vw - 8rem);
         padding-right: 0;
         padding-left: 0;
     }
