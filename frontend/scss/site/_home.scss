@@ -12,7 +12,7 @@
         margin-right: 0;
     }
 
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-up(md) {
         .site-header {
             left: -5rem;
             margin-right: -5rem;

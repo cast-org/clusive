@@ -4,11 +4,15 @@
     z-index: 1;
     padding: 1.375rem 1rem;
     margin-right: -5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     line-height: 1;
     //pointer-events: none;
     background-image: linear-gradient(90deg, rgba(#636b82, .5) 0%, rgba(#636b82, 0) 65%);
     @include border-radius($sidebar-border-radius);
+
+    @include media-breakpoint-up(md) {
+        margin-bottom: 1rem;
+    }
 
     .page-title {
         display: inline-block;
@@ -41,16 +45,25 @@
 }
 
 .site-header-small {
-    left: -6rem;
+    left: -4rem;
     z-index: 0;
     padding: 1.125rem 1rem 1.125rem 5rem;
-    margin-right: -6rem;
+    margin-right: -4rem;
     background-image: linear-gradient(90deg, rgba(#636b82, .25) 0%, rgba(#636b82, 0) 65%);
 
     .site-header-logo {
         @include font-size(1rem);
         line-height: 1;
         color: #636b82;
+    }
+
+    @include media-breakpoint-up(sm) {
+        left: -5rem;
+        margin-right: -5rem;
+    }
+    @include media-breakpoint-up(md) {
+        left: -6rem;
+        margin-right: -6rem;
     }
 }
 
@@ -69,4 +82,8 @@
     display: inline-block;
     @include font-size(.875rem);
     //pointer-events: auto;
+
+    @include media-breakpoint-down(sm) {
+        top: 100%;
+    }
 }

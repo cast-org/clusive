@@ -26,21 +26,6 @@
         }
     }
 
-    .goal-nav {
-        @include font-size(.875rem);
-        margin-bottom: .5rem;
-    }
-    .goal-word {
-        margin-bottom: 1rem;
-        @include font-size(1.375rem);
-        font-weight: 700;
-        text-align: center;
-    }
-    .goal-thanks {
-        padding-right: .5rem;
-        @include font-size(.875rem);
-    }
-
     a:not(.btn) {
         color: #00399c;
 
@@ -48,4 +33,39 @@
             color: palette(#00399c, 700);
         }
     }
+}
+
+
+.goal-nav {
+    @include font-size(.875rem);
+    margin-bottom: .5rem;
+}
+
+.goal-word {
+    margin-bottom: 1rem;
+    @include font-size(1.375rem);
+    font-weight: 700;
+    text-align: center;
+}
+
+.goal-speak {
+    margin-left: -.25rem;
+    color: #636b82;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        color: #333;
+        text-decoration: none;
+    }
+
+    > [class*="icon-"] {
+        @include font-size(1.5rem);
+        line-height: 1;
+    }
+}
+
+.goal-thanks {
+    padding-right: .5rem;
+    @include font-size(.875rem);
 }
