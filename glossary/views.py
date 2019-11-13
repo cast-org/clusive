@@ -84,3 +84,29 @@ def glossdef(request, document, cued, word):
     else:
         return HttpResponseNotFound("<p>No definition found</p>")
 
+
+def get_word_rating(request, word):
+    try:
+        user = ClusiveUser.objects.get(user=request.user)
+        wm = WordModel.objects.get(user=user, word=word)
+        return JsonResponse({ 'rating': wm.rating })
+    except WordModel.DoesNotExist:
+        return JsonResponse({'rating' : False})
+    except ClusiveUser.DoesNotExist:
+        logger.warning("No clusive user, can't fetch ratings")
+        return JsonResponse({'rating' : False})
+
+
+def set_word_rating(request, word, rating):
+    try:
+        user = ClusiveUser.objects.get(user=request.user)
+        wm, created = WordModel.objects.get_or_create(user=user, word=word)
+        if WordModel.is_valid_rating(rating):
+            wm.rating = rating
+            wm.save()
+            return JsonResponse({'success' : 1})
+        else:
+            return JsonResponse({'success' : 0})
+    except ClusiveUser.DoesNotExist:
+        logger.warning("No clusive user, can't set ratings")
+        return JsonResponse({'success' : 0})

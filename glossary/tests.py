@@ -2,6 +2,11 @@ import json
 import logging
 import os
 
+from django.contrib.auth.models import User
+from django.urls import reverse
+
+from roster.models import ClusiveUser
+
 logger = logging.getLogger(__name__)
 
 from django.contrib.staticfiles import finders
@@ -9,6 +14,29 @@ from django.test import TestCase
 
 
 class GlossaryTestCase(TestCase):
+
+    def setUp(self):
+        user_1 = User.objects.create_user(username="user1", password="password1")
+        user_1.save()
+        ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
+
+    def test_set_and_get_rating(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/glossary/rating/something/2')
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(str(response.content, encoding='utf8'),
+                             {'success': 1})
+        response = self.client.get('/glossary/rating/something')
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(str(response.content, encoding='utf8'),
+                             {'rating': 2})
+
+    def test_get_rating_if_none(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/glossary/rating/something')
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(str(response.content, encoding='utf8'),
+                     {'rating': False})
 
     def test_static_glossaries(self):
         pubs_directory = finders.find('shared/pubs')
