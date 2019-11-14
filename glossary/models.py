@@ -18,7 +18,7 @@ class WordModel(models.Model):
     cued = models.SmallIntegerField(default=0)
 
     def knowledge_est(self):
-        if self.rating:
+        if self.rating!=None:
             return self.rating
         if self.cued_lookups>0 or self.free_lookups>0:
             return 1
@@ -36,3 +36,8 @@ class WordModel(models.Model):
             wm, created = WordModel.objects.get_or_create(user=user, word=word)
             wm.cued += 1
             wm.save()
+
+    @classmethod
+    def is_valid_rating(cls, number):
+        return isinstance(number, int) and number>=0 and number<=3
+

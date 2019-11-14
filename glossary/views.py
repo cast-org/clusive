@@ -39,17 +39,25 @@ def cuelist(request, document):
         # First, find any words where we think the user is interested
         interest_words = [wm.word for wm in user_words if wm.interest_est() > 0]
         logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
-        to_find -= len(interest_words)
+        cue_words = set(interest_words)
 
-        # Next look for words where the user has low estimated knowledge (TODO)
+        # Next look for words where the user has low estimated knowledge
+        if len(cue_words) < to_find:
+            unknown_words = set([wm.word for wm in user_words if wm.knowledge_est() and wm.knowledge_est() < 2])
+            logger.debug("Found:  %d low-knowledge words: %s", len(unknown_words), unknown_words)
+            unknown_words = unknown_words-cue_words
+            #logger.debug("Filter: %d low-knowledge words: %s", len(unknown_words), unknown_words)
+            unknown_words = set(random.sample(unknown_words, k=min(to_find-len(cue_words), len(unknown_words))))
+            #logger.debug("Trim:   %d low-knowledge words: %s", len(unknown_words), unknown_words)
+            cue_words = cue_words | unknown_words
 
         # Fill up the list with glossary words
-        glossary_words = []
-        if to_find > 0:
-            glossary_words = random.sample(all_glossary_words, k=min(to_find, len(all_glossary_words)))
+        if len(cue_words) < to_find:
+            glossary_words = set(random.sample(all_glossary_words,
+                                               k=min(to_find-len(cue_words), len(all_glossary_words))))
             logger.debug("Found %d glossary words: %s", len(glossary_words), glossary_words)
+            cue_words = cue_words | glossary_words
 
-        cue_words = set(interest_words + glossary_words)
         WordModel.register_cues(user, cue_words)
 
         return JsonResponse({'words': sorted(cue_words)})
@@ -84,3 +92,29 @@ def glossdef(request, document, cued, word):
     else:
         return HttpResponseNotFound("<p>No definition found</p>")
 
+
+def get_word_rating(request, word):
+    try:
+        user = ClusiveUser.objects.get(user=request.user)
+        wm = WordModel.objects.get(user=user, word=word)
+        return JsonResponse({ 'rating': wm.rating })
+    except WordModel.DoesNotExist:
+        return JsonResponse({'rating' : False})
+    except ClusiveUser.DoesNotExist:
+        logger.warning("No clusive user, can't fetch ratings")
+        return JsonResponse({'rating' : False})
+
+
+def set_word_rating(request, word, rating):
+    try:
+        user = ClusiveUser.objects.get(user=request.user)
+        wm, created = WordModel.objects.get_or_create(user=user, word=word)
+        if WordModel.is_valid_rating(rating):
+            wm.rating = rating
+            wm.save()
+            return JsonResponse({'success' : 1})
+        else:
+            return JsonResponse({'success' : 0})
+    except ClusiveUser.DoesNotExist:
+        logger.warning("No clusive user, can't set ratings")
+        return JsonResponse({'success' : 0})

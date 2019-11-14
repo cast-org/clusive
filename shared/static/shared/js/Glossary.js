@@ -1,5 +1,7 @@
 // Glossary functionality
 
+var glossaryCurrentWord = null;
+
 function find_selected_word() {
     // Look for selected text, first in the reader iframe, then in the top-level frame.
     var sel = null, word = null;
@@ -25,11 +27,15 @@ function find_selected_word() {
 
 function load_definition(cued, word) {
     var title, body;
+    $('#glossaryFooter').hide();
+    $('#glossaryInput').hide();
     if (word) {
+        glossaryCurrentWord = word;
         title = word;
         $.get('/glossary/glossdef/'+window.pub_id+'/'+cued+'/'+word)
             .done(function(data, status) {
                 $('#glossaryBody').html(data);
+                $('#glossaryFooter').show();
             })
             .fail(function(err) {
                 console.log(err);
@@ -39,6 +45,16 @@ function load_definition(cued, word) {
                 if ($('#glossaryPop').is(':visible') && !glossaryBeenDragged) {
                     $('#glossaryPop').CFW_Popover('locateUpdate');
                 }
+            });
+        $.get('/glossary/rating/'+word)
+            .done(function(data, status) {
+                console.log(data);
+                $('#glossaryInput input').prop('checked',false); // Uncheck all
+                if (data['rating']!==null) {
+                    console.log('#ranking0-' + data['rating']);
+                    $('#ranking0-' + data['rating']).prop('checked', true);
+                }
+                $('#glossaryInput').show();
             });
         body = "Loading...";
     } else {
@@ -51,9 +67,16 @@ function load_definition(cued, word) {
 
 // When lookup button is clicked, try to show a definition in the popover.
 $(function() {
+    // When lookup button clicked, show definition of selected word
     $('#glossaryButton').on('click', function () {
         load_definition(0, find_selected_word());
         $(this).CFW_Popover('show');
     });
+
+    // When ranking in the glossary popup is selected, notify server.
+    $('#glossaryInput').on('change', 'input', function() {
+        console.log('input change detected', $(this).val());
+        $.get('/glossary/rating/'+glossaryCurrentWord+'/'+$(this).val());
+    })
 });
 
