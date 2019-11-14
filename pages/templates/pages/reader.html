@@ -56,11 +56,11 @@ var pub_id = "{{ pub_id }}";
             {type: 'style', url: '{% static "shared/css/clusive-reader-theme-bbr.css" %}', r2after: true, appearance: 'bbr'},
             {type: 'style', url: '{% static "shared/css/clusive-reader-theme-gw.css" %}', r2after: true, appearance: 'gw'},
             // {type:'script', url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML&latest'},
-            // {type:'style', url: 'http://localhost:4444/viewer/fonts/opendyslexic/opendyslexic.css', fontFamily: 'opendyslexic'}, */
-        ]
+        ];
 
-        var lastReadingPosition, annotations, userSettings, baseUrl = null;
+        userSettings = { textAlignment:'start' };
 
+        var lastReadingPosition, annotations, baseUrl = null;
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
 
         D2Reader.load({
