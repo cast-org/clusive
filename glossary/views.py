@@ -23,6 +23,31 @@ logger = logging.getLogger(__name__)
 book_glossaries = {}
 
 
+def checklist(request, document):
+    """Return up to five words that should be presented in the vocab check dialog"""
+    try:
+        user = ClusiveUser.objects.get(user=request.user)
+        book = Book.objects.get(path=document)
+        all_glossary_words = json.loads(book.glossary_words)
+        all_words = json.loads(book.all_words) + all_glossary_words # FIXME might not be necessary with stemming, glossary should be a subset of all
+        user_words = WordModel.objects.filter(user=user, word__in=all_words)
+
+        to_find = 5
+        # First, look for any glossary words that we don't have a rating for yet.
+        #logger.debug("Checking: %s", all_glossary_words)
+        #logger.debug("Against:  %s", [[wm.word, wm.rating] for wm in user_words])
+        gloss_words = [w for w in all_glossary_words if not any(wm.word==w and wm.rating!=None for wm in user_words)]
+        logger.debug("Check words from glossary: %s", gloss_words)
+
+        check_words = random.sample(gloss_words, k=min(to_find, len(gloss_words)))
+        return JsonResponse({'words': sorted(check_words)})
+    except ClusiveUser.DoesNotExist:
+        logger.warning("Could not fetch check words, no Clusive user: %s", request.user)
+        return JsonResponse({'words': []})
+    except Book.DoesNotExist:
+        logger.error("Unknown book %s", document)
+        return JsonResponse({'words': []})
+
 def cuelist(request, document):
     """Return the list of words that should be cued in this document for this user"""
     try:
@@ -37,7 +62,8 @@ def cuelist(request, document):
         to_find = 10
 
         # First, find any words where we think the user is interested
-        interest_words = [wm.word for wm in user_words if wm.interest_est() > 0]
+        interest_words = [wm.word for wm in user_words
+                          if wm.interest_est()>0 and (wm.knowledge_est()==None or wm.knowledge_est()<3)]
         logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
         cue_words = set(interest_words)
 

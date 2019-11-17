@@ -10,66 +10,7 @@
 {% if book_list|length == 0 %}
     No articles found.
 {% else %}
-<script>
-    function startVocabCheck(link, article) {
-        window.words = [ 'a', 'b', 'c']; // TODO: load from server
-        window.pendingArticle = article;
-        window.wordCount = words.length;
-        window.wordIndex = 0;
-        updateVocabModal();
-        $(link).CFW_Modal({target: '#modalVocabCheck', unlink: true});
-        $(link).CFW_Modal('show');
-    }
-    function nextVocabCheck() {
-        window.wordIndex++;
-        updateVocabModal();
-    }
-    function backVocabCheck() {
-        if (window.wordIndex>0) {
-            window.wordIndex--;
-            updateVocabModal();
-        }
-    }
-    function updateVocabModal() {
-        if(window.wordIndex>0)
-            $('#vocabCheckBack').show();
-        else
-            $('#vocabCheckBack').hide();
-        $('#vocabCheckCount').html(window.wordCount);
-        $('#vocabCheckIndex').html(window.wordIndex+1);
-        $('#vocabCheckWord').html(window.words[window.wordIndex]);
-        if (window.wordIndex < window.wordCount-1) {
-            $('#vocabCheckNext').show().prop( "disabled", true );
-            $('#vocabCheckThanks').hide();
-            $('#vocabCheckDone').hide();
-        } else {
-            $('#vocabCheckNext').hide();
-            $('#vocabCheckDone').show().prop( "disabled", true ); // TODO enable when a selection is made
-        }
-    }
-    function selectedVocabCheck() {
-        if (window.wordIndex < window.wordCount-1) {
-            $('#vocabCheckNext').prop("disabled", false);
-        } else {
-            $('#vocabCheckThanks').show();
-            $('#vocabCheckDone').prop("disabled", false);
-        }
-    }
-    function skipVocabCheck() {
-        window.location = '/reader/' + window.pendingArticle;
-    }
-    function doneVocabCheck() {
-        window.location = '/reader/' + window.pendingArticle;
-    }
-    $(function() {
-        $('#modalVocabCheck').on('change', 'input[type="radio"]', function() {
-            console.log('input change detected', $(this).val());
-            $.get('/glossary/rating/'+window.words[window.wordIndex]+'/'+$(this).val());
-            selectedVocabCheck();
-        })
-    });
-</script>
-    <div class="library-grid">
+<div class="library-grid">
     {% for pub in book_list %}
         <div class="card card-library">
             {% if pub.cover %}
@@ -79,7 +20,7 @@
             {% endif %}
             <div class="card-body">
                 <!--<a href="{% url 'reader' pub_id=pub.path%}" class="link-stretch"><h2 class="card-title h5">{{ pub.title }}</h2></a>-->
-                <a href="#" class="link-stretch" onclick="startVocabCheck(this, '{{pub.path}}');"><h2 class="card-title h5">{{ pub.title }}</h2></a>
+                <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{pub.path}}');"><h2 class="card-title h5">{{ pub.title }}</h2></a>
                 {% if pub.description %}<p>{{ pub.description }}</p>{% endif %}
             </div>
         </div>
