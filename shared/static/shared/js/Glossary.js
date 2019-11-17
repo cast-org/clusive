@@ -1,4 +1,4 @@
-// Glossary functionality
+// Glossary-related functionality
 
 var glossaryCurrentWord = null;
 
@@ -65,18 +65,103 @@ function load_definition(cued, word) {
     $('#glossaryBody').html(body);
 }
 
-// When lookup button is clicked, try to show a definition in the popover.
+// Methods related to the vocabulary check-in process
+
+window.vocabCheck = {};
+
+vocabCheck.start = function(link, article) {
+    vocabCheck.pendingArticle = article;
+    $.get('/glossary/checklist/'+article)
+        .done(function(data, status) {
+            vocabCheck.words = data.words;
+            vocabCheck.wordCount = vocabCheck.words.length;
+            if (vocabCheck.wordCount === 0)
+                vocabCheck.done(); // No words to show
+            (vocabCheck.ratings = []).length = vocabCheck.wordCount;  vocabCheck.ratings.fill(null);
+            vocabCheck.wordIndex = 0;
+            vocabCheck.update();
+            $(link).CFW_Modal({target: '#vocabCheckModal', unlink: true});
+            $(link).CFW_Modal('show');
+        })
+        .fail(function(err) {
+            console.log(err);
+        });
+};
+
+vocabCheck.next = function() {
+    vocabCheck.wordIndex++;
+    vocabCheck.update();
+};
+
+vocabCheck.back = function() {
+    if (vocabCheck.wordIndex>0) {
+        vocabCheck.wordIndex--;
+        vocabCheck.update();
+    }
+};
+
+vocabCheck.update = function() {
+    $('#vocabCheckModal input[type="radio"]').prop('checked',false);
+    let currentRating = vocabCheck.ratings[vocabCheck.wordIndex];
+    if (currentRating !== null)
+        $('#vocabCheck'+currentRating).prop('checked', true);
+    if(vocabCheck.wordIndex>0)
+        $('#vocabCheckBack').show();
+    else
+        $('#vocabCheckBack').hide();
+    $('#vocabCheckCount').html(vocabCheck.wordCount);
+    $('#vocabCheckIndex').html(vocabCheck.wordIndex+1);
+    $('#vocabCheckWord').html(vocabCheck.words[vocabCheck.wordIndex]);
+    if (vocabCheck.wordIndex < vocabCheck.wordCount-1) {
+        $('#vocabCheckNext').show().prop("disabled", currentRating===null);
+        $('#vocabCheckThanks').hide();
+        $('#vocabCheckDone').hide();
+    } else {
+        $('#vocabCheckNext').hide();
+        $('#vocabCheckDone').show().prop("disabled", currentRating===null);
+    }
+};
+
+vocabCheck.selected = function(value) {
+    vocabCheck.ratings[vocabCheck.wordIndex] = value;
+    if (vocabCheck.wordIndex < vocabCheck.wordCount-1) {
+        $('#vocabCheckNext').prop("disabled", false);
+    } else {
+        $('#vocabCheckThanks').show();
+        $('#vocabCheckDone').prop("disabled", false);
+    }
+};
+
+vocabCheck.skip = function() {
+    window.location = '/reader/' + vocabCheck.pendingArticle;
+};
+
+vocabCheck.done = function() {
+    window.location = '/reader/' + vocabCheck.pendingArticle;
+};
+
+
+/// Set up listener functions after page is loaded
+
 $(function() {
+
     // When lookup button clicked, show definition of selected word
     $('#glossaryButton').on('click', function () {
         load_definition(0, find_selected_word());
         $(this).CFW_Popover('show');
     });
 
-    // When ranking in the glossary popup is selected, notify server.
+    // When ranking in the glossary popup is selected, notify server
     $('#glossaryInput').on('change', 'input', function() {
         console.log('input change detected', $(this).val());
         $.get('/glossary/rating/'+glossaryCurrentWord+'/'+$(this).val());
-    })
-});
+    });
 
+    // When ranking in the check-in modal is selected, notify server
+    $('#vocabCheckModal').on('change', 'input[type="radio"]', function() {
+        let value = $(this).val();
+        $.get('/glossary/rating/'+vocabCheck.words[vocabCheck.wordIndex]+'/'+ value);
+        vocabCheck.selected(value);
+    });
+
+});
