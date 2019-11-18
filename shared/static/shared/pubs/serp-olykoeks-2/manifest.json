@@ -1,0 +1,51 @@
+{
+  "@context": "https://readium.org/webpub-manifest/context.jsonld",
+  "metadata": {
+    "@type": "http://schema.org/Book",
+    "title": "Olykoeks",
+    "description": "Round, straight, frosted or plain, doughnuts have an interesting story.",
+    "identifier": "https://staging.oercommons.org/courseware/lesson/17548",
+    "author": "Kristin Robinson",
+    "language": "en",
+    "modified": "2019-10-21T14:56:33.808Z",
+    "rights": "Creative Commons Attribution 4.0"
+  },
+  "readingOrder": [
+    {
+      "href": "OEBPS/content.xhtml",
+      "type": "application/xhtml+xml"
+    }
+  ],
+  "resources": [
+    {
+      "href": "OEBPS/nav.xhtml",
+      "type": "application/xhtml+xml",
+      "rel": "contents"
+    },
+    {
+      "href": "OEBPS/toc.ncx",
+      "type": "application/x-dtbncx+xml"
+    },
+    {
+      "href": "OEBPS/stylesheet.css",
+      "type": "text/css"
+    },
+    {
+      "rel": "cover",
+      "href": "OEBPS/images/image1.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "toc": [
+    {
+      "href": "OEBPS/content.xhtml#header-1",
+      "title": "Section 1: Olykoeks",
+      "children": [
+        {
+          "href": "OEBPS/content.xhtml#header-2",
+          "title": "by Sue Larson Pascoe"
+        }
+      ]
+    }
+  ]
+}

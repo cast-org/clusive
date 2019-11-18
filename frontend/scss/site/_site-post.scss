@@ -1,0 +1,151 @@
+$utility-bg-colors: map-remove($utility-bg-colors, "secondary", "info", "success", "warning", "danger", "light", "dark");
+
+$usbp: map-remove($grid-breakpoints, "xl");
+$utility-spacing-breakpoints: map-keys($usbp);
+$spacers-margin: map-remove($spacers, "2");
+
+$level-btn: (
+    "bg":                   500,
+    "color":                -1,
+    "border-color":         500,
+    "hover-bg":             600,
+    "hover-color":          -1,
+    "hover-border-color":   600,
+    "active-bg":            700,
+    "active-color":         -1,
+    "active-border-color":  700
+);
+$btn-levels: $level-btn;
+$btn-colors: ();
+$btn-themes: map-merge(
+    $btn-themes,
+    (
+        "primary":
+        (
+            "base": #40998b,
+            "bg": #abfcef,
+            "color": #111,
+            "border-color": transparent,
+            "hover-bg": palette(#abfcef, 600),
+            "hover-color": #111,
+            "hover-border-color": transparent,
+            "active-bg": palette(#abfcef, 700),
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "secondary":
+        (
+            "base": #40998b,
+            "bg": rgba(#7d89ac, .35),
+            "color": #111,
+            "border-color": transparent,
+            "hover-bg": rgba(#7d89ac, .7),
+            "hover-color": #111,
+            "hover-border-color": transparent,
+            "active-bg": rgba(#7d89ac, .9),
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "tertiary":
+        (
+            "base": #40998b,
+            "bg": #ff554d,
+            "color": #111,
+            "border-color": transparent,
+            "hover-bg": palette(#ff554d, 600),
+            "hover-color": #111,
+            "hover-border-color": transparent,
+            "active-bg": palette(#7d89ac, 700),
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "setting":
+        (
+            "base": #40998b,
+            "bg": rgba(#abfcef, .85),
+            "color": #ff554d,
+            "border-color": transparent,
+            "hover-bg": rgba(#abfcef, 1),
+            "hover-color": #ff554d,
+            "hover-border-color": transparent,
+            "active-bg": palette(#abfcef, 600),
+            "active-color": #ff554d,
+            "active-border-color": transparent
+        ),
+        "tool":
+        (
+            "base": #40998b,
+            "bg": rgba(#abfcef, .85),
+            "color": #636b82,
+            "border-color": transparent,
+            "hover-bg": rgba(#abfcef, 1),
+            "hover-color": #636b82,
+            "hover-border-color": transparent,
+            "active-bg": palette(#abfcef, 600),
+            "active-color": #636b82,
+            "active-border-color": transparent
+        ),
+        "option":
+        (
+            "base": #40998b,
+            "bg": $white,
+            "color": #636b81,
+            "border-color": transparent,
+            "hover-bg": $white,
+            "hover-color": #636b81,
+            "hover-border-color": #40998b,
+            "active-bg": #66faff,
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "default":
+        (
+            "base": #40998b,
+            "bg": $white !important,
+            "color": #111,
+            "border-color": transparent,
+            "hover-bg": $white !important,
+            "hover-color": #111,
+            "hover-border-color": #40998b,
+            "active-bg": $white !important,
+            "active-color": #111,
+            "active-border-color": transparent
+        ),
+        "bbr":
+        (
+            "base": #40998b,
+            "bg": #b96 !important,
+            "color": #000,
+            "border-color": #7e8aad,
+            "hover-bg": #ded9c4 !important,
+            "hover-color": #000,
+            "hover-border-color": #40998b,
+            "active-bg": #b96 !important,
+            "active-color": #000,
+            "active-border-color": #7e8aad
+        ),
+        "wb":
+        (
+            "base": #40998b,
+            "bg": #000 !important,
+            "color": #fff,
+            "border-color": transparent,
+            "hover-bg": #000 !important,
+            "hover-color": #fff,
+            "hover-border-color": #40998b,
+            "active-bg": #000 !important,
+            "active-color": #fff,
+            "active-border-color": transparent
+        )
+    )
+);
+
+$btn-sizes: (
+    "splash": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * 1.5),
+        "line-height":   null,
+        "border-radius": .5rem
+    )
+);

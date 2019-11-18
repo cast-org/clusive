@@ -1,0 +1,11 @@
+{% load static %}
+<header class="site-header site-header-small">
+    <div class="site-header-logo">
+        <span class="icon-logo-clusive" aria-hidden="true"></span>
+        <span class="sr-only">Clusive</span>
+    </div>
+
+    {% if user_actions %}
+    {% include "shared/partial/site_header_actions.html" %}
+    {% endif %}
+</header>

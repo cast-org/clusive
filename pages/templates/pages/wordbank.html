@@ -1,0 +1,52 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block title %}Word bank{% endblock %}
+
+{% block head_additional %}
+<style>
+    table th, table td { border: 1px solid #CCCCCC; padding: .3em 1em; }
+</style>
+{% endblock %}
+
+{% block sidebar_start %}
+{% include "shared/partial/sidebar_start.html" with index_reader=True nav=False %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "shared/partial/site_header_small.html" with user_actions=True %}
+
+<div class="table-scroll">
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>Word</th>
+                <th>Self-rating</th>
+                <th>Lookups: cued</th>
+                <th>Lookups: uncued</th>
+                <th>Cues</th>
+                <th>Knowledge estimate</th>
+                <th>Interest estimate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for wm in words %}
+            <tr>
+                <td>{{wm.word}}</td>
+                <td>{{wm.rating}}</td>
+                <td>{{wm.cued_lookups}}</td>
+                <td>{{wm.free_lookups}}</td>
+                <td>{{wm.cued}}</td>
+                <td>{{wm.knowledge_est}}</td>
+                <td>{{wm.interest_est}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

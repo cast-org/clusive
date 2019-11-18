@@ -1,0 +1,65 @@
+.btn-primary,
+.btn-secondary,
+.btn-tertiary {
+    font-weight: 700;
+}
+
+.btn-setting {
+    text-shadow: .0625em .0625em 0 rgba(#5b7799, .75);
+
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        position: relative;
+        top: -.03125em;
+    }
+}
+
+%btn-option-active {
+    box-shadow: $btn-active-box-shadow, .1875rem .1875rem 0 .025rem rgba(#40998b, .9);
+}
+%btn-option-active-hover {
+    border-color: #40998b;
+}
+.btn-option,
+.btn-default,
+.btn-bbr,
+.btn-wb {
+    &:active,
+    &.active,
+    &.open[data-cfw="dropdown"] {
+        @extend %btn-option-active;
+    }
+    &:active:hover,
+    &.active:hover,
+    &.open[data-cfw="dropdown"]:hover {
+        @extend %btn-option-active-hover;
+    }
+    @if $enable-btn-check {
+        .btn-check-input:not([disabled]):checked ~ & {
+            @extend %btn-option-active;
+        }
+        .btn-check-input:not([disabled]):checked:hover ~ & {
+            @extend %btn-option-active-hover;
+        }
+    }
+}
+
+.btn-help {
+    white-space: nowrap;
+
+    [class^="icon-"],
+    [class*=" icon-"] {
+        position: relative;
+        display: inline-block;
+        transform: rotate(10deg);
+
+        &:first-child {
+            left: .25em;
+            margin-left: -.25em;
+        }
+        &:last-child {
+            left: -.25em;
+            margin-right: -.25em;
+        }
+    }
+}

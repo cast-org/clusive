@@ -1,0 +1,130 @@
+[
+    {
+        "headword": "applaud",
+        "alternateForms": [ "applauds", "applauding", "applauded"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To show that you strongly approve of a person or action.",
+                "examples": [],
+                "images": [
+                    {
+                        "src": "images/glossary/applaud-1.jpg",
+                        "alt": "Photo of people clapping.",
+                        "description": "Two people, one in the foreground and one in the background, are shown clapping and smiling."
+                    },
+                    {
+                        "src": "images/glossary/applaud-3.jpg",
+                        "alt": "Photo of people with thumbs up.",
+                        "description": "Two people stand together, smiling at the viewer. Each person holds their hand up with fingers curled into a fist and a thumb pointing up."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "ban",
+        "alternateForms": [ "bans", "banned", "banning" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To forbid something from happening.",
+                "examples": []
+            }
+        ]
+    },
+    {
+        "headword": "biodegradable",
+        "alternateForms": [ "biodegrade", "biodegrades", "biodegradables" ],
+        "meanings": [
+            {
+                "pos": "adj",
+                "definition": "Something that can decompose or break down naturally.",
+                "examples": []
+            }
+        ]
+    },
+    {
+        "headword": "landfill",
+        "alternateForms": [ "landfills" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An area where trash that has been collected is brought and buried underground.",
+                "examples": [],
+                "images": [
+                    {
+                        "src": "images/glossary/landfill-1.jpg",
+                        "alt": "Photo of a large pile of trash.",
+                        "description": "A large pile of trash made up of plastic, metal, paper, wood, garbage, plants, and more. The materials are mixed together into a single, large heap of material."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "overstep",
+        "alternateForms": [ "oversteps", "overstepped", "overstepping" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "Going beyond accepted limits.",
+                "examples": []
+            }
+        ]
+    },
+    {
+        "headword": "petroleum",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Another word for oil, petroleum is a fuel that is made up of the decomposed remains of living things. There is a limited amount of petroleum in the world.",
+                "examples": [],
+                "images": [
+                    {
+                        "src": "images/glossary/petroleum-2.jpg",
+                        "alt": "Photo of an ship built to transport oil.",
+                        "description": "A very long, large ship is shown moving over water, away from the viewer. The deck, or top surface, of the ship is large and flat. A  structure of several stories rises from the flat deck at the back of the ship."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "pigment",
+        "alternateForms": [ "pigments" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A powder that, when mixed with a liquid, creates an ink, paint, or dye.",
+                "examples": [],
+                "images": [
+                    {
+                        "src": "images/glossary/pigment-1.jpg",
+                        "alt": "Photo of pieces of colored chalk.",
+                        "description": "Six rectangular shaped pieces of chalk on a flat surface. There is one piece of chalk in the foreground, and each remaining piece of chalk is lined up behind the one before it. Each piece of chalk is a different color. From front to back, the colors of the pieces of chalk are: red, orange, yellow, green, blue, purple."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "resource",
+        "alternateForms": [ "resources" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Things that are needed for a society or organization to run well. Natural resources are things from nature that are needed for human society to run well.",
+                "examples": [],
+                "images": [
+                    {
+                        "src": "images/glossary/resource-1.jpg",
+                        "alt": "Photo of water with tree-covered hill in background.",
+                        "description": "Mist rises from an area of water. The water has many colors in it, including yellow, gray, white, and brown. A tree-covered hill is in the background, partly hidden by the mist rising from the water."
+                    }
+                ]
+            }
+        ]
+    }
+]

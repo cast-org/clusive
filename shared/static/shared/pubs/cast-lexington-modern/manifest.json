@@ -1,0 +1,28 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "https://schema.org/Article",
+        "headline": "Battle of Lexington (modern version)",
+        "description": "Read modernized accounts of the American Revolution from people who lived at the time.",
+        "publisher": "CAST",
+        "language": "en",
+        "modified": "2019-01-09"
+    },
+    "readingOrder": [
+        {"href": "lexington-modern.html", "type": "text/html"}
+    ],
+    "resources": [
+        { "rel": "cover",
+            "href": "images/etching_source.jpg",
+            "type": "image/jpeg",
+            "attribution": {
+                "title": "Etching created in 1775 showing the Battle of Lexington",
+                "author": "Thomas Doolittle"
+            }}
+    ],
+    "links": [
+        {"title": "Original", "rel": "alternate", "href": "cast-lexington", "type": "application/webpub+json"},
+        {"title": "Modern", "rel": "self", "href": "cast-lexington-modern", "type":  "application/webpub+json"}
+    ]
+
+}

@@ -138,8 +138,23 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/django
 
-# Editor config files 
+# Editor config files
+.idea
 
 .vscode
-.idea
-*.iml
+
+# NPM build artifacts
+
+/node_modules
+
+# Webpack JS build artifacts
+
+shared/static/shared/js/main.js
+
+# Pip install from Git files
+
+src/django-session-timeout
+src/imsglobal-caliper
+src/pip-delete-this-directory.txt
+
+/staticfiles

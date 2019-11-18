@@ -1,0 +1,119 @@
+// disable linting for now - this file is most likely going away
+// stylelint-disable
+
+.flc-prefsEditor-separatedPanel {
+    margin-top: -0.625rem;
+}
+@media screen and (min-width: 40em) {
+    .flc-prefsEditor-separatedPanel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        margin-top: 0;
+    }
+}
+
+.fl-prefsEditor-separatedPanel {
+    /* Match Figuration .bg-uibase-500 */
+    //background-color: #5e7182;
+}
+
+/* Figuration's CSS reset sets legend to 1.5rem in font-size, so we have
+to reset this */
+.fl-prefsEditor legend {
+    font-size: 1rem;
+}
+
+.fl-prefsEditor .fl-choice input:checked ~ label {
+    /* Match Figuration .bg-uibase-800 */
+    background-color: #343e48;
+    color: #fff;
+}
+
+/* These next three instructions change some styling and layout behaviour of
+the panels to match the demo's desired appearance*/
+.fl-prefsEditor-separatedPanel .fl-prefsEditor-panels .fl-prefsEditor-panel {
+    padding: 0 0 1.5rem 0;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.fl-prefsEditor-separatedPanel .fl-prefsEditor-panels .fl-prefsEditor-panel h2 {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    /* Match Figuration .bg-gray-50 */
+    background-color: #f0f0f0;
+    text-indent: 1.5rem;
+    /* Match Figuration .bg-gray-500 */
+    border-bottom: solid #666 1px;
+    box-shadow: none;
+}
+
+.fl-prefsEditor-separatedPanel .fl-prefsEditor-panels .fl-prefsEditor-panel .fl-prefsEditor-panel-descr {
+    text-indent: 1.5rem;
+}
+
+.cisl-prefs-beeLine-acknowledgement {
+    padding-right: 1.5rem;
+    padding-top: 0.5rem;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .fl-preview-A:before {
+    content: "Aa";
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-small .fl-preview-A:before {
+    font-size: 60%;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-medium .fl-preview-A:before {
+    font-size: 80%;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-large .fl-preview-A:before {
+    font-size: 100%;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-x-large .fl-preview-A:before {
+    font-size: 120%;
+}
+
+@media screen and (min-width: 40em) {
+    .fl-prefsEditor-separatedPanel .fl-panelBar .fl-prefsEditor-buttons {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+
+        //padding: .25rem;
+        //border-radius: 0 0 1.5rem 1.5rem !important;
+        //box-shadow: none !important;
+    }
+    .fl-prefsEditor-separatedPanel .fl-prefsEditor-showHide, .fl-prefsEditor-separatedPanel .fl-prefsEditor-reset {
+        font-size: 1rem;
+    }
+}
+.fl-prefsEditor-separatedPanel .fl-icon-undo {
+    font-size: 1rem;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .fl-preview-A:before {
+    content: "Aa";
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-small .fl-preview-A:before {
+    font-size: 60%;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-medium .fl-preview-A:before {
+    font-size: 80%;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-large .fl-preview-A:before {
+    font-size: 100%;
+}
+
+.fl-prefsEditor .fl-prefsEditor-text-size .fl-choices .fl-choice .cisl-textSize-x-large .fl-preview-A:before {
+    font-size: 120%;
+}
