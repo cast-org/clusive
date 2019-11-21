@@ -1,6 +1,6 @@
 # Clusive Django Web Application
 
-This repository contains the [Django-based](https://www.djangoproject.com/) "fall pilots" web application for the CISL project, Clusive.
+This repository contains the [Django-based](https://www.djangoproject.com/) "fall pilot" web application for the CISL project, Clusive.
 
 ## Quick Links for Further Reading
 
