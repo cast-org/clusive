@@ -56,7 +56,7 @@
                             outputValue: "Comic Sans MS, sans-serif"
                         },                        {
                             inputValue: "open-dyslexic",
-                            outputValue: "opendyslexic"
+                            outputValue: "OpenDyslexicRegular"
                         }                        
                     ]
                 }                       
