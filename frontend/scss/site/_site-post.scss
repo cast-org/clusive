@@ -59,6 +59,19 @@ $btn-themes: map-merge(
             "active-color": #111,
             "active-border-color": transparent
         ),
+        "nav":
+        (
+            "base": var(--CT_btnNavFocusRingRGB),
+            "bg": var(--CT_btnNavBg),
+            "color": var(--CT_btnNavColor),
+            "border-color": var(--CT_btnNavBorderColor),
+            "hover-bg": var(--CT_btnNavHoverBg),
+            "hover-color": var(--CT_btnNavHoverColor),
+            "hover-border-color": var(--CT_btnNavHoverBorderColor),
+            "active-bg": var(--CT_btnNavActiveBg),
+            "active-color": var(--CT_btnNavActiveColor),
+            "active-border-color": var(--CT_btnNavActiveBorderColor)
+        ),
         "setting":
         (
             "base": #40998b,

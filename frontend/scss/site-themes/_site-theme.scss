@@ -6,16 +6,32 @@
     --CT_linkColor: #{$link-color};
     --CT_linkHoverColor: #{$link-hover-color};
 
+    --CT_focusRingRGB: #{red($focus-ring-color), green($focus-ring-color), blue($focus-ring-color)};
+
+    --CT_skiplinkBg: #{$skiplink-bg};
+    --CT_skiplinkColor: #{$skiplink-color};
+    --CT_skiplinkBorderColor: #{$skiplink-border-color};
+
     --CT_headerBgStart: #{rgba($header-bg, $header-opacity-start)};
     --CT_headerBgEnd: #{rgba($header-bg, $header-opacity-end)};
     --CT_headerColor: #{$header-color};
 
     --CT_sidebarBgStart: #{rgba($sidebar-bg, $sidebar-opacity-start)};
     --CT_sidebarBgEnd: #{rgba($sidebar-bg, $sidebar-opacity-end)};
-    --CT_sidebarEndBgStart: #{rgba($sidebar-end-bg, $sidebar-end-opacity-end)};
+    --CT_sidebarEndBgStart: #{rgba($sidebar-end-bg, $sidebar-end-opacity-start)};
     --CT_sidebarEndBgEnd: #{rgba($sidebar-end-bg, $sidebar-end-opacity-end)};
 
-    --CT_btnNavColor: #{$btn-nav-color};
+    --CT_libraryBodyBg: #{$library-bg};
+    --CT_homeBodyBg: #{$home-bg};
 
-    --CT_libraryBodyBg: #{$body-bg};
+    --CT_btnNavFocusRingRGB: #{red($btn-nav-focus-ring), green($btn-nav-focus-ring), blue($btn-nav-focus-ring)};
+    --CT_btnNavBg: #{$btn-nav-bg};
+    --CT_btnNavColor: #{$btn-nav-color};
+    --CT_btnNavBorderColor: #{$btn-nav-border-color};
+    --CT_btnNavHoverBg: #{$btn-nav-hover-bg};
+    --CT_btnNavHoverColor: #{$btn-nav-hover-color};
+    --CT_btnNavHoverBorderColor: #{$btn-nav-hover-border-color};
+    --CT_btnNavActiveBg: #{$btn-nav-active-bg};
+    --CT_btnNavActiveColor: #{$btn-nav-active-color};
+    --CT_btnNavActiveBorderColor: #{$btn-nav-active-border-color};
 }

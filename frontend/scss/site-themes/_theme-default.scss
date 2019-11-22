@@ -3,13 +3,13 @@
 
 $theme-name:                            "";
 
-$body-bg:                               #fbfbfb;
+$body-bg:                               #fff;
 $body-color:                            #333;
 
 $link-color:                            #0d36ab;
 $link-hover-color:                      palette($link-color, 700);
 
-$focus-ring-bg:                         #636b82;
+$focus-ring-color:                      #636b82;
 
 $btn-focus-box-shadow-alpha:            .8;
 
@@ -21,25 +21,26 @@ $skiplink-border-color:                 $border-color;
 
 $library-bg:                            #72c0b2;
 
+$home-bg:                               #72c0b2;
+
 $header-bg:                             #636b82;
 $header-color:                          inherit;
-$header-opacity-start:                  .25;
+$header-opacity-start:                  .3;
 $header-opacity-end:                    0;
 
 $sidebar-bg:                            $header-bg;
 $sidebar-end-bg:                        $header-bg;
-$sidebar-opacity-start:                 .2;
-$sidebar-opacity-end:                   .25;
-$sidebar-end-opacity-start:             .5;
-$sidebar-end-opacity-end:               .75;
+$sidebar-opacity-start:                 .15;
+$sidebar-opacity-end:                   .3;
+$sidebar-end-opacity-start:             .7;
+$sidebar-end-opacity-end:               .9;
 
 // Buttons
-$btn-primary
-
+$btn-nav-focus-ring:                    #636b82;
 $btn-nav-bg:                            transparent;
 $btn-nav-color:                         #636b82;
 $btn-nav-border-color:                  transparent;
-$btn-nav-hover-bg:                      transparent
+$btn-nav-hover-bg:                      transparent;
 $btn-nav-hover-color:                   palette($btn-nav-color, 700);
 $btn-nav-hover-border-color:            transparent;
 $btn-nav-active-bg:                     transparent;

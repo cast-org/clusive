@@ -156,10 +156,15 @@ $font-family-sans-serif:                "Source Sans Pro", -apple-system, BlinkM
 
 $grid-row-columns:                      4;
 
+$btn-focus-box-shadow-size:             0 0 0 .1875rem;
+$btn-focus-box-shadow-alpha:            .85;
+$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
+$btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
+
 $input-bg:                              #fbfbfb;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
-$input-focus-box-shadow-alpha:          .9;
-$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(#40998b, $input-focus-box-shadow-alpha) !default;
+$input-focus-box-shadow-alpha:          .85;
+$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
 
 $form-group-margin-bottom:              .5rem;
 
