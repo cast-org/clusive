@@ -8,6 +8,4 @@ Dockerfile
 venv
 staticfiles
 db.sqlite3
-
-# Add back in when we move back to clean build dockerfile
-# node_modules
+node_modules
