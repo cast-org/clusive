@@ -69,13 +69,6 @@ module.exports = function (grunt) {
                     nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/readium-css"
-                },
-                {
-                    expand: true,
-                    cwd: "node_modules/popper.js/dist/",
-                    nonull: true,
-                    src: "**",
-                    dest: "shared/static/shared/js/lib/popper.js"
                 }]
             },
             frontendcss: {
