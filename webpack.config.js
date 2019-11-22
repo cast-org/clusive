@@ -5,7 +5,7 @@ module.exports = {
     mode: 'development',
     entry: {
         main: './index.js',
-        internal: './shared/static/shared/js/internal.js',
+        internal: './shared/static/shared/js/internal.js'
     },
     output: {
         filename: '[name].js',
@@ -18,5 +18,5 @@ module.exports = {
             figuration: "figuration/dist/js/figuration.min.js",
             "mark.js": "mark.js/dist/jquery.mark.min.js"
         }
-    },
+    }
 };
