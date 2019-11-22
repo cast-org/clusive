@@ -55,11 +55,13 @@ module.exports = function (grunt) {
                     dest: "shared/static/shared/js/lib/reader"
                 },
                 {
+                    // FIXME this seems like an odd place for this, leaving it where it was before
+                    // since I'm not sure where else it should go.
                     expand: true,
-                    cwd: "node_modules/@d-i-t-a/reader/viewer/fonts",
+                    cwd: "node_modules/open-dyslexic",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/reader/fonts"
+                    dest: "shared/static/shared/js/lib/reader/fonts/open-dyslexic"
                 },
                 {
                     expand: true,
@@ -67,13 +69,6 @@ module.exports = function (grunt) {
                     nonull: true,
                     src: "**",
                     dest: "shared/static/shared/js/lib/readium-css"
-                },
-                {
-                    expand: true,
-                    cwd: "node_modules/popper.js/dist/",
-                    nonull: true,
-                    src: "**",
-                    dest: "shared/static/shared/js/lib/popper.js"
                 }]
             },
             frontendcss: {

@@ -1,6 +1,6 @@
 # Clusive Django Web Application
 
-This repository contains the [Django-based](https://www.djangoproject.com/) "fall pilots" web application for the CISL project, Clusive.
+This repository contains the [Django-based](https://www.djangoproject.com/) "fall pilot" web application for the CISL project, Clusive.
 
 ## Quick Links for Further Reading
 
@@ -37,17 +37,6 @@ You'll need to activate the environment each time you're working on the project 
 * Front-end assets for infusion and figuration (CSS, etc) are copied to `shared\static\shared\js\lib\` in their own directories
 * The Django template at `shared\templates\shared\base.html` sets a Javascript global called `DJANGO_STATIC_ROOT` for the use of client-side Javascript needing to construct references to static content
 
-#### Notes on Readium dependencies
-
-Until the `@d-i-t-a/reader` repo is made public, you'll need to do the following to have the Readium code properly integrated and building:
-
-**Note**: This needs to be done after every run of `npm install`, because the install delinks any linked packages (see https://github.com/npm/npm/issues/17287)
-
-1. Check out a local copy of ` https://github.com/d-i-t-a/R2D2BC.git`, install / build it, and run `npm link` in that repo's directory
-2. Run `npm link @d-i-t-a/reader` in this repo's directory
-
-The above process creates a package link between this project's `node_modules` directory (in `@d-i-t-a/reader`) and the local directory containing the reader code, so it can be pulled in by the build scripts
-
 ### Install Python Dependencies
 
 * `pip install -r requirements.txt`
@@ -63,6 +52,7 @@ The current configuration (for development) uses sqlite3, so no database setup i
 * `python manage.py migrate`
 
 ### Create a superuser
+
 * `python manage.py createsuperuser`
 
 ### Basic Verification

@@ -1,0 +1,11 @@
+# Configure dependabot to make PRs against the development branch
+version: 1
+update_configs:
+  - package_manager: "javascript"
+    directory: "/"
+    update_schedule: "live"
+    target_branch: "development"
+  - package_manager: "python"
+    directory: "/"
+    update_schedule: "live"
+    target_branch: "development"
