@@ -1,5 +1,5 @@
 .library {
-    background-color: $library-bg;
+    background-color: var(--CT_libraryBodyBg);
 
     .content {
         @include media-breakpoint-down(sm) {
@@ -20,18 +20,6 @@
     .sidebar {
         flex-basis: 3rem;
         max-width: 3rem;
-        background-color: $library-sidebar-bg;
-        //background-image: none;
-    }
-
-    .sidebar-start {
-        .btn-link {
-            color: #434a5a;
-        }
-    }
-
-    .sidebar-end {
-        background-image: linear-gradient(180deg, $library-sidebar-end-bg, $library-sidebar-end-bg-alt);
     }
 
     .sidebar-tool {
@@ -46,17 +34,6 @@
                 height: 3rem;
                 margin-left: -1.5rem;
                 @include font-size(2.25rem);
-            }
-        }
-    }
-
-    .user-actions,
-    .site-footer {
-        a:not(.btn) {
-            color: #00399c;
-
-            @include hover() {
-                color: palette(#00399c, 700);
             }
         }
     }

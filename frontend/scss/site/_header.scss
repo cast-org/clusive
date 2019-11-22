@@ -6,9 +6,8 @@
     margin-right: -5rem;
     margin-bottom: 2rem;
     line-height: 1;
-    //pointer-events: none;
-    background-image: linear-gradient(90deg, rgba(#636b82, .5) 0%, rgba(#636b82, 0) 65%);
-    @include border-radius($sidebar-border-radius);
+    background: linear-gradient(90deg, var(--CT_headerBgStart) 0%, var(--CT_headerBgEnd) $header-opacity-stop);
+    @include border-radius($header-border-radius);
 
     @include media-breakpoint-up(md) {
         margin-bottom: 1rem;
@@ -28,7 +27,6 @@
     @include font-size(1.75rem);
     white-space: nowrap;
     vertical-align: middle;
-    //pointer-events: auto;
 
     .icon-logo-clusive-toggle {
         color: #fbfbfb;
@@ -49,7 +47,6 @@
     z-index: 0;
     padding: 1.125rem 1rem 1.125rem 5rem;
     margin-right: -4rem;
-    background-image: linear-gradient(90deg, rgba(#636b82, .25) 0%, rgba(#636b82, 0) 65%);
 
     .site-header-logo {
         @include font-size(1rem);
@@ -81,7 +78,6 @@
     right: 0;
     display: inline-block;
     @include font-size(.875rem);
-    //pointer-events: auto;
 
     @include media-breakpoint-down(sm) {
         top: 100%;

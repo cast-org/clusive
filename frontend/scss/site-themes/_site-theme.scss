@@ -1,0 +1,21 @@
+// stylelint-disable custom-property-empty-line-before
+#{$theme-name}:root {
+    --CT_bodyBg: #{$body-bg};
+    --CT_bodyColor: #{$body-color};
+
+    --CT_linkColor: #{$link-color};
+    --CT_linkHoverColor: #{$link-hover-color};
+
+    --CT_headerBgStart: #{rgba($header-bg, $header-opacity-start)};
+    --CT_headerBgEnd: #{rgba($header-bg, $header-opacity-end)};
+    --CT_headerColor: #{$header-color};
+
+    --CT_sidebarBgStart: #{rgba($sidebar-bg, $sidebar-opacity-start)};
+    --CT_sidebarBgEnd: #{rgba($sidebar-bg, $sidebar-opacity-end)};
+    --CT_sidebarEndBgStart: #{rgba($sidebar-end-bg, $sidebar-end-opacity-end)};
+    --CT_sidebarEndBgEnd: #{rgba($sidebar-end-bg, $sidebar-end-opacity-end)};
+
+    --CT_btnNavColor: #{$btn-nav-color};
+
+    --CT_libraryBodyBg: #{$body-bg};
+}

@@ -35,17 +35,6 @@
         }
     }
 
-    .user-actions,
-    .content,
-    .site-footer {
-        a:not(.btn) {
-            color: #00399c;
-
-            @include hover() {
-                color: palette(#00399c, 700);
-            }
-        }
-    }
 }
 
 .home-create {

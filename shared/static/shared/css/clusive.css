@@ -24,8 +24,8 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #111;
-  background-color: #fff;
+  color: var(--CT_textColor);
+  background-color: var(--CT_backgroundColor);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -157,12 +157,12 @@ sup {
 }
 
 a {
-  color: #b8330f;
+  color: var(--CT_linkColor);
   text-decoration: underline;
 }
 
 a:hover {
-  color: #81240b;
+  color: var(--CT_linkHoverColor);
   text-decoration: underline;
 }
 
@@ -523,7 +523,7 @@ template {
   font-weight: 400;
   line-height: 1.5;
   color: #424f5b;
-  background-color: #fbfbfb;
+  background-color: #fff;
   border: 1px solid #bfc6cd;
   border-radius: 0.5rem;
   box-shadow: 0 0 transparent;
@@ -543,10 +543,10 @@ template {
 
 .form-control:focus {
   color: #424f5b;
-  background-color: #fbfbfb;
+  background-color: #fff;
   border-color: #8cc2b9;
   outline: 0;
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .form-control::-webkit-input-placeholder {
@@ -586,7 +586,7 @@ template {
 select.form-control {
   padding-right: 1.875em;
   vertical-align: middle;
-  background: #fbfbfb url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='rgba(66, 79, 91, 0.85)' d='M3 0l-3 3h6l-3-3zm-3 5l3 3 3-3h-6z'/%3e%3c/svg%3e") no-repeat right 0.375em center;
+  background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='rgba(66, 79, 91, 0.85)' d='M3 0l-3 3h6l-3-3zm-3 5l3 3 3-3h-6z'/%3e%3c/svg%3e") no-repeat right 0.375em center;
   background-size: 0.75em 0.75em;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -605,7 +605,7 @@ select.form-control[size]:not([size="1"]), select.form-control[multiple] {
 
 select.form-control:focus::-ms-value {
   color: #424f5b;
-  background-color: #fbfbfb;
+  background-color: #fff;
 }
 
 select.form-control::-ms-expand {
@@ -1013,7 +1013,7 @@ textarea.form-control:not([rows="1"]) {
 
 .was-validated .form-control:valid:focus, .form-control.is-valid:focus {
   border-color: #0e8a16;
-  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.35);
 }
 
 .was-validated :valid ~ .form-check-label,
@@ -1031,7 +1031,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-check-input:valid:focus ~ .form-check-label::before, .form-check-input.is-valid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.35);
 }
 
 .was-validated .form-switch .form-check-input:valid ~ .form-check-label::before, .form-switch .form-check-input.is-valid ~ .form-check-label::before {
@@ -1055,7 +1055,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-switch .form-check-input:valid:focus ~ .form-check-label::before, .form-switch .form-check-input.is-valid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.35);
 }
 
 .invalid-feedback {
@@ -1077,7 +1077,7 @@ textarea.form-control:not([rows="1"]) {
 
 .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus {
   border-color: #d42314;
-  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.35);
 }
 
 .was-validated :invalid ~ .form-check-label,
@@ -1095,7 +1095,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-check-input:invalid:focus ~ .form-check-label::before, .form-check-input.is-invalid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.35);
 }
 
 .was-validated .form-switch .form-check-input:invalid ~ .form-check-label::before, .form-switch .form-check-input.is-invalid ~ .form-check-label::before {
@@ -1119,7 +1119,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-switch .form-check-input:invalid:focus ~ .form-check-label::before, .form-switch .form-check-input.is-invalid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.35);
 }
 
 .btn {
@@ -1173,7 +1173,7 @@ textarea.form-control:not([rows="1"]) {
 .btn:active:focus,
 .btn.active:focus,
 .btn.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
@@ -1193,7 +1193,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn:focus, .btn-check-input:focus ~ .btn {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn.disabled,
@@ -1214,7 +1214,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn:active:focus,
 .btn.active:focus,
 .btn.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-primary {
@@ -1230,7 +1230,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-primary:focus, .btn-check-input:focus ~ .btn-primary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-primary.disabled,
@@ -1251,7 +1251,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-primary:active:focus,
 .btn-primary.active:focus,
 .btn-primary.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-primary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-secondary {
@@ -1267,7 +1267,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-secondary:focus, .btn-check-input:focus ~ .btn-secondary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-secondary.disabled,
@@ -1288,7 +1288,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-secondary:active:focus,
 .btn-secondary.active:focus,
 .btn-secondary.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-secondary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-tertiary {
@@ -1304,7 +1304,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-tertiary:focus, .btn-check-input:focus ~ .btn-tertiary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-tertiary.disabled,
@@ -1325,7 +1325,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-tertiary:active:focus,
 .btn-tertiary.active:focus,
 .btn-tertiary.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-tertiary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-setting {
@@ -1341,7 +1341,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-setting:focus, .btn-check-input:focus ~ .btn-setting {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-setting.disabled,
@@ -1362,7 +1362,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-setting:active:focus,
 .btn-setting.active:focus,
 .btn-setting.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-setting {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-tool {
@@ -1378,7 +1378,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-tool:focus, .btn-check-input:focus ~ .btn-tool {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-tool.disabled,
@@ -1399,7 +1399,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-tool:active:focus,
 .btn-tool.active:focus,
 .btn-tool.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-tool {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-option {
@@ -1415,7 +1415,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-option:focus, .btn-check-input:focus ~ .btn-option {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-option.disabled,
@@ -1436,7 +1436,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-option:active:focus,
 .btn-option.active:focus,
 .btn-option.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-option {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-default {
@@ -1452,7 +1452,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-default:focus, .btn-check-input:focus ~ .btn-default {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-default.disabled,
@@ -1473,7 +1473,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-default:active:focus,
 .btn-default.active:focus,
 .btn-default.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-default {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-bbr {
@@ -1489,7 +1489,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-bbr:focus, .btn-check-input:focus ~ .btn-bbr {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-bbr.disabled,
@@ -1510,7 +1510,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-bbr:active:focus,
 .btn-bbr.active:focus,
 .btn-bbr.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-bbr {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-wb {
@@ -1526,7 +1526,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-wb:focus, .btn-check-input:focus ~ .btn-wb {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-wb.disabled,
@@ -1547,11 +1547,11 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-wb:active:focus,
 .btn-wb.active:focus,
 .btn-wb.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-wb {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.35);
 }
 
 .btn-link {
-  color: #b8330f;
+  color: var(--CT_linkColor);
   text-decoration: underline;
   background-color: transparent;
   border-color: transparent;
@@ -1566,7 +1566,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-link:hover {
-  color: #81240b;
+  color: var(--CT_linkHoverColor);
 }
 
 .btn-link:focus {
@@ -1575,14 +1575,14 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-link.disabled, .btn-link:disabled {
-  color: #b8330f;
+  color: var(--CT_linkColor);
   text-decoration: none;
   background-color: transparent;
   border-color: transparent;
 }
 
 .btn-link:active, .btn-link.active, .btn-link.open[data-cfw="dropdown"] {
-  color: #81240b;
+  color: var(--CT_linkHoverColor);
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;
@@ -3244,7 +3244,7 @@ button.list-item-action {
 }
 
 .modal-backdrop.in {
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 .modal-header {
@@ -3493,7 +3493,7 @@ button.list-item-action {
 
 .popover-body {
   padding: 0.5rem 0.75rem;
-  color: #111;
+  color: var(--CT_textColor);
 }
 
 .popover .close, .popover .drag {
@@ -3857,7 +3857,7 @@ button.list-item-action {
 .popover-footer {
   padding: 0.25rem 0.75rem;
   font-size: 0.875rem;
-  color: #111;
+  color: #333;
   background-color: #acfcef;
   border-top: 1px solid #e2e2e2;
   border-radius: 0 0 calc(0.5rem - 3px) calc(0.5rem - 3px);
@@ -4057,20 +4057,21 @@ button.list-item-action {
 
 .skiplink {
   position: absolute !important;
-  top: .25rem;
+  top: 0.25rem;
   left: 50%;
-  padding: .25rem .5rem;
-  color: #111;
+  z-index: 2;
+  padding: 0.25rem 0.5rem;
+  color: var(--CT_skiplinkColor);
   text-align: center;
   text-decoration: none;
-  background-color: #66faff;
-  border: 2px solid #111;
+  background-color: var(--CT_skiplinkBg);
+  border: 2px solid var(--CT_skiplinkBorderColor);
   outline: 0;
   transform: translateX(-50%);
 }
 
 .skiplink:hover {
-  color: #fff;
+  color: var(--CT_skiplinkColor);
 }
 
 .site-header {
@@ -4081,7 +4082,7 @@ button.list-item-action {
   margin-right: -5rem;
   margin-bottom: 2rem;
   line-height: 1;
-  background-image: linear-gradient(90deg, rgba(99, 107, 130, 0.5) 0%, rgba(99, 107, 130, 0) 65%);
+  background: linear-gradient(90deg, var(--CT_headerBgStart) 0%, var(--CT_headerBgEnd) 65%);
   border-radius: 0.5rem;
 }
 
@@ -4126,7 +4127,6 @@ button.list-item-action {
   z-index: 0;
   padding: 1.125rem 1rem 1.125rem 5rem;
   margin-right: -4rem;
-  background-image: linear-gradient(90deg, rgba(99, 107, 130, 0.25) 0%, rgba(99, 107, 130, 0) 65%);
 }
 
 .site-header-small .site-header-logo {
@@ -4287,7 +4287,7 @@ h3, .h3,
   justify-content: center;
   width: 3rem;
   padding: .75rem 0;
-  background-image: linear-gradient(180deg, rgba(99, 174, 161, 0.35) 0%, rgba(99, 174, 161, 0.5) 100%);
+  background: linear-gradient(180deg, var(--CT_sidebarBgStart) 0%, var(--CT_sidebarBgEnd) 100%);
   border-radius: 0.5rem;
 }
 
@@ -4353,7 +4353,7 @@ h3, .h3,
 .sidebar-end {
   order: 1;
   margin-left: 1rem;
-  background-image: linear-gradient(180deg, #5fb29f 0%, #429887 100%);
+  background: linear-gradient(180deg, var(--CT_sidebarEndBgStart) 0%, var(--CT_sidebarEndBgEnd) 100%);
 }
 
 .sidebar-tool {
@@ -4417,18 +4417,6 @@ h3, .h3,
   }
 }
 
-.home .user-actions a:not(.btn),
-.home .content a:not(.btn),
-.home .site-footer a:not(.btn) {
-  color: #00399c;
-}
-
-.home .user-actions a:not(.btn):hover,
-.home .content a:not(.btn):hover,
-.home .site-footer a:not(.btn):hover {
-  color: #00286d;
-}
-
 .home-create {
   padding-top: .5rem;
   margin-top: 1rem;
@@ -4467,15 +4455,10 @@ h3, .h3,
 .library .sidebar {
   flex-basis: 3rem;
   max-width: 3rem;
-  background-color: rgba(28, 84, 71, 0.35);
 }
 
 .library .sidebar-start .btn-link {
   color: #434a5a;
-}
-
-.library .sidebar-end {
-  background-image: linear-gradient(180deg, rgba(99, 107, 130, 0.8), #636b82);
 }
 
 .library .sidebar-tool .btn {
@@ -4492,16 +4475,6 @@ h3, .h3,
     margin-left: -1.5rem;
     font-size: 2.25rem;
   }
-}
-
-.library .user-actions a:not(.btn),
-.library .site-footer a:not(.btn) {
-  color: #00399c;
-}
-
-.library .user-actions a:not(.btn):hover,
-.library .site-footer a:not(.btn):hover {
-  color: #00286d;
 }
 
 .library-grid {
@@ -4859,4 +4832,18 @@ h3, .h3,
 
 .wordbank-prev {
   order: -1;
+}
+
+:root {
+  --CT_backgroundColor: #fbfbfb;
+  --CT_textColor: #333;
+  --CT_linkColor: #0d36ab;
+  --CT_linkHoverColor: #092678;
+  --CT_headerBgStart: rgba(99, 107, 130, 0.25);
+  --CT_headerBgEnd: rgba(99, 107, 130, 0);
+  --CT_headerColor: inherit;
+  --CT_sidebarBgStart: rgba(99, 107, 130, 0.2);
+  --CT_sidebarBgEnd: rgba(99, 107, 130, 0.25);
+  --CT_sidebarEndBgStart: rgba(99, 107, 130, 0.75);
+  --CT_sidebarEndBgEnd: rgba(99, 107, 130, 0.75);
 }

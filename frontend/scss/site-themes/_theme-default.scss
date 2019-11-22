@@ -1,0 +1,56 @@
+// Default theme is inherited by the base CSS
+// It should not include the import to build out theme!
+
+$theme-name:                            "";
+
+$body-bg:                               #fbfbfb;
+$body-color:                            #333;
+
+$link-color:                            #0d36ab;
+$link-hover-color:                      palette($link-color, 700);
+
+$focus-ring-bg:                         #636b82;
+
+$btn-focus-box-shadow-alpha:            .8;
+
+$border-color:                          #bfc6cd;
+
+$skiplink-bg:                           #66faff;
+$skiplink-color:                        $body-color;
+$skiplink-border-color:                 $border-color;
+
+$library-bg:                            #72c0b2;
+
+$header-bg:                             #636b82;
+$header-color:                          inherit;
+$header-opacity-start:                  .25;
+$header-opacity-end:                    0;
+
+$sidebar-bg:                            $header-bg;
+$sidebar-end-bg:                        $header-bg;
+$sidebar-opacity-start:                 .2;
+$sidebar-opacity-end:                   .25;
+$sidebar-end-opacity-start:             .5;
+$sidebar-end-opacity-end:               .75;
+
+// Buttons
+$btn-primary
+
+$btn-nav-bg:                            transparent;
+$btn-nav-color:                         #636b82;
+$btn-nav-border-color:                  transparent;
+$btn-nav-hover-bg:                      transparent
+$btn-nav-hover-color:                   palette($btn-nav-color, 700);
+$btn-nav-hover-border-color:            transparent;
+$btn-nav-active-bg:                     transparent;
+$btn-nav-active-color:                  palette($btn-nav-color, 700);
+$btn-nav-active-border-color:           transparent;
+
+
+// Texthelp overrides
+$readaloud-highlight-bg:                #fd6;
+$readaloud-highlight-color:             $body-color;
+
+// Build out theme via import
+// Note: Not used here since this is the base/default theme.
+@import "site-theme"
