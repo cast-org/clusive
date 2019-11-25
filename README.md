@@ -20,6 +20,8 @@ This repository contains the [Django-based](https://www.djangoproject.com/) "fal
 ### Create and activitate virtualenv for the project
 
 * Create: `virtualenv ENV`
+  - Or if appropriate, use [Intellij's support for virtualenv](https://www.jetbrains.com/help/idea/creating-virtual-environment.html)
+
 * Activate:
   - Windows: `.\ENV\Scripts\activate`
   - Mac/Linux: `source ENV/bin/activate`
