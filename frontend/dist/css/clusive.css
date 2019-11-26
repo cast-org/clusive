@@ -3991,6 +3991,11 @@ button.list-item-action {
   border-radius: 0.25rem;
 }
 
+.btn-nav [class^="icon-"]::before,
+.btn-nav [class*=" icon-"]::before {
+  font-size: 1.25em;
+}
+
 .btn-setting {
   text-shadow: 0.0625em 0.0625em 0 rgba(var(--CT_btnSettingTextShadowColorRGB), var(--CT_btnSettingTextShadowOpacity));
 }
@@ -4051,6 +4056,7 @@ button.list-item-action {
 
 .figure-caption {
   padding: 0.5rem;
+  color: var(--CT_figureCaptionColor);
   background-color: var(--CT_figureCaptionBg);
 }
 
@@ -4423,45 +4429,6 @@ h3, .h3,
   background-color: var(--CT_libraryBodyBg);
 }
 
-@media (max-width: 47.98em) {
-  .library .content {
-    max-width: calc(100vw - 7rem);
-  }
-}
-
-.library .site-header {
-  left: -4rem;
-  margin-right: -4rem;
-}
-
-@media (min-width: 48em) {
-  .library .site-header {
-    left: -5rem;
-    margin-right: -5rem;
-  }
-}
-
-.library .sidebar {
-  flex-basis: 3rem;
-  max-width: 3rem;
-}
-
-.library .sidebar-tool .btn {
-  width: 3.25rem;
-  height: 3.25rem;
-  margin-left: -2rem;
-  font-size: 2.5rem;
-}
-
-@media (max-width: 47.98em) {
-  .library .sidebar-tool .btn {
-    width: 3rem;
-    height: 3rem;
-    margin-left: -1.5rem;
-    font-size: 2.25rem;
-  }
-}
-
 .library-grid {
   display: flex;
   flex-flow: row wrap;
@@ -4476,7 +4443,7 @@ h3, .h3,
   flex-basis: auto;
   width: calc(100% - 2rem);
   margin-right: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.25rem;
   margin-left: 1rem;
 }
 
@@ -4667,7 +4634,6 @@ h3, .h3,
   margin-left: -.25rem;
   font-size: 0.75rem;
   text-decoration: none;
-  vertical-align: text-top;
 }
 
 .goal-speak > [class*="icon-"] {
@@ -4806,7 +4772,7 @@ h3, .h3,
 }
 
 :root {
-  --CT_bodyBg: #fff;
+  --CT_bodyBg: #fbfbfb;
   --CT_bodyColor: #333;
   --CT_linkColor: #0d36ab;
   --CT_linkHoverColor: #092678;
@@ -4819,8 +4785,8 @@ h3, .h3,
   --CT_headerColor: inherit;
   --CT_sidebarBgStart: rgba(99, 107, 130, 0.15);
   --CT_sidebarBgEnd: rgba(99, 107, 130, 0.3);
-  --CT_sidebarEndBgStart: rgba(99, 107, 130, 0.7);
-  --CT_sidebarEndBgEnd: rgba(99, 107, 130, 0.9);
+  --CT_sidebarEndBgStart: rgba(99, 107, 130, 0.6);
+  --CT_sidebarEndBgEnd: rgba(99, 107, 130, 0.8);
   --CT_libraryBodyBg: #72c0b2;
   --CT_homeBodyBg: #72c0b2;
   --CT_homeBodyCreateBorderColor: #636b82;
@@ -4828,10 +4794,11 @@ h3, .h3,
   --CT_cardBorderColor: #ebe6d2;
   --CT_cardImgBg: #70afa7;
   --CT_cardLibraryBoxShadowRGB: 251, 251, 251;
-  --CT_cardLoginBgRGB: 99, 107, 130;
-  --CT_cardLoginBgOpacity: 0.35;
+  --CT_cardLoginBgRGB: 172, 253, 240;
+  --CT_cardLoginBgOpacity: 0.3;
   --CT_cardLoginForgotBorderColor: #d3cfc9;
   --CT_figureCaptionBg: #ebe3d5;
+  --CT_figureCaptionColor: #5e7182;
   --CT_btnPrimaryFocusRingRGB: 99, 107, 130;
   --CT_btnPrimaryBg: #acfdf0;
   --CT_btnPrimaryColor: #111;
@@ -4916,6 +4883,167 @@ h3, .h3,
   --CT_modalHeaderColor: #333;
   --CT_modalHeaderBorderColor: #d3cfc9;
   --CT_modalFooterBg: #acfdf0;
+  --CT_modalFooterColor: #333;
+  --CT_modalFooterBorderColor: #d3cfc9;
+  --CT_modalSectionBorderColor: #d3cfc9;
+  --CT_settingBorderColor: #d3cfc9;
+  --CT_settingTitleColor: #666;
+  --CT_settingModalContentBg: #ebe3d5;
+  --CT_settingModalContentColor: #333;
+  --CT_settingModalContentBorderColor: #636b82;
+  --CT_settingModalHeaderBg: #d3cfc9;
+  --CT_settingModalHeaderBgRGB: 211, 207, 201;
+  --CT_settingModalHeaderBgOpacity: 0.7;
+  --CT_settingModalHeaderBorderColor: #d3cfc9;
+  --CT_settingModalFooterBg: transparent;
+  --CT_settingModalFooterBorderColor: #d3cfc9;
+  --CT_goalModalTitleColor: inherit;
+  --CT_goalModalSubtitleColor: inherit;
+  --CT_rankingBorderColor: #d3cfc9;
+  --CT_formCheckradioBorderColor: #636b82;
+  --CT_formCheckradioCheckedBg: #ff554d;
+  --CT_formCheckradioCheckedBorderColor: #ff554d;
+  --CT_formCheckradioFocusBorderColor: #636b82;
+  --CT_formCheckradioFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formCheckradioFocusBoxShadowOpacity: 0.85;
+  --CT_formCheckradioCheckedBoxShadowRGB: 99, 107, 130;
+  --CT_formCheckradioCheckedBoxShadowOpacity: 0.9;
+  --CT_formRangeTrackBg: #d3cfc9;
+  --CT_formRangeThumbBg: #ff554d;
+  --CT_formRangeThumbBoxShadowRGB: 99, 107, 130;
+  --CT_formRangeThumbBoxShadowOpacity: 0.9;
+  --CT_formRangeThumbFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formRangeThumbFocusBoxShadowOpacity: 0.85;
+  --CT_formRangeThumbActiveBg: #ff554d;
+  --CT_formSwitchTrackBg: #d3cfc9;
+  --CT_formSwitchTrackBorderColor: #636b82;
+  --CT_formSwitchTrackFocusBorderColor: #636b82;
+  --CT_formSwitchTrackFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchTrackFocusBoxShadowOpacity: 0.85;
+  --CT_formSwitchTrackCheckedBg: #ff554d;
+  --CT_formSwitchTrackCheckedBorderColor: #636b82;
+  --CT_formSwitchThumbBg: #fbfbfb;
+  --CT_formSwitchThumbBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchThumbBoxShadowOpacity: 0.9;
+  --CT_formSwitchThumbFocusBg: #fbfbfb;
+  --CT_formSwitchThumbCheckedBg: #fbfbfb;
+  --CT_formSwitchThumbCheckedBorderColor: #fbfbfb;
+  --CT_formSwitchThumbCheckedBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchThumbCheckedBoxShadowOpacity: 0.9;
+}
+
+.clusive-theme-sepia {
+  --CT_bodyBg: #faf4e8;
+  --CT_bodyColor: #333;
+  --CT_linkColor: #0d36ab;
+  --CT_linkHoverColor: #092678;
+  --CT_focusRingRGB: 99, 107, 130;
+  --CT_skiplinkBg: #66faff;
+  --CT_skiplinkColor: #333;
+  --CT_skiplinkBorderColor: #bfc6cd;
+  --CT_headerBgStart: rgba(176, 159, 136, 0.3);
+  --CT_headerBgEnd: rgba(176, 159, 136, 0);
+  --CT_headerColor: inherit;
+  --CT_sidebarBgStart: rgba(176, 159, 136, 0.15);
+  --CT_sidebarBgEnd: rgba(176, 159, 136, 0.3);
+  --CT_sidebarEndBgStart: rgba(176, 159, 136, 0.7);
+  --CT_sidebarEndBgEnd: rgba(176, 159, 136, 0.9);
+  --CT_libraryBodyBg: #faf4e8;
+  --CT_homeBodyBg: #faf4e8;
+  --CT_homeBodyCreateBorderColor: #636b82;
+  --CT_cardBg: #ebe6d2;
+  --CT_cardBorderColor: #ebe6d2;
+  --CT_cardImgBg: #70afa7;
+  --CT_cardLibraryBoxShadowRGB: 251, 251, 251;
+  --CT_cardLoginBgRGB: 99, 107, 130;
+  --CT_cardLoginBgOpacity: 0.35;
+  --CT_cardLoginForgotBorderColor: #d3cfc9;
+  --CT_figureCaptionBg: #ebe3d5;
+  --CT_figureCaptionColor: #666;
+  --CT_btnPrimaryFocusRingRGB: 99, 107, 130;
+  --CT_btnPrimaryBg: #a0abfd;
+  --CT_btnPrimaryColor: #111;
+  --CT_btnPrimaryBorderColor: transparent;
+  --CT_btnPrimaryHoverBg: #8e98e1;
+  --CT_btnPrimaryHoverColor: #111;
+  --CT_btnPrimaryHoverBorderColor: transparent;
+  --CT_btnPrimaryActiveBg: #828bce;
+  --CT_btnPrimaryActiveColor: #111;
+  --CT_btnPrimaryActiveBorderColor: transparent;
+  --CT_btnSecondaryFocusRingRGB: 99, 107, 130;
+  --CT_btnSecondaryBg: #ff554d;
+  --CT_btnSecondaryColor: #111;
+  --CT_btnSecondaryBorderColor: transparent;
+  --CT_btnSecondaryHoverBg: #ec4f47;
+  --CT_btnSecondaryHoverColor: #111;
+  --CT_btnSecondaryHoverBorderColor: transparent;
+  --CT_btnSecondaryActiveBg: #d94841;
+  --CT_btnSecondaryActiveColor: #000;
+  --CT_btnSecondaryActiveBorderColor: transparent;
+  --CT_btnNavFocusRingRGB: 99, 107, 130;
+  --CT_btnNavBg: transparent;
+  --CT_btnNavColor: #636b82;
+  --CT_btnNavBorderColor: transparent;
+  --CT_btnNavHoverBg: transparent;
+  --CT_btnNavHoverColor: #454b5b;
+  --CT_btnNavHoverBorderColor: transparent;
+  --CT_btnNavActiveBg: transparent;
+  --CT_btnNavActiveColor: #363b48;
+  --CT_btnNavActiveBorderColor: transparent;
+  --CT_btnSettingFocusRingRGB: 99, 107, 130;
+  --CT_btnSettingBg: rgba(250, 244, 232, 0.7);
+  --CT_btnSettingColor: #ff554d;
+  --CT_btnSettingBorderColor: transparent;
+  --CT_btnSettingHoverBg: rgba(250, 244, 232, 0.85);
+  --CT_btnSettingHoverColor: #ff554d;
+  --CT_btnSettingHoverBorderColor: transparent;
+  --CT_btnSettingActiveBg: #faf4e8;
+  --CT_btnSettingActiveColor: #ff554d;
+  --CT_btnSettingActiveBorderColor: transparent;
+  --CT_btnSettingTextShadowColorRGB: 99, 107, 130;
+  --CT_btnSettingTextShadowOpacity: 0.75;
+  --CT_btnToolFocusRingRGB: 99, 107, 130;
+  --CT_btnToolBg: rgba(250, 244, 232, 0.7);
+  --CT_btnToolColor: #636b82;
+  --CT_btnToolBorderColor: transparent;
+  --CT_btnToolHoverBg: rgba(250, 244, 232, 0.85);
+  --CT_btnToolHoverColor: #636b82;
+  --CT_btnToolHoverBorderColor: transparent;
+  --CT_btnToolActiveBg: #faf4e8;
+  --CT_btnToolActiveColor: #636b82;
+  --CT_btnToolActiveBorderColor: transparent;
+  --CT_btnOptionFocusRingRGB: 99, 107, 130;
+  --CT_btnOptionBg: #fff;
+  --CT_btnOptionColor: #333;
+  --CT_btnOptionBorderColor: transparent;
+  --CT_btnOptionHoverBg: #fff;
+  --CT_btnOptionHoverColor: #333;
+  --CT_btnOptionHoverBorderColor: #636b82;
+  --CT_btnOptionActiveBg: #ff554d;
+  --CT_btnOptionActiveColor: #111;
+  --CT_btnOptionActiveBorderColor: transparent;
+  --CT_btnOptionActiveBoxShadowRGB: 99, 107, 130;
+  --CT_btnOptionActiveBoxShadowOpacity: 0.9;
+  --CT_btnOptionActiveHoverBorderColor: #636b82;
+  --CT_popoverBg: #faf4e8;
+  --CT_popoverBorderColor: #636b82;
+  --CT_popoverHeaderBg: #a0abfd;
+  --CT_popoverHeaderColor: #333;
+  --CT_popoverHeaderBorderColor: #d3cfc9;
+  --CT_popoverBodyColor: #333;
+  --CT_popoverFooterBg: #a0abfd;
+  --CT_popoverFooterColor: #333;
+  --CT_popoverFooterBorderColor: #d3cfc9;
+  --CT_popoverSectionBorderColor: #d3cfc9;
+  --CT_modalBackdropBg: #343e48;
+  --CT_modalBackdropOpacity: 0.25;
+  --CT_modalContentBg: #faf4e8;
+  --CT_modalContentColor: #333;
+  --CT_modalContentBorderColor: #636b82;
+  --CT_modalHeaderBg: #a0abfd;
+  --CT_modalHeaderColor: #333;
+  --CT_modalHeaderBorderColor: #d3cfc9;
+  --CT_modalFooterBg: #a0abfd;
   --CT_modalFooterColor: #333;
   --CT_modalFooterBorderColor: #d3cfc9;
   --CT_modalSectionBorderColor: #d3cfc9;

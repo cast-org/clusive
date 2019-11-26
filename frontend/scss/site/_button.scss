@@ -1,3 +1,10 @@
+.btn-nav {
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        @include font-size(1.25em);
+    }
+}
+
 .btn-setting {
     text-shadow: .0625em .0625em 0 rgba(var(--CT_btnSettingTextShadowColorRGB), var(--CT_btnSettingTextShadowOpacity));
 

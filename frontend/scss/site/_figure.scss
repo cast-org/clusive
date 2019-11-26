@@ -1,4 +1,5 @@
 .figure-caption {
     padding: $figure-caption-padding;
-    background-color: $figure-caption-bg;
+    color: var(--CT_figureCaptionColor);
+    background-color: var(--CT_figureCaptionBg);
 }

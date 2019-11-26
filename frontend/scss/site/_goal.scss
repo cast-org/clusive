@@ -40,7 +40,7 @@
     margin-left: -.25rem;
     @include font-size(.75rem);
     text-decoration: none;
-    vertical-align: text-top;
+    //vertical-align: text-top;
 
     > [class*="icon-"] {
         @include font-size(1.5rem);

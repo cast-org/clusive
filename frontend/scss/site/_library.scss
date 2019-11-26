@@ -1,42 +1,5 @@
 .library {
     background-color: var(--CT_libraryBodyBg);
-
-    .content {
-        @include media-breakpoint-down(sm) {
-            max-width: calc(100vw - 7rem);
-        }
-    }
-
-    .site-header {
-        left: -4rem;
-        margin-right: -4rem;
-
-        @include media-breakpoint-up(md) {
-            left: -5rem;
-            margin-right: -5rem;
-        }
-    }
-
-    .sidebar {
-        flex-basis: 3rem;
-        max-width: 3rem;
-    }
-
-    .sidebar-tool {
-        .btn {
-            width: 3.25rem;
-            height: 3.25rem;
-            margin-left: -2rem;
-            @include font-size(2.5rem);
-
-            @include media-breakpoint-down(sm) {
-                width: 3rem;
-                height: 3rem;
-                margin-left: -1.5rem;
-                @include font-size(2.25rem);
-            }
-        }
-    }
 }
 
 .library-grid {
@@ -52,7 +15,7 @@
         flex-basis: auto;
         width: calc(100% - #{$library-grid-gutter});
         margin-right: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2.25rem;
         margin-left: 1rem;
 
 

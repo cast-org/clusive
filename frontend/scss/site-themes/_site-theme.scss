@@ -1,5 +1,8 @@
 // stylelint-disable custom-property-empty-line-before
-#{$theme-name}:root {
+//#{$theme-name}:root {
+@if ($theme-name == "") { $theme-name: ":root"; }
+
+#{$theme-name} {
     --CT_bodyBg: #{$body-bg};
     --CT_bodyColor: #{$body-color};
 
@@ -36,6 +39,7 @@
     --CT_cardLoginForgotBorderColor: #{$card-login-forgot-border-color};
 
     --CT_figureCaptionBg: #{$figure-caption-bg};
+    --CT_figureCaptionColor: #{$figure-caption-color};
 
     --CT_btnPrimaryFocusRingRGB: #{red($btn-primary-focus-ring), green($btn-primary-focus-ring), blue($btn-primary-focus-ring)};
     --CT_btnPrimaryBg: #{$btn-primary-bg};
