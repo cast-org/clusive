@@ -9,6 +9,8 @@ $link-hover-color:                      palette($link-color, 700);
 
 $focus-ring-color:                      #636b82;
 
+$selection-bg:                          #acfdf0;
+
 $btn-focus-box-shadow-alpha:            .8;
 
 $border-color:                          #bfc6cd;
@@ -26,6 +28,7 @@ $header-bg:                             #b09f88;
 $header-color:                          inherit;
 $header-opacity-start:                  .3;
 $header-opacity-end:                    0;
+$page-title-border-color:               #a0abfd;
 
 $sidebar-bg:                            $header-bg;
 $sidebar-end-bg:                        $header-bg;
@@ -41,9 +44,9 @@ $figure-caption-color:                  #666;
 // Cards
 $card-bg:                               #ebe6d2;
 $card-border-color:                     #ebe6d2;
-$card-img-bg:                           #70afa7;
+$card-img-bg:                           rgba(#b09f88, .3);
 $card-library-box-shadow:               #fbfbfb;
-$card-login-bg:                         #acfdf0;
+$card-login-bg:                         #b09f88;
 $card-login-bg-opacity:                 .3;
 $card-login-forgot-border-color:        #d3cfc9;
 
@@ -72,7 +75,7 @@ $btn-secondary-active-border-color:     transparent;
 
 $btn-nav-focus-ring:                    #636b82;
 $btn-nav-bg:                            transparent;
-$btn-nav-color:                         #636b82;
+$btn-nav-color:                         #6e6355;
 $btn-nav-border-color:                  transparent;
 $btn-nav-hover-bg:                      $btn-nav-bg;
 $btn-nav-hover-color:                   palette($btn-nav-color, 700);
@@ -96,7 +99,7 @@ $btn-setting-text-shadow-opacity:       .75;
 
 $btn-tool-focus-ring:                   #636b82;
 $btn-tool-bg:                           rgba(#faf4e8, .7);
-$btn-tool-color:                        #636b82;
+$btn-tool-color:                        #6e6355;
 $btn-tool-border-color:                 transparent;
 $btn-tool-hover-bg:                     rgba(#faf4e8, .85);
 $btn-tool-hover-color:                  $btn-tool-color;
@@ -200,6 +203,10 @@ $form-switch-thumb-checked-bg:              #fbfbfb;
 $form-switch-thumb-checked-border-color:    #fbfbfb;
 $form-switch-thumb-checked-box-shadow-color:    #636b82;
 $form-switch-thumb-checked-box-shadow-opacity:  .9;
+
+// Word bank
+$wordbank-border-color:                 #d3cfc9;
+$wordbank-col-bg:                       #ebe3d5;
 
 // Texthelp overrides
 $readaloud-highlight-bg:                #fd6;

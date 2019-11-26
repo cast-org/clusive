@@ -1,5 +1,6 @@
 function themeControls() {
     'use strict';
+
     var html = '<div style="position: fixed; bottom: .25rem; left: 50%; z-index: 2000; transform: translateX(-50%); background: #ddd; padding: 0 .5rem; border: 2px solid #666;">';
     html += '<a href="#" onclick="return themeCSS();">Default</a> |';
     html += '<a href="#" onclick="return themeCSS(\'sepia\');">Sepia</a> |';
@@ -10,10 +11,13 @@ function themeControls() {
 
 function themeCSS(name) {
     'use strict';
+
     var $body = $(document.body);
-    $body.attr('class', function(i, c){
-        return c.replace(/(^|\s)clusive-theme-\S+/g, '');
-    });
+    if (typeof $body.attr('class') !== 'undefined') {
+        $body.attr('class', function(i, c){
+            return c.replace(/(^|\s)clusive-theme-\S+/g, '');
+        });
+    }
     $('#themeCSS').remove();
     if (typeof name != 'undefined') {
         $body.addClass('clusive-theme-' + name);
@@ -23,5 +27,6 @@ function themeCSS(name) {
 
 $(window).ready(function() {
     'use strict';
+
     themeControls();
 });

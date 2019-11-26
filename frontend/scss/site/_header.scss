@@ -1,9 +1,9 @@
 .site-header {
     position: relative;
-    left: -5rem;
+    left: -6rem;
     z-index: 1;
     padding: 1.375rem 1rem;
-    margin-right: -5rem;
+    margin-right: -6rem;
     margin-bottom: 2rem;
     line-height: 1;
     background: linear-gradient(90deg, var(--CT_headerBgStart) 0%, var(--CT_headerBgEnd) $header-opacity-stop);
@@ -18,7 +18,7 @@
         margin-bottom: 0;
         margin-left: 1rem;
         vertical-align: middle;
-        border-bottom: 3px solid #66faff;
+        border-bottom: 3px solid var(--CT_pageTitleBorderColor);
     }
 }
 

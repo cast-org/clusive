@@ -4081,10 +4081,10 @@ button.list-item-action {
 
 .site-header {
   position: relative;
-  left: -5rem;
+  left: -6rem;
   z-index: 1;
   padding: 1.375rem 1rem;
-  margin-right: -5rem;
+  margin-right: -6rem;
   margin-bottom: 2rem;
   line-height: 1;
   background: linear-gradient(90deg, var(--CT_headerBgStart) 0%, var(--CT_headerBgEnd) 65%);
@@ -4102,7 +4102,7 @@ button.list-item-action {
   margin-bottom: 0;
   margin-left: 1rem;
   vertical-align: middle;
-  border-bottom: 3px solid #66faff;
+  border-bottom: 3px solid var(--CT_pageTitleBorderColor);
 }
 
 .site-header-logo {
@@ -4181,6 +4181,14 @@ button.list-item-action {
   padding-bottom: 1rem;
   margin-top: 2rem;
   border-top: 3px solid rgba(99, 107, 130, 0.25);
+}
+
+::-moz-selection {
+  background-color: var(--CT_selectionBg);
+}
+
+::selection {
+  background-color: var(--CT_selectionBg);
 }
 
 body {
@@ -4667,7 +4675,7 @@ h3, .h3,
   display: flex;
   flex-wrap: nowrap;
   width: 100%;
-  border-bottom: 3px solid #bfc6cd;
+  border-bottom: 3px solid var(--CT_wordbankBorderColor);
 }
 
 .wordbank-header::after {
@@ -4684,11 +4692,11 @@ h3, .h3,
 .wordbank-col {
   flex: 1 0 25%;
   align-self: stretch;
-  border-left: 2px solid #bfc6cd;
+  border-left: 2px solid var(--CT_wordbankBorderColor);
 }
 
 .wordbank-col:nth-child(1), .wordbank-col:nth-child(3) {
-  background-color: #eff1f3;
+  background-color: var(--CT_wordbankColBg);
 }
 
 .wordbank-title {
@@ -4777,12 +4785,14 @@ h3, .h3,
   --CT_linkColor: #0d36ab;
   --CT_linkHoverColor: #092678;
   --CT_focusRingRGB: 99, 107, 130;
+  --CT_selectionBg: #acfdf0;
   --CT_skiplinkBg: #66faff;
   --CT_skiplinkColor: #333;
   --CT_skiplinkBorderColor: #bfc6cd;
   --CT_headerBgStart: rgba(99, 107, 130, 0.3);
   --CT_headerBgEnd: rgba(99, 107, 130, 0);
   --CT_headerColor: inherit;
+  --CT_pageTitleBorderColor: #acfdf0;
   --CT_sidebarBgStart: rgba(99, 107, 130, 0.15);
   --CT_sidebarBgEnd: rgba(99, 107, 130, 0.3);
   --CT_sidebarEndBgStart: rgba(99, 107, 130, 0.6);
@@ -4792,13 +4802,13 @@ h3, .h3,
   --CT_homeBodyCreateBorderColor: #636b82;
   --CT_cardBg: #ebe6d2;
   --CT_cardBorderColor: #ebe6d2;
-  --CT_cardImgBg: #70afa7;
+  --CT_cardImgBg: rgba(99, 107, 130, 0.3);
   --CT_cardLibraryBoxShadowRGB: 251, 251, 251;
   --CT_cardLoginBgRGB: 172, 253, 240;
   --CT_cardLoginBgOpacity: 0.3;
   --CT_cardLoginForgotBorderColor: #d3cfc9;
   --CT_figureCaptionBg: #ebe3d5;
-  --CT_figureCaptionColor: #5e7182;
+  --CT_figureCaptionColor: #666;
   --CT_btnPrimaryFocusRingRGB: 99, 107, 130;
   --CT_btnPrimaryBg: #acfdf0;
   --CT_btnPrimaryColor: #111;
@@ -4930,6 +4940,8 @@ h3, .h3,
   --CT_formSwitchThumbCheckedBorderColor: #fbfbfb;
   --CT_formSwitchThumbCheckedBoxShadowRGB: 99, 107, 130;
   --CT_formSwitchThumbCheckedBoxShadowOpacity: 0.9;
+  --CT_wordbankBorderColor: #d3cfc9;
+  --CT_wordbankColBg: #ebe3d5;
 }
 
 .clusive-theme-sepia {
@@ -4938,25 +4950,27 @@ h3, .h3,
   --CT_linkColor: #0d36ab;
   --CT_linkHoverColor: #092678;
   --CT_focusRingRGB: 99, 107, 130;
+  --CT_selectionBg: #acfdf0;
   --CT_skiplinkBg: #66faff;
   --CT_skiplinkColor: #333;
   --CT_skiplinkBorderColor: #bfc6cd;
   --CT_headerBgStart: rgba(176, 159, 136, 0.3);
   --CT_headerBgEnd: rgba(176, 159, 136, 0);
   --CT_headerColor: inherit;
+  --CT_pageTitleBorderColor: #a0abfd;
   --CT_sidebarBgStart: rgba(176, 159, 136, 0.15);
   --CT_sidebarBgEnd: rgba(176, 159, 136, 0.3);
-  --CT_sidebarEndBgStart: rgba(176, 159, 136, 0.7);
-  --CT_sidebarEndBgEnd: rgba(176, 159, 136, 0.9);
+  --CT_sidebarEndBgStart: rgba(176, 159, 136, 0.6);
+  --CT_sidebarEndBgEnd: rgba(176, 159, 136, 0.8);
   --CT_libraryBodyBg: #faf4e8;
   --CT_homeBodyBg: #faf4e8;
   --CT_homeBodyCreateBorderColor: #636b82;
   --CT_cardBg: #ebe6d2;
   --CT_cardBorderColor: #ebe6d2;
-  --CT_cardImgBg: #70afa7;
+  --CT_cardImgBg: rgba(176, 159, 136, 0.3);
   --CT_cardLibraryBoxShadowRGB: 251, 251, 251;
-  --CT_cardLoginBgRGB: 99, 107, 130;
-  --CT_cardLoginBgOpacity: 0.35;
+  --CT_cardLoginBgRGB: 176, 159, 136;
+  --CT_cardLoginBgOpacity: 0.3;
   --CT_cardLoginForgotBorderColor: #d3cfc9;
   --CT_figureCaptionBg: #ebe3d5;
   --CT_figureCaptionColor: #666;
@@ -4982,13 +4996,13 @@ h3, .h3,
   --CT_btnSecondaryActiveBorderColor: transparent;
   --CT_btnNavFocusRingRGB: 99, 107, 130;
   --CT_btnNavBg: transparent;
-  --CT_btnNavColor: #636b82;
+  --CT_btnNavColor: #6e6355;
   --CT_btnNavBorderColor: transparent;
   --CT_btnNavHoverBg: transparent;
-  --CT_btnNavHoverColor: #454b5b;
+  --CT_btnNavHoverColor: #4d453c;
   --CT_btnNavHoverBorderColor: transparent;
   --CT_btnNavActiveBg: transparent;
-  --CT_btnNavActiveColor: #363b48;
+  --CT_btnNavActiveColor: #3d362f;
   --CT_btnNavActiveBorderColor: transparent;
   --CT_btnSettingFocusRingRGB: 99, 107, 130;
   --CT_btnSettingBg: rgba(250, 244, 232, 0.7);
@@ -5004,13 +5018,13 @@ h3, .h3,
   --CT_btnSettingTextShadowOpacity: 0.75;
   --CT_btnToolFocusRingRGB: 99, 107, 130;
   --CT_btnToolBg: rgba(250, 244, 232, 0.7);
-  --CT_btnToolColor: #636b82;
+  --CT_btnToolColor: #6e6355;
   --CT_btnToolBorderColor: transparent;
   --CT_btnToolHoverBg: rgba(250, 244, 232, 0.85);
-  --CT_btnToolHoverColor: #636b82;
+  --CT_btnToolHoverColor: #6e6355;
   --CT_btnToolHoverBorderColor: transparent;
   --CT_btnToolActiveBg: #faf4e8;
-  --CT_btnToolActiveColor: #636b82;
+  --CT_btnToolActiveColor: #6e6355;
   --CT_btnToolActiveBorderColor: transparent;
   --CT_btnOptionFocusRingRGB: 99, 107, 130;
   --CT_btnOptionBg: #fff;
@@ -5091,4 +5105,6 @@ h3, .h3,
   --CT_formSwitchThumbCheckedBorderColor: #fbfbfb;
   --CT_formSwitchThumbCheckedBoxShadowRGB: 99, 107, 130;
   --CT_formSwitchThumbCheckedBoxShadowOpacity: 0.9;
+  --CT_wordbankBorderColor: #d3cfc9;
+  --CT_wordbankColBg: #ebe3d5;
 }

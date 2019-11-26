@@ -9,6 +9,8 @@ $link-hover-color:                      palette($link-color, 700);
 
 $focus-ring-color:                      #636b82;
 
+$selection-bg:                          #acfdf0;
+
 $btn-focus-box-shadow-alpha:            .8;
 
 $border-color:                          #bfc6cd;
@@ -26,6 +28,7 @@ $header-bg:                             #636b82;
 $header-color:                          inherit;
 $header-opacity-start:                  .3;
 $header-opacity-end:                    0;
+$page-title-border-color:               #acfdf0;
 
 $sidebar-bg:                            $header-bg;
 $sidebar-end-bg:                        $header-bg;
@@ -41,7 +44,7 @@ $figure-caption-color:                  #666;
 // Cards
 $card-bg:                               #ebe6d2;
 $card-border-color:                     #ebe6d2;
-$card-img-bg:                           #70afa7;
+$card-img-bg:                           rgba(#636b82, .3);
 $card-library-box-shadow:               #fbfbfb;
 $card-login-bg:                         #acfdf0;
 $card-login-bg-opacity:                 .3;
@@ -200,6 +203,10 @@ $form-switch-thumb-checked-bg:              #fbfbfb;
 $form-switch-thumb-checked-border-color:    #fbfbfb;
 $form-switch-thumb-checked-box-shadow-color:    #636b82;
 $form-switch-thumb-checked-box-shadow-opacity:  .9;
+
+// Word bank
+$wordbank-border-color:                 #d3cfc9;
+$wordbank-col-bg:                       #ebe3d5;
 
 // Texthelp overrides
 $readaloud-highlight-bg:                #fd6;

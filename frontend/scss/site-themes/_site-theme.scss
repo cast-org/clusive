@@ -11,6 +11,8 @@
 
     --CT_focusRingRGB: #{red($focus-ring-color), green($focus-ring-color), blue($focus-ring-color)};
 
+    --CT_selectionBg: #{$selection-bg};
+
     --CT_skiplinkBg: #{$skiplink-bg};
     --CT_skiplinkColor: #{$skiplink-color};
     --CT_skiplinkBorderColor: #{$skiplink-border-color};
@@ -18,6 +20,7 @@
     --CT_headerBgStart: #{rgba($header-bg, $header-opacity-start)};
     --CT_headerBgEnd: #{rgba($header-bg, $header-opacity-end)};
     --CT_headerColor: #{$header-color};
+    --CT_pageTitleBorderColor: #{$page-title-border-color};
 
     --CT_sidebarBgStart: #{rgba($sidebar-bg, $sidebar-opacity-start)};
     --CT_sidebarBgEnd: #{rgba($sidebar-bg, $sidebar-opacity-end)};
@@ -186,4 +189,7 @@
     --CT_formSwitchThumbCheckedBorderColor: #{$form-switch-thumb-checked-border-color};
     --CT_formSwitchThumbCheckedBoxShadowRGB: #{red($form-switch-thumb-checked-box-shadow-color), green($form-switch-thumb-checked-box-shadow-color), blue($form-switch-thumb-checked-box-shadow-color)};
     --CT_formSwitchThumbCheckedBoxShadowOpacity: #{$form-switch-thumb-checked-box-shadow-opacity};
+
+    --CT_wordbankBorderColor: #{$wordbank-border-color};
+    --CT_wordbankColBg: #{$wordbank-col-bg};
 }
