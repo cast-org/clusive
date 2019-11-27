@@ -10,11 +10,20 @@
         gradeNames: ["fluid.prefs.auxSchema.starter"],
         mergePolicy: {
             "auxiliarySchema.tableOfContents": "replace",
-            "auxiliarySchema.enhanceInputs": "replace"
+            "auxiliarySchema.enhanceInputs": "replace",
+            "auxiliarySchema.enhanceInputs.classes": "replace"            
         },
         auxiliarySchema: {
             "tableOfContents": null,
-            "enhanceInputs": null,       
+            "enhanceInputs": null,
+            "contrast": {
+                "classes": {
+                    "default": "clusive-theme-default",
+                    "night": "clusive-theme-night",
+                    "sepia": "clusive-theme-sepia"
+                },
+                "panel": null
+            }
         }
     });
 
@@ -26,7 +35,7 @@
             "fluid.prefs.contrast": {
                 "type": "string",
                 "default": "default",
-                "enum": ["default", "bw", "wb", "lgdg", "gw", "bbr"]
+                "enum": ["default", "night", "sepia"]
             }
         }
     });
