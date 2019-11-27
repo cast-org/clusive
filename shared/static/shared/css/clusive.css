@@ -1476,77 +1476,77 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
-.btn-bbr {
-  color: #000;
-  background-color: #b96 !important;
+.btn-night {
+  color: #FEFEFE;
+  background-color: #000000 !important;
   border-color: #7e8aad;
 }
 
-.btn-bbr:hover {
-  color: #000;
-  background-color: #ded9c4 !important;
+.btn-night:hover {
+  color: #FEFEFE;
+  background-color: #000000 !important;
   border-color: #40998b;
 }
 
-.btn-bbr:focus, .btn-check-input:focus ~ .btn-bbr {
+.btn-night:focus, .btn-check-input:focus ~ .btn-night {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
-.btn-bbr.disabled,
-.btn-bbr:disabled, .btn-check-input[disabled] ~ .btn-bbr {
-  color: #000;
-  background-color: #b96 !important;
+.btn-night.disabled,
+.btn-night:disabled, .btn-check-input[disabled] ~ .btn-night {
+  color: #FEFEFE;
+  background-color: #000000 !important;
   border-color: #7e8aad;
 }
 
-.btn-bbr:active,
-.btn-bbr.active,
-.btn-bbr.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-bbr {
-  color: #000;
-  background-color: #b96 !important;
+.btn-night:active,
+.btn-night.active,
+.btn-night.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-night {
+  color: #FEFEFE;
+  background-color: #000000 !important;
   border-color: #7e8aad;
 }
 
-.btn-bbr:active:focus,
-.btn-bbr.active:focus,
-.btn-bbr.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-bbr {
+.btn-night:active:focus,
+.btn-night.active:focus,
+.btn-night.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-night {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
-.btn-wb {
-  color: #fff;
-  background-color: #000 !important;
+.btn-sepia {
+  color: #121212;
+  background-color: #faf4e8 !important;
   border-color: transparent;
 }
 
-.btn-wb:hover {
-  color: #fff;
-  background-color: #000 !important;
+.btn-sepia:hover {
+  color: #121212;
+  background-color: #faf4e8 !important;
   border-color: #40998b;
 }
 
-.btn-wb:focus, .btn-check-input:focus ~ .btn-wb {
+.btn-sepia:focus, .btn-check-input:focus ~ .btn-sepia {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
-.btn-wb.disabled,
-.btn-wb:disabled, .btn-check-input[disabled] ~ .btn-wb {
-  color: #fff;
-  background-color: #000 !important;
+.btn-sepia.disabled,
+.btn-sepia:disabled, .btn-check-input[disabled] ~ .btn-sepia {
+  color: #121212;
+  background-color: #faf4e8 !important;
   border-color: transparent;
 }
 
-.btn-wb:active,
-.btn-wb.active,
-.btn-wb.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-wb {
-  color: #fff;
-  background-color: #000 !important;
+.btn-sepia:active,
+.btn-sepia.active,
+.btn-sepia.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-sepia {
+  color: #121212;
+  background-color: #faf4e8 !important;
   border-color: transparent;
 }
 
-.btn-wb:active:focus,
-.btn-wb.active:focus,
-.btn-wb.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-wb {
+.btn-sepia:active:focus,
+.btn-sepia.active:focus,
+.btn-sepia.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-sepia {
   box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
 }
 
@@ -4011,11 +4011,11 @@ button.list-item-action {
 .btn-option.active,
 .btn-option.open[data-cfw="dropdown"], .btn-default:active,
 .btn-default.active,
-.btn-default.open[data-cfw="dropdown"], .btn-bbr:active,
-.btn-bbr.active,
-.btn-bbr.open[data-cfw="dropdown"], .btn-wb:active,
-.btn-wb.active,
-.btn-wb.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-option, .btn-check-input:not([disabled]):checked ~ .btn-default, .btn-check-input:not([disabled]):checked ~ .btn-bbr, .btn-check-input:not([disabled]):checked ~ .btn-wb {
+.btn-default.open[data-cfw="dropdown"], .btn-night:active,
+.btn-night.active,
+.btn-night.open[data-cfw="dropdown"], .btn-sepia:active,
+.btn-sepia.active,
+.btn-sepia.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-option, .btn-check-input:not([disabled]):checked ~ .btn-default, .btn-check-input:not([disabled]):checked ~ .btn-night, .btn-check-input:not([disabled]):checked ~ .btn-sepia {
   box-shadow: 0 0 transparent, 0.1875rem 0.1875rem 0 0.025rem rgba(64, 153, 139, 0.9);
 }
 
@@ -4023,12 +4023,12 @@ button.list-item-action {
 .btn-default:active:hover,
 .btn-default.active:hover,
 .btn-default.open[data-cfw="dropdown"]:hover,
-.btn-bbr:active:hover,
-.btn-bbr.active:hover,
-.btn-bbr.open[data-cfw="dropdown"]:hover,
-.btn-wb:active:hover,
-.btn-wb.active:hover,
-.btn-wb.open[data-cfw="dropdown"]:hover, .btn-check-input:not([disabled]):checked:hover ~ .btn-option, .btn-check-input:not([disabled]):checked:hover ~ .btn-default, .btn-check-input:not([disabled]):checked:hover ~ .btn-bbr, .btn-check-input:not([disabled]):checked:hover ~ .btn-wb {
+.btn-night:active:hover,
+.btn-night.active:hover,
+.btn-night.open[data-cfw="dropdown"]:hover,
+.btn-sepia:active:hover,
+.btn-sepia.active:hover,
+.btn-sepia.open[data-cfw="dropdown"]:hover, .btn-check-input:not([disabled]):checked:hover ~ .btn-option, .btn-check-input:not([disabled]):checked:hover ~ .btn-default, .btn-check-input:not([disabled]):checked:hover ~ .btn-night, .btn-check-input:not([disabled]):checked:hover ~ .btn-sepia {
   border-color: #40998b;
 }
 
