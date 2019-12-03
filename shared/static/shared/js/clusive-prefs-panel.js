@@ -57,38 +57,6 @@
         }
     });
 
-    fluid.defaults("cisl.prefs.auxSchema.glossary.demo", {
-        gradeNames: ["cisl.prefs.auxSchema.glossary"],
-        auxiliarySchema: {
-            glossary: {
-                panel: {
-                    template: DJANGO_STATIC_ROOT + "shared/html/PrefsEditorTemplate-glossaryToggle.html",
-                    message: DJANGO_STATIC_ROOT + "shared/messages/glossary.json"
-                },
-                enactor: {
-                    type: "cisl.prefs.enactor.glossary.demo"
-                }
-            }
-        }
-    });
-
-    fluid.defaults("cisl.prefs.enactor.glossary.demo", {
-        gradeNames: ["cisl.prefs.enactor.glossary"],
-        invokers: {
-            applyGlossary: {
-                funcName: "cisl.prefs.enactor.glossary.demo.applyGlossary",
-                args: ["{arguments}.0",
-                "{that}"
-                ]
-            }
-        }
-    });
-
-    cisl.prefs.enactor.glossary.demo.applyGlossary = function(enableGlossary, that) {        
-        // Apply glossary step
-        cisl.prefs.enactor.glossary.applyGlossary(enableGlossary, that);
-    };
-
     fluid.defaults("cisl.prefs.modalSettings", {
         gradeNames: ["gpii.binder.bindOnCreate"],
         listeners: {

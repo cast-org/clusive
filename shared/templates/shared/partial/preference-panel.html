@@ -29,21 +29,12 @@
     </div>
     <!-- END markup for Preference Editor -->
     <script>            
-        
-        {% if prefs_include_glossary %}
-        var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditor.html' %}";
-        var buildGradeNames =  [
-                            "cisl.prefs.auxSchema.starter", // starter set
-                            "cisl.prefs.auxSchema.glossary.demo", // glossary
-                            "fluid.prefs.auxSchema.letterSpace" // letter space                            
-                            ]
-        {% elif not prefs_include_glossary %}                            
+
         var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
         var buildGradeNames =  [
                             "cisl.prefs.auxSchema.starter", // starter set
                             "fluid.prefs.auxSchema.letterSpace", // letter space
-                            ]        
-        {% endif %}
+                            ]                
 
         var prefsEditor;
         $(document).ready(function () {            
