@@ -57,6 +57,15 @@
         }
     });
 
+    fluid.defaults("cisl.prefs.auxSchema.letterSpace", {
+        gradeNames: ["fluid.prefs.auxSchema.letterSpace"],
+        auxiliarySchema: {
+            letterSpace: {
+                panel: null
+            }
+        }
+    });
+
     fluid.defaults("cisl.prefs.modalSettings", {
         gradeNames: ["gpii.binder.bindOnCreate"],
         listeners: {
