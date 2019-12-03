@@ -1,11 +1,12 @@
-.btn-primary,
-.btn-secondary,
-.btn-tertiary {
-    font-weight: 700;
+.btn-nav {
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        @include font-size(1.25em);
+    }
 }
 
 .btn-setting {
-    text-shadow: .0625em .0625em 0 rgba(#5b7799, .75);
+    text-shadow: .0625em .0625em 0 rgba(var(--CT_btnSettingTextShadowColorRGB), var(--CT_btnSettingTextShadowOpacity));
 
     [class^="icon-"]::before,
     [class*=" icon-"]::before {
@@ -15,10 +16,10 @@
 }
 
 %btn-option-active {
-    box-shadow: $btn-active-box-shadow, .1875rem .1875rem 0 .025rem rgba(#40998b, .9);
+    box-shadow: $btn-active-box-shadow, .1875rem .1875rem 0 .025rem rgba(var(--CT_btnOptionActiveBoxShadowRGB), var(--CT_btnOptionActiveBoxShadowOpacity));
 }
 %btn-option-active-hover {
-    border-color: #40998b;
+    border-color: var(--CT_btnOptionActiveHoverBorderColor);
 }
 .btn-option,
 .btn-default,

@@ -2,16 +2,16 @@
     background-color: transparent !important;   // stylelint-disable-line declaration-no-important
 
     .modal-content {
-        background-color: $setting-modal-content-bg;
-        border-color: $setting-modal-content-border-color;
+        background-color: var(--CT_settingModalContentBg);
+        border-color: var(--CT_settingModalContentBorderColor);
     }
     .modal-header {
-        background-color: $setting-modal-header-bg;
-        border-bottom: $setting-modal-header-border-width solid $setting-modal-header-border-color;
+        background-color: rgba(var(--CT_settingModalHeaderBgRGB), var(--CT_settingModalHeaderBgOpacity));
+        border-bottom: $setting-modal-header-border-width solid var(--CT_settingModalHeaderBorderColor);
     }
     .modal-footer {
-        background-color: $setting-modal-footer-bg;
-        border-top: $setting-modal-footer-border-width solid $setting-modal-footer-border-color;
+        background-color: var(--CT_settingModalFooterBg);
+        border-top: $setting-modal-footer-border-width solid var(--CT_settingModalFooterBorderColor);
     }
     .modal-body {
         padding: 0;
@@ -21,7 +21,7 @@
     padding: $setting-padding;
 
     &:not(:first-of-type) {
-        border-top: $setting-border-width solid $setting-border-color;
+        border-top: $setting-border-width solid var(--CT_settingBorderColor);
     }
 }
 
@@ -29,7 +29,7 @@
     margin-bottom: $setting-title-margin-bottom;
     @include font-size($setting-title-font-size);
     font-weight: $setting-title-font-weight;
-    color: $setting-title-color;
+    color: var(--CT_settingTitleColor);
 }
 
 .setting-btn-row {
@@ -50,7 +50,7 @@
         display: inline-block;
         //stylelint-disable-next-line font-family-no-missing-generic-family-keyword
         font-family: Fontello;
-        color: #111;
+        color: inherit;
         content: "\e812";
     }
 

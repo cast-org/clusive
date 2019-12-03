@@ -118,9 +118,4 @@
     @include media-breakpoint-down (sm) {
         max-width: calc(100vw - 7.625rem);
     }
-
-    .figure-caption {
-        padding: .5rem;
-        background-color: #ebe6d2;
-    }
 }

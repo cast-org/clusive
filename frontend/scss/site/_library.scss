@@ -1,65 +1,5 @@
 .library {
-    background-color: $library-bg;
-
-    .content {
-        @include media-breakpoint-down(sm) {
-            max-width: calc(100vw - 7rem);
-        }
-    }
-
-    .site-header {
-        left: -4rem;
-        margin-right: -4rem;
-
-        @include media-breakpoint-up(md) {
-            left: -5rem;
-            margin-right: -5rem;
-        }
-    }
-
-    .sidebar {
-        flex-basis: 3rem;
-        max-width: 3rem;
-        background-color: $library-sidebar-bg;
-        //background-image: none;
-    }
-
-    .sidebar-start {
-        .btn-link {
-            color: #434a5a;
-        }
-    }
-
-    .sidebar-end {
-        background-image: linear-gradient(180deg, $library-sidebar-end-bg, $library-sidebar-end-bg-alt);
-    }
-
-    .sidebar-tool {
-        .btn {
-            width: 3.25rem;
-            height: 3.25rem;
-            margin-left: -2rem;
-            @include font-size(2.5rem);
-
-            @include media-breakpoint-down(sm) {
-                width: 3rem;
-                height: 3rem;
-                margin-left: -1.5rem;
-                @include font-size(2.25rem);
-            }
-        }
-    }
-
-    .user-actions,
-    .site-footer {
-        a:not(.btn) {
-            color: #00399c;
-
-            @include hover() {
-                color: palette(#00399c, 700);
-            }
-        }
-    }
+    background-color: var(--CT_libraryBodyBg);
 }
 
 .library-grid {
@@ -75,7 +15,7 @@
         flex-basis: auto;
         width: calc(100% - #{$library-grid-gutter});
         margin-right: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2.25rem;
         margin-left: 1rem;
 
 
@@ -89,7 +29,7 @@
 }
 
 .card-library {
-    box-shadow: -.125rem -.5rem 0 .125rem rgba(#fbfbfb, 1), -.125rem -.125rem 0 .125rem rgba(#fbfbfb, 1);
+    box-shadow: -.125rem -.5rem 0 .125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1), -.125rem -.125rem 0 .125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1);
 
     .link-stretch {
         color: inherit;

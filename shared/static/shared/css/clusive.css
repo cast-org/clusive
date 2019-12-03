@@ -24,8 +24,8 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #111;
-  background-color: #fff;
+  color: var(--CT_bodyColor);
+  background-color: var(--CT_bodyBg);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -157,12 +157,12 @@ sup {
 }
 
 a {
-  color: #b8330f;
+  color: var(--CT_linkColor);
   text-decoration: underline;
 }
 
 a:hover {
-  color: #81240b;
+  color: var(--CT_linkHoverColor);
   text-decoration: underline;
 }
 
@@ -523,7 +523,7 @@ template {
   font-weight: 400;
   line-height: 1.5;
   color: #424f5b;
-  background-color: #fbfbfb;
+  background-color: #fff;
   border: 1px solid #bfc6cd;
   border-radius: 0.5rem;
   box-shadow: 0 0 transparent;
@@ -543,10 +543,10 @@ template {
 
 .form-control:focus {
   color: #424f5b;
-  background-color: #fbfbfb;
+  background-color: #fff;
   border-color: #8cc2b9;
   outline: 0;
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_focusRingRGB), 0.85);
 }
 
 .form-control::-webkit-input-placeholder {
@@ -586,7 +586,7 @@ template {
 select.form-control {
   padding-right: 1.875em;
   vertical-align: middle;
-  background: #fbfbfb url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='rgba(66, 79, 91, 0.85)' d='M3 0l-3 3h6l-3-3zm-3 5l3 3 3-3h-6z'/%3e%3c/svg%3e") no-repeat right 0.375em center;
+  background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='rgba(66, 79, 91, 0.85)' d='M3 0l-3 3h6l-3-3zm-3 5l3 3 3-3h-6z'/%3e%3c/svg%3e") no-repeat right 0.375em center;
   background-size: 0.75em 0.75em;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -605,7 +605,7 @@ select.form-control[size]:not([size="1"]), select.form-control[multiple] {
 
 select.form-control:focus::-ms-value {
   color: #424f5b;
-  background-color: #fbfbfb;
+  background-color: #fff;
 }
 
 select.form-control::-ms-expand {
@@ -676,7 +676,7 @@ textarea.form-control:not([rows="1"]) {
   margin-left: -1.375em;
   content: "";
   background-color: #fff;
-  border: 1px solid #7e8aad;
+  border: 1px solid var(--CT_formCheckradioBorderColor);
   box-shadow: 0 0 transparent;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -701,17 +701,17 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .form-checkradio .form-check-input:focus ~ .form-check-label::before {
-  border-color: #40998b;
+  border-color: var(--CT_formCheckradioFocusBorderColor);
   outline: 0;
-  box-shadow: 0 0 0 0.1875rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(var(--CT_formCheckradioFocusBoxShadowRGB), var(--CT_formCheckradioFocusBoxShadowOpacity));
 }
 
 .form-checkradio .form-check-input:checked ~ .form-check-label::before {
-  background-color: #66faff;
+  background-color: var(--CT_formCheckradioCheckedBg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 0.625em;
-  border-color: #66faff;
+  border-color: var(--CT_formCheckradioCheckedBorderColor);
 }
 
 .form-checkradio .form-check-input[type="checkbox"]:checked ~ .form-check-label::before {
@@ -728,7 +728,7 @@ textarea.form-control:not([rows="1"]) {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 0.625em;
-  border-color: #66faff;
+  border-color: var(--CT_formCheckradioCheckedBorderColor);
 }
 
 .form-switch {
@@ -763,8 +763,8 @@ textarea.form-control:not([rows="1"]) {
   left: 0;
   width: 3rem;
   height: 1.75rem;
-  background-color: #ded9c4;
-  border: 1px solid #7e8aad;
+  background-color: var(--CT_formSwitchTrackBg);
+  border: 1px solid var(--CT_formSwitchTrackBorderColor);
   border-radius: 1.75rem;
   transform: translateY(0.75em) translateY(-0.875rem);
 }
@@ -774,10 +774,10 @@ textarea.form-control:not([rows="1"]) {
   left: calc(0.25em - 1px);
   width: 1.375em;
   height: 1.375em;
-  background-color: #fff;
-  border: 1px solid #fff;
+  background-color: var(--CT_formSwitchThumbBg);
+  border: 1px solid var(--CT_formSwitchThumbBg);
   border-radius: 50%;
-  box-shadow: 0.1875rem 0 0 0.025rem rgba(126, 138, 173, 0.9);
+  box-shadow: 0.1875rem 0 0 0.025rem rgba(var(--CT_formSwitchThumbBoxShadowRGB), var(--CT_formSwitchThumbBoxShadowOpacity));
   transform: translateY(0.75em) translateY(-0.6875em);
 }
 
@@ -787,26 +787,26 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .form-switch .form-check-input:focus ~ .form-check-label::before {
-  border-color: #40998b;
+  border-color: var(--CT_formSwitchTrackFocusBorderColor);
   outline: 0;
-  box-shadow: 0 0 0 0.1875rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(var(--CT_formSwitchTrackFocusBoxShadowRGB), var(--CT_formSwitchTrackFocusBoxShadowOpacity));
 }
 
 .form-switch .form-check-input:focus ~ .form-check-label::after {
-  background-color: #fff;
-  border-color: #fff;
+  background-color: var(--CT_formSwitchThumbFocusBg);
+  border-color: var(--CT_formSwitchThumbFocusBg);
   outline: 0;
 }
 
 .form-switch .form-check-input:checked ~ .form-check-label::before {
-  background-color: #66faff;
-  border-color: #40998b;
+  background-color: var(--CT_formSwitchTrackCheckedBg);
+  border-color: var(--CT_formSwitchTrackCheckedBorderColor);
 }
 
 .form-switch .form-check-input:checked ~ .form-check-label::after {
   left: calc(3rem - 1.375em - 0.25em + 1px);
-  background-color: #fff;
-  border-color: #fff;
+  background-color: var(--CT_formSwitchThumbCheckedBg);
+  border-color: var(--CT_formSwitchThumbCheckedBorderColor);
 }
 
 .form-range {
@@ -827,15 +827,15 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .form-range:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 0.1875rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(var(--CT_formRangeThumbFocusBoxShadowRGB), var(--CT_formRangeThumbFocusBoxShadowOpacity));
 }
 
 .form-range:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 0.1875rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(var(--CT_formRangeThumbFocusBoxShadowRGB), var(--CT_formRangeThumbFocusBoxShadowOpacity));
 }
 
 .form-range:focus::-ms-thumb {
-  box-shadow: 0 0 0 0.1875rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(var(--CT_formRangeThumbFocusBoxShadowRGB), var(--CT_formRangeThumbFocusBoxShadowOpacity));
 }
 
 .form-range::-moz-focus-outer {
@@ -856,7 +856,7 @@ textarea.form-control:not([rows="1"]) {
   border: 0;
   border-radius: 0.375rem;
   box-shadow: 0 0 transparent;
-  background-color: #d3cfc9;
+  background-color: var(--CT_formRangeTrackBg);
 }
 
 .form-range::-moz-range-track {
@@ -869,7 +869,7 @@ textarea.form-control:not([rows="1"]) {
   border: 0;
   border-radius: 0.375rem;
   box-shadow: 0 0 transparent;
-  background-color: #d3cfc9;
+  background-color: var(--CT_formRangeTrackBg);
 }
 
 .form-range::-ms-track {
@@ -886,13 +886,13 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .form-range::-ms-fill-lower {
-  background-color: #d3cfc9;
+  background-color: var(--CT_formRangeTrackBg);
   border-radius: 0.375rem;
 }
 
 .form-range::-ms-fill-upper {
   margin-right: 0.625rem;
-  background-color: #d3cfc9;
+  background-color: var(--CT_formRangeTrackBg);
   border-radius: 0.375rem;
 }
 
@@ -900,10 +900,10 @@ textarea.form-control:not([rows="1"]) {
   box-sizing: border-box;
   width: 1.25rem;
   height: 1.25rem;
-  background-color: #66faff;
+  background-color: var(--CT_formRangeThumbBg);
   border: 0;
   border-radius: 50%;
-  box-shadow: 0.125rem 0.125rem 0 0.025rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0.125rem 0.125rem 0 0.025rem rgba(var(--CT_formRangeThumbBoxShadowRGB), var(--CT_formRangeThumbBoxShadowOpacity));
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   -webkit-appearance: none;
@@ -919,17 +919,17 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .form-range::-webkit-slider-thumb:active {
-  background-color: #40998b;
+  background-color: var(--CT_formRangeThumbActiveBg);
 }
 
 .form-range::-moz-range-thumb {
   box-sizing: border-box;
   width: 1.25rem;
   height: 1.25rem;
-  background-color: #66faff;
+  background-color: var(--CT_formRangeThumbBg);
   border: 0;
   border-radius: 50%;
-  box-shadow: 0.125rem 0.125rem 0 0.025rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0.125rem 0.125rem 0 0.025rem rgba(var(--CT_formRangeThumbBoxShadowRGB), var(--CT_formRangeThumbBoxShadowOpacity));
   -moz-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   -moz-appearance: none;
@@ -944,17 +944,17 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .form-range::-moz-range-thumb:active {
-  background-color: #40998b;
+  background-color: var(--CT_formRangeThumbActiveBg);
 }
 
 .form-range::-ms-thumb {
   box-sizing: border-box;
   width: 1.25rem;
   height: 1.25rem;
-  background-color: #66faff;
+  background-color: var(--CT_formRangeThumbBg);
   border: 0;
   border-radius: 50%;
-  box-shadow: 0.125rem 0.125rem 0 0.025rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0.125rem 0.125rem 0 0.025rem rgba(var(--CT_formRangeThumbBoxShadowRGB), var(--CT_formRangeThumbBoxShadowOpacity));
   -ms-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   appearance: none;
@@ -971,7 +971,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .form-range::-ms-thumb:active {
-  background-color: #40998b;
+  background-color: var(--CT_formRangeThumbActiveBg);
 }
 
 .form-range:disabled {
@@ -1013,7 +1013,7 @@ textarea.form-control:not([rows="1"]) {
 
 .was-validated .form-control:valid:focus, .form-control.is-valid:focus {
   border-color: #0e8a16;
-  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.85);
 }
 
 .was-validated :valid ~ .form-check-label,
@@ -1031,7 +1031,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-check-input:valid:focus ~ .form-check-label::before, .form-check-input.is-valid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.85);
 }
 
 .was-validated .form-switch .form-check-input:valid ~ .form-check-label::before, .form-switch .form-check-input.is-valid ~ .form-check-label::before {
@@ -1055,7 +1055,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-switch .form-check-input:valid:focus ~ .form-check-label::before, .form-switch .form-check-input.is-valid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(14, 138, 22, 0.85);
 }
 
 .invalid-feedback {
@@ -1077,7 +1077,7 @@ textarea.form-control:not([rows="1"]) {
 
 .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus {
   border-color: #d42314;
-  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.85);
 }
 
 .was-validated :invalid ~ .form-check-label,
@@ -1095,7 +1095,7 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-check-input:invalid:focus ~ .form-check-label::before, .form-check-input.is-invalid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.85);
 }
 
 .was-validated .form-switch .form-check-input:invalid ~ .form-check-label::before, .form-switch .form-check-input.is-invalid ~ .form-check-label::before {
@@ -1119,12 +1119,12 @@ textarea.form-control:not([rows="1"]) {
 }
 
 .was-validated .form-switch .form-check-input:invalid:focus ~ .form-check-label::before, .form-switch .form-check-input.is-invalid:focus ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.9);
+  box-shadow: 0 0 0 0.1875rem rgba(212, 35, 20, 0.85);
 }
 
 .btn {
   display: inline-block;
-  font-weight: 400;
+  font-weight: 700;
   text-align: center;
   text-decoration: none;
   vertical-align: middle;
@@ -1173,7 +1173,7 @@ textarea.form-control:not([rows="1"]) {
 .btn:active:focus,
 .btn.active:focus,
 .btn.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_focusRingRGB), 0.85);
 }
 
 fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
@@ -1193,7 +1193,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn:focus, .btn-check-input:focus ~ .btn {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_focusRingRGB), 0.85);
 }
 
 .btn.disabled,
@@ -1214,229 +1214,229 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn:active:focus,
 .btn.active:focus,
 .btn.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_focusRingRGB), 0.85);
 }
 
 .btn-primary {
-  color: #111;
-  background-color: #abfcef;
-  border-color: transparent;
+  color: var(--CT_btnPrimaryColor);
+  background-color: var(--CT_btnPrimaryBg);
+  border-color: var(--CT_btnPrimaryBorderColor);
 }
 
 .btn-primary:hover {
-  color: #111;
-  background-color: #91d6cb;
-  border-color: transparent;
+  color: var(--CT_btnPrimaryHoverColor);
+  background-color: var(--CT_btnPrimaryHoverBg);
+  border-color: var(--CT_btnPrimaryHoverBorderColor);
 }
 
 .btn-primary:focus, .btn-check-input:focus ~ .btn-primary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnPrimaryFocusRingRGB), 0.85);
 }
 
 .btn-primary.disabled,
 .btn-primary:disabled, .btn-check-input[disabled] ~ .btn-primary {
-  color: #111;
-  background-color: #abfcef;
-  border-color: transparent;
+  color: var(--CT_btnPrimaryColor);
+  background-color: var(--CT_btnPrimaryBg);
+  border-color: var(--CT_btnPrimaryBorderColor);
 }
 
 .btn-primary:active,
 .btn-primary.active,
 .btn-primary.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-primary {
-  color: #111;
-  background-color: #78b0a7;
-  border-color: transparent;
+  color: var(--CT_btnPrimaryActiveColor);
+  background-color: var(--CT_btnPrimaryActiveBg);
+  border-color: var(--CT_btnPrimaryActiveBorderColor);
 }
 
 .btn-primary:active:focus,
 .btn-primary.active:focus,
 .btn-primary.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-primary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnPrimaryFocusRingRGB), 0.85);
 }
 
 .btn-secondary {
-  color: #111;
-  background-color: rgba(125, 137, 172, 0.35);
-  border-color: transparent;
+  color: var(--CT_btnSecondaryColor);
+  background-color: var(--CT_btnSecondaryBg);
+  border-color: var(--CT_btnSecondaryBorderColor);
 }
 
 .btn-secondary:hover {
-  color: #111;
-  background-color: rgba(125, 137, 172, 0.7);
-  border-color: transparent;
+  color: var(--CT_btnSecondaryHoverColor);
+  background-color: var(--CT_btnSecondaryHoverBg);
+  border-color: var(--CT_btnSecondaryHoverBorderColor);
 }
 
 .btn-secondary:focus, .btn-check-input:focus ~ .btn-secondary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnSecondaryFocusRingRGB), 0.85);
 }
 
 .btn-secondary.disabled,
 .btn-secondary:disabled, .btn-check-input[disabled] ~ .btn-secondary {
-  color: #111;
-  background-color: rgba(125, 137, 172, 0.35);
-  border-color: transparent;
+  color: var(--CT_btnSecondaryColor);
+  background-color: var(--CT_btnSecondaryBg);
+  border-color: var(--CT_btnSecondaryBorderColor);
 }
 
 .btn-secondary:active,
 .btn-secondary.active,
 .btn-secondary.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-secondary {
-  color: #111;
-  background-color: rgba(125, 137, 172, 0.9);
-  border-color: transparent;
+  color: var(--CT_btnSecondaryActiveColor);
+  background-color: var(--CT_btnSecondaryActiveBg);
+  border-color: var(--CT_btnSecondaryActiveBorderColor);
 }
 
 .btn-secondary:active:focus,
 .btn-secondary.active:focus,
 .btn-secondary.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-secondary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnSecondaryFocusRingRGB), 0.85);
 }
 
-.btn-tertiary {
-  color: #111;
-  background-color: #ff554d;
-  border-color: transparent;
+.btn-nav {
+  color: var(--CT_btnNavColor);
+  background-color: var(--CT_btnNavBg);
+  border-color: var(--CT_btnNavBorderColor);
 }
 
-.btn-tertiary:hover {
-  color: #111;
-  background-color: #d94841;
-  border-color: transparent;
+.btn-nav:hover {
+  color: var(--CT_btnNavHoverColor);
+  background-color: var(--CT_btnNavHoverBg);
+  border-color: var(--CT_btnNavHoverBorderColor);
 }
 
-.btn-tertiary:focus, .btn-check-input:focus ~ .btn-tertiary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+.btn-nav:focus, .btn-check-input:focus ~ .btn-nav {
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnNavFocusRingRGB), 0.85);
 }
 
-.btn-tertiary.disabled,
-.btn-tertiary:disabled, .btn-check-input[disabled] ~ .btn-tertiary {
-  color: #111;
-  background-color: #ff554d;
-  border-color: transparent;
+.btn-nav.disabled,
+.btn-nav:disabled, .btn-check-input[disabled] ~ .btn-nav {
+  color: var(--CT_btnNavColor);
+  background-color: var(--CT_btnNavBg);
+  border-color: var(--CT_btnNavBorderColor);
 }
 
-.btn-tertiary:active,
-.btn-tertiary.active,
-.btn-tertiary.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-tertiary {
-  color: #111;
-  background-color: #586078;
-  border-color: transparent;
+.btn-nav:active,
+.btn-nav.active,
+.btn-nav.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-nav {
+  color: var(--CT_btnNavActiveColor);
+  background-color: var(--CT_btnNavActiveBg);
+  border-color: var(--CT_btnNavActiveBorderColor);
 }
 
-.btn-tertiary:active:focus,
-.btn-tertiary.active:focus,
-.btn-tertiary.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-tertiary {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+.btn-nav:active:focus,
+.btn-nav.active:focus,
+.btn-nav.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-nav {
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnNavFocusRingRGB), 0.85);
 }
 
 .btn-setting {
-  color: #ff554d;
-  background-color: rgba(171, 252, 239, 0.85);
-  border-color: transparent;
+  color: var(--CT_btnSettingColor);
+  background-color: var(--CT_btnSettingBg);
+  border-color: var(--CT_btnSettingBorderColor);
 }
 
 .btn-setting:hover {
-  color: #ff554d;
-  background-color: #abfcef;
-  border-color: transparent;
+  color: var(--CT_btnSettingHoverColor);
+  background-color: var(--CT_btnSettingHoverBg);
+  border-color: var(--CT_btnSettingHoverBorderColor);
 }
 
 .btn-setting:focus, .btn-check-input:focus ~ .btn-setting {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnSettingFocusRingRGB), 0.85);
 }
 
 .btn-setting.disabled,
 .btn-setting:disabled, .btn-check-input[disabled] ~ .btn-setting {
-  color: #ff554d;
-  background-color: rgba(171, 252, 239, 0.85);
-  border-color: transparent;
+  color: var(--CT_btnSettingColor);
+  background-color: var(--CT_btnSettingBg);
+  border-color: var(--CT_btnSettingBorderColor);
 }
 
 .btn-setting:active,
 .btn-setting.active,
 .btn-setting.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-setting {
-  color: #ff554d;
-  background-color: #91d6cb;
-  border-color: transparent;
+  color: var(--CT_btnSettingActiveColor);
+  background-color: var(--CT_btnSettingActiveBg);
+  border-color: var(--CT_btnSettingActiveBorderColor);
 }
 
 .btn-setting:active:focus,
 .btn-setting.active:focus,
 .btn-setting.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-setting {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnSettingFocusRingRGB), 0.85);
 }
 
 .btn-tool {
-  color: #636b82;
-  background-color: rgba(171, 252, 239, 0.85);
-  border-color: transparent;
+  color: var(--CT_btnToolColor);
+  background-color: var(--CT_btnToolBg);
+  border-color: var(--CT_btnToolBorderColor);
 }
 
 .btn-tool:hover {
-  color: #636b82;
-  background-color: #abfcef;
-  border-color: transparent;
+  color: var(--CT_btnToolHoverColor);
+  background-color: var(--CT_btnToolHoverBg);
+  border-color: var(--CT_btnToolHoverBorderColor);
 }
 
 .btn-tool:focus, .btn-check-input:focus ~ .btn-tool {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnToolFocusRingRGB), 0.85);
 }
 
 .btn-tool.disabled,
 .btn-tool:disabled, .btn-check-input[disabled] ~ .btn-tool {
-  color: #636b82;
-  background-color: rgba(171, 252, 239, 0.85);
-  border-color: transparent;
+  color: var(--CT_btnToolColor);
+  background-color: var(--CT_btnToolBg);
+  border-color: var(--CT_btnToolBorderColor);
 }
 
 .btn-tool:active,
 .btn-tool.active,
 .btn-tool.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-tool {
-  color: #636b82;
-  background-color: #91d6cb;
-  border-color: transparent;
+  color: var(--CT_btnToolActiveColor);
+  background-color: var(--CT_btnToolActiveBg);
+  border-color: var(--CT_btnToolActiveBorderColor);
 }
 
 .btn-tool:active:focus,
 .btn-tool.active:focus,
 .btn-tool.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-tool {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnToolFocusRingRGB), 0.85);
 }
 
 .btn-option {
-  color: #636b81;
-  background-color: #fff;
-  border-color: transparent;
+  color: var(--CT_btnOptionColor);
+  background-color: var(--CT_btnOptionBg);
+  border-color: var(--CT_btnOptionBorderColor);
 }
 
 .btn-option:hover {
-  color: #636b81;
-  background-color: #fff;
-  border-color: #40998b;
+  color: var(--CT_btnOptionHoverColor);
+  background-color: var(--CT_btnOptionHoverBg);
+  border-color: var(--CT_btnOptionHoverBorderColor);
 }
 
 .btn-option:focus, .btn-check-input:focus ~ .btn-option {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnOptionFocusRingRGB), 0.85);
 }
 
 .btn-option.disabled,
 .btn-option:disabled, .btn-check-input[disabled] ~ .btn-option {
-  color: #636b81;
-  background-color: #fff;
-  border-color: transparent;
+  color: var(--CT_btnOptionColor);
+  background-color: var(--CT_btnOptionBg);
+  border-color: var(--CT_btnOptionBorderColor);
 }
 
 .btn-option:active,
 .btn-option.active,
 .btn-option.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-option {
-  color: #111;
-  background-color: #66faff;
-  border-color: transparent;
+  color: var(--CT_btnOptionActiveColor);
+  background-color: var(--CT_btnOptionActiveBg);
+  border-color: var(--CT_btnOptionActiveBorderColor);
 }
 
 .btn-option:active:focus,
 .btn-option.active:focus,
 .btn-option.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-option {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(var(--CT_btnOptionFocusRingRGB), 0.85);
 }
 
 .btn-default {
@@ -1448,11 +1448,11 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-default:hover {
   color: #111;
   background-color: #fff !important;
-  border-color: #40998b;
+  border-color: #636b82;
 }
 
 .btn-default:focus, .btn-check-input:focus ~ .btn-default {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(99, 107, 130, 0.85);
 }
 
 .btn-default.disabled,
@@ -1473,7 +1473,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-default:active:focus,
 .btn-default.active:focus,
 .btn-default.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-default {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(99, 107, 130, 0.85);
 }
 
 .btn-night {
@@ -1489,7 +1489,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-night:focus, .btn-check-input:focus ~ .btn-night {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.85);
 }
 
 .btn-night.disabled,
@@ -1510,7 +1510,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-night:active:focus,
 .btn-night.active:focus,
 .btn-night.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-night {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.85);
 }
 
 .btn-sepia {
@@ -1526,7 +1526,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-sepia:focus, .btn-check-input:focus ~ .btn-sepia {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.85);
 }
 
 .btn-sepia.disabled,
@@ -1547,11 +1547,11 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-sepia:active:focus,
 .btn-sepia.active:focus,
 .btn-sepia.open[data-cfw="dropdown"]:focus, .btn-check-input:not([disabled]):checked:focus ~ .btn-sepia {
-  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.8);
+  box-shadow: 0 0 transparent, 0 0 0 0.1875rem rgba(64, 153, 139, 0.85);
 }
 
 .btn-link {
-  color: #b8330f;
+  color: var(--CT_linkColor);
   text-decoration: underline;
   background-color: transparent;
   border-color: transparent;
@@ -1566,7 +1566,7 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-link:hover {
-  color: #81240b;
+  color: var(--CT_linkHoverColor);
 }
 
 .btn-link:focus {
@@ -1575,14 +1575,14 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 }
 
 .btn-link.disabled, .btn-link:disabled {
-  color: #b8330f;
+  color: var(--CT_linkColor);
   text-decoration: none;
   background-color: transparent;
   border-color: transparent;
 }
 
 .btn-link:active, .btn-link.active, .btn-link.open[data-cfw="dropdown"] {
-  color: #81240b;
+  color: var(--CT_linkHoverColor);
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;
@@ -1591,6 +1591,11 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
 .btn-icon {
   padding-right: 0.375em;
   padding-left: 0.375em;
+}
+
+.btn-xsmall {
+  font-size: 0.75rem;
+  border-radius: 0.1875rem;
 }
 
 .btn-splash {
@@ -2660,8 +2665,8 @@ button.list-item-action {
   min-width: 0;
   margin-bottom: 1rem;
   word-wrap: break-word;
-  background-color: #ebe6d2;
-  border: 1px solid #ebe6d2;
+  background-color: var(--CT_cardBg);
+  border: 1px solid var(--CT_cardBorderColor);
   border-radius: 0.5rem;
 }
 
@@ -3202,10 +3207,11 @@ button.list-item-action {
   display: flex;
   flex-direction: column;
   width: 100%;
+  color: var(--CT_modalContentColor);
   pointer-events: auto;
-  background-color: #94dfd3;
+  background-color: var(--CT_modalContentBg);
   background-clip: padding-box;
-  border: 3px solid #7e8aad;
+  border: 4px solid var(--CT_modalContentBorderColor);
   border-radius: 0.5rem;
   box-shadow: 0 0 transparent;
   outline: 0;
@@ -3222,11 +3228,11 @@ button.list-item-action {
 }
 
 .modal-dialog-side-start .modal-content {
-  border-width: 0 3px 0 0;
+  border-width: 0 4px 0 0;
 }
 
 .modal-dialog-side-end .modal-content {
-  border-width: 0 0 0 3px;
+  border-width: 0 0 0 4px;
 }
 
 .modal-backdrop {
@@ -3236,7 +3242,7 @@ button.list-item-action {
   z-index: 1050;
   width: 100vw;
   height: 100vh;
-  background-color: #343e48;
+  background-color: var(--CT_modalBackdropBg);
 }
 
 .modal-backdrop.fade {
@@ -3244,7 +3250,7 @@ button.list-item-action {
 }
 
 .modal-backdrop.in {
-  opacity: 0.5;
+  opacity: var(--CT_modalBackdropOpacity);
 }
 
 .modal-header {
@@ -3252,9 +3258,9 @@ button.list-item-action {
   align-items: flex-start;
   justify-content: space-between;
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid transparent;
-  border-top-left-radius: calc(0.5rem - 3px);
-  border-top-right-radius: calc(0.5rem - 3px);
+  border-bottom: 1px solid var(--CT_modalHeaderBorderColor);
+  border-top-left-radius: calc(0.5rem - 4px);
+  border-top-right-radius: calc(0.5rem - 4px);
 }
 
 .modal-header .close {
@@ -3283,9 +3289,9 @@ button.list-item-action {
   align-items: center;
   justify-content: flex-end;
   padding: 0.25rem 0.75rem;
-  border-top: 1px solid transparent;
-  border-bottom-right-radius: calc(0.5rem - 3px);
-  border-bottom-left-radius: calc(0.5rem - 3px);
+  border-top: 1px solid var(--CT_modalFooterBorderColor);
+  border-bottom-right-radius: calc(0.5rem - 4px);
+  border-bottom-left-radius: calc(0.5rem - 4px);
 }
 
 .modal-footer > :not(:first-child) {
@@ -3361,9 +3367,9 @@ button.list-item-action {
   white-space: normal;
   font-size: 0.9375rem;
   word-wrap: break-word;
-  background-color: #fff;
+  background-color: var(--CT_popoverBg);
   background-clip: padding-box;
-  border: 3px solid #7c88ac;
+  border: 3px solid var(--CT_popoverBorderColor);
   border-radius: 0.5rem;
   box-shadow: 0 0 transparent;
   outline: 0;
@@ -3401,13 +3407,13 @@ button.list-item-action {
 .cfw-popover-top > .popover-arrow::before, .cfw-popover-auto[x-placement^="top"] > .popover-arrow::before {
   bottom: 0;
   border-width: 0.625rem 0.625rem 0;
-  border-top-color: #7c88ac;
+  border-top-color: var(--CT_popoverBorderColor);
 }
 
 .cfw-popover-top > .popover-arrow::after, .cfw-popover-auto[x-placement^="top"] > .popover-arrow::after {
   bottom: 3px;
   border-width: 0.625rem 0.625rem 0;
-  border-top-color: #fff;
+  border-top-color: var(--CT_popoverBg);
 }
 
 .cfw-popover-right, .cfw-popover-auto[x-placement^="right"] {
@@ -3424,13 +3430,13 @@ button.list-item-action {
 .cfw-popover-right > .popover-arrow::before, .cfw-popover-auto[x-placement^="right"] > .popover-arrow::before {
   left: 0;
   border-width: 0.625rem 0.625rem 0.625rem 0;
-  border-right-color: #7c88ac;
+  border-right-color: var(--CT_popoverBorderColor);
 }
 
 .cfw-popover-right > .popover-arrow::after, .cfw-popover-auto[x-placement^="right"] > .popover-arrow::after {
   left: 3px;
   border-width: 0.625rem 0.625rem 0.625rem 0;
-  border-right-color: #fff;
+  border-right-color: var(--CT_popoverBg);
 }
 
 .cfw-popover-bottom, .cfw-popover-auto[x-placement^="bottom"] {
@@ -3444,13 +3450,13 @@ button.list-item-action {
 .cfw-popover-bottom > .popover-arrow::before, .cfw-popover-auto[x-placement^="bottom"] > .popover-arrow::before {
   top: 0;
   border-width: 0 0.625rem 0.625rem 0.625rem;
-  border-bottom-color: #7c88ac;
+  border-bottom-color: var(--CT_popoverBorderColor);
 }
 
 .cfw-popover-bottom > .popover-arrow::after, .cfw-popover-auto[x-placement^="bottom"] > .popover-arrow::after {
   top: 3px;
   border-width: 0 0.625rem 0.625rem 0.625rem;
-  border-bottom-color: #fff;
+  border-bottom-color: var(--CT_popoverBg);
 }
 
 .cfw-popover-left, .cfw-popover-auto[x-placement^="left"] {
@@ -3467,13 +3473,13 @@ button.list-item-action {
 .cfw-popover-left > .popover-arrow::before, .cfw-popover-auto[x-placement^="left"] > .popover-arrow::before {
   right: 0;
   border-width: 0.625rem 0 0.625rem 0.625rem;
-  border-left-color: #7c88ac;
+  border-left-color: var(--CT_popoverBorderColor);
 }
 
 .cfw-popover-left > .popover-arrow::after, .cfw-popover-auto[x-placement^="left"] > .popover-arrow::after {
   right: 3px;
   border-width: 0.625rem 0 0.625rem 0.625rem;
-  border-left-color: #fff;
+  border-left-color: var(--CT_popoverBg);
 }
 
 /* rtl:end:ignore */
@@ -3482,8 +3488,9 @@ button.list-item-action {
   padding-right: 1.5rem;
   margin: 0;
   font-size: 1rem;
-  background-color: #acfcef;
-  border-bottom: 1px solid #e2e2e2;
+  color: var(--CT_popoverHeaderColor);
+  background-color: var(--CT_popoverHeaderBg);
+  border-bottom: 1px solid var(--CT_popoverHeaderBorderColor);
   border-radius: calc(0.5rem - 3px) calc(0.5rem - 3px) 0 0;
 }
 
@@ -3493,7 +3500,7 @@ button.list-item-action {
 
 .popover-body {
   padding: 0.5rem 0.75rem;
-  color: #111;
+  color: var(--CT_popoverBodyColor);
 }
 
 .popover .close, .popover .drag {
@@ -3857,9 +3864,9 @@ button.list-item-action {
 .popover-footer {
   padding: 0.25rem 0.75rem;
   font-size: 0.875rem;
-  color: #111;
-  background-color: #acfcef;
-  border-top: 1px solid #e2e2e2;
+  color: var(--CT_popoverFooterColor);
+  background-color: var(--CT_popoverFooterBg);
+  border-top: 1px solid var(--CT_popoverFooterBorderColor);
   border-radius: 0 0 calc(0.5rem - 3px) calc(0.5rem - 3px);
 }
 
@@ -3879,7 +3886,7 @@ button.list-item-action {
   right: -0.75rem;
   left: -0.75rem;
   content: "";
-  border-top: 3px solid #d3cfc9;
+  border-top: 3px solid var(--CT_popoverSectionBorderColor);
 }
 
 .popover-scrollable *[role="document"] {
@@ -3938,23 +3945,24 @@ button.list-item-action {
   }
 }
 
-.popover-glossary .figure-caption {
-  padding: .5rem;
-  background-color: #ebe6d2;
-}
-
 .modal-header {
-  background-color: #acfcef;
+  color: var(--CT_modalHeaderColor);
+  background-color: var(--CT_modalHeaderBg);
 }
 
 .modal-footer {
-  background-color: #80c6ba;
+  color: var(--CT_modalFooterColor);
+  background-color: var(--CT_modalFooterBg);
+}
+
+.modal-title {
+  margin-right: 1rem;
 }
 
 .card-img {
   overflow: hidden;
   text-align: center;
-  background-color: #70afa7;
+  background-color: var(--CT_cardImgBg);
 }
 
 .card-img .is-portrait {
@@ -3964,7 +3972,7 @@ button.list-item-action {
 }
 
 .card-login {
-  background-color: #6eaba6;
+  background-color: rgba(var(--CT_cardLoginBgRGB), var(--CT_cardLoginBgOpacity));
   border-color: transparent;
 }
 
@@ -3973,15 +3981,7 @@ button.list-item-action {
 }
 
 .card-login-forgot {
-  border-top: 3px solid rgba(235, 230, 210, 0.25);
-}
-
-.card-login-forgot a:not(.btn) {
-  color: #003080;
-}
-
-.card-login-forgot a:not(.btn):hover {
-  color: #00225a;
+  border-top: 3px solid var(--CT_cardLoginForgotBorderColor);
 }
 
 .card-login-error {
@@ -3991,14 +3991,13 @@ button.list-item-action {
   border-radius: 0.25rem;
 }
 
-.btn-primary,
-.btn-secondary,
-.btn-tertiary {
-  font-weight: 700;
+.btn-nav [class^="icon-"]::before,
+.btn-nav [class*=" icon-"]::before {
+  font-size: 1.25em;
 }
 
 .btn-setting {
-  text-shadow: 0.0625em 0.0625em 0 rgba(91, 119, 153, 0.75);
+  text-shadow: 0.0625em 0.0625em 0 rgba(var(--CT_btnSettingTextShadowColorRGB), var(--CT_btnSettingTextShadowOpacity));
 }
 
 .btn-setting [class^="icon-"]::before,
@@ -4016,7 +4015,7 @@ button.list-item-action {
 .btn-night.open[data-cfw="dropdown"], .btn-sepia:active,
 .btn-sepia.active,
 .btn-sepia.open[data-cfw="dropdown"], .btn-check-input:not([disabled]):checked ~ .btn-option, .btn-check-input:not([disabled]):checked ~ .btn-default, .btn-check-input:not([disabled]):checked ~ .btn-night, .btn-check-input:not([disabled]):checked ~ .btn-sepia {
-  box-shadow: 0 0 transparent, 0.1875rem 0.1875rem 0 0.025rem rgba(64, 153, 139, 0.9);
+  box-shadow: 0 0 transparent, 0.1875rem 0.1875rem 0 0.025rem rgba(var(--CT_btnOptionActiveBoxShadowRGB), var(--CT_btnOptionActiveBoxShadowOpacity));
 }
 
 .btn-option:active:hover, .btn-option.active:hover, .btn-option.open[data-cfw="dropdown"]:hover,
@@ -4029,7 +4028,7 @@ button.list-item-action {
 .btn-sepia:active:hover,
 .btn-sepia.active:hover,
 .btn-sepia.open[data-cfw="dropdown"]:hover, .btn-check-input:not([disabled]):checked:hover ~ .btn-option, .btn-check-input:not([disabled]):checked:hover ~ .btn-default, .btn-check-input:not([disabled]):checked:hover ~ .btn-night, .btn-check-input:not([disabled]):checked:hover ~ .btn-sepia {
-  border-color: #40998b;
+  border-color: var(--CT_btnOptionActiveHoverBorderColor);
 }
 
 .btn-help {
@@ -4055,33 +4054,40 @@ button.list-item-action {
   margin-right: -.25em;
 }
 
+.figure-caption {
+  padding: 0.5rem;
+  color: var(--CT_figureCaptionColor);
+  background-color: var(--CT_figureCaptionBg);
+}
+
 .skiplink {
   position: absolute !important;
-  top: .25rem;
+  top: 0.25rem;
   left: 50%;
-  padding: .25rem .5rem;
-  color: #111;
+  z-index: 2;
+  padding: 0.25rem 0.5rem;
+  color: var(--CT_skiplinkColor);
   text-align: center;
   text-decoration: none;
-  background-color: #66faff;
-  border: 2px solid #111;
+  background-color: var(--CT_skiplinkBg);
+  border: 2px solid var(--CT_skiplinkBorderColor);
   outline: 0;
   transform: translateX(-50%);
 }
 
 .skiplink:hover {
-  color: #fff;
+  color: var(--CT_skiplinkColor);
 }
 
 .site-header {
   position: relative;
-  left: -5rem;
+  left: -6rem;
   z-index: 1;
   padding: 1.375rem 1rem;
-  margin-right: -5rem;
+  margin-right: -6rem;
   margin-bottom: 2rem;
   line-height: 1;
-  background-image: linear-gradient(90deg, rgba(99, 107, 130, 0.5) 0%, rgba(99, 107, 130, 0) 65%);
+  background: linear-gradient(90deg, var(--CT_headerBgStart) 0%, var(--CT_headerBgEnd) 65%);
   border-radius: 0.5rem;
 }
 
@@ -4096,7 +4102,7 @@ button.list-item-action {
   margin-bottom: 0;
   margin-left: 1rem;
   vertical-align: middle;
-  border-bottom: 3px solid #66faff;
+  border-bottom: 3px solid var(--CT_pageTitleBorderColor);
 }
 
 .site-header-logo {
@@ -4126,7 +4132,6 @@ button.list-item-action {
   z-index: 0;
   padding: 1.125rem 1rem 1.125rem 5rem;
   margin-right: -4rem;
-  background-image: linear-gradient(90deg, rgba(99, 107, 130, 0.25) 0%, rgba(99, 107, 130, 0) 65%);
 }
 
 .site-header-small .site-header-logo {
@@ -4176,6 +4181,14 @@ button.list-item-action {
   padding-bottom: 1rem;
   margin-top: 2rem;
   border-top: 3px solid rgba(99, 107, 130, 0.25);
+}
+
+::-moz-selection {
+  background-color: var(--CT_selectionBg);
+}
+
+::selection {
+  background-color: var(--CT_selectionBg);
 }
 
 body {
@@ -4232,11 +4245,11 @@ h3, .h3,
 }
 
 .form-checkradio .form-check-input:checked:not(:focus) ~ .form-check-label::before {
-  box-shadow: 0.0625em 0.0625em 0 0.03125em rgba(64, 153, 139, 0.9);
+  box-shadow: 0.0625em 0.0625em 0 0.03125em rgba(var(--CT_formCheckradioCheckedBoxShadowRGB), var(--CT_formCheckradioCheckedBoxShadowOpacity));
 }
 
 .form-switch .form-check-input:checked ~ .form-check-label::after {
-  box-shadow: -0.1875rem 0 0 0.025rem rgba(64, 153, 139, 0.9);
+  box-shadow: -0.1875rem 0 0 0.025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
 }
 
 .link-prev {
@@ -4287,7 +4300,7 @@ h3, .h3,
   justify-content: center;
   width: 3rem;
   padding: .75rem 0;
-  background-image: linear-gradient(180deg, rgba(99, 174, 161, 0.35) 0%, rgba(99, 174, 161, 0.5) 100%);
+  background: linear-gradient(180deg, var(--CT_sidebarBgStart) 0%, var(--CT_sidebarBgEnd) 100%);
   border-radius: 0.5rem;
 }
 
@@ -4321,16 +4334,6 @@ h3, .h3,
   margin-right: 1rem;
 }
 
-.sidebar-start .btn-link {
-  color: #636b82;
-  text-decoration: none;
-}
-
-.sidebar-start .btn-link:hover, .sidebar-start .btn-link:focus {
-  color: #333;
-  text-decoration: none;
-}
-
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -4353,7 +4356,7 @@ h3, .h3,
 .sidebar-end {
   order: 1;
   margin-left: 1rem;
-  background-image: linear-gradient(180deg, #5fb29f 0%, #429887 100%);
+  background: linear-gradient(180deg, var(--CT_sidebarEndBgStart) 0%, var(--CT_sidebarEndBgEnd) 100%);
 }
 
 .sidebar-tool {
@@ -4379,7 +4382,7 @@ h3, .h3,
 }
 
 .home {
-  background-color: #72c0b2;
+  background-color: var(--CT_homeBodyBg);
 }
 
 .home .content {
@@ -4417,23 +4420,11 @@ h3, .h3,
   }
 }
 
-.home .user-actions a:not(.btn),
-.home .content a:not(.btn),
-.home .site-footer a:not(.btn) {
-  color: #00399c;
-}
-
-.home .user-actions a:not(.btn):hover,
-.home .content a:not(.btn):hover,
-.home .site-footer a:not(.btn):hover {
-  color: #00286d;
-}
-
 .home-create {
   padding-top: .5rem;
   margin-top: 1rem;
   margin-bottom: 2rem;
-  border-top: 3px solid rgba(99, 107, 130, 0.25);
+  border-top: 3px solid var(--CT_homeBodyCreateBorderColor);
 }
 
 @media (min-width: 36em) {
@@ -4443,65 +4434,7 @@ h3, .h3,
 }
 
 .library {
-  background-color: #72c0b2;
-}
-
-@media (max-width: 47.98em) {
-  .library .content {
-    max-width: calc(100vw - 7rem);
-  }
-}
-
-.library .site-header {
-  left: -4rem;
-  margin-right: -4rem;
-}
-
-@media (min-width: 48em) {
-  .library .site-header {
-    left: -5rem;
-    margin-right: -5rem;
-  }
-}
-
-.library .sidebar {
-  flex-basis: 3rem;
-  max-width: 3rem;
-  background-color: rgba(28, 84, 71, 0.35);
-}
-
-.library .sidebar-start .btn-link {
-  color: #434a5a;
-}
-
-.library .sidebar-end {
-  background-image: linear-gradient(180deg, rgba(99, 107, 130, 0.8), #636b82);
-}
-
-.library .sidebar-tool .btn {
-  width: 3.25rem;
-  height: 3.25rem;
-  margin-left: -2rem;
-  font-size: 2.5rem;
-}
-
-@media (max-width: 47.98em) {
-  .library .sidebar-tool .btn {
-    width: 3rem;
-    height: 3rem;
-    margin-left: -1.5rem;
-    font-size: 2.25rem;
-  }
-}
-
-.library .user-actions a:not(.btn),
-.library .site-footer a:not(.btn) {
-  color: #00399c;
-}
-
-.library .user-actions a:not(.btn):hover,
-.library .site-footer a:not(.btn):hover {
-  color: #00286d;
+  background-color: var(--CT_libraryBodyBg);
 }
 
 .library-grid {
@@ -4518,7 +4451,7 @@ h3, .h3,
   flex-basis: auto;
   width: calc(100% - 2rem);
   margin-right: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.25rem;
   margin-left: 1rem;
 }
 
@@ -4535,7 +4468,7 @@ h3, .h3,
 }
 
 .card-library {
-  box-shadow: -0.125rem -0.5rem 0 0.125rem #fbfbfb, -0.125rem -0.125rem 0 0.125rem #fbfbfb;
+  box-shadow: -0.125rem -0.5rem 0 0.125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1), -0.125rem -0.125rem 0 0.125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1);
 }
 
 .card-library .link-stretch {
@@ -4564,7 +4497,7 @@ h3, .h3,
   width: calc(100% - 1.125em);
   height: 4px;
   content: "";
-  background-color: #d3cfc9;
+  background-color: var(--CT_rankingBorderColor);
   transform: translateY(-50%);
 }
 
@@ -4603,18 +4536,18 @@ h3, .h3,
 }
 
 .setting-modal .modal-content {
-  background-color: #ebe6d2;
-  border-color: #72c0b2;
+  background-color: var(--CT_settingModalContentBg);
+  border-color: var(--CT_settingModalContentBorderColor);
 }
 
 .setting-modal .modal-header {
-  background-color: transparent;
-  border-bottom: 3px solid #d3cfc9;
+  background-color: rgba(var(--CT_settingModalHeaderBgRGB), var(--CT_settingModalHeaderBgOpacity));
+  border-bottom: 3px solid var(--CT_settingModalHeaderBorderColor);
 }
 
 .setting-modal .modal-footer {
-  background-color: transparent;
-  border-top: 3px solid #d3cfc9;
+  background-color: var(--CT_settingModalFooterBg);
+  border-top: 3px solid var(--CT_settingModalFooterBorderColor);
 }
 
 .setting-modal .modal-body {
@@ -4626,14 +4559,14 @@ h3, .h3,
 }
 
 .setting:not(:first-of-type) {
-  border-top: 3px solid #d3cfc9;
+  border-top: 3px solid var(--CT_settingBorderColor);
 }
 
 .setting-title {
   margin-bottom: 0.25rem;
   font-size: 0.875rem;
   font-weight: 700;
-  color: #666;
+  color: var(--CT_settingTitleColor);
 }
 
 .setting-btn-row {
@@ -4650,7 +4583,7 @@ h3, .h3,
   position: absolute;
   display: inline-block;
   font-family: Fontello;
-  color: #111;
+  color: inherit;
   content: "\e812";
 }
 
@@ -4674,11 +4607,13 @@ h3, .h3,
   font-size: 0.875rem;
   font-style: italic;
   font-weight: 400;
+  color: var(--CT_goalModalTitleColor);
 }
 
 .goal-modal .modal-subtitle {
   font-size: 1rem;
   font-weight: 700;
+  color: var(--CT_goalModalSubtitleColor);
 }
 
 .goal-modal .modal-footer {
@@ -4689,18 +4624,6 @@ h3, .h3,
 .goal-modal .ranking {
   margin-right: 2rem;
   margin-left: 2rem;
-}
-
-.goal-modal .ranking::before {
-  background-color: #75b7b0;
-}
-
-.goal-modal a:not(.btn) {
-  color: #00399c;
-}
-
-.goal-modal a:not(.btn):hover {
-  color: #00286d;
 }
 
 .goal-nav {
@@ -4717,12 +4640,7 @@ h3, .h3,
 
 .goal-speak {
   margin-left: -.25rem;
-  color: #636b82;
-  text-decoration: none;
-}
-
-.goal-speak:hover, .goal-speak:focus {
-  color: #333;
+  font-size: 0.75rem;
   text-decoration: none;
 }
 
@@ -4757,7 +4675,7 @@ h3, .h3,
   display: flex;
   flex-wrap: nowrap;
   width: 100%;
-  border-bottom: 3px solid #bfc6cd;
+  border-bottom: 3px solid var(--CT_wordbankBorderColor);
 }
 
 .wordbank-header::after {
@@ -4774,11 +4692,11 @@ h3, .h3,
 .wordbank-col {
   flex: 1 0 25%;
   align-self: stretch;
-  border-left: 2px solid #bfc6cd;
+  border-left: 2px solid var(--CT_wordbankBorderColor);
 }
 
 .wordbank-col:nth-child(1), .wordbank-col:nth-child(3) {
-  background-color: #eff1f3;
+  background-color: var(--CT_wordbankColBg);
 }
 
 .wordbank-title {
@@ -4859,4 +4777,334 @@ h3, .h3,
 
 .wordbank-prev {
   order: -1;
+}
+
+:root {
+  --CT_bodyBg: #fbfbfb;
+  --CT_bodyColor: #333;
+  --CT_linkColor: #0d36ab;
+  --CT_linkHoverColor: #092678;
+  --CT_focusRingRGB: 99, 107, 130;
+  --CT_selectionBg: #acfdf0;
+  --CT_skiplinkBg: #66faff;
+  --CT_skiplinkColor: #333;
+  --CT_skiplinkBorderColor: #bfc6cd;
+  --CT_headerBgStart: rgba(99, 107, 130, 0.3);
+  --CT_headerBgEnd: rgba(99, 107, 130, 0);
+  --CT_headerColor: inherit;
+  --CT_pageTitleBorderColor: #acfdf0;
+  --CT_sidebarBgStart: rgba(99, 107, 130, 0.15);
+  --CT_sidebarBgEnd: rgba(99, 107, 130, 0.3);
+  --CT_sidebarEndBgStart: rgba(99, 107, 130, 0.6);
+  --CT_sidebarEndBgEnd: rgba(99, 107, 130, 0.8);
+  --CT_libraryBodyBg: #72c0b2;
+  --CT_homeBodyBg: #72c0b2;
+  --CT_homeBodyCreateBorderColor: #636b82;
+  --CT_cardBg: #ebe6d2;
+  --CT_cardBorderColor: #ebe6d2;
+  --CT_cardImgBg: rgba(99, 107, 130, 0.3);
+  --CT_cardLibraryBoxShadowRGB: 251, 251, 251;
+  --CT_cardLoginBgRGB: 172, 253, 240;
+  --CT_cardLoginBgOpacity: 0.3;
+  --CT_cardLoginForgotBorderColor: #d3cfc9;
+  --CT_figureCaptionBg: #ebe3d5;
+  --CT_figureCaptionColor: #666;
+  --CT_btnPrimaryFocusRingRGB: 99, 107, 130;
+  --CT_btnPrimaryBg: #acfdf0;
+  --CT_btnPrimaryColor: #111;
+  --CT_btnPrimaryBorderColor: transparent;
+  --CT_btnPrimaryHoverBg: #99e1d5;
+  --CT_btnPrimaryHoverColor: #111;
+  --CT_btnPrimaryHoverBorderColor: transparent;
+  --CT_btnPrimaryActiveBg: #8ccec3;
+  --CT_btnPrimaryActiveColor: #111;
+  --CT_btnPrimaryActiveBorderColor: transparent;
+  --CT_btnSecondaryFocusRingRGB: 99, 107, 130;
+  --CT_btnSecondaryBg: #ff554d;
+  --CT_btnSecondaryColor: #111;
+  --CT_btnSecondaryBorderColor: transparent;
+  --CT_btnSecondaryHoverBg: #ec4f47;
+  --CT_btnSecondaryHoverColor: #111;
+  --CT_btnSecondaryHoverBorderColor: transparent;
+  --CT_btnSecondaryActiveBg: #d94841;
+  --CT_btnSecondaryActiveColor: #000;
+  --CT_btnSecondaryActiveBorderColor: transparent;
+  --CT_btnNavFocusRingRGB: 99, 107, 130;
+  --CT_btnNavBg: transparent;
+  --CT_btnNavColor: #636b82;
+  --CT_btnNavBorderColor: transparent;
+  --CT_btnNavHoverBg: transparent;
+  --CT_btnNavHoverColor: #454b5b;
+  --CT_btnNavHoverBorderColor: transparent;
+  --CT_btnNavActiveBg: transparent;
+  --CT_btnNavActiveColor: #363b48;
+  --CT_btnNavActiveBorderColor: transparent;
+  --CT_btnSettingFocusRingRGB: 99, 107, 130;
+  --CT_btnSettingBg: rgba(172, 253, 240, 0.7);
+  --CT_btnSettingColor: #ff554d;
+  --CT_btnSettingBorderColor: transparent;
+  --CT_btnSettingHoverBg: rgba(172, 253, 240, 0.85);
+  --CT_btnSettingHoverColor: #ff554d;
+  --CT_btnSettingHoverBorderColor: transparent;
+  --CT_btnSettingActiveBg: #acfdf0;
+  --CT_btnSettingActiveColor: #ff554d;
+  --CT_btnSettingActiveBorderColor: transparent;
+  --CT_btnSettingTextShadowColorRGB: 99, 107, 130;
+  --CT_btnSettingTextShadowOpacity: 0.75;
+  --CT_btnToolFocusRingRGB: 99, 107, 130;
+  --CT_btnToolBg: rgba(172, 253, 240, 0.7);
+  --CT_btnToolColor: #636b82;
+  --CT_btnToolBorderColor: transparent;
+  --CT_btnToolHoverBg: rgba(172, 253, 240, 0.85);
+  --CT_btnToolHoverColor: #636b82;
+  --CT_btnToolHoverBorderColor: transparent;
+  --CT_btnToolActiveBg: #acfdf0;
+  --CT_btnToolActiveColor: #636b82;
+  --CT_btnToolActiveBorderColor: transparent;
+  --CT_btnOptionFocusRingRGB: 99, 107, 130;
+  --CT_btnOptionBg: #fff;
+  --CT_btnOptionColor: #333;
+  --CT_btnOptionBorderColor: transparent;
+  --CT_btnOptionHoverBg: #fff;
+  --CT_btnOptionHoverColor: #333;
+  --CT_btnOptionHoverBorderColor: #636b82;
+  --CT_btnOptionActiveBg: #ff554d;
+  --CT_btnOptionActiveColor: #111;
+  --CT_btnOptionActiveBorderColor: transparent;
+  --CT_btnOptionActiveBoxShadowRGB: 99, 107, 130;
+  --CT_btnOptionActiveBoxShadowOpacity: 0.9;
+  --CT_btnOptionActiveHoverBorderColor: #636b82;
+  --CT_popoverBg: #fbfbfb;
+  --CT_popoverBorderColor: #636b82;
+  --CT_popoverHeaderBg: #acfdf0;
+  --CT_popoverHeaderColor: #333;
+  --CT_popoverHeaderBorderColor: #d3cfc9;
+  --CT_popoverBodyColor: #333;
+  --CT_popoverFooterBg: #acfdf0;
+  --CT_popoverFooterColor: #333;
+  --CT_popoverFooterBorderColor: #d3cfc9;
+  --CT_popoverSectionBorderColor: #d3cfc9;
+  --CT_modalBackdropBg: #343e48;
+  --CT_modalBackdropOpacity: 0.25;
+  --CT_modalContentBg: #fbfbfb;
+  --CT_modalContentColor: #333;
+  --CT_modalContentBorderColor: #636b82;
+  --CT_modalHeaderBg: #acfdf0;
+  --CT_modalHeaderColor: #333;
+  --CT_modalHeaderBorderColor: #d3cfc9;
+  --CT_modalFooterBg: #acfdf0;
+  --CT_modalFooterColor: #333;
+  --CT_modalFooterBorderColor: #d3cfc9;
+  --CT_modalSectionBorderColor: #d3cfc9;
+  --CT_settingBorderColor: #d3cfc9;
+  --CT_settingTitleColor: #666;
+  --CT_settingModalContentBg: #ebe3d5;
+  --CT_settingModalContentColor: #333;
+  --CT_settingModalContentBorderColor: #636b82;
+  --CT_settingModalHeaderBg: #d3cfc9;
+  --CT_settingModalHeaderBgRGB: 211, 207, 201;
+  --CT_settingModalHeaderBgOpacity: 0.7;
+  --CT_settingModalHeaderBorderColor: #d3cfc9;
+  --CT_settingModalFooterBg: transparent;
+  --CT_settingModalFooterBorderColor: #d3cfc9;
+  --CT_goalModalTitleColor: inherit;
+  --CT_goalModalSubtitleColor: inherit;
+  --CT_rankingBorderColor: #d3cfc9;
+  --CT_formCheckradioBorderColor: #636b82;
+  --CT_formCheckradioCheckedBg: #ff554d;
+  --CT_formCheckradioCheckedBorderColor: #ff554d;
+  --CT_formCheckradioFocusBorderColor: #636b82;
+  --CT_formCheckradioFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formCheckradioFocusBoxShadowOpacity: 0.85;
+  --CT_formCheckradioCheckedBoxShadowRGB: 99, 107, 130;
+  --CT_formCheckradioCheckedBoxShadowOpacity: 0.9;
+  --CT_formRangeTrackBg: #d3cfc9;
+  --CT_formRangeThumbBg: #ff554d;
+  --CT_formRangeThumbBoxShadowRGB: 99, 107, 130;
+  --CT_formRangeThumbBoxShadowOpacity: 0.9;
+  --CT_formRangeThumbFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formRangeThumbFocusBoxShadowOpacity: 0.85;
+  --CT_formRangeThumbActiveBg: #ff554d;
+  --CT_formSwitchTrackBg: #d3cfc9;
+  --CT_formSwitchTrackBorderColor: #636b82;
+  --CT_formSwitchTrackFocusBorderColor: #636b82;
+  --CT_formSwitchTrackFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchTrackFocusBoxShadowOpacity: 0.85;
+  --CT_formSwitchTrackCheckedBg: #ff554d;
+  --CT_formSwitchTrackCheckedBorderColor: #636b82;
+  --CT_formSwitchThumbBg: #fbfbfb;
+  --CT_formSwitchThumbBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchThumbBoxShadowOpacity: 0.9;
+  --CT_formSwitchThumbFocusBg: #fbfbfb;
+  --CT_formSwitchThumbCheckedBg: #fbfbfb;
+  --CT_formSwitchThumbCheckedBorderColor: #fbfbfb;
+  --CT_formSwitchThumbCheckedBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchThumbCheckedBoxShadowOpacity: 0.9;
+  --CT_wordbankBorderColor: #d3cfc9;
+  --CT_wordbankColBg: #ebe3d5;
+}
+
+.clusive-theme-sepia {
+  --CT_bodyBg: #faf4e8;
+  --CT_bodyColor: #333;
+  --CT_linkColor: #0d36ab;
+  --CT_linkHoverColor: #092678;
+  --CT_focusRingRGB: 99, 107, 130;
+  --CT_selectionBg: #acfdf0;
+  --CT_skiplinkBg: #66faff;
+  --CT_skiplinkColor: #333;
+  --CT_skiplinkBorderColor: #bfc6cd;
+  --CT_headerBgStart: rgba(176, 159, 136, 0.3);
+  --CT_headerBgEnd: rgba(176, 159, 136, 0);
+  --CT_headerColor: inherit;
+  --CT_pageTitleBorderColor: #a0abfd;
+  --CT_sidebarBgStart: rgba(176, 159, 136, 0.15);
+  --CT_sidebarBgEnd: rgba(176, 159, 136, 0.3);
+  --CT_sidebarEndBgStart: rgba(176, 159, 136, 0.6);
+  --CT_sidebarEndBgEnd: rgba(176, 159, 136, 0.8);
+  --CT_libraryBodyBg: #faf4e8;
+  --CT_homeBodyBg: #faf4e8;
+  --CT_homeBodyCreateBorderColor: #636b82;
+  --CT_cardBg: #ebe6d2;
+  --CT_cardBorderColor: #ebe6d2;
+  --CT_cardImgBg: rgba(176, 159, 136, 0.3);
+  --CT_cardLibraryBoxShadowRGB: 251, 251, 251;
+  --CT_cardLoginBgRGB: 176, 159, 136;
+  --CT_cardLoginBgOpacity: 0.3;
+  --CT_cardLoginForgotBorderColor: #d3cfc9;
+  --CT_figureCaptionBg: #ebe3d5;
+  --CT_figureCaptionColor: #666;
+  --CT_btnPrimaryFocusRingRGB: 99, 107, 130;
+  --CT_btnPrimaryBg: #a0abfd;
+  --CT_btnPrimaryColor: #111;
+  --CT_btnPrimaryBorderColor: transparent;
+  --CT_btnPrimaryHoverBg: #8e98e1;
+  --CT_btnPrimaryHoverColor: #111;
+  --CT_btnPrimaryHoverBorderColor: transparent;
+  --CT_btnPrimaryActiveBg: #828bce;
+  --CT_btnPrimaryActiveColor: #111;
+  --CT_btnPrimaryActiveBorderColor: transparent;
+  --CT_btnSecondaryFocusRingRGB: 99, 107, 130;
+  --CT_btnSecondaryBg: #ff554d;
+  --CT_btnSecondaryColor: #111;
+  --CT_btnSecondaryBorderColor: transparent;
+  --CT_btnSecondaryHoverBg: #ec4f47;
+  --CT_btnSecondaryHoverColor: #111;
+  --CT_btnSecondaryHoverBorderColor: transparent;
+  --CT_btnSecondaryActiveBg: #d94841;
+  --CT_btnSecondaryActiveColor: #000;
+  --CT_btnSecondaryActiveBorderColor: transparent;
+  --CT_btnNavFocusRingRGB: 99, 107, 130;
+  --CT_btnNavBg: transparent;
+  --CT_btnNavColor: #6e6355;
+  --CT_btnNavBorderColor: transparent;
+  --CT_btnNavHoverBg: transparent;
+  --CT_btnNavHoverColor: #4d453c;
+  --CT_btnNavHoverBorderColor: transparent;
+  --CT_btnNavActiveBg: transparent;
+  --CT_btnNavActiveColor: #3d362f;
+  --CT_btnNavActiveBorderColor: transparent;
+  --CT_btnSettingFocusRingRGB: 99, 107, 130;
+  --CT_btnSettingBg: rgba(250, 244, 232, 0.7);
+  --CT_btnSettingColor: #ff554d;
+  --CT_btnSettingBorderColor: transparent;
+  --CT_btnSettingHoverBg: rgba(250, 244, 232, 0.85);
+  --CT_btnSettingHoverColor: #ff554d;
+  --CT_btnSettingHoverBorderColor: transparent;
+  --CT_btnSettingActiveBg: #faf4e8;
+  --CT_btnSettingActiveColor: #ff554d;
+  --CT_btnSettingActiveBorderColor: transparent;
+  --CT_btnSettingTextShadowColorRGB: 99, 107, 130;
+  --CT_btnSettingTextShadowOpacity: 0.75;
+  --CT_btnToolFocusRingRGB: 99, 107, 130;
+  --CT_btnToolBg: rgba(250, 244, 232, 0.7);
+  --CT_btnToolColor: #6e6355;
+  --CT_btnToolBorderColor: transparent;
+  --CT_btnToolHoverBg: rgba(250, 244, 232, 0.85);
+  --CT_btnToolHoverColor: #6e6355;
+  --CT_btnToolHoverBorderColor: transparent;
+  --CT_btnToolActiveBg: #faf4e8;
+  --CT_btnToolActiveColor: #6e6355;
+  --CT_btnToolActiveBorderColor: transparent;
+  --CT_btnOptionFocusRingRGB: 99, 107, 130;
+  --CT_btnOptionBg: #fff;
+  --CT_btnOptionColor: #333;
+  --CT_btnOptionBorderColor: transparent;
+  --CT_btnOptionHoverBg: #fff;
+  --CT_btnOptionHoverColor: #333;
+  --CT_btnOptionHoverBorderColor: #636b82;
+  --CT_btnOptionActiveBg: #ff554d;
+  --CT_btnOptionActiveColor: #111;
+  --CT_btnOptionActiveBorderColor: transparent;
+  --CT_btnOptionActiveBoxShadowRGB: 99, 107, 130;
+  --CT_btnOptionActiveBoxShadowOpacity: 0.9;
+  --CT_btnOptionActiveHoverBorderColor: #636b82;
+  --CT_popoverBg: #faf4e8;
+  --CT_popoverBorderColor: #636b82;
+  --CT_popoverHeaderBg: #a0abfd;
+  --CT_popoverHeaderColor: #333;
+  --CT_popoverHeaderBorderColor: #d3cfc9;
+  --CT_popoverBodyColor: #333;
+  --CT_popoverFooterBg: #a0abfd;
+  --CT_popoverFooterColor: #333;
+  --CT_popoverFooterBorderColor: #d3cfc9;
+  --CT_popoverSectionBorderColor: #d3cfc9;
+  --CT_modalBackdropBg: #343e48;
+  --CT_modalBackdropOpacity: 0.25;
+  --CT_modalContentBg: #faf4e8;
+  --CT_modalContentColor: #333;
+  --CT_modalContentBorderColor: #636b82;
+  --CT_modalHeaderBg: #a0abfd;
+  --CT_modalHeaderColor: #333;
+  --CT_modalHeaderBorderColor: #d3cfc9;
+  --CT_modalFooterBg: #a0abfd;
+  --CT_modalFooterColor: #333;
+  --CT_modalFooterBorderColor: #d3cfc9;
+  --CT_modalSectionBorderColor: #d3cfc9;
+  --CT_settingBorderColor: #d3cfc9;
+  --CT_settingTitleColor: #666;
+  --CT_settingModalContentBg: #ebe3d5;
+  --CT_settingModalContentColor: #333;
+  --CT_settingModalContentBorderColor: #636b82;
+  --CT_settingModalHeaderBg: #d3cfc9;
+  --CT_settingModalHeaderBgRGB: 211, 207, 201;
+  --CT_settingModalHeaderBgOpacity: 0.7;
+  --CT_settingModalHeaderBorderColor: #d3cfc9;
+  --CT_settingModalFooterBg: transparent;
+  --CT_settingModalFooterBorderColor: #d3cfc9;
+  --CT_goalModalTitleColor: inherit;
+  --CT_goalModalSubtitleColor: inherit;
+  --CT_rankingBorderColor: #d3cfc9;
+  --CT_formCheckradioBorderColor: #636b82;
+  --CT_formCheckradioCheckedBg: #ff554d;
+  --CT_formCheckradioCheckedBorderColor: #ff554d;
+  --CT_formCheckradioFocusBorderColor: #636b82;
+  --CT_formCheckradioFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formCheckradioFocusBoxShadowOpacity: 0.85;
+  --CT_formCheckradioCheckedBoxShadowRGB: 99, 107, 130;
+  --CT_formCheckradioCheckedBoxShadowOpacity: 0.9;
+  --CT_formRangeTrackBg: #d3cfc9;
+  --CT_formRangeThumbBg: #ff554d;
+  --CT_formRangeThumbBoxShadowRGB: 99, 107, 130;
+  --CT_formRangeThumbBoxShadowOpacity: 0.9;
+  --CT_formRangeThumbFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formRangeThumbFocusBoxShadowOpacity: 0.85;
+  --CT_formRangeThumbActiveBg: #ff554d;
+  --CT_formSwitchTrackBg: #d3cfc9;
+  --CT_formSwitchTrackBorderColor: #636b82;
+  --CT_formSwitchTrackFocusBorderColor: #636b82;
+  --CT_formSwitchTrackFocusBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchTrackFocusBoxShadowOpacity: 0.85;
+  --CT_formSwitchTrackCheckedBg: #ff554d;
+  --CT_formSwitchTrackCheckedBorderColor: #636b82;
+  --CT_formSwitchThumbBg: #fbfbfb;
+  --CT_formSwitchThumbBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchThumbBoxShadowOpacity: 0.9;
+  --CT_formSwitchThumbFocusBg: #fbfbfb;
+  --CT_formSwitchThumbCheckedBg: #fbfbfb;
+  --CT_formSwitchThumbCheckedBorderColor: #fbfbfb;
+  --CT_formSwitchThumbCheckedBoxShadowRGB: 99, 107, 130;
+  --CT_formSwitchThumbCheckedBoxShadowOpacity: 0.9;
+  --CT_wordbankBorderColor: #d3cfc9;
+  --CT_wordbankColBg: #ebe3d5;
 }

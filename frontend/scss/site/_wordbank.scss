@@ -19,7 +19,7 @@
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
-    border-bottom: 3px solid #bfc6cd;
+    border-bottom: 3px solid var(--CT_wordbankBorderColor);
 
     &::after {
         position: absolute;
@@ -37,11 +37,11 @@
 .wordbank-col {
     flex: 1 0 25%;
     align-self: stretch;
-    border-left: 2px solid #bfc6cd;
+    border-left: 2px solid var(--CT_wordbankBorderColor);
 
     &:nth-child(1),
     &:nth-child(3) {
-        background-color: #eff1f3;
+        background-color: var(--CT_wordbankColBg);
     }
 }
 

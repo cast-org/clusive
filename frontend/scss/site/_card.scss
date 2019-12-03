@@ -1,7 +1,7 @@
 .card-img {
     overflow: hidden;
     text-align: center;
-    background-color: #70afa7;
+    background-color: var(--CT_cardImgBg);
 
     .is-portrait {
         width: auto;
@@ -12,7 +12,7 @@
 }
 
 .card-login {
-    background-color: #6eaba6;
+    background-color: rgba(var(--CT_cardLoginBgRGB), var(--CT_cardLoginBgOpacity));
     border-color: transparent;
 
     .card-body {
@@ -21,15 +21,7 @@
 }
 
 .card-login-forgot {
-    border-top: 3px solid rgba(#ebe6d2, .25);
-
-    a:not(.btn) {
-        color: #003080;
-
-        @include hover() {
-            color: palette(#003080, 700);
-        }
-    }
+    border-top: 3px solid var(--CT_cardLoginForgotBorderColor);
 }
 
 .card-login-error {
