@@ -10,8 +10,7 @@
         gradeNames: ["fluid.prefs.auxSchema.starter"],
         mergePolicy: {
             "auxiliarySchema.tableOfContents": "replace",
-            "auxiliarySchema.enhanceInputs": "replace",
-            "auxiliarySchema.enhanceInputs.classes": "replace"            
+            "auxiliarySchema.enhanceInputs": "replace"                        
         },
         auxiliarySchema: {
             "tableOfContents": null,
@@ -23,7 +22,16 @@
                     "sepia": "clusive-theme-sepia"
                 },
                 "panel": null
-            }
+            },
+            "textFont": {
+                "panel": null
+            },
+            "textSize": {
+                "panel": null
+            },
+            "lineSpace": {
+                "panel": null
+            }            
         }
     });
 
