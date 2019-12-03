@@ -77,6 +77,10 @@
                                                         "this": "{that}.dom.reset",
                                                         "method": "click",
                                                         "args": "{prefsEditorLoader}.prefsEditor.reset"
+                                                    },
+                                                    "{prefsEditorLoader}.prefsEditor.events.afterReset": {
+                                                        "func": "{that}.setModalSettingsByPreferences",
+                                                        "namespace": "setModalAfterReset"
                                                     }                                            
                                                 }    
                                             }                                        

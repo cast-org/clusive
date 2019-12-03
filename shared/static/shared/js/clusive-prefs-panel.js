@@ -68,13 +68,6 @@
 
     fluid.defaults("cisl.prefs.modalSettings", {
         gradeNames: ["gpii.binder.bindOnCreate"],
-        listeners: {
-            "onCreate.log": {
-                "this": "console",
-                "method": "log",
-                "args": ["{that}"]
-            }
-        },
         model: {
             modalSettings: {                
             },
@@ -101,6 +94,12 @@
                 1: "default",
                 1.2: "wide",
                 1.4: "wider"
+            }
+        },
+        invokers: {
+            setModalSettingsByPreferences: {
+                funcName: "cisl.prefs.modalSettings.setModalSettingsByPreferences",
+                args: ["{that}.model.preferences", "{that}"]
             }
         },
         modelListeners: {
@@ -130,8 +129,7 @@
                 excludeSource: "init"
             },
             "preferences": {
-                funcName: "cisl.prefs.modalSettings.setModalSettingsByPreferences",
-                args: ["{that}.model.preferences", "{that}"],
+                func: "{that}.setModalSettingsByPreferences",
                 includeSource: "init"
             }                 
         },
