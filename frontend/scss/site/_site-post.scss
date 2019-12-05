@@ -114,14 +114,14 @@ $btn-themes: map-merge(
         "night":
         (
             "base": #40998b,
-            "bg": #000000 !important,
-            "color": #FEFEFE,
+            "bg": #000 !important,
+            "color": #fefefe,
             "border-color": #7e8aad,
-            "hover-bg": #000000 !important,
-            "hover-color": #FEFEFE,
+            "hover-bg": #000 !important,
+            "hover-color": #fefefe,
             "hover-border-color": #40998b,
-            "active-bg": #000000 !important,
-            "active-color": #FEFEFE,
+            "active-bg": #000 !important,
+            "active-color": #fefefe,
             "active-border-color": #7e8aad
         ),
         "sepia":
