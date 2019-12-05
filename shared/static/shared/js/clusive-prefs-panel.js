@@ -87,7 +87,7 @@
             },
             modalLetterSpacingToPreference: {
                 "default": 1,
-                "wide": 1.2,
+                "wide": 1.25,
                 "wider": 1.5
             },
             preferenceLetterSpaceToModal: {
