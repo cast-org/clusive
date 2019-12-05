@@ -4,6 +4,10 @@
 {% block bodyClass %}library{% endblock %}
 {% block title %}Library | Clusive{% endblock %}
 
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
+{% endblock %}
+
 {% block content %}
 {% include "shared/partial/site_header.html" with page_title="Library" user_actions=True %}
 

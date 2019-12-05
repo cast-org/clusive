@@ -14,11 +14,8 @@ var pub_id = "{{ pub_id }}";
 {% block title %}Welcome to Clusive{% endblock %}
 
 {% block sidebar_start %}
-{% include "shared/partial/sidebar_start.html" with index_reader=True nav=True %}
-{% endblock %}
-
-{% block sidebar_end %}
-{% include "shared/partial/sidebar_end.html" %}
+<!-- todo: nav should be true in paged mode, or for multi=chapter content -->
+{% include "shared/partial/sidebar_start.html" with index_reader=True nav=False %}
 {% endblock %}
 
 {% block content %}
