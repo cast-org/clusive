@@ -6,7 +6,7 @@
             This div is for the sliding panel bar that shows and hides the Preference Editor controls in the mobile view.
             A separate panel bar for mobile displays is needed to preserver the correct tab order.
         -->
-        <div class="fl-panelBar fl-panelBar-smallScreen" style="display: none">
+        <div class="fl-panelBar fl-panelBar-smallScreen">
             <span class="fl-prefsEditor-buttons">
                 <button class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide"> Show/Hide</button>
                 <button class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span> Reset</button>
@@ -20,7 +20,7 @@
             This div is for the sliding panel bar that shows and hides the Preference Editor controls in the desktop view.
             A separate panel bar for desktop displays is needed to preserver the correct tab order.
         -->
-        <div class="fl-panelBar fl-panelBar-wideScreen" style="display: none">
+        <div class="fl-panelBar fl-panelBar-wideScreen" style="display: none;">
             <span class="fl-prefsEditor-buttons">
                 <button class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide"> Show/Hide</button>
                 <button class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span> Reset</button>
@@ -29,21 +29,12 @@
     </div>
     <!-- END markup for Preference Editor -->
     <script>            
-        
-        {% if prefs_include_glossary %}
-        var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditor.html' %}";
-        var buildGradeNames =  [
-                            "cisl.prefs.auxSchema.starter", // starter set
-                            "cisl.prefs.auxSchema.glossary.demo", // glossary
-                            "fluid.prefs.auxSchema.letterSpace" // letter space                            
-                            ]
-        {% elif not prefs_include_glossary %}                            
+
         var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
         var buildGradeNames =  [
                             "cisl.prefs.auxSchema.starter", // starter set
-                            "fluid.prefs.auxSchema.letterSpace", // letter space
-                            ]        
-        {% endif %}
+                            "cisl.prefs.auxSchema.letterSpace", // letter space
+                            ]                
 
         var prefsEditor;
         $(document).ready(function () {            
@@ -86,6 +77,10 @@
                                                         "this": "{that}.dom.reset",
                                                         "method": "click",
                                                         "args": "{prefsEditorLoader}.prefsEditor.reset"
+                                                    },
+                                                    "{prefsEditorLoader}.prefsEditor.events.afterReset": {
+                                                        "func": "{that}.setModalSettingsByPreferences",
+                                                        "namespace": "setModalAfterReset"
                                                     }                                            
                                                 }    
                                             }                                        

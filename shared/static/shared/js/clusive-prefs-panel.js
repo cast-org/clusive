@@ -10,11 +10,28 @@
         gradeNames: ["fluid.prefs.auxSchema.starter"],
         mergePolicy: {
             "auxiliarySchema.tableOfContents": "replace",
-            "auxiliarySchema.enhanceInputs": "replace"
+            "auxiliarySchema.enhanceInputs": "replace"                        
         },
         auxiliarySchema: {
             "tableOfContents": null,
-            "enhanceInputs": null,       
+            "enhanceInputs": null,
+            "contrast": {
+                "classes": {
+                    "default": "clusive-theme-default",
+                    "night": "clusive-theme-night",
+                    "sepia": "clusive-theme-sepia"
+                },
+                "panel": null
+            },
+            "textFont": {
+                "panel": null
+            },
+            "textSize": {
+                "panel": null
+            },
+            "lineSpace": {
+                "panel": null
+            }            
         }
     });
 
@@ -26,7 +43,7 @@
             "fluid.prefs.contrast": {
                 "type": "string",
                 "default": "default",
-                "enum": ["default", "bw", "wb", "lgdg", "gw", "bbr"]
+                "enum": ["default", "night", "sepia"]
             }
         }
     });
@@ -40,47 +57,17 @@
         }
     });
 
-    fluid.defaults("cisl.prefs.auxSchema.glossary.demo", {
-        gradeNames: ["cisl.prefs.auxSchema.glossary"],
+    fluid.defaults("cisl.prefs.auxSchema.letterSpace", {
+        gradeNames: ["fluid.prefs.auxSchema.letterSpace"],
         auxiliarySchema: {
-            glossary: {
-                panel: {
-                    template: DJANGO_STATIC_ROOT + "shared/html/PrefsEditorTemplate-glossaryToggle.html",
-                    message: DJANGO_STATIC_ROOT + "shared/messages/glossary.json"
-                },
-                enactor: {
-                    type: "cisl.prefs.enactor.glossary.demo"
-                }
+            letterSpace: {
+                panel: null
             }
         }
     });
-
-    fluid.defaults("cisl.prefs.enactor.glossary.demo", {
-        gradeNames: ["cisl.prefs.enactor.glossary"],
-        invokers: {
-            applyGlossary: {
-                funcName: "cisl.prefs.enactor.glossary.demo.applyGlossary",
-                args: ["{arguments}.0",
-                "{that}"
-                ]
-            }
-        }
-    });
-
-    cisl.prefs.enactor.glossary.demo.applyGlossary = function(enableGlossary, that) {        
-        // Apply glossary step
-        cisl.prefs.enactor.glossary.applyGlossary(enableGlossary, that);
-    };
 
     fluid.defaults("cisl.prefs.modalSettings", {
         gradeNames: ["gpii.binder.bindOnCreate"],
-        listeners: {
-            "onCreate.log": {
-                "this": "console",
-                "method": "log",
-                "args": ["{that}"]
-            }
-        },
         model: {
             modalSettings: {                
             },
@@ -107,6 +94,12 @@
                 1: "default",
                 1.2: "wide",
                 1.4: "wider"
+            }
+        },
+        invokers: {
+            setModalSettingsByPreferences: {
+                funcName: "cisl.prefs.modalSettings.setModalSettingsByPreferences",
+                args: ["{that}.model.preferences", "{that}"]
             }
         },
         modelListeners: {
@@ -136,8 +129,7 @@
                 excludeSource: "init"
             },
             "preferences": {
-                funcName: "cisl.prefs.modalSettings.setModalSettingsByPreferences",
-                args: ["{that}.model.preferences", "{that}"],
+                func: "{that}.setModalSettingsByPreferences",
                 includeSource: "init"
             }                 
         },

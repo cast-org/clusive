@@ -1,28 +1,28 @@
 {% if index_home %}
-<a href="{% url 'index' %}" class="btn btn-link btn-icon" aria-label="Back to library">
+<a href="{% url 'index' %}" class="btn btn-nav btn-icon" aria-label="Back to library">
     <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
 </a>
 {% endif %}
 {% if index_reader %}
-<a href="{% url 'reader_index' %}" class="btn btn-link btn-icon" aria-label="Back to library">
+<a href="{% url 'reader_index' %}" class="btn btn-nav btn-icon" aria-label="Back to library">
     <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
 </a>
 {% endif %}
 {% if nav %}
 <nav class="sidebar-nav" aria-label="Article">
-    <button type="button" class="btn btn-link" aria-label="Contents">
+    <button type="button" class="btn btn-nav btn-icon" aria-label="Contents">
         <span class="icon-menu" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-link btn-icon" aria-label="Previous page">
+    <button type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
         <span class="icon-chevron-left" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-link btn-icon" aria-label="Next page">
+    <button type="button" class="btn btn-nav btn-icon" aria-label="Next page">
         <span class="icon-chevron-right" aria-hidden="true"></span>
     </button>
 </nav>
 {% endif %}
 <div class="sidebar-support" role="region" aria-label="Support">
-    <button type="button" class="btn btn-link btn-icon btn-help" aria-label="Help/Information">
+    <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
         <span class="icon-help" aria-hidden="true"></span>
         <span class="icon-attention" aria-hidden="true"></span>
     </button>

@@ -22,125 +22,132 @@ $btn-themes: map-merge(
     (
         "primary":
         (
-            "base": #40998b,
-            "bg": #abfcef,
-            "color": #111,
-            "border-color": transparent,
-            "hover-bg": palette(#abfcef, 600),
-            "hover-color": #111,
-            "hover-border-color": transparent,
-            "active-bg": palette(#abfcef, 700),
-            "active-color": #111,
-            "active-border-color": transparent
+            "base": var(--CT_btnPrimaryFocusRingRGB),
+            "bg": var(--CT_btnPrimaryBg),
+            "color": var(--CT_btnPrimaryColor),
+            "border-color": var(--CT_btnPrimaryBorderColor),
+            "hover-bg": var(--CT_btnPrimaryHoverBg),
+            "hover-color": var(--CT_btnPrimaryHoverColor),
+            "hover-border-color": var(--CT_btnPrimaryHoverBorderColor),
+            "active-bg": var(--CT_btnPrimaryActiveBg),
+            "active-color": var(--CT_btnPrimaryActiveColor),
+            "active-border-color": var(--CT_btnPrimaryActiveBorderColor)
         ),
         "secondary":
         (
-            "base": #40998b,
-            "bg": rgba(#7d89ac, .35),
-            "color": #111,
-            "border-color": transparent,
-            "hover-bg": rgba(#7d89ac, .7),
-            "hover-color": #111,
-            "hover-border-color": transparent,
-            "active-bg": rgba(#7d89ac, .9),
-            "active-color": #111,
-            "active-border-color": transparent
+            "base": var(--CT_btnSecondaryFocusRingRGB),
+            "bg": var(--CT_btnSecondaryBg),
+            "color": var(--CT_btnSecondaryColor),
+            "border-color": var(--CT_btnSecondaryBorderColor),
+            "hover-bg": var(--CT_btnSecondaryHoverBg),
+            "hover-color": var(--CT_btnSecondaryHoverColor),
+            "hover-border-color": var(--CT_btnSecondaryHoverBorderColor),
+            "active-bg": var(--CT_btnSecondaryActiveBg),
+            "active-color": var(--CT_btnSecondaryActiveColor),
+            "active-border-color": var(--CT_btnSecondaryActiveBorderColor)
         ),
-        "tertiary":
+        "nav":
         (
-            "base": #40998b,
-            "bg": #ff554d,
-            "color": #111,
-            "border-color": transparent,
-            "hover-bg": palette(#ff554d, 600),
-            "hover-color": #111,
-            "hover-border-color": transparent,
-            "active-bg": palette(#7d89ac, 700),
-            "active-color": #111,
-            "active-border-color": transparent
+            "base": var(--CT_btnNavFocusRingRGB),
+            "bg": var(--CT_btnNavBg),
+            "color": var(--CT_btnNavColor),
+            "border-color": var(--CT_btnNavBorderColor),
+            "hover-bg": var(--CT_btnNavHoverBg),
+            "hover-color": var(--CT_btnNavHoverColor),
+            "hover-border-color": var(--CT_btnNavHoverBorderColor),
+            "active-bg": var(--CT_btnNavActiveBg),
+            "active-color": var(--CT_btnNavActiveColor),
+            "active-border-color": var(--CT_btnNavActiveBorderColor)
         ),
         "setting":
         (
-            "base": #40998b,
-            "bg": rgba(#abfcef, .85),
-            "color": #ff554d,
-            "border-color": transparent,
-            "hover-bg": rgba(#abfcef, 1),
-            "hover-color": #ff554d,
-            "hover-border-color": transparent,
-            "active-bg": palette(#abfcef, 600),
-            "active-color": #ff554d,
-            "active-border-color": transparent
+            "base": var(--CT_btnSettingFocusRingRGB),
+            "bg": var(--CT_btnSettingBg),
+            "color": var(--CT_btnSettingColor),
+            "border-color": var(--CT_btnSettingBorderColor),
+            "hover-bg": var(--CT_btnSettingHoverBg),
+            "hover-color": var(--CT_btnSettingHoverColor),
+            "hover-border-color": var(--CT_btnSettingHoverBorderColor),
+            "active-bg": var(--CT_btnSettingActiveBg),
+            "active-color": var(--CT_btnSettingActiveColor),
+            "active-border-color": var(--CT_btnSettingActiveBorderColor)
         ),
         "tool":
         (
-            "base": #40998b,
-            "bg": rgba(#abfcef, .85),
-            "color": #636b82,
-            "border-color": transparent,
-            "hover-bg": rgba(#abfcef, 1),
-            "hover-color": #636b82,
-            "hover-border-color": transparent,
-            "active-bg": palette(#abfcef, 600),
-            "active-color": #636b82,
-            "active-border-color": transparent
+            "base": var(--CT_btnToolFocusRingRGB),
+            "bg": var(--CT_btnToolBg),
+            "color": var(--CT_btnToolColor),
+            "border-color": var(--CT_btnToolBorderColor),
+            "hover-bg": var(--CT_btnToolHoverBg),
+            "hover-color": var(--CT_btnToolHoverColor),
+            "hover-border-color": var(--CT_btnToolHoverBorderColor),
+            "active-bg": var(--CT_btnToolActiveBg),
+            "active-color": var(--CT_btnToolActiveColor),
+            "active-border-color": var(--CT_btnToolActiveBorderColor)
         ),
         "option":
         (
-            "base": #40998b,
-            "bg": $white,
-            "color": #636b81,
-            "border-color": transparent,
-            "hover-bg": $white,
-            "hover-color": #636b81,
-            "hover-border-color": #40998b,
-            "active-bg": #66faff,
-            "active-color": #111,
-            "active-border-color": transparent
+            "base": var(--CT_btnOptionFocusRingRGB),
+            "bg": var(--CT_btnOptionBg),
+            "color": var(--CT_btnOptionColor),
+            "border-color": var(--CT_btnOptionBorderColor),
+            "hover-bg": var(--CT_btnOptionHoverBg),
+            "hover-color": var(--CT_btnOptionHoverColor),
+            "hover-border-color": var(--CT_btnOptionHoverBorderColor),
+            "active-bg": var(--CT_btnOptionActiveBg),
+            "active-color": var(--CT_btnOptionActiveColor),
+            "active-border-color": var(--CT_btnOptionActiveBorderColor)
         ),
         "default":
         (
-            "base": #40998b,
+            "base": #636b82,
             "bg": $white !important,
             "color": #111,
             "border-color": transparent,
             "hover-bg": $white !important,
             "hover-color": #111,
-            "hover-border-color": #40998b,
+            "hover-border-color": #636b82,
             "active-bg": $white !important,
             "active-color": #111,
             "active-border-color": transparent
         ),
-        "bbr":
+        "night":
         (
             "base": #40998b,
-            "bg": #b96 !important,
-            "color": #000,
+            "bg": #000000 !important,
+            "color": #FEFEFE,
             "border-color": #7e8aad,
-            "hover-bg": #ded9c4 !important,
-            "hover-color": #000,
+            "hover-bg": #000000 !important,
+            "hover-color": #FEFEFE,
             "hover-border-color": #40998b,
-            "active-bg": #b96 !important,
-            "active-color": #000,
+            "active-bg": #000000 !important,
+            "active-color": #FEFEFE,
             "active-border-color": #7e8aad
         ),
-        "wb":
+        "sepia":
         (
             "base": #40998b,
-            "bg": #000 !important,
-            "color": #fff,
+            "bg": #faf4e8 !important,
+            "color": #121212,
             "border-color": transparent,
-            "hover-bg": #000 !important,
-            "hover-color": #fff,
+            "hover-bg": #faf4e8 !important,
+            "hover-color": #121212,
             "hover-border-color": #40998b,
-            "active-bg": #000 !important,
-            "active-color": #fff,
+            "active-bg": #faf4e8 !important,
+            "active-color": #121212,
             "active-border-color": transparent
         )
     )
 );
 
 $btn-sizes: (
+    "xsmall": (
+        "padding-y":     null,
+        "padding-x":     null,
+        "font-size":     ($font-size-base * .75),
+        "line-height":   null,
+        "border-radius": .1875rem
+    ),
     "splash": (
         "padding-y":     null,
         "padding-x":     null,

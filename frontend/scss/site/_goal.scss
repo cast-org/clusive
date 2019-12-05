@@ -3,13 +3,13 @@
         @include font-size($goal-modal-title-font-size);
         font-style: $goal-modal-title-font-style;
         font-weight: $goal-modal-title-font-weight;
-        color: $goal-modal-title-color;
+        color: var(--CT_goalModalTitleColor);
     }
     .modal-subtitle {
         @include font-size($goal-modal-subtitle-font-size);
         font-style: $goal-modal-subtitle-font-style;
         font-weight: $goal-modal-subtitle-font-weight;
-        color: $goal-modal-subtitle-color;
+        color: var(--CT_goalModalSubtitleColor);
     }
     .modal-footer {
         justify-content: flex-start;
@@ -20,18 +20,6 @@
     .ranking {
         margin-right: 2rem;
         margin-left: 2rem;
-
-        &::before {
-            background-color: $goal-ranking-border-color;
-        }
-    }
-
-    a:not(.btn) {
-        color: #00399c;
-
-        @include hover() {
-            color: palette(#00399c, 700);
-        }
     }
 }
 
@@ -50,14 +38,9 @@
 
 .goal-speak {
     margin-left: -.25rem;
-    color: #636b82;
+    @include font-size(.75rem);
     text-decoration: none;
-
-    &:hover,
-    &:focus {
-        color: #333;
-        text-decoration: none;
-    }
+    //vertical-align: text-top;
 
     > [class*="icon-"] {
         @include font-size(1.5rem);

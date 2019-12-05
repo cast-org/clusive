@@ -14,7 +14,7 @@
         width: calc(100% - #{$ranking-margin-x * 3});
         height: $ranking-border-width;
         content: "";
-        background-color: $ranking-border-color;
+        background-color: var(--CT_rankingBorderColor);
         transform: translateY(-50%);
     }
 

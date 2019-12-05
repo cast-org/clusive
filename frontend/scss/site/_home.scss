@@ -1,5 +1,5 @@
 .home {
-    background-color: $library-bg;
+    background-color: var(--CT_homeBodyBg);
 
     .content {
         max-width: 100%;
@@ -35,24 +35,13 @@
         }
     }
 
-    .user-actions,
-    .content,
-    .site-footer {
-        a:not(.btn) {
-            color: #00399c;
-
-            @include hover() {
-                color: palette(#00399c, 700);
-            }
-        }
-    }
 }
 
 .home-create {
     padding-top: .5rem;
     margin-top: 1rem;
     margin-bottom: 2rem;
-    border-top: 3px solid rgba(#636b82, .25);
+    border-top: 3px solid var(--CT_homeBodyCreateBorderColor);
 
     @include media-breakpoint-up(sm) {
         margin-bottom: 1rem;

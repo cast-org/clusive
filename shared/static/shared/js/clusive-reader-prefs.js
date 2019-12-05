@@ -97,25 +97,13 @@
                             outputValue: "day"
                         },
                         {
-                            inputValue: "wb",
+                            inputValue: "night",
                             outputValue: "night"
                         },
                         {
-                            inputValue: "bw",
-                            outputValue: "day"
-                        },
-                        {
-                            inputValue: "lgdg",
-                            outputValue: "lgdg"
-                        },
-                        {
-                            inputValue: "bbr",
-                            outputValue: "bbr"
-                        },
-                        {
-                            inputValue: "gw",
-                            outputValue: "gw"
-                        }                        
+                            inputValue: "sepia",
+                            outputValue: "sepia"
+                        }                                          
                     ]
                 }                
             }
