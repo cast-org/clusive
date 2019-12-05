@@ -76,24 +76,24 @@
         },
         mappedValues: {
             modalLineSpacingToPreference: {
-                "default": 1,
-                "tall": 1.5,
+                "default": 1.2,
+                "tall": 1.6,
                 "taller": 2
             },
             preferenceLineSpaceToModal: {
-              1: "default",
-              1.5: "tall",
+              1.2: "default",
+              1.6: "tall",
               2: "taller"
             },
             modalLetterSpacingToPreference: {
                 "default": 1,
-                "wide": 1.2,
-                "wider": 1.4
+                "wide": 1.25,
+                "wider": 1.5
             },
             preferenceLetterSpaceToModal: {
                 1: "default",
-                1.2: "wide",
-                1.4: "wider"
+                1.25: "wide",
+                1.5: "wider"
             }
         },
         invokers: {
