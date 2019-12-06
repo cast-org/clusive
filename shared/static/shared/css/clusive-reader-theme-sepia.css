@@ -1,15 +1,14 @@
-/* Used to generate new Readium themes ("appearances") */
 :root[style*="sepia"] {
   --RS__backgroundColor: #faf4e8;
   --RS__textColor: #333;
   --RS__linkColor: #0d36ab;
   --RS__visitedColor: #0d36ab;
-  /* This can be customized but initial will re-use default value of the browser */
   --RS__selectionBackgroundColor: #acfdf0;
   --RS__selectionTextColor: #111;
   --CRT_figureCaptionBg: #ebe3d5;
   --CRT_figureCaptionColor: #666;
   --CRT_glossaryUnderline: #a0abfd;
+  --CRT_imgMixBlendMode: multiply;
   --RS__maxLineLength: 40.01rem;
 }
 
@@ -30,7 +29,6 @@
 
 :root[style*="sepia"] svg,
 :root[style*="sepia"] img {
-  /* Make sure the proper bg-color is used for the blend mode */
   background-color: transparent !important;
-  mix-blend-mode: multiply;
+  mix-blend-mode: var(--CRT_imgMixBlendMode);
 }

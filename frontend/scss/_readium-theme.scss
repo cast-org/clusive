@@ -1,4 +1,4 @@
-/* Used to generate new Readium themes ("appearances") */
+// Used to generate new Readium themes ("appearances")
 
 $selector: "root";
 @if ($themeName != null) {
@@ -11,7 +11,7 @@ $selector: "root";
     --RS__linkColor: #{$linkColor};
     --RS__visitedColor: #{$linkColor};
 
-    /* This can be customized but initial will re-use default value of the browser */
+    // This can be customized but initial will re-use default value of the browser
     --RS__selectionBackgroundColor: #{$selectionBackgroundColor};
     --RS__selectionTextColor: #{$selectionTextColor};
 
@@ -20,6 +20,8 @@ $selector: "root";
     --CRT_figureCaptionColor: #{$figure-caption-color};
     --CRT_glossaryUnderline: #{$glossary-underline};
 
+    // Image blend
+    --CRT_imgMixBlendMode: #{$img-mix-blend-mode};
 
     // Forcing a reflow in Blink/Webkit so that blend mode can work
     --RS__maxLineLength: 40.01rem;
@@ -44,9 +46,9 @@ $selector: "root";
 
     svg,
     img {
-        /* Make sure the proper bg-color is used for the blend mode */
+        // Make sure the proper bg-color is used for the blend mode
         // stylelint-disable-next-line declaration-no-important
         background-color: transparent !important;
-        mix-blend-mode: multiply;
+        mix-blend-mode: var(--CRT_imgMixBlendMode);
     }
 }
