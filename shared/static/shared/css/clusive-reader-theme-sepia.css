@@ -1,6 +1,6 @@
 /* Used to generate new Readium themes ("appearances") */
-:root {
-  --RS__backgroundColor: #fbfbfb;
+:root[style*="sepia"] {
+  --RS__backgroundColor: #faf4e8;
   --RS__textColor: #333;
   --RS__linkColor: #0d36ab;
   --RS__visitedColor: #0d36ab;
@@ -9,55 +9,28 @@
   --RS__selectionTextColor: #111;
   --CRT_figureCaptionBg: #ebe3d5;
   --CRT_figureCaptionColor: #666;
-  --CRT_glossaryUnderline: #acfdf0;
+  --CRT_glossaryUnderline: #a0abfd;
   --RS__maxLineLength: 40.01rem;
 }
 
-:root body {
+:root[style*="sepia"] body {
   color: var(--RS__textColor);
   background-color: var(--RS__backgroundColor);
 }
 
-:root a:link,
-:root a:link * {
+:root[style*="sepia"] a:link,
+:root[style*="sepia"] a:link * {
   color: var(--RS__linkColor);
 }
 
-:root a:visited,
-:root a:visited * {
+:root[style*="sepia"] a:visited,
+:root[style*="sepia"] a:visited * {
   color: var(--RS__visitedColor);
 }
 
-:root svg,
-:root img {
+:root[style*="sepia"] svg,
+:root[style*="sepia"] img {
   /* Make sure the proper bg-color is used for the blend mode */
   background-color: transparent !important;
   mix-blend-mode: multiply;
-}
-
-@media (max-width: 47.98em) {
-  :root {
-    --RS__pageGutter: 10px;
-  }
-}
-
-@media (max-width: 35.98em) {
-  :root {
-    --RS__pageGutter: 0;
-  }
-}
-
-figcaption,
-.figure-caption,
-.caption {
-  padding: .5rem;
-  color: var(--CRT_figureCaptionColor);
-  background-color: var(--CRT_figureCaptionBg);
-}
-
-a.gloss,
-a.gloss:hover {
-  color: inherit !important;
-  text-decoration: none;
-  box-shadow: inset 0 -0.0625em transparent, inset 0 -0.125em 0 0 var(--CRT_glossaryUnderline);
 }

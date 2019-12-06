@@ -1,0 +1,36 @@
+/* Used to generate new Readium themes ("appearances") */
+:root[style*="night"] {
+  --RS__backgroundColor: #121212;
+  --RS__textColor: #fbfbfb;
+  --RS__linkColor: #eceff5;
+  --RS__visitedColor: #eceff5;
+  /* This can be customized but initial will re-use default value of the browser */
+  --RS__selectionBackgroundColor: #acfdf0;
+  --RS__selectionTextColor: #111;
+  --CRT_figureCaptionBg: #272727;
+  --CRT_figureCaptionColor: #eceff5;
+  --CRT_glossaryUnderline: #ff554d;
+  --RS__maxLineLength: 40.01rem;
+}
+
+:root[style*="night"] body {
+  color: var(--RS__textColor);
+  background-color: var(--RS__backgroundColor);
+}
+
+:root[style*="night"] a:link,
+:root[style*="night"] a:link * {
+  color: var(--RS__linkColor);
+}
+
+:root[style*="night"] a:visited,
+:root[style*="night"] a:visited * {
+  color: var(--RS__visitedColor);
+}
+
+:root[style*="night"] svg,
+:root[style*="night"] img {
+  /* Make sure the proper bg-color is used for the blend mode */
+  background-color: transparent !important;
+  mix-blend-mode: multiply;
+}

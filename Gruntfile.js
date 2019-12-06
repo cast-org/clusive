@@ -125,9 +125,8 @@ module.exports = function (grunt) {
                 files: {
                     'frontend/dist/css/<%= pkg.name %>.css': 'frontend/scss/<%= pkg.name %>.scss',
                     'frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',
-                    'frontend/dist/css/<%= pkg.name %>-reader-theme-lgdg.css': 'frontend/scss/<%= pkg.name %>-reader-theme-lgdg.scss',
-                    'frontend/dist/css/<%= pkg.name %>-reader-theme-bbr.css': 'frontend/scss/<%= pkg.name %>-reader-theme-bbr.scss',
-                    'frontend/dist/css/<%= pkg.name %>-reader-theme-gw.css': 'frontend/scss/<%= pkg.name %>-reader-theme-gw.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-sepia.css': 'frontend/scss/<%= pkg.name %>-reader-theme-sepia.scss',
+                    'frontend/dist/css/<%= pkg.name %>-reader-theme-night.css': 'frontend/scss/<%= pkg.name %>-reader-theme-night.scss',
                     'frontend/dist/css/reader-frame.css': 'frontend/scss/reader-frame.scss'
                 }
             }
