@@ -4185,6 +4185,30 @@ button.list-item-action {
   border-top: 3px solid rgba(99, 107, 130, 0.25);
 }
 
+.ff-default {
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.ff-times {
+  font-family: Georgia, Times, "Times New Roman", serif !important;
+}
+
+.ff-comic {
+  font-family: "Comic Sans MS", sans-serif !important;
+}
+
+.ff-arial {
+  font-family: "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.ff-verdana {
+  font-family: Verdana, sans-serif !important;
+}
+
+.ff-dyslexic {
+  font-family: OpenDyslexicRegular, sans-serif !important;
+}
+
 :focus {
   outline-color: var(--CT_focusRingColor);
 }
