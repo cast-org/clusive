@@ -10,16 +10,19 @@ $link-hover-color:                      palette($link-color, 700);
 $focus-ring-color:                      #636b82;
 
 $selection-bg:                          #acfdf0;
+$selection-color:                       #111;
 
 $btn-focus-box-shadow-alpha:            .8;
 
 $border-color:                          #bfc6cd;
 
 $skiplink-bg:                           #66faff;
-$skiplink-color:                        $body-color;
-$skiplink-border-color:                 $border-color;
+$skiplink-color:                        #333;
+$skiplink-border-color:                 #333;
 
 $library-bg:                            #72c0b2;
+$library-logo-icon-color:               #fbfbfb;
+$library-logo-text-color:               #333;
 
 $home-bg:                               #72c0b2;
 $home-create-border-color:              #636b82;
@@ -28,6 +31,8 @@ $header-bg:                             #636b82;
 $header-color:                          inherit;
 $header-opacity-start:                  .3;
 $header-opacity-end:                    0;
+$header-logo-icon-color:                #fbfbfb;
+$header-logo-text-color:                #636b82;
 $page-title-border-color:               #acfdf0;
 
 $sidebar-bg:                            $header-bg;
@@ -43,11 +48,13 @@ $figure-caption-color:                  #666;
 
 // Cards
 $card-bg:                               #ebe6d2;
+$card-color:                            $body-color;
 $card-border-color:                     #ebe6d2;
-$card-img-bg:                           rgba(#636b82, .3);
+$card-img-bg:                           rgba(#72c0b2, .6);
 $card-library-box-shadow:               #fbfbfb;
 $card-login-bg:                         #acfdf0;
 $card-login-bg-opacity:                 .3;
+$card-login-color:                      $body-color;
 $card-login-forgot-border-color:        #d3cfc9;
 
 // Buttons
@@ -160,6 +167,7 @@ $setting-modal-content-color:           #333;
 $setting-modal-content-border-color:    #636b82;
 $setting-modal-header-bg:               #d3cfc9;
 $setting-modal-header-bg-opacity:       .7;
+$setting-modal-header-color:            #333;
 $setting-modal-header-border-color:     #d3cfc9;
 $setting-modal-footer-bg:               transparent;
 $setting-modal-footer-border-color:     #d3cfc9;
@@ -206,7 +214,9 @@ $form-switch-thumb-checked-box-shadow-opacity:  .9;
 
 // Word bank
 $wordbank-border-color:                 #d3cfc9;
-$wordbank-col-bg:                       #ebe3d5;
+$wordbank-col-bg:                       rgba(#ebe3d5, .3);
+$wordbank-control-color:                $link-color;
+$wordbank-control-hover-color:          $link-hover-color;
 
 // Texthelp overrides
 $readaloud-highlight-bg:                #fd6;

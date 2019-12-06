@@ -12,6 +12,7 @@
 }
 
 .card-login {
+    color: var(--CT_cardLoginColor);
     background-color: rgba(var(--CT_cardLoginBgRGB), var(--CT_cardLoginBgOpacity));
     border-color: transparent;
 

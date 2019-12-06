@@ -1,4 +1,9 @@
+:focus {
+    outline-color: var(--CT_focusRingColor);
+}
+
 ::selection {
+    color: var(--CT_selectionColor);
     background-color: var(--CT_selectionBg);
 }
 

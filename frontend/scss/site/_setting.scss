@@ -6,6 +6,7 @@
         border-color: var(--CT_settingModalContentBorderColor);
     }
     .modal-header {
+        color: var(--CT_settingModalHeaderColor);
         background-color: rgba(var(--CT_settingModalHeaderBgRGB), var(--CT_settingModalHeaderBgOpacity));
         border-bottom: $setting-modal-header-border-width solid var(--CT_settingModalHeaderBorderColor);
     }
