@@ -9,9 +9,11 @@
     --CT_linkColor: #{$link-color};
     --CT_linkHoverColor: #{$link-hover-color};
 
+    --CT_focusRingColor: #{$focus-ring-color};
     --CT_focusRingRGB: #{red($focus-ring-color), green($focus-ring-color), blue($focus-ring-color)};
 
     --CT_selectionBg: #{$selection-bg};
+    --CT_selectionColor: #{$selection-color};
 
     --CT_skiplinkBg: #{$skiplink-bg};
     --CT_skiplinkColor: #{$skiplink-color};
@@ -20,6 +22,8 @@
     --CT_headerBgStart: #{rgba($header-bg, $header-opacity-start)};
     --CT_headerBgEnd: #{rgba($header-bg, $header-opacity-end)};
     --CT_headerColor: #{$header-color};
+    --CT_headerLogoIconColor: #{$header-logo-icon-color};
+    --CT_headerLogoTextColor: #{$header-logo-text-color};
     --CT_pageTitleBorderColor: #{$page-title-border-color};
 
     --CT_sidebarBgStart: #{rgba($sidebar-bg, $sidebar-opacity-start)};
@@ -28,17 +32,21 @@
     --CT_sidebarEndBgEnd: #{rgba($sidebar-end-bg, $sidebar-end-opacity-end)};
 
     --CT_libraryBodyBg: #{$library-bg};
+    --CT_libraryLogoIconColor: #{$library-logo-icon-color};
+    --CT_libraryLogoTextColor: #{$library-logo-text-color};
 
     --CT_homeBodyBg: #{$home-bg};
     --CT_homeBodyCreateBorderColor: #{$home-create-border-color};
 
     --CT_cardBg: #{$card-bg};
+    --CT_cardColor: #{$card-color};
     --CT_cardBorderColor: #{$card-border-color};
     --CT_cardImgBg: #{$card-img-bg};
     --CT_cardLibraryBoxShadowRGB: #{red($card-library-box-shadow), green($card-library-box-shadow), blue($card-library-box-shadow)};
 
     --CT_cardLoginBgRGB: #{red($card-login-bg), green($card-login-bg), blue($card-login-bg)};
     --CT_cardLoginBgOpacity: #{$card-login-bg-opacity};
+    --CT_cardLoginColor: #{$card-login-color};
     --CT_cardLoginForgotBorderColor: #{$card-login-forgot-border-color};
 
     --CT_figureCaptionBg: #{$figure-caption-bg};
@@ -147,6 +155,7 @@
     --CT_settingModalHeaderBg: #{$setting-modal-header-bg};
     --CT_settingModalHeaderBgRGB: #{red($setting-modal-header-bg), green($setting-modal-header-bg), blue($setting-modal-header-bg)};
     --CT_settingModalHeaderBgOpacity: #{$setting-modal-header-bg-opacity};
+    --CT_settingModalHeaderColor: #{$setting-modal-header-color};
     --CT_settingModalHeaderBorderColor: #{$setting-modal-header-border-color};
     --CT_settingModalFooterBg: #{$setting-modal-footer-bg};
     --CT_settingModalFooterBorderColor: #{$setting-modal-footer-border-color};
@@ -192,4 +201,6 @@
 
     --CT_wordbankBorderColor: #{$wordbank-border-color};
     --CT_wordbankColBg: #{$wordbank-col-bg};
+    --CT_wordbankControlColor: #{$wordbank-control-color};
+    --CT_wordbankControlHoverColor: #{$wordbank-control-hover-color};
 }

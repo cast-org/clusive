@@ -1,5 +1,13 @@
 .library {
     background-color: var(--CT_libraryBodyBg);
+
+    .site-header-logo {
+        color: var(--CT_libraryLogoTextColor);
+
+        .icon-logo-clusive-toggle {
+            color: var(--CT_libraryLogoIconColor);
+        }
+    }
 }
 
 .library-grid {

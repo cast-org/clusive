@@ -1,4 +1,30 @@
+// stylelint-disable declaration-no-important
+.ff-default {
+    font-family: $font-family-sans-serif !important;
+}
+.ff-times {
+    font-family: Georgia, Times, "Times New Roman", serif !important;
+}
+.ff-comic {
+    font-family: "Comic Sans MS", sans-serif !important;
+}
+.ff-arial {
+    font-family: "Helvetica Neue", Arial, sans-serif !important;
+}
+.ff-verdana {
+    font-family: Verdana, sans-serif !important;
+}
+.ff-dyslexic {
+    font-family: OpenDyslexicRegular, sans-serif !important;
+}
+// stylelint-enable declaration-no-important
+
+:focus {
+    outline-color: var(--CT_focusRingColor);
+}
+
 ::selection {
+    color: var(--CT_selectionColor);
     background-color: var(--CT_selectionBg);
 }
 

@@ -77,6 +77,8 @@
     flex: 1 1 auto;
     align-items: center;
     padding-left: calc(.25rem + 2px);
+    margin-bottom: .75rem;
+    line-height: 1;
     white-space: nowrap;
 
     &.offset0 {
@@ -105,13 +107,20 @@
 .wordbank-next,
 .wordbank-del {
     padding: .125rem .25rem;
-    font-weight: 700;
+    @include font-size(.875rem);
     line-height: 1;
+    color: var(--CT_wordbankControlColor);
     text-decoration: none;
+    vertical-align: middle;
 
     &:hover,
     &:focus {
-        text-decoration: underline;
+        color: var(--CT_wordbankControlHoverColor);
+        text-decoration: none;
+    }
+
+    > [class*="icon-"] {
+        vertical-align: middle;
     }
 }
 

@@ -25,11 +25,12 @@
 .site-header-logo {
     display: inline-block;
     @include font-size(1.75rem);
+    color: var(--CT_headerLogoTextColor);
     white-space: nowrap;
     vertical-align: middle;
 
     .icon-logo-clusive-toggle {
-        color: #fbfbfb;
+        color: var(--CT_headerLogoIconColor);
     }
 
     a {
@@ -51,7 +52,6 @@
     .site-header-logo {
         @include font-size(1rem);
         line-height: 1;
-        color: #636b82;
     }
 
     @include media-breakpoint-up(sm) {
