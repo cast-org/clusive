@@ -65,10 +65,10 @@ EXPOSE 8000
 STOPSIGNAL SIGINT
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
-#COPY docker/configurations /usr/share/configurations
-#ADD  docker/entrypoint.sh /usr/local/bin/
+HEALTHCHECK --interval=10s --timeout=3s \
+	CMD wget --quiet --tries=1 --spider http://localhost:8000/ || exit 1
 
-#ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-#CMD ["nginx", "-g", "daemon off;"]
+# gunicorn configuration suggestions from https://pythonspeed.com/articles/gunicorn-in-docker/
+CMD ["gunicorn", "clusive_project.wsgi", "--bind=0.0.0.0:8000", "--worker-tmp-dir=/dev/shm", \
+	"--workers=2", "--threads=4", "--worker-class=gthread"]
