@@ -12,8 +12,7 @@
         color: var(--CT_goalModalSubtitleColor);
     }
     .modal-footer {
-        justify-content: flex-start;
-        //padding: $goal-modal-footer-padding-y $goal-modal-footer-padding-x;
+        display: block;
         @include font-size($goal-modal-footer-font-size);
     }
 

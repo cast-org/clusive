@@ -1598,6 +1598,11 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
   border-radius: 0.1875rem;
 }
 
+.btn-small {
+  font-size: 0.875rem;
+  border-radius: 0.1875rem;
+}
+
 .btn-splash {
   font-size: 1.5rem;
   border-radius: 0.5rem;
@@ -4658,7 +4663,7 @@ h3, .h3,
 }
 
 .goal-modal .modal-footer {
-  justify-content: flex-start;
+  display: block;
   font-size: 0.875rem;
 }
 
@@ -4693,6 +4698,50 @@ h3, .h3,
 .goal-thanks {
   padding-right: .5rem;
   font-size: 0.875rem;
+}
+
+.why-modal .modal-title {
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--CT_whyModalTitleColor);
+}
+
+.why-modal .modal-footer {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.why-icon {
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--CT_whyIconColor);
+}
+
+.why-icon.active {
+  color: var(--CT_whyIconActiveColor);
+  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(var(--CT_whyIconActiveTextShadowColorRGB), var(--CT_whyIconActiveTextShadowOpacity));
+}
+
+.why-level {
+  margin: 0 0 1rem;
+}
+
+.why-level-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.why-level-item .why-icon {
+  padding-bottom: .125rem;
+}
+
+@media (max-width: 47.98em) {
+  .why-level-item + .why-level-item {
+    margin-top: 1rem;
+  }
 }
 
 .wordbank-scroll {
@@ -5000,6 +5049,12 @@ h3, .h3,
   --CT_settingModalFooterBorderColor: #d3cfc9;
   --CT_goalModalTitleColor: inherit;
   --CT_goalModalSubtitleColor: inherit;
+  --CT_whyModalTitleColor: inherit;
+  --CT_whyIconColor: #636b82;
+  --CT_whyIconActiveColor: #ff554d;
+  --CT_whyIconActiveTextShadowColor: #636b82;
+  --CT_whyIconActiveTextShadowColorRGB: 99, 107, 130;
+  --CT_whyIconActiveTextShadowOpacity: 0.75;
   --CT_rankingBorderColor: #d3cfc9;
   --CT_formCheckradioBorderColor: #636b82;
   --CT_formCheckradioCheckedBg: #ff554d;
@@ -5182,6 +5237,12 @@ h3, .h3,
   --CT_settingModalFooterBorderColor: #d3cfc9;
   --CT_goalModalTitleColor: inherit;
   --CT_goalModalSubtitleColor: inherit;
+  --CT_whyModalTitleColor: inherit;
+  --CT_whyIconColor: #6e6355;
+  --CT_whyIconActiveColor: #ff554d;
+  --CT_whyIconActiveTextShadowColor: #6e6355;
+  --CT_whyIconActiveTextShadowColorRGB: 110, 99, 85;
+  --CT_whyIconActiveTextShadowOpacity: 0.75;
   --CT_rankingBorderColor: #d3cfc9;
   --CT_formCheckradioBorderColor: #636b82;
   --CT_formCheckradioCheckedBg: #ff554d;
@@ -5364,6 +5425,12 @@ h3, .h3,
   --CT_settingModalFooterBorderColor: #363740;
   --CT_goalModalTitleColor: inherit;
   --CT_goalModalSubtitleColor: inherit;
+  --CT_whyModalTitleColor: inherit;
+  --CT_whyIconColor: #eceff5;
+  --CT_whyIconActiveColor: #ff554d;
+  --CT_whyIconActiveTextShadowColor: #fbfbfb;
+  --CT_whyIconActiveTextShadowColorRGB: 251, 251, 251;
+  --CT_whyIconActiveTextShadowOpacity: 0.75;
   --CT_rankingBorderColor: #363740;
   --CT_formCheckradioBorderColor: #636b82;
   --CT_formCheckradioCheckedBg: #ff554d;

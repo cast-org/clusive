@@ -163,6 +163,13 @@
     --CT_goalModalTitleColor: #{$goal-modal-title-color};
     --CT_goalModalSubtitleColor: #{$goal-modal-subtitle-color};
 
+    --CT_whyModalTitleColor: #{$why-modal-title-color};
+    --CT_whyIconColor: #{$why-icon-color};
+    --CT_whyIconActiveColor: #{$why-icon-active-color};
+    --CT_whyIconActiveTextShadowColor: #{$why-icon-active-text-shadow-color};
+    --CT_whyIconActiveTextShadowColorRGB: #{red($why-icon-active-text-shadow-color), green($why-icon-active-text-shadow-color), blue($why-icon-active-text-shadow-color)};
+    --CT_whyIconActiveTextShadowOpacity: #{$why-icon-active-text-shadow-opacity};
+
     --CT_rankingBorderColor: #{$ranking-border-color};
 
     --CT_formCheckradioBorderColor: #{$form-checkradio-border-color};
