@@ -21,16 +21,21 @@
     width: 100%;
     border-bottom: 3px solid var(--CT_wordbankBorderColor);
 
-    &::after {
-        position: absolute;
-        top: .125rem;
-        right: 0;
-        // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
-        font-family: fontello;
-        @include font-size(1.25rem);
-        line-height: 1;
-        vertical-align: middle;
-        content: "\0e844";
+    //&::after {
+    //    position: absolute;
+    //    top: .125rem;
+    //    right: 0;
+    //    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+    //    font-family: fontello;
+    //    @include font-size(1.25rem);
+    //    line-height: 1;
+    //    vertical-align: middle;
+    //    content: "\0e844";
+    //}
+
+    .wordbank-col {
+        position: relative;
+        padding-bottom: .75rem;
     }
 }
 
@@ -38,11 +43,6 @@
     flex: 1 0 25%;
     align-self: stretch;
     border-left: 2px solid var(--CT_wordbankBorderColor);
-
-    &:nth-child(1),
-    &:nth-child(3) {
-        background-color: var(--CT_wordbankColBg);
-    }
 }
 
 .wordbank-title {
@@ -50,11 +50,55 @@
     text-align: center;
 }
 
+.wordbank-count {
+    position: absolute;
+    bottom: calc(-.75rem + 2px);
+    left: 50%;
+    z-index: 1;
+    @include font-size(.875rem);
+    line-height: 1;
+    color: var(--CT_wordbankCountColor);
+    transform: translateX(-50%);
+
+    &::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: -1;
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        content: "";
+        background-color: var(--CT_wordbankCountBg);
+        border: 1px solid var(--CT_wordbankCountBorderColor);
+        @include border-radius(10rem);
+        transform: translate3d(-50%, -50%, 0);
+    }
+}
+
+.wordbank-count-empty {
+    color: var(--CT_wordbankCountEmptyColor);
+
+    &::before {
+        background-color: var(--CT_wordbankCountEmptyBg);
+        border-color: var(--CT_wordbankCountEmptyBorderColor);
+    }
+}
+
+
 .wordbank-body {
     position: relative;
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
+    border-bottom: 2px solid var(--CT_wordbankBorderColor);
+
+    .wordbank-col {
+        &:nth-child(2),
+        &:nth-child(4) {
+            background-color: var(--CT_wordbankColBg);
+        }
+    }
 }
 
 .wordbank-body-bg {
@@ -77,7 +121,7 @@
     flex: 1 1 auto;
     align-items: center;
     padding-left: calc(.25rem + 2px);
-    margin-bottom: .75rem;
+    margin: .75rem 0;
     line-height: 1;
     white-space: nowrap;
 
