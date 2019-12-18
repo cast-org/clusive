@@ -4,6 +4,8 @@ import os
 
 from django.contrib.staticfiles import finders
 
+from glossary.utils import base_form
+
 logger = logging.getLogger(__name__)
 
 # Methods for looking up words in a book's glossary
@@ -27,7 +29,8 @@ class BookGlossary:
                 rawdata = json.load(file)
                 self.data = {}
                 for worddata in rawdata:
-                    self.data[worddata['headword'].lower()] = worddata
+                    base = base_form(worddata['headword'])
+                    self.data[base] = worddata
                     for altform in worddata['alternateForms']:
                         self.data[altform.lower()] = worddata
         except EnvironmentError:

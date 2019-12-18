@@ -9,6 +9,7 @@ from django.http import JsonResponse, HttpResponseNotFound
 from glossary.apps import GlossaryConfig
 from glossary.bookglossary import BookGlossary
 from glossary.models import WordModel
+from glossary.utils import base_form, all_forms
 from library.models import Book
 from roster.models import ClusiveUser
 from wordnet import util as wordnetutil
@@ -86,7 +87,11 @@ def cuelist(request, document):
 
         WordModel.register_cues(user, cue_words)
 
-        return JsonResponse({'words': sorted(cue_words)})
+        map_to_forms = {}
+        for word in cue_words:
+            map_to_forms[word] = sorted(all_forms(word))
+
+        return JsonResponse({'words': map_to_forms})
     except ClusiveUser.DoesNotExist:
         logger.warning("Could not fetch cue words, no Clusive user: %s", request.user)
         return JsonResponse({'words': []})
@@ -94,21 +99,22 @@ def cuelist(request, document):
 def glossdef(request, document, cued, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
     source = None
+    base = base_form(word)
 
     # First try to find in a book glossary
     if not book_glossaries.get(document):
         book_glossaries[document] = BookGlossary(document)
-    defs = book_glossaries[document].lookup(word)
+    defs = book_glossaries[document].lookup(base)
     if (defs):
         source = 'Book'
     else:
         # Next try Wordnet
-        defs = wordnetutil.lookup(word)
+        defs = wordnetutil.lookup(base)
         source = 'Wordnet'
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
-                      word=word,
+                      word=base,
                       cued=cued,
                       source = source)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
@@ -122,19 +128,23 @@ def glossdef(request, document, cued, word):
 def get_word_rating(request, word):
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        wm = WordModel.objects.get(user=user, word=word)
+        base = base_form(word)
+        wm = WordModel.objects.get(user=user, word=base)
         return JsonResponse({ 'rating': wm.rating })
     except WordModel.DoesNotExist:
-        return JsonResponse({'rating' : False})
+        return JsonResponse({'word' : base,
+                             'rating' : False})
     except ClusiveUser.DoesNotExist:
         logger.warning("No clusive user, can't fetch ratings")
-        return JsonResponse({'rating' : False})
+        return JsonResponse({'word' : base,
+                             'rating' : False})
 
 
 def set_word_rating(request, word, rating):
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        wm, created = WordModel.objects.get_or_create(user=user, word=word)
+        base = base_form(word)
+        wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
             wm.rating = rating
             wm.save()
