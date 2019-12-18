@@ -159,6 +159,13 @@ $modal-section-border-color:            #363740;
 $goal-modal-title-color:                inherit;
 $goal-modal-subtitle-color:             inherit;
 
+// Why modal
+$why-modal-title-color:                 inherit;
+$why-icon-color:                        #eceff5;
+$why-icon-active-color:                 #ff554d;
+$why-icon-active-text-shadow-color:     #fbfbfb;
+$why-icon-active-text-shadow-opacity:   .75;
+
 // Settings
 $setting-border-color:                  #363740;
 $setting-title-color:                   #eceff5;
@@ -217,6 +224,12 @@ $wordbank-border-color:                 #d3cfc9;
 $wordbank-col-bg:                       rgba(#ebe3d5, .1);
 $wordbank-control-color:                #a0abfd;
 $wordbank-control-hover-color:          palette($wordbank-control-color, 700);
+$wordbank-count-bg:                     #ff554d;
+$wordbank-count-color:                  #fbfbfb;
+$wordbank-count-border-color:           #ff554d;
+$wordbank-count-empty-bg:               #fff;
+$wordbank-count-empty-color:            #333;
+$wordbank-count-empty-border-color:     #636b82;
 
 // Texthelp overrides
 $readaloud-highlight-bg:                #fd6;

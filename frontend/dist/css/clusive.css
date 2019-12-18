@@ -1598,6 +1598,11 @@ fieldset:disabled a.btn, .btn-check-input[disabled] ~ .btn {
   border-radius: 0.1875rem;
 }
 
+.btn-small {
+  font-size: 0.875rem;
+  border-radius: 0.1875rem;
+}
+
 .btn-splash {
   font-size: 1.5rem;
   border-radius: 0.5rem;
@@ -4658,7 +4663,7 @@ h3, .h3,
 }
 
 .goal-modal .modal-footer {
-  justify-content: flex-start;
+  display: block;
   font-size: 0.875rem;
 }
 
@@ -4695,6 +4700,50 @@ h3, .h3,
   font-size: 0.875rem;
 }
 
+.why-modal .modal-title {
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--CT_whyModalTitleColor);
+}
+
+.why-modal .modal-footer {
+  display: block;
+  font-size: 0.875rem;
+}
+
+.why-icon {
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--CT_whyIconColor);
+}
+
+.why-icon.active {
+  color: var(--CT_whyIconActiveColor);
+  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(var(--CT_whyIconActiveTextShadowColorRGB), var(--CT_whyIconActiveTextShadowOpacity));
+}
+
+.why-level {
+  margin: 0 0 1rem;
+}
+
+.why-level-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.why-level-item .why-icon {
+  padding-bottom: .125rem;
+}
+
+@media (max-width: 47.98em) {
+  .why-level-item + .why-level-item {
+    margin-top: 1rem;
+  }
+}
+
 .wordbank-scroll {
   display: block;
   width: 100%;
@@ -4719,15 +4768,9 @@ h3, .h3,
   border-bottom: 3px solid var(--CT_wordbankBorderColor);
 }
 
-.wordbank-header::after {
-  position: absolute;
-  top: .125rem;
-  right: 0;
-  font-family: fontello;
-  font-size: 1.25rem;
-  line-height: 1;
-  vertical-align: middle;
-  content: "\0e844";
+.wordbank-header .wordbank-col {
+  position: relative;
+  padding-bottom: .75rem;
 }
 
 .wordbank-col {
@@ -4736,13 +4779,44 @@ h3, .h3,
   border-left: 2px solid var(--CT_wordbankBorderColor);
 }
 
-.wordbank-col:nth-child(1), .wordbank-col:nth-child(3) {
-  background-color: var(--CT_wordbankColBg);
-}
-
 .wordbank-title {
   font-size: 0.875rem;
   text-align: center;
+}
+
+.wordbank-count {
+  position: absolute;
+  bottom: calc(-0.75rem + 2px);
+  left: 50%;
+  z-index: 1;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: var(--CT_wordbankCountColor);
+  transform: translateX(-50%);
+}
+
+.wordbank-count::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  content: "";
+  background-color: var(--CT_wordbankCountBg);
+  border: 1px solid var(--CT_wordbankCountBorderColor);
+  border-radius: 10rem;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.wordbank-count-empty {
+  color: var(--CT_wordbankCountEmptyColor);
+}
+
+.wordbank-count-empty::before {
+  background-color: var(--CT_wordbankCountEmptyBg);
+  border-color: var(--CT_wordbankCountEmptyBorderColor);
 }
 
 .wordbank-body {
@@ -4750,6 +4824,11 @@ h3, .h3,
   display: flex;
   flex-wrap: nowrap;
   width: 100%;
+  border-bottom: 2px solid var(--CT_wordbankBorderColor);
+}
+
+.wordbank-body .wordbank-col:nth-child(2), .wordbank-body .wordbank-col:nth-child(4) {
+  background-color: var(--CT_wordbankColBg);
 }
 
 .wordbank-body-bg {
@@ -4772,7 +4851,7 @@ h3, .h3,
   flex: 1 1 auto;
   align-items: center;
   padding-left: calc(0.25rem + 2px);
-  margin-bottom: .75rem;
+  margin: .75rem 0;
   line-height: 1;
   white-space: nowrap;
 }
@@ -4970,6 +5049,12 @@ h3, .h3,
   --CT_settingModalFooterBorderColor: #d3cfc9;
   --CT_goalModalTitleColor: inherit;
   --CT_goalModalSubtitleColor: inherit;
+  --CT_whyModalTitleColor: inherit;
+  --CT_whyIconColor: #636b82;
+  --CT_whyIconActiveColor: #ff554d;
+  --CT_whyIconActiveTextShadowColor: #636b82;
+  --CT_whyIconActiveTextShadowColorRGB: 99, 107, 130;
+  --CT_whyIconActiveTextShadowOpacity: 0.75;
   --CT_rankingBorderColor: #d3cfc9;
   --CT_formCheckradioBorderColor: #636b82;
   --CT_formCheckradioCheckedBg: #ff554d;
@@ -5005,6 +5090,12 @@ h3, .h3,
   --CT_wordbankColBg: rgba(235, 227, 213, 0.3);
   --CT_wordbankControlColor: #0d36ab;
   --CT_wordbankControlHoverColor: #092678;
+  --CT_wordbankCountBg: #ff554d;
+  --CT_wordbankCountColor: #fbfbfb;
+  --CT_wordbankCountBorderColor: #ff554d;
+  --CT_wordbankCountEmptyBg: #fff;
+  --CT_wordbankCountEmptyColor: #333;
+  --CT_wordbankCountEmptyBorderColor: #636b82;
 }
 
 .clusive-theme-sepia {
@@ -5146,6 +5237,12 @@ h3, .h3,
   --CT_settingModalFooterBorderColor: #d3cfc9;
   --CT_goalModalTitleColor: inherit;
   --CT_goalModalSubtitleColor: inherit;
+  --CT_whyModalTitleColor: inherit;
+  --CT_whyIconColor: #6e6355;
+  --CT_whyIconActiveColor: #ff554d;
+  --CT_whyIconActiveTextShadowColor: #6e6355;
+  --CT_whyIconActiveTextShadowColorRGB: 110, 99, 85;
+  --CT_whyIconActiveTextShadowOpacity: 0.75;
   --CT_rankingBorderColor: #d3cfc9;
   --CT_formCheckradioBorderColor: #636b82;
   --CT_formCheckradioCheckedBg: #ff554d;
@@ -5181,6 +5278,12 @@ h3, .h3,
   --CT_wordbankColBg: rgba(235, 227, 213, 0.3);
   --CT_wordbankControlColor: #0d36ab;
   --CT_wordbankControlHoverColor: #092678;
+  --CT_wordbankCountBg: #ff554d;
+  --CT_wordbankCountColor: #fbfbfb;
+  --CT_wordbankCountBorderColor: #ff554d;
+  --CT_wordbankCountEmptyBg: #fff;
+  --CT_wordbankCountEmptyColor: #333;
+  --CT_wordbankCountEmptyBorderColor: #636b82;
 }
 
 .clusive-theme-night {
@@ -5322,6 +5425,12 @@ h3, .h3,
   --CT_settingModalFooterBorderColor: #363740;
   --CT_goalModalTitleColor: inherit;
   --CT_goalModalSubtitleColor: inherit;
+  --CT_whyModalTitleColor: inherit;
+  --CT_whyIconColor: #eceff5;
+  --CT_whyIconActiveColor: #ff554d;
+  --CT_whyIconActiveTextShadowColor: #fbfbfb;
+  --CT_whyIconActiveTextShadowColorRGB: 251, 251, 251;
+  --CT_whyIconActiveTextShadowOpacity: 0.75;
   --CT_rankingBorderColor: #363740;
   --CT_formCheckradioBorderColor: #636b82;
   --CT_formCheckradioCheckedBg: #ff554d;
@@ -5357,4 +5466,10 @@ h3, .h3,
   --CT_wordbankColBg: rgba(235, 227, 213, 0.1);
   --CT_wordbankControlColor: #a0abfd;
   --CT_wordbankControlHoverColor: #7078b1;
+  --CT_wordbankCountBg: #ff554d;
+  --CT_wordbankCountColor: #fbfbfb;
+  --CT_wordbankCountBorderColor: #ff554d;
+  --CT_wordbankCountEmptyBg: #fff;
+  --CT_wordbankCountEmptyColor: #333;
+  --CT_wordbankCountEmptyBorderColor: #636b82;
 }
