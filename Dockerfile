@@ -22,7 +22,7 @@ RUN \
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 RUN ./node_modules/grunt-cli/bin/grunt build
