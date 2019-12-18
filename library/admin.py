@@ -7,6 +7,7 @@ from django.contrib.staticfiles import finders
 from django.http import HttpResponseRedirect
 from django.urls import path
 
+from glossary.utils import base_form
 from library.models import Book
 from library.parsing import TextExtractor
 
@@ -77,7 +78,7 @@ def find_glossary_words(book_dir):
     if os.path.exists(glossaryfile):
         with open(glossaryfile, 'r', encoding='utf-8') as file:
             glossary = json.load(file)
-            words = [e['headword'] for e in glossary]
+            words = [base_form(e['headword']) for e in glossary]
             return json.dumps(words)
     else:
         return "[]"

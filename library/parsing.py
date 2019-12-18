@@ -2,6 +2,7 @@ import logging
 from html.parser import HTMLParser
 
 from nltk import RegexpTokenizer
+from glossary.utils import base_form
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,9 @@ class TextExtractor(HTMLParser):
     def get_word_set(self):
         self.close()
         token_list = RegexpTokenizer(r'\w+').tokenize(self.text)
-        token_set = set([w.lower() for w in token_list if w.isalpha()])
+        token_set = set([base for base in
+                         (base_form(w) for w in token_list if w.isalpha())
+                         if base is not None])
         return token_set
 
     def extract(self, html):

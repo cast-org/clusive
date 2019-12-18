@@ -18,7 +18,6 @@ var primaryMarkOptions = {
     separateWordSearch: false,
     acrossElements: true,
     exclude: [ "h1", "h2", "h3", "h4", "h5", "h6", "figure" ],
-    // synonyms: alternatesMap,
     filter: onlyFirstMatch,
     element: "a",
     className: "gloss",
@@ -46,8 +45,13 @@ var secondaryMarkOptions = {
 };
 
 function markCuedWords(words) {
+    // "words" is a map from main form to a list of all forms.
+    var altmap = {};
     for (var i in words) {
-        console.log("Marking " + words[i]);
+        for (var alt in words[i]) {
+            altmap[words[i][alt]] = i;
+        }
+        primaryMarkOptions['synonyms'] = altmap;
         $('body').mark(words[i], primaryMarkOptions);
     }
 }
@@ -56,7 +60,7 @@ function markCuedWords(words) {
 $(function() {
     $.get('/glossary/cuelist/'+window.parent.pub_id)
         .done(function(data, status) {
-            console.log("success: ", data);
+            console.log("Received cuelist: ", data);
             markCuedWords(data.words)
         })
         .fail(function(err) {
