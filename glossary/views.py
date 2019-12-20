@@ -2,26 +2,17 @@ import json
 import logging
 import random
 
+from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render
 
-from django.http import JsonResponse, HttpResponseNotFound
-
+from eventlog.signals import vocab_lookup
 from glossary.apps import GlossaryConfig
-from glossary.bookglossary import BookGlossary
 from glossary.models import WordModel
-from glossary.utils import base_form, all_forms
+from glossary.util import base_form, all_forms, lookup, has_definition
 from library.models import Book
 from roster.models import ClusiveUser
-from wordnet import util as wordnetutil
-from eventlog.signals import vocab_lookup
 
 logger = logging.getLogger(__name__)
-
-# Note, currently these views depend directly on Wordnet.
-# Eventually, the goal is to have multiple possible backends and a way to
-# configure which one(s) to use.
-
-book_glossaries = {}
 
 
 def checklist(request, document):
@@ -39,8 +30,8 @@ def checklist(request, document):
         #logger.debug("Against:  %s", [[wm.word, wm.rating] for wm in user_words])
         gloss_words = [w for w in all_glossary_words if not any(wm.word==w and wm.rating!=None for wm in user_words)]
         logger.debug("Check words from glossary: %s", gloss_words)
-
         check_words = random.sample(gloss_words, k=min(to_find, len(gloss_words)))
+        # TODO: consider other challenging words from article if all glossary words already have ratings
         return JsonResponse({'words': sorted(check_words)})
     except ClusiveUser.DoesNotExist:
         logger.warning("Could not fetch check words, no Clusive user: %s", request.user)
@@ -48,6 +39,7 @@ def checklist(request, document):
     except Book.DoesNotExist:
         logger.error("Unknown book %s", document)
         return JsonResponse({'words': []})
+
 
 def cuelist(request, document):
     """Return the list of words that should be cued in this document for this user"""
@@ -64,13 +56,18 @@ def cuelist(request, document):
 
         # First, find any words where we think the user is interested
         interest_words = [wm.word for wm in user_words
-                          if wm.interest_est()>0 and (wm.knowledge_est()==None or wm.knowledge_est()<3)]
+                          if wm.interest_est()>0
+                          and (wm.knowledge_est()==None or wm.knowledge_est()<3)
+                          and has_definition(document, wm.word)]
         logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
         cue_words = set(interest_words)
 
         # Next look for words where the user has low estimated knowledge
         if len(cue_words) < to_find:
-            unknown_words = set([wm.word for wm in user_words if wm.knowledge_est() and wm.knowledge_est() < 2])
+            unknown_words = set([wm.word for wm in user_words
+                                 if wm.knowledge_est()
+                                 and wm.knowledge_est() < 2
+                                 and has_definition(document, wm.word)])
             logger.debug("Found:  %d low-knowledge words: %s", len(unknown_words), unknown_words)
             unknown_words = unknown_words-cue_words
             #logger.debug("Filter: %d low-knowledge words: %s", len(unknown_words), unknown_words)
@@ -96,27 +93,17 @@ def cuelist(request, document):
         logger.warning("Could not fetch cue words, no Clusive user: %s", request.user)
         return JsonResponse({'words': []})
 
+
 def glossdef(request, document, cued, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
-    source = None
     base = base_form(word)
-
-    # First try to find in a book glossary
-    if not book_glossaries.get(document):
-        book_glossaries[document] = BookGlossary(document)
-    defs = book_glossaries[document].lookup(base)
-    if (defs):
-        source = 'Book'
-    else:
-        # Next try Wordnet
-        defs = wordnetutil.lookup(base)
-        source = 'Wordnet'
+    defs = lookup(document, base)
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=base,
                       cued=cued,
-                      source = source)
+                      source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
         context = {'defs': defs, 'pub_id': document}

@@ -3,9 +3,8 @@ import logging
 import os
 
 from django.contrib.auth.models import User
-from django.urls import reverse
 
-from glossary.utils import base_form, all_forms
+from glossary.util import base_form, all_forms
 from library.models import Book
 from roster.models import ClusiveUser
 
@@ -42,14 +41,14 @@ class GlossaryTestCase(TestCase):
         response = self.client.get('/glossary/rating/something')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
-                     {'rating': False})
+                     {'word': 'something', 'rating': False})
 
     def test_cuelist(self):
         login = self.client.login(username='user1', password='password1')
         response = self.client.get('/glossary/cuelist/test')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
-                                 {'words': ['test']})
+                                 {'words': {'test': ['test', 'tested', 'testing', 'tests']}})
 
     def test_definition(self):
         #login = self.client.login(username='user1', password='password1')

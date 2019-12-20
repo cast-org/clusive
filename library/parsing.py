@@ -2,7 +2,7 @@ import logging
 from html.parser import HTMLParser
 
 from nltk import RegexpTokenizer
-from glossary.utils import base_form
+from glossary.util import base_form
 
 logger = logging.getLogger(__name__)
 
