@@ -1,23 +1,47 @@
+// Basic object for speech synthesis
 
-// 1. Get reader text content
-// 2. Build parallel text to elements structure
+var clusiveTTS = {
+    synth: window.speechSynthesis,
+    elementsToRead: [],    
+    readAloudButtonId: "#readAloudButton"
+};
 
-var clusiveTTS = {};
+// Bind controls
 
-clusiveTTS.readElements = function (elems) {
-    if(elems.length > 0) {
-        var current = elems.shift();
-        clusiveTTS.readElement(current, elems);            
+$(document).ready(function () {
+    $(clusiveTTS.readAloudButtonId).click(function (e) {
+        console.log("read aloud button clicked");
+        if(! clusiveTTS.synth.speaking) {
+            clusiveTTS.readAll(); 
+        } else if (clusiveTTS.synth.speaking) {
+            clusiveTTS.stopReading();
+        }
+    });
+});
+
+// Stop an in-process reading
+
+clusiveTTS.stopReading = function () {
+    clusiveTTS.elementsToRead = [];
+    clusiveTTS.synth.cancel();    
+}
+
+clusiveTTS.readQueuedElements = function () {
+    if(clusiveTTS.elementsToRead.length > 0) {
+        var toRead = clusiveTTS.elementsToRead.shift();
+        clusiveTTS.readElement(toRead);            
     } else {
-        console.log("Done processing");
+        console.log("Done reading elements");
     }
 }
 
-clusiveTTS.readElement = function (textElement, remainingElements) {
-    var synth = window.speechSynthesis;        
+clusiveTTS.readElement = function (textElement) {
+    var synth = clusiveTTS.synth;    
     var element = $(textElement);
     var contentText = element.text();
     
+    // Preserve and hide the original element so we can handle the highlighting in an
+    // element without markup (needs better implementation longer term)
     var copiedElement = element.clone(false); 
     element.after(copiedElement);  
     element.hide();                     
@@ -39,29 +63,29 @@ clusiveTTS.readElement = function (textElement, remainingElements) {
     }
 
     utterance.onend = function (e) {      
+        console.log("utterance ended");
         copiedElement.remove();
         element.show();                  
-        process(remainingElements);
+        clusiveTTS.readQueuedElements();
     }
 
+    element[0].scrollIntoView();
     synth.speak(utterance);
 }
 
-clusiveTTS.start = function() {
-    console.log("tts loaded");
-    
+clusiveTTS.readAll = function() {    
+    // Cancel any active reading
+    clusiveTTS.stopReading();
     clusiveTTS.readerIframe = $("#D2Reader-Container").find("iframe");
     clusiveTTS.readerBody = clusiveTTS.readerIframe.contents().find("body");
 
-    clusiveTTS.textElements = clusiveTTS.readerBody.find("h1,h2,h3,h4,h5,h6,p");
+    var textElements = clusiveTTS.readerBody.find("h1,h2,h3,h4,h5,h6,p");
 
-    textElements = [];
-
-    $.each(clusiveTTS.textElements, function (i, e) {
-        textElements.push(e);
+    $.each(textElements, function (i, e) {
+        clusiveTTS.elementsToRead.push(e);
     });
 
-    clusiveTTS.readElements(textElements);
+    clusiveTTS.readQueuedElements();
 
 };
 
