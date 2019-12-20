@@ -7,7 +7,7 @@ from django.contrib.staticfiles import finders
 from django.http import HttpResponseRedirect
 from django.urls import path
 
-from glossary.utils import base_form
+from glossary.util import base_form
 from library.models import Book
 from library.parsing import TextExtractor
 

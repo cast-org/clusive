@@ -4,7 +4,7 @@ import os
 
 from django.contrib.staticfiles import finders
 
-from glossary.utils import base_form
+import glossary.util as glossaryutil
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class BookGlossary:
                 rawdata = json.load(file)
                 self.data = {}
                 for worddata in rawdata:
-                    base = base_form(worddata['headword'])
+                    base = glossaryutil.base_form(worddata['headword'])
                     self.data[base] = worddata
                     for altform in worddata['alternateForms']:
                         self.data[altform.lower()] = worddata
