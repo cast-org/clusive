@@ -33,7 +33,7 @@ RUN rm -rf node_modules Grunt* package*
 ###
 ### Construct the slim image for deployment (second stage)
 ###
-
+d
 FROM python:3.7-alpine
 
 RUN apk add --no-cache postgresql-libs
