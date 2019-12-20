@@ -33,7 +33,7 @@ RUN rm -rf node_modules Grunt* package*
 ###
 ### Construct the slim image for deployment (second stage)
 ###
-d
+
 FROM python:3.7-alpine
 
 RUN apk add --no-cache postgresql-libs
@@ -57,7 +57,8 @@ WORKDIR /app
 
 RUN python -m nltk.downloader wordnet
 
-COPY --from=base /app /app
+COPY --from=base /app/target /app
+COPY src/entrypoint.sh /app
 
 RUN python manage.py collectstatic --no-input
 
