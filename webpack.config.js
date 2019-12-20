@@ -4,12 +4,12 @@ const path = require('path');
 module.exports = {
     mode: 'development',
     entry: {
-        main: './index.js',
-        internal: './shared/static/shared/js/internal.js'
+        main: './src/index.js',
+        internal: './src/internal.js'
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, 'shared/static/shared/js/lib')
+        path: path.resolve(__dirname, 'target/shared/static/shared/js/lib')
     },
     resolve: {
         alias: {
