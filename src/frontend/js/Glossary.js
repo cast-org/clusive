@@ -1,3 +1,6 @@
+/* eslint-disable strict */
+/* global vocabCheck */
+
 // Glossary-related functionality
 
 var glossaryCurrentWord = null;
@@ -102,7 +105,7 @@ vocabCheck.back = function() {
 
 vocabCheck.update = function() {
     $('#vocabCheckModal input[type="radio"]').prop('checked',false);
-    let currentRating = vocabCheck.ratings[vocabCheck.wordIndex];
+    var currentRating = vocabCheck.ratings[vocabCheck.wordIndex];
     if (currentRating !== null)
         $('#vocabCheck'+currentRating).prop('checked', true);
     if(vocabCheck.wordIndex>0)
@@ -159,7 +162,7 @@ $(function() {
 
     // When ranking in the check-in modal is selected, notify server
     $('#vocabCheckModal').on('change', 'input[type="radio"]', function() {
-        let value = $(this).val();
+        var value = $(this).val();
         $.get('/glossary/rating/'+vocabCheck.words[vocabCheck.wordIndex]+'/'+ value);
         vocabCheck.selected(value);
     });
