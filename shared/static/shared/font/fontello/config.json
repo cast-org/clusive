@@ -359,6 +359,12 @@
       "search": [
         "why1-walk"
       ]
+    },
+    {
+      "uid": "b624a1e512819d410ddbee84e6918b9d",
+      "css": "stop",
+      "code": 59412,
+      "src": "fontawesome"
     }
   ]
 }
