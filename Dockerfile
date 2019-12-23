@@ -22,7 +22,7 @@ RUN \
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 RUN ./node_modules/grunt-cli/bin/grunt build
@@ -57,7 +57,8 @@ WORKDIR /app
 
 RUN python -m nltk.downloader wordnet
 
-COPY --from=base /app /app
+COPY --from=base /app/target /app
+COPY src/entrypoint.sh /app
 
 RUN python manage.py collectstatic --no-input
 

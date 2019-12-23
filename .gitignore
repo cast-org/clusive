@@ -147,10 +147,6 @@ dmypy.json
 
 /node_modules
 
-# Webpack JS build artifacts
-
-shared/static/shared/js/main.js
-
 # Pip install from Git files
 
 src/django-session-timeout

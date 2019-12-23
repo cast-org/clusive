@@ -1,0 +1,18 @@
+{% load static %}
+{% comment %}
+Sets constants based on Django's environment in order to make them available
+to client-side Javascript
+{% endcomment %}
+<script>
+var DJANGO_STATIC_ROOT = "{% static '' %}"
+</script>
+
+<script src="{% static 'shared/js/lib/main.js' %}"></script>
+<script src="{% static 'shared/js/clusive-reader-prefs.js' %}"></script>
+<script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>
+
+<script src="{% static 'shared/js/Glossary.js' %}"></script>
+<script src="{% static 'shared/js/images.js' %}"></script>
+<script src="{% static 'shared/js/frontend.min.js' %}"></script>
+
+<script src="{% static 'shared/js/tts.js' %}"></script>

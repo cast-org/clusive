@@ -5,5 +5,7 @@ whitenoise==4.1.3
 gunicorn==19.9.0
 nltk==3.4.5
 lemminflect==0.2.0
+future==0.18.2
+numpy==1.17.4
 -e git+https://github.com/IMSGlobal/caliper-python@1.1.0.2#egg=imsglobal_caliper
 -e git+https://github.com/cast-org/django-session-timeout#egg=django-session-timeout
