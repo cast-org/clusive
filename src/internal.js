@@ -52,7 +52,7 @@ function markCuedWords(words) {
             altmap[words[i][alt]] = i;
         }
         primaryMarkOptions['synonyms'] = altmap;
-        $('body').mark(words[i], primaryMarkOptions);
+        $('body').mark(i, primaryMarkOptions);
     }
 }
 

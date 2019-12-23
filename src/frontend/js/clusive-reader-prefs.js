@@ -144,7 +144,7 @@
         if (reader) {
             var settingsObj =
             {
-                settingName:settingValue
+                [settingName]:settingValue
             };
             reader.applyUserSettings(settingsObj);
         }

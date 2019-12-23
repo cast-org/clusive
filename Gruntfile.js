@@ -181,7 +181,8 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: 'target/shared/static/shared/js',
-                    src: ['*.js', '!*.min.js'],
+                    // FIXME: clusive-reader-prefs and internal.js are excluded since uglification throws errors or breaks behavior. But why?
+                    src: ['*.js', '!*.min.js', '!clusive-reader-prefs.js', '!internal.js'],
                     dest: 'target/shared/static/shared/js',
                     rename: function (dst, src) {
                         // Keep source js files and make new files as `*.min.js`:
