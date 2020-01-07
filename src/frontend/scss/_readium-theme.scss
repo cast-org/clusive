@@ -19,6 +19,8 @@ $selector: "root";
     --CRT_figureCaptionBg: #{$figure-caption-bg};
     --CRT_figureCaptionColor: #{$figure-caption-color};
     --CRT_glossaryUnderline: #{$glossary-underline};
+    --CRT_ttsBackgroundColor: #{$textColor};
+    --CRT_ttsTextColor: #{$backgroundColor};    
 
     // Image blend
     --CRT_imgMixBlendMode: #{$img-mix-blend-mode};

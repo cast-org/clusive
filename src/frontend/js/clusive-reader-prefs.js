@@ -97,11 +97,11 @@
                         },
                         {
                             inputValue: 'night',
-                            outputValue: 'night'
+                            outputValue: 'clusive-night'
                         },
                         {
                             inputValue: 'sepia',
-                            outputValue: 'sepia'
+                            outputValue: 'clusive-sepia'
                         }
                     ]
                 }

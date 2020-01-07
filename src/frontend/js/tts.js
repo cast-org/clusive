@@ -39,7 +39,8 @@ clusiveTTS.readElement = function (textElement) {
     var contentText = element.text();
     
     // Preserve and hide the original element so we can handle the highlighting in an
-    // element without markup (needs better implementation longer term)
+    // element without markup
+    // TODO: this needs improved implementation longer term
     var copiedElement = element.clone(false); 
     element.after(copiedElement);  
     element.hide();                     
