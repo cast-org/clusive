@@ -1,5 +1,3 @@
-// Basic object for speech synthesis
-
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],    
@@ -68,8 +66,7 @@ clusiveTTS.readElement = function (textElement) {
         element.show();                  
         clusiveTTS.readQueuedElements();
     }
-
-    element[0].scrollIntoView();
+    
     synth.speak(utterance);
 }
 
