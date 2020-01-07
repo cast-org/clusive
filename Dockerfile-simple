@@ -4,7 +4,7 @@
 # Prerequisites:
 #   npm install
 #   grunt build
-# Remove node_modules from .dockerignore
+# Remove "target" from .dockerignore
 # Then:
 #   docker build . -t clusive -f Dockerfile-simple
 #   docker run -p 8000:8000 -e DJANGO_CONFIG=local clusive
@@ -31,7 +31,8 @@ WORKDIR /app
 
 RUN python -m nltk.downloader wordnet
 
-COPY . .
+COPY --chown=app target .
+COPY src/entrypoint.sh .
 
 RUN python manage.py collectstatic --no-input
 
@@ -39,4 +40,10 @@ EXPOSE 8000
 STOPSIGNAL SIGINT
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["gunicorn", "clusive_project.wsgi", "--bind=0.0.0.0:8000"]
+
+HEALTHCHECK --interval=10s --timeout=3s \
+	CMD wget --quiet --tries=1 --spider http://localhost:8000/ || exit 1
+
+# gunicorn configuration suggestions from https://pythonspeed.com/articles/gunicorn-in-docker/
+CMD ["gunicorn", "clusive_project.wsgi", "--bind=0.0.0.0:8000", "--worker-tmp-dir=/dev/shm", \
+	"--workers=2", "--threads=4", "--worker-class=gthread"]

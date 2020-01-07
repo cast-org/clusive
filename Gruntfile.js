@@ -16,15 +16,24 @@ module.exports = function (grunt) {
             prod: Object.assign(webpackConfig, {mode: "production"})
         },
         clean: {
-            target: [
-                "shared/static/shared/js/lib",
-                "shared/static/shared/css/*.css"
-            ],
-            frontend: "frontend/dist",
-            frontendcss: "frontend/dist/css",
-            frontendjs: "frontend/dist/js"
+            target: "target",
+//            frontend: "target/frontend/dist",
+            frontendcss: "target/shared/static/shared/css",
+            frontendjs: "target/shared/static/shared/js"
         },
         copy: {
+            python: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: "src",
+                        nonull: true,
+                        src: ["clusive_project/**", "eventlog/**", "glossary/**", "library/**", "pages/**", "roster/**", "shared/**", "wordnet/**",
+                            "manage.py"],
+                        dest: "target"
+                    }
+                ]
+            },
             lib: {
                 files: [
                 {
@@ -32,27 +41,27 @@ module.exports = function (grunt) {
                     cwd: "node_modules/infusion/dist",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/infusion/dist"
+                    dest: "target/shared/static/shared/js/lib/infusion/dist"
                 },
                 {
                     expand: true,
                     cwd: "node_modules/infusion/src",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/infusion/src"
+                    dest: "target/shared/static/shared/js/lib/infusion/src"
                 },
                 {
                     expand: true,
                     cwd: "node_modules/figuration/dist",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/figuration"
+                    dest: "target/shared/static/shared/js/lib/figuration"
                 }, {
                     expand: true,
                     cwd: "node_modules/@d-i-t-a/reader/dist",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/reader"
+                    dest: "target/shared/static/shared/js/lib/reader"
                 },
                 {
                     // FIXME this seems like an odd place for this, leaving it where it was before
@@ -61,55 +70,41 @@ module.exports = function (grunt) {
                     cwd: "node_modules/open-dyslexic",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/reader/fonts/open-dyslexic"
+                    dest: "target/shared/static/shared/js/lib/reader/fonts/open-dyslexic"
                 },
                 {
                     expand: true,
                     cwd: "node_modules/readium-css/css/dist",
                     nonull: true,
                     src: "**",
-                    dest: "shared/static/shared/js/lib/readium-css"
+                    dest: "target/shared/static/shared/js/lib/readium-css"
                 }]
-            },
-            frontendcss: {
-                expand: true,
-                cwd: 'frontend/dist/css',
-                nonull: true,
-                src: ['**/*'],
-                dest: 'shared/static/shared/css'
             },
             frontendjs: {
                 files: [
                 {
                     expand: true,
-                    cwd: 'frontend/js',
+                    cwd: 'src/frontend/js',
                     nonull: true,
                     src: ['**/*'],
-                    dest: 'frontend/dist/js'
-                },
-                {
-                    expand: true,
-                    cwd: 'frontend/dist/js',
-                    nonull: true,
-                    src: ['**/*'],
-                    dest: 'shared/static/shared/js'
+                    dest: 'target/shared/static/shared/js'
                 }]
             },
             frontendfont: {
                 expand: true,
-                cwd: 'frontend/html/font/',
+                cwd: 'src/frontend/html/font/',
                 nonull: true,
                 src: ['**/*'],
-                dest: 'shared/static/shared/font/'
+                dest: 'target/shared/static/shared/font/'
             }
 
         },
         stylelint: {
             frontend: {
                 options: {
-                    configFile: 'frontend/scss/.stylelintrc'
+                    configFile: 'src/frontend/scss/.stylelintrc'
                 },
-                src: ['frontend/scss/**/*.scss']
+                src: ['src/frontend/scss/**/*.scss']
             }
         },
         sass: {
@@ -123,11 +118,11 @@ module.exports = function (grunt) {
             },
             frontend: {
                 files: {
-                    'frontend/dist/css/<%= pkg.name %>.css': 'frontend/scss/<%= pkg.name %>.scss',
-                    'frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'frontend/scss/<%= pkg.name %>-prefs-panel.scss',
-                    'frontend/dist/css/<%= pkg.name %>-reader-theme-sepia.css': 'frontend/scss/<%= pkg.name %>-reader-theme-sepia.scss',
-                    'frontend/dist/css/<%= pkg.name %>-reader-theme-night.css': 'frontend/scss/<%= pkg.name %>-reader-theme-night.scss',
-                    'frontend/dist/css/reader-frame.css': 'frontend/scss/reader-frame.scss'
+                    'target/shared/static/shared/css/<%= pkg.name %>.css': 'src/frontend/scss/<%= pkg.name %>.scss',
+                    'target/shared/static/shared/css/<%= pkg.name %>-prefs-panel.css': 'src/frontend/scss/<%= pkg.name %>-prefs-panel.scss',
+                    'target/shared/static/shared/css/<%= pkg.name %>-reader-theme-sepia.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-sepia.scss',
+                    'target/shared/static/shared/css/<%= pkg.name %>-reader-theme-night.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-night.scss',
+                    'target/shared/static/shared/css/reader-frame.css': 'src/frontend/scss/reader-frame.scss'
                 }
             }
         },
@@ -137,7 +132,7 @@ module.exports = function (grunt) {
                     map: false,
                     processors: [flexbugs, calc, autoprefixer]
                 },
-                src: ['frontend/dist/css/*.css', '!frontend/dist/css/*.min.css']
+                src: ['target/shared/static/shared/css/*.css', '!target/shared/static/shared/css/*.min.css']
             }
         },
         cssmin: {
@@ -150,18 +145,18 @@ module.exports = function (grunt) {
             frontend: {
                 files: [{
                         expand: true,
-                        cwd: 'frontend/dist/css',
+                        cwd: 'target/shared/static/shared/css',
                         src: ['*.css', '!*.min.css'],
-                        dest: 'frontend/dist/css',
+                        dest: 'target/shared/static/shared/css',
                         ext: '.min.css'
                 }]
             },
             frontendfont: {
                 files: [{
                         expand: true,
-                        cwd: 'frontend/html/font',
+                        cwd: 'target/shared/static/shared/font',
                         src: ['**/*.css', '!**/*.min.css'],
-                        dest: 'frontend/html/font',
+                        dest: 'target/shared/static/shared/font',
                         ext: '.min.css'
                 }]
             }
@@ -169,10 +164,10 @@ module.exports = function (grunt) {
         eslint: {
             frontend: {
                 options: {
-                    config: 'frontend/.eslintrc.json',
+                    config: 'src/frontend/.eslintrc.json',
                     reportUnusedDisableDirectives: 'true',
                 },
-                src: 'frontend/js/*.js'
+                src: 'src/frontend/js/*.js'
             }
         },
         uglify: {
@@ -185,9 +180,10 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: 'frontend/js',
-                    src: ['*.js', '!*.min.js'],
-                    dest: 'frontend/dist/js',
+                    cwd: 'target/shared/static/shared/js',
+                    // FIXME: clusive-reader-prefs and internal.js are excluded since uglification throws errors or breaks behavior. But why?
+                    src: ['*.js', '!*.min.js', '!clusive-reader-prefs.js', '!internal.js'],
+                    dest: 'target/shared/static/shared/js',
                     rename: function (dst, src) {
                         // Keep source js files and make new files as `*.min.js`:
                        return dst + '/' + src.replace('.js', '.min.js');
@@ -209,14 +205,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-webpack");
 
     // Custom tasks:
-    grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules", ["clean:target", "webpack:dev", "frontend-dist", "copy:lib"]);
+    grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules",
+        ["clean:target", "copy:python", "frontend-dist", "webpack:dev", "copy:lib"]);
 
     // Frontend build tasks
     grunt.registerTask('frontend-test', ['css-test', 'js-test']);
     grunt.registerTask('frontend-dist', ['css-dist', 'js-dist', 'font-dist']);
     grunt.registerTask('css-test', "Lint front end CSS", ['stylelint:frontend']);
-    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['clean:frontendcss', 'sass:frontend', 'postcss:frontend', 'cssmin:frontend', 'copy:frontendcss']);
+    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['clean:frontendcss', 'sass:frontend', 'postcss:frontend', 'cssmin:frontend']);
     grunt.registerTask('js-test', "Lint front end JS", ['eslint:frontend']);
-    grunt.registerTask('js-dist', "Build front end JS and copy to static assets", ['clean:frontendjs', 'uglify:frontend', 'copy:frontendjs']);
-    grunt.registerTask('font-dist', "Build front end font and copy to static assets", ['cssmin:frontendfont', 'copy:frontendfont']);
-}
+    grunt.registerTask('js-dist', "Build front end JS and copy to static assets", ['copy:frontendjs', 'uglify:frontend']);
+    grunt.registerTask('font-dist', "Build front end font and copy to static assets", ['copy:frontendfont', 'cssmin:frontendfont']);
+};
