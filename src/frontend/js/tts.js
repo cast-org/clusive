@@ -1,7 +1,10 @@
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],    
-    readAloudButtonId: "#readAloudButton"
+    readAloudButtonId: "#readAloudButton",
+    readAloudButtonPlayAriaLabel: "Read aloud",
+    readAloudButtonStopAriaLabel: "Stop reading aloud",
+    readAloudIconId: "#readAloudIcon"
 };
 
 // Bind controls
@@ -9,9 +12,15 @@ var clusiveTTS = {
 $(document).ready(function () {
     $(clusiveTTS.readAloudButtonId).click(function (e) {
         console.log("read aloud button clicked");
-        if(! clusiveTTS.synth.speaking) {
-            clusiveTTS.readAll(); 
+        if(! clusiveTTS.synth.speaking) {            
+            $(clusiveTTS.readAloudButtonId).attr("aria-label", clusiveTTS.readAloudButtonStopAriaLabel)
+            $(clusiveTTS.readAloudIconId).toggleClass("icon-play", false);
+            $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", true);
+            clusiveTTS.readAll();             
         } else if (clusiveTTS.synth.speaking) {
+            $(clusiveTTS.readAloudButtonId).attr("aria-label", clusiveTTS.readAloudButtonPlayAriaLabel)
+            $(clusiveTTS.readAloudIconId).toggleClass("icon-play", true);
+            $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", false);
             clusiveTTS.stopReading();
         }
     });
