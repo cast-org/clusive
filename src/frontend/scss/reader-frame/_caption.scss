@@ -1,7 +1,24 @@
+figure {
+    img {
+        vertical-align: middle;
+    }
+}
+
 figcaption,
 .figure-caption,
 .caption {
     padding: .5rem;
     color: var(--CRT_figureCaptionColor);
     background-color: var(--CRT_figureCaptionBg);
+}
+
+// Override to get caption font to a 14px base
+:root[style*="readium-advanced-on"] {
+    figcaption {
+        @include font-size(.875em);
+
+        p {
+            @include font-size(1em, true);
+        }
+    }
 }
