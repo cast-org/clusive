@@ -14,7 +14,7 @@ $(document).ready(function () {
         console.log("read aloud button clicked");
         if(! clusiveTTS.synth.speaking) {            
             clusiveTTS.toggleButtonToStop();
-            clusiveTTS.readSelection();             
+            clusiveTTS.read();             
             // clusiveTTS.readAll();             
         } else if (clusiveTTS.synth.speaking) {
             clusiveTTS.toggleButtonToPlay();
@@ -110,12 +110,26 @@ clusiveTTS.getAllReaderTextElements = function() {
     return textElements;
 };
 
+clusiveTTS.getReaderIframeSelection = function() {
+    return $("#D2Reader-Container").find("iframe")[0].contentWindow.getSelection();
+}
+
 clusiveTTS.filterReaderTextElementsBySelection = function (textElements) {
-    var readerIFrameSelection = $("#D2Reader-Container").find("iframe")[0].contentWindow.getSelection();
+    readerIFrameSelection = clusiveTTS.getReaderIframeSelection();
     var filteredElements = textElements.filter(function (i, elem) {       
         return readerIFrameSelection.containsNode(elem, true);
     });
     return filteredElements;
+};
+
+clusiveTTS.read = function() {
+    var isSelection = clusiveTTS.getReaderIframeSelection().type === "None" ? false : true;
+    if(isSelection) {
+        clusiveTTS.readSelection();
+    } else {
+        clusiveTTS.readAll();
+    }
+    
 };
 
 clusiveTTS.readAll = function() {    
