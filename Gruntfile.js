@@ -223,6 +223,8 @@ module.exports = function (grunt) {
     // Custom tasks:
     grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules",
         ["clean:target", "copy:python", "frontend-dist", "webpack:dev", "copy:lib"]);
+    grunt.registerTask("build-noclean", "Build front end JS dependencies and copy over needed static assets from node_modules without a clean",
+        ["copy:python", "frontend-dist", "webpack:dev", "copy:lib"]);
 
     // Frontend build tasks
     grunt.registerTask('frontend-test', ['css-test', 'js-test']);
