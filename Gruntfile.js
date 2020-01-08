@@ -205,8 +205,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-webpack");
 
     // Custom tasks:
-    grunt.registerTask("build", "Build front end JS dependencies and copy over needed static assets from node_modules",
+    grunt.registerTask("build", "Clean target directory, build front end JS dependencies and copy over needed static assets from node_modules",
         ["clean:target", "copy:python", "frontend-dist", "webpack:dev", "copy:lib"]);
+
+    grunt.registerTask("buildWithoutClean", "build front end JS dependencies and copy over needed static assets from node_modules", ["copy:python", "frontend-dist", "webpack:dev", "copy:lib"])
 
     // Frontend build tasks
     grunt.registerTask('frontend-test', ['css-test', 'js-test']);

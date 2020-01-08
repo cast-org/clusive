@@ -13,25 +13,35 @@ $(document).ready(function () {
     $(clusiveTTS.readAloudButtonId).click(function (e) {
         console.log("read aloud button clicked");
         if(! clusiveTTS.synth.speaking) {            
-            $(clusiveTTS.readAloudButtonId).attr("aria-label", clusiveTTS.readAloudButtonStopAriaLabel)
-            $(clusiveTTS.readAloudIconId).toggleClass("icon-play", false);
-            $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", true);
-            clusiveTTS.readAll();             
+            clusiveTTS.toggleButtonToStop();
+            clusiveTTS.readSelection();             
+            // clusiveTTS.readAll();             
         } else if (clusiveTTS.synth.speaking) {
-            $(clusiveTTS.readAloudButtonId).attr("aria-label", clusiveTTS.readAloudButtonPlayAriaLabel)
-            $(clusiveTTS.readAloudIconId).toggleClass("icon-play", true);
-            $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", false);
+            clusiveTTS.toggleButtonToPlay();
             clusiveTTS.stopReading();
         }
     });
 });
 
+clusiveTTS.toggleButtonToPlay = function () {
+    $(clusiveTTS.readAloudButtonId).attr("aria-label", clusiveTTS.readAloudButtonPlayAriaLabel)
+    $(clusiveTTS.readAloudIconId).toggleClass("icon-play", true);
+    $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", false);
+};
+
+clusiveTTS.toggleButtonToStop = function () {
+    $(clusiveTTS.readAloudButtonId).attr("aria-label", clusiveTTS.readAloudButtonStopAriaLabel)
+    $(clusiveTTS.readAloudIconId).toggleClass("icon-play", false);
+    $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", true);
+};
+
+
 // Stop an in-process reading
 
 clusiveTTS.stopReading = function () {
     clusiveTTS.elementsToRead = [];
-    clusiveTTS.synth.cancel();    
-}
+    clusiveTTS.synth.cancel();        
+};
 
 clusiveTTS.readQueuedElements = function () {
     if(clusiveTTS.elementsToRead.length > 0) {
@@ -39,8 +49,9 @@ clusiveTTS.readQueuedElements = function () {
         clusiveTTS.readElement(toRead);            
     } else {
         console.log("Done reading elements");
+        clusiveTTS.toggleButtonToPlay();
     }
-}
+};
 
 clusiveTTS.readElement = function (textElement) {
     var synth = clusiveTTS.synth;    
@@ -78,23 +89,44 @@ clusiveTTS.readElement = function (textElement) {
     }
     
     synth.speak(utterance);
-}
+};
 
-clusiveTTS.readAll = function() {    
+clusiveTTS.readElements = function(textElements) {
     // Cancel any active reading
     clusiveTTS.stopReading();
-    clusiveTTS.readerIframe = $("#D2Reader-Container").find("iframe");
-    clusiveTTS.readerBody = clusiveTTS.readerIframe.contents().find("body");
-
-    var textElements = clusiveTTS.readerBody.find("h1,h2,h3,h4,h5,h6,p");
 
     $.each(textElements, function (i, e) {
         clusiveTTS.elementsToRead.push(e);
     });
 
     clusiveTTS.readQueuedElements();
+};
+
+clusiveTTS.getAllReaderTextElements = function() {
+    var readerIframe = $("#D2Reader-Container").find("iframe");
+    var readerBody = readerIframe.contents().find("body");
+
+    var textElements = readerBody.find("h1,h2,h3,h4,h5,h6,p");
+    return textElements;
+};
+
+clusiveTTS.filterReaderTextElementsBySelection = function (textElements) {
+    var readerIFrameSelection = $("#D2Reader-Container").find("iframe")[0].contentWindow.getSelection();
+    var filteredElements = textElements.filter(function (i, elem) {       
+        return readerIFrameSelection.containsNode(elem, true);
+    });
+    return filteredElements;
+};
+
+clusiveTTS.readAll = function() {    
+    clusiveTTS.readElements(clusiveTTS.getAllReaderTextElements());
 
 };
 
+clusiveTTS.readSelection = function() {
+    var textElements = clusiveTTS.getAllReaderTextElements();
+    var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(textElements);
+    clusiveTTS.readElements(filteredElements);
+};
 
 
