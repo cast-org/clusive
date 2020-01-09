@@ -157,6 +157,7 @@ $font-family-sans-serif:                "Source Sans Pro", -apple-system, BlinkM
 $grid-row-columns:                      4;
 
 $figure-caption-padding:                .5rem;
+$figure-caption-font-size:              .875rem;
 
 $btn-font-weight:                       700;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
@@ -275,6 +276,9 @@ $header-border-radius:                  $border-radius;
 $header-opacity-stop:                   65%;
 
 $sidebar-border-radius:                 $header-border-radius;
+// Sidebar stretched max width is half of:
+// vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)
+$sidebar-xl-width:                      calc((100vw - 72rem + ((4rem - 1rem) * 2)) / 2);
 
 $library-grid-gutter:                   2rem;
 

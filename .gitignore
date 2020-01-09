@@ -44,6 +44,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# Local mockups
+frontend/dist/
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -140,15 +143,12 @@ dmypy.json
 
 # Editor config files
 .idea
-
 .vscode
 
 # NPM build artifacts
-
 /node_modules
 
 # Pip install from Git files
-
 src/django-session-timeout
 src/imsglobal-caliper
 src/pip-delete-this-directory.txt

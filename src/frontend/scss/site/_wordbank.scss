@@ -19,7 +19,8 @@
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
-    border-bottom: 3px solid var(--CT_wordbankBorderColor);
+    font-weight: $font-weight-bold;
+    border-bottom: 5px solid var(--CT_wordbankBorderColor);
 
     //&::after {
     //    position: absolute;
@@ -36,13 +37,15 @@
     .wordbank-col {
         position: relative;
         padding-bottom: .75rem;
+        padding-left: 1px;
+        border-left: 0;
     }
 }
 
 .wordbank-col {
     flex: 1 0 25%;
     align-self: stretch;
-    border-left: 2px solid var(--CT_wordbankBorderColor);
+    border-left: 1px solid var(--CT_wordbankBorderColor);
 }
 
 .wordbank-title {
@@ -91,7 +94,7 @@
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
-    border-bottom: 2px solid var(--CT_wordbankBorderColor);
+    border-bottom: 1px solid var(--CT_wordbankBorderColor);
 
     .wordbank-col {
         &:nth-child(2),
@@ -120,7 +123,7 @@
     display: flex;
     flex: 1 1 auto;
     align-items: center;
-    padding-left: calc(.25rem + 2px);
+    padding-left: calc(.25rem + 1px);
     margin: .75rem 0;
     line-height: 1;
     white-space: nowrap;

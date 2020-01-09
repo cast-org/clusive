@@ -137,3 +137,8 @@ h3,
         content: ">";
     }
 }
+
+.definition-speech {
+    @include font-size(.875rem);
+    color: var(--CT_definitionSpeechColor);
+}

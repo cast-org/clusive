@@ -20,7 +20,7 @@ $skiplink-bg:                           #66faff;
 $skiplink-color:                        #333;
 $skiplink-border-color:                 #333;
 
-$library-bg:                            #353841;
+$library-bg:                            #121212;
 $library-logo-icon-color:               #eceff5;
 $library-logo-text-color:               #d7ddee;
 
@@ -47,11 +47,11 @@ $figure-caption-bg:                     #272727;
 $figure-caption-color:                  #eceff5;
 
 // Cards
-$card-bg:                               #ebe3d5;
-$card-color:                            #333;
-$card-border-color:                     #ebe3d5;
-$card-img-bg:                           rgba(#272727, .3);
-$card-library-box-shadow:               #fbfbfb;
+$card-bg:                               #272727;
+$card-color:                            #fbfbfb;
+$card-border-color:                     #272727;
+$card-img-bg:                           rgba(#636b82, .25);
+$card-library-box-shadow:               #636b82;
 $card-login-bg:                         #636b82;
 $card-login-bg-opacity:                 .3;
 $card-login-color:                      $body-color;
@@ -225,15 +225,18 @@ $wordbank-col-bg:                       rgba(#ebe3d5, .1);
 $wordbank-control-color:                #a0abfd;
 $wordbank-control-hover-color:          palette($wordbank-control-color, 700);
 $wordbank-count-bg:                     #ff554d;
-$wordbank-count-color:                  #fbfbfb;
+$wordbank-count-color:                  #111;
 $wordbank-count-border-color:           #ff554d;
 $wordbank-count-empty-bg:               #fff;
-$wordbank-count-empty-color:            #333;
+$wordbank-count-empty-color:            #111;
 $wordbank-count-empty-border-color:     #636b82;
 
 // Texthelp overrides
 $readaloud-highlight-bg:                #fd6;
 $readaloud-highlight-color:             $body-color;
+
+// Glossary/definitions
+$definition-speech-color:               #eceff5;
 
 // Build out theme via import
 @import "site-theme"

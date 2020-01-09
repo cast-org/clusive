@@ -17,7 +17,7 @@ module.exports = function (grunt) {
         },
         clean: {
             target: "target",
-//            frontend: "target/frontend/dist",
+            mockup: "src/frontend/dist",
             frontendcss: "target/shared/static/shared/css",
             frontendjs: "target/shared/static/shared/js"
         },
@@ -116,6 +116,15 @@ module.exports = function (grunt) {
                 sourceMap: false,
                 outputStyle: 'expanded'
             },
+            mockup: {
+                files: {
+                    'src/frontend/dist/css/<%= pkg.name %>.css': 'src/frontend/scss/<%= pkg.name %>.scss',
+                    'src/frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'src/frontend/scss/<%= pkg.name %>-prefs-panel.scss',
+                    'src/frontend/dist/css/<%= pkg.name %>-reader-theme-sepia.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-sepia.scss',
+                    'src/frontend/dist/css/<%= pkg.name %>-reader-theme-night.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-night.scss',
+                    'src/frontend/dist/css/reader-frame.css': 'src/frontend/scss/reader-frame.scss'
+                }
+            },
             frontend: {
                 files: {
                     'target/shared/static/shared/css/<%= pkg.name %>.css': 'src/frontend/scss/<%= pkg.name %>.scss',
@@ -127,6 +136,13 @@ module.exports = function (grunt) {
             }
         },
         postcss: {
+            mockup: {
+                options: {
+                    map: false,
+                    processors: [flexbugs, calc, autoprefixer]
+                },
+                src: ['src/frontend/dist/css/*.css', '!src/frontend/dist/css/*.min.css']
+            },
             frontend: {
                 options: {
                     map: false,
@@ -207,6 +223,8 @@ module.exports = function (grunt) {
     // Custom tasks:
     grunt.registerTask("build", "Clean target directory, build front end JS dependencies and copy over needed static assets from node_modules",
         ["clean:target", "copy:python", "frontend-dist", "webpack:dev", "copy:lib"]);
+    grunt.registerTask("build-noclean", "Build front end JS dependencies and copy over needed static assets from node_modules without a clean",
+        ["copy:python", "frontend-dist", "webpack:dev", "copy:lib"]);
 
     grunt.registerTask("buildWithoutClean", "build front end JS dependencies and copy over needed static assets from node_modules", ["copy:python", "frontend-dist", "webpack:dev", "copy:lib"])
 
@@ -214,7 +232,7 @@ module.exports = function (grunt) {
     grunt.registerTask('frontend-test', ['css-test', 'js-test']);
     grunt.registerTask('frontend-dist', ['css-dist', 'js-dist', 'font-dist']);
     grunt.registerTask('css-test', "Lint front end CSS", ['stylelint:frontend']);
-    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['clean:frontendcss', 'sass:frontend', 'postcss:frontend', 'cssmin:frontend']);
+    grunt.registerTask('css-dist', "Build front end CSS and copy to static assets", ['clean:frontendcss', 'sass:mockup', 'sass:frontend', 'postcss:mockup', 'postcss:frontend', 'cssmin:frontend']);
     grunt.registerTask('js-test', "Lint front end JS", ['eslint:frontend']);
     grunt.registerTask('js-dist', "Build front end JS and copy to static assets", ['copy:frontendjs', 'uglify:frontend']);
     grunt.registerTask('font-dist', "Build front end font and copy to static assets", ['copy:frontendfont', 'cssmin:frontendfont']);

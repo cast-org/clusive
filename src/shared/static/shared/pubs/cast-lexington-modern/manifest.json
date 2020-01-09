@@ -18,7 +18,12 @@
             "attribution": {
                 "title": "Etching created in 1775 showing the Battle of Lexington",
                 "author": "Thomas Doolittle"
-            }}
+            }
+        },
+        {
+            "href": "css/stylesheet.css",
+            "type": "text/css"
+        }
     ],
     "links": [
         {"title": "Original", "rel": "alternate", "href": "cast-lexington", "type": "application/webpub+json"},
