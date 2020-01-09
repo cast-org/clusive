@@ -39,6 +39,10 @@
         padding-bottom: .75rem;
         padding-left: 1px;
         border-left: 0;
+
+        &:last-child {
+            border-right: 0;
+        }
     }
 }
 
@@ -46,6 +50,10 @@
     flex: 1 0 25%;
     align-self: stretch;
     border-left: 1px solid var(--CT_wordbankBorderColor);
+
+    &:last-child {
+        border-right: 1px solid var(--CT_wordbankBorderColor);
+    }
 }
 
 .wordbank-title {
