@@ -46,6 +46,8 @@
 }
 
 .btn-help {
+    padding-right: 0;
+    padding-left: 0;
     white-space: nowrap;
 
     [class^="icon-"],
@@ -56,11 +58,11 @@
 
         &:first-child {
             left: .25em;
-            margin-left: -.25em;
+            margin-right: -.25em;
         }
         &:last-child {
-            left: -.25em;
-            margin-right: -.25em;
+            left: -.125em;
+            margin-right: .125em;
         }
     }
 }

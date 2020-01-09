@@ -276,6 +276,9 @@ $header-border-radius:                  $border-radius;
 $header-opacity-stop:                   65%;
 
 $sidebar-border-radius:                 $header-border-radius;
+// Sidebar stretched max width is half of:
+// vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)
+$sidebar-xl-width:                      calc((100vw - 72rem + ((4rem - 1rem) * 2)) / 2);
 
 $library-grid-gutter:                   2rem;
 
