@@ -1,0 +1,31 @@
+// Functions
+@import "../../../node_modules/figuration/scss/functions";
+
+// Settings variables
+@import "site/site-pre";
+@import "../../../node_modules/figuration/scss/settings";
+@import "../../../node_modules/figuration/scss/settings-options";
+@import "site/site-post";
+
+// Mixins
+@import "../../../node_modules/figuration/scss/mixins";
+
+$textColor: #333;
+$backgroundColor: #fbfbfb;
+$linkColor: #0d36ab;
+$selectionBackgroundColor: #acfdf0;
+$selectionTextColor: #111;
+
+$figure-caption-bg:                     #ebe3d5;
+$figure-caption-color:                  #666;
+$glossary-underline:                    #acfdf0; //#72c0b2;
+
+$img-mix-blend-mode:                    normal;
+
+$themeName: null;
+@import "readium-theme";
+
+@import "reader-frame/content";
+@import "reader-frame/caption";
+@import "reader-frame/glossary";
+@import "reader-frame/tts";

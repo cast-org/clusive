@@ -1,0 +1,96 @@
+{% load static %}
+    <!-- BEGIN markup for Preference Editor -->
+    
+    <div class="flc-prefsEditor-separatedPanel fl-prefsEditor-separatedPanel">
+        <!--
+            This div is for the sliding panel bar that shows and hides the Preference Editor controls in the mobile view.
+            A separate panel bar for mobile displays is needed to preserver the correct tab order.
+        -->
+        <div class="fl-panelBar fl-panelBar-smallScreen">
+            <span class="fl-prefsEditor-buttons">
+                <button class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide"> Show/Hide</button>
+                <button class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span> Reset</button>
+            </span>
+        </div>
+
+        <!-- This is the div that will contain the Preference Editor component -->
+        <div class="flc-slidingPanel-panel flc-prefsEditor-iframe"></div>
+
+        <!--
+            This div is for the sliding panel bar that shows and hides the Preference Editor controls in the desktop view.
+            A separate panel bar for desktop displays is needed to preserver the correct tab order.
+        -->
+        <div class="fl-panelBar fl-panelBar-wideScreen" style="display: none;">
+            <span class="fl-prefsEditor-buttons">
+                <button class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide"> Show/Hide</button>
+                <button class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span> Reset</button>
+            </span>
+        </div>
+    </div>
+    <!-- END markup for Preference Editor -->
+    <script>            
+
+        var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
+        var buildGradeNames =  [
+                            "cisl.prefs.auxSchema.starter", // starter set
+                            "cisl.prefs.auxSchema.letterSpace", // letter space
+                            ]                
+
+        var prefsEditor;
+        $(document).ready(function () {            
+            prefsEditor = fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
+                    build: {                        
+                        gradeNames: buildGradeNames,
+                        auxiliarySchema: {
+                            "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
+                            "template": buildAuxiliarySchemaTemplate,
+                            "terms": {
+                                "templatePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/html' %}",
+                                "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",
+                            },
+                        },
+                    },
+                    prefsEditor: {   
+                        components: {                         
+                            prefsEditorLoader: {
+                                options: {
+                                    components: {                                        
+                                        readerPrefs: {
+                                            type: "cisl.prefs.readerPreferencesBridge",
+                                            createOnEvent: "{prefsEditorLoader}.events.onReady",
+                                            options: {
+                                                model: {
+                                                    preferences: "{prefsEditorLoader}.model.preferences"
+                                                }
+                                            }
+                                        },
+                                        modalSettings: {
+                                            type: "cisl.prefs.modalSettings",
+                                            createOnEvent: "{prefsEditorLoader}.events.onReady",
+                                            container: "#modalSettings",
+                                            options: {
+                                                model: {
+                                                    "preferences": "{prefsEditorLoader}.model.preferences"
+                                                },
+                                                listeners: {
+                                                    "onCreate.bindReset": {
+                                                        "this": "{that}.dom.reset",
+                                                        "method": "click",
+                                                        "args": "{prefsEditorLoader}.prefsEditor.reset"
+                                                    },
+                                                    "{prefsEditorLoader}.prefsEditor.events.afterReset": {
+                                                        "func": "{that}.setModalSettingsByPreferences",
+                                                        "namespace": "setModalAfterReset"
+                                                    }                                            
+                                                }    
+                                            }                                        
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });                                       
+        });	        
+
+    </script>

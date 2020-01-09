@@ -1,0 +1,20 @@
+//stylelint-disable declaration-no-important
+
+.skiplink {
+    position: absolute !important;
+    top: $skiplink-offset-top;
+    left: 50%;
+    z-index: 2;
+    padding: $skiplink-padding;
+    color: var(--CT_skiplinkColor);
+    text-align: center;
+    text-decoration: none;
+    background-color: var(--CT_skiplinkBg);
+    border: $skiplink-border-width solid var(--CT_skiplinkBorderColor);
+    outline: 0;
+    transform: translateX(-50%);
+
+    &:hover {
+        color: var(--CT_skiplinkColor);
+    }
+}

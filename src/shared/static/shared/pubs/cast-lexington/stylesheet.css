@@ -1,0 +1,37 @@
+.parchment-0 {
+    padding: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: #fff;
+    border-radius: .25rem;
+    box-shadow: 0 0 .5rem .25rem rgba(0, 0, 0, .1);
+    clear: both;
+}
+.parchment-0 p:last-child {
+    margin-bottom: 0;
+}
+
+.parchment-1 {
+    padding: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    background-image: url("images/parchment-1.png");
+    border-radius: .25rem;
+    box-shadow: 0 0 .5rem .25rem rgba(0, 0, 0, .1);
+    clear: both;
+}
+.parchment-1 p:last-child {
+    margin-bottom: 0;
+}
+.parchment-2 {
+    padding: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    background-image: url("images/parchment-2.png");
+    border-radius: .25rem;
+    box-shadow: 0 0 .5rem .25rem rgba(0, 0, 0, .1);
+    clear: both;
+}
+.parchment-2 p:last-child {
+    margin-bottom: 0;
+}

@@ -1,0 +1,33 @@
+.card-img {
+    overflow: hidden;
+    text-align: center;
+    background-color: var(--CT_cardImgBg);
+
+    .is-portrait {
+        width: auto;
+        max-width: none;
+        //max-height: 100%;
+        max-height: 10rem;
+    }
+}
+
+.card-login {
+    color: var(--CT_cardLoginColor);
+    background-color: rgba(var(--CT_cardLoginBgRGB), var(--CT_cardLoginBgOpacity));
+    border-color: transparent;
+
+    .card-body {
+        padding: .75rem 1.5rem;
+    }
+}
+
+.card-login-forgot {
+    border-top: 3px solid var(--CT_cardLoginForgotBorderColor);
+}
+
+.card-login-error {
+    padding: .25rem .5rem;
+    color: #fbfbfb;
+    background-color: #d42314;
+    @include border-radius(.25rem);
+}

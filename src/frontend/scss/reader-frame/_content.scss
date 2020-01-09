@@ -1,0 +1,27 @@
+:root {
+    //// Update base font
+    //--RS__baseFontFamily: #{$font-family-sans-serif};
+    // Add margin top/bottom spacing
+    --RS__paraSpacing: #{$paragraph-spacer-y / 2};
+    // Remove text indent
+    --RS__paraIndent: 0;
+    // Decrease header spacing (default: 1.5rem)
+    --RS__flowSpacing: 1rem;
+    //// Remove left/right padding on body
+    //--RS__pageGutter: 0;
+    //// Unset base max body width/line length
+    //--RS__maxLineLength: 0;
+
+    @media (max-width: 47.98em) {
+        --RS__pageGutter: 10px;
+    }
+
+    @media (max-width: 35.98em) {
+        --RS__pageGutter: 0;
+    }
+}
+
+//body {
+//    // Remove max body width/line length for all variants
+//    max-width: none !important;
+//}

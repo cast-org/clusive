@@ -1,0 +1,74 @@
+.setting-modal {
+    background-color: transparent !important;   // stylelint-disable-line declaration-no-important
+
+    .modal-content {
+        background-color: var(--CT_settingModalContentBg);
+        border-color: var(--CT_settingModalContentBorderColor);
+    }
+    .modal-header {
+        color: var(--CT_settingModalHeaderColor);
+        background-color: rgba(var(--CT_settingModalHeaderBgRGB), var(--CT_settingModalHeaderBgOpacity));
+        border-bottom: $setting-modal-header-border-width solid var(--CT_settingModalHeaderBorderColor);
+    }
+    .modal-footer {
+        background-color: var(--CT_settingModalFooterBg);
+        border-top: $setting-modal-footer-border-width solid var(--CT_settingModalFooterBorderColor);
+    }
+    .modal-body {
+        padding: 0;
+    }
+}
+.setting {
+    padding: $setting-padding;
+
+    &:not(:first-of-type) {
+        border-top: $setting-border-width solid var(--CT_settingBorderColor);
+    }
+}
+
+.setting-title {
+    margin-bottom: $setting-title-margin-bottom;
+    @include font-size($setting-title-font-size);
+    font-weight: $setting-title-font-weight;
+    color: var(--CT_settingTitleColor);
+}
+
+.setting-btn-row {
+    display: flex;
+    justify-content: space-around;
+}
+
+// Options
+// =====
+
+.option-font-size {
+    position: relative;
+    margin-bottom: 1.25rem;
+
+    &::before,
+    &::after {
+        position: absolute;
+        display: inline-block;
+        //stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+        font-family: Fontello;
+        color: inherit;
+        content: "\e812";
+    }
+
+    &::before {
+        top: 1.5rem;
+        left: 0;
+        @include font-size(.875rem);
+    }
+    &::after{
+        top: 1.25rem;
+        right: 0;
+        @include font-size(1.25rem);
+    }
+}
+
+.option-color-theme {
+    .btn {
+        padding: 1rem 1.5rem;
+    }
+}

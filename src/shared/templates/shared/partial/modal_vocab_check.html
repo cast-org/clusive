@@ -1,0 +1,59 @@
+<div id="vocabCheckModal" class="modal goal-modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">Get your just-right challenge!</h2>
+                    <div class="modal-subtitle">Tell us how well you know 5 words, and we will recommend a personalized version of the article.</div>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="goal-nav">
+                    <a id="vocabCheckBack" href="#" onclick="vocabCheck.back()" class="link-prev">back |</a> Word <span id="vocabCheckIndex">#</span> of <span id="vocabCheckCount">5</span>
+                </div>
+                <div class="goal-word">
+                    <span id="vocabCheckWord"></span>
+                    <!--<a href="#" role="button" class="btn btn-nav btn-icon goal-speak" aria-label="speak word"><span class="icon-volume-down"></span></a>-->
+                </div>
+                <form>
+                    <fieldset>
+                        <legend class="ranking-legend">How well do you know this word?</legend>
+                        <div class="ranking">
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="vocabCheck0" name="vocabCheckInput" value="0" aria-label="Never heard it">
+                                <label class="form-check-label" for="vocabCheck0"></label>
+                                <label class="ranking-label" for="vocabCheck0" aria-hidden="true">Never heard it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="vocabCheck1" name="vocabCheckInput" value="1" aria-label="Heard it">
+                                <label class="form-check-label" for="vocabCheck1"></label>
+                                <label class="ranking-label" for="vocabCheck1" aria-hidden="true">Heard it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="vocabCheck2" name="vocabCheckInput" value="2" aria-label="Know it">
+                                <label class="form-check-label" for="vocabCheck2"></label>
+                                <label class="ranking-label" for="vocabCheck2"  aria-hidden="true">Know it</label>
+                            </div>
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="radio" id="vocabCheck3" name="vocabCheckInput" value="3" aria-label="Use it">
+                                <label class="form-check-label" for="vocabCheck3"></label>
+                                <label class="ranking-label" for="vocabCheck3" aria-hidden="true">Use it</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="text-end">
+                        <button id="vocabCheckNext" onclick="vocabCheck.next()" type="button" class="btn btn-primary">Next <span class="aria-hidden">&gt;</span></button>
+                        <span id="vocabCheckThanks" class="goal-thanks" style="display:none;">Thanks for cluing us in!</span>
+                        <button id="vocabCheckDone" onclick="vocabCheck.done();" style="display:none;" type="button" class="btn btn-secondary">All set! <span class="aria-hidden">&gt;</span></button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                Skip this&mdash;<a href="#" onclick="vocabCheck.skip();" class="link-next">Take me to the article</a>
+            </div>
+        </div>
+    </div>
+</div>

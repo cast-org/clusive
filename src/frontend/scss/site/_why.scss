@@ -1,0 +1,45 @@
+.why-modal {
+    .modal-title {
+        font-family: $font-family-sans-serif;
+        @include font-size($why-modal-title-font-size);
+        font-style: $why-modal-title-font-style;
+        font-weight: $why-modal-title-font-weight;
+        color: var(--CT_whyModalTitleColor);
+    }
+
+    .modal-footer {
+        display: block;
+        @include font-size($why-modal-footer-font-size);
+    }
+}
+
+.why-icon {
+    @include font-size(5rem);
+    line-height: 1;
+    color: var(--CT_whyIconColor);
+
+    &.active {
+        color: var(--CT_whyIconActiveColor);
+        text-shadow: .0625rem .0625rem .125rem rgba(var(--CT_whyIconActiveTextShadowColorRGB), var(--CT_whyIconActiveTextShadowOpacity));
+    }
+}
+
+.why-level {
+    margin: 0 0 1rem;
+}
+.why-level-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+
+    .why-icon {
+        padding-bottom: .125rem;
+    }
+
+    @include media-breakpoint-down(sm) {
+        & + & {
+            margin-top: 1rem;
+        }
+    }
+}

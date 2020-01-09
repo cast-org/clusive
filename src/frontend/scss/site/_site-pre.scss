@@ -1,0 +1,312 @@
+// Override some Figuration's generated CSS
+// =====
+
+// Global
+$enable-palette:                        false;
+$enable-print-styles:                   false;
+$enable-sizing:                         true;
+$enable-shadows:                        true;
+
+// Content
+$enable-root:                           false;
+$enable-typography-lead:                false;
+$enable-typography-mark:                false;
+$enable-typography-initialism:          false;
+$enable-typography-blockquote:          false;
+$enable-code:                           false;
+$enable-img-thumbnail:                  false;
+$enable-figure:                         false;
+$enable-table-striped:                  false;
+$enable-table-hover:                    false;
+$enable-table-active:                   false;
+$enable-table-colors:                   false;
+$enable-table-scroll-responsive:        false;
+$enable-btn-outline:                    false;
+$enable-btn-outline-colors:             false;
+$enable-btn-sizing:                     true;
+$enable-btn-icon-sizing:                true;
+$enable-btn-block:                      false;
+$enable-form-control-sizing:            false;
+$enable-form-control-static:            false;
+$enable-form-label-sizing:              false;
+$enable-form-text:                      false;
+$enable-form-file:                      false;
+$enable-form-color:                     false;
+$enable-form-row:                       false;
+$enable-form-inline:                    false;
+$enable-form-validation-tooltip:        false;
+$enable-form-validation-icon:           false;
+
+// Components
+$enable-alert:                          false;
+$enable-badge:                          false;
+$enable-breadcrumb:                     false;
+$enable-btn-group:                      false;
+$enable-card-subtitle:                  false;
+$enable-card-link:                      false;
+$enable-card-list:                      false;
+$enable-card-table:                     false;
+$enable-card-header-tabs:               false;
+$enable-card-header-pills:              false;
+$enable-card-img-overlay:               false;
+$enable-card-img-horizontal:            false;
+$enable-card-group:                     false;
+$enable-card-columns:                   false;
+$enable-input-group:                    false;
+$enable-jumbotron:                      false;
+$enable-list-bulleted:                  false;
+$enable-list-ordered:                   false;
+$enable-list-group:                     false;
+$enable-list-horizontal:                false;
+$enable-list-item-colors:               false;
+$enable-media:                          false;
+$enable-navbar-text:                    false;
+$enable-navbar-divider:                 false;
+$enable-navbar-collapse:                false;
+$enable-navbar-toggle:                  false;
+$enable-navbar-light:                   false;
+$enable-navbar-dark:                    false;
+$enable-nav-tabs:                       false;
+$enable-nav-pills:                      false;
+$enable-nav-vertical:                   false;
+$enable-nav-fill:                       false;
+$enable-nav-justify:                    false;
+$enable-tab-content:                    false;
+$enable-pagination:                     false;
+$enable-progress:                       false;
+
+// Widgets
+$enable-dropdown:                       false;
+$enable-tooltip:                        false;
+
+// Utilities
+$enable-utility-bg:                     false;
+$enable-utility-border:                 false;
+$enable-utility-clearfix:               false;
+$enable-utility-display:                false;
+$enable-utility-embed:                  false;
+$enable-utility-flex:                   false;
+$enable-utility-float:                  false;
+$enable-utility-overflow:               false;
+$enable-utility-position:               false;
+$enable-utility-shadow:                 false;
+$enable-utility-sizing:                 false;
+$enable-utility-spacing:                false;
+$enable-utility-text-justify:           false;
+$enable-utility-text-wrap:              false;
+$enable-utility-text-nowrap:            false;
+$enable-utility-text-align:             true;
+$enable-utility-text-transform:         false;
+$enable-utility-text-weight:            false;
+$enable-utility-text-style:             false;
+$enable-utility-text-family:            false;
+$enable-utility-text-truncate:          false;
+$enable-utility-text-decoration:        false;
+$enable-utility-text-break:             false;
+$enable-utility-text-colors:            false;
+$enable-utility-text-palette:           false;
+$enable-utility-text-special:           false;
+$enable-utility-text-reset:             false;
+$enable-utility-text-height:            false;
+$enable-utility-text-size:              false;
+$enable-utility-valign:                 false;
+$enable-utility-visibility:             false;
+
+
+// Default Figuration setting overrides
+// =====
+
+// Disable some default box-shadows
+$thumbnail-box-shadow:                  0 0 transparent;
+$kbd-box-shadow:                        0 0 transparent;
+$btn-box-shadow:                        0 0 transparent;
+$btn-active-box-shadow:                 0 0 transparent;
+$input-box-shadow:                      0 0 transparent;
+$form-checkradio-box-shadow:            0 0 transparent;
+$form-switch-track-box-shadow:          null;
+$form-switch-thumb-box-shadow:          null;
+$form-range-track-box-shadow:           0 0 transparent;
+$progress-box-shadow:                   0 0 transparent;
+$progress-bar-box-shadow:               0 0 transparent;
+$dropdown-box-shadow:                   0 0 transparent;
+$popover-box-shadow:                    0 0 transparent;
+$modal-content-box-shadow:              0 0 transparent;
+
+$white:                                 #fff;
+
+$primary:                               #40998b;
+//rgba(#abfcef, .7); //rgba(#66faff, .75);
+
+$palette-interval-light:                .2%;
+$palette-interval-dark:                 .15%;
+
+$border-radius:                         .5rem;
+
+$body-bg:                               var(--CT_bodyBg);
+$body-color:                            var(--CT_bodyColor);
+$body-padding:                          .625rem;
+
+$link-color:                            var(--CT_linkColor);
+$link-hover-color:                      var(--CT_linkHoverColor);
+
+$drag-font-weight:                      400;
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif:                "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$grid-row-columns:                      4;
+
+$figure-caption-padding:                .5rem;
+$figure-caption-font-size:              .875rem;
+
+$btn-font-weight:                       700;
+$btn-focus-box-shadow-size:             0 0 0 .1875rem;
+$btn-focus-box-shadow-alpha:            .85;
+$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
+$btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
+
+$input-bg:                              #fff;
+$input-focus-box-shadow-size:           0 0 0 .1875rem;
+$input-focus-box-shadow-alpha:          .85;
+$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
+
+$form-group-margin-bottom:              .5rem;
+
+$form-checkradio-border-width:          1px;
+$form-checkradio-border-color:          var(--CT_formCheckradioBorderColor);
+$form-checkradio-checked-bg:            var(--CT_formCheckradioCheckedBg);
+$form-checkradio-checked-border-color:  var(--CT_formCheckradioCheckedBorderColor);
+$form-checkradio-radio-icon:            none;
+$form-checkradio-focus-border-color:    var(--CT_formCheckradioFocusBorderColor);
+$form-checkradio-focus-box-shadow:      0 0 0 .1875rem rgba(var(--CT_formCheckradioFocusBoxShadowRGB), var(--CT_formCheckradioFocusBoxShadowOpacity));
+$form-checkradio-checked-box-shadow:    .0625em .0625em 0 .03125em rgba(var(--CT_formCheckradioCheckedBoxShadowRGB), var(--CT_formCheckradioCheckedBoxShadowOpacity));
+
+$form-range-track-height:               .375rem;
+$form-range-track-bg:                   var(--CT_formRangeTrackBg);
+$form-range-thumb-width:                1.25rem;
+$form-range-thumb-bg:                   var(--CT_formRangeThumbBg);
+$form-range-thumb-box-shadow:           .125rem .125rem 0 .025rem rgba(var(--CT_formRangeThumbBoxShadowRGB), var(--CT_formRangeThumbBoxShadowOpacity));
+$form-range-thumb-focus-box-shadow:     0 0 0 .1875rem rgba(var(--CT_formRangeThumbFocusBoxShadowRGB), var(--CT_formRangeThumbFocusBoxShadowOpacity)) !default;
+$form-range-thumb-active-bg:            var(--CT_formRangeThumbActiveBg);
+
+$form-switch-width:                         3rem;
+$form-switch-gutter:                        calc(#{$form-switch-width} + .125em) !default;
+$form-switch-track-height:                  1.75rem;
+$form-switch-track-bg:                      var(--CT_formSwitchTrackBg);
+$form-switch-track-border-color:            var(--CT_formSwitchTrackBorderColor);
+$form-switch-track-border-radius:           $form-switch-track-height;
+$form-switch-track-focus-border-color:      var(--CT_formSwitchTrackFocusBorderColor);
+$form-switch-track-focus-box-shadow:        0 0 0 .1875rem rgba(var(--CT_formSwitchTrackFocusBoxShadowRGB), var(--CT_formSwitchTrackFocusBoxShadowOpacity));
+$form-switch-track-checked-bg:              var(--CT_formSwitchTrackCheckedBg);
+$form-switch-track-checked-border-color:    var(--CT_formSwitchTrackCheckedBorderColor);
+$form-switch-track-checked-box-shadow:      null;
+
+$form-switch-thumb-width:                   1.375em;
+$form-switch-thumb-height:                  1.375em;
+$form-switch-thumb-bg:                      var(--CT_formSwitchThumbBg);
+$form-switch-thumb-box-shadow:              .1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbBoxShadowRGB), var(--CT_formSwitchThumbBoxShadowOpacity));
+$form-switch-thumb-focus-bg:                var(--CT_formSwitchThumbFocusBg);
+$form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
+$form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
+$form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
+
+$card-bg:                               var(--CT_cardBg);
+$card-color:                            var(--CT_cardColor);
+$card-padding-y:                        .5rem;
+$card-padding-x:                        .75rem;
+$card-title-margin-bottom:              .25rem;
+$card-border-color:                     var(--CT_cardBorderColor);
+$card-border-radius:                    $border-radius;
+
+$popover-bg:                            var(--CT_popoverBg);
+$popover-border-width:                  3px;
+$popover-border-radius:                 .5rem;
+$popover-border-color:                  var(--CT_popoverBorderColor);
+$popover-header-padding-y:              .25rem;
+$popover-header-bg:                     var(--CT_popoverHeaderBg);
+$popover-header-color:                  var(--CT_popoverHeaderColor);
+$popover-header-border-color:           var(--CT_popoverHeaderBorderColor);
+$popover-body-color:                    var(--CT_popoverBodyColor);
+$popover-footer-padding-y:              .25rem;
+$popover-footer-padding-x:              .75rem;
+$popover-footer-font-size:              .875rem;
+$popover-footer-bg:                     var(--CT_popoverFooterBg);
+$popover-footer-color:                  var(--CT_popoverFooterColor);
+$popover-footer-border-width:           1px;
+$popover-footer-border-color:           var(--CT_popoverFooterBorderColor);
+$popover-section-border-width:          3px;
+$popover-section-border-color:          var(--CT_popoverSectionBorderColor);
+
+$modal-backdrop-bg:                     var(--CT_modalBackdropBg);
+$modal-backdrop-opacity:                var(--CT_modalBackdropOpacity);
+$modal-content-bg:                      var(--CT_modalContentBg);
+$modal-content-color:                   var(--CT_modalContentColor);
+$modal-content-border-width:            4px;
+$modal-content-border-color:            var(--CT_modalContentBorderColor);
+$modal-border-radius:                   $border-radius;
+
+$modal-header-padding-y:                .5rem;
+$modal-header-padding-x:                .75rem;
+$modal-header-bg:                       var(--CT_modalHeaderBg);
+$modal-header-color:                    var(--CT_modalHeaderColor);
+$modal-header-border-color:             var(--CT_modalHeaderBorderColor);
+$modal-header-border-width:             1px;
+
+$modal-close-padding-y:                 .25rem;
+$modal-close-padding-x:                 .25rem;
+
+$modal-body-padding-y:                  .5rem;
+$modal-body-padding-x:                  .75rem;
+
+$modal-footer-padding-y:                .25rem;
+$modal-footer-padding-x:                .75rem;
+$modal-footer-bg:                       var(--CT_modalFooterBg);
+$modal-footer-color:                    var(--CT_modalFooterColor);
+$modal-footer-border-color:             var(--CT_modalFooterBorderColor);
+$modal-footer-border-width:             1px;
+
+// Clusive specific items
+// =====
+
+$skiplink-offset-top:                   .25rem;
+$skiplink-padding:                      .25rem .5rem;
+$skiplink-border-width:                 2px;
+
+$header-border-radius:                  $border-radius;
+$header-opacity-stop:                   65%;
+
+$sidebar-border-radius:                 $header-border-radius;
+// Sidebar stretched max width is half of:
+// vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)
+$sidebar-xl-width:                      calc((100vw - 72rem + ((4rem - 1rem) * 2)) / 2);
+
+$library-grid-gutter:                   2rem;
+
+$setting-padding:                       .75rem 1rem 1rem;
+$setting-border-width:                  3px;
+
+$setting-title-margin-bottom:           .25rem;
+$setting-title-font-size:               .875rem;
+$setting-title-font-weight:             700;
+
+$setting-modal-header-border-width:     3px;
+$setting-modal-footer-border-width:     3px;
+
+$ranking-margin-x:                      .375em;
+$ranking-margin-bottom:                 1.75em;
+$ranking-font-size:                     1.5rem;
+$ranking-border-width:                  4px;
+$ranking-label-font-size:               .875rem;
+
+$goal-modal-title-font-size:            .875rem;
+$goal-modal-title-font-weight:          400;
+$goal-modal-title-font-style:           italic;
+$goal-modal-subtitle-font-size:         1rem;
+$goal-modal-subtitle-font-weight:       700;
+$goal-modal-subtitle-font-style:        null;
+$goal-modal-footer-font-size:           .875rem;
+
+$why-modal-title-font-size:             1rem;
+$why-modal-title-font-weight:           700;
+$why-modal-title-font-style:            null;
+$why-modal-footer-font-size:            $goal-modal-footer-font-size;

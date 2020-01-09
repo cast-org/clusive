@@ -1,0 +1,242 @@
+// Default theme
+$theme-name:                            ".clusive-theme-sepia";
+
+$body-bg:                               #faf4e8;
+$body-color:                            #333;
+
+$link-color:                            #0d36ab;
+$link-hover-color:                      palette($link-color, 700);
+
+$focus-ring-color:                      #636b82;
+
+$selection-bg:                          #acfdf0;
+$selection-color:                       #111;
+
+$btn-focus-box-shadow-alpha:            .8;
+
+$border-color:                          #bfc6cd;
+
+$skiplink-bg:                           #66faff;
+$skiplink-color:                        #333;
+$skiplink-border-color:                 #333;
+
+$library-bg:                            #faf4e8;
+$library-logo-icon-color:               #ff554d;
+$library-logo-text-color:               #333;
+
+$home-bg:                               #faf4e8;
+$home-create-border-color:              #636b82;
+
+$header-bg:                             #b09f88;
+$header-color:                          inherit;
+$header-opacity-start:                  .3;
+$header-opacity-end:                    0;
+$header-logo-icon-color:                #fbfbfb;
+$header-logo-text-color:                #b09f88;
+$page-title-border-color:               #a0abfd;
+
+$sidebar-bg:                            $header-bg;
+$sidebar-end-bg:                        $header-bg;
+$sidebar-opacity-start:                 .15;
+$sidebar-opacity-end:                   .3;
+$sidebar-end-opacity-start:             .6;
+$sidebar-end-opacity-end:               .8;
+
+// Figure
+$figure-caption-bg:                     #ebe3d5;
+$figure-caption-color:                  #666;
+
+// Cards
+$card-bg:                               #ebe3d5;
+$card-color:                            $body-color;
+$card-border-color:                     #ebe3d5;
+$card-img-bg:                           rgba(#b09f88, .3);
+$card-library-box-shadow:               #fbfbfb;
+$card-login-bg:                         #b09f88;
+$card-login-bg-opacity:                 .3;
+$card-login-color:                      $body-color;
+$card-login-forgot-border-color:        #d3cfc9;
+
+// Buttons
+$btn-primary-focus-ring:                #636b82;
+$btn-primary-bg:                        #a0abfd;
+$btn-primary-color:                     #111;
+$btn-primary-border-color:              transparent;
+$btn-primary-hover-bg:                  palette($btn-primary-bg, 575);
+$btn-primary-hover-color:               $btn-primary-color;
+$btn-primary-hover-border-color:        transparent;
+$btn-primary-active-bg:                 palette($btn-primary-bg, 625);
+$btn-primary-active-color:              $btn-primary-color;
+$btn-primary-active-border-color:       transparent;
+
+$btn-secondary-focus-ring:              #636b82;
+$btn-secondary-bg:                      #ff554d;
+$btn-secondary-color:                   #111;
+$btn-secondary-border-color:            transparent;
+$btn-secondary-hover-bg:                palette($btn-secondary-bg, 550);
+$btn-secondary-hover-color:             $btn-secondary-color;
+$btn-secondary-hover-border-color:      transparent;
+$btn-secondary-active-bg:               palette($btn-secondary-bg, 600);
+$btn-secondary-active-color:            #000;
+$btn-secondary-active-border-color:     transparent;
+
+$btn-nav-focus-ring:                    #636b82;
+$btn-nav-bg:                            transparent;
+$btn-nav-color:                         #6e6355;
+$btn-nav-border-color:                  transparent;
+$btn-nav-hover-bg:                      $btn-nav-bg;
+$btn-nav-hover-color:                   palette($btn-nav-color, 700);
+$btn-nav-hover-border-color:            transparent;
+$btn-nav-active-bg:                     $btn-nav-bg;
+$btn-nav-active-color:                  palette($btn-nav-color, 800);
+$btn-nav-active-border-color:           transparent;
+
+$btn-setting-focus-ring:                #636b82;
+$btn-setting-bg:                        rgba(#faf4e8, .7);
+$btn-setting-color:                     #ff554d;
+$btn-setting-border-color:              transparent;
+$btn-setting-hover-bg:                  rgba(#faf4e8, .85);
+$btn-setting-hover-color:               $btn-setting-color;
+$btn-setting-hover-border-color:        transparent;
+$btn-setting-active-bg:                 rgba(#faf4e8, 1);
+$btn-setting-active-color:              $btn-setting-color;
+$btn-setting-active-border-color:       transparent;
+$btn-setting-text-shadow-color:         #636b82;
+$btn-setting-text-shadow-opacity:       .75;
+
+$btn-tool-focus-ring:                   #636b82;
+$btn-tool-bg:                           rgba(#faf4e8, .7);
+$btn-tool-color:                        #6e6355;
+$btn-tool-border-color:                 transparent;
+$btn-tool-hover-bg:                     rgba(#faf4e8, .85);
+$btn-tool-hover-color:                  $btn-tool-color;
+$btn-tool-hover-border-color:           transparent;
+$btn-tool-active-bg:                    rgba(#faf4e8, 1);
+$btn-tool-active-color:                 $btn-tool-color;
+$btn-tool-active-border-color:          transparent;
+
+$btn-option-focus-ring:                 #636b82;
+$btn-option-bg:                         #fff;
+$btn-option-color:                      #333;
+$btn-option-border-color:               transparent;
+$btn-option-hover-bg:                   #fff;
+$btn-option-hover-color:                $btn-option-color;
+$btn-option-hover-border-color:         #636b82;
+$btn-option-active-bg:                  #ff554d;
+$btn-option-active-color:               #111;
+$btn-option-active-border-color:        transparent;
+$btn-option-active-box-shadow-color:    #636b82;
+$btn-option-active-box-shadow-opacity:  .9;
+$btn-option-active-hover-border-color:  #636b82;
+
+// Popovers
+$popover-bg:                            #faf4e8;
+$popover-border-color:                  #636b82;
+$popover-header-bg:                     #a0abfd;
+$popover-header-color:                  #333;
+$popover-header-border-color:           #d3cfc9;
+$popover-body-color:                    #333;
+$popover-footer-bg:                     #a0abfd;
+$popover-footer-color:                  #333;
+$popover-footer-border-color:           #d3cfc9;
+$popover-section-border-color:          #d3cfc9;
+
+// Modals
+$modal-backdrop-bg:                     #343e48;
+$modal-backdrop-opacity:                .25;
+$modal-content-bg:                      #faf4e8;
+$modal-content-color:                   #333;
+$modal-content-border-color:            #636b82;
+$modal-header-bg:                       #a0abfd;
+$modal-header-color:                    #333;
+$modal-header-border-color:             #d3cfc9;
+$modal-footer-bg:                       #a0abfd;
+$modal-footer-color:                    #333;
+$modal-footer-border-color:             #d3cfc9;
+$modal-section-border-color:            #d3cfc9;
+
+// Goals
+$goal-modal-title-color:                inherit;
+$goal-modal-subtitle-color:             inherit;
+
+// Why modal
+$why-modal-title-color:                 inherit;
+$why-icon-color:                        #6e6355;
+$why-icon-active-color:                 #ff554d;
+$why-icon-active-text-shadow-color:     #6e6355;
+$why-icon-active-text-shadow-opacity:   .75;
+
+// Settings
+$setting-border-color:                  #d3cfc9;
+$setting-title-color:                   #666;
+$setting-modal-content-bg:              #ebe3d5;
+$setting-modal-content-color:           #333;
+$setting-modal-content-border-color:    #636b82;
+$setting-modal-header-bg:               #d3cfc9;
+$setting-modal-header-bg-opacity:       .7;
+$setting-modal-header-color:            #333;
+$setting-modal-header-border-color:     #d3cfc9;
+$setting-modal-footer-bg:               transparent;
+$setting-modal-footer-border-color:     #d3cfc9;
+
+// Word rank
+$ranking-border-color:                  #d3cfc9;
+
+// Form check input
+$form-checkradio-border-color:          #636b82;
+$form-checkradio-checked-bg:            #ff554d;
+$form-checkradio-checked-border-color:  #ff554d;
+$form-checkradio-focus-border-color:    #636b82;
+$form-checkradio-focus-box-shadow-color:        #636b82;
+$form-checkradio-focus-box-shadow-opacity:      .85;
+$form-checkradio-checked-box-shadow-color:      #636b82;
+$form-checkradio-checked-box-shadow-opacity:    .9;
+
+// Form range input
+$form-range-track-bg:                   #d3cfc9;
+$form-range-thumb-bg:                   #ff554d;
+$form-range-thumb-box-shadow-color:     #636b82;
+$form-range-thumb-box-shadow-opacity:   .9;
+$form-range-thumb-focus-box-shadow-color:       #636b82;
+$form-range-thumb-focus-box-shadow-opacity:     .85;
+$form-range-thumb-active-bg:            #ff554d;
+
+// Form switch input
+$form-switch-track-bg:                      #d3cfc9;
+$form-switch-track-border-color:            #636b82;
+$form-switch-track-focus-border-color:      #636b82;
+$form-switch-track-focus-box-shadow-color:  #636b82;
+$form-switch-track-focus-box-shadow-opacity:    .85;
+$form-switch-track-checked-bg:              #ff554d;
+$form-switch-track-checked-border-color:    #636b82;
+
+$form-switch-thumb-bg:                      #fbfbfb;
+$form-switch-thumb-box-shadow-color:        #636b82;
+$form-switch-thumb-box-shadow-opacity:      .9;
+$form-switch-thumb-focus-bg:                #fbfbfb;
+$form-switch-thumb-checked-bg:              #fbfbfb;
+$form-switch-thumb-checked-border-color:    #fbfbfb;
+$form-switch-thumb-checked-box-shadow-color:    #636b82;
+$form-switch-thumb-checked-box-shadow-opacity:  .9;
+
+// Word bank
+$wordbank-border-color:                 #d3cfc9;
+$wordbank-col-bg:                       rgba(#ebe3d5, .3);
+$wordbank-control-color:                $link-color;
+$wordbank-control-hover-color:          $link-hover-color;
+$wordbank-count-bg:                     #ff554d;
+$wordbank-count-color:                  #111;
+$wordbank-count-border-color:           #ff554d;
+$wordbank-count-empty-bg:               #fff;
+$wordbank-count-empty-color:            #111;
+$wordbank-count-empty-border-color:     #636b82;
+
+// Texthelp overrides
+$readaloud-highlight-bg:                #fd6;
+$readaloud-highlight-color:             $body-color;
+
+// Glossary/definitions
+$definition-speech-color:               #666;
+
+// Build out theme via import
+@import "site-theme"

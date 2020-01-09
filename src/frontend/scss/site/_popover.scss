@@ -1,0 +1,121 @@
+.popover {
+    .close,
+    .drag {
+        position: relative;
+        top: .125rem;
+    }
+
+    .drag {
+        &::before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: block;
+            // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+            font-family: fontello;
+            @include font-size(1.25rem);
+            line-height: 1;
+            color: inherit;
+            content: "\f047";
+            transform: translateX(-50%) translateY(-50%);
+        }
+    }
+}
+
+.popover-header {
+    min-height: calc(#{$popover-header-font-size * $line-height-base} + #{$popover-header-padding-y * 2} + #{$popover-header-border-width});
+
+    &:empty {
+        display: block;
+    }
+}
+
+.popover-body {
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.popover-footer {
+    padding: $popover-footer-padding-y $popover-footer-padding-x;
+    @include font-size($popover-footer-font-size);
+    color: $popover-footer-color;
+    background-color: $popover-footer-bg;
+    border-top: $popover-footer-border-width solid $popover-footer-border-color;
+    @include border-radius(0 0 $popover-inner-border-radius $popover-inner-border-radius);
+
+    &:empty {
+        display: none;
+    }
+}
+
+.popover-section {
+    position: relative;
+    padding-top: $popover-body-padding-y;
+    margin-top: $popover-body-padding-y;
+
+    &::before {
+        position: absolute;
+        top: 0;
+        right: -$popover-body-padding-x;
+        left: -$popover-body-padding-x;
+        content: "";
+        border-top: $popover-section-border-width solid $popover-section-border-color;
+    }
+}
+
+.popover-scrollable {
+    *[role="document"] {
+        display: flex;
+        flex-direction: column;
+        max-height: 80vh;
+
+        @include media-breakpoint-up(sm) {
+            max-height: 90vh;
+        }
+    }
+
+    .close {
+        position: absolute;
+        top: .125rem;
+        right: -.0625rem;
+    }
+
+    .drag {
+        position: absolute;
+        top: .0625rem;
+        right: 2rem;
+
+        *[aria-hidden] {
+            visibility: hidden;
+        }
+    }
+
+    .popover-header,
+    .popover-footer {
+        flex-shrink: 0;
+    }
+
+    .popover-header {
+        padding-right: 1.75rem;
+    }
+
+    &.draggable {
+        .popover-header {
+            padding-right: 3.75rem;
+        }
+    }
+
+    .popover-body {
+        flex: 1 1 auto;
+        overflow-y: auto;
+    }
+}
+
+.popover-glossary {
+    min-width: $popover-max-width;
+
+    @include media-breakpoint-down (sm) {
+        max-width: calc(100vw - 7.625rem);
+    }
+}

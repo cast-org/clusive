@@ -1,0 +1,53 @@
+.goal-modal {
+    .modal-title {
+        @include font-size($goal-modal-title-font-size);
+        font-style: $goal-modal-title-font-style;
+        font-weight: $goal-modal-title-font-weight;
+        color: var(--CT_goalModalTitleColor);
+    }
+    .modal-subtitle {
+        @include font-size($goal-modal-subtitle-font-size);
+        font-style: $goal-modal-subtitle-font-style;
+        font-weight: $goal-modal-subtitle-font-weight;
+        color: var(--CT_goalModalSubtitleColor);
+    }
+    .modal-footer {
+        display: block;
+        @include font-size($goal-modal-footer-font-size);
+    }
+
+    .ranking {
+        margin-right: 2rem;
+        margin-left: 2rem;
+    }
+}
+
+
+.goal-nav {
+    @include font-size(.875rem);
+    margin-bottom: .5rem;
+}
+
+.goal-word {
+    margin-bottom: 1rem;
+    @include font-size(1.375rem);
+    font-weight: 700;
+    text-align: center;
+}
+
+.goal-speak {
+    margin-left: -.25rem;
+    @include font-size(.75rem);
+    text-decoration: none;
+    //vertical-align: text-top;
+
+    > [class*="icon-"] {
+        @include font-size(1.5rem);
+        line-height: 1;
+    }
+}
+
+.goal-thanks {
+    padding-right: .5rem;
+    @include font-size(.875rem);
+}

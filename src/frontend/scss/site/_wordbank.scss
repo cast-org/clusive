@@ -1,0 +1,176 @@
+.wordbank-scroll {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.wordbank {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 15rem;
+    margin-right: 2em;
+}
+
+.wordbank-header  {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    font-weight: $font-weight-bold;
+    border-bottom: 5px solid var(--CT_wordbankBorderColor);
+
+    //&::after {
+    //    position: absolute;
+    //    top: .125rem;
+    //    right: 0;
+    //    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+    //    font-family: fontello;
+    //    @include font-size(1.25rem);
+    //    line-height: 1;
+    //    vertical-align: middle;
+    //    content: "\0e844";
+    //}
+
+    .wordbank-col {
+        position: relative;
+        padding-bottom: .75rem;
+        padding-left: 1px;
+        border-left: 0;
+    }
+}
+
+.wordbank-col {
+    flex: 1 0 25%;
+    align-self: stretch;
+    border-left: 1px solid var(--CT_wordbankBorderColor);
+}
+
+.wordbank-title {
+    @include font-size(.875rem);
+    text-align: center;
+}
+
+.wordbank-count {
+    position: absolute;
+    bottom: calc(-.75rem + 2px);
+    left: 50%;
+    z-index: 1;
+    @include font-size(.875rem);
+    line-height: 1;
+    color: var(--CT_wordbankCountColor);
+    transform: translateX(-50%);
+
+    &::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: -1;
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        content: "";
+        background-color: var(--CT_wordbankCountBg);
+        border: 1px solid var(--CT_wordbankCountBorderColor);
+        @include border-radius(10rem);
+        transform: translate3d(-50%, -50%, 0);
+    }
+}
+
+.wordbank-count-empty {
+    color: var(--CT_wordbankCountEmptyColor);
+
+    &::before {
+        background-color: var(--CT_wordbankCountEmptyBg);
+        border-color: var(--CT_wordbankCountEmptyBorderColor);
+    }
+}
+
+
+.wordbank-body {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    border-bottom: 1px solid var(--CT_wordbankBorderColor);
+
+    .wordbank-col {
+        &:nth-child(2),
+        &:nth-child(4) {
+            background-color: var(--CT_wordbankColBg);
+        }
+    }
+}
+
+.wordbank-body-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.wordbank-list {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.wordbank-item {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    padding-left: calc(.25rem + 1px);
+    margin: .75rem 0;
+    line-height: 1;
+    white-space: nowrap;
+
+    &.offset0 {
+        margin-left: 0;
+
+        .wordbank-prev {
+            display: none;
+        }
+    }
+    &.offset1 {
+        margin-left: 25%;
+    }
+    &.offset2 {
+        margin-left: 50%;
+    }
+    &.offset3 {
+        margin-left: 75%;
+
+        .wordbank-next {
+            display: none;
+        }
+    }
+}
+
+.wordbank-prev,
+.wordbank-next,
+.wordbank-del {
+    padding: .125rem .25rem;
+    @include font-size(.875rem);
+    line-height: 1;
+    color: var(--CT_wordbankControlColor);
+    text-decoration: none;
+    vertical-align: middle;
+
+    &:hover,
+    &:focus {
+        color: var(--CT_wordbankControlHoverColor);
+        text-decoration: none;
+    }
+
+    > [class*="icon-"] {
+        vertical-align: middle;
+    }
+}
+
+.wordbank-prev {
+    order: -1;
+}

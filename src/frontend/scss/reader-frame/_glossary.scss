@@ -1,0 +1,9 @@
+// stylelint-disable selector-no-qualifying-type
+
+a.gloss,
+a.gloss:hover {
+    font-weight: $font-weight-bold;
+    color: inherit !important; // stylelint-disable-line declaration-no-important
+    text-decoration: none;
+    box-shadow: 0 .0625em 0 0 var(--CRT_glossaryUnderline), inset 0 -.125em 0 0 var(--CRT_glossaryUnderline);
+}

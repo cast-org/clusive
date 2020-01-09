@@ -1,0 +1,49 @@
+# Quicker docker build that assumes the application has already been built in the local directory.
+# Might be useful for some debugging purposes, but in general we recommend using the regular Dockerfile
+# which does a full clean build.
+# Prerequisites:
+#   npm install
+#   grunt build
+# Remove "target" from .dockerignore
+# Then:
+#   docker build . -t clusive -f Dockerfile-simple
+#   docker run -p 8000:8000 -e DJANGO_CONFIG=local clusive
+
+FROM python:3.7-alpine as base
+
+# No point caching bytecode for single run
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Don't buffer log output inside the container
+ENV PYTHONUNBUFFERED 1
+
+COPY requirements.txt /
+RUN \
+  apk add --no-cache postgresql-libs git gcc musl-dev postgresql-dev npm && \
+  python -m pip install -r /requirements.txt --no-cache-dir
+
+# Don't run as root
+RUN mkdir -p /app /home/app
+RUN addgroup -S app && adduser -S -G app app && chown app /app /home/app
+USER app
+
+WORKDIR /app
+
+RUN python -m nltk.downloader wordnet
+
+COPY --chown=app target .
+COPY src/entrypoint.sh .
+
+RUN python manage.py collectstatic --no-input
+
+EXPOSE 8000
+STOPSIGNAL SIGINT
+
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+HEALTHCHECK --interval=10s --timeout=3s \
+	CMD wget --quiet --tries=1 --spider http://localhost:8000/ || exit 1
+
+# gunicorn configuration suggestions from https://pythonspeed.com/articles/gunicorn-in-docker/
+CMD ["gunicorn", "clusive_project.wsgi", "--bind=0.0.0.0:8000", "--worker-tmp-dir=/dev/shm", \
+	"--workers=2", "--threads=4", "--worker-class=gthread"]
