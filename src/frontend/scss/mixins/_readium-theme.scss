@@ -1,0 +1,59 @@
+// Used to generate new Readium themes ("appearances")
+
+@mixin readium-theme($theme-name: null) {
+    $selector: "root";
+    @if ($theme-name != null) {
+        $selector: #{'root[style*="#{$theme-name}"]'};
+    }
+
+    :#{$selector} {
+        --RS__backgroundColor: #{$body-bg};
+        --RS__textColor: #{$body-color};
+        --RS__linkColor: #{$link-color};
+        --RS__visitedColor: #{$link-color};
+
+        // This can be customized but initial will re-use default value of the browser
+        --RS__selectionBackgroundColor: #{$selection-bg};
+        --RS__selectionTextColor: #{$selection-color};
+
+        // Additional Clusive styling within the reader frame
+        --CRT_figureCaptionBg: #{$figure-caption-bg};
+        --CRT_figureCaptionColor: #{$figure-caption-color};
+        --CRT_glossaryUnderline: #{$glossary-underline};
+        --CRT_ttsBackgroundColor: #{$tts-highlight-bg};
+        --CRT_ttsTextColor: #{$tts-highlight-color};
+        --CRT_focusRingColor: #{$focus-ring-color};
+
+        // Image blend
+        --CRT_imgMixBlendMode: #{$img-mix-blend-mode};
+
+        // Forcing a reflow in Blink/Webkit so that blend mode can work
+        --RS__maxLineLength: 40.01rem;
+
+        // we don't need to redeclare bg-color and color for :root since we will inherit and update from day/default mode
+
+        body {
+            // Should be transparent but Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=711955&q=mix-blend-mode&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified
+            color: var(--RS__textColor);
+            background-color: var(--RS__backgroundColor);
+        }
+
+        a:link,
+        a:link * {
+            color: var(--RS__linkColor);
+        }
+
+        a:visited,
+        a:visited * {
+            color: var(--RS__visitedColor);
+        }
+
+        svg,
+        img {
+            // Make sure the proper bg-color is used for the blend mode
+            // stylelint-disable-next-line declaration-no-important
+            background-color: var(--RS__backgroundColor) !important;
+            mix-blend-mode: var(--CRT_imgMixBlendMode);
+        }
+    }
+}

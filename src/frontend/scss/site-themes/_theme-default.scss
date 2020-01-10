@@ -1,5 +1,6 @@
 // Default theme
-$theme-name:                            "";
+$theme-name:                            null;
+$theme-name-readium:                    null;
 
 $body-bg:                               #fbfbfb;
 $body-color:                            #333;
@@ -8,6 +9,8 @@ $link-color:                            #0d36ab;
 $link-hover-color:                      palette($link-color, 700);
 
 $focus-ring-color:                      #636b82;
+
+$img-mix-blend-mode:                    normal;
 
 $selection-bg:                          #acfdf0;
 $selection-color:                       #111;
@@ -231,12 +234,10 @@ $wordbank-count-empty-bg:               #fff;
 $wordbank-count-empty-color:            #111;
 $wordbank-count-empty-border-color:     #636b82;
 
-// Texthelp overrides
-$readaloud-highlight-bg:                #fd6;
-$readaloud-highlight-color:             $body-color;
+// Text-to-Speech (TTS)
+$tts-highlight-bg:                      #fd6;
+$tts-highlight-color:                   #636b82;
 
 // Glossary/definitions
+$glossary-underline:                    #acfdf0;
 $definition-speech-color:               #666;
-
-// Build out theme via import
-@import "site-theme"

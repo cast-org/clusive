@@ -9,23 +9,17 @@
 
 // Mixins
 @import "../../../node_modules/figuration/scss/mixins";
+@import "mixins/readium-theme";
 
-$textColor: #333;
-$backgroundColor: #fbfbfb;
-$linkColor: #0d36ab;
-$selectionBackgroundColor: #acfdf0;
-$selectionTextColor: #111;
-
-$figure-caption-bg:                     #ebe3d5;
-$figure-caption-color:                  #666;
-$glossary-underline:                    #acfdf0; //#72c0b2;
-
-$img-mix-blend-mode:                    normal;
-
-$themeName: null;
-@import "readium-theme";
-
+// Readium frame specific items
 @import "reader-frame/content";
 @import "reader-frame/caption";
 @import "reader-frame/glossary";
 @import "reader-frame/tts";
+
+// =====
+// Default theme - build out via import
+// Other themes are `clusive-reader-theme-*.scss`
+@import "site-themes/theme-default";
+@include readium-theme($theme-name-readium);
+
