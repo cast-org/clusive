@@ -44,19 +44,6 @@ h2,
     font-weight: 900;
 }
 
-h1,
-.h1 {
-    @include font-size(1.375rem);
-}
-h2,
-.h2 {
-    @include font-size(1.125rem);
-}
-h3,
-.h3 {
-    @include font-size(1rem);
-}
-
 .content {
     max-width: calc(100vw - 10.625rem);
     padding-right: 1rem;
