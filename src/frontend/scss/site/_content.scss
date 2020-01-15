@@ -1,19 +1,25 @@
 // stylelint-disable declaration-no-important
+#ff-default,
 .ff-default {
     font-family: $font-family-sans-serif !important;
 }
+#ff-times,
 .ff-times {
     font-family: Georgia, Times, "Times New Roman", serif !important;
 }
+#ff-comic,
 .ff-comic {
     font-family: "Comic Sans MS", sans-serif !important;
 }
+#ff-arial,
 .ff-arial {
     font-family: "Helvetica Neue", Arial, sans-serif !important;
 }
+#ff-verdana,
 .ff-verdana {
     font-family: Verdana, sans-serif !important;
 }
+#ff-dyslexic,
 .ff-dyslexic {
     font-family: OpenDyslexicRegular, sans-serif !important;
 }
