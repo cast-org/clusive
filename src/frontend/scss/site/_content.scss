@@ -1,4 +1,4 @@
-// stylelint-disable declaration-no-important
+// stylelint-disable declaration-no-important, selector-max-id
 #ff-default,
 .ff-default {
     font-family: $font-family-sans-serif !important;
@@ -23,7 +23,7 @@
 .ff-dyslexic {
     font-family: OpenDyslexicRegular, sans-serif !important;
 }
-// stylelint-enable declaration-no-important
+// stylelint-enable declaration-no-important, selector-max-id
 
 :focus {
     outline-color: var(--CT_focusRingColor);
