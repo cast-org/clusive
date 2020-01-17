@@ -1,9 +1,12 @@
 {% load static %}
 <header class="site-header">
     <div class="site-header-logo">
+        {% comment %}
         <a href="{% url 'index' %}">
             <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
         </a>
+        {% endcomment %}
+        <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
         <span class="icon-logo-clusive" aria-hidden="true"></span>
         <span class="sr-only">Clusive</span>
     </div>
