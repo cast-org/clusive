@@ -135,3 +135,14 @@ h2,
     @include font-size(.875rem);
     color: var(--CT_definitionSpeechColor);
 }
+.definition-meaning {
+    font-weight: $font-weight-bolder;
+    color: var(--CT_definitionSpeechColor);
+}
+.definition-example {
+    display: block;
+    margin-top: .25rem;
+    @include font-size(.875rem);
+    font-style: italic;
+    color: var(--CT_definitionSpeechColor);
+}
