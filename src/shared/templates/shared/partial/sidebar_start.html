@@ -1,10 +1,12 @@
 {% if index_home %}
-<a href="{% url 'index' %}" class="btn btn-nav btn-icon" aria-label="Back to library">
+<a href="{% url 'index' %}" class="btn btn-nav btn-icon">
+    <span class="sr-only">Back to library</span>
     <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
 </a>
 {% endif %}
 {% if index_reader %}
-<a href="{% url 'reader_index' %}" class="btn btn-nav btn-icon" aria-label="Back to library">
+<a href="{% url 'reader_index' %}" class="btn btn-nav btn-icon">
+    <span class="sr-only">Back to library</span>
     <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
 </a>
 {% endif %}
