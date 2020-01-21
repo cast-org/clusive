@@ -4,7 +4,7 @@ var clusiveTTS = {
     readAloudButtonId: "#readAloudButton",
     readAloudButtonPlayAriaLabel: "Read aloud",
     readAloudButtonStopAriaLabel: "Stop reading aloud",
-    readAloudIconId: "#readAloudIcon"
+    readAloudIconId: "#readAloudIcon"    
 };
 
 // Bind controls
@@ -102,44 +102,59 @@ clusiveTTS.readElements = function(textElements) {
     clusiveTTS.readQueuedElements();
 };
 
-clusiveTTS.getAllReaderTextElements = function() {
-    var readerIframe = $("#D2Reader-Container").find("iframe");
-    var readerBody = readerIframe.contents().find("body");
-
-    var textElements = readerBody.find("h1,h2,h3,h4,h5,h6,p");
+clusiveTTS.getAllTextElements = function(documentBody) {        
+    var textElements = documentBody.find("h1,h2,h3,h4,h5,h6,p");
     return textElements;
+};
+
+clusiveTTS.getReaderIFrameBody = function() {
+    var readerIframe = $("#D2Reader-Container").find("iframe");
+    return readerIframe.contents().find("body");
 };
 
 clusiveTTS.getReaderIframeSelection = function() {
     return $("#D2Reader-Container").find("iframe")[0].contentWindow.getSelection();
 }
 
-clusiveTTS.filterReaderTextElementsBySelection = function (textElements) {
-    readerIFrameSelection = clusiveTTS.getReaderIframeSelection();
+clusiveTTS.filterReaderTextElementsBySelection = function (textElements, userSelection) {    
     var filteredElements = textElements.filter(function (i, elem) {       
-        return readerIFrameSelection.containsNode(elem, true);
+        return userSelection.containsNode(elem, true);
     });
     return filteredElements;
 };
 
 clusiveTTS.read = function() {
-    var isSelection = clusiveTTS.getReaderIframeSelection().type === "None" ? false : true;
+    var isReader = false;
+    var isLibrary = true;
+    var elementsToRead;
+    var selection, isSelection;
+    
+    if(isReader) {
+        elementsToRead = clusiveTTS.getAllTextElements(clusiveTTS.getReaderIFrameBody());
+        selection = clusiveTTS.getReaderIframeSelection();
+        isSelection = selection.type === "None" ? false : true;
+    } else if(isLibrary) {
+        elementsToRead = clusiveTTS.getAllTextElements($("body"));
+        selection = "";
+        isSelection = false;
+
+    }
+    
     if(isSelection) {
-        clusiveTTS.readSelection();
+        clusiveTTS.readSelection(elementsToRead, selection);
     } else {
-        clusiveTTS.readAll();
+        clusiveTTS.readAll(elementsToRead);
     }
     
 };
 
-clusiveTTS.readAll = function() {    
-    clusiveTTS.readElements(clusiveTTS.getAllReaderTextElements());
+clusiveTTS.readAll = function(elements) {    
+    clusiveTTS.readElements(elements);
 
 };
 
-clusiveTTS.readSelection = function() {
-    var textElements = clusiveTTS.getAllReaderTextElements();
-    var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(textElements);
+clusiveTTS.readSelection = function(elements, selection) {    
+    var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
     clusiveTTS.readElements(filteredElements);
 };
 
