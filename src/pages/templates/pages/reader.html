@@ -23,6 +23,9 @@ var pub_id = "{{ pub_id }}";
 
 <div id="D2Reader-Container" style="position: relative;">
     <main style="overflow: hidden" tabindex=-1 id="iframe-wrapper">
+        <span id="content" tabindex="-1"></span>
+        <h1 class="sr-only">Reading epub: {{ Book.title }}</h1>
+
         <div id="reader-loading" class="loading"></div>
         <div id="reader-error" class="error"></div>
         <div id="reader-info-top" class="info top">

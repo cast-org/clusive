@@ -1,4 +1,4 @@
-//stylelint-disable declaration-no-important
+// stylelint-disable declaration-no-important, selector-max-id
 
 .skiplink {
     position: absolute !important;
@@ -17,4 +17,8 @@
     &:hover {
         color: var(--CT_skiplinkColor);
     }
+}
+
+#content {
+    outline: 0;
 }
