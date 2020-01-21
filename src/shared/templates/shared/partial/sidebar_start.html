@@ -1,14 +1,20 @@
+{% if index_home or index_reader %}
+<nav aria-label="Clusive">
+{% endif %}
 {% if index_home %}
-<a href="{% url 'index' %}" class="btn btn-nav btn-icon">
-    <span class="sr-only">Back to library</span>
-    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-</a>
+    <a href="{% url 'index' %}" class="btn btn-nav btn-icon">
+        <span class="sr-only">Back to library</span>
+        <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+    </a>
 {% endif %}
 {% if index_reader %}
-<a href="{% url 'reader_index' %}" class="btn btn-nav btn-icon">
-    <span class="sr-only">Back to library</span>
-    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-</a>
+    <a href="{% url 'reader_index' %}" class="btn btn-nav btn-icon">
+        <span class="sr-only">Back to library</span>
+        <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+    </a>
+{% endif %}
+{% if index_home or index_reader %}
+</nav>
 {% endif %}
 {% if nav %}
 <nav class="sidebar-nav" aria-label="Article">
