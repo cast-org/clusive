@@ -123,23 +123,25 @@ clusiveTTS.filterReaderTextElementsBySelection = function (textElements, userSel
     return filteredElements;
 };
 
+clusiveTTS.isSelection = function (selection) {
+    return selection.type === "None" ? false : true;
+};
+
 clusiveTTS.read = function() {
-    var isReader = false;
-    var isLibrary = true;
+    var isReader = $("#D2Reader-Container").length > 0;    
     var elementsToRead;
     var selection, isSelection;
     
     if(isReader) {
         elementsToRead = clusiveTTS.getAllTextElements(clusiveTTS.getReaderIFrameBody());
-        selection = clusiveTTS.getReaderIframeSelection();
-        isSelection = selection.type === "None" ? false : true;
-    } else if(isLibrary) {
+        selection = clusiveTTS.getReaderIframeSelection();        
+    } else {
         elementsToRead = clusiveTTS.getAllTextElements($("body"));
-        selection = window.getSelection();
-        isSelection = selection.type === "None" ? false : true;
-
+        selection = window.getSelection();        
     }
     
+    isSelection = clusiveTTS.isSelection(selection);
+
     if(isSelection) {
         clusiveTTS.readSelection(elementsToRead, selection);
     } else {
