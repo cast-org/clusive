@@ -135,8 +135,8 @@ clusiveTTS.read = function() {
         isSelection = selection.type === "None" ? false : true;
     } else if(isLibrary) {
         elementsToRead = clusiveTTS.getAllTextElements($("body"));
-        selection = "";
-        isSelection = false;
+        selection = window.getSelection();
+        isSelection = selection.type === "None" ? false : true;
 
     }
     
