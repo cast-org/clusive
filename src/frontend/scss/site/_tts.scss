@@ -1,0 +1,5 @@
+// stylelint-disable selector-no-qualifying-type, selector-class-pattern, declaration-no-important
+span.tts-currentWord {
+    color: var(--CT_ttsTextColor) !important;
+    background-color: var(--CT_ttsBackgroundColor) !important;
+}

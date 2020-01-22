@@ -27,7 +27,9 @@ class ReaderView(LoginRequiredMixin,TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             context = self.get_context_data(**kwargs)
-            page_viewed.send(self.__class__, request=request, document=context.get('pub_id'))
+            pub_id = context.get('pub_id')
+            self.extra_context = { 'pub_title' : Book.objects.get(path=pub_id).title}
+            page_viewed.send(self.__class__, request=request, document=pub_id)
         return super().get(request, *args, **kwargs)
 
 
