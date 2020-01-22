@@ -94,6 +94,7 @@ vocabCheck.start = function(link, article) {
 vocabCheck.next = function() {
     vocabCheck.wordIndex++;
     vocabCheck.update();
+    $('#vocabCheckBody').focus();
     return false;
 };
 
@@ -102,6 +103,7 @@ vocabCheck.back = function() {
         vocabCheck.wordIndex--;
         vocabCheck.update();
     }
+    $('#vocabCheckBody').focus();
     return false;
 };
 
