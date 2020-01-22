@@ -11,7 +11,7 @@ var pub_id = "{{ pub_id }}";
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
 {% endblock %}
 
-{% block title %}Welcome to Clusive{% endblock %}
+{% block title %}{{ pub_title }} | Clusive{% endblock %}
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
@@ -24,7 +24,7 @@ var pub_id = "{{ pub_id }}";
 <div id="D2Reader-Container" style="position: relative;">
     <main style="overflow: hidden" tabindex=-1 id="iframe-wrapper">
         <span id="content" tabindex="-1"></span>
-        <h1 class="sr-only">Reading epub: {{ Book.title }}</h1>
+        <h1 class="sr-only">Reading: {{ pub_title }}</h1>
 
         <div id="reader-loading" class="loading"></div>
         <div id="reader-error" class="error"></div>
