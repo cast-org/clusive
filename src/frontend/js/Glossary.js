@@ -94,6 +94,7 @@ vocabCheck.start = function(link, article) {
 vocabCheck.next = function() {
     vocabCheck.wordIndex++;
     vocabCheck.update();
+    return false;
 };
 
 vocabCheck.back = function() {
@@ -101,6 +102,7 @@ vocabCheck.back = function() {
         vocabCheck.wordIndex--;
         vocabCheck.update();
     }
+    return false;
 };
 
 vocabCheck.update = function() {
@@ -138,10 +140,12 @@ vocabCheck.selected = function(value) {
 
 vocabCheck.skip = function() {
     window.location = '/reader/' + vocabCheck.pendingArticle;
+    return false;
 };
 
 vocabCheck.done = function() {
     window.location = '/reader/' + vocabCheck.pendingArticle;
+    return false;
 };
 
 
