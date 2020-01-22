@@ -1,0 +1,25 @@
+// Image description
+.imgdesc-modal {
+    @include media-breakpoint-up(#{$modal-breakpoint}) {
+        .modal-dialog {
+            max-width: $imgdesc-modal-max-width;
+        }
+    }
+    .modal-title {
+        font-family: $imgdesc-modal-title-font-family;
+        @include font-size($imgdesc-modal-title-font-size);
+        font-style: $imgdesc-modal-title-font-style;
+        font-weight: $imgdesc-modal-title-font-weight;
+    }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+.imgdesc-img {
+    margin-bottom: 1rem;
+}
+.imgdesc-cite {
+    @include font-size(.875rem);
+    color: var(--CT_imageDescCiteColor);
+}

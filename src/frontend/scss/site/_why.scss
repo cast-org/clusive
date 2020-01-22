@@ -1,6 +1,6 @@
 .why-modal {
     .modal-title {
-        font-family: $font-family-sans-serif;
+        font-family: $why-modal-title-font-family;
         @include font-size($why-modal-title-font-size);
         font-style: $why-modal-title-font-style;
         font-weight: $why-modal-title-font-weight;
