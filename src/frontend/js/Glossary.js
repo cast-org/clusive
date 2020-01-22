@@ -113,6 +113,7 @@ vocabCheck.update = function() {
     else
         $('#vocabCheckBack').hide();
     $('#vocabCheckCount').html(vocabCheck.wordCount);
+    $('#vocabCheckCountHead').html(vocabCheck.wordCount);
     $('#vocabCheckIndex').html(vocabCheck.wordIndex+1);
     $('#vocabCheckWord').html(vocabCheck.words[vocabCheck.wordIndex]);
     if (vocabCheck.wordIndex < vocabCheck.wordCount-1) {
