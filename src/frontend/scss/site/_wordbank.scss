@@ -135,6 +135,7 @@
     margin: .75rem 0;
     line-height: 1;
     white-space: nowrap;
+    @include transition(margin-left .25s ease);
 
     &.offset0 {
         margin-left: 0;
