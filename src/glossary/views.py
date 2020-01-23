@@ -133,8 +133,7 @@ def set_word_rating(request, word, rating):
         base = base_form(word)
         wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
-            wm.rating = rating
-            wm.save()
+            wm.register_rating(rating)
             return JsonResponse({'success' : 1})
         else:
             return JsonResponse({'success' : 0})

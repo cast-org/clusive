@@ -22,7 +22,8 @@ class PageTestCases(TestCase):
                                  word='testword',
                                  cued=3,
                                  cued_lookups=2,
-                                 free_lookups=1)
+                                 free_lookups=1,
+                                 interest=1)
         login = self.client.login(username='user1', password='password1')
         response = self.client.get(reverse('word_bank'))
         self.assertEqual(response.status_code, 200)

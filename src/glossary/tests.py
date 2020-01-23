@@ -54,7 +54,7 @@ class GlossaryTestCase(TestCase):
         #login = self.client.login(username='user1', password='password1')
         response = self.client.get('/glossary/glossdef/test/0/word')
         self.assertEqual(response.status_code, 200)
-        self.assertInHTML('<em>we had a word or two about it</em>', response.content.decode('utf8'), 1)
+        self.assertInHTML('<span class="definition-example">we had a word or two about it</span>', response.content.decode('utf8'), 1)
 
     def test_base_forms(self):
         self.assertEqual('noun', base_form('noun'))
@@ -87,6 +87,9 @@ class GlossaryTestCase(TestCase):
                             # assert entry['headword'] == base_form(entry['headword']) or entry['headword']=='install', \
                             #             "In %s, glossary word %s is not base form, should be %s" \
                             #             % (glossfile, entry['headword'], base_form(entry['headword']))
+                            if entry['headword'] != base_form(entry['headword']):
+                                logger.info("Non baseform in %s: %s (should be %s)",
+                                            glossfile, entry['headword'], base_form(entry['headword']))
                             assert 'alternateForms' in entry, \
                                 "In %s, %s missing alternateForms" % (glossfile, entry['headword'])
                             assert 'meanings' in entry, \

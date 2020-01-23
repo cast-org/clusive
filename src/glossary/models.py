@@ -6,8 +6,9 @@ from roster.models import ClusiveUser
 class WordModel(models.Model):
     """Stores the system's model of a particular user's relationship with a particular word."""
     # How strongly should these events be counted in our estimate of user interest in a word?
-    FREE_LOOKUP_WEIGHT = 5
-    CUED_LOOKUP_WEIGHT = 2
+    FREE_LOOKUP_WEIGHT = 6
+    CUED_LOOKUP_WEIGHT = 3
+    RATING_WEIGHT = 2
     CUE_WEIGHT = -1
 
     KNOWLEDGE_RATINGS = {
@@ -20,6 +21,7 @@ class WordModel(models.Model):
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE)
     word = models.CharField(max_length=256)
     rating = models.SmallIntegerField(null=True)
+    interest = models.SmallIntegerField(default=0)
     cued_lookups = models.SmallIntegerField(default=0)
     free_lookups = models.SmallIntegerField(default=0)
     cued = models.SmallIntegerField(default=0)
@@ -35,9 +37,28 @@ class WordModel(models.Model):
         return self.KNOWLEDGE_RATINGS.get(self.knowledge_est())
 
     def interest_est(self):
-        return self.free_lookups*self.FREE_LOOKUP_WEIGHT \
-               + self.cued_lookups*self.CUED_LOOKUP_WEIGHT \
-               + self.cued*self.CUE_WEIGHT
+        return self.interest
+
+    # "Register" methods for various events that can effect ratings and interest
+
+    def register_rating(self, rating):
+        self.rating = rating
+        self.interest += self.RATING_WEIGHT
+        self.save()
+
+    def register_wordbank_remove(self):
+        self.interest = 0
+        self.save()
+
+    def register_cued_lookup(self):
+        self.cued_lookups += 1
+        self.interest += self.CUED_LOOKUP_WEIGHT
+        self.save()
+
+    def register_free_lookup(self):
+        self.free_lookups += 1
+        self.interest += self.FREE_LOOKUP_WEIGHT
+        self.save()
 
     @classmethod
     def register_cues(cls, user, words):
@@ -45,6 +66,8 @@ class WordModel(models.Model):
         for word in words:
             wm, created = WordModel.objects.get_or_create(user=user, word=word)
             wm.cued += 1
+            if wm.interest>0:
+                wm.interest += cls.CUE_WEIGHT
             wm.save()
 
     @classmethod
