@@ -140,3 +140,18 @@ def set_word_rating(request, word, rating):
     except ClusiveUser.DoesNotExist:
         logger.warning("No clusive user, can't set ratings")
         return JsonResponse({'success' : 0})
+
+
+def word_bank_remove(request, word):
+    try:
+        user = ClusiveUser.objects.get(user=request.user)
+        base = base_form(word)
+        wm = WordModel.objects.get(user=user, word=base)
+        if wm:
+            wm.register_wordbank_remove()
+            return JsonResponse({'success' : 1})
+        else:
+            return JsonResponse({'success' : 0})
+    except ClusiveUser.DoesNotExist:
+        logger.warning("No clusive user, can't remove word")
+        return JsonResponse({'success' : 0})

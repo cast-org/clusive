@@ -68,6 +68,16 @@ function load_definition(cued, word) {
     $('#glossaryBody').html(body);
 }
 
+// Methods related to the wordbank page
+
+window.wordBank = {};
+
+window.wordBank.removeWord = function(elt, word) {
+    $(elt).closest('div.wordbank-item').hide();
+    $.get('/glossary/interest/remove/' + word);
+};
+
+
 // Methods related to the vocabulary check-in process
 
 window.vocabCheck = {};
@@ -151,12 +161,12 @@ vocabCheck.done = function() {
 };
 
 
-/// Set up listener functions after page is loaded
+// Set up listener functions after page is loaded
 
 $(function() {
 
     // When lookup button clicked, show definition of selected word
-    $('#glossaryButton').on('click', function () {
+    $('#glossaryButton').on('click', function() {
         load_definition(0, find_selected_word());
         $(this).CFW_Popover('show');
     });
@@ -174,4 +184,8 @@ $(function() {
         vocabCheck.selected(value);
     });
 
+    $('a.wordbank-del').on('click', function() {
+        var word = $(this).closest('div.wordbank-item').find('.wordbank-word').text();
+        window.wordBank.removeWord(this, word);
+    });
 });
