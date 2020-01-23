@@ -1,8 +1,8 @@
-# Clusive Reader
+# Clusive
 
 _Clusive_ is an adaptive, customizable, accessible web-based EPUB reader 
 built for education.  Our goal is to provide options and supports so that every student can 
-succeed in reading.  It will eventually be part of a suite of tools, including 
+succeed in learning.  It will eventually be part of a suite of tools, including 
 authoring and preferences discovery.
 
 Clusive is a project of the [Center for Inclusive Software for Learning](http://cisl.cast.org), 
