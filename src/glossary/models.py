@@ -10,6 +10,13 @@ class WordModel(models.Model):
     CUED_LOOKUP_WEIGHT = 2
     CUE_WEIGHT = -1
 
+    KNOWLEDGE_RATINGS = {
+        0: 'Never heard it',
+        1: 'Heard it',
+        2: 'Know it',
+        3: 'Use it'
+    }
+
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE)
     word = models.CharField(max_length=256)
     rating = models.SmallIntegerField(null=True)
@@ -23,6 +30,9 @@ class WordModel(models.Model):
         if self.cued_lookups>0 or self.free_lookups>0:
             return 1
         return None
+
+    def knowledge_est_in_words(self):
+        return self.KNOWLEDGE_RATINGS.get(self.knowledge_est())
 
     def interest_est(self):
         return self.free_lookups*self.FREE_LOOKUP_WEIGHT \
