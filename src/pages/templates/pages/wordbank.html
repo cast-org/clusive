@@ -18,20 +18,20 @@
     <div class="wordbank">
         <div class="wordbank-header">
             <div class="wordbank-col">
-                <div class="wordbank-title">Never heard it</div>
-                <div class="wordbank-count wordbank-count-empty">0</div>
+                <div id="rank0" class="wordbank-title"><span class="sr-only">Ranking: </span>Never heard it</div>
+                <div class="wordbank-count wordbank-count-empty"><span id="count0">0</span> <span class="sr-only">words</span></div>
             </div>
             <div class="wordbank-col">
-                <div class="wordbank-title">Heard it</div>
-                <div class="wordbank-count wordbank-count-empty">0</div>
+                <div id="rank1" class="wordbank-title"><span class="sr-only">Ranking: </span>Heard it</div>
+                <div class="wordbank-count wordbank-count-empty"><span id="count1">0</span> <span class="sr-only">words</span></div>
             </div>
             <div class="wordbank-col">
-                <div class="wordbank-title">Know it</div>
-                <div class="wordbank-count wordbank-count-empty">0</div>
+                <div id="rank2" class="wordbank-title"><span class="sr-only">Ranking: </span>Know it</div>
+                <div class="wordbank-count wordbank-count-empty"><span id="count2">0</span> <span class="sr-only">words</span></div>
             </div>
             <div class="wordbank-col">
-                <div class="wordbank-title">Use it</div>
-                <div class="wordbank-count wordbank-count-empty">0</div>
+                <div id="rank3" class="wordbank-title"><span class="sr-only">Ranking:</span>Use it</div>
+                <div class="wordbank-count wordbank-count-empty"><span id="count3">0</span> <span class="sr-only">words</span></div>
             </div>
         </div>
         <div class="wordbank-body">
@@ -43,9 +43,8 @@
             </div>
             <div class="wordbank-list">
             {% for wm in words %}
-                <div class="wordbank-item offset{{wm.knowledge_est}}">
-                    <a class="wordbank-word" aria-describedby="wordbank-desc-{{wm.id}}">{{wm.word}}</a>
-                    <span id="wordbank-desc-{{wm.id}}" class="sr-only">rating: {{wm.knowledge_est_in_words}}</span>
+                <div data-rating="{{wm.knowledge_est}}" class="wordbank-item offset{{wm.knowledge_est}}">
+                    <a class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
                     <a href="#" role="button" class="wordbank-prev" aria-label="decrease rating for '{{wm.word}}'"><span class="icon-chevron-left" aria-hidden="true"></span></a>
                     <a href="#" role="button" class="wordbank-next" aria-label="increase rating for '{{wm.word}}'"><span class="icon-chevron-right" aria-hidden="true"></span></a>
                     <a href="#" role="button" class="wordbank-del" aria-label="remove '{{wm.word}}' from word bank"><span class="icon-cancel" aria-hidden="true"></span></a>

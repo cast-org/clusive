@@ -77,11 +77,41 @@ function load_definition(cued, word) {
 
 window.wordBank = {};
 
-window.wordBank.removeWord = function(elt, word) {
-    $(elt).closest('div.wordbank-item').hide();
+window.wordBank.removeWord = function(elt) {
+    var item = $(elt).closest('div.wordbank-item');
+    var word = item.find('.wordbank-word').text();
+    item.remove();
     $.get('/glossary/interest/remove/' + word);
+    window.wordBank.updateColumnCounts();
 };
 
+window.wordBank.moveRating = function(elt, delta) {
+    var item = $(elt).closest('div.wordbank-item');
+    var word = item.find('.wordbank-word');
+    var rating = item.data('rating');
+    var newrating = rating + delta;
+    if (newrating >= 0 && newrating <= 3) {
+        item.removeClass('offset' + rating);
+        item.data('rating', newrating);
+        item.addClass('offset' + newrating);
+        word.attr('aria-describedby', 'rank' + newrating);
+        $.get('/glossary/rating/' + word.text() + '/' + newrating);
+    }
+    window.wordBank.updateColumnCounts();
+};
+
+window.wordBank.updateColumnCounts = function() {
+    for (var rank = 0; rank <= 3; rank++) {
+        var n = $('.wordbank-item.offset' + rank).length;
+        var indicator = $('#count' + rank);
+        indicator.text(n);
+        if (n === 0) {
+            indicator.closest('.wordbank-count').addClass('wordbank-count-empty');
+        } else {
+            indicator.closest('.wordbank-count').removeClass('wordbank-count-empty');
+        }
+    }
+};
 
 // Methods related to the vocabulary check-in process
 
@@ -188,7 +218,16 @@ $(function() {
     });
 
     $('a.wordbank-del').on('click', function() {
-        var word = $(this).closest('div.wordbank-item').find('.wordbank-word').text();
-        window.wordBank.removeWord(this, word);
+        window.wordBank.removeWord(this);
     });
+
+    $('a.wordbank-next').on('click', function() {
+        window.wordBank.moveRating(this, +1);
+    });
+
+    $('a.wordbank-prev').on('click', function() {
+        window.wordBank.moveRating(this, -1);
+    });
+
+    window.wordBank.updateColumnCounts();
 });
