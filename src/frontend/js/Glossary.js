@@ -113,6 +113,13 @@ window.wordBank.updateColumnCounts = function() {
     }
 };
 
+window.wordBank.wordClicked = function(elt) {
+    var item = $(elt).closest('div.wordbank-item');
+    var word = item.find('.wordbank-word').text();
+    load_definition(1, word);
+    $('#glossaryButton').CFW_Popover('show');
+};
+
 // Methods related to the vocabulary check-in process
 
 window.vocabCheck = {};
@@ -215,6 +222,10 @@ $(function() {
         var value = $(this).val();
         $.get('/glossary/rating/' + vocabCheck.words[vocabCheck.wordIndex] + '/' + value);
         vocabCheck.selected(value);
+    });
+
+    $('a.wordbank-word').on('click', function() {
+        window.wordBank.wordClicked(this);
     });
 
     $('a.wordbank-del').on('click', function() {
