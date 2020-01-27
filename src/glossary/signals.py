@@ -24,9 +24,9 @@ def record_vocab_lookup(sender, **kwargs):
         word=kwargs['word'].lower()
         wm, created = WordModel.objects.get_or_create(user=user, word=word)
         if (kwargs.get('cued')):
-            wm.cued_lookups = F('cued_lookups') + 1
+            wm.register_cued_lookup()
         else:
-            wm.free_lookups = F('free_lookups') + 1
+            wm.register_free_lookup()
         wm.save()
         if logger.isEnabledFor(logging.DEBUG):
             wm.refresh_from_db()
