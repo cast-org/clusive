@@ -118,6 +118,14 @@ window.wordBank.wordClicked = function(elt) {
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
     $('#glossaryButton').CFW_Popover('show');
+
+    // Handle focus into popover on open, and re-focus on word when popover closed
+    $('#glossaryButton')
+        .off('afterHide.cfw.popover')
+        .one('afterHide.cfw.popover', function() {
+            $(elt).focus();
+        });
+    $('#glossaryPop').focus();
 };
 
 // Methods related to the vocabulary check-in process
@@ -224,19 +232,23 @@ $(function() {
         vocabCheck.selected(value);
     });
 
-    $('a.wordbank-word').on('click', function() {
+    $('a.wordbank-word').on('click', function(e) {
+        e.preventDefault();
         window.wordBank.wordClicked(this);
     });
 
-    $('a.wordbank-del').on('click', function() {
+    $('a.wordbank-del').on('click', function(e) {
+        e.preventDefault();
         window.wordBank.removeWord(this);
     });
 
-    $('a.wordbank-next').on('click', function() {
+    $('a.wordbank-next').on('click', function(e) {
+        e.preventDefault();
         window.wordBank.moveRating(this, +1);
     });
 
-    $('a.wordbank-prev').on('click', function() {
+    $('a.wordbank-prev').on('click', function(e) {
+        e.preventDefault();
         window.wordBank.moveRating(this, -1);
     });
 

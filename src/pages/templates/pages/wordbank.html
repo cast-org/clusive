@@ -51,7 +51,7 @@
                 <div class="wordbank-list">
                 {% for wm in words %}
                     <div data-rating="{{wm.knowledge_est}}" class="wordbank-item offset{{wm.knowledge_est}}">
-                        <a class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
+                        <a href="#" role="button" class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
                         <a href="#" role="button" class="wordbank-prev" aria-label="decrease rating for '{{wm.word}}'"><span class="icon-chevron-left" aria-hidden="true"></span></a>
                         <a href="#" role="button" class="wordbank-next" aria-label="increase rating for '{{wm.word}}'"><span class="icon-chevron-right" aria-hidden="true"></span></a>
                         <a href="#" role="button" class="wordbank-del" aria-label="remove '{{wm.word}}' from word bank"><span class="icon-cancel" aria-hidden="true"></span></a>
