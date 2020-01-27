@@ -1,5 +1,7 @@
 import MarkLoader from 'script-loader!mark.js'
 
+window.cuedWordMap = null;
+
 // Filter function that, when applied as part of Mark options, only marks up the first occurrence
 function onlyFirstMatch(node, term, totalCount, count) {
     "use strict";
@@ -44,28 +46,39 @@ var secondaryMarkOptions = {
     className: "glossOther"
 };
 
-function markCuedWords(words) {
-    // "words" is a map from main form to a list of all forms.
-    var altmap = {};
-    for (var i in words) {
-        for (var alt in words[i]) {
-            altmap[words[i][alt]] = i;
+// Explicitly attached to "window" so that uglify won't change it and it can be called from elsewhere.
+window.markCuedWords = function() {
+    if (window.cuedWordMap === null) {
+        $.get('/glossary/cuelist/'+window.parent.pub_id)
+            .done(function(data, status) {
+                console.log("Received cuelist: ", data);
+                window.cuedWordMap = data.words;
+                markCuedWords();
+            })
+            .fail(function(err) {
+                console.log(err);
+            });
+    } else {
+        // "cuedWordMap" is a map from main form to a list of all forms.
+        var altmap = {};
+        for (var i in window.cuedWordMap) {
+            for (var alt in window.cuedWordMap[i]) {
+                altmap[window.cuedWordMap[i][alt]] = i;
+            }
+            primaryMarkOptions['synonyms'] = altmap;
+            $('body').mark(i, primaryMarkOptions);
         }
-        primaryMarkOptions['synonyms'] = altmap;
-        $('body').mark(i, primaryMarkOptions);
     }
-}
+};
+
+// Explicitly attached to "window" so that uglify won't change it and it can be called from elsewhere.
+window.unmarkCuedWords = function() {
+    return $('body').unmark();
+};
 
 
 $(function() {
-    $.get('/glossary/cuelist/'+window.parent.pub_id)
-        .done(function(data, status) {
-            console.log("Received cuelist: ", data);
-            markCuedWords(data.words)
-        })
-        .fail(function(err) {
-            console.log(err);
-        });
+    window.markCuedWords();
     // This doesn't work on mobile since Readium intercepts the touch events and this never fires.
     // $('body').on('click touchstart', 'a.gloss', function(e) {
     //     e.preventDefault();
