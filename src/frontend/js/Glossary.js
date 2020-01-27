@@ -56,10 +56,8 @@ function load_definition(cued, word) {
         $.get('/glossary/rating/' + word)
             // eslint-disable-next-line no-unused-vars
             .done(function(data, status) {
-                console.log(data);
                 $('#glossaryInput input').prop('checked', false); // Uncheck all
                 if (data.rating !== null) {
-                    console.log('#ranking0-' + data.rating);
                     $('#ranking0-' + data.rating).prop('checked', true);
                 }
                 $('#glossaryInput').show();
@@ -88,15 +86,19 @@ window.wordBank.removeWord = function(elt) {
 window.wordBank.moveRating = function(elt, delta) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word');
-    var rating = item.data('rating');
+    var rating = Number(item.data('rating'));
     var newrating = rating + delta;
     if (newrating >= 0 && newrating <= 3) {
-        item.removeClass('offset' + rating);
-        item.data('rating', newrating);
-        item.addClass('offset' + newrating);
-        word.attr('aria-describedby', 'rank' + newrating);
         $.get('/glossary/rating/' + word.text() + '/' + newrating);
+        window.wordBank.displayNewWordRating(item, newrating);
     }
+};
+
+window.wordBank.displayNewWordRating = function(item, newrating) {
+    item.removeClass('offset' + item.data('rating'));
+    item.data('rating', newrating);
+    item.addClass('offset' + newrating);
+    item.find('.wordbank-word').attr('aria-describedby', 'rank' + newrating);
     window.wordBank.updateColumnCounts();
 };
 
@@ -221,8 +223,15 @@ $(function() {
 
     // When ranking in the glossary popup is selected, notify server
     $('#glossaryInput').on('change', 'input', function() {
-        console.log('input change detected', $(this).val());
-        $.get('/glossary/rating/' + glossaryCurrentWord + '/' + $(this).val());
+        var newValue = $(this).val();
+        $.get('/glossary/rating/' + glossaryCurrentWord + '/' + newValue);
+        // If we're on the word bank page, need to update the word's position as well
+        $('div.wordbank-item .wordbank-word').each(function() {
+            var wbw = $(this);
+            if (wbw.text() === glossaryCurrentWord) {
+                window.wordBank.displayNewWordRating(wbw.closest('div.wordbank-item'), newValue);
+            }
+        });
     });
 
     // When ranking in the check-in modal is selected, notify server
