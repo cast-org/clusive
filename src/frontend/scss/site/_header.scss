@@ -46,7 +46,7 @@
 .site-header-small {
     left: -4rem;
     z-index: 0;
-    padding: 1.125rem 1rem 1.125rem 5rem;
+    padding: 1.125rem 1rem 1.125rem 4rem;
     margin-right: -4rem;
 
     .site-header-logo {
@@ -55,10 +55,12 @@
     }
 
     @include media-breakpoint-up(sm) {
+        padding-left: 5rem;
         left: -5rem;
         margin-right: -5rem;
     }
     @include media-breakpoint-up(md) {
+        padding-left: 5rem;
         left: -6rem;
         margin-right: -6rem;
     }
