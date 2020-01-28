@@ -29,9 +29,11 @@
     </button>
 </nav>
 {% endif %}
+{% if why %}
 <div class="sidebar-support" role="region" aria-label="Support">
-    <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
+    <button id="whyButton" type="button" class="btn btn-nav btn-icon btn-help" aria-label="Why am I seeing this?">
         <span class="icon-help" aria-hidden="true"></span>
         <span class="icon-attention" aria-hidden="true"></span>
     </button>
 </div>
+{% endif %}
