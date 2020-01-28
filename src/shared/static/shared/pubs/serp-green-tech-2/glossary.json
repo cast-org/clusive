@@ -205,12 +205,12 @@
     ]
   },
   {
-    "headword": "emerging",
-    "alternateForms": [ ],
+    "headword": "emerge",
+    "alternateForms": [ "emerging" ],
     "meanings": [
       {
-        "pos": "adjective",
-        "definition": "In the process of being made known or prepared.",
+        "pos": "verb",
+        "definition": "To make known.",
         "examples": [ "Facts about the event are emerging and giving us a better idea of what really happened." ],
         "images": [
           {

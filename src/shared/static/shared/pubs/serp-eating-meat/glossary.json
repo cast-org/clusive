@@ -69,12 +69,12 @@
         ]
     },
     {
-        "headword": "nutrients",
-        "alternateForms": [ "nutrient" ],
+        "headword": "nutrient",
+        "alternateForms": [ "nutrients" ],
         "meanings": [
             {
-                "pos": "pl. n",
-                "definition": "The substances in food that are important for energy, growth, development, and reproduction.",
+                "pos": "noun",
+                "definition": "A substance in food that is important for energy, growth, development, and reproduction.",
                 "examples": ["Milk has important nutrients, like calcium and Vitamin D, that are important for healthy teeth and bones."],
                 "images": [
                     {

@@ -81,12 +81,12 @@
         ]
     },
     {
-        "headword": "charred",
-        "alternateForms": ["" ],
+        "headword": "char",
+        "alternateForms": ["charred" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "when something has been burned until the surface is black.",
+                "pos": "verb",
+                "definition": "To burn something until the surface is black.",
                 "examples": [ "When the campfire had burned out, the only thing left were bits of charred wood and ash." ],
                 "images": [
                     {
@@ -108,12 +108,12 @@
         ]
     },
     {
-        "headword": "fossilized",
-        "alternateForms": ["" ],
+        "headword": "fossilize",
+        "alternateForms": ["fossilized" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "When something living becomes preserved as stone over a long period of time. ",
+                "pos": "verb",
+                "definition": "To preserve a living thing so that, over a long time, it becomes stone. ",
                 "examples": [ "The fossilized bones, leaves, and shells from prehistoric times give us an idea of what life was like long ago. " ],
                 "images": [
                     {
@@ -162,12 +162,12 @@
         ]
     },
     {
-        "headword": "disturbed",
-        "alternateForms": ["" ],
+        "headword": "disturb",
+        "alternateForms": ["disturbed" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "bothered, interrupted, or having the normal arrangement mixed up. ",
+                "pos": "verb",
+                "definition": "to bother, interrupt, or mix up the normal arrangement. ",
                 "examples": [ "The thick layer of dust was disturbed when I blew on it." ],
                 "images": [
                     {
@@ -365,12 +365,12 @@
     },
 
     {
-        "headword": "contained",
-        "alternateForms": [ ],
+        "headword": "contain",
+        "alternateForms": [ "contained" ],
         "meanings": [
             {
                 "pos": "verb",
-                "definition": "Had or held. ",
+                "definition": "To have or to hold. ",
                 "examples": [ "The box contained a pair of new shoes." ]
 
             }
