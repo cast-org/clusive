@@ -15,7 +15,7 @@ var pub_id = "{{ pub_id }}";
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
-{% include "shared/partial/sidebar_start.html" with index_reader=True nav=False why=True %}
+{% include "shared/partial/sidebar_start.html" with index_reader=True nav=True why=True %}
 {% endblock %}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
