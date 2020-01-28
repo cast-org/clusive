@@ -1,0 +1,39 @@
+<div id="whyModal" class="modal why-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">Why am i seeing this?!</h2>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>We see that you know [some] of the challenge words, so we're recommending this version of the article
+                based on what we know about you so far. We're confident that you're up for this challenge but you
+                know yourself best!</p>
+                <p><strong>Do you want to accept this challenge, or go for a different level?</strong></p>
+                <div class="row why-level">
+                    <div class="col-sm-4 why-level-item">
+                        <span class="icon-walk why-icon" aria-hidden="true"></span>
+                        <!-- <a href="#" class="btn btn-primary btn-small"><span class="aria-hidden">&lt;</span> Less Challenge</a> -->
+                        <span class="btn btn-primary btn-small disabled"><span class="aria-hidden">&lt;</span> Less Challenge</span>
+                    </div>
+                    <div class="col-sm-4 why-level-item">
+                        <span class="icon-hike why-icon active" aria-hidden="true"></span>
+                        <span class="small">(you are here)</span>
+                        <a href="#" class="btn btn-primary btn-small" data-cfw-dismiss="modal">Stay here</a>
+                    </div>
+                    <div class="col-sm-4 why-level-item">
+                        <span class="icon-climb why-icon" aria-hidden="true"></span>
+                        <a href="#" class="btn btn-primary btn-small disabled">More challenge <span class="aria-hidden">&gt;</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                Pssst. Curious as to <a id="whyWhyLink" href="#">why we made this recommendation</a>?
+            </div>
+        </div>
+    </div>
+</div>
