@@ -249,12 +249,12 @@
         ]
     },
     {
-        "headword": "astonishing",
-        "alternateForms": ["" ],
+        "headword": "astonish",
+        "alternateForms": ["astonishing" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "Causing great surprise or wonder.",
+                "pos": "verb",
+                "definition": "To cause great surprise or wonder.",
                 "examples": [ "It is astonishing that sea turtles can for live up to 152 years. " ],
                 "images": [
                     {
@@ -342,12 +342,12 @@
         ]
     },
     {
-        "headword": "amazing",
-        "alternateForms": [ ],
+        "headword": "amaze",
+        "alternateForms": [ "amazing" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "Causing great surprise or wonder.",
+                "pos": "verb",
+                "definition": "To cause great surprise or wonder.",
                 "examples": [ "Doing an Extreme Triathlon, where you swim 5 miles, bike 225 miles, and then run 52 miles, is an amazing accomplishment!" ]
 
             }

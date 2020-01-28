@@ -121,12 +121,12 @@
         ]
     },
     {
-        "headword": "disappointed",
-        "alternateForms": ["" ],
+        "headword": "disappoint",
+        "alternateForms": ["disappointed" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "Unhappy because what was hoped or wished for did not happen.",
+                "pos": "verb",
+                "definition": "To make unhappy because what was hoped or wished for did not happen.",
                 "examples": [ " The children were disappointed when they did not get the toys they wanted." ],
                 "images": [
                     {
@@ -148,8 +148,8 @@
         ]
     },
     {
-        "headword": "dismayed",
-        "alternateForms": ["" ],
+        "headword": "dismay",
+        "alternateForms": ["dismayed" ],
         "meanings": [
             {
                 "pos": "adjective",
