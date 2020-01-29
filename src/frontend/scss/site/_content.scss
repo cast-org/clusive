@@ -88,6 +88,17 @@ h2,
     }
 }
 
+.form-switch-dual {
+    display: block;
+
+    .form-check-label-pre {
+        margin-right: $form-switch-dual-pre-gutter;
+    }
+    .form-check {
+        display: inline-block;
+    }
+}
+
 .link-prev {
     position: relative;
 

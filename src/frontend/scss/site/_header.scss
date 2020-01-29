@@ -55,13 +55,13 @@
     }
 
     @include media-breakpoint-up(sm) {
-        padding-left: 5rem;
         left: -5rem;
+        padding-left: 5rem;
         margin-right: -5rem;
     }
     @include media-breakpoint-up(md) {
-        padding-left: 5rem;
         left: -6rem;
+        padding-left: 5rem;
         margin-right: -6rem;
     }
 }

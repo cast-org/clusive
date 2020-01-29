@@ -12,8 +12,7 @@
     {% block head_additional %}{% endblock %}
 </head>
 <body class="{% block bodyClass %}{% endblock %}">
-    {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
-
+    {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=False %} {% endblock %}
     <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
     <div class="container-xl">
