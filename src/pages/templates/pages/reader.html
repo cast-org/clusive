@@ -18,6 +18,8 @@ var pub_id = "{{ pub_id }}";
 {% include "shared/partial/sidebar_start.html" with index_reader=True nav=False %}
 {% endblock %}
 
+{% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
+
 {% block content %}
 {% include "shared/partial/site_header_small.html" with user_actions=True %}
 
@@ -99,7 +101,17 @@ var pub_id = "{{ pub_id }}";
                 }
             }).then(instance => {
                 console.log("D2Reader loaded ", instance);
-                console.log("instance.bookmarkModule ", instance.bookmarkModule);                
+                console.log("instance.bookmarkModule ", instance.bookmarkModule);   
+                // Create the preference editor when the Reader has loaded,
+                // after a short delay
+                // TODO: improve this sequencing
+                $(document).ready(function () {     
+                    setTimeout(function() {
+                        createClusivePrefsEditor();
+                    }, 250);       
+                    
+                });            
+                
             }).catch(error => {
                 console.error("error.message ", error.message);
             });

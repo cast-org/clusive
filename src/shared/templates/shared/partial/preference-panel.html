@@ -28,69 +28,75 @@
         </div>
     </div>
     <!-- END markup for Preference Editor -->
-    <script>            
-
-        var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
-        var buildGradeNames =  [
+    <script>
+        var prefsEditor;            
+        var createClusivePrefsEditor = function() {
+            var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
+            var buildGradeNames =  [
                             "cisl.prefs.auxSchema.starter", // starter set
                             "cisl.prefs.auxSchema.letterSpace", // letter space
                             ]                
 
-        var prefsEditor;
-        $(document).ready(function () {            
-            prefsEditor = fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
-                    build: {                        
-                        gradeNames: buildGradeNames,
-                        auxiliarySchema: {
-                            "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
-                            "template": buildAuxiliarySchemaTemplate,
-                            "terms": {
-                                "templatePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/html' %}",
-                                "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",
+            return fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
+                        build: {                        
+                            gradeNames: buildGradeNames,
+                            auxiliarySchema: {
+                                "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
+                                "template": buildAuxiliarySchemaTemplate,
+                                "terms": {
+                                    "templatePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/html' %}",
+                                    "messagePrefix": "{% static 'shared/js/lib/infusion/src/framework/preferences/messages' %}",
+                                },
                             },
                         },
-                    },
-                    prefsEditor: {   
-                        components: {                         
-                            prefsEditorLoader: {
-                                options: {
-                                    components: {                                        
-                                        readerPrefs: {
-                                            type: "cisl.prefs.readerPreferencesBridge",
-                                            createOnEvent: "{prefsEditorLoader}.events.onReady",
-                                            options: {
-                                                model: {
-                                                    preferences: "{prefsEditorLoader}.model.preferences"
+                        prefsEditor: {   
+                            components: {                         
+                                prefsEditorLoader: {
+                                    options: {
+                                        components: {                                        
+                                            readerPrefs: {
+                                                type: "cisl.prefs.readerPreferencesBridge",
+                                                createOnEvent: "{prefsEditorLoader}.events.onReady",
+                                                options: {
+                                                    model: {
+                                                        preferences: "{prefsEditorLoader}.model.preferences"
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        modalSettings: {
-                                            type: "cisl.prefs.modalSettings",
-                                            createOnEvent: "{prefsEditorLoader}.events.onReady",
-                                            container: "#modalSettings",
-                                            options: {
-                                                model: {
-                                                    "preferences": "{prefsEditorLoader}.model.preferences"
-                                                },
-                                                listeners: {
-                                                    "onCreate.bindReset": {
-                                                        "this": "{that}.dom.reset",
-                                                        "method": "click",
-                                                        "args": "{prefsEditorLoader}.prefsEditor.reset"
+                                            },
+                                            modalSettings: {
+                                                type: "cisl.prefs.modalSettings",
+                                                createOnEvent: "{prefsEditorLoader}.events.onReady",
+                                                container: "#modalSettings",
+                                                options: {
+                                                    model: {
+                                                        "preferences": "{prefsEditorLoader}.model.preferences"
                                                     },
-                                                    "{prefsEditorLoader}.prefsEditor.events.afterReset": {
-                                                        "func": "{that}.setModalSettingsByPreferences",
-                                                        "namespace": "setModalAfterReset"
-                                                    }                                            
-                                                }    
-                                            }                                        
+                                                    listeners: {
+                                                        "onCreate.bindReset": {
+                                                            "this": "{that}.dom.reset",
+                                                            "method": "click",
+                                                            "args": "{prefsEditorLoader}.prefsEditor.reset"
+                                                        },
+                                                        "{prefsEditorLoader}.prefsEditor.events.afterReset": {
+                                                            "func": "{that}.setModalSettingsByPreferences",
+                                                            "namespace": "setModalAfterReset"
+                                                        }                                            
+                                                    }    
+                                                }                                        
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                });                                       
-        });	        
+                    });                                       
+            }             
+
+        {% if not prefs_is_reader %}        
+        // If not on the Reader page, we can create the preference editor now
+        $(document).ready(function () {            
+                createClusivePrefsEditor();
+        });
+        {% endif %}
 
     </script>
