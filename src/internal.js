@@ -78,7 +78,7 @@ window.unmarkCuedWords = function() {
 
 
 $(function() {
-    window.markCuedWords();
+    // window.markCuedWords();
     // This doesn't work on mobile since Readium intercepts the touch events and this never fires.
     // $('body').on('click touchstart', 'a.gloss', function(e) {
     //     e.preventDefault();
