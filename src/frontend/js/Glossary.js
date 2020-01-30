@@ -8,11 +8,10 @@ var glossaryCurrentWord = null;
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
 function glossaryPop_focus($elm) {
-console.log('glossaryPop_focus', $elm);
     $('#glossaryButton')
         .off('afterHide.cfw.popover')
         .one('afterHide.cfw.popover', function() {
-            if ($elm.get(0) != $('#glossaryButton').get(0)) {
+            if ($elm.get(0) !== $('#glossaryButton').get(0)) {
                 $elm.trigger('focus');
             }
         });
@@ -232,19 +231,19 @@ $(function() {
             eventsEnabled: false,
             modifiers: {
                 preventOverflow: {
-                    boundariesElement: 'viewport',
+                    boundariesElement: 'viewport'
                 },
                 computeStyle: {
                     gpuAcceleration: false
                 }
-            },
+            }
         }
     });
 
     // When lookup button clicked, show definition of selected word
     $('#glossaryButton').on('click', function(e) {
-        var selWord = find_selected_word()
-        if ($('#glossaryPop').is(':visible') && selWord == null) {
+        var selWord = find_selected_word();
+        if ($('#glossaryPop').is(':visible') && selWord === null) {
             $(this).CFW_Popover('hide');
         } else {
             load_definition(0, selWord);
