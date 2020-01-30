@@ -5,6 +5,20 @@
 
 var glossaryCurrentWord = null;
 
+// Ensure focus for glossary popover on open,
+// and re-focus on word when popover closed
+function glossaryPop_focus($elm) {
+console.log('glossaryPop_focus', $elm);
+    $('#glossaryButton')
+        .off('afterHide.cfw.popover')
+        .one('afterHide.cfw.popover', function() {
+            if ($elm.get(0) != $('#glossaryButton').get(0)) {
+                $elm.trigger('focus');
+            }
+        });
+    $('#glossaryPop').trigger('focus');
+}
+
 function find_selected_word() {
     // Look for selected text, first in the reader iframe, then in the top-level frame.
     var sel = null;
@@ -120,14 +134,7 @@ window.wordBank.wordClicked = function(elt) {
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
     $('#glossaryButton').CFW_Popover('show');
-
-    // Handle focus into popover on open, and re-focus on word when popover closed
-    $('#glossaryButton')
-        .off('afterHide.cfw.popover')
-        .one('afterHide.cfw.popover', function() {
-            $(elt).focus();
-        });
-    $('#glossaryPop').focus();
+    glossaryPop_focus($(elt));
 };
 
 // Methods related to the vocabulary check-in process
@@ -215,10 +222,35 @@ vocabCheck.done = function() {
 // Set up listener functions after page is loaded
 
 $(function() {
+    $('#glossaryButton').CFW_Popover({
+        target: '#glossaryPop',
+        trigger: 'manual',
+        placement: 'reverse',
+        drag: true,
+        popperConfig: {
+            positionFixed: true,
+            eventsEnabled: false,
+            modifiers: {
+                preventOverflow: {
+                    boundariesElement: 'viewport',
+                },
+                computeStyle: {
+                    gpuAcceleration: false
+                }
+            },
+        }
+    });
+
     // When lookup button clicked, show definition of selected word
-    $('#glossaryButton').on('click', function() {
-        load_definition(0, find_selected_word());
-        $(this).CFW_Popover('show');
+    $('#glossaryButton').on('click', function(e) {
+        var selWord = find_selected_word()
+        if ($('#glossaryPop').is(':visible') && selWord == null) {
+            $(this).CFW_Popover('hide');
+        } else {
+            load_definition(0, selWord);
+            $(this).CFW_Popover('show');
+            glossaryPop_focus($(e.currentTarget));
+        }
     });
 
     // When ranking in the glossary popup is selected, notify server
