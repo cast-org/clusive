@@ -30,6 +30,11 @@
         background-color: transparent;
         background-image: none;
 
+        &::before,
+        &::after {
+            content: none;
+        }
+
         @include media-breakpoint-down(sm) {
             display: none;
         }

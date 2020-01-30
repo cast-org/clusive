@@ -21,6 +21,10 @@
     }
 }
 
+:focus {
+    outline-color: var(--CRT_focusRingColor);
+}
+
 //body {
 //    // Remove max body width/line length for all variants
 //    max-width: none !important;

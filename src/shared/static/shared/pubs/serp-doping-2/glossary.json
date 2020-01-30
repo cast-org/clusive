@@ -12,8 +12,8 @@
     ]
   },
   {
-    "headword": "compounds",
-    "alternateForms": [ "compounds", "compounded", "compounding"],
+    "headword": "compound",
+    "alternateForms": [ "compound", "compounded", "compounding"],
     "meanings": [
       {
         "pos": "verb",
@@ -24,12 +24,12 @@
     ]
   },
   {
-    "headword": "conflicted",
-    "alternateForms": [ ],
+    "headword": "conflict",
+    "alternateForms": ["conflicted" ],
     "meanings": [
       {
-        "pos": "adjective",
-        "definition": "Undecided, or having feelings that clash or do not agree.",
+        "pos": "verb",
+        "definition": "To have feelings that clash or do not agree.",
         "examples": [ "Mussa was conflicted about whether to save his money or spend it on a new game." ]
 
       }

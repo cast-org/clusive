@@ -1,11 +1,11 @@
 [
     {
-        "headword": "embarrassed",
-        "alternateForms": ["embarass" ],
+        "headword": "embarrass",
+        "alternateForms": ["embarassed", "embarrassing" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "Feeling uncomfortable because of shame or receiving too much attention from others.",
+                "pos": "verb",
+                "definition": "To make feel uncomfortable because of shame or receiving too much attention from others.",
                 "examples": [ "I was embarassed when I realized I forgot to do today's homework. " ],
                 "images": [
                     {
@@ -54,12 +54,12 @@
         ]
     },
     {
-        "headword": "mortified",
-        "alternateForms": ["mortify" ],
+        "headword": "mortify",
+        "alternateForms": ["mortified" ],
         "meanings": [
             {
-                "pos": "adjective",
-                "definition": "Feeling uncomfortable because of shame or receiving too much attention from others.",
+                "pos": "verb",
+                "definition": "To make feel uncomfortable because of shame or receiving too much attention from others.",
                 "examples": [ "I was mortified when my personal secret was shared with the class." ],
                 "images": [
                     {

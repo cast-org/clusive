@@ -17,7 +17,7 @@ FROM python:3.7-alpine as base
 
 COPY requirements.txt /
 RUN \
-  apk add --no-cache postgresql-libs git gcc musl-dev postgresql-dev npm && \
+  apk add --no-cache postgresql-libs git gcc g++ musl-dev postgresql-dev npm make && \
   python -m pip wheel -r /requirements.txt --no-cache-dir --no-deps --wheel-dir /wheels
 
 WORKDIR /app

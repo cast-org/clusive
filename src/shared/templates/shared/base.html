@@ -12,15 +12,14 @@
     {% block head_additional %}{% endblock %}
 </head>
 <body class="{% block bodyClass %}{% endblock %}">
-    {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_include_glossary=False %} {% endblock %}
-
+    {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=False %} {% endblock %}
     <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
     <div class="container-xl">
         <div class="row">
             <div class="col-auto sidebar sidebar-start">
                 {% block sidebar_start %}
-                {% include "shared/partial/sidebar_start.html" with index_home=0 index_reader=0 nav=0 %}
+                {% include "shared/partial/sidebar_start.html" with index_home=0 index_reader=0 nav=0 why=0 %}
                 {% endblock%}
             </div>
 
@@ -30,7 +29,7 @@
                 {% endblock%}
             </div>
 
-            <div id="content" class="col content" tabindex="-1">
+            <div class="col content">
                 {% block content %}
                 {% endblock %}
             </div>
@@ -38,6 +37,7 @@
     </div>
 
     {% include "shared/partial/modal_settings.html" %}
+    {% include "shared/partial/modal_why.html" %}
     {% include "shared/partial/popover_glossary.html" %}
 </body>
 </html>

@@ -27,12 +27,12 @@
     ]
   },
   {
-    "headword": "improved",
-    "alternateForms": [ ],
+    "headword": "improve",
+    "alternateForms": [ "improved"],
     "meanings": [
       {
-        "pos": "adjective",
-        "definition": "Having become or been made better.",
+        "pos": "verb",
+        "definition": "To become or be made better.",
         "examples": [ "Jana practiced with kicking the soccer ball with both feet and improved her soccer skills." ]
 
       }
@@ -63,12 +63,12 @@
     ]
   },
   {
-    "headword": "challenging",
-    "alternateForms": [  ],
+    "headword": "challenge",
+    "alternateForms": ["challenging" ],
     "meanings": [
       {
-        "pos": "adjective",
-        "definition": "Difficult; testing one's skills or abilities. ",
+        "pos": "verb",
+        "definition": "To test one's skills or abilities. ",
         "examples": ["When I do something challenging, I see that I can accomplish more than I had thought."],
         "images": [
           {

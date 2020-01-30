@@ -30,8 +30,8 @@
 <div class="container-xl">
     <div class="row">
 
-        <div id="content" class="col content" tabindex="-1">
-            <main>
+        <div class="col content">
+            <main id="content" tabindex="-1">
 
 <button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalSettings">Settings</button>
 
@@ -191,6 +191,17 @@
                                 <label for="option-lookup" class="form-check-label">Enable</label>
                             </div>
                         </fieldset>
+
+                        <fieldset>
+                            <legend class="setting-title">Lookup</legend>
+                            <div class="form-switch-dual">
+                                <label for="option-lookup-dual" class="form-check-label-pre" aria-hidden="true">Off</label>
+                                <div class="form-check form-switch">
+                                    <input id="option-lookup-dual" class="form-check-input" type="checkbox">
+                                    <label for="option-lookup-dual" class="form-check-label">On</label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </form>
             </div>
@@ -205,7 +216,7 @@
 <button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalGoal2">Goal 2</button>
 
 <div id="modalGoal0" class="modal goal-modal">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-block">
@@ -254,7 +265,7 @@
 </div>
 
 <div id="modalGoal1" class="modal goal-modal">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-block">
@@ -312,7 +323,7 @@
 </div>
 
 <div id="modalGoal2" class="modal goal-modal">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-block">
@@ -375,7 +386,7 @@
 <button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalWhy0">Why 0</button>
 
 <div id="modalWhy0" class="modal why-modal">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-block">
@@ -412,7 +423,29 @@
     </div>
 </div>
 
+<hr>
 
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalId0">Image Description</button>
+
+<div id="modalId0" class="modal imgdesc-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">Image Description</h2>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="./img/sample-1.jpg" class="img-fluid imgdesc-img">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim. Curabitur sit amet ante odio. In eleifend lacinia ipsum, eu eleifend diam tempor et.</p>
+                <p class="imgdesc-cite">Nullam iaculis lobortis sollicitudin. Maecenas interdum libero sit amet quam cursus, et dapibus enim facilisis. Donec non leo dapibus, elementum velit non, laoreet nisl.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
             </main>
         </div>

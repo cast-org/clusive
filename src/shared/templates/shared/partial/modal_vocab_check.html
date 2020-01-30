@@ -1,18 +1,18 @@
 <div id="vocabCheckModal" class="modal goal-modal">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-block">
                     <h2 class="modal-title">Get your just-right challenge!</h2>
-                    <div class="modal-subtitle">Tell us how well you know 5 words, and we will recommend a personalized version of the article.</div>
+                    <div class="modal-subtitle">Tell us how well you know <span id="vocabCheckCountHead">5</span> words, and we will recommend a personalized version of the article.</div>
                 </div>
                 <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
                     <span class="icon-cancel-circled2" aria-hidden="true"></span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="vocabCheckBody" aria-live="polite" tabindex="-1">
                 <div class="goal-nav">
-                    <a id="vocabCheckBack" href="#" onclick="vocabCheck.back()" class="link-prev">back |</a> Word <span id="vocabCheckIndex">#</span> of <span id="vocabCheckCount">5</span>
+                    <a id="vocabCheckBack" href="#" role="button" aria-controls="vocabCheckBody" onclick="return vocabCheck.back();" class="link-prev">back |</a> Word <span id="vocabCheckIndex">#</span> of <span id="vocabCheckCount">5</span>
                 </div>
                 <div class="goal-word">
                     <span id="vocabCheckWord"></span>
@@ -45,14 +45,14 @@
                         </div>
                     </fieldset>
                     <div class="text-end">
-                        <button id="vocabCheckNext" onclick="vocabCheck.next()" type="button" class="btn btn-primary">Next <span class="aria-hidden">&gt;</span></button>
+                        <button id="vocabCheckNext" aria-controls="vocabCheckBody" onclick="return vocabCheck.next();" type="button" class="btn btn-primary">Next <span class="aria-hidden">&gt;</span></button>
                         <span id="vocabCheckThanks" class="goal-thanks" style="display:none;">Thanks for cluing us in!</span>
-                        <button id="vocabCheckDone" onclick="vocabCheck.done();" style="display:none;" type="button" class="btn btn-secondary">All set! <span class="aria-hidden">&gt;</span></button>
+                        <button id="vocabCheckDone" onclick="return vocabCheck.done();" style="display:none;" type="button" class="btn btn-secondary">All set! <span class="aria-hidden">&gt;</span></button>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                Skip this&mdash;<a href="#" onclick="vocabCheck.skip();" class="link-next">Take me to the article</a>
+                Skip this&mdash;<a href="#" onclick="return vocabCheck.skip();" class="link-next">Take me to the article</a>
             </div>
         </div>
     </div>

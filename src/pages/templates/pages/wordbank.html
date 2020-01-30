@@ -3,50 +3,63 @@
 
 {% block title %}Word bank{% endblock %}
 
-{% block head_additional %}
-<style>
-    table th, table td { border: 1px solid #CCCCCC; padding: .3em 1em; }
-</style>
-{% endblock %}
-
 {% block sidebar_start %}
 {% include "shared/partial/sidebar_start.html" with index_reader=True nav=False %}
 {% endblock %}
 
 {% block sidebar_end %}
-{% include "shared/partial/sidebar_end.html" %}
+{% include "shared/partial/sidebar_end.html" with lookup=True %}
 {% endblock %}
 
 {% block content %}
 {% include "shared/partial/site_header_small.html" with user_actions=True %}
 
-<div class="table-scroll">
-    <table class="table table-bordered table-condensed">
-        <thead>
-            <tr>
-                <th>Word</th>
-                <th>Self-rating</th>
-                <th>Lookups: cued</th>
-                <th>Lookups: uncued</th>
-                <th>Cues</th>
-                <th>Knowledge estimate</th>
-                <th>Interest estimate</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for wm in words %}
-            <tr>
-                <td>{{wm.word}}</td>
-                <td>{{wm.rating}}</td>
-                <td>{{wm.cued_lookups}}</td>
-                <td>{{wm.free_lookups}}</td>
-                <td>{{wm.cued}}</td>
-                <td>{{wm.knowledge_est}}</td>
-                <td>{{wm.interest_est}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<main id="content" tabindex="-1">
+    <div class="link-back">
+        <a href="#" onclick="window.history.back(); return false;" class="link-prev">back</a>
+    </div>
 
+    <h1>Word bank</h1>
+
+    <div class="wordbank-scroll">
+        <div class="wordbank">
+            <div class="wordbank-header">
+                <div class="wordbank-col">
+                    <div id="rank0" class="wordbank-title"><span class="sr-only">Ranking: </span>Never heard it</div>
+                    <div class="wordbank-count wordbank-count-empty"><span id="count0">0</span> <span class="sr-only">words</span></div>
+                </div>
+                <div class="wordbank-col">
+                    <div id="rank1" class="wordbank-title"><span class="sr-only">Ranking: </span>Heard it</div>
+                    <div class="wordbank-count wordbank-count-empty"><span id="count1">0</span> <span class="sr-only">words</span></div>
+                </div>
+                <div class="wordbank-col">
+                    <div id="rank2" class="wordbank-title"><span class="sr-only">Ranking: </span>Know it</div>
+                    <div class="wordbank-count wordbank-count-empty"><span id="count2">0</span> <span class="sr-only">words</span></div>
+                </div>
+                <div class="wordbank-col">
+                    <div id="rank3" class="wordbank-title"><span class="sr-only">Ranking:</span>Use it</div>
+                    <div class="wordbank-count wordbank-count-empty"><span id="count3">0</span> <span class="sr-only">words</span></div>
+                </div>
+            </div>
+            <div class="wordbank-body">
+                <div class="wordbank-body-bg">
+                    <div class="wordbank-col"></div>
+                    <div class="wordbank-col"></div>
+                    <div class="wordbank-col"></div>
+                    <div class="wordbank-col"></div>
+                </div>
+                <div class="wordbank-list">
+                {% for wm in words %}
+                    <div data-rating="{{wm.knowledge_est}}" class="wordbank-item offset{{wm.knowledge_est}}">
+                        <a href="#" role="button" class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
+                        <a href="#" role="button" class="wordbank-prev" aria-label="decrease rating for '{{wm.word}}'"><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                        <a href="#" role="button" class="wordbank-next" aria-label="increase rating for '{{wm.word}}'"><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                        <a href="#" role="button" class="wordbank-del" aria-label="remove '{{wm.word}}' from word bank"><span class="icon-cancel" aria-hidden="true"></span></a>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

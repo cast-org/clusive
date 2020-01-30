@@ -9,6 +9,7 @@
 
 // Mixins
 @import "../../../node_modules/figuration/scss/mixins";
+@import "mixins/site-theme";
 
 // Core CSS items - extend on the base HTML
 @import "../../../node_modules/figuration/scss/core/root";
@@ -55,7 +56,13 @@
 // Additional site specific items
 @import "site/site";
 
-// Themes
+// =====
+// Themes - build out each via mixin
 @import "site-themes/theme-default";
+@include site-theme();
+
 @import "site-themes/theme-sepia";
+@include site-theme(".clusive-theme-sepia");
+
 @import "site-themes/theme-night";
+@include site-theme(".clusive-theme-night");

@@ -9,6 +9,8 @@ $enable-shadows:                        true;
 
 // Content
 $enable-root:                           false;
+$enable-grid-row-cols:                  false;
+$enable-grid-responsive-containers:     true;
 $enable-typography-lead:                false;
 $enable-typography-mark:                false;
 $enable-typography-initialism:          false;
@@ -151,8 +153,14 @@ $link-hover-color:                      var(--CT_linkHoverColor);
 
 $drag-font-weight:                      400;
 
+$font-size-base:                        1rem;
+
 // stylelint-disable value-keyword-case
 $font-family-sans-serif:                "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$h1-font-size:                          ($font-size-base * 1.375);
+$h2-font-size:                          ($font-size-base * 1.125);
+$h3-font-size:                          ($font-size-base * 1);
 
 $grid-row-columns:                      4;
 
@@ -190,7 +198,7 @@ $form-range-thumb-focus-box-shadow:     0 0 0 .1875rem rgba(var(--CT_formRangeTh
 $form-range-thumb-active-bg:            var(--CT_formRangeThumbActiveBg);
 
 $form-switch-width:                         3rem;
-$form-switch-gutter:                        calc(#{$form-switch-width} + .125em) !default;
+$form-switch-gutter:                        calc(#{$form-switch-width} + .25em) !default;
 $form-switch-track-height:                  1.75rem;
 $form-switch-track-bg:                      var(--CT_formSwitchTrackBg);
 $form-switch-track-border-color:            var(--CT_formSwitchTrackBorderColor);
@@ -200,6 +208,7 @@ $form-switch-track-focus-box-shadow:        0 0 0 .1875rem rgba(var(--CT_formSwi
 $form-switch-track-checked-bg:              var(--CT_formSwitchTrackCheckedBg);
 $form-switch-track-checked-border-color:    var(--CT_formSwitchTrackCheckedBorderColor);
 $form-switch-track-checked-box-shadow:      null;
+$form-switch-dual-pre-gutter:               .125rem;
 
 $form-switch-thumb-width:                   1.375em;
 $form-switch-thumb-height:                  1.375em;
@@ -306,7 +315,14 @@ $goal-modal-subtitle-font-weight:       700;
 $goal-modal-subtitle-font-style:        null;
 $goal-modal-footer-font-size:           .875rem;
 
+$why-modal-title-font-family:           $font-family-sans-serif;
 $why-modal-title-font-size:             1rem;
 $why-modal-title-font-weight:           700;
 $why-modal-title-font-style:            null;
 $why-modal-footer-font-size:            $goal-modal-footer-font-size;
+
+$imgdesc-modal-max-width:               50rem;
+$imgdesc-modal-title-font-family:       $font-family-sans-serif;
+$imgdesc-modal-title-font-size:         1rem;
+$imgdesc-modal-title-font-weight:       700;
+$imgdesc-modal-title-font-style:        null;

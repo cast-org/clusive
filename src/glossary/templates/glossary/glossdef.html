@@ -1,10 +1,13 @@
 {% load static %}
+{% comment %}
 <strong>{{defs.headword}}</strong>
+{% endcomment %}
 
 {% for m in defs.meanings %}
-<p>({{m.pos}}) {{m.definition}}<br />
+<p>
+    <span class="definition-speech">({{m.pos}})</span> <span class="definition-meaning">{{m.definition}}</span><br />
     {% for e in m.examples %}
-        <em>{{e}}</em><br/>
+        <span class="definition-example">{{e}}</span>
     {% endfor %}
 </p>
 {% endfor %}
