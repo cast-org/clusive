@@ -182,16 +182,18 @@ clusiveTTS.readSelection = function(elements, selection) {
         
     var focusNode = selection.focusNode;
     var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
-    
-    // Forward: use anchorOffset for first
-
+            
+    // Selection within a single element, direction can be determined by comparing anchor and focus offset
     if(anchorNode.textContent === focusNode.textContent) {
         selectionDirection = selection.anchorOffset < selection.focusOffset ? "FORWARD" : "BACKWARD";
+    // The first block of selection text is matched in the anchor element; forward selection
     } else if(selectedAnchorText === selectionTexts[0].trim()) {
         selectionDirection = "FORWARD";
-    // Backword: Use focusOffset for first
+    // The first block of selection text is matched in the focus element; backward selection
     } else if(selectedFocusText === selectionTexts[0].trim()) {
         selectionDirection = "BACKWARD";
+    // This should eventually be eliminated as other scenarios get covered
+    // TODO: check for anchorText / focusText within larger elements - might be divided by inline tags, etc
     } else selectionDirection = "UNCERTAIN";
 
     var firstNodeOffSet;
@@ -202,18 +204,30 @@ clusiveTTS.readSelection = function(elements, selection) {
         firstNodeOffSet = selection.focusOffset;
     };
 
-    debugger;
+    // Check the selectionTexts against the filteredElements text, eliminate 
+    // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
+    
+    selectionTexts = selectionTexts.filter(function (selectionText, i) {
+        var trimmed = selectionText.trim();
+        var found = false;
+        $.each(filteredElements, function (i, elem) {
+            var elemText = $(elem).text();
+            if(elemText.includes(trimmed)) {
+                found = true;                
+            };
+        });
+        return found;
+    });
 
     var toRead = [];
-    $.each(filteredElements, function(i, elem) {
+    $.each(filteredElements, function(i, elem) {        
+        // TODO: at least on Firefox, ALT text gets captured by the selection - is this desirable? how do we guard against it?
         var fromIndex = (i===0) ? firstNodeOffSet : 0;
         var selText = selectionTexts[i].trim();
 
         var textOffset = $(elem).text().indexOf(selText, fromIndex);
         
         var textEnd = selText.length;
-        
-        debugger;
 
         console.log("textOffset/textEnd", textOffset, textEnd);
 
