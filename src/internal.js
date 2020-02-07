@@ -31,6 +31,7 @@ var primaryMarkOptions = {
             let word = $(this).text();
             window.parent.load_definition(1, word);
             window.parent.$('#glossaryButton').CFW_Popover('show');
+            window.parent.glossaryPop_focus($(this));
         });
     },
 };

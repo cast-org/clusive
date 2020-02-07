@@ -62,11 +62,6 @@ $('#glossaryButton').CFW_Popover({
 });
 
 $('#glossaryButton')
-    .on('click', function() {
-        if ($('#glossaryPop').is(':visible')) {
-            $('#glossaryButton').CFW_Popover('hide');
-        }
-    })
     .on('beforeShow.cfw.popover', function() {
         glossaryBeenDragged = false;
     })
