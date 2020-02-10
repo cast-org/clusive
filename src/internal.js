@@ -25,14 +25,6 @@ var primaryMarkOptions = {
     className: "gloss",
     each: function (node) {
         $(node).attr("href", "#");
-        $(node).on('click touchstart', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            let word = $(this).text();
-            window.parent.load_definition(1, word);
-            window.parent.$('#glossaryButton').CFW_Popover('show');
-            window.parent.glossaryPop_focus($(this));
-        });
     },
 };
 
@@ -79,16 +71,14 @@ window.unmarkCuedWords = function() {
 
 
 $(function() {
-    // window.markCuedWords();
-    // This doesn't work on mobile since Readium intercepts the touch events and this never fires.
-    // $('body').on('click touchstart', 'a.gloss', function(e) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     let word = $(this).text();
-    //     console.log('clicked ', word);
-    //     window.parent.load_definition(1, word);
-    //     window.parent.$('#glossaryButton').CFW_Popover('show');
-    // })
+    $('body').on('click touchstart', 'a.gloss', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let word = $(this).text();
+        window.parent.load_definition(1, word);
+        window.parent.$('#glossaryButton').CFW_Popover('show');
+        window.parent.glossaryPop_focus($(this));
+    })
 });
 
 
