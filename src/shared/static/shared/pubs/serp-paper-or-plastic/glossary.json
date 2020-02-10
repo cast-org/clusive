@@ -9,12 +9,12 @@
                 "examples": [],
                 "images": [
                     {
-                        "src": "images/glossary/applaud-1.jpg",
+                        "src": "glossimages/applaud-1.jpg",
                         "alt": "Photo of people clapping.",
                         "description": "Two people, one in the foreground and one in the background, are shown clapping and smiling."
                     },
                     {
-                        "src": "images/glossary/applaud-3.jpg",
+                        "src": "glossimages/applaud-3.jpg",
                         "alt": "Photo of people with thumbs up.",
                         "description": "Two people stand together, smiling at the viewer. Each person holds their hand up with fingers curled into a fist and a thumb pointing up."
                     }
@@ -54,7 +54,7 @@
                 "examples": [],
                 "images": [
                     {
-                        "src": "images/glossary/landfill-1.jpg",
+                        "src": "glossimages/landfill-1.jpg",
                         "alt": "Photo of a large pile of trash.",
                         "description": "A large pile of trash made up of plastic, metal, paper, wood, garbage, plants, and more. The materials are mixed together into a single, large heap of material."
                     }
@@ -83,7 +83,7 @@
                 "examples": [],
                 "images": [
                     {
-                        "src": "images/glossary/petroleum-2.jpg",
+                        "src": "glossimages/petroleum-2.jpg",
                         "alt": "Photo of an ship built to transport oil.",
                         "description": "A very long, large ship is shown moving over water, away from the viewer. The deck, or top surface, of the ship is large and flat. A  structure of several stories rises from the flat deck at the back of the ship."
                     }
@@ -101,7 +101,7 @@
                 "examples": [],
                 "images": [
                     {
-                        "src": "images/glossary/pigment-1.jpg",
+                        "src": "glossimages/pigment-1.jpg",
                         "alt": "Photo of pieces of colored chalk.",
                         "description": "Six rectangular shaped pieces of chalk on a flat surface. There is one piece of chalk in the foreground, and each remaining piece of chalk is lined up behind the one before it. Each piece of chalk is a different color. From front to back, the colors of the pieces of chalk are: red, orange, yellow, green, blue, purple."
                     }
@@ -119,7 +119,7 @@
                 "examples": [],
                 "images": [
                     {
-                        "src": "images/glossary/resource-1.jpg",
+                        "src": "glossimages/resource-1.jpg",
                         "alt": "Photo of water with tree-covered hill in background.",
                         "description": "Mist rises from an area of water. The water has many colors in it, including yellow, gray, white, and brown. A tree-covered hill is in the background, partly hidden by the mist rising from the water."
                     }

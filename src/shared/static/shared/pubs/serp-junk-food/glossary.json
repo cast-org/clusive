@@ -14,7 +14,7 @@
                 ],
                 "images": [
                     {
-                        "src": "images/glossary/incorporate1.jpg",
+                        "src": "glossimages/incorporate1.jpg",
                         "alt": "Photo of fruits, leaves, and two filled glasses.",
                         "description": "Photo of two glasses, filled with thick liquid. One glass is filled with pink liquid and has a strawberry slice on its rim. The other glass is filled with green liquid and has a slice of green kiwi on its rim. Around the base of the glasses are kiwis, strawberries, and sprigs of plant leaves.",
                         "caption": "Fruits and vegetables are incorporated together to make delicious smoothies."
@@ -48,7 +48,7 @@
                 ],
                 "images": [
                     {
-                        "src": "images/glossary/nutritious1.jpg",
+                        "src": "glossimages/nutritious1.jpg",
                         "alt": "Photo of a basket filled with mixed fruits.",
                         "description": "A basket filled with a mix of whole fruits, including bananas, oranges, apples, plums, grapes and pears.",
                         "caption": "Schools could fill snack machines with nutritious foods like fruit, vegetables, and nuts."
@@ -73,7 +73,7 @@
                 ],
                 "images": [
                     {
-                        "src": "images/glossary/encourage1.jpg",
+                        "src": "glossimages/encourage1.jpg",
                         "alt": "Photo of a coach and player during a ballgame.",
                         "description": "Photo of two people standing, facing away from the viewer. The person on the left is older, is talking to the person on her right, and has her hand on that person’s back. The person on the right is dressed in a uniform, wears a helmet, and holds a bat.",
                         "caption": "A coach takes time to talk and encourage a player during a pause in the game."
