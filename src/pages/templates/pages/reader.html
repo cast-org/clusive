@@ -59,7 +59,7 @@ var pub_id = "{{ pub_id }}";
             // {type:'script', url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML&latest'},
         ];
 
-        userSettings = { textAlignment:'start' };
+        var userSettings = { textAlignment:'start' };
 
         var lastReadingPosition, annotations, baseUrl = null;
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
