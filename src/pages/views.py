@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views import View
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, RedirectView
 
 from eventlog.signals import page_viewed
 from glossary.models import WordModel
@@ -18,6 +18,14 @@ class LibraryView(LoginRequiredMixin,ListView):
         if request.user.is_authenticated:
             page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
+
+
+class ReaderDefaultVersionView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        kwargs['version'] = 1
+        return super().get_redirect_url(*args, **kwargs)
 
 
 class ReaderView(LoginRequiredMixin,TemplateView):
