@@ -22,7 +22,7 @@ def checklist(request, document):
         version = 1  # FIXME will need to look up glossary words for all versions and adjust algorithm.
         bv = BookVersion.lookup(path=document, versionNumber=version)
         all_glossary_words = json.loads(bv.glossary_words)
-        all_words = json.loads(bv.all_words) + all_glossary_words # FIXME might not be necessary with stemming, glossary should be a subset of all
+        all_words = json.loads(bv.all_words)
         user_words = WordModel.objects.filter(user=user, word__in=all_words)
 
         to_find = 5
