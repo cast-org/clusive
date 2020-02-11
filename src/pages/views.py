@@ -5,7 +5,7 @@ from django.views.generic import ListView, TemplateView, RedirectView
 
 from eventlog.signals import page_viewed
 from glossary.models import WordModel
-from library.models import Book
+from library.models import Book, BookVersion
 from roster.models import ClusiveUser
 
 
@@ -36,7 +36,15 @@ class ReaderView(LoginRequiredMixin,TemplateView):
         if request.user.is_authenticated:
             context = self.get_context_data(**kwargs)
             pub_id = context.get('pub_id')
-            self.extra_context = { 'pub_title' : Book.objects.get(path=pub_id).title}
+            version = int(context.get('version'))
+            bv_prev = str(version-1) if version>0 \
+                else False
+            bv_next = str(version+1) if BookVersion.objects.filter(book__path=pub_id, sortOrder=version+1).exists()\
+                else False
+            self.extra_context = { 'pub_title' : Book.objects.get(path=pub_id).title,
+                                   'prev_version' : bv_prev,
+                                   'next_version' : bv_next,
+                                   }
             page_viewed.send(self.__class__, request=request, document=pub_id)
         return super().get(request, *args, **kwargs)
 

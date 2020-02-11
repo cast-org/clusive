@@ -17,8 +17,11 @@
                 <div class="row why-level">
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-walk why-icon" aria-hidden="true"></span>
-                        <!-- <a href="#" class="btn btn-primary btn-small"><span class="aria-hidden">&lt;</span> Less Challenge</a> -->
-                        <span class="btn btn-primary btn-small disabled"><span class="aria-hidden">&lt;</span> Less Challenge</span>
+                        {% if prev_version %}
+                            <a href="{{ prev_version }}" class="btn btn-primary btn-small"><span class="aria-hidden">&lt;</span> Less Challenge</a>
+                        {% else %}
+                            <span class="btn btn-primary btn-small disabled"><span class="aria-hidden">&lt;</span> Less Challenge</span>
+                        {% endif %}
                     </div>
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-hike why-icon active" aria-hidden="true"></span>
@@ -27,7 +30,11 @@
                     </div>
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-climb why-icon" aria-hidden="true"></span>
-                        <a href="#" class="btn btn-primary btn-small disabled">More challenge <span class="aria-hidden">&gt;</span></a>
+                        {% if next_version %}
+                            <a href="{{ next_version }}" class="btn btn-primary btn-small">More challenge <span class="aria-hidden">&gt;</span></a>
+                        {% else %}
+                            <span class="btn btn-primary btn-small disabled">More challenge <span class="aria-hidden">&gt;</span></span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
