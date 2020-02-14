@@ -117,6 +117,9 @@ module.exports = function (grunt) {
                 outputStyle: 'expanded'
             },
             mockup: {
+                options: {
+                    sourceMap: true
+                },
                 files: {
                     'src/frontend/dist/css/<%= pkg.name %>.css': 'src/frontend/scss/<%= pkg.name %>.scss',
                     'src/frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'src/frontend/scss/<%= pkg.name %>-prefs-panel.scss',
@@ -138,7 +141,7 @@ module.exports = function (grunt) {
         postcss: {
             mockup: {
                 options: {
-                    map: false,
+                    map: true,
                     processors: [flexbugs, calc, autoprefixer]
                 },
                 src: ['src/frontend/dist/css/*.css', '!src/frontend/dist/css/*.min.css']
