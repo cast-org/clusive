@@ -42,4 +42,16 @@
             margin-top: 1rem;
         }
     }
+
+    &.disabled {
+        .why-icon {
+            opacity: .5;
+        }
+
+        .btn.disabled,
+        .btn:disabled {
+            opacity: .45;
+
+        }
+    }
 }

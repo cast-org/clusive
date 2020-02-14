@@ -47,48 +47,23 @@ $('#glossaryButton').CFW_Popover({
     trigger: 'manual',
     placement: 'reverse',
     drag: true,
+
     popperConfig: {
         positionFixed: true,
         eventsEnabled: false,
         modifiers: {
             preventOverflow: {
-                boundariesElement: 'viewport',
-            },
-            computeStyle: {
-                gpuAcceleration: false
+                boundariesElement: 'viewport'
             }
         },
     }
 });
 
 $('#glossaryButton')
-    .on('beforeShow.cfw.popover', function() {
+    .on('afterHide.cfw.popover', function() {
         glossaryBeenDragged = false;
     })
-    .on('afterShow.cfw.popover', function() {
-        //$('#glossaryButton').data('cfw.popover').popper.enableEventListeners();
-        $(window).off('resize.cfw.popover.glossaryButton');
-
-        $('#glossaryPop')
-            .find('[data-cfw-drag="popover"]')
-            .on('mousedown touchstart MSPointerDown', function() {
-                if (!glossaryBeenDragged) {
-                    //var newTop = $('#glossaryPop').position().top - document.documentElement.scrollTop;
-                    $('#glossaryPop').css({
-                        //'top': newTop + 'px',
-                        'position': 'fixed'
-                    });
-                }
-                $('#glossaryButton').data('cfw.popover').popper.disableEventListeners();
-                glossaryBeenDragged = true;
-            });
+    .on('dragStart.cfw.popover', function() {
+        glossaryBeenDragged = true;
     });
-/*
-$(window).on('scroll resize', function() {
-console.log('updating');
-    if ($('#glossaryPop').is(':visible') && !glossaryBeenDragged) {
-        $('#glossaryButton').CFW_Popover('locateUpdate');
-    }
-});
-*/
 </script>
