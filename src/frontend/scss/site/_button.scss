@@ -21,10 +21,8 @@
 %btn-option-active-hover {
     border-color: var(--CT_btnOptionActiveHoverBorderColor);
 }
-.btn-option,
-.btn-default,
-.btn-night,
-.btn-sepia {
+.btn.btn-option,
+.btn.btn-theme {
     &:active,
     &.active,
     &.open[data-cfw="dropdown"] {
