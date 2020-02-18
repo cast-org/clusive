@@ -9,7 +9,7 @@
                 "examples": ["I threw a handful of leaves up and the wind dispersed them in all different directions."],
                 "images": [
                     {
-                        "src": "images/glossary/disperse-1.jpg",
+                        "src": "glossimages/disperse-1.jpg",
                         "alt": "Photo of dandelion and drifting seeds.",
                         "description": "A cluster of tiny, white, fluffy objects on the top of a plant stem. Some of the tiny white fluffy objects have separated from the plant and are floating away.",
                         "caption": "Dandelion seeds disperse in the wind."
@@ -28,7 +28,7 @@
                 "examples": ["When segregation was legal, black and white children were forced to go to different schools."],
                 "images": [
                     {
-                        "src": "images/glossary/segregation-1.jpg",
+                        "src": "glossimages/segregation-1.jpg",
                         "alt": "Photo of a child at outdoor water fountain.",
                         "description": "A child stands at an outdoor drinking water fountain. A sign on a tree next to the fountain reads, “COLORED.",
                         "caption": "Segregation, such as having different water fountains for people of different colors, is no longer legal in the U.S."
@@ -77,7 +77,7 @@
                 "examples": ["The cat used its claws to defend itself when the dog tried to bit it."],
                 "images": [
                     {
-                        "src": "images/glossary/defend-1.jpg",
+                        "src": "glossimages/defend-1.jpg",
                         "alt": "Photo of small tiles, with hand between fallen and standing tiles.",
                         "description": "A row of small tiles, called dominos, extends from the lower right of the photo to the upper left. A person’s hand is in the middle, between tiles. Tiles in front of the hand have fallen toward the hand. Tiles behind the hand remain standing.",
                         "caption": "The hand is a defense that protects the standing dominos from being knocked over."

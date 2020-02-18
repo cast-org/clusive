@@ -41,10 +41,11 @@ var pub_id = "{{ pub_id }}";
     </main>
 
     <script>
-        var url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "{% static 'shared/pubs/' %}" + "{{ pub_id }}/manifest.json"
+        var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% static "shared/pubs/" %}'
+            + '{{ pub_id }}/{{ version }}/manifest.json';
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.4.1.min.js'},
-            {type: 'script', url: "{% static 'shared/js/lib/internal.js' %}"},
+            {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-before.css" %}', r2before: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-default.css" %}', r2default: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-after.css" %}', r2after: true},

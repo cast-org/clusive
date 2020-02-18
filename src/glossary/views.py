@@ -9,7 +9,7 @@ from eventlog.signals import vocab_lookup
 from glossary.apps import GlossaryConfig
 from glossary.models import WordModel
 from glossary.util import base_form, all_forms, lookup, has_definition
-from library.models import Book
+from library.models import Book, BookVersion
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -19,9 +19,10 @@ def checklist(request, document):
     """Return up to five words that should be presented in the vocab check dialog"""
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        book = Book.objects.get(path=document)
-        all_glossary_words = json.loads(book.glossary_words)
-        all_words = json.loads(book.all_words) + all_glossary_words # FIXME might not be necessary with stemming, glossary should be a subset of all
+        version = 1  # FIXME will need to look up glossary words for all versions and adjust algorithm.
+        bv = BookVersion.lookup(path=document, versionNumber=version)
+        all_glossary_words = json.loads(bv.glossary_words)
+        all_words = json.loads(bv.all_words)
         user_words = WordModel.objects.filter(user=user, word__in=all_words)
 
         to_find = 5
@@ -36,18 +37,18 @@ def checklist(request, document):
     except ClusiveUser.DoesNotExist:
         logger.warning("Could not fetch check words, no Clusive user: %s", request.user)
         return JsonResponse({'words': []})
-    except Book.DoesNotExist:
-        logger.error("Unknown book %s", document)
+    except BookVersion.DoesNotExist:
+        logger.error("Unknown BookVersion %s:%d", document, version)
         return JsonResponse({'words': []})
 
 
-def cuelist(request, document):
+def cuelist(request, document, version):
     """Return the list of words that should be cued in this document for this user"""
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        book = Book.objects.get(path=document)
-        all_glossary_words = json.loads(book.glossary_words)
-        all_words = json.loads(book.all_words)
+        bv = BookVersion.lookup(path=document, versionNumber=version)
+        all_glossary_words = json.loads(bv.glossary_words)
+        all_words = json.loads(bv.all_words)
         user_words = WordModel.objects.filter(user=user, word__in=all_words)
 
         # Target number of words.  For now, just pick an arbitrary number.

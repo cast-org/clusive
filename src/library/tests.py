@@ -17,7 +17,7 @@ class LibraryTestCase(TestCase):
 
     def test_parse_file(self):
         te = TextExtractor()
-        te.feed_file(finders.find('shared/pubs/serp-penguins-2/OEBPS/content.xhtml'))
+        te.feed_file(finders.find('shared/pubs/serp-penguins/1/OEBPS/content.xhtml'))
         te.close()
         result = te.text
         self.assertRegex(result, "Penguins are funny birds")
