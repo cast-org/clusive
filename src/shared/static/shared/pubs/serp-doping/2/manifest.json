@@ -1,0 +1,49 @@
+{
+  "@context": "https://readium.org/webpub-manifest/context.jsonld",
+  "metadata": {
+    "@type": "http://schema.org/Book",
+    "title": "Who is responsible for doping in professional team sports?",
+    "description": "Athletes are pressured to perform. Are only they responsible for doping in sports?",
+    "identifier": "https://www.oercommons.org/courseware/lesson/62483",
+    "author": "Kristin Robinson",
+    "language": "en",
+    "modified": "2020-02-18T14:29:54.509Z",
+    "rights": "Creative Commons Attribution 4.0"
+  },
+  "readingOrder": [
+    {
+      "href": "OEBPS/content.xhtml",
+      "type": "application/xhtml+xml"
+    }
+  ],
+  "resources": [
+    {
+      "href": "OEBPS/nav.xhtml",
+      "type": "application/xhtml+xml",
+      "rel": "contents"
+    },
+    {
+      "href": "OEBPS/toc.ncx",
+      "type": "application/x-dtbncx+xml"
+    },
+    {
+      "href": "OEBPS/stylesheet.css",
+      "type": "text/css"
+    },
+    {
+      "rel": "cover",
+      "href": "OEBPS/images/file1.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "toc": [
+    {
+      "href": "OEBPS/content.xhtml#header-1",
+      "title": "Lesson Overview"
+    },
+    {
+      "href": "OEBPS/content.xhtml#header-2",
+      "title": "Section 1: Who is responsible for doping in professional team sports?"
+    }
+  ]
+}

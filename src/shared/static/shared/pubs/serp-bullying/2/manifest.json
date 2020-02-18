@@ -1,0 +1,49 @@
+{
+  "@context": "https://readium.org/webpub-manifest/context.jsonld",
+  "metadata": {
+    "@type": "http://schema.org/Book",
+    "title": "Are kids responsible for stepping in to prevent bullying?",
+    "description": "Should kids step in to prevent bullying, even if that puts them in danger?",
+    "identifier": "https://www.oercommons.org/courseware/lesson/62481",
+    "author": "Kristin Robinson",
+    "language": "en",
+    "modified": "2020-02-18T14:31:06.248Z",
+    "rights": "Creative Commons Attribution 4.0"
+  },
+  "readingOrder": [
+    {
+      "href": "OEBPS/content.xhtml",
+      "type": "application/xhtml+xml"
+    }
+  ],
+  "resources": [
+    {
+      "href": "OEBPS/nav.xhtml",
+      "type": "application/xhtml+xml",
+      "rel": "contents"
+    },
+    {
+      "href": "OEBPS/toc.ncx",
+      "type": "application/x-dtbncx+xml"
+    },
+    {
+      "href": "OEBPS/stylesheet.css",
+      "type": "text/css"
+    },
+    {
+      "rel": "cover",
+      "href": "OEBPS/images/file1.jpg",
+      "type": "image/jpeg"
+    }
+  ],
+  "toc": [
+    {
+      "href": "OEBPS/content.xhtml#header-1",
+      "title": "Lesson Overview"
+    },
+    {
+      "href": "OEBPS/content.xhtml#header-2",
+      "title": "Section 1: Are kids responsible for stepping in to prevent bullying?"
+    }
+  ]
+}
