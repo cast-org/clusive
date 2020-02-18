@@ -60,7 +60,8 @@ def load_static_books():
                         b, b_created = Book.objects.get_or_create(path=book_dir.name)
                         b.title = find_title(manifest)
                         b.description = find_description(manifest)
-                        b.cover = version_dir.name + "/" + find_cover(manifest)
+                        cover_link = find_cover(manifest)
+                        b.cover = version_dir.name + "/" + cover_link if cover_link else None
                         b.save()
                         bv, bv_created = BookVersion.objects.get_or_create(book=b, sortOrder=version)
                         all_words = find_all_words(version_dir, manifest)
