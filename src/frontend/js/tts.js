@@ -176,8 +176,6 @@ clusiveTTS.readSelection = function(elements, selection) {
     var selectionTexts = selection.toString().split("\n").filter(function (text) {
         return text.length > 1;
     });    
-    
-    debugger;
 
     var selectionDirection;
 
