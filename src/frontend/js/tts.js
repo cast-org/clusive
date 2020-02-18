@@ -177,32 +177,13 @@ clusiveTTS.readSelection = function(elements, selection) {
         return text.length > 1;
     });    
 
-    var selectionDirection;
-
-    var anchorNode = selection.anchorNode;
-    var selectedAnchorText = selection.anchorNode.textContent.slice(selection.anchorOffset);
-        
-    var focusNode = selection.focusNode;
-    var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
-            
-    // Selection within a single element, direction can be determined by comparing anchor and focus offset
-    if(anchorNode.textContent === focusNode.textContent) {
-        selectionDirection = selection.anchorOffset < selection.focusOffset ? "FORWARD" : "BACKWARD";
-    // The first block of selection text is matched in the anchor element; forward selection
-    } else if(selectedAnchorText === selectionTexts[0].trim()) {
-        selectionDirection = "FORWARD";
-    // The first block of selection text is matched in the focus element; backward selection
-    } else if(selectedFocusText === selectionTexts[0].trim()) {
-        selectionDirection = "BACKWARD";
-    // This should eventually be eliminated as other scenarios get covered
-    // TODO: check for anchorText / focusText within larger elements - might be divided by inline tags, etc
-    } else selectionDirection = "UNCERTAIN";
+    var selectionDirection = clusiveSelection.getSelectionDirection(selection);
 
     var firstNodeOffSet;
 
-    if(selectionDirection === "FORWARD") {
+    if(selectionDirection === clusiveSelection.directions.FORWARD) {
         firstNodeOffSet = selection.anchorOffset;
-    } else if(selectionDirection === "BACKWARD") {
+    } else if(selectionDirection === clusiveSelection.directions.BACKWARD) {
         firstNodeOffSet = selection.focusOffset;
     };
 
@@ -246,3 +227,38 @@ clusiveTTS.readSelection = function(elements, selection) {
 };
 
 
+
+var clusiveSelection = {
+    directions: {
+        FORWARD: "Forward",
+        BACKWARD: "Backward",
+        UNCERTAIN: "Uncertain"
+    }
+};
+
+
+clusiveSelection.getSelectionDirection = function (selection) {
+    
+    var selectionDirection;
+
+    var anchorNode = selection.anchorNode;
+    var selectedAnchorText = selection.anchorNode.textContent.slice(selection.anchorOffset);
+        
+    var focusNode = selection.focusNode;
+    var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
+            
+    // Selection within a single element, direction can be determined by comparing anchor and focus offset
+    if(anchorNode.textContent === focusNode.textContent) {
+        selectionDirection = selection.anchorOffset < selection.focusOffset ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
+    // The first block of selection text is matched in the anchor element; forward selection
+    } else if(selectedAnchorText === selectionTexts[0].trim()) {
+        selectionDirection = clusiveSelection.directions.FORWARD;
+    // The first block of selection text is matched in the focus element; backward selection
+    } else if(selectedFocusText === selectionTexts[0].trim()) {
+        selectionDirection = clusiveSelection.directions.BACKWARD;
+    // This should eventually be eliminated as other scenarios get covered
+    // TODO: check for anchorText / focusText within larger elements - might be divided by inline tags, etc
+    } else selectionDirection = clusiveSelection.directions.UNCERTAIN;
+
+    return selectionDirection;
+};
