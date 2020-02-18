@@ -127,7 +127,7 @@ clusiveTTS.filterReaderTextElementsBySelection = function (textElements, userSel
 };
 
 clusiveTTS.isSelection = function (selection) {
-    return selection.type === "None" ? false : true;
+    return selection.type === "None" || selection.type === "Caret" ? false : true;
 };
 
 clusiveTTS.read = function() {
@@ -168,6 +168,8 @@ clusiveTTS.readAll = function(elements) {
 
 };
 
+// TODO: this needs refactoring to (among other things) extract the Selection-related functions
+// for general usage
 clusiveTTS.readSelection = function(elements, selection) {    
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);    
     
@@ -175,6 +177,8 @@ clusiveTTS.readSelection = function(elements, selection) {
         return text.length > 1;
     });    
     
+    debugger;
+
     var selectionDirection;
 
     var anchorNode = selection.anchorNode;
@@ -220,8 +224,7 @@ clusiveTTS.readSelection = function(elements, selection) {
     });
 
     var toRead = [];
-    $.each(filteredElements, function(i, elem) {        
-        // TODO: at least on Firefox, ALT text gets captured by the selection - is this desirable? how do we guard against it?
+    $.each(filteredElements, function(i, elem) {                
         var fromIndex = (i===0) ? firstNodeOffSet : 0;
         var selText = selectionTexts[i].trim();
 
