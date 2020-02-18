@@ -172,12 +172,8 @@ clusiveTTS.readAll = function(elements) {
 // for general usage
 clusiveTTS.readSelection = function(elements, selection) {    
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);    
-    
-    var selectionTexts = selection.toString().split("\n").filter(function (text) {
-        return text.length > 1;
-    });    
-
-    var selectionDirection = clusiveSelection.getSelectionDirection(selection);
+        
+    var selectionDirection = clusiveSelection.getSelectionDirection(selection, selectionTexts);
 
     var firstNodeOffSet;
 
@@ -186,6 +182,8 @@ clusiveTTS.readSelection = function(elements, selection) {
     } else if(selectionDirection === clusiveSelection.directions.BACKWARD) {
         firstNodeOffSet = selection.focusOffset;
     };
+
+    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
 
     // Check the selectionTexts against the filteredElements text, eliminate 
     // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
@@ -236,10 +234,10 @@ var clusiveSelection = {
     }
 };
 
-
 clusiveSelection.getSelectionDirection = function (selection) {
     
     var selectionDirection;
+    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
 
     var anchorNode = selection.anchorNode;
     var selectedAnchorText = selection.anchorNode.textContent.slice(selection.anchorOffset);
@@ -261,4 +259,11 @@ clusiveSelection.getSelectionDirection = function (selection) {
     } else selectionDirection = clusiveSelection.directions.UNCERTAIN;
 
     return selectionDirection;
+};
+
+// Get the selection text as an array, splitting by the newline character
+clusiveSelection.getSelectionTextAsArray = function (selection) {
+    return selection.toString().split("\n").filter(function (text) {
+        return text.length > 1;
+    });
 };
