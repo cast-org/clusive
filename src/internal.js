@@ -42,7 +42,7 @@ var secondaryMarkOptions = {
 // Explicitly attached to "window" so that uglify won't change it and it can be called from elsewhere.
 window.markCuedWords = function() {
     if (window.cuedWordMap === null) {
-        $.get('/glossary/cuelist/'+window.parent.pub_id)
+        $.get('/glossary/cuelist/'+window.parent.pub_id+'/'+window.parent.pub_version)
             .done(function(data, status) {
                 console.log("Received cuelist: ", data);
                 window.cuedWordMap = data.words;
