@@ -46,17 +46,19 @@ clusiveTTS.stopReading = function () {
 clusiveTTS.readQueuedElements = function () {
     if(clusiveTTS.elementsToRead.length > 0) {
         var toRead = clusiveTTS.elementsToRead.shift();
-        clusiveTTS.readElement(toRead);            
+        var end = toRead.end ? toRead.end : null;
+        clusiveTTS.readElement(toRead.element, toRead.offset, end);            
     } else {
         console.log("Done reading elements");
         clusiveTTS.toggleButtonToPlay();
     }
 };
 
-clusiveTTS.readElement = function (textElement) {
+clusiveTTS.readElement = function (textElement, offset, end) {    
     var synth = clusiveTTS.synth;    
     var element = $(textElement);
-    var contentText = element.text();
+    var elementText = element.text();
+    var contentText = end ? element.text().slice(offset, end) : element.text().slice(offset);
     
     // Preserve and hide the original element so we can handle the highlighting in an
     // element without markup
@@ -72,11 +74,12 @@ clusiveTTS.readElement = function (textElement) {
         }
         if(e.name === "word") {
             console.log("word boundary", e.charIndex, e.charLength, contentText.slice(e.charIndex, e.charIndex + e.charLength));
-
-            var preceding = contentText.substring(0, e.charIndex);
-            var middle = contentText.substring(e.charIndex, e.charIndex+e.charLength);
-            var following = contentText.substring(e.charIndex+e.charLength)
+            
+            var preceding = elementText.substring(0, offset+e.charIndex);
+            var middle = elementText.substring(offset+e.charIndex, offset+e.charIndex+e.charLength);
+            var following = elementText.substring(offset+e.charIndex+e.charLength)
             var newText = preceding + "<span class='tts-currentWord'>" + middle + "</span>" + following;
+            
             copiedElement.html(newText);
         }
     }
@@ -124,7 +127,7 @@ clusiveTTS.filterReaderTextElementsBySelection = function (textElements, userSel
 };
 
 clusiveTTS.isSelection = function (selection) {
-    return selection.type === "None" ? false : true;
+    return selection.type === "None" || selection.type === "Caret" ? false : true;
 };
 
 clusiveTTS.read = function() {
@@ -151,13 +154,116 @@ clusiveTTS.read = function() {
 };
 
 clusiveTTS.readAll = function(elements) {    
-    clusiveTTS.readElements(elements);
+    
+    var toRead = [];
+    $.each(elements, function(i, elem) {
+        var elementToRead = {
+            element: elem,
+            offset: 0            
+        };
+        toRead.push(elementToRead);
+    });
+
+    clusiveTTS.readElements(toRead);
 
 };
 
+// TODO: this needs refactoring to (among other things) extract the Selection-related functions
+// for general usage
 clusiveTTS.readSelection = function(elements, selection) {    
-    var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
-    clusiveTTS.readElements(filteredElements);
+    var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);    
+        
+    var selectionDirection = clusiveSelection.getSelectionDirection(selection, selectionTexts);
+
+    var firstNodeOffSet;
+
+    if(selectionDirection === clusiveSelection.directions.FORWARD) {
+        firstNodeOffSet = selection.anchorOffset;
+    } else if(selectionDirection === clusiveSelection.directions.BACKWARD) {
+        firstNodeOffSet = selection.focusOffset;
+    };
+
+    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
+
+    // Check the selectionTexts against the filteredElements text, eliminate 
+    // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
+    
+    selectionTexts = selectionTexts.filter(function (selectionText, i) {
+        var trimmed = selectionText.trim();
+        var found = false;
+        $.each(filteredElements, function (i, elem) {
+            var elemText = $(elem).text();
+            if(elemText.includes(trimmed)) {
+                found = true;                
+            };
+        });
+        return found;
+    });
+
+    var toRead = [];
+    $.each(filteredElements, function(i, elem) {                
+        var fromIndex = (i===0) ? firstNodeOffSet : 0;
+        var selText = selectionTexts[i].trim();
+
+        var textOffset = $(elem).text().indexOf(selText, fromIndex);
+        
+        var textEnd = selText.length;
+
+        console.log("textOffset/textEnd", textOffset, textEnd);
+
+        var elementToRead = {
+            element: elem,
+            offset: textOffset,
+            end: textOffset+textEnd
+        };
+        toRead.push(elementToRead);
+        
+    });    
+    // TODO: how to preserve ranges, while not selecting the substituted ones?
+    selection.removeAllRanges();
+    clusiveTTS.readElements(toRead);
 };
 
 
+
+var clusiveSelection = {
+    directions: {
+        FORWARD: "Forward",
+        BACKWARD: "Backward",
+        UNCERTAIN: "Uncertain"
+    }
+};
+
+clusiveSelection.getSelectionDirection = function (selection) {
+    
+    var selectionDirection;
+    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
+
+    var anchorNode = selection.anchorNode;
+    var selectedAnchorText = selection.anchorNode.textContent.slice(selection.anchorOffset);
+        
+    var focusNode = selection.focusNode;
+    var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
+            
+    // Selection within a single element, direction can be determined by comparing anchor and focus offset
+    if(anchorNode.textContent === focusNode.textContent) {
+        selectionDirection = selection.anchorOffset < selection.focusOffset ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
+    // The first block of selection text is matched in the anchor element; forward selection
+    } else if(selectedAnchorText === selectionTexts[0].trim()) {
+        selectionDirection = clusiveSelection.directions.FORWARD;
+    // The first block of selection text is matched in the focus element; backward selection
+    } else if(selectedFocusText === selectionTexts[0].trim()) {
+        selectionDirection = clusiveSelection.directions.BACKWARD;
+    // This should eventually be eliminated as other scenarios get covered
+    // TODO: check for anchorText / focusText within larger elements - might be divided by inline tags, etc
+    } else selectionDirection = clusiveSelection.directions.UNCERTAIN;
+
+    return selectionDirection;
+};
+
+// Get the selection text as an array, splitting by the newline character
+clusiveSelection.getSelectionTextAsArray = function (selection) {
+    return selection.toString().split("\n").filter(function (text) {
+        return text.length > 1;
+    });
+};
