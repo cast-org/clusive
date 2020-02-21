@@ -17,7 +17,7 @@ import execJQueryUIDraggable from "script-loader!jquery-ui/ui/widgets/draggable.
 import execJQueryUITooltip from "script-loader!jquery-ui/ui/widgets/tooltip.js"
 
 import execInfusion from 'script-loader!infusion';
-import execPopperJs from 'script-loader!popper.js';
+var Popper = require('script-loader!popper.js').default;
 import execFiguration from 'script-loader!figuration';
 
 import execGPIIBinder from "script-loader!gpii-binder/src/js/binder.js";
