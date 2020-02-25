@@ -5,7 +5,7 @@ from django.views.generic import ListView, TemplateView, RedirectView
 
 from eventlog.signals import page_viewed
 from glossary.models import WordModel
-from library.models import Book, BookVersion
+from library.models import Book, BookVersion, Paradata
 from roster.models import ClusiveUser
 
 
@@ -46,6 +46,8 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                                    'next_version' : bv_next,
                                    }
             page_viewed.send(self.__class__, request=request, document=pub_id)
+            clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+            Paradata.record_view(pub_id, version, clusive_user)
         return super().get(request, *args, **kwargs)
 
 
