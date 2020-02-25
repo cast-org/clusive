@@ -24,7 +24,7 @@ class ReaderDefaultVersionView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        kwargs['version'] = 1
+        kwargs['version'] = 0
         return super().get_redirect_url(*args, **kwargs)
 
 
