@@ -43,13 +43,13 @@ class Paradata(models.Model):
     lastLocation = models.TextField(null=True, verbose_name='Last reading location')
 
     @classmethod
-    def record_view(cls, path, versionNumber, user):
-        b = Book.objects.get(path=path)
-        bv = BookVersion.objects.get(book__path=path, sortOrder=versionNumber)
-        para, created = cls.objects.get_or_create(book=b, user=user)
+    def record_view(cls, book, versionNumber, clusive_user):
+        bv = BookVersion.objects.get(book=book, sortOrder=versionNumber)
+        para, created = cls.objects.get_or_create(book=book, user=clusive_user)
         para.viewCount += 1
         para.lastVersion = bv
         para.save()
+        return para
 
     @classmethod
     def record_last_location(cls, path, user, locator):

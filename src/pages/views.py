@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views import View
@@ -8,6 +10,7 @@ from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata
 from roster.models import ClusiveUser
 
+logger = logging.getLogger(__name__)
 
 class LibraryView(LoginRequiredMixin,ListView):
     """Library page showing all books"""
@@ -37,17 +40,19 @@ class ReaderView(LoginRequiredMixin,TemplateView):
             context = self.get_context_data(**kwargs)
             pub_id = context.get('pub_id')
             version = int(context.get('version'))
+            book = Book.objects.get(path=pub_id)
+            clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+            pdata = Paradata.record_view(book, version, clusive_user)
             bv_prev = str(version-1) if version>0 \
                 else False
-            bv_next = str(version+1) if BookVersion.objects.filter(book__path=pub_id, sortOrder=version+1).exists()\
+            bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
                 else False
-            self.extra_context = { 'pub_title' : Book.objects.get(path=pub_id).title,
+            self.extra_context = { 'pub_title' : book.title,
                                    'prev_version' : bv_prev,
                                    'next_version' : bv_next,
+                                   'last_position' : pdata.lastLocation or "null",
                                    }
             page_viewed.send(self.__class__, request=request, document=pub_id)
-            clusive_user = get_object_or_404(ClusiveUser, user=request.user)
-            Paradata.record_view(pub_id, version, clusive_user)
         return super().get(request, *args, **kwargs)
 
 
