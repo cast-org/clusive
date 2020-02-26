@@ -62,8 +62,8 @@ var pub_version = "{{ version }}";
         ];
 
         var userSettings = { textAlignment:'start' };
-
-        var lastReadingPosition, annotations, baseUrl = null;
+        var lastReadingPosition = {{ last_position|safe }};
+        var annotations, baseUrl = null;
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
 
         D2Reader.load({
@@ -88,14 +88,23 @@ var pub_version = "{{ version }}";
                 injectables: injectables,
                 api: {
                     addBookmark: function (bookmark) {
-                        bookmark.id = Math.random()
+                        bookmark.id = Math.random();
                         return Promise.resolve(bookmark);
                     },
                     deleteBookmark: function (bookmark) {
                         return Promise.resolve();
                     },
-                    updateCurrentlocation: function (location) {
+                    updateCurrentlocation: function (locator) {
                         return Promise.resolve();
+                        // The code below works, but is called too frequently (every time user scrolls)
+                        // Need to find an alternate method to send this info only when needed.
+                        // return $.post('/library/setlocation', { book: '{{ pub_id }}', locator: JSON.stringify(locator) })
+                        //     .done(function(data) {
+                        //         console.log("Set location API success!", data);
+                        //     })
+                        //     .fail(function(err) {
+                        //         console.log("Set location API failure!", err);
+                        //     });
                     },
                     updateUserSettings: function (userSettings) {
                         return Promise.resolve();

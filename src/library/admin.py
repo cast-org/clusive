@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 from glossary.util import base_form
-from library.models import Book, BookVersion
+from library.models import Book, BookVersion, Paradata
 from library.parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
@@ -43,6 +43,11 @@ class BookAdmin(admin.ModelAdmin):
 @admin.register(BookVersion)
 class BookVersionAdmin(admin.ModelAdmin):
     list_display = ('book', 'sortOrder')
+
+
+@admin.register(Paradata)
+class ParadataAdmin(admin.ModelAdmin):
+    list_display = ('book', 'user', 'viewCount', 'lastVersion', 'lastLocation')
 
 
 def load_static_books():
