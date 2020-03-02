@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 from roster.models import ClusiveUser
@@ -21,6 +23,12 @@ class BookVersion(models.Model):
     sortOrder = models.SmallIntegerField()
     glossary_words = models.TextField(default="[]")
     all_words = models.TextField(default="[]")
+
+    @property
+    def all_word_list(self):
+        if not hasattr(self, '_all_word_list'):
+            self._all_word_list = json.loads(self.all_words)
+        return self._all_word_list
 
     @classmethod
     def lookup(cls, path, versionNumber):
