@@ -61,7 +61,7 @@ class ReaderChooseVersionView(RedirectView):
                     else:
                         words = bv.all_word_list
                         prev_version = versions[bv.sortOrder - 1]
-                        new_words = set(words)-set(prev_version.all_word_list)
+                        new_words = bv.new_word_list
                         logger.debug("  New words in this version (%d): %s", len(new_words), new_words)
                         user_words = WordModel.objects.filter(user=clusive_user, word__in=new_words)
                         user_words = [u for u in user_words if u.knowledge_est()!=None]
