@@ -51,6 +51,8 @@ def checklist(request, document):
                                 word = random.choice(bv.potential_words)
                                 check_words.add(word)
                                 bv.potential_words.remove(word)
+                        if len(check_words)==to_find:
+                            break
                         if len(bv.potential_words)>0:
                             some_potential_words_remain = True
             logger.debug("Picked: %s", check_words)
