@@ -69,12 +69,18 @@ def load_static_books():
                         b.cover = version_dir.name + "/" + cover_link if cover_link else None
                         b.save()
                         bv, bv_created = BookVersion.objects.get_or_create(book=b, sortOrder=version)
-                        all_words = find_all_words(version_dir, manifest)
-                        bv.all_words = json.dumps(all_words)
-                        bv.glossary_words = json.dumps(find_glossary_words(book_dir, all_words))
+                        bv.all_word_list = find_all_words(version_dir, manifest)
+                        bv.glossary_word_list = find_glossary_words(book_dir, bv.all_word_list)
                         bv.save()
                 else:
                     logger.warning("Ignoring directory without manifest: %s", version_dir)
+        versions = BookVersion.objects.filter(book__path=book_dir.name)
+        # After all versions are read, determine new words added in each version.
+        if len(versions)>1:
+            for bv in versions:
+                if bv.sortOrder > 0:
+                    bv.new_word_list = list(set(bv.all_word_list)-set(versions[bv.sortOrder-1].all_word_list))
+                    bv.save()
 
 
 def find_title(manifest):
