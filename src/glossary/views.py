@@ -23,13 +23,13 @@ def checklist(request, document):
         to_find = 5
         check_words = set()
 
-        if len(versions)>1:
+        if len(versions) > 1:
             # Multiple versions, so we want to use our check words to determine which version to show.
             # Create two lists for each version above the simplest:
             #   All "new" words in this version that are not yet rated
             #   The subset of that list that are glossary words.
             for bv in versions:
-                if bv.sortOrder>0:
+                if bv.sortOrder > 0:
                     user_words = WordModel.objects.filter(user=user, word__in=bv.new_word_list)
                     bv.potential_words = [w for w in bv.new_word_list if not any(wm.word==w and wm.rating!=None for wm in user_words)]
                     logger.debug("%s potential: %s", bv, bv.potential_words)
@@ -41,19 +41,19 @@ def checklist(request, document):
                 some_potential_words_remain = False
                 for bv in versions:
                     if bv.sortOrder > 0:
-                        if len(bv.potential_gloss_words)>0:  # Glossary word is preferred if there is one
+                        if len(bv.potential_gloss_words) > 0:  # Glossary word is preferred if there is one
                             word = random.choice(bv.potential_gloss_words)
                             check_words.add(word)
                             bv.potential_gloss_words.remove(word)
                             bv.potential_words.remove(word)
                         else:
-                            if len(bv.potential_words)>0:    # Otherwise any new word.
+                            if len(bv.potential_words) > 0:    # Otherwise any new word.
                                 word = random.choice(bv.potential_words)
                                 check_words.add(word)
                                 bv.potential_words.remove(word)
-                        if len(check_words)==to_find:
+                        if len(check_words) == to_find:
                             break
-                        if len(bv.potential_words)>0:
+                        if len(bv.potential_words) > 0:
                             some_potential_words_remain = True
             logger.debug("Picked: %s", check_words)
         else:
