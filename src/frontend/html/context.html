@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Selection Context Menu</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.3/dist/css/figuration.min.css" integrity="sha384-FxI8IvAmVlzB9xYQlzBh6R4Qb+XOxlgUSpA0LqjaeUrNoyQeO4zPXL6wgwjFHB82" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.3/dist/js/figuration.min.js" integrity="sha384-5+C6I6Gf1bWSmbIANEj6halK5ku2CFrkqQJkEfLxjRWqLDVIbvElrjq71gmkRGKT" crossorigin="anonymous"></script>
+
+<script src="../js/context.js"></script>
+
+<style>
+/* specific targeting for iOS -- hopefully
+    using ::selection {} - causes no visible select in Firefox
+*/
+
+@supports (-webkit-touch-callout: none) {
+    * {
+        -webkit-touch-callout: none;
+    }
+}
+.context-helper {
+    position: absolute;
+    background-color: rgba(0, 0, 0, .2);
+    pointer-events: none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <!--
+    <div class="my-1">
+        <button id="test" type="button">Test</button>
+    </div>
+    <div id="result" class="bg-light border p-1 mb-1"></div>
+    -->
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim. Curabitur sit amet ante odio. In eleifend lacinia ipsum, eu eleifend diam tempor et. Nullam iaculis lobortis sollicitudin. Maecenas interdum libero sit amet quam cursus, et dapibus enim facilisis. Donec non leo dapibus, elementum velit non, laoreet nisl. Sed in lacinia tortor. Suspendisse eget accumsan erat. Phasellus vel est eu ligula hendrerit condimentum sed quis nulla. Nam dignissim dolor in ipsum dapibus sagittis.</p>
+    <p>Aliquam auctor, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, feugiat id porta nec, tincidunt eget quam.</p>
+    <div style="-webkit-touch-callout: none;">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim. Curabitur sit amet ante odio. In eleifend lacinia ipsum, eu eleifend diam tempor et. Nullam iaculis lobortis sollicitudin. Maecenas interdum libero sit amet quam cursus, et dapibus enim facilisis. Donec non leo dapibus, elementum velit non, laoreet nisl. Sed in lacinia tortor. Suspendisse eget accumsan erat. Phasellus vel est eu ligula hendrerit condimentum sed quis nulla. Nam dignissim dolor in ipsum dapibus sagittis.</p>
+        <p>Aliquam auctor, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, feugiat id porta nec, tincidunt eget quam.</p>
+    </div>
+    <div contenteditable="true">
+        Aliquam auctor, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, feugiat id porta nec, tincidunt eget quam.
+    </div>
+</div>
+
+</body>
+</html>
