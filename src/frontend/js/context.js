@@ -1,6 +1,7 @@
 var clusiveContext = {
     docNode: null,
     menuId: '#contextMenu',
+    menu: null,
     helper: null
 };
 
@@ -78,20 +79,26 @@ clusiveContext.helperPlacement = function() {
         width: posRect.width,
         height: posRect.height
     });
+
+    if (clusiveContext.menu !== null) {
+        clusiveContext.menu.CFW_Tooltip('locateUpdate');
+    }
 };
 
 clusiveContext.helperSet = function() {
-    clusiveContext.helper = $(document.createElement('div'));
-    clusiveContext.helper.addClass('context-helper');
-    document.body.append(clusiveContext.helper[0]);
+    if (clusiveContext.helper === null) {
+        clusiveContext.helper = $(document.createElement('div'));
+        clusiveContext.helper.addClass('context-helper');
+        document.body.append(clusiveContext.helper[0]);
 
-    $(window).on('resize.clusiveContext', function() {
+        $(window).on('resize.clusiveContext', function() {
+                clusiveContext.helperPlacement();
+            });
+
+        clusiveContext.docNode.on('selectionchange.clusiveContext', function() {
             clusiveContext.helperPlacement();
         });
-
-    clusiveContext.docNode.on('selectionchange.clusiveContext', function() {
-        clusiveContext.helperPlacement();
-    });
+    };
 
     clusiveContext.helperPlacement();
 };
@@ -108,6 +115,26 @@ clusiveContext.helperReset = function() {
     clusiveContext.helper = null;
 };
 
+clusiveContext.menuSet = function() {
+    clusiveContext.menu = $(clusiveContext.menuId);
+
+    clusiveContext.helper
+        .CFW_Tooltip({
+            target: clusiveContext.menuId,
+            trigger: 'manual',
+            placement: 'bottom auto'
+        })
+        .CFW_Tooltip('show');
+};
+
+clusiveContext.menuReset = function() {
+    if (clusiveContext.menu !== null) {
+        clusiveContext.helper
+            .CFW_Tooltip('unlink');
+        clusiveContext.menu = null;
+    }
+};
+
 clusiveContext.showMenu = function() {
     var selObj = clusiveContext.getSelection();
 
@@ -118,11 +145,13 @@ clusiveContext.showMenu = function() {
 
 console.log('selection\n', selObj, "\n" + selObj.anchorNode.ownerDocument);
 
-    clusiveContext.helperReset();
+    //clusiveContext.helperReset();
     clusiveContext.helperSet();
+    clusiveContext.menuSet();
 };
 
 clusiveContext.hideMenu = function() {
+    clusiveContext.menuReset();
     clusiveContext.helperReset();
 
 };
@@ -134,7 +163,7 @@ $(window).on('load', function() {
         clusiveContext.docNode = clusiveContext.docNode.add($(clusiveContext.getReaderIFrameBody()[0].ownerDocument));
     }
 
-    clusiveContext.docNode.on('keyup mouseup touchend', function() {
+    clusiveContext.docNode.on('keyup mouseup touchend selectstart', function() {
         // Slight delay to 'allow selection update to finish'
         setTimeout(function() {
             clusiveContext.showMenu();
@@ -155,13 +184,3 @@ $(window).on('load', function() {
         e.preventDefault();
     });
 });
-
-
-/*
-Hide
- - on loss of focus
- - selection 0 length
-
-Don't hide
- - click on menu option?
- */
