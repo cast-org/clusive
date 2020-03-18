@@ -1,0 +1,78 @@
+.toc-modal {
+    // placeholder
+}
+
+.nav-tabs-toc {
+    margin-bottom: calc(-.5rem - 1px);
+    border-color: var(--CT_modalHeaderBorderColor);
+
+    .nav-link {
+        color: var(-CT_linkColor);
+
+        @include hover-focus() {
+            color: var(--CT_linkHoverColor);
+        }
+    }
+
+    .nav-link.active,
+    .nav-item.open .nav-link {
+        font-weight: $font-weight-bold;
+        background-color: var(--CT_modalContentBg);
+        border-color: var(--CT_modalHeaderBorderColor);
+        border-bottom-color: transparent;
+    }
+}
+
+.media-toc {
+    .media-img {
+        max-width: 64px;
+        margin-right: .75rem;
+    }
+    .media-title {
+        margin-bottom: 0;
+    }
+}
+
+
+.nav-toc {
+    .nav {
+        margin-left: 1rem;
+    }
+
+    .nav-link {
+        padding: .125rem .5rem;
+    }
+
+    .has-children {
+        position: relative;
+
+        &::before {
+            position: absolute;
+            top: calc(((#{$line-height-base} * 1em) / 2) + .125rem);
+            left: -.5rem;
+            //@include caret(end, $caret-border-width);
+            display: inline-block;
+            width: .75em;
+            height: .75em;
+            margin-top: (-.75em / 2);
+            vertical-align: middle;
+            content: "";
+            background-image: encode-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path fill='var(--CT_bodyColor)' d='M1.5 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z' transform='translate(1)' /></svg>"));
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: .75em;
+        }
+
+        &.open::before {
+            background-image: encode-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path fill='var(--CT_bodyColor)' d='M1.5 0l-1.5 1.5 4 4 4-4-1.5-1.5-2.5 2.5-2.5-2.5z' transform='translate(0 1)' /></svg>"));
+
+        }
+
+    }
+}
+
+.nav-toc-header {
+    margin-bottom: .125rem;
+    @include font-size(1.125rem);
+    font-weight: 600;
+}

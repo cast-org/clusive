@@ -61,25 +61,25 @@ $enable-list-ordered:                   false;
 $enable-list-group:                     false;
 $enable-list-horizontal:                false;
 $enable-list-item-colors:               false;
-$enable-media:                          false;
+$enable-media:                          true;
 $enable-navbar-text:                    false;
 $enable-navbar-divider:                 false;
 $enable-navbar-collapse:                false;
 $enable-navbar-toggle:                  false;
 $enable-navbar-light:                   false;
 $enable-navbar-dark:                    false;
-$enable-nav-tabs:                       false;
+$enable-nav-tabs:                       true;
 $enable-nav-pills:                      false;
-$enable-nav-vertical:                   false;
+$enable-nav-vertical:                   true;
 $enable-nav-fill:                       false;
 $enable-nav-justify:                    false;
-$enable-tab-content:                    false;
+$enable-tab-content:                    true;
 $enable-pagination:                     false;
 $enable-progress:                       false;
 
 // Widgets
 $enable-dropdown:                       false;
-$enable-tooltip:                        false;
+$enable-tooltip:                        true;
 
 // Utilities
 $enable-utility-bg:                     false;
@@ -218,6 +218,9 @@ $form-switch-thumb-focus-bg:                var(--CT_formSwitchThumbFocusBg);
 $form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
 $form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
 $form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
+
+$nav-tabs-hover-bg:                         rgba(0, 0, 0, .1);
+$nav-tabs-active-color:                     var(--CT_bodyColor);
 
 $card-bg:                               var(--CT_cardBg);
 $card-color:                            var(--CT_cardColor);
