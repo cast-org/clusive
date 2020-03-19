@@ -49,14 +49,15 @@
         position: absolute;
         top: 0;
         left: -1.25rem;
+        z-index: 1; // Bring above text link
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 1.75rem;
-        height: 1.75rem;
-        @include font-size(1.25rem);
+        width: 1.5em;
+        height: calc(1.5em + .25rem);   // Height align with single-line of text
 
         > [class*="icon-"] {
+            @include font-size(1.25em);
             line-height: 1;
 
             &::before {
@@ -68,6 +69,15 @@
             content: "\f107";
         }
     }
+}
+
+.toc-depth-0 {
+    @include font-size(1.125rem);
+    font-weight: 700;
+}
+.toc-depth-1 {
+    @include font-size(1rem);
+    font-weight: 700;
 }
 
 .nav-toc-header {
