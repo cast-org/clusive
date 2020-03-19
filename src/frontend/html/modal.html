@@ -211,6 +211,131 @@
 
 <hr>
 
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalToc">TOC</button>
+
+<div id="modalToc" class="modal toc-modal">
+    <div class="modal-dialog modal-dialog-side-start modal-dialog-scrollable modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5 sr-only">Contents and Bookmarks</h2>
+                <ul class="nav nav-tabs nav-tabs-toc">
+                    <li class="nav-item"><a href="#toc0" class="nav-link" data-cfw="tab">Contents</a></li>
+                    <li class="nav-item"><a href="#toc1" class="nav-link" data-cfw="tab">Bookmarks</a></li>
+                </ul>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div id="toc0" class="tab-pane">
+                        <div class="media media-toc">
+                            <div class="media-img">
+                                <img src="./img/sample-1.jpg" class="img-fluid" alt="Article cover image">
+                            </div>
+                            <div class="media-body">
+                                <h3 class="h5 media-title">Some longer article title</h3>
+                                Author's Name
+                            </div>
+                        </div>
+
+                        <nav class="nav-toc" aria-label="Contents">
+                            <ul class="nav nav-vertical">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link toc-depth-0">Editor's Note</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link toc-depth-0">Reading Shakespeare's Language</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link toc-depth-0">Character List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#tocnav1" class="has-children toc-depth-0" data-cfw="collapse">
+                                        <span class="icon-angle-right" aria-hidden="true"></span>
+                                        <span class="sr-only">Toggle menu for The Tragedy of King Lear</span>
+                                    </a>
+                                    <a href="#" class="nav-link toc-depth-0">The Tragedy of King Lear</a>
+                                    <div id="tocnav1" class="collapse">
+                                        <ul class="nav nav-vertical">
+                                            <li class="nav-item">
+                                                <a href="#tocnav1-1" class="has-children toc-depth-1" data-cfw="collapse">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act I</span>
+                                                </a>
+                                                <a href="#" class="nav-link toc-depth-1">Act I</a>
+                                                <div id="tocnav1-1" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#tocnav1-2" class="has-children toc-depth-1" data-cfw="collapse">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act II</span>
+                                                </a>
+                                                <a href="#" class="nav-link toc-depth-1">Act II</a>
+                                                <div id="tocnav1-2" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#tocnav1-3" class="has-children toc-depth-1" data-cfw="collapse">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act III</span>
+                                                </a>
+                                                <a href="#" class="nav-link toc-depth-1">Act III</a>
+                                                <div id="tocnav1-3" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#tocnav1-4" class="has-children toc-depth-1" data-cfw="collapse">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act IV</span>
+                                                </a>
+                                                <a href="#" class="nav-link toc-depth-1">Act IV</a>
+                                                <div id="tocnav1-4" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
+
+                    </div>
+                    <div id="toc1" class="tab-pane">
+                        Bookmarks here
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
 <button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalGoal0">Goal 0</button>
 <button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalGoal1">Goal 1</button>
 <button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalGoal2">Goal 2</button>

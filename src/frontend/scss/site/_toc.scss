@@ -1,0 +1,87 @@
+.toc-modal {
+    // placeholder
+}
+
+.nav-tabs-toc {
+    margin-bottom: calc(-.5rem - 1px);
+    border-color: var(--CT_modalHeaderBorderColor);
+
+    .nav-link {
+        color: var(-CT_linkColor);
+
+        @include hover-focus() {
+            color: var(--CT_linkHoverColor);
+        }
+    }
+
+    .nav-link.active,
+    .nav-item.open .nav-link {
+        font-weight: $font-weight-bold;
+        background-color: var(--CT_modalContentBg);
+        border-color: var(--CT_modalHeaderBorderColor);
+        border-bottom-color: transparent;
+    }
+}
+
+.media-toc {
+    .media-img {
+        max-width: 64px;
+        margin-right: .75rem;
+    }
+    .media-title {
+        margin-bottom: 0;
+    }
+}
+
+
+.nav-toc {
+    .nav {
+        margin-left: 1rem;
+    }
+    .nav-item {
+        position: relative;
+    }
+    .nav-link {
+        padding: .125rem .5rem;
+    }
+
+    .has-children {
+        position: absolute;
+        top: 0;
+        left: -1.25rem;
+        z-index: 1; // Bring above text link
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5em;
+        height: calc(1.5em + .25rem);   // Height align with single-line of text
+
+        > [class*="icon-"] {
+            @include font-size(1.25em);
+            line-height: 1;
+
+            &::before {
+                font-weight: 700;
+            }
+        }
+
+        &.open > [class*="icon-"]::before {
+            content: "\f107";
+        }
+    }
+}
+
+.toc-depth-0 {
+    @include font-size(1.125rem);
+    font-weight: 700;
+}
+.toc-depth-1 {
+    @include font-size(1rem);
+    font-weight: 700;
+}
+
+.nav-toc-header {
+    margin-bottom: .125rem;
+    @include font-size(1.125rem);
+    font-weight: 600;
+}
