@@ -1,10 +1,13 @@
 .toc-modal {
-    // placeholder
+    .modal-body {
+        padding-bottom: 2rem;
+        overflow-y: scroll;
+    }
 }
 
 .nav-tabs-toc {
     margin-bottom: calc(-.5rem - 1px);
-    border-color: var(--CT_modalHeaderBorderColor);
+    border-color: var(--CT_popoverHeaderBorderColor);
 
     .nav-link {
         color: var(-CT_linkColor);
@@ -17,8 +20,8 @@
     .nav-link.active,
     .nav-item.open .nav-link {
         font-weight: $font-weight-bold;
-        background-color: var(--CT_modalContentBg);
-        border-color: var(--CT_modalHeaderBorderColor);
+        background-color: var(--CT_popoverBg);
+        border-color: var(--CT_popoverHeaderBorderColor);
         border-bottom-color: transparent;
     }
 }
@@ -35,20 +38,30 @@
 
 
 .nav-toc {
-    .nav {
-        margin-left: 1rem;
+    margin-right: -.75rem;
+    margin-left: -.75rem;
+
+    .nav .nav {
+        background-color: rgba(var(--CT_figureCaptionBgRGB), .4);
     }
+
     .nav-item {
         position: relative;
     }
     .nav-link {
-        padding: .125rem .5rem;
+        padding: .25rem 1.75em .25rem 2.75rem;
+        text-decoration: none;
+        border-bottom: 1px solid var(--CT_popoverSectionBorderColor);
+
+        @include hover-focus() {
+            text-decoration: underline;
+        }
     }
 
     .has-children {
         position: absolute;
-        top: 0;
-        left: -1.25rem;
+        top: .125rem;
+        left: calc(100% - 1.75em);
         z-index: 1; // Bring above text link
         display: inline-flex;
         align-items: center;
@@ -74,10 +87,18 @@
 .toc-depth-0 {
     @include font-size(1.125rem);
     font-weight: 700;
+
+    &.nav-link {
+        padding-left: .75rem;
+    }
 }
 .toc-depth-1 {
     @include font-size(1rem);
     font-weight: 700;
+
+    &.nav-link {
+        padding-left: 1.75rem;
+    }
 }
 
 .nav-toc-header {

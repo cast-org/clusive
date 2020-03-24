@@ -47,6 +47,7 @@
         --CT_cardLoginColor: #{$card-login-color};
         --CT_cardLoginForgotBorderColor: #{$card-login-forgot-border-color};
 
+        --CT_figureCaptionBgRGB: #{red($figure-caption-bg), green($figure-caption-bg), blue($figure-caption-bg)};
         --CT_figureCaptionBg: #{$figure-caption-bg};
         --CT_figureCaptionColor: #{$figure-caption-color};
 
