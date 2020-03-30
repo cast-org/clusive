@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Site, Period, ClusiveUser, Roles
+from .models import Site, Period, ClusiveUser, Roles, Preference
 from django.core.exceptions import ValidationError
 from django.test import Client
 from django.urls import reverse
@@ -196,6 +196,13 @@ class ClusiveUserTestCase(TestCase):
         for state in nonpermissioned_states:
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
+
+    def test_preferences(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/account/pref/foo/bar')
+        self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
+        response = self.client.get('/account/prefs')
+        self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
 
 
 class PageTestCases(TestCase):
