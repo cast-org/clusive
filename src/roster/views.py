@@ -2,6 +2,7 @@ from django.contrib.auth import login
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+from eventlog.signals import preference_changed
 from roster.models import ClusiveUser
 
 
@@ -13,9 +14,10 @@ def guest_login(request):
 
 def set_preference(request, pref, value):
     user = ClusiveUser.from_request(request)
-    pref = user.get_preference(pref)
-    pref.value = value
-    pref.save()
+    preference = user.get_preference(pref)
+    preference.value = value
+    preference.save()
+    preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)
     return JsonResponse({'success' : 1})
 
 

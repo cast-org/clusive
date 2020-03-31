@@ -1,20 +1,23 @@
-from django.dispatch import receiver, Signal
+import logging
+
 from django.contrib.auth import user_logged_in, user_logged_out
+from django.dispatch import receiver, Signal
+from django.utils import timezone
 from django_session_timeout.signals import user_timed_out
+
 from eventlog.models import LoginSession, Event, SESSION_ID_KEY, PERIOD_KEY
 from roster.models import Period, ClusiveUser
-from django.utils import timezone
-import logging
-import caliper
 
 logger = logging.getLogger(__name__)
 
 #
-# Custom signals that we recognize for event logging
+# Custom signals that we recognize for event logging.
+# (we also recognize some Django standard signals - user logged in/out, timeout)
 #
 
 page_viewed = Signal(providing_args=['request', 'document', 'page'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
+preference_changed = Signal(providing_args=['request', 'preference'])
 
 #
 # Signal handlers that log specific events
@@ -48,6 +51,19 @@ def log_vocab_lookup(sender, **kwargs):
     if event:
         event.save()
 
+@receiver(preference_changed)
+def log_pref_change(sender, **kwargs):
+    """User changes a preference setting"""
+    logger.debug("Preference change signal received")
+    request = kwargs.get('request')
+    preference = kwargs.get('preference')
+    value = kwargs.get('value')
+    event = Event.build(type='TOOL_USE_EVENT',
+                        action='USED',
+                        control='pref:'+preference.pref,
+                        value=preference.value,
+                        session=request.session)
+    event.save()
 
 @receiver(user_logged_in)
 def log_login(sender, **kwargs):
