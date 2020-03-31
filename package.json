@@ -21,7 +21,7 @@
     "expose-loader": "0.7.5",
     "figuration": "^4.0.0-beta.3",
     "gpii-binder": "git+https://github.com/GPII/gpii-binder.git",
-    "infusion": "3.0.0-dev.20190820T145526Z.389bd6937.FLUID-6394",
+    "infusion": "3.0.0-dev.20200326T173810Z.24ddb2718.FLUID-6482",
     "jquery": "^3.4.1",
     "jquery-ui": "1.12.1",
     "mark.js": "8.11.1",
