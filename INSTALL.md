@@ -13,8 +13,10 @@ Clusive can be installed locally for development or for production use via Docke
   * Highly recommended for maintaining an isolated environment and dependencies
 * [Postgres](https://www.postgresql.org/) 
   * Version 11.5 or later. Used in the deployment configuration 
-* [npm/grunt](https://www.npmjs.com/get-npm) 
-  * Used as a build system to manage all other dependencies
+* [Node.js](https://nodejs.org/)
+  * Used for the build system and to manage all other dependencies using:
+    * [npm](https://www.npmjs.com/get-npm) - Package manager
+    * [Grunt](https://gruntjs.com/) - Task runner
 
   
 ### Clone the Clusive Repository
