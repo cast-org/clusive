@@ -16,9 +16,11 @@
                 <div class="tab-content">
                     <div id="toc0" class="tab-pane">
                         <div class="media media-toc">
+                            {% if pub.cover %}
                             <div class="media-img">
                                 <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{pub.cover}}" class="img-fluid" alt="Cover image">
                             </div>
+                            {% endif %}
                             <div class="media-body">
                                 <h3 class="h5 media-title">{{ pub.title }}</h3>
                                 <!-- author would go here -->

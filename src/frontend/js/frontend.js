@@ -80,12 +80,12 @@ function table_of_contents_level(list, level, id) {
                 '</div>';
         }
         out += '<li class="nav-item">' +
-            twiddle +
             '<a href="' +
             element.href +
             '" onclick="' + click + '" class="' + li_class + '">' +
             element.title +
             '</a>' +
+            twiddle +
             submenu +
             '</li>';
     });
@@ -124,8 +124,10 @@ function highlight_current_toc_item() {
     elt.addClass('active');
     // Open collapsers to show the current section
     elt.parents('li').children('a[data-cfw="collapse"]').CFW_Collapse('show');
-    // FIXME - for some reason this is not working
-    elt[0].scrollIntoView();
+    if (elt.length > 0) {
+        // FIXME - for some reason this is not working
+        elt[0].scrollIntoView();
+    }
 }
 
 $(window).ready(function() {
