@@ -18,13 +18,13 @@
 {% endif %}
 {% if nav %}
 <nav class="sidebar-nav" aria-label="Article">
-    <button type="button" class="btn btn-nav btn-icon" aria-label="Contents">
+    <button type="button" data-cfw="modal" data-cfw-modal-target="#modalToc" class="btn btn-nav btn-icon" aria-label="Contents">
         <span class="icon-menu" aria-hidden="true"></span>
     </button>
-    <button onclick="D2Reader.previousResource();" type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
+    <button id="prevResourceButton" onclick="D2Reader.previousResource();" type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
         <span class="icon-chevron-left" aria-hidden="true"></span>
     </button>
-    <button onclick="D2Reader.nextResource();" type="button" class="btn btn-nav btn-icon" aria-label="Next page">
+    <button id="nextResourceButton" onclick="D2Reader.nextResource();" type="button" class="btn btn-nav btn-icon" aria-label="Next page">
         <span class="icon-chevron-right" aria-hidden="true"></span>
     </button>
 </nav>

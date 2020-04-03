@@ -1,0 +1,39 @@
+{% load static %}
+<div id="modalToc" class="modal toc-modal">
+    <div class="modal-dialog modal-dialog-side-start modal-dialog-scrollable modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5 sr-only">Contents and Bookmarks</h2>
+                <ul class="nav nav-tabs nav-tabs-toc">
+                    <li class="nav-item"><a href="#toc0" class="nav-link" data-cfw="tab">Contents</a></li>
+                    <li class="nav-item"><a href="#toc1" class="nav-link" data-cfw="tab">Bookmarks</a></li>
+                </ul>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div id="toc0" class="tab-pane">
+                        <div class="media media-toc">
+                            <div class="media-img">
+                                <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{pub.cover}}" class="img-fluid" alt="Cover image">
+                            </div>
+                            <div class="media-body">
+                                <h3 class="h5 media-title">{{ pub.title }}</h3>
+                                <!-- author would go here -->
+                            </div>
+                        </div>
+                        <nav class="nav-toc" aria-label="Contents">
+                            <ul id="contents_list" class="nav nav-vertical">
+                            </ul>
+                        </nav>
+                    </div>
+                    <div id="toc1" class="tab-pane">
+                        Bookmarks here
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
