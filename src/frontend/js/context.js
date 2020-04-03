@@ -2,8 +2,20 @@ var clusiveContext = {
     docNode: null,
     menuId: '#contextMenu',
     menu: null,
-    helper: null
+    helper: null,
+    preventSelRecursion: false
 };
+
+clusiveContext.debounce = function(fn, delay) {
+    var timer = null;
+    return function() {
+        var context = this, args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            fn.apply(context, args);
+        }, delay);
+    };
+}
 
 clusiveContext.hasReader = function() {
     return $('#D2Reader-Container').length > 0;
@@ -56,7 +68,14 @@ clusiveContext.helperPlacement = function() {
     var selObj = clusiveContext.getSelection();
     var elRect = clusiveContext.getSelectionProperties(selObj).rect;
     var posRect = $.extend({}, elRect);
-    var frameRect = {top: 0, left: 0};
+    var frameRect = {
+        top: 0,
+        left: 0
+    };
+
+    if (!clusiveContext.preventSelRecursion) {
+        clusiveContext.iosNoContext();
+    }
 
     if (clusiveContext.hasReader()) {
         if (selObj.anchorNode.ownerDocument === clusiveContext.getReaderIFrameBody()[0].ownerDocument) {
@@ -70,8 +89,8 @@ clusiveContext.helperPlacement = function() {
         top: document.documentElement.scrollTop,
         left: document.documentElement.scrollLeft
     };
-    posRect.top = posRect.top + docScroll.top;
-    posRect.left = posRect.left + docScroll.left;
+    posRect.top += docScroll.top;
+    posRect.left += docScroll.left;
 
     clusiveContext.helper.css({
         top: posRect.top,
@@ -92,13 +111,13 @@ clusiveContext.helperSet = function() {
         document.body.append(clusiveContext.helper[0]);
 
         $(window).on('resize.clusiveContext', function() {
-                clusiveContext.helperPlacement();
-            });
+            clusiveContext.helperPlacement();
+        });
 
         clusiveContext.docNode.on('selectionchange.clusiveContext', function() {
             clusiveContext.helperPlacement();
         });
-    };
+    }
 
     clusiveContext.helperPlacement();
 };
@@ -138,14 +157,14 @@ clusiveContext.menuReset = function() {
 clusiveContext.showMenu = function() {
     var selObj = clusiveContext.getSelection();
 
-    if(selObj === null || selObj.isCollapsed) {
+    if (selObj === null || selObj.isCollapsed) {
         clusiveContext.hideMenu();
         return;
     }
 
-console.log('selection\n', selObj, "\n" + selObj.anchorNode.ownerDocument);
+    console.log('selection\n', selObj, "\n" + selObj.anchorNode.ownerDocument);
 
-    //clusiveContext.helperReset();
+    // clusiveContext.helperReset();
     clusiveContext.helperSet();
     clusiveContext.menuSet();
 };
@@ -155,6 +174,27 @@ clusiveContext.hideMenu = function() {
     clusiveContext.helperReset();
 
 };
+
+// Hide the iOS Safari context menu
+// Reference: https://stackoverflow.com/a/30046936
+clusiveContext.iosNoContext = clusiveContext.debounce(function() {
+    if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ) {
+
+        // Selection remove and re-add should remove context menu
+        var S = clusiveContext.getSelection();
+        var r = S.getRangeAt(0);
+        clusiveContext.preventSelRecursion = true;
+
+        S.removeAllRanges();
+        setTimeout(function() {
+            S.addRange(r);
+            setTimeout(function(){
+                clusiveContext.preventSelRecursion = false;
+            });
+        }, 5);
+    }
+}, 750);
 
 // Use load event to watch allow iframe to become ready
 $(window).on('load', function() {
@@ -167,11 +207,7 @@ $(window).on('load', function() {
         // Slight delay to 'allow selection update to finish'
         setTimeout(function() {
             clusiveContext.showMenu();
-        }, 100);
-
-        //if (navigator.userAgent.match(/iPhone|iPod|iPad/)) {
-        //    alert('ipad');
-        //}
+        }, 150);
     });
 
     //$(document).on('mousedown touchstart focus blur', 'p', function() {
