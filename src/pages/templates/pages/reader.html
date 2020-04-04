@@ -122,7 +122,9 @@ var pub_version = "{{ version }}";
                 // TODO: improve this sequencing
                 $(document).ready(function () {
                     build_table_of_contents();
-                    $('#modalToc').on('beforeShow.cfw.modal', function() { highlight_current_toc_item(); });
+                    $('#modalToc')
+                        .on('beforeShow.cfw.modal', function() { highlight_current_toc_item(); })
+                        .on('afterShow.cfw.modal', function() { scroll_to_current_toc_item() });
                     setTimeout(function() {
                         createClusivePrefsEditor();
                     }, 250);       
