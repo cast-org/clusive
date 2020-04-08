@@ -1,3 +1,4 @@
+
 function imgCheckPortrait($img) {
     'use strict';
 

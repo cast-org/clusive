@@ -105,7 +105,7 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                 else False
             bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
                 else False
-            self.extra_context = { 'pub_title' : book.title,
+            self.extra_context = { 'pub' : book,
                                    'prev_version' : bv_prev,
                                    'next_version' : bv_next,
                                    'last_position' : pdata.lastLocation or "null",
