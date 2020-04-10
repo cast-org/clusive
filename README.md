@@ -40,9 +40,9 @@ The web application is built in Python with [Django](https://www.djangoproject.c
 EPUB reading functions are based on [Readium 2](https://readium.org/development/readium-2-overview/),
 specifically the R2 web-reader [R2D2BC](https://github.com/d-i-t-a/R2D2BC).
 
-We use the [Figuration](http://figuration.org) front-end framework.
+We use the [Figuration](http://figuration.org) front-end framework in conjunction with the Infusion [Preferences Framework](https://build.fluidproject.org/infusion/demos/prefsFramework/).
 
-Word definitions are provided by [Wordnet](https://wordnet.princeton.edu/).
+Word definitions are provided by [WordNet](https://wordnet.princeton.edu/).
 
 ## License
 
