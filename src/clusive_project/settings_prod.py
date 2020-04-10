@@ -17,7 +17,6 @@ DEBUG = False
 ALLOWED_HOSTS = ['clusive.cast.org',
                  'clusive.qa.cast.org',
                  'cisl-demo.qa.cast.org',
-                 'host.docker.internal',
                  'localhost',
                  '127.0.0.1',
                  '10.*',
