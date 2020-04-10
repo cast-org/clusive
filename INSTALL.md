@@ -21,9 +21,10 @@ Clusive can be installed locally for development or for production use via Docke
   
 ### Clone the Clusive Repository
 
-Clone one of these to your local machine.  Note that there are currently no released versions.
+Clone the Clusive repository to your local machine and check out the appropriate branch. Note that there are currently no released versions.
 * [master branch](https://github.com/cast-org/clusive/) - the most stable version
-* [development branch](https://github.com/cast-org/clusive/tree/development) - the latest code changes 
+* [development branch](https://github.com/cast-org/clusive/tree/development) - the latest code changes
+ 
 
 ### Create/Activitate Virtual Environment
 Always activate and use the virtual environment to maintain an isolated environment.
@@ -94,6 +95,7 @@ made part of the application's static files:
 * Unpack EPUBs in the r2-shared-js directory
   * `npm run cli file.epub output-dir`
 * Copy unpacked EPUB directory in output-dir to `/shared/static/shared/pubs/short-name-for-new-pub`
+* Build and restart the application
 * In the Clusive Admin site, navigate to "Books" and click "Rescan Books"
 
 
