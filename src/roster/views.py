@@ -21,7 +21,7 @@ def guest_login(request):
 @staff_member_required
 def upload_csv(request):
     template = 'roster/upload_csv.html'
-    context = {'fields' : csvparser.FIELDS, }
+    context = {'fields' : csvparser.FIELDS, 'title': 'Bulk add users' }
 
     if request.method == "GET":
         # First render; just show the form.

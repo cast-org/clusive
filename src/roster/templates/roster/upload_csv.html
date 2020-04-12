@@ -1,4 +1,14 @@
 {% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:auth_user_changelist' %}">Users</a>
+    &rsaquo; {{ title }}
+</div>
+{% endblock %}
+
 {% block content %}
 
 <h2>Upload a list of users</h2>
@@ -98,4 +108,5 @@
     </form>
 {% endif %}
 
+<p><a href="{% url 'admin:auth_user_changelist' %}">&lt; Back to user listing</a></p>
 {% endblock %}
