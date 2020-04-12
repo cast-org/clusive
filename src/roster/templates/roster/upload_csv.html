@@ -1,0 +1,101 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<h2>Upload a list of users</h2>
+
+{% if messages %}
+    <h3>Status</h3>
+    {% if errors %}
+        <p>Errors found in file, fix and try again:</p>
+        <ul>
+            {% for e in errors %}
+                <li>{{e}}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% if dry_run %}
+            <p>Looks good!</p>
+        {% else %}
+            <p>Users created!</p>
+        {% endif %}
+    {% endif %}
+
+    <h3>Sites and periods affected:</h3>
+    <ul>
+        {% for site_name, site_info in sites.items %}
+            <li>
+                {{site_name}}: <strong>{{site_info.errors}}</strong>
+                <ul>
+                    {% for period_name, period_info in site_info.periods.items %}
+                        <li>{{ period_name }}: <strong>{{ period_info.errors }}</strong></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Users to create:</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Role</th>
+                <th>Site</th>
+                <th>Period</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Anon ID</th>
+                <th>Permission</th>
+                <th>Errors</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr class="{% cycle 'row1' 'row2' %}">
+                <td>{{user.role}}</td>
+                <td>{{user.site}}</td>
+                <td>{{user.period}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.password}}</td>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_name}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.anon_id}}</td>
+                <td>{{user.permission}}</td>
+                <td>
+                    {% for err in user.errors %}
+                      {{ err }}.
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+    <p>Uploaded file must be in CSV format, with one row per user to be created.</p>
+    <p>Columns that are recognized:</p>
+    <ul>
+        {% for key, val in fields.items %}
+            <dl>
+                <dt>{{key}} {% if val.required %}[required]{% endif %}</dt>
+                <dd>
+                    {% if val.alt %}(Header can also be: {{ val.alt | join:', '}}){% endif %}
+                    {{ val.doc }}
+                </dd>
+            </dl>
+        {% endfor %}
+    </ul>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="file1">Upload a CSV file:</label>
+        <input type="file" id="file1" name="file"><br />
+        <button class="button" type="submit" name="test" value="true">Test file</button>
+        <button class="button" type="submit" name="real" value="true">Create users</button>
+    </form>
+{% endif %}
+
+{% endblock %}
