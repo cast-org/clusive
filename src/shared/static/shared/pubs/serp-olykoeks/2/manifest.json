@@ -35,21 +35,5 @@
       "href": "OEBPS/images/file1.jpg",
       "type": "image/jpeg"
     }
-  ],
-  "toc": [
-    {
-      "href": "OEBPS/content.xhtml#header-1",
-      "title": "Lesson Overview"
-    },
-    {
-      "href": "OEBPS/content.xhtml#header-2",
-      "title": "Section 1: Olykoeks",
-      "children": [
-        {
-          "href": "OEBPS/content.xhtml#header-3",
-          "title": "by Sue Larson Pascoe"
-        }
-      ]
-    }
   ]
 }
