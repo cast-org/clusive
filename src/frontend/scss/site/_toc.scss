@@ -24,23 +24,31 @@
 }
 
 .nav-tabs-toc {
-    margin-bottom: calc(-.5rem - 1px);
-    border-color: var(--CT_tocModalHeaderBorderColor);
+    margin: .5rem 0 .25rem -.5rem;
 
     .nav-link {
-        color: var(-CT_linkColor);
+        padding: 0 .125rem;
+        margin: 0 .5rem;
+        color: var(--CT_tocTabColor);
+        text-decoration: none;
+        background-color: var(--CT_tocTabBg);
+        border-bottom: 4px solid var(--CT_tocTabBorderColor);
 
         @include hover-focus() {
-            color: var(--CT_linkHoverColor);
+            color: var(--CT_tocTabHoverColor);
+            text-decoration: underline;
+            background-color: var(--CT_tocTabHoverBg);
+            border-color: var(--CT_tocTabHoverBorderColor);
         }
     }
 
     .nav-link.active,
     .nav-item.open .nav-link {
         font-weight: $font-weight-bold;
-        background-color: var(--CT_popoverBg);
-        border-color: var(--CT_tocModalHeaderBorderColor);
-        border-bottom-color: transparent;
+        color: var(--CT_tocTabActiveColor);
+        text-decoration: none;
+        background-color: var(--CT_tocTabActiveBg);
+        border-color: var(--CT_tocTabActiveBorderColor);
     }
 }
 
