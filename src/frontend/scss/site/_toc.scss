@@ -1,4 +1,16 @@
 .toc-modal {
+    background-color: transparent !important;   // stylelint-disable-line declaration-no-important
+
+    .modal-content {
+        color: var(--CT_tocModalContentColor);
+        background-color: var(--CT_tocModalContentBg);
+        border-color: var(--CT_tocModalContentBorderColor);
+    }
+    .modal-header {
+        color: var(--CT_tocModalHeaderColor);
+        background-color: var(--CT_tocModalHeaderBg);
+        border-bottom: $setting-modal-header-border-width solid var(--CT_tocModalHeaderBorderColor);
+    }
     .modal-body {
         padding-bottom: 2rem;
         overflow-y: scroll;
@@ -7,7 +19,7 @@
 
 .nav-tabs-toc {
     margin-bottom: calc(-.5rem - 1px);
-    border-color: var(--CT_popoverHeaderBorderColor);
+    border-color: var(--CT_tocModalHeaderBorderColor);
 
     .nav-link {
         color: var(-CT_linkColor);
@@ -21,7 +33,7 @@
     .nav-item.open .nav-link {
         font-weight: $font-weight-bold;
         background-color: var(--CT_popoverBg);
-        border-color: var(--CT_popoverHeaderBorderColor);
+        border-color: var(--CT_tocModalHeaderBorderColor);
         border-bottom-color: transparent;
     }
 }
@@ -45,33 +57,42 @@
     margin-right: -.75rem;
     margin-left: -.75rem;
 
-    .nav .nav {
-        background-color: rgba(var(--CT_figureCaptionBgRGB), .4);
-    }
-
     .nav-item {
         position: relative;
     }
     .nav-link {
+        position: relative;
         padding: .25rem 1.75em .25rem 2.75rem;
+        color: var(--CT_tocLinkColor);
         text-decoration: none;
-        border-bottom: 1px solid var(--CT_popoverSectionBorderColor);
+        background-color: var(--CT_tocLinkBg);
+        border-bottom: 1px solid var(--CT_tocLinkBorderColor);
 
         @include hover-focus() {
+            color: var(--CT_tocLinkHoverColor);
             text-decoration: underline;
+            background-color: var(--CT_tocLinkHoverBg);
+            border-color: var(--CT_tocLinkHoverBorderColor);
         }
     }
 
     .has-children {
         position: absolute;
-        top: .125rem;
-        left: calc(100% - 1.75em);
+        top: 0;
+        right: 0;
         z-index: 1; // Bring above text link
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 1.5em;
-        height: calc(1.5em + .25rem);   // Height align with single-line of text
+        width: calc(1.5em + (.25rem * 2));
+        height: calc(1.5em + (.25rem * 2));  // Height align with single-line of text
+        color: var(--CT_tocCaretColor);
+        background-color: var(--CT_tocCaretBg);
+
+        @include hover-focus() {
+            color: var(--CT_tocCaretHoverColor);
+            background-color: var(--CT_tocCaretHoverBg);
+        }
 
         > [class*="icon-"] {
             @include font-size(1.25em);
@@ -86,6 +107,17 @@
             content: "\f107";
         }
     }
+
+    .active::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        display: block;
+        width: 4px;
+        content: "";
+        background-color: var(--CT_tocActiveBg);
+    }
 }
 
 .toc-depth-0 {
@@ -94,6 +126,12 @@
 
     &.nav-link {
         padding-left: .75rem;
+        color: var(--CT_tocLinkColorD0);
+        background-color: var(--CT_tocLinkBgD0);
+    }
+    &.has-children {
+        color: var(--CT_tocCaretColorD0);
+        background-color: var(--CT_tocCaretBgD0);
     }
 }
 .toc-depth-1 {
@@ -102,8 +140,25 @@
 
     &.nav-link {
         padding-left: 1.75rem;
+        color: var(--CT_tocLinkColorD1);
+        background-color: var(--CT_tocLinkBgD1);
+    }
+    &.has-children {
+        color: var(--CT_tocCaretColorD1);
+        background-color: var(--CT_tocCaretBgD1);
     }
 }
+.toc-depth-2 {
+    &.nav-link {
+        color: var(--CT_tocLinkColorD2);
+        background-color: var(--CT_tocLinkBgD2);
+    }
+    &.has-children {
+        color: var(--CT_tocCaretColorD2);
+        background-color: var(--CT_tocCaretBgD2);
+    }
+}
+
 
 .nav-toc-header {
     margin-bottom: .125rem;

@@ -116,21 +116,25 @@ var pub_version = "{{ version }}";
                 }
             }).then(instance => {
                 console.log("D2Reader loaded ", instance);
-                console.log("instance.bookmarkModule ", instance.bookmarkModule);   
+                console.log("instance.bookmarkModule ", instance.bookmarkModule);
                 // Create the preference editor when the Reader has loaded,
                 // after a short delay
                 // TODO: improve this sequencing
                 $(document).ready(function () {
                     build_table_of_contents();
                     $('#modalToc')
-                        .on('beforeShow.cfw.modal', function() { highlight_current_toc_item(); })
-                        .on('afterShow.cfw.modal', function() { scroll_to_current_toc_item() });
+                        .on('beforeShow.cfw.modal', function() {
+                            reset_current_toc_item(true);
+                            highlight_current_toc_item();
+                        })
+                        .on('afterShow.cfw.modal', function() {
+                            scroll_to_current_toc_item()
+                        });
                     setTimeout(function() {
                         createClusivePrefsEditor();
-                    }, 250);       
-                    
-                });            
-                
+                    }, 250);
+                });
+
             }).catch(error => {
                 console.error("error.message ", error.message);
             });
