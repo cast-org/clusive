@@ -1,6 +1,12 @@
 .toc-modal {
     background-color: transparent !important;   // stylelint-disable-line declaration-no-important
 
+    .modal-dialog {
+        @include media-breakpoint-up(#{$modal-breakpoint}) {
+            max-width: $toc-modal-dialoag-max-width;
+        }
+    }
+
     .modal-content {
         color: var(--CT_tocModalContentColor);
         background-color: var(--CT_tocModalContentBg);
