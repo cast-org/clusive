@@ -1,13 +1,60 @@
+// stylelint-disable declaration-no-important
+@mixin sample-theme($fg, $bg, $bc) {
+    color: #{$fg} !important;
+    background-color: #{$bg} !important;
+    border: 1px solid #{$bc} !important;
+}
+// stylelint-enable declaration-no-important
+
+.setting-brand {
+    display: inline-block;
+    color: var(--CT_btnSettingColor);
+    text-shadow: .0625em .0625em 0 rgba(var(--CT_btnSettingTextShadowColorRGB), var(--CT_btnSettingTextShadowOpacity));
+
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        position: relative;
+        top: -.03125em;
+    }
+}
+
 .setting-modal {
     background-color: transparent !important;   // stylelint-disable-line declaration-no-important
 
+    .setting-brand {
+        position: relative;
+        top: .125em;
+        margin-top: -.375rem;
+        margin-right: .125rem;
+        margin-left: -2.25rem;
+        @include font-size(2.5rem);
+        line-height: 1;
+        vertical-align: bottom;
+
+        &::before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: block;
+            width: 1.375rem;
+            height: 1.375rem;
+            content: "";
+            background-color: var(--CT_settingModalHeaderBg);
+            transform: translate(-50%, -50%);
+            //@include border-radius(100%);
+        }
+    }
+
     .modal-content {
+        overflow: visible;  // Hopefully does not break the 'magic' - needed for floating logo
+        color: var(--CT_settingModalContentColor);
         background-color: var(--CT_settingModalContentBg);
         border-color: var(--CT_settingModalContentBorderColor);
     }
     .modal-header {
+        flex-wrap: wrap;
         color: var(--CT_settingModalHeaderColor);
-        background-color: rgba(var(--CT_settingModalHeaderBgRGB), var(--CT_settingModalHeaderBgOpacity));
+        background-color: var(--CT_settingModalHeaderBg);
         border-bottom: $setting-modal-header-border-width solid var(--CT_settingModalHeaderBorderColor);
     }
     .modal-footer {
@@ -18,6 +65,38 @@
         padding: 0;
     }
 }
+
+.nav-tabs-setting {
+    flex-basis: 100%;
+    order: 1;
+    margin: .5rem 0 .25rem -.5rem;
+
+    .nav-link {
+        padding: 0 .125rem;
+        margin: 0 .5rem;
+        color: var(--CT_settingTabColor);
+        text-decoration: none;
+        background-color: var(--CT_settingTabBg);
+        border-bottom: 4px solid var(--CT_settingTabBorderColor);
+
+        @include hover-focus() {
+            color: var(--CT_settingTabHoverColor);
+            text-decoration: underline;
+            background-color: var(--CT_settingTabHoverBg);
+            border-color: var(--CT_settingTabHoverBorderColor);
+        }
+    }
+
+    .nav-link.active,
+    .nav-item.open .nav-link {
+        font-weight: $font-weight-bold;
+        color: var(--CT_settingTabActiveColor);
+        text-decoration: none;
+        background-color: var(--CT_settingTabActiveBg);
+        border-color: var(--CT_settingTabActiveBorderColor);
+    }
+}
+
 .setting {
     padding: $setting-padding;
 
@@ -70,5 +149,41 @@
 .option-color-theme {
     .btn {
         padding: 1rem 1.5rem;
+    }
+
+    .form-check {
+        display: inline-flex;
+    }
+    .form-checkradio {
+        position: relative;
+        padding-bottom: calc(#{$form-checkradio-size} + .375em);
+        padding-left: 0;
+
+        .form-check-input,
+        .form-check-label::before {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            float: none;
+            margin: 0;
+            transform: translateX(-50%);
+        }
+    }
+}
+
+.theme-sample {
+    display: inline-block;
+    padding: .5rem 1.25rem;
+    line-height: 1 !important; // stylelint-disable-line declaration-no-important
+    @include border-radius(.125rem);
+}
+
+@each $key, $value in $setting-theme-options {
+    $fg: map-get($value, "color");
+    $bg: map-get($value, "bg");
+    $bc: map-get($value, "border-color");
+
+    .theme-sample-#{$key} {
+        @include sample-theme($fg, $bg, $bc);
     }
 }

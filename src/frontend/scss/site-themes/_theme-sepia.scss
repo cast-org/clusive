@@ -176,12 +176,66 @@ $setting-title-color:                   #666;
 $setting-modal-content-bg:              #ebe3d5;
 $setting-modal-content-color:           #333;
 $setting-modal-content-border-color:    #636b82;
-$setting-modal-header-bg:               #d3cfc9;
-$setting-modal-header-bg-opacity:       .7;
+$setting-modal-header-bg:               #dad5cc; //rgba(#d3cfc9, .7);
 $setting-modal-header-color:            #333;
 $setting-modal-header-border-color:     #d3cfc9;
-$setting-modal-footer-bg:               transparent;
+$setting-modal-footer-bg:               #dad5cc; //rgba(#d3cfc9, .7);
 $setting-modal-footer-border-color:     #d3cfc9;
+
+// Settings tabs
+$setting-tab-bg:                        transparent;
+$setting-tab-color:                     #333;
+$setting-tab-border-color:              transparent;
+$setting-tab-hover-bg:                  #acfdf0;
+$setting-tab-hover-color:               #333;
+$setting-tab-hover-border-color:        transparent;
+$setting-tab-active-bg:                 transparent;
+$setting-tab-active-color:              #333;
+$setting-tab-active-border-color:       #ff554d;
+
+// TOC
+$toc-modal-content-bg:                  #faf4e8;
+$toc-modal-content-color:               #333;
+$toc-modal-content-border-color:        #636b82;
+$toc-modal-header-bg:                   #dad5cc; //rgba(#d3cfc9, .7);
+$toc-modal-header-color:                #333;
+$toc-modal-header-border-color:         #d3cfc9;
+
+// TOC tabs
+$toc-tab-bg:                            transparent;
+$toc-tab-color:                         #333;
+$toc-tab-border-color:                  transparent;
+$toc-tab-hover-bg:                      #acfdf0;
+$toc-tab-hover-color:                   #333;
+$toc-tab-hover-border-color:            transparent;
+$toc-tab-active-bg:                     transparent;
+$toc-tab-active-color:                  #333;
+$toc-tab-active-border-color:           #ff554d;
+
+// TOC menu
+$toc-active-bg:                         #ff554d;
+$toc-link-color:                        #333;
+$toc-link-bg:                           $figure-caption-bg;
+$toc-link-border-color:                 #d3cfc9;
+$toc-link-hover-color:                  $toc-link-color;
+$toc-link-hover-bg:                     #acfdf0;
+$toc-link-hover-border-color:           #d3cfc9;
+$toc-caret-color:                       $link-color;
+$toc-caret-bg:                          $toc-link-bg;
+$toc-caret-hover-color:                 $toc-link-hover-color;
+$toc-caret-hover-bg:                    $toc-link-hover-bg;
+$toc-nav-link-bg-d0:                    $toc-modal-content-bg;
+$toc-nav-link-color-d0:                 $toc-link-color;
+$toc-nav-caret-bg-d0:                   $toc-nav-link-bg-d0;
+$toc-nav-caret-color-d0:                $link-color;
+$toc-nav-link-bg-d1:                    color-get-opaque(rgba($figure-caption-bg, .4), $toc-modal-content-bg);
+$toc-nav-link-color-d1:                 $toc-link-color;
+$toc-nav-caret-bg-d1:                   $toc-nav-link-bg-d1;
+$toc-nav-caret-color-d1:                $link-color;
+$toc-nav-link-bg-d2:                    color-get-opaque(rgba($figure-caption-bg, .8), $toc-modal-content-bg);
+$toc-nav-link-color-d2:                 $toc-link-color;
+$toc-nav-caret-bg-d2:                   $toc-nav-link-bg-d2;
+$toc-nav-caret-color-d2:                $link-color;
 
 // Word rank
 $ranking-border-color:                  #d3cfc9;
