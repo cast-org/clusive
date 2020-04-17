@@ -1,3 +1,11 @@
+// stylelint-disable declaration-no-important
+@mixin sample-theme($fg, $bg, $bc) {
+    color: #{$fg} !important;
+    background-color: #{$bg} !important;
+    border: 1px solid #{$bc} !important;
+}
+// stylelint-enable declaration-no-important
+
 .setting-modal {
     background-color: transparent !important;   // stylelint-disable-line declaration-no-important
 
@@ -104,5 +112,41 @@
 .option-color-theme {
     .btn {
         padding: 1rem 1.5rem;
+    }
+
+    .form-check {
+        display: inline-flex;
+    }
+    .form-checkradio {
+        position: relative;
+        padding-bottom: calc(#{$form-checkradio-size} + .375em);
+        padding-left: 0;
+
+        .form-check-input,
+        .form-check-label::before {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            float: none;
+            margin: 0;
+            transform: translateX(-50%);
+        }
+    }
+}
+
+.theme-sample {
+    display: inline-block;
+    padding: .5rem 1.25rem;
+    line-height: 1 !important; // stylelint-disable-line declaration-no-important
+    @include border-radius(.125rem);
+}
+
+@each $key, $value in $setting-theme-options {
+    $fg: map-get($value, "color");
+    $bg: map-get($value, "bg");
+    $bc: map-get($value, "border-color");
+
+    .theme-sample-#{$key} {
+        @include sample-theme($fg, $bg, $bc);
     }
 }

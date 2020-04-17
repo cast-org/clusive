@@ -304,6 +304,27 @@ $setting-title-font-weight:             700;
 $setting-modal-header-border-width:     3px;
 $setting-modal-footer-border-width:     3px;
 
+$setting-theme-options: (
+    "default":
+    (
+        "bg": $white,
+        "color": #111,
+        "border-color": #636b82
+    ),
+    "night":
+    (
+        "bg": #000,
+        "color": #fefefe,
+        "border-color": #636b82
+    ),
+    "sepia":
+    (
+        "bg": #faf4e8,
+        "color": #121212,
+        "border-color": #363740
+    )
+);
+
 $ranking-margin-x:                      .375em;
 $ranking-margin-bottom:                 1.75em;
 $ranking-font-size:                     1.5rem;
