@@ -6,10 +6,47 @@
 }
 // stylelint-enable declaration-no-important
 
+.setting-brand {
+    display: inline-block;
+    color: var(--CT_btnSettingColor);
+    text-shadow: .0625em .0625em 0 rgba(var(--CT_btnSettingTextShadowColorRGB), var(--CT_btnSettingTextShadowOpacity));
+
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        position: relative;
+        top: -.03125em;
+    }
+}
+
 .setting-modal {
     background-color: transparent !important;   // stylelint-disable-line declaration-no-important
 
+    .setting-brand {
+        position: relative;
+        top: .125em;
+        margin-top: -.375rem;
+        margin-right: .125rem;
+        margin-left: -2.25rem;
+        @include font-size(2.5rem);
+        line-height: 1;
+        vertical-align: bottom;
+
+        &::before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: block;
+            width: 1.375rem;
+            height: 1.375rem;
+            content: "";
+            background-color: var(--CT_settingModalHeaderBg);
+            transform: translate(-50%, -50%);
+            //@include border-radius(100%);
+        }
+    }
+
     .modal-content {
+        overflow: visible;  // Hopefully does not break the 'magic' - needed for floating logo
         color: var(--CT_settingModalContentColor);
         background-color: var(--CT_settingModalContentBg);
         border-color: var(--CT_settingModalContentBorderColor);
