@@ -7,6 +7,7 @@
         border-color: var(--CT_settingModalContentBorderColor);
     }
     .modal-header {
+        flex-wrap: wrap;
         color: var(--CT_settingModalHeaderColor);
         background-color: var(--CT_settingModalHeaderBg);
         border-bottom: $setting-modal-header-border-width solid var(--CT_settingModalHeaderBorderColor);
@@ -19,6 +20,38 @@
         padding: 0;
     }
 }
+
+.nav-tabs-setting {
+    flex-basis: 100%;
+    order: 1;
+    margin: .5rem 0 .25rem -.5rem;
+
+    .nav-link {
+        padding: 0 .125rem;
+        margin: 0 .5rem;
+        color: var(--CT_settingTabColor);
+        text-decoration: none;
+        background-color: var(--CT_settingTabBg);
+        border-bottom: 4px solid var(--CT_settingTabBorderColor);
+
+        @include hover-focus() {
+            color: var(--CT_settingTabHoverColor);
+            text-decoration: underline;
+            background-color: var(--CT_settingTabHoverBg);
+            border-color: var(--CT_settingTabHoverBorderColor);
+        }
+    }
+
+    .nav-link.active,
+    .nav-item.open .nav-link {
+        font-weight: $font-weight-bold;
+        color: var(--CT_settingTabActiveColor);
+        text-decoration: none;
+        background-color: var(--CT_settingTabActiveBg);
+        border-color: var(--CT_settingTabActiveBorderColor);
+    }
+}
+
 .setting {
     padding: $setting-padding;
 
