@@ -94,7 +94,7 @@ function scroll_to_current_toc_item() {
     var elt =  $('#contents_list').find('a.active');
     console.log('Scrolling to ', elt);
     if (elt.length > 0) {
-        elt[0].scrollIntoView();
+        elt[elt.length - 1].scrollIntoView();
     }
 }
 
