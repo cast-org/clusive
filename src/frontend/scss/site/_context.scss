@@ -1,0 +1,14 @@
+.context-helper {
+    position: absolute;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, .2);
+}
+
+.context-menu {
+    display: none;
+    user-select: none;
+
+    &.in {
+        display: block;
+    }
+}
