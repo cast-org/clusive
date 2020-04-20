@@ -99,16 +99,7 @@ var pub_version = "{{ version }}";
                         var nRes = D2Reader.currentResource();
                         document.getElementById('prevResourceButton').disabled = (nRes===0);
                         document.getElementById('nextResourceButton').disabled = (nRes===D2Reader.totalResources()-1);
-                        return Promise.resolve();
-                        // The code below works, but is called too frequently (every time user scrolls)
-                        // Need to find an alternate method to send this info only when needed.
-                        // return $.post('/library/setlocation', { book: '{{ pub_id }}', locator: JSON.stringify(locator) })
-                        //     .done(function(data) {
-                        //         console.log("Set location API success!", data);
-                        //     })
-                        //     .fail(function(err) {
-                        //         console.log("Set location API failure!", err);
-                        //     });
+                        return trackReadingLocation('{{pub_id}}', locator);
                     },
                     updateUserSettings: function (userSettings) {
                         return Promise.resolve();

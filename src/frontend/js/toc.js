@@ -1,8 +1,9 @@
-/* global D2Reader */
-/* exported build_table_of_contents, reset_current_toc_item, highlight_current_toc_item, scroll_to_current_toc_item */
+/* global D2Reader, Promise */
+/* exported build_table_of_contents, reset_current_toc_item, highlight_current_toc_item, scroll_to_current_toc_item,
+    trackReadingLocation */
 
 /*
- * Functions dealing with the Table of Contents modal.
+ * Functions dealing with location tracking and the Table of Contents modal.
  */
 
 function table_of_contents_level(list, level, id) {
@@ -117,3 +118,79 @@ function build_table_of_contents() {
         });
     }
 }
+
+//
+// Location tracking functions
+//
+// Readium generates frequent callbacks - on every scroll or page.
+// We hold onto these in session storage, sending them to the server only once per minute.
+// If user navigates to a new page, any pending final location should also be sent to the server.
+//
+
+var LOC_UPDATE_INTERVAL = 60 * 1000; // Time between server calls - once per minute, in ms.
+var LOC_LOC_KEY = 'trackReadingLocationLoc'; // Stores recorded location that has not yet been transmitted, if any.
+var LOC_BOOK_KEY = 'trackReadingLocationBook'; // Publication that LOC_LOC_KEY refers to.
+var LOC_DATE_KEY = 'trackReadingLocationDate'; // Last time location was sent to server.
+
+// Push data to server.  Asynchronous - returns a Promise.
+function sendLocationToServer(book, locString) {
+    'use strict';
+
+    return $.post('/library/setlocation', {
+        book: book,
+        locator: locString
+    })
+        .fail(function(err) {
+            console.log('Set location API failure!', err);
+        });
+}
+
+function trackReadingLocation(book, locator) {
+    'use strict';
+
+    var store = window.sessionStorage;
+    if (store) {
+        // Put this location into session storage for eventual transmittal to server
+        var locString = JSON.stringify(locator);
+        store.setItem(LOC_BOOK_KEY, book);
+        store.setItem(LOC_LOC_KEY, locString);
+
+        var storedDate = store.getItem(LOC_DATE_KEY);
+        // Send to server if we haven't already sent one for this book, or last did so more than a minute ago
+        if (!storedDate || storedDate < Date.now() - LOC_UPDATE_INTERVAL) {
+            return sendLocationToServer(book, locString)
+                .done(function() {
+                    store.setItem(LOC_DATE_KEY, Date.now());
+                });
+        }
+    }
+    // eslint-disable-next-line compat/compat
+    return Promise.resolve();
+}
+
+// If there is a location update waiting in sessionStorage, send it to server.
+// Called at page load to capture final location if you left the reading page.
+function savePendingLocationUpdate() {
+    'use strict';
+
+    var store = window.sessionStorage;
+    if (store) {
+        var storedLoc = store.getItem(LOC_LOC_KEY);
+        var storedBook = store.getItem(LOC_BOOK_KEY);
+        if (storedLoc && storedBook) {
+            return sendLocationToServer(storedBook, storedLoc)
+                .done(function() {
+                    store.removeItem(LOC_LOC_KEY);
+                    store.removeItem(LOC_BOOK_KEY);
+                    store.removeItem(LOC_DATE_KEY);
+                });
+        }
+    }
+    return false;
+}
+
+$(document).ready(function() {
+    'use strict';
+
+    savePendingLocationUpdate();
+});
