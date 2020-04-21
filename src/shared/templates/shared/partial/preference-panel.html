@@ -29,7 +29,40 @@
     </div>
     <!-- END markup for Preference Editor -->
     <script>
-        var prefsEditor;            
+        var prefsEditor;         
+
+        fluid.contextAware.makeChecks({
+            "clusive.loggedInUser":  true
+        });
+
+        fluid.defaults("clusive.prefs.djangoStoreMapper", {
+            gradeNames: ["fluid.component", "fluid.resolveRoot"],
+            distributeOptions: {
+                record: {
+                    listeners: {
+                        "onCreate.announce": {
+                            "this": "console",
+                            "method": "log",
+                            "args": ["Global settings store created,", "{that}"]
+                        }
+                    },
+                    contextAwareness: {
+                        strategy: {
+                            checks: {
+                                clusiveLoggedInUser: {
+                                    contextValue: "{clusive.loggedInUser}",
+                                    gradeNames: "clusive.prefs.djangoStore"
+                                }
+                            }
+                        }
+                    }
+                },
+                target: "{/ fluid.prefs.globalSettingsStore}.options.components.settingsStore.options"
+            }
+        });
+
+        clusive.prefs.djangoStoreMapper();
+
         var createClusivePrefsEditor = function() {
             var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
             var buildGradeNames =  [
@@ -38,7 +71,7 @@
                             ]                
 
             return fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
-                        build: {                        
+                        build: {                                                
                             gradeNames: buildGradeNames,
                             auxiliarySchema: {
                                 "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
@@ -50,10 +83,21 @@
                             },
                         },
                         prefsEditor: {   
-                            components: {                         
+                            components: {      
                                 prefsEditorLoader: {
-                                    options: {
-                                        components: {                                        
+                                    options: {                                      
+                                        components: {   
+                                            prefsEditor: {
+                                                options: {
+                                                    listeners: {
+                                                        "onCreate.announce": {
+                                                            "this": "console",
+                                                            "method": "log",
+                                                            "args": ["Prefs editor created,", "{that}"]
+                                                        }
+                                                    },
+                                                }
+                                            },                                     
                                             readerPrefs: {
                                                 type: "cisl.prefs.readerPreferencesBridge",
                                                 createOnEvent: "{prefsEditorLoader}.events.onReady",
