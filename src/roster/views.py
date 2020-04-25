@@ -25,3 +25,8 @@ def get_preferences(request):
     user = ClusiveUser.from_request(request)
     prefs = user.get_preferences()
     return JsonResponse({p.pref:p.value for p in prefs})
+
+def reset_preferences(request):
+    user = ClusiveUser.from_request(request)    
+    user.delete_preferences()
+    return JsonResponse({'success': 1})

@@ -50,15 +50,22 @@
     }
 
     clusive.prefs.djangoStore.setUserPreferences = function (model, directModel) {
-        // console.log("clusive.prefs.djangoStore.setUserPreferences", directModel, model);
-        // console.log(arguments);
+        console.log("clusive.prefs.djangoStore.setUserPreferences", directModel, model);
+        console.log(arguments);
 
-        fluid.each(fluid.get(model, "preferences"), function (prefVal, prefKey) {
-            var setURL = fluid.stringTemplate("/account/pref/%prefKey/%prefVal", {prefKey: prefKey, prefVal: prefVal});
-            $.get(setURL, function (data) {
-                console.log(setURL, data);
-            })
-        });
+        if($.isEmptyObject(model)) {
+            var resetURL = "/account/prefs/reset";
+            $.get(resetURL, function (data) {
+                console.log(resetURL, data);
+            });
+        } else {
+            fluid.each(fluid.get(model, "preferences"), function (prefVal, prefKey) {
+                var setURL = fluid.stringTemplate("/account/pref/%prefKey/%prefVal", {prefKey: prefKey, prefVal: prefVal});
+                $.get(setURL, function (data) {
+                    console.log(setURL, data);
+                })
+            });
+        }
     }
 
     // This removes the tableOfContents and

@@ -10,4 +10,5 @@ urlpatterns = [
 
     path('prefs', views.get_preferences, name='get_prefs'),
     path('pref/<pref>/<value>', views.set_preference, name='set_pref'),
+    path('prefs/reset', views.reset_preferences, name='reset_prefs'),
 ]

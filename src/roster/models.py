@@ -107,6 +107,11 @@ class ClusiveUser(models.Model):
     def get_preferences(self):
         return Preference.objects.filter(user=self)
 
+    def delete_preferences(self):
+        prefs = Preference.objects.filter(user=self)
+        print("deleting preferences", prefs.delete());
+        return prefs.delete()
+
     guest_serial_number = 0
 
     @classmethod
