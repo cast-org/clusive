@@ -26,6 +26,7 @@ def get_preferences(request):
     prefs = user.get_preferences()
     return JsonResponse({p.pref:p.value for p in prefs})
 
+# TODO: how does a preference reset get logged?
 def reset_preferences(request):
     user = ClusiveUser.from_request(request)    
     user.delete_preferences()

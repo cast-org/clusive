@@ -5,6 +5,11 @@
 
     fluid.defaults("clusive.prefs.djangoStore", {
         gradeNames: ["fluid.dataSource"],
+        storeConfig: {
+            getURL: "/account/prefs",
+            setURL: "/account/pref/%prefKey/%prefVal",
+            resetURL: "/account/prefs/reset"
+        },
         components: {
             encoding: {
                 type: "fluid.dataSource.encoding.none"
@@ -15,6 +20,11 @@
                 listener: "clusive.prefs.djangoStore.getUserPreferences",
                 args: ["{arguments}.1"]
             }
+        },
+        invokers: {
+            get: {
+                args: ["{that}", "{arguments}.0", "{that}.options.storeConfig"]
+            }
         }
     });
 
@@ -24,6 +34,11 @@
             "onWrite.impl": {
                 listener: "clusive.prefs.djangoStore.setUserPreferences"
             }
+        },
+        invokers: {
+            set: {
+                args: ["{that}", "{arguments}.0", "{arguments}.1", "{that}.options.storeConfig"]
+            }
         }
     });
 
@@ -32,7 +47,7 @@
     clusive.prefs.djangoStore.getUserPreferences = function (directModel) {
         console.log("clusive.prefs.djangoStore.getUserPreferences", directModel);
         
-        var getURL = "/account/prefs";
+        var getURL = directModel.getURL;        
 
         var djangoStorePromise = fluid.promise();        
 
@@ -54,13 +69,13 @@
         console.log(arguments);
 
         if($.isEmptyObject(model)) {
-            var resetURL = "/account/prefs/reset";
+            var resetURL = directModel.resetURL;
             $.get(resetURL, function (data) {
                 console.log(resetURL, data);
             });
         } else {
             fluid.each(fluid.get(model, "preferences"), function (prefVal, prefKey) {
-                var setURL = fluid.stringTemplate("/account/pref/%prefKey/%prefVal", {prefKey: prefKey, prefVal: prefVal});
+                var setURL = fluid.stringTemplate(directModel.setURL, {prefKey: prefKey, prefVal: prefVal});
                 $.get(setURL, function (data) {
                     console.log(setURL, data);
                 })
