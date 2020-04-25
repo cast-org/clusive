@@ -31,10 +31,6 @@
     <script>
         var prefsEditor;         
 
-        fluid.contextAware.makeChecks({
-            "clusive.loggedInUser":  true
-        });
-
         fluid.defaults("clusive.prefs.djangoStoreMapper", {
             gradeNames: ["fluid.component", "fluid.resolveRoot"],
             distributeOptions: {
