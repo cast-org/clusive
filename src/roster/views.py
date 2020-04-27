@@ -24,9 +24,11 @@ def guest_login(request):
 def set_preference(request, pref, value):
     user = ClusiveUser.from_request(request)
     preference = user.get_preference(pref)
-    preference.value = value
-    preference.save()
-    preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)
+    # Don't re-save again if the set preference value is the same as the request value
+    if(preference.value != value):
+        preference.value = value
+        preference.save()
+        preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)
     return JsonResponse({'success' : 1})
 
 
@@ -40,6 +42,7 @@ def reset_preferences(request):
     user = ClusiveUser.from_request(request)    
     user.delete_preferences()
     return JsonResponse({'success': 1})
+
 @staff_member_required
 def upload_csv(request):
     template = 'roster/upload_csv.html'

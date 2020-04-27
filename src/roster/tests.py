@@ -211,6 +211,8 @@ class ClusiveUserTestCase(TestCase):
         with catch_signal(preference_changed) as handler:
             response = self.client.get('/account/pref/foo/bar')
             self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
+            response = self.client.get('/account/pref/foo/bar')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to same value did not return expected response')
             response = self.client.get('/account/prefs')
             self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
             response = self.client.get('/account/prefs/reset')
