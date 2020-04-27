@@ -74,11 +74,22 @@
                 console.log(resetURL, data);
             });
         } else {
-            fluid.each(fluid.get(model, "preferences"), function (prefVal, prefKey) {
-                var setURL = fluid.stringTemplate(directModel.setURL, {prefKey: prefKey, prefVal: prefVal});
-                $.get(setURL, function (data) {
-                    console.log(setURL, data);
-                })
+            var getURL = directModel.getURL;
+
+            $.get(getURL, function (currentPrefs) {
+                fluid.each(fluid.get(model, "preferences"), function (prefVal, prefKey) {
+                    
+                    // Implicit conversion of numbers as strings to compare with numbers
+                    if(currentPrefs[prefKey] != prefVal) {
+                        var setURL = fluid.stringTemplate(directModel.setURL, {prefKey: prefKey, prefVal: prefVal});
+                        $.get(setURL, function (data) {
+                            console.log(setURL, data);
+                        })
+                    } else {
+                        var message = fluid.stringTemplate("%prefKey already stored at value '%prefVal', not making save request", {prefVal: prefVal, prefKey:prefKey});                        
+                        console.log(message);
+                    }
+                });
             });
         }
     }
