@@ -12,11 +12,11 @@ var pub_version = "{{ version }}";
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
 {% endblock %}
 
-{% block title %}{{ pub_title }} | Clusive{% endblock %}
+{% block title %}{{ pub.title }} | Clusive{% endblock %}
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
-{% include "shared/partial/sidebar_start.html" with index_reader=True nav=False why=True %}
+{% include "shared/partial/sidebar_start.html" with index_reader=True nav=True why=True %}
 {% endblock %}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
@@ -27,7 +27,7 @@ var pub_version = "{{ version }}";
 <div id="D2Reader-Container" style="position: relative;">
     <main style="overflow: hidden" tabindex=-1 id="iframe-wrapper">
         <span id="content" tabindex="-1"></span>
-        <h1 class="sr-only">Reading: {{ pub_title }}</h1>
+        <h1 class="sr-only">Reading: {{ pub.title }}</h1>
 
         <div id="reader-loading" class="loading"></div>
         <div id="reader-error" class="error"></div>
@@ -95,16 +95,11 @@ var pub_version = "{{ version }}";
                         return Promise.resolve();
                     },
                     updateCurrentlocation: function (locator) {
-                        return Promise.resolve();
-                        // The code below works, but is called too frequently (every time user scrolls)
-                        // Need to find an alternate method to send this info only when needed.
-                        // return $.post('/library/setlocation', { book: '{{ pub_id }}', locator: JSON.stringify(locator) })
-                        //     .done(function(data) {
-                        //         console.log("Set location API success!", data);
-                        //     })
-                        //     .fail(function(err) {
-                        //         console.log("Set location API failure!", err);
-                        //     });
+                        // Grey out navigation buttons when necessary.
+                        var nRes = D2Reader.currentResource();
+                        document.getElementById('prevResourceButton').disabled = (nRes===0);
+                        document.getElementById('nextResourceButton').disabled = (nRes===D2Reader.totalResources()-1);
+                        return trackReadingLocation('{{pub_id}}', locator);
                     },
                     updateUserSettings: function (userSettings) {
                         return Promise.resolve();
@@ -112,17 +107,25 @@ var pub_version = "{{ version }}";
                 }
             }).then(instance => {
                 console.log("D2Reader loaded ", instance);
-                console.log("instance.bookmarkModule ", instance.bookmarkModule);   
+                console.log("instance.bookmarkModule ", instance.bookmarkModule);
                 // Create the preference editor when the Reader has loaded,
                 // after a short delay
                 // TODO: improve this sequencing
-                $(document).ready(function () {     
+                $(document).ready(function () {
+                    build_table_of_contents();
+                    $('#modalToc')
+                        .on('beforeShow.cfw.modal', function() {
+                            reset_current_toc_item(true);
+                            highlight_current_toc_item();
+                        })
+                        .on('afterShow.cfw.modal', function() {
+                            scroll_to_current_toc_item()
+                        });
                     setTimeout(function() {
                         createClusivePrefsEditor();
-                    }, 250);       
-                    
-                });            
-                
+                    }, 250);
+                });
+
             }).catch(error => {
                 console.error("error.message ", error.message);
             });
@@ -132,4 +135,5 @@ var pub_version = "{{ version }}";
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     -->
 </div>
+{% include "shared/partial/modal_toc.html" %}
 {% endblock %}

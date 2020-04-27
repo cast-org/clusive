@@ -13,6 +13,7 @@ for tz in available_timezones:
     tz_friendly = tz.replace("_", " ")
     available_timezones_friendly.append(tz_friendly)
 
+
 class Site(models.Model):
     name = models.CharField(max_length=100)
     anon_id = models.CharField(max_length=30, unique=True, null=True)
@@ -36,6 +37,7 @@ class Period(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
 
+
 class Roles:
     GUEST = 'GU'
     STUDENT = 'ST'
@@ -53,6 +55,25 @@ class Roles:
         (ADMIN, 'Admin')
     ]
 
+
+class ResearchPermissions:
+    PERMISSIONED = 'PE'
+    PENDING = 'PD'
+    DECLINED = 'DC'
+    WITHDREW = 'WD'
+    TEST_ACCOUNT = 'TA'
+    GUEST = 'GU'
+
+    CHOICES = [
+        (PERMISSIONED, 'Permissioned'),
+        (PENDING, 'Pending'),
+        (DECLINED, 'Declined'),
+        (WITHDREW, 'Withdrew'),
+        (TEST_ACCOUNT, 'Test Account'),
+        (GUEST, 'Guest Account')
+    ]
+
+
 class ClusiveUser(models.Model):
     
     # Django standard user class contains the following fields already
@@ -67,26 +88,9 @@ class ClusiveUser(models.Model):
 
     periods = models.ManyToManyField(Period, blank=True)
 
-    class ResearchPermissions:
-        PERMISSIONED = 'PE'
-        PENDING = 'PD'
-        DECLINED = 'DC'
-        WITHDREW = 'WD'
-        TEST_ACCOUNT = 'TA'
-        GUEST = 'GU'
-
-        CHOICES = [
-            (PERMISSIONED, 'Permissioned'),
-            (PENDING, 'Pending'),
-            (DECLINED, 'Declined'),
-            (WITHDREW, 'Withdrew'),
-            (TEST_ACCOUNT, 'Test Account'),
-            (GUEST, 'Guest Account')
-        ]
-
     @property 
     def is_permissioned(self):
-        return self.permission == ClusiveUser.ResearchPermissions.PERMISSIONED
+        return self.permission == ResearchPermissions.PERMISSIONED
 
     permission = models.CharField(
         max_length=2,
@@ -127,6 +131,57 @@ class ClusiveUser(models.Model):
         return 'guest%d' % (cls.guest_serial_number)
 
     @classmethod
+    def add_defaults(cls, properties):
+        """Add default values to a partially-specified ClusiveUser properties dict.
+
+        """
+        if not properties.get('role'):
+            properties['role'] = Roles.STUDENT
+        if not properties.get('password'):
+            properties['password'] = User.objects.make_random_password()
+        if not properties.get('anon_id'):
+            properties['anon_id'] = properties['username']
+        if not properties.get('permission'):
+            properties['permission'] = ResearchPermissions.TEST_ACCOUNT
+        return properties
+
+    @classmethod
+    def check_uniqueness_errors(cls, properties):
+        """Check if a user with the given properties could be created.
+
+        Properties must be a dict with fields like those of a ClusiveUser.
+        The username and anon_id fields will be checked for uniqueness.
+        In the future other sanity checks may also be performed.
+
+        Returns an error message as a string, or None if everything looks ok.
+        """
+        username = properties.get('username')
+        anon_id = properties.get('anon_id')
+        if username and User.objects.filter(username=username).exists():
+            return "Username already exists"
+        if anon_id and ClusiveUser.objects.filter(anon_id=anon_id).exists():
+            return "Anon_id already exists"
+        return None
+
+    @classmethod
+    def create_from_properties(cls, props):
+        period = Period.objects.get(site__name=props.get('site'), name=props.get('period'))
+        django_user = User.objects.create_user(username=props.get('username'),
+                                               first_name=props.get('first_name'),
+                                               last_name=props.get('last_name'),
+                                               password=props.get('password'),
+                                               email=props.get('email'))
+        clusive_user = ClusiveUser.objects.create(user=django_user,
+                                                  role=props.get('role'),
+                                                  permission=props.get('permission'),
+                                                  anon_id=props.get('anon_id'))
+        p = props.get('period')
+        if p:
+            clusive_user.periods.set([period])
+        clusive_user.save()
+        return clusive_user
+
+    @classmethod
     def make_guest(cls):
         username = cls.next_guest_username()
         while User.objects.filter(username=username).exists():
@@ -137,7 +192,7 @@ class ClusiveUser(models.Model):
                                                last_name=str(cls.guest_serial_number))
         clusive_user = ClusiveUser.objects.create(user=django_user,
                                                   role=Roles.GUEST,
-                                                  permission=cls.ResearchPermissions.GUEST,
+                                                  permission=ResearchPermissions.GUEST,
                                                   anon_id=username)
         return clusive_user
 

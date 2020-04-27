@@ -47,6 +47,7 @@
         --CT_cardLoginColor: #{$card-login-color};
         --CT_cardLoginForgotBorderColor: #{$card-login-forgot-border-color};
 
+        --CT_figureCaptionBgRGB: #{red($figure-caption-bg), green($figure-caption-bg), blue($figure-caption-bg)};
         --CT_figureCaptionBg: #{$figure-caption-bg};
         --CT_figureCaptionColor: #{$figure-caption-color};
 
@@ -151,12 +152,62 @@
         --CT_settingModalContentColor: #{$setting-modal-content-color};
         --CT_settingModalContentBorderColor: #{$setting-modal-content-border-color};
         --CT_settingModalHeaderBg: #{$setting-modal-header-bg};
-        --CT_settingModalHeaderBgRGB: #{red($setting-modal-header-bg), green($setting-modal-header-bg), blue($setting-modal-header-bg)};
-        --CT_settingModalHeaderBgOpacity: #{$setting-modal-header-bg-opacity};
         --CT_settingModalHeaderColor: #{$setting-modal-header-color};
         --CT_settingModalHeaderBorderColor: #{$setting-modal-header-border-color};
         --CT_settingModalFooterBg: #{$setting-modal-footer-bg};
         --CT_settingModalFooterBorderColor: #{$setting-modal-footer-border-color};
+
+        --CT_settingTabBg: #{$toc-tab-bg};
+        --CT_settingTabColor: #{$toc-tab-color};
+        --CT_settingTabBorderColor: #{$toc-tab-border-color};
+        --CT_settingTabHoverBg: #{$toc-tab-hover-bg};
+        --CT_settingTabHoverColor: #{$toc-tab-hover-color};
+        --CT_settingTabHoverBorderColor: #{$toc-tab-hover-border-color};
+        --CT_settingTabActiveBg: #{$toc-tab-active-bg};
+        --CT_settingTabActiveColor: #{$toc-tab-active-color};
+        --CT_settingTabActiveBorderColor: #{$toc-tab-active-border-color};
+
+        --CT_tocModalContentBg: #{$toc-modal-content-bg};
+        --CT_tocModalContentColor: #{$toc-modal-content-color};
+        --CT_tocModalContentBorderColor: #{$toc-modal-content-border-color};
+        --CT_tocModalHeaderBg: #{$toc-modal-header-bg};
+        --CT_tocModalHeaderColor: #{$toc-modal-header-color};
+        --CT_tocModalHeaderBorderColor: #{$toc-modal-header-border-color};
+
+        --CT_tocTabBg: #{$toc-tab-bg};
+        --CT_tocTabColor: #{$toc-tab-color};
+        --CT_tocTabBorderColor: #{$toc-tab-border-color};
+        --CT_tocTabHoverBg: #{$toc-tab-hover-bg};
+        --CT_tocTabHoverColor: #{$toc-tab-hover-color};
+        --CT_tocTabHoverBorderColor: #{$toc-tab-hover-border-color};
+        --CT_tocTabActiveBg: #{$toc-tab-active-bg};
+        --CT_tocTabActiveColor: #{$toc-tab-active-color};
+        --CT_tocTabActiveBorderColor: #{$toc-tab-active-border-color};
+
+        --CT_tocActiveBg: #{$toc-active-bg};
+        --CT_tocLinkColor: #{$toc-link-color};
+        --CT_tocLinkBg: #{$toc-link-bg};
+        --CT_tocLinkBorderColor: #{$toc-link-border-color};
+        --CT_tocLinkHoverColor: #{$toc-link-hover-color};
+        --CT_tocLinkHoverBg: #{$toc-link-hover-bg};
+        --CT_tocLinkHoverBorderColor: #{$toc-link-hover-border-color};
+        --CT_tocCaretColor: #{$toc-caret-color};
+        --CT_tocCaretBg: #{$toc-caret-bg};
+        --CT_tocCaretHoverColor: #{$toc-caret-hover-color};
+        --CT_tocCaretHoverBg: #{$toc-caret-hover-bg};
+
+        --CT_tocLinkBgD0: #{$toc-nav-link-bg-d0};
+        --CT_tocLinkColorD0: #{$toc-nav-link-color-d0};
+        --CT_tocCaretBgD0: #{$toc-nav-caret-bg-d0};
+        --CT_tocCaretColorD0: #{$toc-nav-caret-color-d0};
+        --CT_tocLinkBgD1: #{$toc-nav-link-bg-d1};
+        --CT_tocLinkColorD1: #{$toc-nav-link-color-d1};
+        --CT_tocCaretBgD1: #{$toc-nav-caret-bg-d1};
+        --CT_tocCaretColorD1: #{$toc-nav-caret-color-d1};
+        --CT_tocLinkBgD2: #{$toc-nav-link-bg-d2};
+        --CT_tocLinkColorD2: #{$toc-nav-link-color-d2};
+        --CT_tocCaretBgD2: #{$toc-nav-caret-bg-d2};
+        --CT_tocCaretColorD2: #{$toc-nav-caret-color-d2};
 
         --CT_goalModalTitleColor: #{$goal-modal-title-color};
         --CT_goalModalSubtitleColor: #{$goal-modal-subtitle-color};

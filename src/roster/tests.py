@@ -7,10 +7,13 @@ from django.contrib.auth.models import User
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from .models import Site, Period, ClusiveUser, Roles, Preference
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.test import Client
+from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+
+from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
+
 
 # TODO: make sure all tests have helpful messages
 
@@ -153,7 +156,7 @@ class ClusiveUserTestCase(TestCase):
         new_clusive_user = ClusiveUser.objects.create(user=new_user)
 
         self.assertEqual(new_clusive_user.anon_id, None)
-        self.assertEqual(new_clusive_user.permission, ClusiveUser.ResearchPermissions.TEST_ACCOUNT)
+        self.assertEqual(new_clusive_user.permission, ResearchPermissions.TEST_ACCOUNT)
         self.assertEqual(new_clusive_user.role, Roles.GUEST)
 
     def test_manual_anon_id(self):
@@ -188,15 +191,15 @@ class ClusiveUserTestCase(TestCase):
         clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
         clusive_user_2 = ClusiveUser.objects.get(anon_id="Student2")
 
-        clusive_user_1.permission = ClusiveUser.ResearchPermissions.PERMISSIONED
+        clusive_user_1.permission = ResearchPermissions.PERMISSIONED
 
         self.assertTrue(clusive_user_1.is_permissioned)        
         
         nonpermissioned_states = [
-            ClusiveUser.ResearchPermissions.TEST_ACCOUNT,
-            ClusiveUser.ResearchPermissions.PENDING,
-            ClusiveUser.ResearchPermissions.WITHDREW,
-            ClusiveUser.ResearchPermissions.DECLINED
+            ResearchPermissions.TEST_ACCOUNT,
+            ResearchPermissions.PENDING,
+            ResearchPermissions.WITHDREW,
+            ResearchPermissions.DECLINED
         ]
 
         for state in nonpermissioned_states:
@@ -210,6 +213,10 @@ class ClusiveUserTestCase(TestCase):
             self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
             response = self.client.get('/account/prefs')
             self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
+            response = self.client.get('/account/prefs/reset')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Resetting prefs did not return expected response')
+            response = self.client.get('/account/prefs')
+            self.assertJSONEqual(response.content, {}, 'Fetching prefs after reset did not return empty response')
         handler.assert_called_once()
         handler.calls.kwargs.preference.pref='foo'
         handler.calls.kwargs.preference.value='bar'
