@@ -86,6 +86,10 @@ made part of the application's static files:
 * Copy the directory in output-dir to `clusive/shared/static/shared/pubs/short-name-for-new-pub`
 * Log in as a superuser, and in the "Books" page of the admin site, click "Rescan books".
 
+### Local Development
+
+* `grunt watch:devRebuild` can be used to watch the `src` directory and run the build to `target` again on changes, reducing the need to manually run the build while working locally
+
 ## Running under Docker
 
 Build:
