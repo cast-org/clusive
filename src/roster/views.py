@@ -4,8 +4,11 @@ import logging
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+from eventlog.signals import preference_changed
+from roster.models import ClusiveUser
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.models import ClusiveUser, Site, Period
@@ -17,6 +20,28 @@ def guest_login(request):
     login(request, clusive_user.user)
     return redirect('reader_index')
 
+
+def set_preference(request, pref, value):
+    user = ClusiveUser.from_request(request)
+    preference = user.get_preference(pref)
+    # Don't re-save again if the set preference value is the same as the request value
+    if(preference.value != value):
+        preference.value = value
+        preference.save()
+        preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)
+    return JsonResponse({'success' : 1})
+
+
+def get_preferences(request):
+    user = ClusiveUser.from_request(request)
+    prefs = user.get_preferences()
+    return JsonResponse({p.pref:p.value for p in prefs})
+
+# TODO: how does a preference reset get logged?
+def reset_preferences(request):
+    user = ClusiveUser.from_request(request)    
+    user.delete_preferences()
+    return JsonResponse({'success': 1})
 
 @staff_member_required
 def upload_csv(request):

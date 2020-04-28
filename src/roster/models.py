@@ -104,7 +104,26 @@ class ClusiveUser(models.Model):
         default=Roles.GUEST
     )    
 
+    def get_preference(self, pref):
+        pref, created = Preference.objects.get_or_create(user=self, pref=pref)
+        return pref
+
+    def get_preferences(self):
+        return Preference.objects.filter(user=self)
+
+    def delete_preferences(self):
+        prefs = Preference.objects.filter(user=self)
+        print("deleting preferences", prefs.delete());
+        return prefs.delete()
+
     guest_serial_number = 0
+
+    @classmethod
+    def from_request(cls, request):
+        try:
+            return ClusiveUser.objects.get(user=request.user)
+        except ClusiveUser.DoesNotExist:
+            logger.error("Expected ClusiveUser, got %s", request.user)
 
     @classmethod
     def next_guest_username(cls):
@@ -179,3 +198,16 @@ class ClusiveUser(models.Model):
 
     def __str__(self):
         return '%s' % (self.anon_id)
+
+
+class Preference (models.Model):
+    """Store a single user preference setting."""
+
+    user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+
+    pref = models.CharField(max_length=32, db_index=True)
+
+    value = models.CharField(max_length=32, null=True)
+
+    def __str__(self):
+        return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)

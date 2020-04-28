@@ -17,4 +17,12 @@ var DJANGO_STATIC_ROOT = "{% static '' %}"
 <script src="{% static 'shared/js/toc.js' %}"></script>
 <script src="{% static 'shared/js/tts.js' %}"></script>
 <script src="{% static 'shared/js/why.js' %}"></script>
+
+{% if not user.is_anonymous %}
+<script>
+        fluid.contextAware.makeChecks({
+            "clusive.loggedInUser":  true
+        });
+</script>        
+{% endif %}
 <script src="{% static 'shared/js/context.js' %}"></script>

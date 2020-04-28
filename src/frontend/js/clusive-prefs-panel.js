@@ -3,6 +3,97 @@
 (function(fluid) {
     'use strict';
 
+    fluid.defaults("clusive.prefs.djangoStore", {
+        gradeNames: ["fluid.dataSource"],
+        storeConfig: {
+            getURL: "/account/prefs",
+            setURL: "/account/pref/%prefKey/%prefVal",
+            resetURL: "/account/prefs/reset"
+        },
+        components: {
+            encoding: {
+                type: "fluid.dataSource.encoding.none"
+            }
+        },
+        listeners: {
+            "onRead.impl": {
+                listener: "clusive.prefs.djangoStore.getUserPreferences",
+                args: ["{arguments}.1"]
+            }
+        },
+        invokers: {
+            get: {
+                args: ["{that}", "{arguments}.0", "{that}.options.storeConfig"]
+            }
+        }
+    });
+
+    fluid.defaults("clusive.prefs.djangoStore.writable", {
+        gradeNames: ["fluid.dataSource.writable"],
+        listeners: {
+            "onWrite.impl": {
+                listener: "clusive.prefs.djangoStore.setUserPreferences"
+            }
+        },
+        invokers: {
+            set: {
+                args: ["{that}", "{arguments}.0", "{arguments}.1", "{that}.options.storeConfig"]
+            }
+        }
+    });
+
+    fluid.makeGradeLinkage("clusive.prefs.djangoStore.linkage", ["fluid.dataSource.writable", "clusive.prefs.djangoStore"], "clusive.prefs.djangoStore.writable");
+
+    clusive.prefs.djangoStore.getUserPreferences = function (directModel) {
+        console.log("clusive.prefs.djangoStore.getUserPreferences", directModel);
+        
+        var getURL = directModel.getURL;        
+
+        var djangoStorePromise = fluid.promise();        
+
+        $.get(getURL, function(data) {
+            console.log(getURL);
+            console.log(data);
+            djangoStorePromise.resolve({preferences: data});
+        }).fail(function(error) {
+            console.log("an error occured", error);
+            djangoStorePromise.reject("error");
+        })
+
+        return djangoStorePromise;
+
+    }
+
+    clusive.prefs.djangoStore.setUserPreferences = function (model, directModel) {
+        console.log("clusive.prefs.djangoStore.setUserPreferences", directModel, model);
+        console.log(arguments);
+
+        if($.isEmptyObject(model)) {
+            var resetURL = directModel.resetURL;
+            $.get(resetURL, function (data) {
+                console.log(resetURL, data);
+            });
+        } else {
+            var getURL = directModel.getURL;
+
+            $.get(getURL, function (currentPrefs) {
+                fluid.each(fluid.get(model, "preferences"), function (prefVal, prefKey) {
+                    
+                    // Implicit conversion of numbers as strings to compare with numbers
+                    if(currentPrefs[prefKey] != prefVal) {
+                        var setURL = fluid.stringTemplate(directModel.setURL, {prefKey: prefKey, prefVal: prefVal});
+                        $.get(setURL, function (data) {
+                            console.log(setURL, data);
+                        })
+                    } else {
+                        var message = fluid.stringTemplate("%prefKey already stored at value '%prefVal', not making save request", {prefVal: prefVal, prefKey:prefKey});                        
+                        console.log(message);
+                    }
+                });
+            });
+        }
+    }
+
     // This removes the tableOfContents and
     // enhanceInputs preferences from the
     // default Infusion starter auxiliary schema
@@ -126,6 +217,42 @@
         }
     });
 
+    cisl.prefs.getSettings = function (that, isLoggedIn) {
+        console.log("calling CISL prefs Editor fetch impl");
+        console.log("isLoggedIn", isLoggedIn);        
+        
+        // If logged in retrieve from store
+        // var prefGetURL = "/account/prefs";
+        // $.get(prefGetURL, function (data) {
+        //     console.log(prefGetURL, data);
+        // });
+
+        var isLoggedIn = false;
+        if(! isLoggedIn) {
+            console.log("Not logged in, using local cookie for fetch method");
+            return that.getSettings();
+        }        
+    };
+
+    cisl.prefs.setSettings = function (model, directModel, set) {
+        console.log("calling CISL prefs Editor setSettings");        
+        
+        // // If logged In
+        // fluid.each(fluid.get(modelToSave, "preferences"), function (prefVal, prefKey) {
+        //     console.log(prefKey, prefVal);
+        //     var prefSetURL = fluid.stringTemplate("/account/pref/%prefKey/%prefVal", {prefKey: prefKey, prefVal: prefVal});
+        //     $.get(prefSetURL, function (data) {
+        //         console.log(prefSetURL, data);
+        //     })
+        // });
+        
+        var isLoggedIn = false;
+        if(! isLoggedIn) {
+            console.log("Not logged in, using local cookie for write method");
+            return that.setSettings(model, directModel, set);
+        }
+    };
+
     fluid.defaults('cisl.prefs.modalSettings', {
         gradeNames: ['gpii.binder.bindOnCreate'],
         model: {
@@ -238,18 +365,15 @@
         }
     });
 
-    cisl.prefs.modalSettings.getMappedValue = function(changedValue, map) {
-        // console.log("getMappedValue", changedValue, map)
+    cisl.prefs.modalSettings.getMappedValue = function(changedValue, map) {        
         return map[changedValue];
     };
 
-    cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
-        // console.log("applyModalSetting", changedValue, path, that);        
+    cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {       
         that.applier.change(path, changedValue);
     };
 
-    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {
-        console.log('cisl.prefs.modalSettings.setModalSettingsByPreferences', preferences);
+    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {        
 
         that.applier.change('modalSettings.textSize', fluid.get(preferences, 'fluid_prefs_textSize'));
 

@@ -1,3 +1,12 @@
+from contextlib import contextmanager
+from unittest import mock
+
+from django.test import TestCase
+from django.contrib.auth.models import User
+
+from eventlog.models import Event
+from eventlog.signals import preference_changed
+from .models import Site, Period, ClusiveUser, Roles, Preference
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
@@ -197,6 +206,23 @@ class ClusiveUserTestCase(TestCase):
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
 
+    def test_preferences(self):
+        login = self.client.login(username='user1', password='password1')
+        with catch_signal(preference_changed) as handler:
+            response = self.client.get('/account/pref/foo/bar')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
+            response = self.client.get('/account/pref/foo/bar')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to same value did not return expected response')
+            response = self.client.get('/account/prefs')
+            self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
+            response = self.client.get('/account/prefs/reset')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Resetting prefs did not return expected response')
+            response = self.client.get('/account/prefs')
+            self.assertJSONEqual(response.content, {}, 'Fetching prefs after reset did not return empty response')
+        handler.assert_called_once()
+        handler.calls.kwargs.preference.pref='foo'
+        handler.calls.kwargs.preference.value='bar'
+
 
 class PageTestCases(TestCase):
 
@@ -236,3 +262,12 @@ class PageTestCases(TestCase):
             html = response.content.decode('utf8')        
             self.assertIn('Username', html)
             self.assertIn('Password', html)
+
+
+@contextmanager
+def catch_signal(signal):
+    """Catch django signal and return the mocked call."""
+    handler = mock.Mock()
+    signal.connect(handler)
+    yield handler
+    signal.disconnect(handler)

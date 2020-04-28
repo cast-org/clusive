@@ -98,6 +98,9 @@ made part of the application's static files:
 * Build and restart the application
 * In the Clusive Admin site, navigate to "Books" and click "Rescan Books"
 
+### Local Development
+
+* `grunt watch:devRebuild` can be used to watch the `src` directory and run the build to `target` again on changes, reducing the need to manually run the build while working locally
 
 ## Docker Production Installation
 
@@ -121,4 +124,4 @@ docker run -p 8000:8000 \\
 Docker will run any pending database migrations. Users and books are added manually:
 
 * `docker exec -it <container_id> python manage.py createsuperuser`
-* In the Clusive Admin site, navigate to "Books" and click "Rescan Books"
+* Log in as a superuser, and in the "Books" page of the admin site, click "Rescan books".
