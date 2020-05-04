@@ -5,6 +5,9 @@ to client-side Javascript
 {% endcomment %}
 <script>
 var DJANGO_STATIC_ROOT = "{% static '' %}"
+// Global reference to the preferences editor for non-Infusion code
+// Initialized with the results of createClusivePrefsEditor() when that's called
+var clusivePrefs;
 </script>
 
 <script src="{% static 'shared/js/lib/main.js' %}"></script>

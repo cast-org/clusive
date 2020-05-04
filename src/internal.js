@@ -1,5 +1,14 @@
 import MarkLoader from 'script-loader!mark.js'
 
+// Reference from within the iframe to the clusivePrefs global in the parent window
+var clusivePrefs = window.parent.window.clusivePrefs;
+
+if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoader.prefsEditor) {
+    console.log("Applying existing preferences");
+    clusivePrefs.prefsEditorLoader.prefsEditor.events.onPrefsEditorRefresh.fire();
+    clusivePrefs.prefsEditorLoader.prefsEditor.applyChanges();
+}
+
 window.cuedWordMap = null;
 
 // Filter function that, when applied as part of Mark options, only marks up the first occurrence
