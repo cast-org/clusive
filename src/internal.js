@@ -2,6 +2,10 @@ import MarkLoader from 'script-loader!mark.js'
 
 window.cuedWordMap = null;
 
+if (!window.debug) {
+    console.log = function () {};
+}
+
 // Filter function that, when applied as part of Mark options, only marks up the first occurrence
 function onlyFirstMatch(node, term, totalCount, count) {
     "use strict";
