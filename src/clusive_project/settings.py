@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
 
-INSTALLED_APPS = [    
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,6 +60,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django_settings_export.settings_export',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -133,6 +134,11 @@ LOGGING = {
         }
     }
 }
+
+# Settings allowed to be exported
+SETTINGS_EXPORT = [
+    'DEBUG',
+];
 
 # Session settings
 SESSION_EXPIRE_SECONDS = 1800   # 30 minutes, in seconds
