@@ -39,6 +39,24 @@ var pub_version = "{{ version }}";
             <span class="chapter-position"></span>
             <span class="chapter-title"></span>
         </div>
+        <button id="image-info-trigger" style="display:none;" data-cfw="modal" data-cfw-modal-target="#image-info-modal">
+            Show image details
+        </button>
+        <div id="image-info-modal" class="modal imgdesc-modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-header-block">
+                            <h2 class="modal-title">Image Details</h2>
+                        </div>
+                        <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                            <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
