@@ -80,7 +80,8 @@ window.unmarkCuedWords = function() {
 
 
 $(function() {
-    $('body').on('click touchstart', 'a.gloss', function(e) {
+    var $body = $('body');
+    $body.on('click touchstart', 'a.gloss', function(e) {
         e.preventDefault();
         e.stopPropagation();
         let word = $(this).text();
@@ -88,6 +89,7 @@ $(function() {
         window.parent.$('#glossaryButton').CFW_Popover('show');
         window.parent.glossaryPop_focus($(this));
     })
+    window.parent.setUpImageDetails($body);
 });
 
 
