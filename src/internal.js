@@ -1,5 +1,8 @@
 import MarkLoader from 'script-loader!mark.js'
 
+// Reference from within the iframe to the clusivePrefs global in the parent window
+var clusivePrefs = window.parent.window.clusivePrefs;
+
 window.cuedWordMap = null;
 
 if (!window.debug) {
@@ -49,7 +52,7 @@ window.markCuedWords = function() {
         $.get('/glossary/cuelist/'+window.parent.pub_id+'/'+window.parent.pub_version)
             .done(function(data, status) {
                 console.log("Received cuelist: ", data);
-                window.cuedWordMap = data.words;
+                window.cuedWordMap = data.words;                
                 markCuedWords();
             })
             .fail(function(err) {
@@ -57,7 +60,7 @@ window.markCuedWords = function() {
             });
     } else {
         // "cuedWordMap" is a map from main form to a list of all forms.
-        var altmap = {};
+        var altmap = {};        
         for (var i in window.cuedWordMap) {
             for (var alt in window.cuedWordMap[i]) {
                 altmap[window.cuedWordMap[i][alt]] = i;
@@ -88,8 +91,6 @@ $(function() {
 });
 
 
-
-
 // // Additional actions when popover opens
 // scope.on("beforeShow.cfw.popover", "a.gloss",
 //     function () {
@@ -107,3 +108,17 @@ $(function() {
 //         console.log("Closed: ", $(this).data("word"));
 //         scope.unmark({ element: "span" });
 //     });
+
+// TODO: make preferences editor properly aware of page changes
+if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoader.prefsEditor) {    
+    console.log("getting settings")
+    var prefsPromise = clusivePrefs.prefsEditorLoader.getSettings();
+    prefsPromise.then(function (prefs) {
+        console.log("prefs received", prefs)
+        if(prefs.preferences["cisl_prefs_glossary"]) {
+            window.markCuedWords();
+        }
+    }, function (e) {
+        console.log("error fetching prefs", e)
+    })    
+}

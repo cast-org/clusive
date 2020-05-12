@@ -84,16 +84,24 @@ def cuelist(request, document, version):
         user = ClusiveUser.objects.get(user=request.user)
         bv = BookVersion.lookup(path=document, versionNumber=version)
         all_glossary_words = json.loads(bv.glossary_words)
-        all_words = json.loads(bv.all_words)
-        user_words = WordModel.objects.filter(user=user, word__in=all_words)
+        all_book_words = json.loads(bv.all_words)
+
+        # Get all a user's words
+        all_user_words = list(WordModel.objects.filter(user=user))
+
+        # Filter user's word list by words in the book
+        user_words = [wm for wm in all_user_words
+                      if wm.word in all_book_words
+                      ]        
 
         # Target number of words.  For now, just pick an arbitrary number.
         # TODO: target number should depend on word count of the book.
         to_find = 10
 
-        # First, find any words where we think the user is interested
-        interest_words = [wm.word for wm in user_words
-                          if wm.interest_est()>0
+        # First, find any words where we think the user is interested  
+
+        interest_words = [wm.word for wm in user_words                                    
+                          if wm.interest_est()>0                                                                              
                           and (wm.knowledge_est()==None or wm.knowledge_est()<3)
                           and has_definition(document, wm.word)]
         logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
