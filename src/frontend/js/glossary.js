@@ -77,7 +77,7 @@ function load_definition(cued, word) {
             });
         body = 'Loading...';
     } else {
-        title = 'Glossary';
+        title = 'Lookup';
         body = 'Select a word, then click \'lookup\' to see a definition';
     }
     $('#glossaryTitle').html(title);
