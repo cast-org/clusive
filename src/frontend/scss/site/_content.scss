@@ -155,6 +155,10 @@ h2,
     }
 }
 
+.link-undelete {
+    margin-left: .5rem;
+}
+
 .definition-speech {
     @include font-size(.875rem);
     color: var(--CT_definitionSpeechColor);

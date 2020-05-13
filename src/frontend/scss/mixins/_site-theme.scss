@@ -273,5 +273,12 @@
         --CT_ttsTextColor: #{$tts-highlight-color};
 
         --CT_imageDescCiteColor: #{$image-desc-cite-color};
+
+        --CT_highlightBg: #{$highlight-bg};
+        --CT_highlightColor: #{$highlight-color};
+        --CT_highlightUndeleteBg: #{$highlight-undelete-bg};
+
+        --CT_noteTitleColor: #{$note-title-color};
+        --CT_noteUndeleteBg: #{$note-undelete-bg};
     }
 }

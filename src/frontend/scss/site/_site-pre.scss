@@ -59,7 +59,6 @@ $enable-jumbotron:                      false;
 $enable-list-bulleted:                  false;
 $enable-list-ordered:                   false;
 $enable-list-group:                     false;
-$enable-list-horizontal:                false;
 $enable-list-item-colors:               false;
 $enable-media:                          true;
 $enable-navbar-text:                    false;
@@ -168,6 +167,9 @@ $grid-row-columns:                      4;
 
 $figure-caption-padding:                .5rem;
 $figure-caption-font-size:              .875rem;
+
+$list-item-active-bg:                   unset;
+$list-item-active-color:                unset;
 
 $btn-font-weight:                       700;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;

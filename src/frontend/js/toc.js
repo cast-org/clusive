@@ -59,8 +59,8 @@ function reset_current_toc_item(collapse) {
     }
 
     // Remove active and current indicators from all menu items
-    top.find('.active').removeClass('active');
-    top.find('[aria-current]').removeAttr('aria-current');
+    top.find('.nav-toc .active').removeClass('active');
+    top.find('.nav-toc [aria-current]').removeAttr('aria-current');
 
     // Collapse any open sub-menus
     if (collapse) {

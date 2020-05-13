@@ -179,3 +179,71 @@
     @include font-size(1.125rem);
     font-weight: 600;
 }
+
+.nav-highlight {
+    margin: -.75rem;
+}
+
+.list-highlight {
+    > .list-item {
+        position: relative;
+        padding: 1rem;
+        border-color: var(--CT_tocLinkBorderColor);
+
+        & > *:last-child() {
+            margin-bottom: 0;
+        }
+
+        &.active::before {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            display: block;
+            width: 5px;
+            content: "";
+            background-color: var(--CT_tocActiveBg);
+        }
+    }
+}
+
+.list.list-highlight-action {
+    margin-top: -.5rem;
+    margin-left: 0;
+    @include font-size(.875rem);
+}
+
+.highlight {
+    color: var(--CT_highlightColor);
+    background-color: var(--CT_highlightBg);
+}
+.highlight-undelete {
+    padding: 0 .5rem;
+    @include font-size(.875rem);
+    background-color: var(--CT_highlightUndeleteBg);
+}
+
+.note {
+    margin-top: .75rem;
+    margin-left: 1.25rem;
+}
+.note-title {
+    @include font-size(.875rem);
+    font-weight: 600;
+    color: var(--CT_noteTitleColor);
+
+    [class^="icon-"],
+    [class*=" icon-"] {
+        margin-right: .25rem;
+    }
+}
+.list.list-note-action {
+    margin-top: -.5rem;
+    margin-left: 0;
+    @include font-size(.875rem);
+}
+.note-undelete {
+    padding: 0 .5rem;
+    @include font-size(.875rem);
+    background-color: var(--CT_noteUndeleteBg);
+}
