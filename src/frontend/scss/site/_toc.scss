@@ -216,6 +216,16 @@
 .highlight {
     color: var(--CT_highlightColor);
     background-color: var(--CT_highlightBg);
+
+    &[href] {
+        text-decoration: none;
+
+        @include hover-focus() {
+            color: var(--CT_highlightHoverColor);
+            text-decoration: underline;
+            background-color: var(--CT_highlightHoverBg);
+        }
+    }
 }
 .highlight-undelete {
     padding: 0 .5rem;
