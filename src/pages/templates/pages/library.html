@@ -12,11 +12,11 @@
 {% include "shared/partial/site_header.html" with page_title="Library" user_actions=True %}
 
 <main id="content" tabindex="-1">
-    {% if book_list|length == 0 %}
+    {% if object_list|length == 0 %}
         No articles found.
     {% else %}
     <div class="library-grid">
-        {% for pub in book_list %}
+        {% for pub in object_list %}
             <div class="card card-library">
                 {% if pub.cover %}
                 <div class="card-img card-img-top">
