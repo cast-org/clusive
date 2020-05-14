@@ -15,7 +15,7 @@
     .modal-header {
         color: var(--CT_tocModalHeaderColor);
         background-color: var(--CT_tocModalHeaderBg);
-        border-bottom: $setting-modal-header-border-width solid var(--CT_tocModalHeaderBorderColor);
+        border-bottom: $toc-modal-header-border-width solid var(--CT_tocModalHeaderBorderColor);
     }
     .modal-body {
         padding-bottom: 2rem;
@@ -32,7 +32,7 @@
         color: var(--CT_tocTabColor);
         text-decoration: none;
         background-color: var(--CT_tocTabBg);
-        border-bottom: 4px solid var(--CT_tocTabBorderColor);
+        border-bottom: 7px solid var(--CT_tocTabBorderColor);
 
         @include hover-focus() {
             color: var(--CT_tocTabHoverColor);
@@ -76,7 +76,7 @@
     }
     .nav-link {
         position: relative;
-        padding: .25rem 1.75em .25rem 2.75rem;
+        padding: .5rem 1.75em .5rem 2.75rem;
         color: var(--CT_tocLinkColor);
         text-decoration: none;
         background-color: var(--CT_tocLinkBg);
@@ -98,8 +98,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: calc(1.5em + (.25rem * 2));
-        height: calc(1.5em + (.25rem * 2));  // Height align with single-line of text
+        width: calc(1.5em + (.5rem * 2));
+        height: calc(1.5em + (.5rem * 2));  // Height align with single-line of text
         color: var(--CT_tocCaretColor);
         background-color: var(--CT_tocCaretBg);
 
@@ -135,7 +135,7 @@
 }
 
 .toc-depth-0 {
-    @include font-size(1.125rem);
+    @include font-size(1rem);
     font-weight: 700;
 
     &.nav-link {
