@@ -8,15 +8,25 @@ from django.views.generic import ListView, TemplateView, RedirectView
 
 from eventlog.signals import page_viewed
 from glossary.models import WordModel
-from library.models import Book, BookVersion, Paradata
+from library.models import Book, BookVersion, Paradata, BookAssignment
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
 
 class LibraryView(LoginRequiredMixin,ListView):
     """Library page showing all books"""
-    model = Book
     template_name = 'pages/library.html'
+
+    def get_queryset(self):
+        clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+        period = clusive_user.periods.first()
+        logger.debug("User is in period %s" % (period))
+        if period:
+            books = [ba.book for ba in BookAssignment.objects.filter(period=period)]
+            logger.debug("Books: %s", books)
+            return books
+        else:
+            return Book.objects.all()
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:

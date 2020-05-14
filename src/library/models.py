@@ -2,10 +2,12 @@ import json
 
 from django.db import models
 
-from roster.models import ClusiveUser
+from roster.models import ClusiveUser, Period
 
 
 class Book(models.Model):
+    """Metadata about a single reading, to be represented as an item on the Library page.
+    There may be multiple versions of a single Book, which are separate EPUB files."""
     path = models.CharField(max_length=256, db_index=True)
     title = models.CharField(max_length=256)
     description = models.TextField(default="")
@@ -19,6 +21,7 @@ class Book(models.Model):
 
 
 class BookVersion(models.Model):
+    """Database representation of metadata about a single EPUB file."""
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     sortOrder = models.SmallIntegerField()
     glossary_words = models.TextField(default="[]")  # Words in the glossary that occur in this version
@@ -73,7 +76,21 @@ class BookVersion(models.Model):
         ordering = ['book', 'sortOrder']
 
 
+class BookAssignment(models.Model):
+    """Records Books that are visible by Periods."""
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
+    period = models.ForeignKey(to=Period, on_delete=models.CASCADE, db_index=True)
+    dateAssigned = models.DateTimeField()
+
+    def __str__(self):
+        return "[Assigned %s to %s]" % (self.book, self.period)
+
+    class Meta:
+        ordering = ['book']
+
+
 class Paradata(models.Model):
+    """Information about a User's interactions with a Book."""
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
 
