@@ -145,6 +145,7 @@ SESSION_EXPIRE_SECONDS = 1800   # 30 minutes, in seconds
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_SECURE = True
 LOGIN_URL = '/account/login'
 
 # Load appropriate specific settings file

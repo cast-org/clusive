@@ -14,6 +14,17 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# Settings for CSRF cookie.
+CSRF_COOKIE_SECURE = True
+
+#######################
+# SECURITY MIDDLEWARE #
+#######################
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+
+
 ALLOWED_HOSTS = ['clusive.cast.org',
                  'clusive.qa.cast.org',
                  'cisl-demo.qa.cast.org',
