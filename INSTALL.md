@@ -112,7 +112,8 @@ Run with local development settings (creates an empty sqlite database at each ru
 
 `docker run -e DJANGO_CONFIG=local -p 8000:8000 clusive`
 
-Run with production settings and Postgres database:
+Run with production settings and Postgres database 
+(_note:_ the production settings require HTTPS):
 
 ```
 docker run -p 8000:8000 \\
