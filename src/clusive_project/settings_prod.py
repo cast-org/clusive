@@ -1,11 +1,9 @@
 """
 Django settings for Clusive PRODUCTION and QA servers.
 This file is read when the DJANGO_CONFIG environment variable is set to "prod".
+HTTPS is REQUIRED with these settings.
 """
 import os
-
-# To improve production settings,
-# see https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Key not set here; must be set from environment variable.
@@ -14,8 +12,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# Settings for CSRF cookie.
+# Secure cookies mean that HTTPS is REQUIRED for this profile.
+# This avoids the possibility of a session getting hijacked by someone seeing the cookies.
 CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 #######################
 # SECURITY MIDDLEWARE #
