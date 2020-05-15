@@ -17,7 +17,7 @@
 <!-- jQuery and Figuration JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.4/dist/js/figuration.min.js" integrity="sha384-lwtQ9QGJtkIWsH/wn7encjO6SUqexttNVFi0E82glxgZ/BQmYmmiIx4SFtTI0Dc6" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.5/dist/js/figuration.min.js" integrity="sha384-qxJIAaCm2yIk7HvSXNiSadX6nVf5VaAO9zw+rIsjkAl3cpu4CEnsupskg4ZvPL4i" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="../js/theme-test.js"></script>
@@ -368,7 +368,78 @@
                         </nav>
                     </div>
                     <div id="toc1" class="tab-pane">
-                        Highlights/notes here
+                        <p>No highlights or notes yet.</p>
+
+                        <nav class="nav-highlight" aria-label="Highlights and notes">
+                            <ul class="list list-divided list-highlight">
+                                <div class="list-item">
+                                    <p><span class="highlight">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat mi nisi.</span></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Add a note</a></li>
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+                                </div>
+                                <div class="list-item">
+                                    <p><a href="#" class="highlight">Fusce rutrum ligula orci, vitae vulputate nisl dignissim sit amet.</a></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+
+                                    <div class="note">
+                                        <form>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-small" placeholder="Add a note..." aria-label="Add a note">
+                                            </div>
+                                            <div>
+                                                <button type="submit" class="btn btn-primary btn-small">Save</button>
+                                                <button type="button" class="btn btn-link btn-small">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="list-item active" aria-current="true">
+                                    <p><a href="#" class="highlight">Vivamus et accumsan nisl, sed condimentum massa.</a></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+
+                                    <div class="note">
+                                        <div class="note-title">
+                                            <span class="icon-sticky-note-o" aria-hidden="true"></span>Note
+                                        </div>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        <ul class="list list-divided list-horizontal list-note-action">
+                                            <li class="list-item"><a href="#" role="button">Edit</a></li>
+                                            <li class="list-item"><a href="#" role="button">Delete note</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <p><a href="#" class="highlight">Aliquam maximus placerat nibh, nec tristique felis tempus a.</a></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Add a note</a></li>
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+
+                                    <div class="note">
+                                        <div class="note-undelete">
+                                            Deleted
+                                            <a href="#" class="link-undelete">Undo</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="highlight-undelete">
+                                        Deleted
+                                        <a href="#" class="link-undelete">Undo</a>
+                                    </div>
+                                </div>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
