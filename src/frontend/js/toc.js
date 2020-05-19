@@ -23,7 +23,7 @@ function table_of_contents_level(list, level, id) {
                 submenu_id +
                 '" class="has-children ' +
                 toc_depth +
-                '" role="button" data-cfw="collapse" data-cfw-collapse-animate="false">' +
+                '" role="button" data-cfw="collapse" data-cfw-collapse-animate="false" title="Toggle sub-menu">' +
                 '<span class="icon-angle-right" aria-hidden="true"></span>\n' +
                 '<span class="sr-only">Toggle menu for item ' +
                 element.title +

@@ -2,14 +2,14 @@
 <nav aria-label="Clusive">
 {% endif %}
 {% if index_home %}
-    <a href="{% url 'index' %}" class="btn btn-nav btn-icon">
-        <span class="sr-only">Back to library</span>
+    <a href="{% url 'index' %}" class="btn btn-nav btn-icon" title="Back to Library">
+        <span class="sr-only">Back to Library</span>
         <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
     </a>
 {% endif %}
 {% if index_reader %}
-    <a href="{% url 'reader_index' %}" class="btn btn-nav btn-icon">
-        <span class="sr-only">Back to library</span>
+    <a href="{% url 'reader_index' %}" class="btn btn-nav btn-icon" title="Back to Library">
+        <span class="sr-only">Back to Library</span>
         <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
     </a>
 {% endif %}
@@ -18,20 +18,20 @@
 {% endif %}
 {% if nav %}
 <nav class="sidebar-nav" aria-label="Article">
-    <button type="button" data-cfw="modal" data-cfw-modal-target="#modalToc" class="btn btn-nav btn-icon" aria-label="Contents">
+    <button type="button" data-cfw="modal" data-cfw-modal-target="#modalToc" class="btn btn-nav btn-icon" aria-label="Contents, highlights, &amp; notes" title="Contents, highlights, &amp; notes">
         <span class="icon-menu" aria-hidden="true"></span>
     </button>
-    <button id="prevResourceButton" onclick="D2Reader.previousPage();" type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
+    <button id="prevResourceButton" onclick="D2Reader.previousPage();" type="button" class="btn btn-nav btn-icon" aria-label="Previous page" title="Previous page">
         <span class="icon-chevron-left" aria-hidden="true"></span>
     </button>
-    <button id="nextResourceButton" onclick="D2Reader.nextPage();" type="button" class="btn btn-nav btn-icon" aria-label="Next page">
+    <button id="nextResourceButton" onclick="D2Reader.nextPage();" type="button" class="btn btn-nav btn-icon" aria-label="Next page" title="Next page">
         <span class="icon-chevron-right" aria-hidden="true"></span>
     </button>
 </nav>
 {% endif %}
 {% if why %}
 <div class="sidebar-support" role="region" aria-label="Support">
-    <button id="whyButton" type="button" class="btn btn-nav btn-icon btn-help" aria-label="Why am I seeing this?">
+    <button id="whyButton" type="button" class="btn btn-nav btn-icon btn-help" aria-label="Why am I seeing this version of the text?!" title="Why am I seeing this version of the text?!">
         <span class="icon-help" aria-hidden="true"></span>
         <span class="icon-attention" aria-hidden="true"></span>
     </button>
