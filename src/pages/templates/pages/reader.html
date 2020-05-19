@@ -2,6 +2,54 @@
 {% load static %}
 
 {% block head_additional %}
+<style>
+    .highlight-toolbox {
+        transform: translate(-50%, -100%);
+        animation: toolsAnimateIn 100ms ease-out both;
+        transform-origin: bottom;
+        z-index: 999;
+        position: absolute;
+        background: gainsboro;
+        display: none; }
+    .highlight-toolbox:before {
+        content: '';
+        position: absolute;
+        width: 0.4rem;
+        height: 0.4rem;
+        bottom: -0.2rem;
+        left: calc(50% - 0.2rem);
+        background-color: inherit;
+        transform: rotate(45deg); }
+    .highlight-toolbox > div > button {
+        display: inline-block; }
+
+    .color-option {
+        background-color: gainsboro; }
+
+    .color-option span {
+        display: inline-block;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        background: grey; }
+
+    .toolbox-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 998;
+        background: rgba(255, 255, 255, 0); }
+
+    @keyframes toolsAnimateIn {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5); } }
+
+</style>
 {% comment %} Readium reader dependencies {% endcomment %}
 
 <script>
@@ -24,8 +72,11 @@ var pub_version = "{{ version }}";
 {% block content %}
 {% include "shared/partial/site_header_small.html" with user_actions=True %}
 
+<!-- TODO: this is required due to a bug in Reader 1.1.3, remove after upgrading to next version -->
+<div id="headerMenu"></div>
+
 <div id="D2Reader-Container" style="position: relative;">
-    <main style="overflow: hidden" tabindex=-1 id="iframe-wrapper">
+    <main style="overflow: hidden" tabindex="-1" id="iframe-wrapper">
         <span id="content" tabindex="-1"></span>
         <h1 class="sr-only">Reading: {{ pub.title }}</h1>
 
@@ -34,30 +85,54 @@ var pub_version = "{{ version }}";
         <div id="reader-info-top" class="info top">
             <span class="book-title"></span>
         </div>
-        <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" SCROLLING="no" style="max-width: 100%; Border: 0px; display: block;" width="100%" height="100%"></iframe>
+        <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
         <div id="reader-info-bottom" class="info bottom">
             <span class="chapter-position"></span>
             <span class="chapter-title"></span>
         </div>
-        <button id="image-info-trigger" style="display:none;" data-cfw="modal" data-cfw-modal-target="#image-info-modal">
-            Show image details
-        </button>
-        <div id="image-info-modal" class="modal imgdesc-modal">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-header-block">
-                            <h2 class="modal-title">Image Details</h2>
-                        </div>
-                        <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
-                            <span class="icon-cancel-circled2" aria-hidden="true"></span>
-                        </button>
+    </main>
+
+    <div id="toolbox-backdrop" class="toolbox-backdrop"></div>
+
+    <div id="highlight-toolbox" class="highlight-toolbox">
+        <div id="highlight-toolbox-mode-colors">
+            <button id="dismissIcon">close</button>
+        </div>
+
+        <div id="highlight-toolbox-mode-add">
+            <button id="highlightIcon"><span>Highlight</span></button>
+            <button style="background-color: gainsboro;" id="underlineIcon"><span style="display: inline-block;width: 24px;height: 24px;border-bottom: yellow solid 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" role="img" class="icon open" aria-labelledby="text-icon"><title id="text-icon">Text</title><path d="M5 4v3h5.5v12h3V7H19V4z"></path></svg>
+            </span></button>
+            <button style="background-color: gainsboro;" id="speakIcon"><span style="display: inline-block;width: 24px;height: 24px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" role="img" class="icon open" aria-labelledby="speak-icon"><title id="speak-icon">Speak</title><circle cx="9" cy="9" r="4"></circle><path d="M9 15c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm7.76-9.64l-1.68 1.69c.84 1.18.84 2.71 0 3.89l1.68 1.69c2.02-2.02 2.02-5.07 0-7.27zM20.07 2l-1.63 1.63c2.77 3.02 2.77 7.56 0 10.74L20.07 16c3.9-3.89 3.91-9.95 0-14z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg>
+            </span></button>
+            <button id="lookupIcon"><span>Lookup</span></button>
+        </div>
+
+        <div id="highlight-toolbox-mode-edit">
+            <button style="background-color: gainsboro;display: none" id="deleteIcon"><i class="material-icons" style="color:gray">delete</i></button>
+        </div>
+    </div>
+
+    <button id="image-info-trigger" style="display:none;" data-cfw="modal" data-cfw-modal-target="#image-info-modal">
+        Show image details
+    </button>
+    <div id="image-info-modal" class="modal imgdesc-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-block">
+                        <h2 class="modal-title">Image Details</h2>
                     </div>
-                    <div class="modal-body"></div>
+                    <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                        <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                    </button>
                 </div>
+                <div class="modal-body"></div>
             </div>
         </div>
-    </main>
+    </div>
 
     <script>
         var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% static "shared/pubs/" %}'
@@ -81,8 +156,21 @@ var pub_version = "{{ version }}";
 
         var userSettings = { textAlignment:'start' };
         var lastReadingPosition = {{ last_position|safe }};
-        var annotations, baseUrl = null;
+        var annotations = [];
+        var baseUrl = null;
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
+
+        var selectionMenuItems = [
+            {
+                id: 'lookupIcon',
+                callback: function (selection) {
+                    console.log('looking up: ', selection);
+                    window.parent.load_definition(1, selection);
+                    window.parent.$('#glossaryButton').CFW_Popover('show');
+                    glossaryPop_focus($('#lookupIcon'));
+                }
+            }
+        ];
 
         D2Reader.load({
                 url: new URL(url),
@@ -97,14 +185,19 @@ var pub_version = "{{ version }}";
                     },
                 },
                 rights: {
-                    enableBookmarks: true
+                    enableBookmarks: true,
+                    enableAnnotations: true
                 },
                 material: false,
                 userSettings: userSettings,
                 annotations: annotations,
                 lastReadingPosition: lastReadingPosition,
                 injectables: injectables,
-                api: {
+
+                selectionMenuItems: selectionMenuItems,
+                initialAnnotationColor: "#ff8500",
+
+            api: {
                     addBookmark: function (bookmark) {
                         bookmark.id = Math.random();
                         return Promise.resolve(bookmark);
