@@ -1,43 +1,45 @@
 <div class="popover popover-glossary popover-scrollable" id="glossaryPop">
-    <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
-    <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
-    <div class="popover-header">
-        <strong id="glossaryTitle">
-            Glossary
-        </strong>
-    </div>
-    <div class="popover-body">
-        <div id="glossaryBody">body content&hellip;</div>
-        <div id="glossaryInput" class="popover-section">
-            <fieldset>
-                <legend class="ranking-legend">How well do you know this word?</legend>
-                <div class="ranking">
-                    <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="radio" id="ranking0-0" name="ranking0" value="0" aria-label="Never heard it">
-                        <label class="form-check-label" for="ranking0-0"></label>
-                        <label class="ranking-label" for="ranking0-0" aria-hidden="true">Never heard it</label>
-                    </div>
-                    <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="radio" id="ranking0-1" name="ranking0" value="1" aria-label="Heard it">
-                        <label class="form-check-label" for="ranking0-1"></label>
-                        <label class="ranking-label" for="ranking0-1" aria-hidden="true">Heard it</label>
-                    </div>
-                    <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="radio" id="ranking0-2" name="ranking0" value="2" aria-label="Know it">
-                        <label class="form-check-label" for="ranking0-2"></label>
-                        <label class="ranking-label" for="ranking0-2"  aria-hidden="true">Know it</label>
-                    </div>
-                    <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="radio" id="ranking0-3" name="ranking0" value="3" aria-label="Use it">
-                        <label class="form-check-label" for="ranking0-3"></label>
-                        <label class="ranking-label" for="ranking0-3" aria-hidden="true">Use it</label>
-                    </div>
-                </div>
-            </fieldset>
+    <div role="document" style="height: 100%;">
+        <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+        <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
+        <div class="popover-header">
+            <strong id="glossaryTitle">
+                Glossary
+            </strong>
         </div>
-    </div>
-    <div id="glossaryFooter" class="popover-footer">
-        Added to <a href="{% url 'word_bank' %}">word bank</a>
+        <div class="popover-body">
+            <div id="glossaryBody">body content&hellip;</div>
+            <div id="glossaryInput" class="popover-section">
+                <fieldset>
+                    <legend class="ranking-legend">How well do you know this word?</legend>
+                    <div class="ranking">
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-0" name="ranking0" value="0" aria-label="Never heard it">
+                            <label class="form-check-label" for="ranking0-0"></label>
+                            <label class="ranking-label" for="ranking0-0" aria-hidden="true">Never heard it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-1" name="ranking0" value="1" aria-label="Heard it">
+                            <label class="form-check-label" for="ranking0-1"></label>
+                            <label class="ranking-label" for="ranking0-1" aria-hidden="true">Heard it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-2" name="ranking0" value="2" aria-label="Know it">
+                            <label class="form-check-label" for="ranking0-2"></label>
+                            <label class="ranking-label" for="ranking0-2"  aria-hidden="true">Know it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-3" name="ranking0" value="3" aria-label="Use it">
+                            <label class="form-check-label" for="ranking0-3"></label>
+                            <label class="ranking-label" for="ranking0-3" aria-hidden="true">Use it</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div id="glossaryFooter" class="popover-footer">
+            Added to <a href="{% url 'word_bank' %}">word bank</a>
+        </div>
     </div>
 </div>
 <script>
@@ -47,6 +49,7 @@ $('#glossaryButton').CFW_Popover({
     target: '#glossaryPop',
     trigger: 'manual',
     placement: 'reverse',
+    viewport: 'viewport',
     drag: true,
     popperConfig: {
         positionFixed: true,

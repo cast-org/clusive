@@ -4,7 +4,8 @@ var clusiveTTS = {
     readAloudButtonId: "#readAloudButton",
     readAloudButtonPlayAriaLabel: "Read aloud",
     readAloudButtonStopAriaLabel: "Stop reading aloud",
-    readAloudIconId: "#readAloudIcon"
+    readAloudIconId: "#readAloudIcon",
+    readAloudSrTextId: "#readAloudSrText",
 };
 
 // Bind controls
@@ -30,6 +31,7 @@ clusiveTTS.toggleButtonToPlay = function () {
     });
     $(clusiveTTS.readAloudIconId).toggleClass("icon-play", true);
     $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", false);
+    $(clusiveTTS.readAloudSrTextId).text(readAloudButtonPlayAriaLabel);
 };
 
 clusiveTTS.toggleButtonToStop = function () {
@@ -39,6 +41,7 @@ clusiveTTS.toggleButtonToStop = function () {
     });
     $(clusiveTTS.readAloudIconId).toggleClass("icon-play", false);
     $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", true);
+    $(clusiveTTS.readAloudSrTextId).text(readAloudButtonStopAriaLabel);
 };
 
 
