@@ -286,10 +286,9 @@ $modal-footer-border-width:             1px;
 
 $skiplink-offset-top:                   .25rem;
 $skiplink-padding:                      .25rem .5rem;
-$skiplink-border-width:                 2px;
+$skiplink-border-width:                 1px;
 
 $header-border-radius:                  $border-radius;
-$header-opacity-stop:                   65%;
 
 $sidebar-border-radius:                 $header-border-radius;
 // Sidebar stretched max width is half of:
@@ -305,7 +304,7 @@ $setting-title-margin-bottom:           .25rem;
 $setting-title-font-size:               .875rem;
 $setting-title-font-weight:             700;
 
-$setting-modal-header-border-width:     7px;
+$setting-modal-header-border-width:     3px;
 $setting-modal-footer-border-width:     3px;
 
 $setting-theme-options: (

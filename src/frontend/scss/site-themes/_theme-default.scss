@@ -14,15 +14,13 @@ $img-mix-blend-mode:                    normal;
 $bg-image-override:                     null;
 
 $selection-bg:                          #acfdf0;
-$selection-color:                       #111;
+$selection-color:                       #333;
 
 $btn-focus-box-shadow-alpha:            .8;
 
-$border-color:                          #bfc6cd;
-
-$skiplink-bg:                           #66faff;
-$skiplink-color:                        #333;
-$skiplink-border-color:                 #333;
+$skiplink-bg:                           #6268ad;
+$skiplink-color:                        #fbfbfb;
+$skiplink-border-color:                 #6268ad;
 
 $library-bg:                            #72c0b2;
 $library-logo-icon-color:               #fbfbfb;
@@ -31,34 +29,27 @@ $library-logo-text-color:               #333;
 $home-bg:                               #72c0b2;
 $home-create-border-color:              #636b82;
 
-$header-bg:                             #636b82;
+$header-bg:                             linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, 0) 65%);
 $header-color:                          inherit;
-$header-opacity-start:                  .3;
-$header-opacity-end:                    0;
 $header-logo-icon-color:                #fbfbfb;
-$header-logo-text-color:                #333;
+$header-logo-text-color:                #636b82;
 $page-title-border-color:               #acfdf0;
 
-$sidebar-bg:                            $header-bg;
-$sidebar-end-bg:                        $header-bg;
-$sidebar-opacity-start:                 .15;
-$sidebar-opacity-end:                   .3;
-$sidebar-end-opacity-start:             .6;
-$sidebar-end-opacity-end:               .8;
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .15) 0%, rgba(#636b82, .3) 100%);
+$sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .6) 0%, rgba(#636b82, .8) 100%);
 
 // Figure
-$figure-caption-bg:                     #ebe3d5;
+$figure-caption-bg:                     #ebe9e4;
 $figure-caption-color:                  #666;
 
 // Cards
-$card-bg:                               #ebe3d5;
-$card-color:                            $body-color;
-$card-border-color:                     #ebe3d5;
-$card-img-bg:                           rgba(#72c0b2, .6);
+$card-bg:                               #ebe9e4;
+$card-color:                            inherit;
+$card-border-color:                     #ebe9e4;
+$card-img-bg:                           rgba(#72c0b2, .3);
 $card-library-box-shadow:               #fbfbfb;
-$card-login-bg:                         #acfdf0;
-$card-login-bg-opacity:                 .3;
-$card-login-color:                      $body-color;
+$card-login-bg:                         rgba(#acfdf0, .3);
+$card-login-color:                      inherit;
 $card-login-forgot-border-color:        #d3cfc9;
 
 // Buttons
@@ -66,22 +57,22 @@ $btn-primary-focus-ring:                #636b82;
 $btn-primary-bg:                        #acfdf0;
 $btn-primary-color:                     #111;
 $btn-primary-border-color:              transparent;
-$btn-primary-hover-bg:                  palette($btn-primary-bg, 575);
-$btn-primary-hover-color:               $btn-primary-color;
+$btn-primary-hover-bg:                  #6268ad;
+$btn-primary-hover-color:               #fbfbfb;
 $btn-primary-hover-border-color:        transparent;
-$btn-primary-active-bg:                 palette($btn-primary-bg, 625);
-$btn-primary-active-color:              $btn-primary-color;
+$btn-primary-active-bg:                 palette($btn-primary-hover-bg, 600);
+$btn-primary-active-color:              $btn-primary-hover-color;
 $btn-primary-active-border-color:       transparent;
 
 $btn-secondary-focus-ring:              #636b82;
 $btn-secondary-bg:                      #ff554d;
 $btn-secondary-color:                   #111;
 $btn-secondary-border-color:            transparent;
-$btn-secondary-hover-bg:                palette($btn-secondary-bg, 550);
-$btn-secondary-hover-color:             $btn-secondary-color;
+$btn-secondary-hover-bg:                #6268ad;
+$btn-secondary-hover-color:             #fbfbfb;
 $btn-secondary-hover-border-color:      transparent;
-$btn-secondary-active-bg:               palette($btn-secondary-bg, 600);
-$btn-secondary-active-color:            #000;
+$btn-secondary-active-bg:               palette($btn-secondary-hover-bg, 600);
+$btn-secondary-active-color:            $btn-secondary-hover-color;
 $btn-secondary-active-border-color:     transparent;
 
 $btn-nav-focus-ring:                    #636b82;
@@ -173,7 +164,7 @@ $why-icon-active-text-shadow-opacity:   .75;
 // Settings
 $setting-border-color:                  #d3cfc9;
 $setting-title-color:                   #666;
-$setting-modal-content-bg:              #ebe3d5;
+$setting-modal-content-bg:              #ebe9e4;
 $setting-modal-content-color:           #333;
 $setting-modal-content-border-color:    #636b82;
 $setting-modal-header-bg:               #dad5cc; //rgba(#d3cfc9, .7);
@@ -279,7 +270,7 @@ $form-switch-thumb-checked-box-shadow-opacity:  .9;
 
 // Word bank
 $wordbank-border-color:                 #d3cfc9;
-$wordbank-col-bg:                       rgba(#ebe3d5, .3);
+$wordbank-col-bg:                       rgba(#ebe9e4, .3);
 $wordbank-control-color:                $link-color;
 $wordbank-control-hover-color:          $link-hover-color;
 $wordbank-count-bg:                     #ff554d;

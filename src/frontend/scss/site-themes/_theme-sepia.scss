@@ -14,15 +14,13 @@ $img-mix-blend-mode:                    multiply;
 $bg-image-override:                     null;
 
 $selection-bg:                          #acfdf0;
-$selection-color:                       #111;
+$selection-color:                       #333;
 
 $btn-focus-box-shadow-alpha:            .8;
 
-$border-color:                          #bfc6cd;
-
-$skiplink-bg:                           #66faff;
-$skiplink-color:                        #333;
-$skiplink-border-color:                 #333;
+$skiplink-bg:                           #6268ad;
+$skiplink-color:                        #fbfbfb;
+$skiplink-border-color:                 #6268ad;
 
 $library-bg:                            #faf4e8;
 $library-logo-icon-color:               #ff554d;
@@ -31,20 +29,14 @@ $library-logo-text-color:               #333;
 $home-bg:                               #faf4e8;
 $home-create-border-color:              #636b82;
 
-$header-bg:                             #b09f88;
+$header-bg:                             linear-gradient(90deg, rgba(#b09f88, .3) 0%, rgba(#b09f88, 0) 65%);
 $header-color:                          inherit;
-$header-opacity-start:                  .3;
-$header-opacity-end:                    0;
 $header-logo-icon-color:                #fbfbfb;
-$header-logo-text-color:                #b09f88;
+$header-logo-text-color:                #89775f;
 $page-title-border-color:               #a0abfd;
 
-$sidebar-bg:                            $header-bg;
-$sidebar-end-bg:                        $header-bg;
-$sidebar-opacity-start:                 .15;
-$sidebar-opacity-end:                   .3;
-$sidebar-end-opacity-start:             .6;
-$sidebar-end-opacity-end:               .8;
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#b09f88, .15) 0%, rgba(#b09f88, .3) 100%);
+$sidebar-end-bg:                        linear-gradient(180deg, rgba(#b09f88, .6) 0%, rgba(#b09f88, .8) 100%);
 
 // Figure
 $figure-caption-bg:                     #ebe3d5;
@@ -52,13 +44,12 @@ $figure-caption-color:                  #666;
 
 // Cards
 $card-bg:                               #ebe3d5;
-$card-color:                            $body-color;
+$card-color:                            inherit;
 $card-border-color:                     #ebe3d5;
-$card-img-bg:                           rgba(#b09f88, .3);
+$card-img-bg:                           rgba(#b09f88, .2);
 $card-library-box-shadow:               #fbfbfb;
-$card-login-bg:                         #b09f88;
-$card-login-bg-opacity:                 .3;
-$card-login-color:                      $body-color;
+$card-login-bg:                         rgba(#b09f88, .3);
+$card-login-color:                      inherit;
 $card-login-forgot-border-color:        #d3cfc9;
 
 // Buttons
@@ -66,22 +57,22 @@ $btn-primary-focus-ring:                #636b82;
 $btn-primary-bg:                        #a0abfd;
 $btn-primary-color:                     #111;
 $btn-primary-border-color:              transparent;
-$btn-primary-hover-bg:                  palette($btn-primary-bg, 575);
-$btn-primary-hover-color:               $btn-primary-color;
+$btn-primary-hover-bg:                  #6268ad;
+$btn-primary-hover-color:               #fbfbfb;
 $btn-primary-hover-border-color:        transparent;
-$btn-primary-active-bg:                 palette($btn-primary-bg, 625);
-$btn-primary-active-color:              $btn-primary-color;
+$btn-primary-active-bg:                 palette($btn-primary-hover-bg, 600);
+$btn-primary-active-color:              $btn-primary-hover-color;
 $btn-primary-active-border-color:       transparent;
 
 $btn-secondary-focus-ring:              #636b82;
 $btn-secondary-bg:                      #ff554d;
 $btn-secondary-color:                   #111;
 $btn-secondary-border-color:            transparent;
-$btn-secondary-hover-bg:                palette($btn-secondary-bg, 550);
-$btn-secondary-hover-color:             $btn-secondary-color;
+$btn-secondary-hover-bg:                #6268ad;
+$btn-secondary-hover-color:             #fbfbfb;
 $btn-secondary-hover-border-color:      transparent;
-$btn-secondary-active-bg:               palette($btn-secondary-bg, 600);
-$btn-secondary-active-color:            #000;
+$btn-secondary-active-bg:               palette($btn-secondary-hover-bg, 600);
+$btn-secondary-active-color:            $btn-secondary-hover-color;
 $btn-secondary-active-border-color:     transparent;
 
 $btn-nav-focus-ring:                    #636b82;
@@ -96,26 +87,26 @@ $btn-nav-active-color:                  palette($btn-nav-color, 800);
 $btn-nav-active-border-color:           transparent;
 
 $btn-setting-focus-ring:                #636b82;
-$btn-setting-bg:                        rgba(#faf4e8, .7);
+$btn-setting-bg:                        #ece4d6;
 $btn-setting-color:                     #ff554d;
 $btn-setting-border-color:              transparent;
-$btn-setting-hover-bg:                  rgba(#faf4e8, .85);
+$btn-setting-hover-bg:                  palette($btn-setting-bg, 300);
 $btn-setting-hover-color:               $btn-setting-color;
 $btn-setting-hover-border-color:        transparent;
-$btn-setting-active-bg:                 rgba(#faf4e8, 1);
+$btn-setting-active-bg:                 palette($btn-setting-bg, 100);
 $btn-setting-active-color:              $btn-setting-color;
 $btn-setting-active-border-color:       transparent;
 $btn-setting-text-shadow-color:         #636b82;
 $btn-setting-text-shadow-opacity:       .75;
 
 $btn-tool-focus-ring:                   #636b82;
-$btn-tool-bg:                           rgba(#faf4e8, .7);
+$btn-tool-bg:                           #ece4d6;
 $btn-tool-color:                        #6e6355;
 $btn-tool-border-color:                 transparent;
-$btn-tool-hover-bg:                     rgba(#faf4e8, .85);
+$btn-tool-hover-bg:                     palette($btn-tool-bg, 300);
 $btn-tool-hover-color:                  $btn-tool-color;
 $btn-tool-hover-border-color:           transparent;
-$btn-tool-active-bg:                    rgba(#faf4e8, 1);
+$btn-tool-active-bg:                    palette($btn-tool-bg, 100);
 $btn-tool-active-color:                 $btn-tool-color;
 $btn-tool-active-border-color:          transparent;
 
