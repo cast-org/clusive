@@ -12,10 +12,12 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# Secure cookies mean that HTTPS is REQUIRED for this profile.
-# This avoids the possibility of a session getting hijacked by someone seeing the cookies.
+# Require HTTPS and secure cookies
+SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+# The following is for use with Google Cloud load balancers. May not be appropriate in other contexts.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #######################
 # SECURITY MIDDLEWARE #
