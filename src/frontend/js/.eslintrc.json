@@ -247,6 +247,9 @@
     "sort-imports": "error",
     "symbol-description": "error",
     "template-curly-spacing": "error",
-    "yield-star-spacing": "error"
+    "yield-star-spacing": "error",
+
+    // Console messages must be categorized with their level of severity
+    "no-console": ["error", { "allow": ["debug", "info","warn", "error"] }]
   }
 }

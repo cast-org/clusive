@@ -49,7 +49,7 @@ function restoreFocus() {
         previousFocus.focus();
         previousFocus = null;
     } else {
-        console.log('Warning: no previous focus recorded');
+        console.warn('Warning: no previous focus recorded');
     }
 }
 

@@ -51,12 +51,12 @@ window.markCuedWords = function() {
     if (window.cuedWordMap === null) {
         $.get('/glossary/cuelist/'+window.parent.pub_id+'/'+window.parent.pub_version)
             .done(function(data, status) {
-                console.log("Received cuelist: ", data);
+                console.debug("Received cuelist: ", data);
                 window.cuedWordMap = data.words;                
                 markCuedWords();
             })
             .fail(function(err) {
-                console.log(err);
+                console.error(err);
             });
     } else {
         // "cuedWordMap" is a map from main form to a list of all forms.
@@ -111,14 +111,14 @@ $(function() {
 
 // TODO: make preferences editor properly aware of page changes
 if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoader.prefsEditor) {    
-    console.log("getting settings")
+    console.info('getting settings')
     var prefsPromise = clusivePrefs.prefsEditorLoader.getSettings();
     prefsPromise.then(function (prefs) {
-        console.log("prefs received", prefs)
+        console.debug('prefs received', prefs)
         if(prefs.preferences["cisl_prefs_glossary"]) {
             window.markCuedWords();
         }
     }, function (e) {
-        console.log("error fetching prefs", e)
+        console.error('error fetching prefs', e)
     })    
 }

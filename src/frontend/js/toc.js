@@ -93,7 +93,7 @@ function scroll_to_current_toc_item() {
     'use strict';
 
     var elt =  $('#contents_list').find('a.active');
-    console.log('Scrolling to ', elt);
+    console.debug('Scrolling to ', elt);
     if (elt.length > 0) {
         elt[elt.length - 1].scrollIntoView();
     }
@@ -141,7 +141,7 @@ function sendLocationToServer(book, locString) {
         locator: locString
     })
         .fail(function(err) {
-            console.log('Set location API failure!', err);
+            console.error('Set location API failure!', err);
         });
 }
 

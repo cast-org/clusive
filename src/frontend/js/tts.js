@@ -12,7 +12,7 @@ var clusiveTTS = {
 
 $(document).ready(function () {
     $(clusiveTTS.readAloudButtonId).click(function (e) {
-        console.log("read aloud button clicked");
+        console.debug('read aloud button clicked');
         if(! clusiveTTS.synth.speaking) {
             clusiveTTS.toggleButtonToStop();
             clusiveTTS.read();
@@ -58,7 +58,7 @@ clusiveTTS.readQueuedElements = function () {
         var end = toRead.end ? toRead.end : null;
         clusiveTTS.readElement(toRead.element, toRead.offset, end);
     } else {
-        console.log("Done reading elements");
+        console.debug('Done reading elements');
         clusiveTTS.toggleButtonToPlay();
     }
 };
@@ -79,10 +79,10 @@ clusiveTTS.readElement = function (textElement, offset, end) {
 
     utterance.onboundary = function (e) {
         if(e.name === "sentence") {
-            console.log("sentence boundary", e.charIndex, e.charLength, contentText.slice(e.charIndex, e.charIndex + e.charLength));
+            console.debug('sentence boundary', e.charIndex, e.charLength, contentText.slice(e.charIndex, e.charIndex + e.charLength));
         }
         if(e.name === "word") {
-            console.log("word boundary", e.charIndex, e.charLength, contentText.slice(e.charIndex, e.charIndex + e.charLength));
+            console.debug('word boundary', e.charIndex, e.charLength, contentText.slice(e.charIndex, e.charIndex + e.charLength));
 
             var preceding = elementText.substring(0, offset+e.charIndex);
             var middle = elementText.substring(offset+e.charIndex, offset+e.charIndex+e.charLength);
@@ -94,7 +94,7 @@ clusiveTTS.readElement = function (textElement, offset, end) {
     }
 
     utterance.onend = function (e) {
-        console.log("utterance ended");
+        console.debug('utterance ended');
         copiedElement.remove();
         element.show();
         clusiveTTS.readQueuedElements();
@@ -218,7 +218,7 @@ clusiveTTS.readSelection = function(elements, selection) {
 
         var textEnd = selText.length;
 
-        console.log("textOffset/textEnd", textOffset, textEnd);
+        console.debug('textOffset/textEnd', textOffset, textEnd);
 
         var elementToRead = {
             element: elem,
