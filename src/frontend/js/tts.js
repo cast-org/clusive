@@ -31,7 +31,7 @@ clusiveTTS.toggleButtonToPlay = function () {
     });
     $(clusiveTTS.readAloudIconId).toggleClass("icon-play", true);
     $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", false);
-    $(clusiveTTS.readAloudSrTextId).text(readAloudButtonPlayAriaLabel);
+    $(clusiveTTS.readAloudSrTextId).text(clusiveTTS.readAloudButtonPlayAriaLabel);
 };
 
 clusiveTTS.toggleButtonToStop = function () {
@@ -41,7 +41,7 @@ clusiveTTS.toggleButtonToStop = function () {
     });
     $(clusiveTTS.readAloudIconId).toggleClass("icon-play", false);
     $(clusiveTTS.readAloudIconId).toggleClass("icon-stop", true);
-    $(clusiveTTS.readAloudSrTextId).text(readAloudButtonStopAriaLabel);
+    $(clusiveTTS.readAloudSrTextId).text(clusiveTTS.readAloudButtonStopAriaLabel);
 };
 
 
