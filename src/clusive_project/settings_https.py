@@ -1,6 +1,5 @@
 """
-Django settings for Clusive PRODUCTION and QA servers.
-This file is read when the DJANGO_CONFIG environment variable is set to "prod".
+Django settings that require HTTPS only.
 """
 import os
 
@@ -11,11 +10,17 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# Require HTTPS and secure cookies
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 #######################
 # SECURITY MIDDLEWARE #
 #######################
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
 
 
 ALLOWED_HOSTS = ['clusive.cast.org',
