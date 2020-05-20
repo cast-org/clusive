@@ -17,12 +17,5 @@ class EventAdmin(admin.ModelAdmin):
     ordering = ('-eventTime',)
 
 
-class PreferenceAdmin(admin.ModelAdmin):
-    readonly_fields = ('id',)
-    list_display = ('id', 'user', 'pref', 'value')
-    ordering = ('user', 'pref')
-
-
 admin.site.register(LoginSession, SessionAdmin)
 admin.site.register(Event, EventAdmin)
-admin.site.register(Preference, PreferenceAdmin)
