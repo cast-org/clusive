@@ -26,8 +26,7 @@
 // stylelint-enable declaration-no-important, selector-max-id
 
 :focus {
-    //outline-color: var(--CT_focusRingColor);
-    outline-color: rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
+    outline-color: var(--CT_focusRingColor);
 }
 
 ::selection {

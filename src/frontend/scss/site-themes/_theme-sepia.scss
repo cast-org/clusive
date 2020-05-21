@@ -16,8 +16,6 @@ $bg-image-override:                     null;
 $selection-bg:                          #acfdf0;
 $selection-color:                       #333;
 
-$btn-focus-box-shadow-alpha:            .8;
-
 $skiplink-bg:                           #6268ad;
 $skiplink-color:                        #fbfbfb;
 $skiplink-border-color:                 #6268ad;
@@ -47,7 +45,7 @@ $card-bg:                               #ebe3d5;
 $card-color:                            inherit;
 $card-border-color:                     #ebe3d5;
 $card-img-bg:                           rgba(#b09f88, .2);
-$card-library-box-shadow:               #fbfbfb;
+$card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
 $card-login-bg:                         rgba(#b09f88, .3);
 $card-login-color:                      inherit;
 $card-login-forgot-border-color:        #d3cfc9;
@@ -85,6 +83,7 @@ $btn-nav-hover-border-color:            transparent;
 $btn-nav-active-bg:                     $btn-nav-bg;
 $btn-nav-active-color:                  palette($btn-nav-color, 800);
 $btn-nav-active-border-color:           transparent;
+$btn-nav-disabled-opacity:              .4;
 
 $btn-setting-focus-ring:                #636b82;
 $btn-setting-bg:                        #ece4d6;
@@ -96,8 +95,7 @@ $btn-setting-hover-border-color:        transparent;
 $btn-setting-active-bg:                 palette($btn-setting-bg, 100);
 $btn-setting-active-color:              $btn-setting-color;
 $btn-setting-active-border-color:       transparent;
-$btn-setting-text-shadow-color:         #636b82;
-$btn-setting-text-shadow-opacity:       .75;
+$btn-setting-text-shadow-color:         rgba(#636b82, .75);
 
 $btn-tool-focus-ring:                   #636b82;
 $btn-tool-bg:                           #ece4d6;
@@ -114,9 +112,9 @@ $btn-option-focus-ring:                 #636b82;
 $btn-option-bg:                         #fff;
 $btn-option-color:                      #333;
 $btn-option-border-color:               transparent;
-$btn-option-hover-bg:                   #fff;
-$btn-option-hover-color:                $btn-option-color;
-$btn-option-hover-border-color:         #636b82;
+$btn-option-hover-bg:                   #6268ad;
+$btn-option-hover-color:                #fbfbfb;
+$btn-option-hover-border-color:         transparent;
 $btn-option-active-bg:                  #ff554d;
 $btn-option-active-color:               #111;
 $btn-option-active-border-color:        transparent;
@@ -127,14 +125,14 @@ $btn-option-active-hover-border-color:  #636b82;
 // Popovers
 $popover-bg:                            #faf4e8;
 $popover-border-color:                  #636b82;
-$popover-header-bg:                     #a0abfd;
+$popover-header-bg:                     #dad5cc;
 $popover-header-color:                  #333;
-$popover-header-border-color:           #d3cfc9;
+$popover-header-border-color:           #d3cfca;
 $popover-body-color:                    #333;
-$popover-footer-bg:                     #a0abfd;
+$popover-footer-bg:                     #dad5cc;
 $popover-footer-color:                  #333;
-$popover-footer-border-color:           #d3cfc9;
-$popover-section-border-color:          #d3cfc9;
+$popover-footer-border-color:           #d3cfca;
+$popover-section-border-color:          #d3cfca;
 
 // Modals
 $modal-backdrop-bg:                     #343e48;
@@ -142,13 +140,13 @@ $modal-backdrop-opacity:                .25;
 $modal-content-bg:                      #faf4e8;
 $modal-content-color:                   #333;
 $modal-content-border-color:            #636b82;
-$modal-header-bg:                       #a0abfd;
+$modal-header-bg:                       #dad5cc;
 $modal-header-color:                    #333;
-$modal-header-border-color:             #d3cfc9;
-$modal-footer-bg:                       #a0abfd;
+$modal-header-border-color:             #d3cfca;
+$modal-footer-bg:                       #dad5cc;
 $modal-footer-color:                    #333;
-$modal-footer-border-color:             #d3cfc9;
-$modal-section-border-color:            #d3cfc9;
+$modal-footer-border-color:             #d3cfca;
+$modal-section-border-color:            #d3cfca;
 
 // Goals
 $goal-modal-title-color:                inherit;
@@ -206,11 +204,11 @@ $toc-tab-active-border-color:           #ff554d;
 // TOC menu
 $toc-active-bg:                         #ff554d;
 $toc-link-color:                        #333;
-$toc-link-bg:                           $figure-caption-bg;
-$toc-link-border-color:                 #d3cfc9;
-$toc-link-hover-color:                  $toc-link-color;
+$toc-link-bg:                           $toc-modal-content-bg;
+$toc-link-border-color:                 #d3cfca;
+$toc-link-hover-color:                  #333;
 $toc-link-hover-bg:                     #acfdf0;
-$toc-link-hover-border-color:           #d3cfc9;
+$toc-link-hover-border-color:           #d3cfca;
 $toc-caret-color:                       $link-color;
 $toc-caret-bg:                          $toc-link-bg;
 $toc-caret-hover-color:                 $toc-link-hover-color;
@@ -270,7 +268,7 @@ $form-switch-thumb-checked-box-shadow-opacity:  .9;
 
 // Word bank
 $wordbank-border-color:                 #d3cfc9;
-$wordbank-col-bg:                       rgba(#ebe3d5, .3);
+$wordbank-col-bg:                       #f6efe3;
 $wordbank-control-color:                $link-color;
 $wordbank-control-hover-color:          $link-hover-color;
 $wordbank-count-bg:                     #ff554d;
