@@ -41,3 +41,16 @@ DATABASES = {
         'CONN_MAX_AGE': 60,
     }
 }
+
+if os.environ.get('DJANGO_ADMIN_EMAIL'):
+    ADMINS = [os.environ.get('DJANGO_ADMIN_NAME'), os.environ.get('DJANGO_ADMIN_EMAIL')]
+
+DEFAULT_FROM_EMAIL  = os.environ.get('DJANGO_DEFAULT_EMAIL', 'cisl@cast.org')
+SERVER_EMAIL        = os.environ.get('DJANGO_SERVER_EMAIL', 'cisl@cast.org')
+
+EMAIL_HOST          = os.environ.get('DJANGO_EMAIL_HOST', 'localhost')
+EMAIL_PORT          = os.environ.get('DJANGO_EMAIL_PORT', '25')
+EMAIL_HOST_USER     = os.environ.get('DJANGO_EMAIL_USER', None)
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_PASSWORD', None)
+EMAIL_USE_TLS       = os.environ.get('DJANGO_EMAIL_TLS', False)
+EMAIL_USE_SSL       = os.environ.get('DJANGO_EMAIL_SSL', False)
