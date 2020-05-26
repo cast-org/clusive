@@ -146,20 +146,20 @@ $btn-sizes: (
         "padding-x":     null,
         "font-size":     ($font-size-base * .75),
         "line-height":   null,
-        "border-radius": .1875rem
+        "border-radius": $border-radius
     ),
     "small": (
         "padding-y":     null,
         "padding-x":     null,
         "font-size":     ($font-size-base * .875),
         "line-height":   null,
-        "border-radius": .1875rem
+        "border-radius": $border-radius
     ),
     "splash": (
         "padding-y":     null,
         "padding-x":     null,
         "font-size":     ($font-size-base * 1.5),
         "line-height":   null,
-        "border-radius": .5rem
+        "border-radius": $border-radius
     )
 );

@@ -35,10 +35,10 @@ function find_selected_word() {
         if (match) {
             word = match[0];
         } else {
-            console.log('Did not find any word in selection: ', text);
+            console.info('Did not find any word in selection: %s', text);
         }
     } else {
-        console.log('No text selection found');
+        console.info('No text selection found');
     }
     return word;
 }
@@ -58,7 +58,7 @@ function load_definition(cued, word) {
                 $('#glossaryFooter').show();
             })
             .fail(function(err) {
-                console.log(err);
+                console.error(err);
                 $('#glossaryBody').html(err.responseText);
             })
             .always(function() {
@@ -158,7 +158,7 @@ vocabCheck.start = function(link, article) {
             $(link).CFW_Modal('show');
         })
         .fail(function(err) {
-            console.log(err);
+            console.error(err);
         });
 };
 

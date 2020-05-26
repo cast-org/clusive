@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.urls import path
 
 from . import views
-from .models import Site, Period, ClusiveUser
+from .models import Site, Period, ClusiveUser, Preference
+
 
 class ClusiveUserInline(admin.StackedInline):
     model = ClusiveUser
@@ -25,16 +26,29 @@ class UserAdmin(BaseUserAdmin):
         return my_urls + urls
 
 
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
+
+
 class PeriodAdminInline(admin.StackedInline):
     model = Period
 
 
+@admin.register(Site)
 class SiteAdmin(admin.ModelAdmin):
     model = Site
     inlines = (PeriodAdminInline,)
 
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
-admin.site.register(Site, SiteAdmin)
-admin.site.register(Period)
+@admin.register(Preference)
+class PreferenceAdmin(admin.ModelAdmin):
+    readonly_fields = ('id',)
+    list_display = ('id', 'user', 'pref', 'value')
+    list_filter = ('user', )
+    ordering = ('user', 'pref')
+
+
+@admin.register(Period)
+class PeriodAdmin(admin.ModelAdmin):
+    model = Period
+

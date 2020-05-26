@@ -3,96 +3,102 @@
 (function(fluid) {
     'use strict';
 
-    fluid.defaults("clusive.prefs.djangoStore", {
-        gradeNames: ["fluid.dataSource"],
+    fluid.defaults('clusive.prefs.djangoStore', {
+        gradeNames: ['fluid.dataSource'],
         storeConfig: {
-            getURL: "/account/prefs",
-            setURL: "/account/pref/%prefKey/%prefVal",
-            resetURL: "/account/prefs/reset"
+            getURL: '/account/prefs',
+            setURL: '/account/pref/%prefKey/%prefVal',
+            resetURL: '/account/prefs/reset'
         },
         components: {
             encoding: {
-                type: "fluid.dataSource.encoding.none"
+                type: 'fluid.dataSource.encoding.none'
             }
         },
         listeners: {
-            "onRead.impl": {
-                listener: "clusive.prefs.djangoStore.getUserPreferences",
-                args: ["{arguments}.1"]
+            'onRead.impl': {
+                listener: 'clusive.prefs.djangoStore.getUserPreferences',
+                args: ['{arguments}.1']
             }
         },
         invokers: {
             get: {
-                args: ["{that}", "{arguments}.0", "{that}.options.storeConfig"]
+                args: ['{that}', '{arguments}.0', '{that}.options.storeConfig']
             }
         }
     });
 
-    fluid.defaults("clusive.prefs.djangoStore.writable", {
-        gradeNames: ["fluid.dataSource.writable"],
+    fluid.defaults('clusive.prefs.djangoStore.writable', {
+        gradeNames: ['fluid.dataSource.writable'],
         listeners: {
-            "onWrite.impl": {
-                listener: "clusive.prefs.djangoStore.setUserPreferences"
+            'onWrite.impl': {
+                listener: 'clusive.prefs.djangoStore.setUserPreferences'
             }
         },
         invokers: {
             set: {
-                args: ["{that}", "{arguments}.0", "{arguments}.1", "{that}.options.storeConfig"]
+                args: ['{that}', '{arguments}.0', '{arguments}.1', '{that}.options.storeConfig']
             }
         }
     });
 
-    fluid.makeGradeLinkage("clusive.prefs.djangoStore.linkage", ["fluid.dataSource.writable", "clusive.prefs.djangoStore"], "clusive.prefs.djangoStore.writable");
+    fluid.makeGradeLinkage('clusive.prefs.djangoStore.linkage', ['fluid.dataSource.writable', 'clusive.prefs.djangoStore'], 'clusive.prefs.djangoStore.writable');
 
-    clusive.prefs.djangoStore.getUserPreferences = function (directModel) {
-        console.log("clusive.prefs.djangoStore.getUserPreferences", directModel);
-        
-        var getURL = directModel.getURL;        
+    clusive.prefs.djangoStore.getUserPreferences = function(directModel) {
+        console.debug('clusive.prefs.djangoStore.getUserPreferences', directModel);
 
-        var djangoStorePromise = fluid.promise();        
+        var getURL = directModel.getURL;
+
+        var djangoStorePromise = fluid.promise();
 
         $.get(getURL, function(data) {
-            console.log(getURL);
-            console.log(data);
-            djangoStorePromise.resolve({preferences: data});
+            console.debug(getURL);
+            console.debug(data);
+            djangoStorePromise.resolve({
+                preferences: data
+            });
         }).fail(function(error) {
-            console.log("an error occured", error);
-            djangoStorePromise.reject("error");
-        })
+            console.error('an error occured', error);
+            djangoStorePromise.reject('error');
+        });
 
         return djangoStorePromise;
+    };
 
-    }
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel) {
+        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model);
+        console.debug(arguments);
 
-    clusive.prefs.djangoStore.setUserPreferences = function (model, directModel) {
-        console.log("clusive.prefs.djangoStore.setUserPreferences", directModel, model);
-        console.log(arguments);
-
-        if($.isEmptyObject(model)) {
+        if ($.isEmptyObject(model)) {
             var resetURL = directModel.resetURL;
-            $.get(resetURL, function (data) {
-                console.log(resetURL, data);
+            $.get(resetURL, function(data) {
+                console.debug(resetURL, data);
             });
         } else {
             var getURL = directModel.getURL;
 
-            $.get(getURL, function (currentPrefs) {
-                fluid.each(fluid.get(model, "preferences"), function (prefVal, prefKey) {
-                    
+            $.get(getURL, function(currentPrefs) {
+                fluid.each(fluid.get(model, 'preferences'), function(prefVal, prefKey) {
                     // Implicit conversion of numbers as strings to compare with numbers
-                    if(currentPrefs[prefKey] != prefVal) {
-                        var setURL = fluid.stringTemplate(directModel.setURL, {prefKey: prefKey, prefVal: prefVal});
-                        $.get(setURL, function (data) {
-                            console.log(setURL, data);
-                        })
+                    if (currentPrefs[prefKey] != prefVal) {
+                        var setURL = fluid.stringTemplate(directModel.setURL, {
+                            prefKey: prefKey,
+                            prefVal: prefVal
+                        });
+                        $.get(setURL, function(data) {
+                            console.debug(setURL, data);
+                        });
                     } else {
-                        var message = fluid.stringTemplate("%prefKey already stored at value '%prefVal', not making save request", {prefVal: prefVal, prefKey:prefKey});                        
-                        console.log(message);
+                        var message = fluid.stringTemplate('%prefKey already stored at value \'%prefVal\', not making save request', {
+                            prefVal: prefVal,
+                            prefKey:prefKey
+                        });
+                        console.debug(message);
                     }
                 });
             });
         }
-    }
+    };
 
     // This removes the tableOfContents and
     // enhanceInputs preferences from the
@@ -124,11 +130,11 @@
                 panel: null
             },
             glossary: {
-                type: "cisl.prefs.glossary",
+                type: 'cisl.prefs.glossary',
                 enactor: {
-                    type: "cisl.prefs.enactor.glossary"
+                    type: 'cisl.prefs.enactor.glossary'
                 },
-                panel: null,
+                panel: null
             }
         }
     });
@@ -147,53 +153,53 @@
     });
 
     // Add a boolean preference for the glossary
-    fluid.defaults("cisl.prefs.schemas.glossary", {
-        gradeNames: ["fluid.prefs.schemas"],
+    fluid.defaults('cisl.prefs.schemas.glossary', {
+        gradeNames: ['fluid.prefs.schemas'],
         schema: {
-            "cisl.prefs.glossary": {
-                "type": "boolean",
-                "default": true
+            'cisl.prefs.glossary': {
+                type: 'boolean',
+                default: true
             }
         }
     });
 
-    fluid.defaults("cisl.prefs.enactor.glossary", {
-        gradeNames: ["fluid.prefs.enactor"],
+    fluid.defaults('cisl.prefs.enactor.glossary', {
+        gradeNames: ['fluid.prefs.enactor'],
         preferenceMap: {
-            "cisl.prefs.glossary": {
-                "model.glossary": "value"
+            'cisl.prefs.glossary': {
+                'model.glossary': 'value'
             }
         },
         modelListeners: {
             glossary: {
-                listener: "{that}.enactGlossary",
-                args: ["{that}.model.glossary"],
-                namespace: "enactGlossary"
+                listener: '{that}.enactGlossary',
+                args: ['{that}.model.glossary'],
+                namespace: 'enactGlossary'
             }
         },
         invokers: {
             enactGlossary: {
-                funcName: "cisl.prefs.enactor.glossary.enactGlossary",
-                args: ["{arguments}.0", "{that}"]
+                funcName: 'cisl.prefs.enactor.glossary.enactGlossary',
+                args: ['{arguments}.0', '{that}']
             }
         }
     });
-    
+
     cisl.prefs.enactor.glossary.enactGlossary = function(enableGlossary, that) {
-        console.log("enact glossary", enableGlossary, that);
-        var readerIframe = $("#D2Reader-Container").find("iframe"); 
+        console.debug('enact glossary', enableGlossary, that);
+        var readerIframe = $('#D2Reader-Container').find('iframe');
         var readerWindow;
-        if(readerIframe.length > 0) {
+        if (readerIframe.length > 0) {
             readerWindow = readerIframe[0].contentWindow;
-        }        
-        
-        if(readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
-            console.log("readerWindow");
-            if(enableGlossary) {
-                console.log("mark");
+        }
+
+        if (readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
+            console.debug('readerWindow');
+            if (enableGlossary) {
+                console.debug('mark');
                 readerWindow.markCuedWords();
             } else {
-                console.log("unmark");
+                console.debug('unmark');
                 readerWindow.unmarkCuedWords();
             }
         }
@@ -217,10 +223,10 @@
         }
     });
 
-    cisl.prefs.getSettings = function (that, isLoggedIn) {
-        console.log("calling CISL prefs Editor fetch impl");
-        console.log("isLoggedIn", isLoggedIn);        
-        
+    cisl.prefs.getSettings = function(that, isLoggedIn) {
+        console.debug('calling CISL prefs Editor fetch impl');
+        console.debug('isLoggedIn', isLoggedIn);
+
         // If logged in retrieve from store
         // var prefGetURL = "/account/prefs";
         // $.get(prefGetURL, function (data) {
@@ -228,15 +234,15 @@
         // });
 
         var isLoggedIn = false;
-        if(! isLoggedIn) {
-            console.log("Not logged in, using local cookie for fetch method");
+        if (!isLoggedIn) {
+            console.warn('Not logged in, using local cookie for fetch method');
             return that.getSettings();
-        }        
+        }
     };
 
-    cisl.prefs.setSettings = function (model, directModel, set) {
-        console.log("calling CISL prefs Editor setSettings");        
-        
+    cisl.prefs.setSettings = function(model, directModel, set) {
+        console.debug('calling CISL prefs Editor setSettings');
+
         // // If logged In
         // fluid.each(fluid.get(modelToSave, "preferences"), function (prefVal, prefKey) {
         //     console.log(prefKey, prefVal);
@@ -245,10 +251,10 @@
         //         console.log(prefSetURL, data);
         //     })
         // });
-        
+
         var isLoggedIn = false;
-        if(! isLoggedIn) {
-            console.log("Not logged in, using local cookie for write method");
+        if (!isLoggedIn) {
+            console.warn('Not logged in, using local cookie for write method');
             return that.setSettings(model, directModel, set);
         }
     };
@@ -318,7 +324,7 @@
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_glossary', '{that}'],
                 excludeSource: 'init'
-            },            
+            },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
                 includeSource: 'init'
@@ -338,43 +344,42 @@
             lineSpacing: 'modalSettings.lineSpacing',
             letterSpacing: 'modalSettings.letterSpacing',
             font: 'modalSettings.font',
-            color: 'modalSettings.color',            
+            color: 'modalSettings.color',
             glossaryCheckbox: {
-                selector: "glossary",
-                path: "modalSettings.glossary",
+                selector: 'glossary',
+                path: 'modalSettings.glossary',
                 rules: {
                     domToModel: {
-                        "": {
+                        '': {
                             transform: {
-                                type: "gpii.binder.transforms.checkToBoolean",
-                                inputPath: ""
+                                type: 'gpii.binder.transforms.checkToBoolean',
+                                inputPath: ''
                             }
                         }
                     },
                     modelToDom: {
-                        "": {
+                        '': {
                             transform: {
-                                type: "gpii.binder.transforms.booleanToCheck",
-                                inputPath: ""
+                                type: 'gpii.binder.transforms.booleanToCheck',
+                                inputPath: ''
                             }
                         }
-                    }                    
+                    }
                 }
-            },
-            
+            }
+
         }
     });
 
-    cisl.prefs.modalSettings.getMappedValue = function(changedValue, map) {        
+    cisl.prefs.modalSettings.getMappedValue = function(changedValue, map) {
         return map[changedValue];
     };
 
-    cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {       
+    cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
         that.applier.change(path, changedValue);
     };
 
-    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {        
-
+    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {
         that.applier.change('modalSettings.textSize', fluid.get(preferences, 'fluid_prefs_textSize'));
 
         that.applier.change('modalSettings.font', fluid.get(preferences, 'fluid_prefs_textFont'));
@@ -388,7 +393,7 @@
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
     };
 
-    fluid.registerNamespace("gpii.binder.transforms");
+    fluid.registerNamespace('gpii.binder.transforms');
 
     /**
      *
@@ -398,18 +403,18 @@
      * @return {Boolean} - `true` if the first value is checked, `false`.
      *
      */
-    gpii.binder.transforms.checkToBoolean = function (value) {
-        return fluid.get(value, 0) ? true : false;
+    gpii.binder.transforms.checkToBoolean = function(value) {
+        return Boolean(fluid.get(value, 0));
     };
 
-    gpii.binder.transforms.checkToBoolean.invert = function (transformSpec) {
-        transformSpec.type = "gpii.binder.transforms.booleanToCheck";
+    gpii.binder.transforms.checkToBoolean.invert = function(transformSpec) {
+        transformSpec.type = 'gpii.binder.transforms.booleanToCheck';
         return transformSpec;
     };
 
-    fluid.defaults("gpii.binder.transforms.checkToBoolean", {
-        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
-        invertConfiguration: "gpii.binder.transforms.checkToBoolean.invert"
+    fluid.defaults('gpii.binder.transforms.checkToBoolean', {
+        gradeNames: ['fluid.standardTransformFunction', 'fluid.lens'],
+        invertConfiguration: 'gpii.binder.transforms.checkToBoolean.invert'
     });
 
     /**
@@ -420,18 +425,17 @@
      * @return {Array} - An array with the first value set to "on" if the value is `true`, an empty Array otherwise.
      *
      */
-    gpii.binder.transforms.booleanToCheck = function (value) {
-        return value ? ["on"] : [];
+    gpii.binder.transforms.booleanToCheck = function(value) {
+        return value ? ['on'] : [];
     };
 
-    gpii.binder.transforms.booleanToCheck.invert = function (transformSpec) {
-        transformSpec.type = "gpii.binder.transforms.checkToBoolean";
+    gpii.binder.transforms.booleanToCheck.invert = function(transformSpec) {
+        transformSpec.type = 'gpii.binder.transforms.checkToBoolean';
         return transformSpec;
     };
 
-    fluid.defaults("gpii.binder.transforms.booleanToCheck", {
-        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
-        invertConfiguration: "gpii.binder.transforms.booleanToCheck.invert"
+    fluid.defaults('gpii.binder.transforms.booleanToCheck', {
+        gradeNames: ['fluid.standardTransformFunction', 'fluid.lens'],
+        invertConfiguration: 'gpii.binder.transforms.booleanToCheck.invert'
     });
-    
 }(fluid_3_0_0));

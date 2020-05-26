@@ -8,7 +8,7 @@
     padding: $skiplink-padding;
     color: var(--CT_skiplinkColor);
     text-align: center;
-    text-decoration: none;
+    text-decoration: underline;
     background-color: var(--CT_skiplinkBg);
     border: $skiplink-border-width solid var(--CT_skiplinkBorderColor);
     outline: 0;

@@ -6,7 +6,7 @@
     margin-right: -6rem;
     margin-bottom: 2rem;
     line-height: 1;
-    background: linear-gradient(90deg, var(--CT_headerBgStart) 0%, var(--CT_headerBgEnd) $header-opacity-stop);
+    background: var(--CT_headerBg);
     @include border-radius($header-border-radius);
 
     @include media-breakpoint-up(md) {

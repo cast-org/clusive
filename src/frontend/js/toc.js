@@ -23,7 +23,7 @@ function table_of_contents_level(list, level, id) {
                 submenu_id +
                 '" class="has-children ' +
                 toc_depth +
-                '" role="button" data-cfw="collapse" data-cfw-collapse-animate="false">' +
+                '" role="button" data-cfw="collapse" data-cfw-collapse-animate="false" title="Toggle sub-menu">' +
                 '<span class="icon-angle-right" aria-hidden="true"></span>\n' +
                 '<span class="sr-only">Toggle menu for item ' +
                 element.title +
@@ -93,7 +93,7 @@ function scroll_to_current_toc_item() {
     'use strict';
 
     var elt =  $('#contents_list').find('a.active');
-    console.log('Scrolling to ', elt);
+    console.debug('Scrolling to ', elt);
     if (elt.length > 0) {
         elt[elt.length - 1].scrollIntoView();
     }
@@ -141,7 +141,7 @@ function sendLocationToServer(book, locString) {
         locator: locString
     })
         .fail(function(err) {
-            console.log('Set location API failure!', err);
+            console.error('Set location API failure!', err);
         });
 }
 

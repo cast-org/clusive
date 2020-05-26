@@ -1,15 +1,18 @@
 <div class="sidebar-tool" role="region" aria-label="Reading tools">
-    <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
+    <button type="button" class="btn btn-setting" aria-label="Settings" title="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
         <span class="icon-settings" aria-hidden="true"></span>
+        <span class="sr-only">Settings</span>
     </button>
 {% if read_aloud %}
-    <button type="button" class="btn btn-tool" aria-label="Read aloud" id="readAloudButton">
+    <button type="button" class="btn btn-tool" aria-label="Read aloud" title="Read aloud" id="readAloudButton">
         <span id="readAloudIcon" class="icon-play" aria-hidden="true"></span>
+        <span id="readAloudSrText" class="sr-only">Read aloud</span>
     </button>
 {% endif %}
 {% if lookup %}
-    <button id="glossaryButton" type="button" class="btn btn-tool" aria-label="Lookup definition">
+    <button id="glossaryButton" type="button" class="btn btn-tool" aria-label="Word lookup" title="Word lookup">
         <span class="icon-book" aria-hidden="true"></span>
+        <span class="sr-only">Word lookup</span>
     </button>
 {% endif %}
 </div>

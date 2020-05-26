@@ -22,11 +22,7 @@
     },
     {
       "rel": "cover",
-      "href": "GoogleDoc/images/image1.gif",
-      "type": "image/gif"
-    },
-    {
-      "href": "GoogleDoc/images/image2.jpg",
+      "href": "GoogleDoc/images/image1.jpg",
       "type": "image/jpeg"
     }
   ]
