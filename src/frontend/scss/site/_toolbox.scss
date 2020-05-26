@@ -1,0 +1,101 @@
+@keyframes toolsAnimateIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.5);
+    }
+}
+
+.toolbox {
+    position: absolute;
+    z-index: 999;
+    display: none;
+    user-select: none;
+    transform: translate(-50%, -100%) translateY($toolbox-menu-arrow-height * -1);
+    transform-origin: bottom;
+    animation: toolsAnimateIn 100ms ease-out both;
+}
+
+.toolbox-menu-group {
+    color: var(--CT_toolboxMenuColor);
+    background: var(--CT_toolboxMenuBg);
+    border: $toolbox-menu-border-width solid var(--CT_toolboxMenuBorderColor);
+    @include border-radius($toolbox-menu-border-radius);
+
+    > * {
+        @include border-radius($toolbox-menu-border-radius);
+    }
+    > :not(:last-child) {
+        @include border-end-radius(0);
+    }
+    > :not(:first-child) {
+        @include border-start-radius(0);
+    }
+}
+
+.toolbox-menu-arrow {
+    position: absolute;
+    bottom: $toolbox-menu-arrow-height * -1;
+    left: 50%;
+    display: block;
+    width: $toolbox-menu-arrow-width;
+    height: $toolbox-menu-arrow-height;
+    transform: translateX(-50%);
+
+    &::before,
+    &::after {
+        position: absolute;
+        display: block;
+        content: "";
+        border-color: transparent;
+        border-style: solid;
+    }
+    &::before {
+        bottom: 0;
+        border-width: $toolbox-menu-arrow-height ($toolbox-menu-arrow-width / 2) 0;
+        border-top-color: var(--CT_toolboxMenuBorderColor);
+    }
+    &::after {
+        bottom: $toolbox-menu-border-width;
+        border-width: $toolbox-menu-arrow-height ($toolbox-menu-arrow-width / 2) 0;
+        border-top-color: var(--CT_toolboxMenuBg);
+    }
+
+}
+
+.toolbox-btn {
+    padding: $toolbox-btn-padding;
+    @include font-size($toobox-btn-font-size);
+    color: var(--CT_toolboxBtnColor);
+    background-color: var(--CT_toolboxBtnBg);
+    border-width: 0;
+
+    @include hover-focus() {
+        color: var(--CT_toolboxBtnHoverColor);
+        background-color: var(--CT_toolboxBtnHoverBg);
+    }
+}
+
+
+.color-option {
+    //background-color: gainsboro;
+
+    span {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        //background: grey;
+        @include border-radius(50%);
+    }
+}
+
+.toolbox-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 998;
+    display: none;
+    width: 100%;
+    background: rgba(255, 255, 255, 0);
+}

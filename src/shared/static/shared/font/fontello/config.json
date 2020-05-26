@@ -395,6 +395,18 @@
       "css": "sticky-note-o",
       "code": 62026,
       "src": "fontawesome"
+    },
+    {
+      "uid": "e835d9d0f2ee39ae01b01cc6a6fa24ab",
+      "css": "play-circled2",
+      "code": 59423,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "41087bc74d4b20b55059c60a33bf4008",
+      "css": "edit",
+      "code": 59424,
+      "src": "fontawesome"
     }
   ]
 }

@@ -298,3 +298,12 @@ $highlight-undelete-bg:                 #363740;
 
 $note-title-color:                      #eceff5;
 $note-undelete-bg:                      #363740;
+
+// Toolbox (Context menu)
+$toolbox-menu-bg:                       #272727;
+$toolbox-menu-color:                    #636b82;
+$toolbox-menu-border-color:             #636b82;
+$toolbox-btn-bg:                        $toolbox-menu-bg;
+$toolbox-btn-color:                     $toolbox-menu-color;
+$toolbox-btn-hover-bg:                  #6268ad;
+$toolbox-btn-hover-color:               #eceff5;
