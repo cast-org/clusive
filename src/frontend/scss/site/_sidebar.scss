@@ -6,7 +6,7 @@
     width: 3rem;
     max-width: 3rem;
     padding: .75rem .25rem;
-    background: linear-gradient(180deg, var(--CT_sidebarBgStart) 0%, var(--CT_sidebarBgEnd) 100%);
+    background: var(--CT_sidebarStartBg);
     @include border-radius($sidebar-border-radius);
 
     @include media-breakpoint-up(sm) {
@@ -30,7 +30,7 @@
             min-width: 4rem;
             max-width: $sidebar-xl-width;
             content: "";
-            background: linear-gradient(180deg, var(--CT_sidebarBgStart) 0%, var(--CT_sidebarBgEnd) 100%);
+            background: var(--CT_sidebarStartBg);
             @include border-radius($sidebar-border-radius);
         }
     }
@@ -81,7 +81,7 @@
     flex-direction: column;
     order: 1;
     margin-left: 1rem;
-    background: linear-gradient(180deg, var(--CT_sidebarEndBgStart) 0%, var(--CT_sidebarEndBgEnd) 100%);
+    background: var(--CT_sidebarEndBg);
 
     @include media-breakpoint-up(xl) {
         background: none;
@@ -89,7 +89,7 @@
         &::after {
             right: auto;
             left: 0;
-            background: linear-gradient(180deg, var(--CT_sidebarEndBgStart) 0%, var(--CT_sidebarEndBgEnd) 100%);
+            background: var(--CT_sidebarEndBg);
         }
     }
 }

@@ -174,13 +174,13 @@ $list-item-active-color:                unset;
 $btn-font-weight:                       700;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
 $btn-focus-box-shadow-alpha:            .85;
-$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
-$btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
+$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRing), $btn-focus-box-shadow-alpha);
+$btn-default-focus-box-shadow-color:    var(--CT_focusRing);
 
 $input-bg:                              #fff;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
-$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
+$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRing), $input-focus-box-shadow-alpha);
 
 $form-group-margin-bottom:              .5rem;
 
@@ -286,10 +286,9 @@ $modal-footer-border-width:             1px;
 
 $skiplink-offset-top:                   .25rem;
 $skiplink-padding:                      .25rem .5rem;
-$skiplink-border-width:                 2px;
+$skiplink-border-width:                 1px;
 
 $header-border-radius:                  $border-radius;
-$header-opacity-stop:                   65%;
 
 $sidebar-border-radius:                 $header-border-radius;
 // Sidebar stretched max width is half of:
@@ -305,7 +304,7 @@ $setting-title-margin-bottom:           .25rem;
 $setting-title-font-size:               .875rem;
 $setting-title-font-weight:             700;
 
-$setting-modal-header-border-width:     7px;
+$setting-modal-header-border-width:     3px;
 $setting-modal-footer-border-width:     3px;
 
 $setting-theme-options: (
