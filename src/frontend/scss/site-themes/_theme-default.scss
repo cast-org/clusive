@@ -14,15 +14,11 @@ $img-mix-blend-mode:                    normal;
 $bg-image-override:                     null;
 
 $selection-bg:                          #acfdf0;
-$selection-color:                       #111;
+$selection-color:                       #333;
 
-$btn-focus-box-shadow-alpha:            .8;
-
-$border-color:                          #bfc6cd;
-
-$skiplink-bg:                           #66faff;
-$skiplink-color:                        #333;
-$skiplink-border-color:                 #333;
+$skiplink-bg:                           #6268ad;
+$skiplink-color:                        #fbfbfb;
+$skiplink-border-color:                 #6268ad;
 
 $library-bg:                            #72c0b2;
 $library-logo-icon-color:               #fbfbfb;
@@ -31,34 +27,27 @@ $library-logo-text-color:               #333;
 $home-bg:                               #72c0b2;
 $home-create-border-color:              #636b82;
 
-$header-bg:                             #636b82;
+$header-bg:                             linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, 0) 65%);
 $header-color:                          inherit;
-$header-opacity-start:                  .3;
-$header-opacity-end:                    0;
 $header-logo-icon-color:                #fbfbfb;
-$header-logo-text-color:                #333;
+$header-logo-text-color:                #636b82;
 $page-title-border-color:               #acfdf0;
 
-$sidebar-bg:                            $header-bg;
-$sidebar-end-bg:                        $header-bg;
-$sidebar-opacity-start:                 .15;
-$sidebar-opacity-end:                   .3;
-$sidebar-end-opacity-start:             .6;
-$sidebar-end-opacity-end:               .8;
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .15) 0%, rgba(#636b82, .3) 100%);
+$sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .6) 0%, rgba(#636b82, .8) 100%);
 
 // Figure
-$figure-caption-bg:                     #ebe3d5;
+$figure-caption-bg:                     #ebe9e4;
 $figure-caption-color:                  #666;
 
 // Cards
-$card-bg:                               #ebe3d5;
-$card-color:                            $body-color;
-$card-border-color:                     #ebe3d5;
-$card-img-bg:                           rgba(#72c0b2, .6);
-$card-library-box-shadow:               #fbfbfb;
-$card-login-bg:                         #acfdf0;
-$card-login-bg-opacity:                 .3;
-$card-login-color:                      $body-color;
+$card-bg:                               #ebe9e4;
+$card-color:                            inherit;
+$card-border-color:                     #ebe9e4;
+$card-img-bg:                           rgba(#72c0b2, .3);
+$card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
+$card-login-bg:                         rgba(#acfdf0, .3);
+$card-login-color:                      inherit;
 $card-login-forgot-border-color:        #d3cfc9;
 
 // Buttons
@@ -66,22 +55,22 @@ $btn-primary-focus-ring:                #636b82;
 $btn-primary-bg:                        #acfdf0;
 $btn-primary-color:                     #111;
 $btn-primary-border-color:              transparent;
-$btn-primary-hover-bg:                  palette($btn-primary-bg, 575);
-$btn-primary-hover-color:               $btn-primary-color;
+$btn-primary-hover-bg:                  #6268ad;
+$btn-primary-hover-color:               #fbfbfb;
 $btn-primary-hover-border-color:        transparent;
-$btn-primary-active-bg:                 palette($btn-primary-bg, 625);
-$btn-primary-active-color:              $btn-primary-color;
+$btn-primary-active-bg:                 palette($btn-primary-hover-bg, 600);
+$btn-primary-active-color:              $btn-primary-hover-color;
 $btn-primary-active-border-color:       transparent;
 
 $btn-secondary-focus-ring:              #636b82;
 $btn-secondary-bg:                      #ff554d;
 $btn-secondary-color:                   #111;
 $btn-secondary-border-color:            transparent;
-$btn-secondary-hover-bg:                palette($btn-secondary-bg, 550);
-$btn-secondary-hover-color:             $btn-secondary-color;
+$btn-secondary-hover-bg:                #6268ad;
+$btn-secondary-hover-color:             #fbfbfb;
 $btn-secondary-hover-border-color:      transparent;
-$btn-secondary-active-bg:               palette($btn-secondary-bg, 600);
-$btn-secondary-active-color:            #000;
+$btn-secondary-active-bg:               palette($btn-secondary-hover-bg, 600);
+$btn-secondary-active-color:            $btn-secondary-hover-color;
 $btn-secondary-active-border-color:     transparent;
 
 $btn-nav-focus-ring:                    #636b82;
@@ -94,6 +83,7 @@ $btn-nav-hover-border-color:            transparent;
 $btn-nav-active-bg:                     $btn-nav-bg;
 $btn-nav-active-color:                  palette($btn-nav-color, 800);
 $btn-nav-active-border-color:           transparent;
+$btn-nav-disabled-opacity:              .4;
 
 $btn-setting-focus-ring:                #636b82;
 $btn-setting-bg:                        rgba(#acfdf0, .7);
@@ -105,8 +95,7 @@ $btn-setting-hover-border-color:        transparent;
 $btn-setting-active-bg:                 rgba(#acfdf0, 1);
 $btn-setting-active-color:              $btn-setting-color;
 $btn-setting-active-border-color:       transparent;
-$btn-setting-text-shadow-color:         #636b82;
-$btn-setting-text-shadow-opacity:       .75;
+$btn-setting-text-shadow-color:         rgba(#636b82, .75);
 
 $btn-tool-focus-ring:                   #636b82;
 $btn-tool-bg:                           rgba(#acfdf0, .7);
@@ -123,9 +112,9 @@ $btn-option-focus-ring:                 #636b82;
 $btn-option-bg:                         #fff;
 $btn-option-color:                      #333;
 $btn-option-border-color:               transparent;
-$btn-option-hover-bg:                   #fff;
-$btn-option-hover-color:                $btn-option-color;
-$btn-option-hover-border-color:         #636b82;
+$btn-option-hover-bg:                   #6268ad;
+$btn-option-hover-color:                #fbfbfb;
+$btn-option-hover-border-color:         transparent;
 $btn-option-active-bg:                  #ff554d;
 $btn-option-active-color:               #111;
 $btn-option-active-border-color:        transparent;
@@ -135,7 +124,7 @@ $btn-option-active-hover-border-color:  #636b82;
 
 // Popovers
 $popover-bg:                            #fbfbfb;
-$popover-border-color:                  #636b82;
+$popover-border-color:                  #707996;
 $popover-header-bg:                     #acfdf0;
 $popover-header-color:                  #333;
 $popover-header-border-color:           #d3cfc9;
@@ -150,7 +139,7 @@ $modal-backdrop-bg:                     #343e48;
 $modal-backdrop-opacity:                .25;
 $modal-content-bg:                      #fbfbfb;
 $modal-content-color:                   #333;
-$modal-content-border-color:            #636b82;
+$modal-content-border-color:            #707996;
 $modal-header-bg:                       #acfdf0;
 $modal-header-color:                    #333;
 $modal-header-border-color:             #d3cfc9;
@@ -173,7 +162,7 @@ $why-icon-active-text-shadow-opacity:   .75;
 // Settings
 $setting-border-color:                  #d3cfc9;
 $setting-title-color:                   #666;
-$setting-modal-content-bg:              #ebe3d5;
+$setting-modal-content-bg:              #ebe9e4;
 $setting-modal-content-color:           #333;
 $setting-modal-content-border-color:    #636b82;
 $setting-modal-header-bg:               #dad5cc; //rgba(#d3cfc9, .7);
@@ -215,7 +204,7 @@ $toc-tab-active-border-color:           #ff554d;
 // TOC menu
 $toc-active-bg:                         #ff554d;
 $toc-link-color:                        #333;
-$toc-link-bg:                           $figure-caption-bg;
+$toc-link-bg:                           $toc-modal-content-bg;
 $toc-link-border-color:                 #d3cfc9;
 $toc-link-hover-color:                  #333;
 $toc-link-hover-bg:                     #acfdf0;
@@ -279,7 +268,7 @@ $form-switch-thumb-checked-box-shadow-opacity:  .9;
 
 // Word bank
 $wordbank-border-color:                 #d3cfc9;
-$wordbank-col-bg:                       rgba(#ebe3d5, .3);
+$wordbank-col-bg:                       #f6f4f0;
 $wordbank-control-color:                $link-color;
 $wordbank-control-hover-color:          $link-hover-color;
 $wordbank-count-bg:                     #ff554d;
@@ -290,7 +279,7 @@ $wordbank-count-empty-color:            #111;
 $wordbank-count-empty-border-color:     #636b82;
 
 // Text-to-Speech (TTS)
-$tts-highlight-bg:                      #fd6;
+$tts-highlight-bg:                      #fffd38;
 $tts-highlight-color:                   #636b82;
 
 // Glossary/definitions

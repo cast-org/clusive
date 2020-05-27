@@ -12,6 +12,14 @@
         margin-right: 0;
     }
 
+    .site-header-logo {
+        color: var(--CT_libraryLogoTextColor);
+
+        .icon-logo-clusive-toggle {
+            color: var(--CT_libraryLogoIconColor);
+        }
+    }
+
     @include media-breakpoint-up(md) {
         .site-header {
             left: -5rem;

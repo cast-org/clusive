@@ -37,7 +37,7 @@
 }
 
 .card-library {
-    box-shadow: -.125rem -.5rem 0 .125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1), -.125rem -.125rem 0 .125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1);
+    box-shadow: var(--CT_cardLibraryBoxShadow);
 
     .link-stretch {
         color: inherit;
