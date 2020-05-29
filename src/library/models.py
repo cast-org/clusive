@@ -1,6 +1,7 @@
 import json
 
 from django.db import models
+from django.utils import timezone
 
 from roster.models import ClusiveUser, Period
 
@@ -25,8 +26,8 @@ class BookVersion(models.Model):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     sortOrder = models.SmallIntegerField()
     glossary_words = models.TextField(default="[]")  # Words in the glossary that occur in this version
-    all_words = models.TextField(default="[]")       # All words that occur in this version
-    new_words = models.TextField(default="[]")       # Words that occur in this version but not the previous one.
+    all_words = models.TextField(default="[]")  # All words that occur in this version
+    new_words = models.TextField(default="[]")  # Words that occur in this version but not the previous one.
 
     @property
     def glossary_word_list(self):
@@ -117,3 +118,32 @@ class Paradata(models.Model):
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
+
+
+class Annotation(models.Model):
+    """Holds one highlight/bookmark/annotation/note"""
+    bookVersion = models.ForeignKey(to=BookVersion, on_delete=models.CASCADE, db_index=True)
+    user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    highlight = models.TextField()
+    dateAdded = models.DateTimeField(default=timezone.now)
+
+    # later: note
+    # later: category
+
+    @property
+    def highlightWithId(self):
+        """
+        Returns the JSON stored as the highlight, plus an 'id' field with the primary key.
+        This is what is reported to Readium so that we can identify each highlight by id
+        when it is clicked on.
+        """
+        hl = json.loads(self.highlight)
+        hl['id'] = self.pk
+        return hl
+
+    @classmethod
+    def getList(self, user, bookVersion):
+        return [a.highlightWithId for a in Annotation.objects.filter(user=user, bookVersion=bookVersion)]
+
+    def __str__(self):
+        return "[Annotation %d: %s in %s]" % (self.pk, self.user, self.bookVersion)

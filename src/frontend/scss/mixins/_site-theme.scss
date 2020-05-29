@@ -277,5 +277,13 @@
 
         --CT_noteTitleColor: #{$note-title-color};
         --CT_noteUndeleteBg: #{$note-undelete-bg};
+
+        --CT_toolboxMenuBg: #{$toolbox-menu-bg};
+        --CT_toolboxMenuColor: #{$toolbox-menu-color};
+        --CT_toolboxMenuBorderColor: #{$toolbox-menu-border-color};
+        --CT_toolboxBtnBg: #{$toolbox-btn-bg};
+        --CT_toolboxBtnColor: #{$toolbox-btn-color};
+        --CT_toolboxBtnHoverBg: #{$toolbox-btn-hover-bg};
+        --CT_toolboxBtnHoverColor: #{$toolbox-btn-hover-color};
     }
 }
