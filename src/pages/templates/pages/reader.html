@@ -24,7 +24,7 @@ var pub_version = "{{ version }}";
 {% block content %}
 {% include "shared/partial/site_header_small.html" with user_actions=True %}
 
-<!-- TODO: this is required due to a bug in Reader 1.1.3, remove after upgrading to next version -->
+<!-- TODO: this is required due to a bug in Reader 1.1.4, remove when fixed -->
 <div id="headerMenu"></div>
 
 <div id="D2Reader-Container" style="position: relative;">
@@ -67,7 +67,7 @@ var pub_version = "{{ version }}";
 
     <script>
         var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% static "shared/pubs/" %}'
-            + '{{ pub_id }}/{{ version }}/manifest.json';
+            + pub_id + '/' + pub_version + '/manifest.json';
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
@@ -87,7 +87,7 @@ var pub_version = "{{ version }}";
 
         var userSettings = { textAlignment:'start' };
         var lastReadingPosition = {{ last_position|safe }};
-        var annotations = [];
+        var annotations = JSON.parse('{{ annotations|safe }}');
         var baseUrl = null;
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
 
@@ -121,7 +121,7 @@ var pub_version = "{{ version }}";
                 },
                 material: false,
                 userSettings: userSettings,
-                annotations: annotations,
+                initialAnnotations: {"bookmarks":[], "highlights": annotations},
                 lastReadingPosition: lastReadingPosition,
                 injectables: injectables,
 
@@ -129,25 +129,49 @@ var pub_version = "{{ version }}";
                 initialAnnotationColor: "#ff8500",
 
             api: {
-                    addBookmark: function (bookmark) {
-                        bookmark.id = Math.random();
-                        return Promise.resolve(bookmark);
-                    },
-                    deleteBookmark: function (bookmark) {
-                        return Promise.resolve();
-                    },
-                    updateCurrentlocation: function (locator) {
-                        // Grey out navigation buttons when necessary.
-                        var nRes = D2Reader.currentResource();
-                        document.getElementById('prevResourceButton').disabled = (nRes===0);
-                        document.getElementById('nextResourceButton').disabled = (nRes===D2Reader.totalResources()-1);
-                        return trackReadingLocation('{{pub_id}}', locator);
-                    },
-                    updateUserSettings: function (userSettings) {
-                        return Promise.resolve();
-                    },
-                }
-            }).then(instance => {
+                addBookmark: function (bookmark) {
+                    console.error('Bookmark saving is not implemented yet. Received: ', bookmark);
+                    return Promise.resolve(bookmark);
+                },
+                deleteBookmark: function (bookmark) {
+                    console.error('Bookmark deletion is not implemented yet. Received: ', bookmark);
+                    return Promise.resolve();
+                },
+                addAnnotation: function (annotation) {
+                    return $.post('/library/annotation', {
+                        book: pub_id,
+                        version: pub_version,
+                        highlight: JSON.stringify(annotation)
+                    })
+                        .then(function(result) {
+                            annotation.id = result.id;
+                            console.info('Successfully stored annotation ', result.id);
+                            return annotation;
+                        })
+                        .fail(function(err) {
+                            console.error('Set location API failure!', err);
+                        });
+                },
+                selectedAnnotation: function (annotation) {
+                    console.info('Selected annotation: ', annotation.id);
+                    return Promise.resolve();
+                },
+                deleteAnnotation: function (annotation) {
+                    console.warn('Not implemented: Delete annotation: ', annotation.id);
+                    return Promise.reject();
+                },
+                updateCurrentlocation: function (locator) {
+                    // Grey out navigation buttons when necessary.
+                    var nRes = D2Reader.currentResource();
+                    document.getElementById('prevResourceButton').disabled = (nRes===0);
+                    document.getElementById('nextResourceButton').disabled = (nRes===D2Reader.totalResources()-1);
+                    return trackReadingLocation(pub_id, locator);
+                },
+                updateUserSettings: function (userSettings) {
+                    return Promise.resolve();
+                },
+            }
+        }).then(instance => {
                 console.log("D2Reader loaded ", instance);
                 console.log("instance.bookmarkModule ", instance.bookmarkModule);
                 // Create the preference editor when the Reader has loaded,
@@ -169,7 +193,7 @@ var pub_version = "{{ version }}";
                 });
 
             }).catch(error => {
-                console.error("error.message ", error.message);
+                console.error("error loading: ", error);
             });
     </script>
 

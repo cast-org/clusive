@@ -8,7 +8,7 @@ from django.views.generic import ListView, TemplateView, RedirectView
 
 from eventlog.signals import page_viewed
 from glossary.models import WordModel
-from library.models import Book, BookVersion, Paradata, BookAssignment
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -110,6 +110,8 @@ class ReaderView(LoginRequiredMixin,TemplateView):
             version = int(context.get('version'))
             book = Book.objects.get(path=pub_id)
             clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+            bookVersion = BookVersion.objects.get(book=book, sortOrder=version)
+            annotationList = Annotation.getList(user=clusive_user, bookVersion=bookVersion)
             pdata = Paradata.record_view(book, version, clusive_user)
             bv_prev = str(version-1) if version>0 \
                 else False
@@ -119,6 +121,7 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                                    'prev_version' : bv_prev,
                                    'next_version' : bv_next,
                                    'last_position' : pdata.lastLocation or "null",
+                                   'annotations' : json.dumps(annotationList),
                                    }
             page_viewed.send(self.__class__, request=request, document=pub_id)
         return super().get(request, *args, **kwargs)
