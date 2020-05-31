@@ -105,7 +105,10 @@ class Paradata(models.Model):
         bv = BookVersion.objects.get(book=book, sortOrder=versionNumber)
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
         para.viewCount += 1
-        para.lastVersion = bv
+        if para.lastVersion != bv:
+            # If we're switching to a different version, clear out last reading location
+            para.lastLocation = None
+            para.lastVersion = bv
         para.save()
         return para
 
