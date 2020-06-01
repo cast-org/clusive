@@ -7,6 +7,8 @@ from django.contrib.auth import login
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+from django.views import View
+
 from eventlog.signals import preference_changed
 from roster.models import ClusiveUser
 from roster import csvparser
@@ -14,6 +16,14 @@ from roster.csvparser import parse_file
 from roster.models import ClusiveUser, Site, Period
 
 logger = logging.getLogger(__name__)
+
+class PreferenceView(View):
+    def get(self, request):
+        user = ClusiveUser.from_request(request)
+        prefs = user.get_preferences()
+        return JsonResponse({p.pref:p.value for p in prefs})
+    def post(self, request):
+        return JsonResponse({'success': 1})
 
 def guest_login(request):
     clusive_user = ClusiveUser.make_guest()
@@ -30,12 +40,6 @@ def set_preference(request, pref, value):
         preference.save()
         preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)
     return JsonResponse({'success' : 1})
-
-
-def get_preferences(request):
-    user = ClusiveUser.from_request(request)
-    prefs = user.get_preferences()
-    return JsonResponse({p.pref:p.value for p in prefs})
 
 # TODO: how does a preference reset get logged?
 def reset_preferences(request):

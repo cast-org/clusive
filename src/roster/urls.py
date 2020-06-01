@@ -24,7 +24,7 @@ urlpatterns = [
 
     path('guest_login', views.guest_login, name='guest_login'),
 
-    path('prefs', views.get_preferences, name='get_prefs'),
+    path('prefs', views.PreferenceView.as_view(), name='prefs'),    
     path('pref/<pref>/<value>', views.set_preference, name='set_pref'),
-    path('prefs/reset', views.reset_preferences, name='reset_prefs'),
+    path('prefs/reset', views.reset_preferences, name='reset_prefs'),    
 ]
