@@ -1,5 +1,6 @@
 import csv
 import logging
+import json
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -17,29 +18,33 @@ from roster.models import ClusiveUser, Site, Period
 
 logger = logging.getLogger(__name__)
 
-class PreferenceView(View):
-    def get(self, request):
-        user = ClusiveUser.from_request(request)
-        prefs = user.get_preferences()
-        return JsonResponse({p.pref:p.value for p in prefs})
-    def post(self, request):
-        return JsonResponse({'success': 1})
-
 def guest_login(request):
     clusive_user = ClusiveUser.make_guest()
     login(request, clusive_user.user)
     return redirect('reader_index')
 
+class PreferenceView(View):
+    def get(self, request):
+        user = ClusiveUser.from_request(request)
+        prefs = user.get_preferences()
+        return JsonResponse({p.pref:p.value for p in prefs})
+    def post(self, request):        
+        try:
+            request_prefs = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': 0, 'message': 'Invalid JSON'})
 
-def set_preference(request, pref, value):
-    user = ClusiveUser.from_request(request)
-    preference = user.get_preference(pref)
-    # Don't re-save again if the set preference value is the same as the request value
-    if(preference.value != value):
-        preference.value = value
-        preference.save()
-        preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)
-    return JsonResponse({'success' : 1})
+        user = ClusiveUser.from_request(request)        
+        for req_pref_key in request_prefs:
+            req_pref_val = request_prefs[req_pref_key]
+            preference = user.get_preference(req_pref_key)               
+            if(preference.value != req_pref_val):           
+                print("Setting new preference", preference.value, req_pref_val)     
+                preference.value = req_pref_val
+                preference.save()
+                preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)            
+
+        return JsonResponse({'success': 1})
 
 # TODO: how does a preference reset get logged?
 def reset_preferences(request):

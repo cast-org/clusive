@@ -208,21 +208,42 @@ class ClusiveUserTestCase(TestCase):
 
     def test_preferences(self):
         login = self.client.login(username='user1', password='password1')
+        # Setting one preference
         with catch_signal(preference_changed) as handler:
-            response = self.client.get('/account/pref/foo/bar')
+            response = self.client.post('/account/prefs', {'foo': 'bar'}, content_type='application/json')
             self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
-            response = self.client.get('/account/pref/foo/bar')
+            
+            response = self.client.post('/account/prefs', {'foo': 'bar'}, content_type='application/json')
             self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to same value did not return expected response')
+            
             response = self.client.get('/account/prefs')
             self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
-            response = self.client.get('/account/prefs/reset')
-            self.assertJSONEqual(response.content, {'success': 1}, 'Resetting prefs did not return expected response')
-            response = self.client.get('/account/prefs')
-            self.assertJSONEqual(response.content, {}, 'Fetching prefs after reset did not return empty response')
+
         handler.assert_called_once()
         handler.calls.kwargs.preference.pref='foo'
         handler.calls.kwargs.preference.value='bar'
 
+        # Setting two preferences where one already exists at the same value; handler should
+        # still only get triggered once
+        with catch_signal(preference_changed) as handler:        
+            response = self.client.post('/account/prefs', {'foo': 'bar', 'baz': 'lur'}, content_type='application/json')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting prefs did not return expected response')
+            
+            response = self.client.get('/account/prefs')
+            self.assertJSONEqual(response.content, {'foo': 'bar', 'baz': 'lur'}, 'Fetching prefs did not return values that were set')
+
+        handler.assert_called_once()
+        # TODO: clarify what this is doing; is it intended to test the handler?        
+        handler.calls.kwargs.preference.pref='baz'
+        handler.calls.kwargs.preference.value='lur'
+
+        # Resetting preferences
+                    
+        response = self.client.get('/account/prefs/reset')
+        self.assertJSONEqual(response.content, {'success': 1}, 'Resetting prefs did not return expected response')
+            
+        response = self.client.get('/account/prefs')
+        self.assertJSONEqual(response.content, {}, 'Fetching prefs after reset did not return empty response')
 
 class PageTestCases(TestCase):
 
