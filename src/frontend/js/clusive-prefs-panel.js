@@ -7,7 +7,7 @@
         gradeNames: ['fluid.dataSource'],
         storeConfig: {
             getURL: '/account/prefs',
-            setURL: '/account/pref/%prefKey/%prefVal',
+            setURL: '/account/prefs',
             resetURL: '/account/prefs/reset'
         },
         components: {
@@ -74,29 +74,21 @@
             $.get(resetURL, function(data) {
                 console.debug(resetURL, data);
             });
-        } else {
-            var getURL = directModel.getURL;
+        } else {           
+            var setURL = directModel.setURL;
+            console.log("posting");
+            $.ajax({
+                type: "POST",
+                url: setURL,
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify(fluid.get(model, 'preferences')),
+                success: function (data) {
+                    console.log("set preferences", data);
+                },
 
-            $.get(getURL, function(currentPrefs) {
-                fluid.each(fluid.get(model, 'preferences'), function(prefVal, prefKey) {
-                    // Implicit conversion of numbers as strings to compare with numbers
-                    if (currentPrefs[prefKey] != prefVal) {
-                        var setURL = fluid.stringTemplate(directModel.setURL, {
-                            prefKey: prefKey,
-                            prefVal: prefVal
-                        });
-                        $.get(setURL, function(data) {
-                            console.debug(setURL, data);
-                        });
-                    } else {
-                        var message = fluid.stringTemplate('%prefKey already stored at value \'%prefVal\', not making save request', {
-                            prefVal: prefVal,
-                            prefKey:prefKey
-                        });
-                        console.debug(message);
-                    }
-                });
-            });
+            })
         }
     };
 
