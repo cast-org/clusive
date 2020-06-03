@@ -24,10 +24,3 @@
 .card-login-forgot {
     border-top: 3px solid var(--CT_cardLoginForgotBorderColor);
 }
-
-.card-login-error {
-    padding: .25rem .5rem;
-    color: #fbfbfb;
-    background-color: #d42314;
-    @include border-radius(.25rem);
-}

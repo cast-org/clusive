@@ -174,3 +174,10 @@ h2,
     font-style: italic;
     color: var(--CT_definitionSpeechColor);
 }
+
+// Django error list
+.errorList {
+    color: var(--CT_errorListColor);
+    background-color: var(--CT_errorListBg);
+    @include norder-radius($border-radius);
+}
