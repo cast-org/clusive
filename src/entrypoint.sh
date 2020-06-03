@@ -18,6 +18,10 @@ fi
 echo "Applying any pending migrations..."
 python manage.py migrate
 
+echo "Loading preference sets"
+python manage.py loaddata prefencesets
+
+
 # The below does not actually work since createsuperuser command does not allow password to be
 # specified on the command line. Need to write a custom admin command or do this as a Migration.
 # See https://stackoverflow.com/questions/6244382/how-to-automate-createsuperuser-on-django

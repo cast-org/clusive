@@ -36,13 +36,6 @@ class PreferenceView(View):
 
         user = ClusiveUser.from_request(request)        
         set_user_preferences(user, request_prefs, request)
-        for req_pref_key in request_prefs:
-            req_pref_val = request_prefs[req_pref_key]
-            preference = user.get_preference(req_pref_key)               
-            if(preference.value != req_pref_val):                           
-                preference.value = req_pref_val
-                preference.save()
-                preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)            
 
         return JsonResponse({'success': 1})
 
