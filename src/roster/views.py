@@ -55,10 +55,10 @@ class PreferenceSetView(View):
         except json.JSONDecodeError:
             return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})            
         
-        desired_prefs_set_name = request_json["adopt"]
+        desired_prefs_name = request_json["adopt"]
         
         try:
-            prefs_set = PreferenceSet.objects.get(set_name=desired_prefs_set_name)
+            prefs_set = PreferenceSet.objects.get(name=desired_prefs_name)
         except PreferenceSet.DoesNotExist:
             return JsonResponse({'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_set_name })            
 

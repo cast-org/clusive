@@ -3,8 +3,8 @@
         "model": "roster.preferenceset",
         "pk": 1,
         "fields": {
-            "set_name": "default",
-            "set_description": "Default Clusive preference set",
+            "name": "default",
+            "description": "Default Clusive preference set",
             "prefs_json": "{\"theme\":\"default\",\"textFont\":\"default\",\"textSize\":1,\"lineSpace\":1.6,\"cisl_prefs_glossary\":true}"
         }
     }
