@@ -139,8 +139,7 @@
         }
     });
 
-    // Redefine the existing contrast schema used by the starter
-    // to remove
+    // Redefine the existing contrast schema used by the starter    
     fluid.defaults('fluid.prefs.schemas.contrast', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
@@ -148,6 +147,19 @@
                 type: 'string',
                 default: 'default',
                 enum: ['default', 'night', 'sepia']
+            }
+        }
+    });
+
+    fluid.defaults('fluid.prefs.schemas.lineSpace', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            "fluid.prefs.lineSpace": {
+                "type": "number",
+                "default": 1.6,
+                "minimum": 0.7,
+                "maximum": 2,
+                "multipleOf": 0.1
             }
         }
     });

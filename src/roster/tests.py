@@ -212,7 +212,7 @@ class ClusiveUserTestCase(TestCase):
 
     def test_preference_sets(self):
 
-        default_pref_set_json = '{"fluid_prefs_letterSpace":1,"fluid_prefs_contrast":"default","theme":"default","fluid_prefs_textFont":"default","textFont":"default","fluid_prefs_textSize":1,"textSize":1,"fluid_prefs_lineSpace":1.2,"lineSpace":1.2,"cisl_prefs_glossary":true}'
+        default_pref_set_json = '{"fluid_prefs_letterSpace":1,"fluid_prefs_contrast":"default","theme":"default","fluid_prefs_textFont":"default","textFont":"default","fluid_prefs_textSize":1,"textSize":1,"fluid_prefs_lineSpace":1.6,"lineSpace":1.6,"cisl_prefs_glossary":true}'
 
         login = self.client.login(username='user1', password='password1')
         response = self.client.post('/account/prefs/profile', {'adopt': 'default'}, content_type='application/json')
