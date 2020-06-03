@@ -176,8 +176,9 @@ h2,
 }
 
 // Django error list
+// stylelint-disable-next-line selector-class-pattern
 .errorList {
     color: var(--CT_errorListColor);
     background-color: var(--CT_errorListBg);
-    @include norder-radius($border-radius);
+    @include border-radius($border-radius);
 }
