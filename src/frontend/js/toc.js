@@ -1,6 +1,6 @@
 /* global D2Reader, Promise */
 /* exported build_table_of_contents, reset_current_toc_item, highlight_current_toc_item, scroll_to_current_toc_item,
-    trackReadingLocation */
+    trackReadingLocation, showNewAnnotation, showExistingAnnotation */
 
 /*
  * Functions dealing with location tracking and the Table of Contents modal.
@@ -188,6 +188,99 @@ function savePendingLocationUpdate() {
     }
     return false;
 }
+
+//
+// Functions dealing with the Highlights and Notes panel
+//
+
+function markAnnotationActive(annotation) {
+    'use strict';
+
+    $('#annotationsContainer .active').removeClass('active');
+    $('#annotation' + annotation.id).addClass('active');
+}
+
+function buildAnnotationHtml(annotation) {
+    'use strict';
+
+    var id = annotation.id;
+    var cleanText = annotation.highlight.selectionInfo.cleanText;
+    if (!cleanText) {
+        console.warn('Couldn\'t find highlight text in: ', annotation);
+    }
+
+    var out = '<div id="annotation' + id + '" class="list-item">' +
+        '<a href=\'javascript:D2Reader.goTo(' + JSON.stringify(annotation) + ');\'>' +
+        '<span class="highlight">' + cleanText + '</span>' +
+        '</a>' +
+        '<ul class="list list-divided list-horizontal list-highlight-action">' +
+        // '<li class="list-item"><a href="#" role="button">Add a note</a></li>' +
+        '<li class="list-item">' +
+        '<a href="javascript:deleteAnnotation(' + id + ');" role="button">Delete highlight</a>' +
+        '</li></ul></div>';
+
+    // add to annotationsContainer
+    return out;
+}
+
+// Build the HTML for the annotations list in the sidebar.
+// If an "extra" annotation is provided as the argument, it will be included
+// at the beginning of the list.
+function buildAnnotationList(extra) {
+    'use strict';
+
+    D2Reader.annotations().then(function(result) {
+        console.info(result);
+        if (result || extra) {
+            $('#noAnnotationsMessage').hide();
+            var $annotationsContainer = $('#annotationsContainer');
+            $annotationsContainer.empty();
+            if (extra) {
+                $annotationsContainer.append(buildAnnotationHtml(extra));
+                markAnnotationActive(extra);
+            }
+            result.forEach(function(a) {
+                $annotationsContainer.append(buildAnnotationHtml(a));
+            });
+        } else {
+            $('#noAnnotationsMessage').show();
+        }
+    });
+}
+
+// Used in href of delete links
+// eslint-disable-next-line no-unused-vars
+function deleteAnnotation(id) {
+    'use strict';
+
+    // TODO: support undo
+    // TODO: this function is documented but doesn't exist.
+    D2Reader.deleteAnnotation({
+        id:id
+    });
+    buildAnnotationList();
+    return false;
+}
+
+// Called by reader.html
+function showNewAnnotation(annotation) {
+    'use strict';
+
+    buildAnnotationList(annotation);
+    $('#annotation' + annotation.id).addClass('active');
+    $('#tocButton').CFW_Modal('show');
+    $('#notesTab').CFW_Tab('show');
+}
+
+function showExistingAnnotation(annotation) {
+    'use strict';
+
+    markAnnotationActive(annotation);
+    $('#tocButton').CFW_Modal('show');
+    $('#notesTab').CFW_Tab('show');
+}
+
+//  Initial setup
 
 $(document).ready(function() {
     'use strict';

@@ -3,13 +3,13 @@
     <div class="modal-dialog modal-dialog-side-start modal-dialog-scrollable modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title h5 sr-only">Contents<!-- , Highlights, and Notes--></h2>
+                <h2 class="modal-title h5 sr-only">Contents, Highlights, and Notes</h2>
                 <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
                     <span class="icon-cancel" aria-hidden="true"></span>
                 </button>
                 <ul class="nav nav-tabs-toc">
-                    <li class="nav-item"><a href="#toc0" class="nav-link" data-cfw="tab">Contents</a></li>
-<!--                    <li class="nav-item"><a href="#toc1" class="nav-link" data-cfw="tab">Highlights &amp; Notes</a></li>-->
+                    <li class="nav-item"><a id="tocTab" href="#toc0" class="nav-link" data-cfw="tab">Contents</a></li>
+                    <li class="nav-item"><a id="notesTab" href="#toc1" class="nav-link" data-cfw="tab">Highlights &amp; Notes</a></li>
                 </ul>
             </div>
             <div class="modal-body">
@@ -32,7 +32,20 @@
                         </nav>
                     </div>
                     <div id="toc1" class="tab-pane">
-                        Highlights/notes here
+                        <p id="noAnnotationsMessage">No highlights or notes yet.</p>
+
+                        <nav class="nav-highlight" aria-label="Highlights and notes">
+                            <ul id="annotationsContainer" class="list list-divided list-highlight">
+                                <div class="list-item">
+                                    <p><span class="highlight">Ut consequat mi nisi.</span></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Add a note</a></li>
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+                                </div>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

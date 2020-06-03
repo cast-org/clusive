@@ -88,14 +88,13 @@ var pub_version = "{{ version }}";
         var userSettings = { textAlignment:'start' };
         var lastReadingPosition = {{ last_position|safe }};
         var annotations = JSON.parse('{{ annotations|safe }}');
-        var baseUrl = null;
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
 
         var selectionMenuItems = [
             {
                 id: 'lookupIcon',
                 callback: function (selection) {
-                    console.log('looking up: ', selection);
+                    console.debug('looking up: ', selection);
                     window.parent.load_definition(1, selection);
                     window.parent.$('#glossaryButton').CFW_Popover('show');
                     glossaryPop_focus($('#lookupIcon'));
@@ -126,7 +125,7 @@ var pub_version = "{{ version }}";
                 injectables: injectables,
 
                 selectionMenuItems: selectionMenuItems,
-                initialAnnotationColor: "#ff8500",
+                initialAnnotationColor: "#FFDD66",
 
             api: {
                 addBookmark: function (bookmark) {
@@ -138,6 +137,7 @@ var pub_version = "{{ version }}";
                     return Promise.resolve();
                 },
                 addAnnotation: function (annotation) {
+                    showNewAnnotation(annotation);
                     return $.post('/library/annotation', {
                         book: pub_id,
                         version: pub_version,
@@ -145,7 +145,7 @@ var pub_version = "{{ version }}";
                     })
                         .then(function(result) {
                             annotation.id = result.id;
-                            console.info('Successfully stored annotation ', result.id);
+                            console.debug('Successfully stored annotation ', result.id);
                             return annotation;
                         })
                         .fail(function(err) {
@@ -153,7 +153,8 @@ var pub_version = "{{ version }}";
                         });
                 },
                 selectedAnnotation: function (annotation) {
-                    console.info('Selected annotation: ', annotation.id);
+                    console.debug('Selected annotation: ', annotation.id);
+                    showExistingAnnotation(annotation);
                     return Promise.resolve();
                 },
                 deleteAnnotation: function (annotation) {
@@ -172,13 +173,13 @@ var pub_version = "{{ version }}";
                 },
             }
         }).then(instance => {
-                console.log("D2Reader loaded ", instance);
-                console.log("instance.bookmarkModule ", instance.bookmarkModule);
+                console.debug("D2Reader loaded ", instance);
                 // Create the preference editor when the Reader has loaded,
                 // after a short delay
                 // TODO: improve this sequencing
                 $(document).ready(function () {
                     build_table_of_contents();
+                    buildAnnotationList();
                     $('#modalToc')
                         .on('beforeShow.cfw.modal', function() {
                             reset_current_toc_item(true);
@@ -196,10 +197,6 @@ var pub_version = "{{ version }}";
                 console.error("error loading: ", error);
             });
     </script>
-
-    <!--
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    -->
 </div>
 {% include "shared/partial/modal_toc.html" %}
 {% endblock %}
