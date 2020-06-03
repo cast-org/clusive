@@ -79,7 +79,7 @@
                 },
                 data: JSON.stringify({adopt: 'default'}),
                 success: function (data) {
-                    console.log("reset preferences to default", data);
+                    console.debug("reset preferences to default", data);
                 },
 
             })            
@@ -93,7 +93,7 @@
                 },
                 data: JSON.stringify(fluid.get(model, 'preferences')),
                 success: function (data) {
-                    console.log("set preferences", data);
+                    console.debug("set preferences", data);
                 },
 
             })
@@ -239,12 +239,6 @@
         console.debug('calling CISL prefs Editor fetch impl');
         console.debug('isLoggedIn', isLoggedIn);
 
-        // If logged in retrieve from store
-        // var prefGetURL = "/account/prefs";
-        // $.get(prefGetURL, function (data) {
-        //     console.log(prefGetURL, data);
-        // });
-
         var isLoggedIn = false;
         if (!isLoggedIn) {
             console.warn('Not logged in, using local cookie for fetch method');
@@ -254,15 +248,6 @@
 
     cisl.prefs.setSettings = function(model, directModel, set) {
         console.debug('calling CISL prefs Editor setSettings');
-
-        // // If logged In
-        // fluid.each(fluid.get(modelToSave, "preferences"), function (prefVal, prefKey) {
-        //     console.log(prefKey, prefVal);
-        //     var prefSetURL = fluid.stringTemplate("/account/pref/%prefKey/%prefVal", {prefKey: prefKey, prefVal: prefVal});
-        //     $.get(prefSetURL, function (data) {
-        //         console.log(prefSetURL, data);
-        //     })
-        // });
 
         var isLoggedIn = false;
         if (!isLoggedIn) {
