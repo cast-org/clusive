@@ -79,6 +79,7 @@
                 },
                 data: JSON.stringify({adopt: 'default'}),
                 success: function (data) {
+                    clusive.prefs.djangoStore.getUserPreferences(directModel);
                     console.debug("reset preferences to default", data);
                 },
 
