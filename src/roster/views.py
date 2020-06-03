@@ -26,7 +26,8 @@ class PreferenceView(View):
     def get(self, request):
         user = ClusiveUser.from_request(request)
         prefs = user.get_preferences()
-        return JsonResponse({p.pref:p.value for p in prefs})
+        prefs_json = preferences_to_json(prefs)
+        return JsonResponse(prefs_json)
     def post(self, request):        
         try:
             request_prefs = json.loads(request.body)
@@ -69,10 +70,32 @@ class PreferenceSetView(View):
         set_user_preferences(user, desired_prefs, request)
 
         prefs = user.get_preferences()
-        return JsonResponse({p.pref:p.value for p in prefs})
+        prefs_json = preferences_to_json(prefs)
+        return JsonResponse(prefs_json)
 
 # Return a JSON object from a set of user preferences
 # Casts numbers-as-strings and booleans-as-strings as appropriate
+def preferences_to_json(prefs):
+
+    # TODO: code smell is strong here
+    def convert_string_value(val):
+        if(val.lower() == "true"):
+            return True
+        if(val.lower() == "false"):
+            return False
+        try:
+            return int(val)
+        except ValueError:
+            try:
+                return float(val)
+            except ValueError:
+                return val
+
+    processed_prefs = {}
+    for pref_setting in prefs:
+        processed_prefs[pref_setting.pref] = convert_string_value(pref_setting.value)
+        
+    return processed_prefs
 
 # Set user preferences from a dictionary
 def set_user_preferences(user, new_prefs, request):
