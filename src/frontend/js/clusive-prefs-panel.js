@@ -82,6 +82,9 @@
                     clusive.prefs.djangoStore.getUserPreferences(directModel);
                     console.debug("reset preferences to default", data);
                 },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
+                }
 
             })            
         } else {           
