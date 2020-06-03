@@ -160,8 +160,9 @@ class ClusiveUserTestCase(TestCase):
         new_clusive_user = ClusiveUser.objects.create(user=new_user)
 
         self.assertEqual(new_clusive_user.anon_id, None)
-        self.assertEqual(new_clusive_user.permission, ResearchPermissions.TEST_ACCOUNT)
+        self.assertEqual(new_clusive_user.permission, ResearchPermissions.TEST_ACCOUNT)        
         self.assertEqual(new_clusive_user.role, Roles.GUEST)
+        self.check_user_has_default_preferences(new_clusive_user)
 
     def test_manual_anon_id(self):
         """ A user can have an anon_id set manually """
@@ -210,15 +211,17 @@ class ClusiveUserTestCase(TestCase):
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
 
-    def test_adopt_preferences_set(self):
-        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True'}
-        user = ClusiveUser.objects.get(user__username='user1')
-        
+    def test_adopt_preferences_set(self):        
+        user = ClusiveUser.objects.get(user__username='user1')        
         user.adopt_preferences_set("default")
+        self.check_user_has_default_preferences(user)
+
+    def check_user_has_default_preferences(self, user):
+        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True'}
         user_prefs = user.get_preferences()
         
         for p_key in default_pref_set.keys():            
-            self.assertEqual(default_pref_set[p_key], user.get_preference(p_key).value, "preference %s not at expected default value of %s" % (p_key, default_pref_set[p_key]))
+            self.assertEqual(default_pref_set[p_key], user.get_preference(p_key).value, "preference '%s' not at expected default value of '%s'" % (p_key, default_pref_set[p_key]))
 
     def test_convert_pref_string_value(self):
                 
