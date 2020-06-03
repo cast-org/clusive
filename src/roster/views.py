@@ -26,8 +26,8 @@ class PreferenceView(View):
     def get(self, request):
         user = ClusiveUser.from_request(request)
         prefs = user.get_preferences()
-        prefs_json = preferences_to_json(prefs)
-        return JsonResponse(prefs_json)
+        prefs_processed = convert_preference_values(prefs)
+        return JsonResponse(prefs_processed)
     def post(self, request):        
         try:
             request_prefs = json.loads(request.body)
@@ -70,32 +70,31 @@ class PreferenceSetView(View):
         set_user_preferences(user, desired_prefs, request)
 
         prefs = user.get_preferences()
-        prefs_json = preferences_to_json(prefs)
-        return JsonResponse(prefs_json)
+        prefs_processed = convert_preference_values(prefs)
+        return JsonResponse(prefs_processed)
 
-# Return a JSON object from a set of user preferences
+# Process a dictionary object from a set of user preferences
 # Casts numbers-as-strings and booleans-as-strings as appropriate
-def preferences_to_json(prefs):
-
-    # TODO: code smell is strong here
-    def convert_string_value(val):
-        if(val.lower() == "true"):
-            return True
-        if(val.lower() == "false"):
-            return False
-        try:
-            return int(val)
-        except ValueError:
-            try:
-                return float(val)
-            except ValueError:
-                return val
-
+def convert_preference_values(prefs):
     processed_prefs = {}
     for pref_setting in prefs:
-        processed_prefs[pref_setting.pref] = convert_string_value(pref_setting.value)
+        processed_prefs[pref_setting.pref] = convert_pref_string_value(pref_setting.value)
         
     return processed_prefs
+
+# TODO: this and the method above should perhaps be on the model
+def convert_pref_string_value(val):
+    if(val.lower() == "true"):
+        return True
+    if(val.lower() == "false"):
+        return False
+    try:
+        return int(val)
+    except ValueError:
+        try:
+            return float(val)
+        except ValueError:
+            return val
 
 # Set user preferences from a dictionary
 def set_user_preferences(user, new_prefs, request):

@@ -13,7 +13,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
-
+from .views import convert_pref_string_value
 
 # TODO: make sure all tests have helpful messages
 
@@ -209,6 +209,16 @@ class ClusiveUserTestCase(TestCase):
         for state in nonpermissioned_states:
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
+
+    def test_convert_pref_string_value(self):
+                
+        self.assertEqual(convert_pref_string_value("1"), 1, "int as string was not converted as expected")
+
+        self.assertEqual(convert_pref_string_value("1.57"), 1.57, "float as string was not converted as expected")
+
+        self.assertEqual(convert_pref_string_value("False"), False, "boolean:False as string was converted as expected")
+
+        self.assertEqual(convert_pref_string_value("True"), True, "boolean:True as string was converted as expected")
 
     def test_preference_sets(self):
 
