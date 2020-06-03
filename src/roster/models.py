@@ -2,6 +2,9 @@ import logging
 
 from django.contrib.auth.models import User
 from django.db import models
+
+from django.db.models.signals import post_save
+
 from pytz import country_timezones
 
 import json
@@ -217,6 +220,16 @@ class ClusiveUser(models.Model):
 
     def __str__(self):
         return '%s' % (self.anon_id)
+
+# This is the current recommended way to ensure additional code is run after 
+# the initial creation of an object; 'created' is True only on the save() from 
+# initial creation
+def set_default_preferences(sender, instance, created, **kwargs):    
+    if(created):
+        logger.info("New user created, setting preferences to 'default' set")
+        instance.adopt_preferences_set('default')
+
+post_save.connect(set_default_preferences, sender=ClusiveUser)
 
 class Preference (models.Model):
     """Store a single user preference setting."""

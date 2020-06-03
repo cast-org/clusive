@@ -233,16 +233,25 @@ class ClusiveUserTestCase(TestCase):
 
         self.assertEqual(convert_pref_string_value("True"), True, "boolean:True as string was converted as expected")
 
-    def test_preference_sets(self):
+    default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"cisl_prefs_glossary":true}'
 
-        default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"cisl_prefs_glossary":true}'
+    def test_preference_sets(self):        
+
+        # delete any existing preferences so we're starting with a clean set
+        user = ClusiveUser.objects.get(user__username='user1')
+        user.delete_preferences()
 
         login = self.client.login(username='user1', password='password1')
         response = self.client.post('/account/prefs/profile', {'adopt': 'default'}, content_type='application/json')
-        self.assertJSONEqual(response.content, default_pref_set_json, 'Changing to default preferences profile did not return expected response')
+        self.assertJSONEqual(response.content, self.default_pref_set_json, 'Changing to default preferences profile did not return expected response')
 
     def test_preferences(self):
+        # delete any existing preferences so we're starting with a clean set
+        user = ClusiveUser.objects.get(user__username='user1')
+        user.delete_preferences()
+
         login = self.client.login(username='user1', password='password1')
+        
         # Setting one preference
         with catch_signal(preference_changed) as handler:
             response = self.client.post('/account/prefs', {'foo': 'bar'}, content_type='application/json')
