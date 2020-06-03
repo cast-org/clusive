@@ -213,11 +213,12 @@ class ClusiveUserTestCase(TestCase):
     def test_adopt_preferences_set(self):
         default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True'}
         user = ClusiveUser.objects.get(user__username='user1')
+        
         user.adopt_preferences_set("default")
         user_prefs = user.get_preferences()
         
-        for p in user_prefs:
-            self.assertEqual(default_pref_set[p.pref], p.value, '%s:%s and %s:%s were not equal after adopt_preferences_set(default)' % (p.pref, p.value, p.pref, default_pref_set[p.pref]))        
+        for p_key in default_pref_set.keys():            
+            self.assertEqual(default_pref_set[p_key], user.get_preference(p_key).value, "preference %s not at expected default value of %s" % (p_key, default_pref_set[p_key]))
 
     def test_convert_pref_string_value(self):
                 
