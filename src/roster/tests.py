@@ -146,9 +146,13 @@ class PeriodTestCase(TestCase):
             self.assertEqual(e.message_dict["anon_id"][0], "Period with this Anon id already exists.")                
 
 class ClusiveUserTestCase(TestCase):
+    maxDiff = None
+    
+    # Load the preference sets 
+    fixtures = ['preferencesets.json']
 
     def setUp(self):
-        set_up_test_users()
+        set_up_test_users()               
 
     def test_defaults(self):
         """ A user has the expected defaults, if not set """
@@ -206,6 +210,14 @@ class ClusiveUserTestCase(TestCase):
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
 
+    def test_preference_sets(self):
+
+        default_pref_set_json = '{"fluid_prefs_letterSpace":1,"fluid_prefs_contrast":"default","theme":"default","fluid_prefs_textFont":"default","textFont":"default","fluid_prefs_textSize":1,"textSize":1,"fluid_prefs_lineSpace":1.2,"lineSpace":1.2,"cisl_prefs_glossary":true}'
+
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.post('/account/prefs/profile', {'adopt': 'default'}, content_type='application/json')
+        self.assertJSONEqual(response.content, default_pref_set_json, 'Changing to default preferences profile did not return expected response')
+
     def test_preferences(self):
         login = self.client.login(username='user1', password='password1')
         # Setting one preference
@@ -237,18 +249,10 @@ class ClusiveUserTestCase(TestCase):
         handler.calls.kwargs.preference.pref='baz'
         handler.calls.kwargs.preference.value='lur'
 
-        # Resetting preferences
-                    
-        response = self.client.get('/account/prefs/reset')
-        self.assertJSONEqual(response.content, {'success': 1}, 'Resetting prefs did not return expected response')
-            
-        response = self.client.get('/account/prefs')
-        self.assertJSONEqual(response.content, {}, 'Fetching prefs after reset did not return empty response')
-
 class PageTestCases(TestCase):
 
         def setUp(self):
-            set_up_test_users()
+            set_up_test_users()            
 
         def test_login_page(self):                
             url = reverse('login')

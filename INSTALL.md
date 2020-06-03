@@ -70,6 +70,7 @@ The local development configuration uses sqlite3, so no database setup is requir
 
 Run in the /target directory:
 * `python manage.py migrate`
+* `python manage.py loaddata prefencesets` 
 
 ### Create a Superuser
 

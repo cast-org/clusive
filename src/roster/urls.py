@@ -25,5 +25,5 @@ urlpatterns = [
     path('guest_login', views.guest_login, name='guest_login'),
 
     path('prefs', views.PreferenceView.as_view(), name='prefs'),        
-    path('prefs/reset', views.reset_preferences, name='reset_prefs'),    
+    path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile')      
 ]

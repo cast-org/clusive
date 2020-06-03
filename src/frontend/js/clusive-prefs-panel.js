@@ -8,7 +8,7 @@
         storeConfig: {
             getURL: '/account/prefs',
             setURL: '/account/prefs',
-            resetURL: '/account/prefs/reset'
+            resetURL: '/account/prefs/profile'
         },
         components: {
             encoding: {
@@ -71,12 +71,20 @@
 
         if ($.isEmptyObject(model)) {
             var resetURL = directModel.resetURL;
-            $.get(resetURL, function(data) {
-                console.debug(resetURL, data);
-            });
+            $.ajax({
+                type: "POST",
+                url: resetURL,
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify({adopt: 'default'}),
+                success: function (data) {
+                    console.log("reset preferences to default", data);
+                },
+
+            })            
         } else {           
-            var setURL = directModel.setURL;
-            console.log("posting");
+            var setURL = directModel.setURL;            
             $.ajax({
                 type: "POST",
                 url: setURL,

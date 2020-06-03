@@ -1,0 +1,11 @@
+[
+    {
+        "model": "roster.preferenceset",
+        "pk": 1,
+        "fields": {
+            "set_name": "default",
+            "set_description": "Default Clusive preference set",
+            "prefs_json": "{\"fluid_prefs_letterSpace\":1,\"fluid_prefs_contrast\":\"default\",\"theme\":\"default\",\"fluid_prefs_textFont\":\"default\",\"textFont\":\"default\",\"fluid_prefs_textSize\":1,\"textSize\":1,\"fluid_prefs_lineSpace\":1.2,\"lineSpace\":1.2,\"cisl_prefs_glossary\":true}"
+        }
+    }
+]

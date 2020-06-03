@@ -211,3 +211,13 @@ class Preference (models.Model):
 
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
+
+class PreferenceSet(models.Model):
+    """Store a set of preference keys and values as a JSON string"""
+
+    set_name = models.CharField(max_length=32)
+    set_description = models.CharField(max_length=256)
+    prefs_json = models.TextField()
+
+    def __str__(self):
+        return 'PreferenceSet:%s' % (self.set_name)
