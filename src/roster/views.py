@@ -1,5 +1,6 @@
 import csv
 import logging
+import json
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -7,11 +8,12 @@ from django.contrib.auth import login
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
+from django.views import View
+
 from eventlog.signals import preference_changed
-from roster.models import ClusiveUser
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.models import ClusiveUser, Site, Period
+from roster.models import ClusiveUser, Site, Period, PreferenceSet
 
 logger = logging.getLogger(__name__)
 
@@ -20,28 +22,82 @@ def guest_login(request):
     login(request, clusive_user.user)
     return redirect('reader_index')
 
+class PreferenceView(View):
+    def get(self, request):
+        user = ClusiveUser.from_request(request)
+        prefs = user.get_preferences()
+        prefs_processed = convert_preference_values(prefs)
+        return JsonResponse(prefs_processed)
+    def post(self, request):        
+        try:
+            request_prefs = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})
 
-def set_preference(request, pref, value):
-    user = ClusiveUser.from_request(request)
-    preference = user.get_preference(pref)
-    # Don't re-save again if the set preference value is the same as the request value
-    if(preference.value != value):
-        preference.value = value
-        preference.save()
-        preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)
-    return JsonResponse({'success' : 1})
+        user = ClusiveUser.from_request(request)        
+        set_user_preferences(user, request_prefs, request)
 
+        return JsonResponse({'success': 1})
 
-def get_preferences(request):
-    user = ClusiveUser.from_request(request)
-    prefs = user.get_preferences()
-    return JsonResponse({p.pref:p.value for p in prefs})
+# TODO: should we specially log an event that adopts a full new preference set?
+class PreferenceSetView(View):
+    def post(self, request):
+        user = ClusiveUser.from_request(request)
+        try:
+            request_json = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})            
+        
+        desired_prefs_name = request_json["adopt"]
+        
+        try:
+            prefs_set = PreferenceSet.objects.get(name=desired_prefs_name)
+        except PreferenceSet.DoesNotExist:
+            return JsonResponse({'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_set_name })            
 
-# TODO: how does a preference reset get logged?
-def reset_preferences(request):
-    user = ClusiveUser.from_request(request)    
-    user.delete_preferences()
-    return JsonResponse({'success': 1})
+        desired_prefs = json.loads(prefs_set.prefs_json)
+
+        # Clear existing preferences
+        user.delete_preferences()
+
+        set_user_preferences(user, desired_prefs, request)
+
+        prefs = user.get_preferences()
+        prefs_processed = convert_preference_values(prefs)
+        return JsonResponse(prefs_processed)
+
+# Process a dictionary object from a set of user preferences
+# Casts numbers-as-strings and booleans-as-strings as appropriate
+def convert_preference_values(prefs):
+    processed_prefs = {}
+    for pref_setting in prefs:
+        processed_prefs[pref_setting.pref] = convert_pref_string_value(pref_setting.value)
+        
+    return processed_prefs
+
+# TODO: this and the method above should perhaps be on the model
+def convert_pref_string_value(val):
+    if(val.lower() == "true"):
+        return True
+    if(val.lower() == "false"):
+        return False
+    try:
+        return int(val)
+    except ValueError:
+        try:
+            return float(val)
+        except ValueError:
+            return val
+
+# Set user preferences from a dictionary
+def set_user_preferences(user, new_prefs, request):
+    for pref_key in new_prefs:
+            pref_val = new_prefs[pref_key]
+            preference = user.get_preference(pref_key)               
+            if(preference.value != pref_val):                           
+                preference.value = pref_val
+                preference.save()
+                preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)            
 
 @staff_member_required
 def upload_csv(request):

@@ -2,7 +2,12 @@ import logging
 
 from django.contrib.auth.models import User
 from django.db import models
+
+from django.db.models.signals import post_save
+
 from pytz import country_timezones
+
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +17,6 @@ available_timezones_friendly = []
 for tz in available_timezones:
     tz_friendly = tz.replace("_", " ")
     available_timezones_friendly.append(tz_friendly)
-
 
 class Site(models.Model):
     name = models.CharField(max_length=100)
@@ -86,7 +90,7 @@ class ClusiveUser(models.Model):
 
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    periods = models.ManyToManyField(Period, blank=True)
+    periods = models.ManyToManyField(Period, blank=True)    
 
     @property 
     def is_permissioned(self):
@@ -113,8 +117,26 @@ class ClusiveUser(models.Model):
 
     def delete_preferences(self):
         prefs = Preference.objects.filter(user=self)
-        print("deleting preferences", prefs.delete());
+        logger.info("deleting preferences for %s", self.user.username);
         return prefs.delete()
+
+    # adopts a preference set; does not log a preference change event right now
+    def adopt_preferences_set(self, prefset_name):
+        logger.info("trying to adopt preference set named %s for %s" % (prefset_name, self.user.username))
+        try:
+            prefs_set = PreferenceSet.objects.get(name=prefset_name)
+             
+            desired_prefs = json.loads(prefs_set.prefs_json)    
+
+            for pref_key in desired_prefs:
+                pref_val = desired_prefs[pref_key]
+                preference = self.get_preference(pref_key)               
+                if(preference.value != pref_val):                           
+                    preference.value = pref_val
+                    preference.save()
+
+        except PreferenceSet.DoesNotExist:
+            logger.error("preference set named %s not found", prefset_name)       
 
     guest_serial_number = 0
 
@@ -199,6 +221,15 @@ class ClusiveUser(models.Model):
     def __str__(self):
         return '%s' % (self.anon_id)
 
+# This is the current recommended way to ensure additional code is run after 
+# the initial creation of an object; 'created' is True only on the save() from 
+# initial creation
+def set_default_preferences(sender, instance, created, **kwargs):    
+    if(created):
+        logger.info("New user created, setting preferences to 'default' set")
+        instance.adopt_preferences_set('default')
+
+post_save.connect(set_default_preferences, sender=ClusiveUser)
 
 class Preference (models.Model):
     """Store a single user preference setting."""
@@ -211,3 +242,13 @@ class Preference (models.Model):
 
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
+
+class PreferenceSet(models.Model):
+    """Store a set of preference keys and values as a JSON string"""
+
+    name = models.CharField(max_length=32)
+    description = models.CharField(max_length=256)
+    prefs_json = models.TextField()
+
+    def __str__(self):
+        return 'PreferenceSet:%s' % (self.name)

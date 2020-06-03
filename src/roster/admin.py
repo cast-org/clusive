@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.urls import path
 
 from . import views
-from .models import Site, Period, ClusiveUser, Preference
+from .models import Site, Period, ClusiveUser, Preference, PreferenceSet
 
 
 class ClusiveUserInline(admin.StackedInline):
@@ -51,4 +51,8 @@ class PreferenceAdmin(admin.ModelAdmin):
 @admin.register(Period)
 class PeriodAdmin(admin.ModelAdmin):
     model = Period
+
+@admin.register(PreferenceSet)
+class PreferenceSetAdmin(admin.ModelAdmin):
+    model = PreferenceSet
 

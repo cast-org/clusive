@@ -3,8 +3,10 @@
 Sets constants based on Django's environment in order to make them available
 to client-side Javascript
 {% endcomment %}
+{% csrf_token %}
 <script>
-var DJANGO_STATIC_ROOT = "{% static '' %}"
+var DJANGO_STATIC_ROOT = "{% static '' %}";
+var DJANGO_CSRF_TOKEN = $("[name=csrfmiddlewaretoken]").val();
 // Global reference to the preferences editor for non-Infusion code
 // Initialized with the results of createClusivePrefsEditor() when that's called
 var clusivePrefs;

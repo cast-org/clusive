@@ -7,8 +7,8 @@
         gradeNames: ['fluid.dataSource'],
         storeConfig: {
             getURL: '/account/prefs',
-            setURL: '/account/pref/%prefKey/%prefVal',
-            resetURL: '/account/prefs/reset'
+            setURL: '/account/prefs',
+            resetURL: '/account/prefs/profile'
         },
         components: {
             encoding: {
@@ -71,32 +71,36 @@
 
         if ($.isEmptyObject(model)) {
             var resetURL = directModel.resetURL;
-            $.get(resetURL, function(data) {
-                console.debug(resetURL, data);
-            });
-        } else {
-            var getURL = directModel.getURL;
+            $.ajax({
+                type: "POST",
+                url: resetURL,
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify({adopt: 'default'}),
+                success: function (data) {
+                    clusive.prefs.djangoStore.getUserPreferences(directModel);
+                    console.debug("reset preferences to default", data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
+                }
 
-            $.get(getURL, function(currentPrefs) {
-                fluid.each(fluid.get(model, 'preferences'), function(prefVal, prefKey) {
-                    // Implicit conversion of numbers as strings to compare with numbers
-                    if (currentPrefs[prefKey] != prefVal) {
-                        var setURL = fluid.stringTemplate(directModel.setURL, {
-                            prefKey: prefKey,
-                            prefVal: prefVal
-                        });
-                        $.get(setURL, function(data) {
-                            console.debug(setURL, data);
-                        });
-                    } else {
-                        var message = fluid.stringTemplate('%prefKey already stored at value \'%prefVal\', not making save request', {
-                            prefVal: prefVal,
-                            prefKey:prefKey
-                        });
-                        console.debug(message);
-                    }
-                });
-            });
+            })            
+        } else {           
+            var setURL = directModel.setURL;            
+            $.ajax({
+                type: "POST",
+                url: setURL,
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify(fluid.get(model, 'preferences')),
+                success: function (data) {
+                    console.debug("set preferences", data);
+                },
+
+            })
         }
     };
 
@@ -139,8 +143,7 @@
         }
     });
 
-    // Redefine the existing contrast schema used by the starter
-    // to remove
+    // Redefine the existing contrast schema used by the starter    
     fluid.defaults('fluid.prefs.schemas.contrast', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
@@ -148,6 +151,19 @@
                 type: 'string',
                 default: 'default',
                 enum: ['default', 'night', 'sepia']
+            }
+        }
+    });
+
+    fluid.defaults('fluid.prefs.schemas.lineSpace', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            "fluid.prefs.lineSpace": {
+                "type": "number",
+                "default": 1.6,
+                "minimum": 0.7,
+                "maximum": 2,
+                "multipleOf": 0.1
             }
         }
     });
@@ -227,12 +243,6 @@
         console.debug('calling CISL prefs Editor fetch impl');
         console.debug('isLoggedIn', isLoggedIn);
 
-        // If logged in retrieve from store
-        // var prefGetURL = "/account/prefs";
-        // $.get(prefGetURL, function (data) {
-        //     console.log(prefGetURL, data);
-        // });
-
         var isLoggedIn = false;
         if (!isLoggedIn) {
             console.warn('Not logged in, using local cookie for fetch method');
@@ -242,15 +252,6 @@
 
     cisl.prefs.setSettings = function(model, directModel, set) {
         console.debug('calling CISL prefs Editor setSettings');
-
-        // // If logged In
-        // fluid.each(fluid.get(modelToSave, "preferences"), function (prefVal, prefKey) {
-        //     console.log(prefKey, prefVal);
-        //     var prefSetURL = fluid.stringTemplate("/account/pref/%prefKey/%prefVal", {prefKey: prefKey, prefVal: prefVal});
-        //     $.get(prefSetURL, function (data) {
-        //         console.log(prefSetURL, data);
-        //     })
-        // });
 
         var isLoggedIn = false;
         if (!isLoggedIn) {
