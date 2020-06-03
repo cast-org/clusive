@@ -102,7 +102,11 @@ class ClusiveUser(models.Model):
         max_length=2,
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
-    )    
+    )
+
+    @property
+    def can_set_password(self):
+        return self.role and self.role != Roles.GUEST
 
     def get_preference(self, pref):
         pref, created = Preference.objects.get_or_create(user=self, pref=pref)

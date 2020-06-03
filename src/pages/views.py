@@ -18,8 +18,8 @@ class LibraryView(LoginRequiredMixin,ListView):
     template_name = 'pages/library.html'
 
     def get_queryset(self):
-        clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
-        period = clusive_user.periods.first()
+        self.clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+        period = self.clusive_user.periods.first()
         logger.debug("User is in period %s" % (period))
         if period:
             books = [ba.book for ba in BookAssignment.objects.filter(period=period)]
@@ -32,6 +32,11 @@ class LibraryView(LoginRequiredMixin,ListView):
         if request.user.is_authenticated:
             page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clusive_user'] = self.clusive_user
+        return context
 
 
 class ReaderChooseVersionView(RedirectView):

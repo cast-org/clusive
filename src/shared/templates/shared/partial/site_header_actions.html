@@ -2,7 +2,15 @@
     <a href="{% url 'word_bank' %}">Word bank</a>
     |
     {% if not user.is_anonymous %}
-    {{ user }} | <a href="{% url 'logout' %}">Log out</a>
+        <button type="button" class="btn btn-xsmall btn-primary" data-cfw="dropdown">
+            {{ user }} <span class="caret" aria-hidden="true"></span>
+        </button>
+        <ul class="dropdown-menu dropreverse">
+            {% if clusive_user.can_set_password %}
+            <li><a href="{% url 'password_change' %}">Change password</a></li>
+            {% endif %}
+            <a href="{% url 'logout' %}">Log out</a>
+        </ul>
     {% else %}
     <a href="{% url 'login' %}">Log in</a> | <a href="{% url 'login' %}">Create an account</a>
     {% endif %}

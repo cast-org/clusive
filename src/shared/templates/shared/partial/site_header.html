@@ -1,14 +1,11 @@
 {% load static %}
 <header class="site-header">
     <div class="site-header-logo">
-        {% comment %}
-        <a href="{% url 'index' %}">
+        {% if home_link %}<a href="{% url 'index' %}">{% endif %}
             <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-        </a>
-        {% endcomment %}
-        <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-        <span class="icon-logo-clusive" aria-hidden="true"></span>
-        <span class="sr-only">Clusive</span>
+            <span class="icon-logo-clusive" aria-hidden="true"></span>
+            <span class="sr-only">Clusive</span>
+        {% if home_link %}</a>{% endif %}
     </div>
 
     {% if page_title|length > 0 %}
