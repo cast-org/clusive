@@ -210,6 +210,15 @@ class ClusiveUserTestCase(TestCase):
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
 
+    def test_adopt_preferences_set(self):
+        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True'}
+        user = ClusiveUser.objects.get(user__username='user1')
+        user.adopt_preferences_set("default")
+        user_prefs = user.get_preferences()
+        
+        for p in user_prefs:
+            self.assertEqual(default_pref_set[p.pref], p.value, '%s:%s and %s:%s were not equal after adopt_preferences_set(default)' % (p.pref, p.value, p.pref, default_pref_set[p.pref]))        
+
     def test_convert_pref_string_value(self):
                 
         self.assertEqual(convert_pref_string_value("1"), 1, "int as string was not converted as expected")
