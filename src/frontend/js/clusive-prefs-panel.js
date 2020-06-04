@@ -1,4 +1,4 @@
-/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT */
+/* global cisl, clusive, fluid_3_0_0, gpii, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
 
 (function(fluid) {
     'use strict';
@@ -52,13 +52,13 @@
         var djangoStorePromise = fluid.promise();
 
         $.get(getURL, function(data) {
-            console.debug(getURL);
-            console.debug(data);
+            console.debug('Get user preferences from ', getURL);
+            console.debug('Received preferences: ', data);
             djangoStorePromise.resolve({
                 preferences: data
             });
         }).fail(function(error) {
-            console.error('an error occured', error);
+            console.error('Error getting preferences:', error);
             djangoStorePromise.reject('error');
         });
 
@@ -67,40 +67,40 @@
 
     clusive.prefs.djangoStore.setUserPreferences = function(model, directModel) {
         console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model);
-        console.debug(arguments);
 
         if ($.isEmptyObject(model)) {
             var resetURL = directModel.resetURL;
-            $.ajax({
-                type: "POST",
-                url: resetURL,
+            $.ajax(resetURL, {
+                method: 'POST',
                 headers: {
                     'X-CSRFToken': DJANGO_CSRF_TOKEN
                 },
-                data: JSON.stringify({adopt: 'default'}),
-                success: function (data) {
-                    clusive.prefs.djangoStore.getUserPreferences(directModel);
-                    console.debug("reset preferences to default", data);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
-                }
-
-            })            
-        } else {           
-            var setURL = directModel.setURL;            
-            $.ajax({
-                type: "POST",
-                url: setURL,
-                headers: {
-                    'X-CSRFToken': DJANGO_CSRF_TOKEN
-                },
-                data: JSON.stringify(fluid.get(model, 'preferences')),
-                success: function (data) {
-                    console.debug("set preferences", data);
-                },
-
+                data: JSON.stringify({
+                    adopt: 'default'
+                })
             })
+                .done(function(data) {
+                    console.debug('resetting preferences to default', data);
+                    clusive.prefs.djangoStore.getUserPreferences(directModel);
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
+                });
+        } else {
+            var setURL = directModel.setURL;
+            $.ajax(setURL, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify(fluid.get(model, 'preferences'))
+            })
+                .done(function(data) {
+                    console.debug('storing preferences to server', data);
+                })
+                .fail(function(err) {
+                    console.error('Failed storing prefs to server: ', err);
+                });
         }
     };
 
@@ -143,7 +143,7 @@
         }
     });
 
-    // Redefine the existing contrast schema used by the starter    
+    // Redefine the existing contrast schema used by the starter
     fluid.defaults('fluid.prefs.schemas.contrast', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
@@ -158,12 +158,12 @@
     fluid.defaults('fluid.prefs.schemas.lineSpace', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
-            "fluid.prefs.lineSpace": {
-                "type": "number",
-                "default": 1.6,
-                "minimum": 0.7,
-                "maximum": 2,
-                "multipleOf": 0.1
+            'fluid.prefs.lineSpace': {
+                type: 'number',
+                default: 1.6,
+                minimum: 0.7,
+                maximum: 2,
+                multipleOf: 0.1
             }
         }
     });
@@ -212,10 +212,10 @@
         if (readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
             console.debug('readerWindow');
             if (enableGlossary) {
-                console.debug('mark');
+                console.debug('mark cued words');
                 readerWindow.markCuedWords();
             } else {
-                console.debug('unmark');
+                console.debug('unmark cued words');
                 readerWindow.unmarkCuedWords();
             }
         }
@@ -239,25 +239,9 @@
         }
     });
 
-    cisl.prefs.getSettings = function(that, isLoggedIn) {
+    cisl.prefs.getSettings = function(that) {
         console.debug('calling CISL prefs Editor fetch impl');
-        console.debug('isLoggedIn', isLoggedIn);
-
-        var isLoggedIn = false;
-        if (!isLoggedIn) {
-            console.warn('Not logged in, using local cookie for fetch method');
-            return that.getSettings();
-        }
-    };
-
-    cisl.prefs.setSettings = function(model, directModel, set) {
-        console.debug('calling CISL prefs Editor setSettings');
-
-        var isLoggedIn = false;
-        if (!isLoggedIn) {
-            console.warn('Not logged in, using local cookie for write method');
-            return that.setSettings(model, directModel, set);
-        }
+        return that.getSettings();
     };
 
     fluid.defaults('cisl.prefs.modalSettings', {
