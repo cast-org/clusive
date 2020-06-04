@@ -112,8 +112,18 @@ class ClusiveUser(models.Model):
         pref, created = Preference.objects.get_or_create(user=self, pref=pref)
         return pref
 
+    def set_preference(self, pref, value):
+        pref, created = Preference.objects.get_or_create(user=self, pref=pref)
+        pref.typed_value = value
+        pref.save()
+        return pref
+
     def get_preferences(self):
         return Preference.objects.filter(user=self)
+
+    def get_preferences_dict(self):
+        """Build and return a dictionary of preference names to preference values for this user."""
+        return {p.pref: p.typed_value for p in (self.get_preferences())}
 
     def delete_preferences(self):
         prefs = Preference.objects.filter(user=self)
@@ -231,6 +241,7 @@ def set_default_preferences(sender, instance, created, **kwargs):
 
 post_save.connect(set_default_preferences, sender=ClusiveUser)
 
+
 class Preference (models.Model):
     """Store a single user preference setting."""
 
@@ -240,8 +251,33 @@ class Preference (models.Model):
 
     value = models.CharField(max_length=32, null=True)
 
+    @property
+    def typed_value(self):
+        """Returns the value as its actual type - string, int, float, or boolean"""
+        return self.convert_from_string(self.value)
+
+    @typed_value.setter
+    def typed_value(self, newval):
+        self.value = str(newval)
+
+    @classmethod
+    def convert_from_string(cls, val):
+        """Converts a string value to a boolean, int, float, or string depending what it looks like."""
+        if val.lower() == "true":
+            return True
+        if val.lower() == "false":
+            return False
+        try:
+            return int(val)
+        except ValueError:
+            try:
+                return float(val)
+            except ValueError:
+                return val
+
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
+
 
 class PreferenceSet(models.Model):
     """Store a set of preference keys and values as a JSON string"""
@@ -249,6 +285,12 @@ class PreferenceSet(models.Model):
     name = models.CharField(max_length=32)
     description = models.CharField(max_length=256)
     prefs_json = models.TextField()
+
+    @classmethod
+    def get_json(cls, name):
+        """Return JSON for the preferences in the PreferenceSet with the given name."""
+        prefs_set = cls.objects.get(name=name)
+        return json.loads(prefs_set.prefs_json)
 
     def __str__(self):
         return 'PreferenceSet:%s' % (self.name)

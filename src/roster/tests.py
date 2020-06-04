@@ -13,7 +13,6 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
-from .views import convert_pref_string_value
 
 # TODO: make sure all tests have helpful messages
 
@@ -223,20 +222,15 @@ class ClusiveUserTestCase(TestCase):
         for p_key in default_pref_set.keys():            
             self.assertEqual(default_pref_set[p_key], user.get_preference(p_key).value, "preference '%s' not at expected default value of '%s'" % (p_key, default_pref_set[p_key]))
 
-    def test_convert_pref_string_value(self):
-                
-        self.assertEqual(convert_pref_string_value("1"), 1, "int as string was not converted as expected")
+    def test_preference_convert_from_string(self):
+        self.assertEqual(Preference.convert_from_string("1"), 1, "int as string was not converted as expected")
+        self.assertEqual(Preference.convert_from_string("1.57"), 1.57, "float as string was not converted as expected")
+        self.assertEqual(Preference.convert_from_string("False"), False, "boolean:False as string was converted as expected")
+        self.assertEqual(Preference.convert_from_string("True"), True, "boolean:True as string was converted as expected")
 
-        self.assertEqual(convert_pref_string_value("1.57"), 1.57, "float as string was not converted as expected")
+    default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"fluid_prefs_letterSpace":1,"cisl_prefs_glossary":true}'
 
-        self.assertEqual(convert_pref_string_value("False"), False, "boolean:False as string was converted as expected")
-
-        self.assertEqual(convert_pref_string_value("True"), True, "boolean:True as string was converted as expected")
-
-    default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"cisl_prefs_glossary":true}'
-
-    def test_preference_sets(self):        
-
+    def test_preference_sets(self):
         # delete any existing preferences so we're starting with a clean set
         user = ClusiveUser.objects.get(user__username='user1')
         user.delete_preferences()
@@ -253,15 +247,21 @@ class ClusiveUserTestCase(TestCase):
         login = self.client.login(username='user1', password='password1')
         
         # Setting one preference
+        response = self.client.post('/account/prefs', {'foo': 'bar'}, content_type='application/json')
+        self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
+
+        response = self.client.get('/account/prefs')
+        # TODO: currently default settings are always applied, so more than this one item is returned.
+        # self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
+        self.assertContains(response, '"foo": "bar"')
+
+        # Now that defaults are established, we should get accurate event logging
         with catch_signal(preference_changed) as handler:
-            response = self.client.post('/account/prefs', {'foo': 'bar'}, content_type='application/json')
-            self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
-            
-            response = self.client.post('/account/prefs', {'foo': 'bar'}, content_type='application/json')
+            response = self.client.post('/account/prefs', {'foo': 'baz'}, content_type='application/json')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to new value did not return expected response')
+
+            response = self.client.post('/account/prefs', {'foo': 'baz'}, content_type='application/json')
             self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to same value did not return expected response')
-            
-            response = self.client.get('/account/prefs')
-            self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
 
         handler.assert_called_once()
         handler.calls.kwargs.preference.pref='foo'
@@ -274,10 +274,11 @@ class ClusiveUserTestCase(TestCase):
             self.assertJSONEqual(response.content, {'success': 1}, 'Setting prefs did not return expected response')
             
             response = self.client.get('/account/prefs')
-            self.assertJSONEqual(response.content, {'foo': 'bar', 'baz': 'lur'}, 'Fetching prefs did not return values that were set')
-
-        handler.assert_called_once()
-        # TODO: clarify what this is doing; is it intended to test the handler?        
+            # TODO: currently default settings are always applied, so more than this one item is returned.
+            # self.assertJSONEqual(response.content, {'foo': 'bar', 'baz': 'lur'}, 'Fetching prefs did not return values that were set')
+            self.assertContains(response, '"foo": "bar", "baz": "lur"')
+        self.assertEqual(handler.call_count, 2)
+        # TODO: clarify what this is doing; is it intended to test the handler?
         handler.calls.kwargs.preference.pref='baz'
         handler.calls.kwargs.preference.value='lur'
 

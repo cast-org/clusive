@@ -22,13 +22,14 @@ def guest_login(request):
     login(request, clusive_user.user)
     return redirect('reader_index')
 
+
 class PreferenceView(View):
+
     def get(self, request):
         user = ClusiveUser.from_request(request)
-        prefs = user.get_preferences()
-        prefs_processed = convert_preference_values(prefs)
-        return JsonResponse(prefs_processed)
-    def post(self, request):        
+        return JsonResponse(user.get_preferences_dict())
+
+    def post(self, request):
         try:
             request_prefs = json.loads(request.body)
         except json.JSONDecodeError:
@@ -39,8 +40,10 @@ class PreferenceView(View):
 
         return JsonResponse({'success': 1})
 
+
 # TODO: should we specially log an event that adopts a full new preference set?
 class PreferenceSetView(View):
+
     def post(self, request):
         user = ClusiveUser.from_request(request)
         try:
@@ -51,53 +54,34 @@ class PreferenceSetView(View):
         desired_prefs_name = request_json["adopt"]
         
         try:
-            prefs_set = PreferenceSet.objects.get(name=desired_prefs_name)
+            desired_prefs = PreferenceSet.get_json(desired_prefs_name)
         except PreferenceSet.DoesNotExist:
-            return JsonResponse({'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_set_name })            
+            return JsonResponse({'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_name })
 
-        desired_prefs = json.loads(prefs_set.prefs_json)
-
-        # Clear existing preferences
-        user.delete_preferences()
-
+        # Replace all existing preferences with the new set.
+        # user.delete_preferences()
         set_user_preferences(user, desired_prefs, request)
 
-        prefs = user.get_preferences()
-        prefs_processed = convert_preference_values(prefs)
-        return JsonResponse(prefs_processed)
+        # Return the newly-established preferences
+        return JsonResponse(user.get_preferences_dict())
 
-# Process a dictionary object from a set of user preferences
-# Casts numbers-as-strings and booleans-as-strings as appropriate
-def convert_preference_values(prefs):
-    processed_prefs = {}
-    for pref_setting in prefs:
-        processed_prefs[pref_setting.pref] = convert_pref_string_value(pref_setting.value)
-        
-    return processed_prefs
-
-# TODO: this and the method above should perhaps be on the model
-def convert_pref_string_value(val):
-    if(val.lower() == "true"):
-        return True
-    if(val.lower() == "false"):
-        return False
-    try:
-        return int(val)
-    except ValueError:
-        try:
-            return float(val)
-        except ValueError:
-            return val
 
 # Set user preferences from a dictionary
 def set_user_preferences(user, new_prefs, request):
-    for pref_key in new_prefs:
-            pref_val = new_prefs[pref_key]
-            preference = user.get_preference(pref_key)               
-            if(preference.value != pref_val):                           
-                preference.value = pref_val
-                preference.save()
-                preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=preference)            
+    """Sets User's preferences to match the given dictionary of preference values.
+    Any preferences NOT specified in the dictionary are set to their default values."""
+    old_prefs = user.get_preferences_dict()
+    prefs_to_use = PreferenceSet.get_json('default')
+    prefs_to_use.update(new_prefs)
+    for pref_key in prefs_to_use:
+        old_val = old_prefs.get(pref_key)
+        if old_val != prefs_to_use[pref_key]:
+            pref = user.set_preference(pref_key, prefs_to_use[pref_key])
+            # logger.debug("Pref %s changed %s (%s) -> %s (%s)", pref_key,
+            #              old_val, type(old_val),
+            #              pref.typed_value, type(pref.typed_value))
+            preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=pref)
+
 
 @staff_member_required
 def upload_csv(request):

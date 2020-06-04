@@ -51,19 +51,20 @@ def log_vocab_lookup(sender, **kwargs):
     if event:
         event.save()
 
+
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
     """User changes a preference setting"""
-    logger.debug("Preference change signal received")
     request = kwargs.get('request')
     preference = kwargs.get('preference')
-    value = kwargs.get('value')
+    logger.debug("Preference change: %s" % (preference))
     event = Event.build(type='TOOL_USE_EVENT',
                         action='USED',
                         control='pref:'+preference.pref,
                         value=preference.value,
                         session=request.session)
     event.save()
+
 
 @receiver(user_logged_in)
 def log_login(sender, **kwargs):
