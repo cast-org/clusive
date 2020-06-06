@@ -82,7 +82,7 @@ def cuelist(request, document, version):
     """Return the list of words that should be cued in this document for this user"""
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        bv = BookVersion.lookup(path=document, versionNumber=version)
+        bv = BookVersion.lookup(path=document, version_number=version)
         all_glossary_words = json.loads(bv.glossary_words)
         all_book_words = json.loads(bv.all_words)
 

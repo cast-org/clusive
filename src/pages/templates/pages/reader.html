@@ -130,27 +130,14 @@ var pub_version = "{{ version }}";
             api: {
                 addBookmark: function (bookmark) {
                     console.error('Bookmark saving is not implemented yet. Received: ', bookmark);
-                    return Promise.resolve(bookmark);
+                    return Promise.reject();
                 },
                 deleteBookmark: function (bookmark) {
                     console.error('Bookmark deletion is not implemented yet. Received: ', bookmark);
-                    return Promise.resolve();
+                    return Promise.reject();
                 },
                 addAnnotation: function (annotation) {
-                    showNewAnnotation(annotation);
-                    return $.post('/library/annotation', {
-                        book: pub_id,
-                        version: pub_version,
-                        highlight: JSON.stringify(annotation)
-                    })
-                        .then(function(result) {
-                            annotation.id = result.id;
-                            console.debug('Successfully stored annotation ', result.id);
-                            return annotation;
-                        })
-                        .fail(function(err) {
-                            console.error('Set location API failure!', err);
-                        });
+                    return addNewAnnotation(annotation, pub_id, pub_version);
                 },
                 selectedAnnotation: function (annotation) {
                     console.debug('Selected annotation: ', annotation.id);
@@ -178,16 +165,8 @@ var pub_version = "{{ version }}";
                 // after a short delay
                 // TODO: improve this sequencing
                 $(document).ready(function () {
-                    build_table_of_contents();
+                    buildTableOfContents();
                     buildAnnotationList();
-                    $('#modalToc')
-                        .on('beforeShow.cfw.modal', function() {
-                            reset_current_toc_item(true);
-                            highlight_current_toc_item();
-                        })
-                        .on('afterShow.cfw.modal', function() {
-                            scroll_to_current_toc_item()
-                        });
                     setTimeout(function() {
                         clusivePrefs = createClusivePrefsEditor();
                     }, 250);

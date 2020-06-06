@@ -1,12 +1,17 @@
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView
 
 from library.models import Paradata, Book, Annotation, BookVersion
 from roster.models import ClusiveUser
+
+logger = logging.getLogger(__name__)
 
 
 class UpdateLastLocationView(LoginRequiredMixin,View):
@@ -31,15 +36,16 @@ class UpdateLastLocationView(LoginRequiredMixin,View):
 
 class AnnotationView(LoginRequiredMixin,View):
     """
-    Post to this view to add a new highlight to the database.
-    May eventually support the GET method to return information on a highlight or annotation,
+    POST to this view to add a new highlight to the database.
+    DELETE to it to remove one.
+    Logically would support the GET method to return information on a highlight or annotation,
     but that is not needed right now.
     """
 
-    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super(AnnotationView, self).dispatch(request, *args, **kwargs)
 
+    # Creates a new annotation
     def post(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
         book_path = request.POST.get('book')
@@ -48,10 +54,31 @@ class AnnotationView(LoginRequiredMixin,View):
         if not book_path or not highlight:
             raise Http404('POST must contain book, version, and highlight string.')
         try:
-            bookVersion = BookVersion.lookup(book_path, version_number)
-            annotation = Annotation(user=clusive_user, bookVersion=bookVersion, highlight=highlight)
+            book_version = BookVersion.lookup(book_path, version_number)
+            annotation = Annotation(user=clusive_user, bookVersion=book_version, highlight=highlight)
+            annotation.update_progression()
+            annotation.save()
+            # Once a database ID has been generated, we have to update the JSON to include it.
+            annotation.update_id()
             annotation.save()
         except BookVersion.DoesNotExist:
             raise Http404('Unknown BookVersion: %s / %d' % (book_path, version_number))
         else:
-            return JsonResponse({'id': annotation.pk})
+            return JsonResponse({'success': True, 'id': annotation.pk})
+
+    def delete(self, request, *args, **kwargs):
+        clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+        id = int(kwargs.get('id'))
+        anno = get_object_or_404(Annotation, id=id, user=clusive_user)
+        anno.delete()
+        return JsonResponse({'success': True})
+
+
+class AnnotationListView(LoginRequiredMixin,ListView):
+    template_name = 'library/annotationList.html'
+    context_object_name = 'annotations'
+
+    def get_queryset(self):
+        clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+        bookVersion = BookVersion.lookup(self.kwargs['document'], self.kwargs['version'])
+        return Annotation.objects.filter(bookVersion=bookVersion, user=clusive_user)

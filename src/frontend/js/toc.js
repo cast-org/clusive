@@ -1,12 +1,38 @@
-/* global D2Reader, Promise */
-/* exported build_table_of_contents, reset_current_toc_item, highlight_current_toc_item, scroll_to_current_toc_item,
-    trackReadingLocation, showNewAnnotation, showExistingAnnotation */
+/* global D2Reader, Promise, DJANGO_CSRF_TOKEN */
+/* exported buildTableOfContents, trackReadingLocation,
+   buildAnnotationList, addNewAnnotation, showExistingAnnotation */
+
+// Some IDs are required to be used in the side modal:
+var TOC_MODAL_BUTTON = '#tocButton';
+var TOC_MODAL = '#modalToc';
+
+var TOC_TAB   = '#tocTab';  // links to #tocPanel
+var TOC_CONTAINER = '#tocList';
+
+var NOTES_TAB = '#notesTab';  // links to #notesPanel
+var NOTES_CONTAINER = '#notesList';
+
+// eslint-disable-next-line no-unused-vars
+function showTocPanel() {
+    'use strict';
+
+    $(TOC_MODAL_BUTTON).CFW_Modal('show');
+    $(TOC_TAB).CFW_Tab('show');
+}
+
+function showNotesPanel() {
+    'use strict';
+
+    $(TOC_MODAL_BUTTON).CFW_Modal('show');
+    $(NOTES_TAB).CFW_Tab('show');
+}
 
 /*
  * Functions dealing with location tracking and the Table of Contents modal.
  */
 
-function table_of_contents_level(list, level, id) {
+// Create HTML for a single level of TOC structure
+function buildTocLevel(list, level, id) {
     'use strict';
 
     var out = '<ul class="nav nav-vertical">';
@@ -32,7 +58,7 @@ function table_of_contents_level(list, level, id) {
             submenu = '<div id="' +
                 submenu_id +
                 '" class="collapse">' +
-                table_of_contents_level(element.children, level + 1, submenu_id) +
+                buildTocLevel(element.children, level + 1, submenu_id) +
                 '</div>';
         }
         out += '<li class="nav-item">' +
@@ -50,10 +76,11 @@ function table_of_contents_level(list, level, id) {
     return out;
 }
 
-function reset_current_toc_item(collapse) {
+// Reset TOC to its base state with nothing active, and (optionally) everything collapsed
+function resetCurrentTocItem(collapse) {
     'use strict';
 
-    var top = $('#contents_list');
+    var top = $(TOC_CONTAINER);
     if (typeof collapse === 'undefined') {
         collapse = false;
     }
@@ -68,8 +95,8 @@ function reset_current_toc_item(collapse) {
     }
 }
 
-// This is called from reader.html
-function highlight_current_toc_item() {
+// Called when TOC modal is opened - activates the current location
+function markTocItemActive() {
     'use strict';
 
     var current = D2Reader.mostRecentNavigatedTocItem();
@@ -77,7 +104,7 @@ function highlight_current_toc_item() {
         current = current.substr(1);
     }
 
-    var top = $('#contents_list');
+    var top = $(TOC_CONTAINER);
     var elt = top.find('a[href$=\'' + current + '\']');
 
     // Add active class to current element and any related 'parent' sections
@@ -88,31 +115,32 @@ function highlight_current_toc_item() {
     elt.parents('li').children('a[data-cfw="collapse"]').attr('aria-current', true).CFW_Collapse('show');
 }
 
-// This is called from reader.html
-function scroll_to_current_toc_item() {
+// Scroll the TOC display so that the active item can be seen.
+function scrollToCurrentTocItem() {
     'use strict';
 
-    var elt =  $('#contents_list').find('a.active');
+    var elt =  $(TOC_CONTAINER).find('a.active');
     console.debug('Scrolling to ', elt);
     if (elt.length > 0) {
         elt[elt.length - 1].scrollIntoView();
     }
 }
 
-function build_table_of_contents() {
+// Creates TOC contents for the current book.
+function buildTableOfContents() {
     'use strict';
 
     if (typeof D2Reader === 'object') {
         D2Reader.tableOfContents().then(function(x) {
-            var out = table_of_contents_level(x, 0, 'toc');
-            $('#contents_list').html(out).CFW_Init();
+            var out = buildTocLevel(x, 0, 'toc');
+            $(TOC_CONTAINER).html(out).CFW_Init();
 
             // Add click event to update menu when new page selected
-            $('#contents_list').find('.nav-link').on('click', function() {
+            $(TOC_CONTAINER).find('.nav-link').on('click', function() {
                 // Use timeout delay until we can get a callback from reader
                 setTimeout(function() {
-                    reset_current_toc_item(false);
-                    highlight_current_toc_item();
+                    resetCurrentTocItem(false);
+                    markTocItemActive();
                 }, 100);
             });
         });
@@ -193,91 +221,101 @@ function savePendingLocationUpdate() {
 // Functions dealing with the Highlights and Notes panel
 //
 
+// Indicates the given annotation as being active.
 function markAnnotationActive(annotation) {
     'use strict';
 
-    $('#annotationsContainer .active').removeClass('active');
+    $(NOTES_CONTAINER + ' .active').removeClass('active');
     $('#annotation' + annotation.id).addClass('active');
 }
 
-function buildAnnotationHtml(annotation) {
+// Build the HTML for the annotations display
+function buildAnnotationList() {
     'use strict';
 
-    var id = annotation.id;
-    var cleanText = annotation.highlight.selectionInfo.cleanText;
-    if (!cleanText) {
-        console.warn('Couldn\'t find highlight text in: ', annotation);
-    }
-
-    var out = '<div id="annotation' + id + '" class="list-item">' +
-        '<a href=\'javascript:D2Reader.goTo(' + JSON.stringify(annotation) + ');\'>' +
-        '<span class="highlight">' + cleanText + '</span>' +
-        '</a>' +
-        '<ul class="list list-divided list-horizontal list-highlight-action">' +
-        // '<li class="list-item"><a href="#" role="button">Add a note</a></li>' +
-        '<li class="list-item">' +
-        '<a href="javascript:deleteAnnotation(' + id + ');" role="button">Delete highlight</a>' +
-        '</li></ul></div>';
-
-    // add to annotationsContainer
-    return out;
+    var $annotationsContainer = $(NOTES_CONTAINER);
+    $annotationsContainer.html('<p>Loading...</p>');
+    return $.get('/library/annotationlist/' + window.pub_id + '/' + window.pub_version)
+        .done(function(data) {
+            $annotationsContainer.html(data);
+        })
+        .fail(function(err) {
+            console.error(err);
+        });
 }
 
-// Build the HTML for the annotations list in the sidebar.
-// If an "extra" annotation is provided as the argument, it will be included
-// at the beginning of the list.
-function buildAnnotationList(extra) {
+// Create an annotation and assign an ID for it; called by reader.html
+function addNewAnnotation(annotation, pub_id, pub_version) {
     'use strict';
 
-    D2Reader.annotations().then(function(result) {
-        console.info(result);
-        if (result || extra) {
-            $('#noAnnotationsMessage').hide();
-            var $annotationsContainer = $('#annotationsContainer');
-            $annotationsContainer.empty();
-            if (extra) {
-                $annotationsContainer.append(buildAnnotationHtml(extra));
-                markAnnotationActive(extra);
-            }
-            result.forEach(function(a) {
-                $annotationsContainer.append(buildAnnotationHtml(a));
-            });
-        } else {
-            $('#noAnnotationsMessage').show();
+    return $.ajax('/library/annotation', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            book: pub_id,
+            version: pub_version,
+            highlight: JSON.stringify(annotation)
         }
-    });
+    })
+        .then(function(result) {
+            annotation.id = result.id;
+            console.debug('Successfully stored annotation ', result.id);
+
+            buildAnnotationList()
+                .then(function() { markAnnotationActive(annotation); });
+            showNotesPanel();
+
+            return annotation;
+        })
+        .fail(function(err) {
+            console.error('Set location API failure!', err);
+            return err;
+        });
 }
 
-// Used in href of delete links
-// eslint-disable-next-line no-unused-vars
-function deleteAnnotation(id) {
+function deleteAnnotation(e) {
     'use strict';
 
-    // TODO: support undo
-    // TODO: this function is documented but doesn't exist.
+    e.preventDefault();
+    e.stopPropagation();
+    var id = $(this).closest('.annotation-container').data('annotation-id');
+    console.debug('Deleting annotation: ', id);
     D2Reader.deleteAnnotation({
-        id:id
+        id: id
     });
-    buildAnnotationList();
-    return false;
+    $.ajax('/library/annotation/' + id, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        }
+    })
+        .then(buildAnnotationList)
+        .fail(function(err) {
+            console.error('Delete API failure: ', err);
+        });
 }
 
-// Called by reader.html
-function showNewAnnotation(annotation) {
-    'use strict';
-
-    buildAnnotationList(annotation);
-    $('#annotation' + annotation.id).addClass('active');
-    $('#tocButton').CFW_Modal('show');
-    $('#notesTab').CFW_Tab('show');
-}
-
+// Open sidebar showing the requested annotation. Called by reader.html
 function showExistingAnnotation(annotation) {
     'use strict';
 
     markAnnotationActive(annotation);
-    $('#tocButton').CFW_Modal('show');
-    $('#notesTab').CFW_Tab('show');
+    showNotesPanel();
+}
+
+// Move reading position to the selected annotation.
+function goToAnnotation(event) {
+    'use strict';
+
+    event.preventDefault();
+    event.stopPropagation();
+    var encoded = $(this).closest('.annotation-container').data('annotation');
+    // Decode base-64 encoded JSON attribute value
+    var json = JSON.parse(atob(encoded));
+    markAnnotationActive(json);
+    D2Reader.goTo(json);
 }
 
 //  Initial setup
@@ -286,4 +324,17 @@ $(document).ready(function() {
     'use strict';
 
     savePendingLocationUpdate();
+
+    $(NOTES_CONTAINER)
+        .on('click touchstart', '.delete-highlight', deleteAnnotation)
+        .on('click touchstart', '.goto-highlight', goToAnnotation);
+
+    $(TOC_MODAL)
+        .on('beforeShow.cfw.modal', function() {
+            resetCurrentTocItem(true);
+            markTocItemActive();
+        })
+        .on('afterShow.cfw.modal', function() {
+            scrollToCurrentTocItem();
+        });
 });
