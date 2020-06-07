@@ -116,7 +116,7 @@ class ReaderView(LoginRequiredMixin,TemplateView):
             book = Book.objects.get(path=pub_id)
             clusive_user = get_object_or_404(ClusiveUser, user=request.user)
             bookVersion = BookVersion.objects.get(book=book, sortOrder=version)
-            annotationList = Annotation.getList(user=clusive_user, bookVersion=bookVersion)
+            annotationList = Annotation.get_list(user=clusive_user, book_version=bookVersion)
             pdata = Paradata.record_view(book, version, clusive_user)
             bv_prev = str(version-1) if version>0 \
                 else False

@@ -3,18 +3,18 @@
     <div class="modal-dialog modal-dialog-side-start modal-dialog-scrollable modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title h5 sr-only">Contents<!-- , Highlights, and Notes--></h2>
+                <h2 class="modal-title h5 sr-only">Contents, Highlights, and Notes</h2>
                 <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
                     <span class="icon-cancel" aria-hidden="true"></span>
                 </button>
                 <ul class="nav nav-tabs-toc">
-                    <li class="nav-item"><a href="#toc0" class="nav-link" data-cfw="tab">Contents</a></li>
-<!--                    <li class="nav-item"><a href="#toc1" class="nav-link" data-cfw="tab">Highlights &amp; Notes</a></li>-->
+                    <li class="nav-item"><a id="tocTab" href="#tocPanel" class="nav-link" data-cfw="tab">Contents</a></li>
+                    <li class="nav-item"><a id="notesTab" href="#notesPanel" class="nav-link" data-cfw="tab">Highlights &amp; Notes</a></li>
                 </ul>
             </div>
             <div class="modal-body">
                 <div class="tab-content">
-                    <div id="toc0" class="tab-pane">
+                    <div id="tocPanel" class="tab-pane">
                         <div class="media media-toc">
                             {% if pub.cover %}
                             <div class="media-img">
@@ -27,12 +27,12 @@
                             </div>
                         </div>
                         <nav class="nav-toc" aria-label="Contents">
-                            <ul id="contents_list" class="nav nav-vertical">
+                            <ul id="tocList" class="nav nav-vertical">
                             </ul>
                         </nav>
                     </div>
-                    <div id="toc1" class="tab-pane">
-                        Highlights/notes here
+                    <div id="notesPanel" class="tab-pane">
+                        <div id="notesList">Loading...</div>
                     </div>
                 </div>
             </div>

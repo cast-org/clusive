@@ -1,15 +1,20 @@
 import json
+import logging
+from base64 import b64encode
+from json import JSONDecodeError
 
 from django.db import models
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Period
 
+logger = logging.getLogger(__name__)
+
 
 class Book(models.Model):
     """Metadata about a single reading, to be represented as an item on the Library page.
     There may be multiple versions of a single Book, which are separate EPUB files."""
-    path = models.CharField(max_length=256, db_index=True)
+    path = models.CharField(max_length=256, db_index=True, unique=True)
     title = models.CharField(max_length=256)
     description = models.TextField(default="")
     cover = models.CharField(max_length=256, null=True)
@@ -67,14 +72,17 @@ class BookVersion(models.Model):
         self.new_words = json.dumps(val)
 
     @classmethod
-    def lookup(cls, path, versionNumber):
-        return cls.objects.get(book__path=path, sortOrder=versionNumber)
+    def lookup(cls, path, version_number):
+        return cls.objects.get(book__path=path, sortOrder=version_number)
 
     def __str__(self):
         return "%s[%d]" % (self.book, self.sortOrder)
 
     class Meta:
         ordering = ['book', 'sortOrder']
+        constraints = [
+            models.UniqueConstraint(fields=['book', 'sortOrder'], name='unique_book_version')
+        ]
 
 
 class BookAssignment(models.Model):
@@ -88,6 +96,9 @@ class BookAssignment(models.Model):
 
     class Meta:
         ordering = ['book']
+        constraints = [
+            models.UniqueConstraint(fields=['book', 'period'], name='unique_book_period')
+        ]
 
 
 class Paradata(models.Model):
@@ -101,8 +112,8 @@ class Paradata(models.Model):
     lastLocation = models.TextField(null=True, verbose_name='Last reading location')
 
     @classmethod
-    def record_view(cls, book, versionNumber, clusive_user):
-        bv = BookVersion.objects.get(book=book, sortOrder=versionNumber)
+    def record_view(cls, book, version_number, clusive_user):
+        bv = BookVersion.objects.get(book=book, sortOrder=version_number)
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
         para.viewCount += 1
         if para.lastVersion != bv:
@@ -122,31 +133,73 @@ class Paradata(models.Model):
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['book', 'user'], name='unique_book_user')
+        ]
+
 
 class Annotation(models.Model):
     """Holds one highlight/bookmark/annotation/note"""
     bookVersion = models.ForeignKey(to=BookVersion, on_delete=models.CASCADE, db_index=True)
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     highlight = models.TextField()
+    progression = models.FloatField()   # Location in the book, expressed as a number from 0 to 1
     dateAdded = models.DateTimeField(default=timezone.now)
+    dateDeleted = models.DateTimeField(null=True, db_index=True)
 
     # later: note
     # later: category
 
     @property
-    def highlightWithId(self):
-        """
-        Returns the JSON stored as the highlight, plus an 'id' field with the primary key.
-        This is what is reported to Readium so that we can identify each highlight by id
-        when it is clicked on.
-        """
-        hl = json.loads(self.highlight)
+    def highlight_object(self):
+        """Returns the 'highlight' string converted to a python object (a dictionary)."""
+        return json.loads(self.highlight)
+
+    @highlight_object.setter
+    def highlight_object(self, value):
+        self.highlight = json.dumps(value)
+
+    @property
+    def highlight_base64(self):
+        """Return highlight string Base64-encoded so it can be passed as an HTML attribute value."""
+        return b64encode(self.highlight.encode('utf-8')).decode()
+
+    def clean_text(self):
+        try:
+            return self.highlight_object['highlight']['selectionInfo']['cleanText']
+        except KeyError:
+            return None
+
+    def update_id(self):
+        """Rewrite JSON with the database ID as the annotation's ID
+        so that client & server agree on one ID."""
+        hl = self.highlight_object
         hl['id'] = self.pk
-        return hl
+        self.highlight_object = hl
+
+    def update_progression(self):
+        """Set the 'progression' field based on the highlight."""
+        self.progression = self.find_progression(self.highlight)
+
+    def find_progression(self, jsonString):
+        if jsonString is None:
+            return 0
+        try:
+            locations = json.loads(jsonString).get('locations')
+            return locations.get('progression')
+        except (JSONDecodeError, AttributeError):
+            logger.error('Can\'t find progression in JSON %s', jsonString)
+            return 0
 
     @classmethod
-    def getList(self, user, bookVersion):
-        return [a.highlightWithId for a in Annotation.objects.filter(user=user, bookVersion=bookVersion)]
+    def get_list(self, user, book_version):
+        return [a.highlight_object for a in
+                Annotation.objects.filter(user=user, bookVersion=book_version, dateDeleted=None)]
 
     def __str__(self):
-        return "[Annotation %d: %s in %s]" % (self.pk, self.user, self.bookVersion)
+        return "[Annotation %d for %s]" % (self.pk, self.user)
+
+    class Meta:
+        ordering = ['progression']
+
