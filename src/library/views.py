@@ -9,6 +9,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 
+from eventlog.signals import annotation_action
 from library.models import Paradata, Book, Annotation, BookVersion
 from roster.models import ClusiveUser
 
@@ -54,6 +55,10 @@ class AnnotationView(LoginRequiredMixin,View):
             anno.dateDeleted = None
             anno.save()
             logger.debug('Undeleting annotation %s', anno)
+            annotation_action.send(sender=AnnotationView.__class__,
+                                   request=request,
+                                   annotation = anno,
+                                   action='HIGHLIGHTED')
             return JsonResponse({'success': True})
         else:
             book_path = request.POST.get('book')
@@ -70,6 +75,10 @@ class AnnotationView(LoginRequiredMixin,View):
                 annotation.update_id()
                 annotation.save()
                 logger.debug('Created annotation %s', annotation)
+                annotation_action.send(sender=AnnotationView.__class__,
+                                       request=request,
+                                       annotation = annotation,
+                                       action='HIGHLIGHTED')
             except BookVersion.DoesNotExist:
                 raise Http404('Unknown BookVersion: %s / %d' % (book_path, version_number))
             else:
@@ -82,6 +91,10 @@ class AnnotationView(LoginRequiredMixin,View):
         logger.debug('Deleting annotation %s', anno)
         anno.dateDeleted = timezone.now()
         anno.save()
+        annotation_action.send(sender=AnnotationView.__class__,
+                               request=request,
+                               annotation = anno,
+                               action='REMOVED')
         return JsonResponse({'success': True})
 
 

@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 page_viewed = Signal(providing_args=['request', 'document', 'page'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'preference'])
+annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 
 #
 # Signal handlers that log specific events
@@ -63,6 +64,22 @@ def log_pref_change(sender, **kwargs):
                         control='pref:'+preference.pref,
                         value=preference.value,
                         session=request.session)
+    event.save()
+
+
+@receiver(annotation_action)
+def log_annotation_action(sender, **kwargs):
+    """User adds, deletes, or undeletes an annotation"""
+    request = kwargs.get('request')
+    action = kwargs.get('action')   # Should be HIGHLIGHTED or REMOVED
+    annotation = kwargs.get('annotation')
+    logger.debug("Annotation %s: %s" % (action, annotation))
+    event = Event.build(type='ANNOTATION_EVENT',
+                        action=action,
+                        document='%s:%d' % (annotation.bookVersion.book.path, annotation.bookVersion.sortOrder),
+                        value=annotation.clean_text(),
+                        session=request.session)
+            # TODO: page?  Generated?
     event.save()
 
 
