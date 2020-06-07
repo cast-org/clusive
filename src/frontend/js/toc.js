@@ -270,7 +270,7 @@ function addNewAnnotation(annotation, pub_id, pub_version) {
             return annotation;
         })
         .fail(function(err) {
-            console.error('Set location API failure!', err);
+            console.error('Create annotation API failure!', err);
             return err;
         });
 }
@@ -280,20 +280,56 @@ function deleteAnnotation(e) {
 
     e.preventDefault();
     e.stopPropagation();
-    var id = $(this).closest('.annotation-container').data('annotation-id');
+    var $container = $(this).closest('.annotation-container');
+    var id = $container.data('annotation-id');
     console.debug('Deleting annotation: ', id);
     D2Reader.deleteAnnotation({
         id: id
     });
+    $container.html('<div class="highlight-undelete">Deleted' +
+        '<a href="#" class="link-undelete">Undo</a></div>');
     $.ajax('/library/annotation/' + id, {
         method: 'DELETE',
         headers: {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
         }
     })
-        .then(buildAnnotationList)
+        .then(function() {
+            console.debug('Server-side delete succeeded');
+        })
         .fail(function(err) {
             console.error('Delete API failure: ', err);
+            return err;
+        });
+}
+
+function undeleteAnnotation(event) {
+    'use strict';
+
+    event.preventDefault();
+    event.stopPropagation();
+    var $container = $(this).closest('.annotation-container');
+    var encoded = $container.data('annotation');
+    var annotation = JSON.parse(atob(encoded));
+    console.debug('Undeleting annotation id=', annotation.id);
+    D2Reader.addAnnotation(annotation);
+    $.ajax('/library/annotation', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            undelete: annotation.id
+        }
+    })
+        .then(function() {
+            console.debug('Server-side undelete succeeded');
+            buildAnnotationList()
+                .then(function() { markAnnotationActive(annotation); });
+        })
+        .fail(function(err) {
+            console.error('Undelete API failure: ', err);
+            return err;
         });
 }
 
@@ -327,7 +363,8 @@ $(document).ready(function() {
 
     $(NOTES_CONTAINER)
         .on('click touchstart', '.delete-highlight', deleteAnnotation)
-        .on('click touchstart', '.goto-highlight', goToAnnotation);
+        .on('click touchstart', '.goto-highlight', goToAnnotation)
+        .on('click touchstart', '.link-undelete', undeleteAnnotation);
 
     $(TOC_MODAL)
         .on('beforeShow.cfw.modal', function() {

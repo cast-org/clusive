@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class Book(models.Model):
     """Metadata about a single reading, to be represented as an item on the Library page.
     There may be multiple versions of a single Book, which are separate EPUB files."""
-    path = models.CharField(max_length=256, db_index=True)
+    path = models.CharField(max_length=256, db_index=True, unique=True)
     title = models.CharField(max_length=256)
     description = models.TextField(default="")
     cover = models.CharField(max_length=256, null=True)
@@ -80,6 +80,9 @@ class BookVersion(models.Model):
 
     class Meta:
         ordering = ['book', 'sortOrder']
+        constraints = [
+            models.UniqueConstraint(fields=['book', 'sortOrder'], name='unique_book_version')
+        ]
 
 
 class BookAssignment(models.Model):
@@ -93,6 +96,9 @@ class BookAssignment(models.Model):
 
     class Meta:
         ordering = ['book']
+        constraints = [
+            models.UniqueConstraint(fields=['book', 'period'], name='unique_book_period')
+        ]
 
 
 class Paradata(models.Model):
@@ -127,6 +133,11 @@ class Paradata(models.Model):
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['book', 'user'], name='unique_book_user')
+        ]
+
 
 class Annotation(models.Model):
     """Holds one highlight/bookmark/annotation/note"""
@@ -135,6 +146,7 @@ class Annotation(models.Model):
     highlight = models.TextField()
     progression = models.FloatField()   # Location in the book, expressed as a number from 0 to 1
     dateAdded = models.DateTimeField(default=timezone.now)
+    dateDeleted = models.DateTimeField(null=True, db_index=True)
 
     # later: note
     # later: category
@@ -182,7 +194,8 @@ class Annotation(models.Model):
 
     @classmethod
     def get_list(self, user, book_version):
-        return [a.highlight_object for a in Annotation.objects.filter(user=user, bookVersion=book_version)]
+        return [a.highlight_object for a in
+                Annotation.objects.filter(user=user, bookVersion=book_version, dateDeleted=None)]
 
     def __str__(self):
         return "[Annotation %d for %s]" % (self.pk, self.user)

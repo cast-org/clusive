@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -45,40 +46,50 @@ class AnnotationView(LoginRequiredMixin,View):
     def dispatch(self, request, *args, **kwargs):
         return super(AnnotationView, self).dispatch(request, *args, **kwargs)
 
-    # Creates a new annotation
+    # Creates a new annotation or undeletes one
     def post(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
-        book_path = request.POST.get('book')
-        version_number = int(request.POST.get('version'))
-        highlight = request.POST.get('highlight')
-        if not book_path or not highlight:
-            raise Http404('POST must contain book, version, and highlight string.')
-        try:
-            book_version = BookVersion.lookup(book_path, version_number)
-            annotation = Annotation(user=clusive_user, bookVersion=book_version, highlight=highlight)
-            annotation.update_progression()
-            annotation.save()
-            # Once a database ID has been generated, we have to update the JSON to include it.
-            annotation.update_id()
-            annotation.save()
-        except BookVersion.DoesNotExist:
-            raise Http404('Unknown BookVersion: %s / %d' % (book_path, version_number))
+        if request.POST.get('undelete'):
+            anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)
+            anno.dateDeleted = None
+            anno.save()
+            logger.debug('Undeleting annotation %s', anno)
+            return JsonResponse({'success': True})
         else:
-            return JsonResponse({'success': True, 'id': annotation.pk})
+            book_path = request.POST.get('book')
+            version_number = int(request.POST.get('version'))
+            highlight = request.POST.get('highlight')
+            if not book_path or not highlight:
+                raise Http404('POST must contain book, version, and highlight string.')
+            try:
+                book_version = BookVersion.lookup(book_path, version_number)
+                annotation = Annotation(user=clusive_user, bookVersion=book_version, highlight=highlight)
+                annotation.update_progression()
+                annotation.save()
+                # Once a database ID has been generated, we have to update the JSON to include it.
+                annotation.update_id()
+                annotation.save()
+                logger.debug('Created annotation %s', annotation)
+            except BookVersion.DoesNotExist:
+                raise Http404('Unknown BookVersion: %s / %d' % (book_path, version_number))
+            else:
+                return JsonResponse({'success': True, 'id': annotation.pk})
 
     def delete(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
         id = int(kwargs.get('id'))
         anno = get_object_or_404(Annotation, id=id, user=clusive_user)
-        anno.delete()
+        logger.debug('Deleting annotation %s', anno)
+        anno.dateDeleted = timezone.now()
+        anno.save()
         return JsonResponse({'success': True})
 
 
 class AnnotationListView(LoginRequiredMixin,ListView):
-    template_name = 'library/annotationList.html'
+    template_name = 'library/annotation_list.html'
     context_object_name = 'annotations'
 
     def get_queryset(self):
         clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
         bookVersion = BookVersion.lookup(self.kwargs['document'], self.kwargs['version'])
-        return Annotation.objects.filter(bookVersion=bookVersion, user=clusive_user)
+        return Annotation.objects.filter(bookVersion=bookVersion, user=clusive_user, dateDeleted=None)

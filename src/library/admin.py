@@ -60,8 +60,8 @@ class ParadataAdmin(admin.ModelAdmin):
 
 @admin.register(Annotation)
 class AnnotationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'bookVersion', 'progression', 'clean_text')
-    sortable_by = ('progression', 'user', 'bookVersion')
+    list_display = ('user', 'bookVersion', 'dateAdded', 'dateDeleted', 'progression', 'clean_text')
+    sortable_by = ('progression', 'user', 'bookVersion', 'dateAdded', 'dateDeleted')
     list_filter = ('bookVersion', 'user' )
 
 
