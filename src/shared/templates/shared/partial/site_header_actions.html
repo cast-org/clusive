@@ -2,9 +2,9 @@
     <a href="{% url 'word_bank' %}">Word bank</a>
     |
     {% if not user.is_anonymous %}
-        <button type="button" class="btn btn-xsmall btn-primary" data-cfw="dropdown">
+        <a href="#" data-cfw="dropdown">
             {{ user }} <span class="caret" aria-hidden="true"></span>
-        </button>
+        </a>
         <ul class="dropdown-menu dropreverse">
             {% if clusive_user.can_set_password %}
             <li><a href="{% url 'password_change' %}">Change password</a></li>
