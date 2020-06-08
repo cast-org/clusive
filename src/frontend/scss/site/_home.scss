@@ -7,28 +7,11 @@
         padding-left: 1rem;
     }
 
-    .site-header {
-        left: 0;
-        margin-right: 0;
-    }
-
     .site-header-logo {
         color: var(--CT_libraryLogoTextColor);
 
         .icon-logo-clusive-toggle {
             color: var(--CT_libraryLogoIconColor);
-        }
-    }
-
-    @include media-breakpoint-up(md) {
-        .site-header {
-            left: -5rem;
-            margin-right: -5rem;
-        }
-
-        .site-header-small {
-            left: -5.25rem;
-            margin-right: -5.25rem;
         }
     }
 

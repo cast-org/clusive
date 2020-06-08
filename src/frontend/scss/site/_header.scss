@@ -1,13 +1,17 @@
 .site-header {
     position: relative;
-    left: -6rem;
     z-index: 1;
-    padding: 1.375rem 1rem;
-    margin-right: -6rem;
+    padding: 1.375rem  1rem;
+    margin-right: $sidebar-width + ($grid-gutter-width / -2);
     margin-bottom: 2rem;
+    margin-left: ($grid-gutter-width / -2);
     line-height: 1;
     background: var(--CT_headerBg);
     @include border-radius($header-border-radius);
+
+    @include media-breakpoint-up(sm) {
+        margin-right: $sidebar-sm-width  + $sidebar-sm-gutter + ($grid-gutter-width / -2);
+    }
 
     @include media-breakpoint-up(md) {
         margin-bottom: 1rem;
@@ -44,10 +48,7 @@
 }
 
 .site-header-small {
-    left: -4rem;
-    z-index: 0;
     padding: 1.125rem 1rem 1.125rem 4rem;
-    margin-right: -4rem;
 
     .site-header-logo {
         @include font-size(1rem);
@@ -55,14 +56,7 @@
     }
 
     @include media-breakpoint-up(sm) {
-        left: -5rem;
         padding-left: 5rem;
-        margin-right: -5rem;
-    }
-    @include media-breakpoint-up(md) {
-        left: -6rem;
-        padding-left: 5rem;
-        margin-right: -6rem;
     }
 }
 

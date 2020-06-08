@@ -35,73 +35,75 @@
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-<div class="container-xl">
-    <div class="row">
-        <div class="col-auto sidebar sidebar-start">
-            <nav aria-label="Clusive">
-                <a href="./library.html" class="btn btn-nav btn-icon" aria-label="Back to Library" title="Back to Library">
-                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-                </a>
-            </nav>
-            <nav class="sidebar-nav" aria-label="Article">
-                <button type="button" class="btn btn-nav btn-icon" aria-label="Contents">
-                    <span class="icon-menu" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
-                    <span class="icon-chevron-left" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-nav btn-icon" aria-label="Next page" disabled>
-                    <span class="icon-chevron-right" aria-hidden="true"></span>
-                </button>
-            </nav>
-            <div class="sidebar-support" role="region" aria-label="Support">
-                <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
-                    <span class="icon-help" aria-hidden="true"></span>
-                    <span class="icon-attention" aria-hidden="true"></span>
-                </button>
+<div class="page-wrapper">
+    <div class="container-xl">
+        <header class="site-header site-header-small">
+            <div class="site-header-logo">
+                <span class="icon-logo-clusive" aria-hidden="true"></span>
+                <span class="sr-only">Clusive</span>
+            </div>
+
+            <div class="user-actions" role="region" aria-label="">
+                <a href="#">Word bank</a> |
+                Username
+                <a href="#">Log out</a>
+            </div>
+        </header>
+
+        <div class="sidebars-wrapper">
+            <div class="sidebars">
+                <div class="col-auto sidebar sidebar-start">
+                    <nav aria-label="Clusive">
+                        <a href="./library.html" class="btn btn-nav btn-icon" aria-label="Back to Library" title="Back to Library">
+                            <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                        </a>
+                    </nav>
+                    <nav class="sidebar-nav" aria-label="Article">
+                        <button type="button" class="btn btn-nav btn-icon" aria-label="Contents">
+                            <span class="icon-menu" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
+                            <span class="icon-chevron-left" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-nav btn-icon" aria-label="Next page" disabled>
+                            <span class="icon-chevron-right" aria-hidden="true"></span>
+                        </button>
+                    </nav>
+                    <div class="sidebar-support" role="region" aria-label="Support">
+                        <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
+                            <span class="icon-help" aria-hidden="true"></span>
+                            <span class="icon-attention" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-auto sidebar sidebar-end">
+                    <div class="sidebar-tool" role="region" aria-label="Reading tools">
+                        <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
+                            <span class="icon-settings" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tool" aria-label="Read aloud">
+                            <span class="icon-play" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tool" aria-label="Lookup definition">
+                            <span class="icon-book" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-auto sidebar sidebar-end">
-            <div class="sidebar-tool" role="region" aria-label="Reading tools">
-                <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
-                    <span class="icon-settings" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-tool" aria-label="Read aloud">
-                    <span class="icon-play" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-tool" aria-label="Lookup definition">
-                    <span class="icon-book" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
+        <main id="content" class="content" tabindex="-1">
+            <!--
+            <h1 class="page-title">Lorem ipsum dolor sit amet</h1>
+            -->
 
-        <div class="col content">
-            <header class="site-header site-header-small">
-                <div class="site-header-logo">
-                    <span class="icon-logo-clusive" aria-hidden="true"></span>
-                    <span class="sr-only">Clusive</span>
-                </div>
+            <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; border: 0px; display: block; opacity: 1;" width="1133px" height="1189" src="./reader-frame.html" class=""></iframe>
+        </main>
 
-                <div class="user-actions" role="region" aria-label="">
-                    <a href="#">Word bank</a> |
-                    Username
-                    <a href="#">Log out</a>
-                </div>
-            </header>
-
-            <main id="content" tabindex="-1">
-                <!--
-                <h1 class="page-title">Lorem ipsum dolor sit amet</h1>
-                -->
-
-                <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; border: 0px; display: block; opacity: 1;" width="1133px" height="1189" src="./reader-frame.html" class=""></iframe>
-            </main>
-
-            <footer>
-                <!-- anything here? -->
-            </footer>
-        </div>
+        <footer>
+            <!-- anything here? -->
+        </footer>
     </div>
 </div>
 
