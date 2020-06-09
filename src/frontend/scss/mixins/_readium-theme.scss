@@ -8,7 +8,11 @@
 
     :#{$selector} {
         --RS__backgroundColor: #{$body-bg};
-        --RS__backgroundImage: if($bg-image-override != null, #{$bg-image-override}, null);
+
+        @if $bg-image-override != null {
+            --RS__backgroundImage: #{if($bg-image-override != null, $bg-image-override, null)};
+        }
+
         --RS__textColor: #{$body-color};
         --RS__linkColor: #{$link-color};
         --RS__visitedColor: #{$link-color};

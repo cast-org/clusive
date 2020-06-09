@@ -16,13 +16,14 @@
 }
 
 .toolbox-menu-group {
+    line-height: 1;
     color: var(--CT_toolboxMenuColor);
     background: var(--CT_toolboxMenuBg);
     border: $toolbox-menu-border-width solid var(--CT_toolboxMenuBorderColor);
     @include border-radius($toolbox-menu-border-radius);
 
     > * {
-        @include border-radius($toolbox-menu-border-radius);
+        @include border-radius(calc(#{$toolbox-menu-border-radius} - #{$toolbox-menu-border-width}));
     }
     > :not(:last-child) {
         @include border-end-radius(0);

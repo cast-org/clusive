@@ -13,7 +13,9 @@ $focus-ring-color:                      #636b82;
 $img-mix-blend-mode:                    normal;
 $bg-image-override:                     null;
 
-$selection-bg:                          #acfdf0;
+// Use opacity hack to get ~full color bg
+// https://stackoverflow.com/a/22751702
+$selection-bg:                          rgba(#acfdf0, .99);
 $selection-color:                       #333;
 
 $skiplink-bg:                           #6268ad;

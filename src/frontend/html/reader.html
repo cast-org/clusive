@@ -44,9 +44,18 @@
             </div>
 
             <div class="user-actions" role="region" aria-label="">
-                <a href="#">Word bank</a> |
-                Username
-                <a href="#">Log out</a>
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Word bank</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-cfw="dropdown">Username <span class="caret" aria-hidden="true"></span></a>
+                        <ul class="dropdown-menu dropreverse">
+                            <li><a href="#">Change password</a></li>
+                            <li><a href="#">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </header>
 

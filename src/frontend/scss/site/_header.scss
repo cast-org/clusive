@@ -3,7 +3,7 @@
     z-index: 1;
     padding: 1.375rem  1rem;
     margin-right: $sidebar-width + $sidebar-gutter + ($grid-gutter-width / -2);
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     margin-left: ($grid-gutter-width / -2);
     line-height: 1;
     background: var(--CT_headerBg);
@@ -19,10 +19,16 @@
 
     .page-title {
         display: inline-block;
+        margin-top: .25rem;
         margin-bottom: 0;
-        margin-left: 1rem;
+        margin-left: 3.125rem;
         vertical-align: middle;
         border-bottom: 3px solid var(--CT_pageTitleBorderColor);
+
+        @include media-breakpoint-up(md) {
+            margin-top: 0;
+            margin-left: 1rem;
+        }
     }
 }
 
@@ -48,6 +54,7 @@
 }
 
 .site-header-small {
+    z-index: 0;
     padding: 1.125rem 1rem 1.125rem 4rem;
 
     .site-header-logo {
@@ -74,8 +81,28 @@
     right: 0;
     display: inline-block;
     @include font-size(.875rem);
+    line-height: 1.25;
 
     @include media-breakpoint-down(sm) {
-        top: 100%;
+        top: calc(100% + .5rem);
+    }
+
+    .nav-item + .nav-item {
+        padding-left: 1px;
+        margin-left: 1px;
+        border-left: 1px solid;
+    }
+
+    .nav-link {
+        padding: .125rem .25rem;
+
+        @include hover-focus() {
+            color: var(--CT_btnPrimaryHoverColor);
+            background-color: var(--CT_btnPrimaryHoverBg);
+        }
+    }
+
+    .dropdown-menu {
+        line-height: 1.5;
     }
 }

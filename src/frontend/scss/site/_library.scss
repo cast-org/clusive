@@ -11,6 +11,10 @@
 }
 
 .library-grid {
+    // Set a z-index to keep this below the header, works as long as no acestors
+    // have any z-index asjustments (up to the sibling of the header)
+    position: relative;
+    z-index: 0;
     display: flex;
     flex-flow: row wrap;
     align-items: stretch;
