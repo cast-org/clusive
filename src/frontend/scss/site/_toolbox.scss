@@ -56,7 +56,7 @@
         border-top-color: var(--CT_toolboxMenuBorderColor);
     }
     &::after {
-        bottom: $toolbox-menu-border-width;
+        bottom: $toolbox-menu-border-width + 1px;
         border-width: $toolbox-menu-arrow-height ($toolbox-menu-arrow-width / 2) 0;
         border-top-color: var(--CT_toolboxMenuBg);
     }
