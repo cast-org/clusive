@@ -3,6 +3,10 @@
 
 {% block title %}Word bank{% endblock %}
 
+{% block header %}
+{% include "shared/partial/site_header_small.html" with user_actions=True %}
+{% endblock %}
+
 {% block sidebar_start %}
 {% include "shared/partial/sidebar_start.html" with index_reader=True nav=False %}
 {% endblock %}
@@ -12,8 +16,6 @@
 {% endblock %}
 
 {% block content %}
-{% include "shared/partial/site_header_small.html" with user_actions=True %}
-
 <main id="content" tabindex="-1">
     <div class="link-back">
         <a href="#" onclick="window.history.back(); return false;" class="link-prev">back</a>

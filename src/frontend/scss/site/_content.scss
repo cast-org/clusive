@@ -58,12 +58,14 @@ h2,
     //max-width: calc(100vw - 8rem);
     padding-right: $sidebar-width + $sidebar-gutter;
     padding-left: $sidebar-width + $sidebar-gutter;
+    margin-right: ($grid-gutter-width / -2);
+    margin-left: ($grid-gutter-width / -2);
     outline: 0;
 
     @include media-breakpoint-up(sm) {
         //max-width: calc(100vw - 10.625rem);
-        padding-right: $sidebar-sm-width  + $sidebar-sm-gutter;
-        padding-left: $sidebar-sm-width  + $sidebar-sm-gutter;
+        padding-right: $sidebar-sm-width + $sidebar-sm-gutter;
+        padding-left: $sidebar-sm-width + $sidebar-sm-gutter;
     }
 }
 

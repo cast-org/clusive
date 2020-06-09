@@ -2,7 +2,7 @@
     position: relative;
     z-index: 1;
     padding: 1.375rem  1rem;
-    margin-right: $sidebar-width + ($grid-gutter-width / -2);
+    margin-right: $sidebar-width + $sidebar-gutter + ($grid-gutter-width / -2);
     margin-bottom: 2rem;
     margin-left: ($grid-gutter-width / -2);
     line-height: 1;
@@ -10,7 +10,7 @@
     @include border-radius($header-border-radius);
 
     @include media-breakpoint-up(sm) {
-        margin-right: $sidebar-sm-width  + $sidebar-sm-gutter + ($grid-gutter-width / -2);
+        margin-right: $sidebar-sm-width + $sidebar-sm-gutter + ($grid-gutter-width / -2);
     }
 
     @include media-breakpoint-up(md) {

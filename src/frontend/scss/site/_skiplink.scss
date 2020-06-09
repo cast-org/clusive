@@ -1,4 +1,4 @@
-// stylelint-disable declaration-no-important
+// stylelint-disable declaration-no-important, selector-max-id
 
 .skiplink {
     position: absolute !important;
@@ -19,6 +19,6 @@
     }
 }
 
-.content {
+#content {
     outline: 0;
 }

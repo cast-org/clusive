@@ -4,6 +4,10 @@
 {% block bodyClass %}home{% endblock %}
 {% block title %}Welcome to Clusive{% endblock %}
 
+{% block header %}
+{% include "shared/partial/site_header.html" %}
+{% endblock %}
+
 {% block sidebar_start %}
 {% endblock %}
 
@@ -11,8 +15,6 @@
 {% endblock %}
 
 {% block content %}
-{% include "shared/partial/site_header.html" %}
-
 <main id="content" tabindex="-1">
     <h1>Welcome to Clusive</h1>
     <p>This is the <a href="http://cisl.cast.org">Center on Inclusive Software for Learning</a>'s flexible, adaptive, and customizable digital learning environment.</p>
@@ -35,9 +37,9 @@
                 <div class="card-body">
 
                     {% if form.errors %}
-                    <div class="card-login-error">
-                        Your username and password didn't match. Please try again.
-                    </div>
+                    <ul class="errorlist">
+                        <li>Your username and password didn't match. Please try again.</li>
+                    </ul>
                     {% else %}
                     <h2>I already have an account.</h2>
                     {% endif %}

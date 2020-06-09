@@ -303,10 +303,10 @@ $header-border-radius:                  $border-radius;
 $sidebar-border-radius:                 $header-border-radius;
 $sidebar-width:                         3rem;
 $sidebar-padding:                       .75rem .25rem;
-$sidebar-gutter:                        .5rem;
+$sidebar-gutter:                        1rem;
 $sidebar-sm-width:                      4rem;
 $sidebar-sm-padding:                    .75rem;
-$sidebar-sm-gutter:                     1rem;
+$sidebar-sm-gutter:                     2rem;
 // Sidebar stretched max width is half of:
 // vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)
 $sidebar-xl-width:                      calc((100vw - #{map-get($container-max-widths, xl)} + ((#{$sidebar-sm-width} - #{$body-padding-x}) * 2)) / 2);

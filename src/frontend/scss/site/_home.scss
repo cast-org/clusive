@@ -1,12 +1,6 @@
 .home {
     background-color: var(--CT_homeBodyBg);
 
-    .content {
-        max-width: 100%;
-        padding-right: 1rem;
-        padding-left: 1rem;
-    }
-
     .site-header-logo {
         color: var(--CT_libraryLogoTextColor);
 
@@ -16,8 +10,6 @@
     }
 
     .sidebar {
-        flex-basis: 3rem;
-        max-width: 3rem;
         background-color: transparent;
         background-image: none;
 
@@ -31,6 +23,15 @@
         }
     }
 
+    .content {
+        padding-right: 1rem;
+        padding-left: 1rem;
+
+        @include media-breakpoint-up(sm) {
+            padding-right: $sidebar-sm-width + 1rem;
+            padding-left: $sidebar-sm-width + 1rem;
+        }
+    }
 }
 
 .home-create {

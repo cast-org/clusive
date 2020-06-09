@@ -95,7 +95,7 @@ $btn-setting-hover-border-color:        transparent;
 $btn-setting-active-bg:                 palette($btn-setting-bg, 425);
 $btn-setting-active-color:              $btn-setting-color;
 $btn-setting-active-border-color:       transparent;
-$btn-setting-text-shadow-color:         rgba(#fbfbfb, .75);
+$btn-setting-text-shadow:               .0625em .0625em 0 rgba(#fbfbfb, .75);
 
 $btn-tool-focus-ring:                   #a0abfd;
 $btn-tool-bg:                           #565c6e;

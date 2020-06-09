@@ -14,6 +14,10 @@ var pub_version = "{{ version }}";
 
 {% block title %}{{ pub.title }} | Clusive{% endblock %}
 
+{% block header %}
+{% include "shared/partial/site_header_small.html" with user_actions=True %}
+{% endblock %}
+
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
 {% include "shared/partial/sidebar_start.html" with index_reader=True nav=True why=True %}
@@ -22,8 +26,6 @@ var pub_version = "{{ version }}";
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 
 {% block content %}
-{% include "shared/partial/site_header_small.html" with user_actions=True %}
-
 <!-- TODO: this is required due to a bug in Reader 1.1.4, remove when fixed -->
 <div id="headerMenu"></div>
 
@@ -177,5 +179,6 @@ var pub_version = "{{ version }}";
             });
     </script>
 </div>
+
 {% include "shared/partial/modal_toc.html" %}
 {% endblock %}
