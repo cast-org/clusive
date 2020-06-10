@@ -9,7 +9,7 @@
 .setting-brand {
     display: inline-block;
     color: var(--CT_btnSettingColor);
-    text-shadow: .0625em .0625em 0 var(--CT_btnSettingTextShadowColor);
+    text-shadow: var(--CT_btnSettingTextShadow);
 
     [class^="icon-"]::before,
     [class*=" icon-"]::before {
