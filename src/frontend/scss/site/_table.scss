@@ -2,7 +2,7 @@
     // stylelint-disable-next-line selector-max-universal
     thead > * > * {
         @include font-size(.875rem);
-        font-weight: $font-weight-bold;
+        font-weight: $font-weight-normal;
     }
 }
 
