@@ -1,0 +1,306 @@
+[
+    {
+        "headword": "implement",
+        "alternateForms": ["implements", "implemented", "implementing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To put something (a decision, plan, action, etc.) into effect." ,
+                "examples": [ "On January 1, the two countries will begin implementing the new peace plan." ]
+            }
+        ]
+    },
+    {
+        "headword": "motivate",
+        "alternateForms": ["motivates", "motivated", "motivating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make someone or something want to take action.",
+                "examples": [ "Our volleyball team was motivated to beat Central Middle School because we lost to them last time." ],
+                "images": [
+                    {
+                        "src": "glossimages/motivate1.jpg",
+                        "alt": "Photo of man clapping and cheering.",
+                        "description": "Photo of a coach on the side of a basketball court, clapping and cheering. ",
+                        "caption": "This coach claps and shouts encouraging messages to motivate players. ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/ae90d107-29c9-4e68-9ed4-6b8ad400b7a1",
+                            "title": "Coach Rex Walters",
+                            "author": "sffoghorn ",
+                            "author_url": "https://www.flickr.com/photos/30386789@N05",
+                            "license": "CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "undertake",
+        "alternateForms": ["undertakes", "undertook", "undertaking"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To accept as a challenge.",
+                "examples": [ "Because she needed money, Susannah agreed to undertake the difficult task of babysitting her neighbor." ]
+            }
+        ]
+    },
+    {
+        "headword": "incentive",
+        "alternateForms": ["incentives"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A reward that leads someone to take action.",
+                "examples": [ "Playing chess with his father was Tyrese’s incentive to finish his homework early." ],
+                "images": [
+                    {
+                        "src": "glossimages/incentive1.jpg",
+                        "alt": "Photo of a reward poster for missing pet.",
+                        "description": "A poster offering a reward for finding a missing cockrel (rooster).",
+                        "caption": "The owner of this pet hopes that a reward will be the incentive for someone to find his rooster.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/b076da12-9744-41e3-8f42-975bdddf2d12",
+                            "title": "Missing cockerel",
+                            "author": "Allan Rostron",
+                            "author_url": "https://www.flickr.com/photos/57443490@N00",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "enable",
+        "alternateForms": ["enables", "enabled", "enabling"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make something possible.",
+                "examples": [ "Mahmoud’s three-pointers enabled his team to make a comeback in the championship game." ],
+                "images": [
+                    {
+                        "src": "glossimages/enable1.jpg",
+                        "alt": "Photo of iPod with sound check on.",
+                        "description": "The screen of an iPod showing settings. The settings show that the sound check feature is \"On,\" making that setting enabled.",
+                        "caption": "Enabling settings allows someone to get help when they need it.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/30a8c463-f9aa-46cc-982a-ff9f3dad69a1",
+                            "title": "Settings: iPod Settings",
+                            "author": "pouwerkerk",
+                            "author_url": "https://www.flickr.com/photos/85515841@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "immediate",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Happening right away; instant.",
+                "examples": [ "When she asked them to explain why they were late, they gave her an immediate answer." ]
+            }
+        ]
+    },
+    {
+        "headword": "instantaneous",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Happening right away; instant.",
+                "examples": [ "When she asked them to explain why they were late, they gave her an immediate answer." ]
+            }
+        ]
+    },
+    {
+        "headword": "critical",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Characterized by or involving careful and exact analysis and evaluation.",
+                "examples": [ "Scientific research requires critical thinking." ]
+            }
+        ]
+    },
+    {
+        "headword": "analytical",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Characterized by or involving careful and exact analysis and evaluation.",
+                "examples": [ "Scientific research requires critical thinking." ]
+            }
+        ]
+    },
+    {
+        "headword": "creative",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Characterized by originality or imagination.",
+                "examples": [ "That creative inventor designed a new kind of wheelchair." ],
+                "images": [
+                    {
+                        "src": "glossimages/creative1.jpg",
+                        "alt": "Photo of kids building with toothpicks and gum drops.",
+                        "description": "This photo shows two students using toothpicks and gum drops. They are using these materials to build different designs and structures.",
+                        "caption": "It's hard, fun work to build with unusual materials.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/9a109130-1e8f-4a5d-bf07-44eff4f8cf63",
+                            "title": " Dot Day Fun",
+                            "author": "KGA Team 6th Grade",
+                            "author_url": "https://www.flickr.com/photos/99072005@N08",
+                            "license": "CC by-nc-sa 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "innovative",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Characterized by originality or imagination.",
+                "examples": [ "That innovative inventor designed a new kind of wheelchair." ],
+                "images": [
+                    {
+                        "src": "glossimages/creative1.jpg",
+                        "alt": "Photo of kids building with toothpicks and gum drops.",
+                        "description": "This photo shows two students using toothpicks and gum drops. They are using these materials to build different designs and structures.",
+                        "caption": "It's hard, fun work to build with unusual materials.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/9a109130-1e8f-4a5d-bf07-44eff4f8cf63",
+                            "title": " Dot Day Fun",
+                            "author": "KGA Team 6th Grade",
+                            "author_url": "https://www.flickr.com/photos/99072005@N08",
+                            "license": "CC by-nc-sa 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "challenge",
+        "alternateForms": ["challenges"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An interesting or difficult problem or task.",
+                "examples": [ "Learning all the state capitals was a challenge." ],
+                "images": [
+                    {
+                        "src": "glossimages/challenge1.jpg",
+                        "alt": "Photo of two people playing chess",
+                        "description": "Two people sit at a table, on opposite sides. On the table is a chess board with chess pieces on the board. Both people lean forward toward the chess board and look down at the pieces. They are both very focused and intent on the pieces on the chess board.",
+                        "caption": "It takes a lot of practice and a lot of skill to win at chess.  ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/f0284838-db5b-4102-ba96-c2f2242c2f39",
+                            "title": "Chess",
+                            "author": "Open Grid Scheduler / Grid Engine",
+                            "author_url": "https://www.flickr.com/photos/29155878@N03",
+                            "license": "cc0 1.0",
+                            "license_url": "https://creativecommons.org/licenses/CC0/1.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "endeavor",
+        "alternateForms": ["endeavors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An interesting or difficult problem or task.",
+                "examples": [ "Learning all the state capitals was an endeavor." ],
+                "src": "glossimages/challenge1.jpg",
+                "alt": "Photo of two people playing chess",
+                "description": "Two people sit at a table, on opposite sides. On the table is a chess board with chess pieces on the board. Both people lean forward toward the chess board and look down at the pieces. They are both very focused and intent on the pieces on the chess board.",
+                "caption": "It takes a lot of practice and a lot of skill to win at chess.  ",
+                "source": {
+                    "url": "https://search.creativecommons.org/photos/f0284838-db5b-4102-ba96-c2f2242c2f39",
+                    "title": "Chess",
+                    "author": "Open Grid Scheduler / Grid Engine",
+                    "author_url": "https://www.flickr.com/photos/29155878@N03",
+                    "license": "cc0 1.0",
+                    "license_url": "https://creativecommons.org/licenses/CC0/1.0/?ref=ccsearch"
+                }
+            }
+        ]
+    },
+    {
+        "headword": "program",
+        "alternateForms": ["programs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A planned, coordinated group of activities or procedures, often for a specific purpose.",
+                "examples": [ "The city offers summer programs so that kids have interesting things to do during vacation." ],
+                "images": [
+                    {
+                        "src": "glossimages/program1.jpg",
+                        "alt": "Photo of people standing in cafeterial lunch line",
+                        "description": "The photo shows two lines of people. One line of people stand in front of food, placing the food on dishes. The other line of people, which includes adults and children, stand with trays. On the trays are plates filled with food. ",
+                        "caption": "School lunch is a program that all students can take advantage of.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/78c1454a-79c4-420b-885a-b25d338195f4",
+                            "title": "Amy Gilroy school cafeteria",
+                            "author": "Oregon Department of Agriculture",
+                            "author_url": "https://www.flickr.com/photos/87721025@N08",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "initiative",
+        "alternateForms": ["initiatives"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A planned, coordinated group of activities or procedures, often for a specific purpose.",
+                "examples": [ "The city offers summer initiatives so that kids have interesting things to do during vacation." ],
+                "images": [
+                    {
+                        "src": "glossimages/program1.jpg",
+                        "alt": "Photo of people standing in cafeterial lunch line",
+                        "description": "The photo shows two lines of people. One line of people stand in front of food, placing the food on dishes. The other line of people, which includes adults and children, stand with trays. On the trays are plates filled with food. ",
+                        "caption": "School lunch is an initiative, or program, that all students can take advantage of.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/78c1454a-79c4-420b-885a-b25d338195f4",
+                            "title": "Amy Gilroy school cafeteria",
+                            "author": "Oregon Department of Agriculture",
+                            "author_url": "https://www.flickr.com/photos/87721025@N08",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
