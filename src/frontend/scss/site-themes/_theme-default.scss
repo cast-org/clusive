@@ -52,6 +52,10 @@ $card-login-bg:                         rgba(#acfdf0, .3);
 $card-login-color:                      inherit;
 $card-login-forgot-border-color:        #d3cfc9;
 
+// Tables
+$table-active-bg:                       #f6f4f0;
+$table-border-color:                    #d3cfc9;
+
 // Buttons
 $btn-primary-focus-ring:                #636b82;
 $btn-primary-bg:                        #acfdf0;
@@ -135,6 +139,8 @@ $dropdown-border-color:                 #707996;
 $dropdown-link-color:                   $dropdown-color;
 $dropdown-link-hover-bg:                #acfdf0;
 $dropdown-link-hover-color:             #333;
+$dropdown-link-active-bg:               #ff554d;
+$dropdown-link-active-color:            #111;
 
 // Popovers
 $popover-bg:                            #fbfbfb;

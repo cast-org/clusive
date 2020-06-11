@@ -15,6 +15,11 @@
     @include media-breakpoint-up(xl) {
         max-width: map-get($container-max-widths, xl);
     }
+
+    // Bring sidebar up 'above' header
+    .site-header-small ~ & {
+        z-index: 1;
+    }
 }
 
 .sidebars {

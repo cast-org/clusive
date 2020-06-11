@@ -54,7 +54,6 @@
 }
 
 .site-header-small {
-    z-index: 0;
     padding: 1.125rem 1rem 1.125rem 4rem;
 
     .site-header-logo {
@@ -87,6 +86,10 @@
         top: calc(100% + .5rem);
     }
 
+    .nav {
+        align-items: center;
+    }
+
     .nav-item + .nav-item {
         padding-left: .125rem;
         margin-left: .125rem;
@@ -100,6 +103,11 @@
             color: var(--CT_btnPrimaryHoverColor);
             background-color: var(--CT_btnPrimaryHoverBg);
         }
+    }
+
+    .current {
+        padding: .25rem .5rem;
+        font-weight: 600;
     }
 
     .dropdown-menu {
