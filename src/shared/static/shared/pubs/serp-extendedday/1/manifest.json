@@ -1,0 +1,24 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Find a solution to improve student performance.",
+        "identifier": "d7cb66aa-8cb6-4564-996a-527867fd5313",
+        "language": "en",
+        "modified": "2020-06-11T18:28:40.066967Z",
+        "title": "Is an Extended School Day the Right Choice for Middle School Students?"
+    },
+    "readingOrder": [
+        {
+            "href": "v2_extendedday.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/extendedday_cover.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        }
+    ]
+}

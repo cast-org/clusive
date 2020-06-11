@@ -1,0 +1,24 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Is there a conflict between human safety and animal rights?",
+        "identifier": "d1de89bd-616e-428b-9a4b-d32734b73a39",
+        "language": "en",
+        "modified": "2020-06-11T14:04:34.210820Z",
+        "title": "Animal Testing: Is it Necessary?"
+    },
+    "readingOrder": [
+        {
+            "href": "V2_animal_testing.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/animaltesting_cover.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        }
+    ]
+}
