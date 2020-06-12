@@ -1,0 +1,24 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Join the discussion around illegal immigration and its consequences.",
+        "identifier": "06097dd3-2cbe-487f-a234-cd725dbd364e",
+        "language": "en",
+        "modified": "2020-06-12T14:06:38.300270Z",
+        "title": "Should There Be Amnesty for Undocumented Immigrants?"
+    },
+    "readingOrder": [
+        {
+            "href": "v3_immigration.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/amnesty_cover.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        }
+    ]
+}

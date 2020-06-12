@@ -1,0 +1,477 @@
+[
+    {
+        "headword": "amnesty",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Official forgiveness." ,
+                "examples": [ "Some people want the government to give undocumented immigrants amnesty, so that they can become legal immigrants." ]
+            }
+        ]
+    },
+    {
+        "headword": "undocumented",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Without legal papers.",
+                "examples": [ "Marcos is an undocumented immigrant, someone who doesn’t have papers that prove he has the right to live in America." ]
+            }
+        ]
+    },
+    {
+        "headword": "orient",
+        "alternateForms": ["orients", "oriented", "orienting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To adjust, to align.",
+                "examples": [ "Some say the United States should orient its immigration laws toward protecting those who went  through the proper channels, not those who \"jumped the line.\"" ]
+            }
+        ]
+    },
+    {
+        "headword": "exclude",
+        "alternateForms": ["excludes", "excluded", "excluding" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To leave out.",
+                "examples": [ "Programs that help many people in America often exclude undocumented immigrants." ],
+                "images": [
+                    {
+                        "src": "glossimages/exclude1.jpg",
+                        "alt": "Photo of a person, alone.",
+                        "description": "A person alone, sitting on the ground beside a building.",
+                        "caption": "When you are excluded, you can feel alone and without a way to get help.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Outsider_(49005812).jpeg",
+                            "title": "Outsider",
+                            "author": "Rouan Van Der Ende",
+                            "author_url": "https://500px.com/rouan",
+                            "license": "CC BY 3.0",
+                            "license_url": "https://creativecommons.org/licenses/by/3.0"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "compound",
+        "alternateForms": ["compounds", "compounded", "compounding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To add to.",
+                "examples": [ "Some think that forgiving people who entered the country without permission will only compound problems like unemployment." ]
+            }
+        ]
+    },
+    {
+        "headword": "program",
+        "alternateForms": ["programs" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A planned, coordinated group of activities or procedures, often for a specific purpose.",
+                "examples": [ "The city offers summer programs so that kids have interesting things to do during vacation." ],
+                "images": [
+                    {
+                        "src": "glossimages/program1.jpg",
+                        "alt": "Photo of people standing in cafeterial lunch line",
+                        "description": "The photo shows two lines of people. One line of people stand in front of food, placing the food on dishes. The other line of people, which includes adults and children, stand with trays. On the trays are plates filled with food. ",
+                        "caption": "School lunch is a program that all students can take advantage of. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/78c1454a-79c4-420b-885a-b25d338195f4",
+                            "title": "Amy Gilroy school cafeteria",
+                            "author": "Oregon Department of Agriculture",
+                            "author_url": "https://www.flickr.com/photos/87721025@N08",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "activity",
+        "alternateForms": ["activities" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A planned, coordinated group of activities or procedures, often for a specific purpose.",
+                "examples": [ "The city offers summer activities so that kids have interesting things to do during vacation." ],
+                "images": [
+                    {
+                        "src": "glossimages/program1.jpg",
+                        "alt": "Photo of people standing in cafeterial lunch line",
+                        "description": "The photo shows two lines of people. One line of people stand in front of food, placing the food on dishes. The other line of people, which includes adults and children, stand with trays. On the trays are plates filled with food. ",
+                        "caption": "School lunch is a program that all students can take advantage of. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/78c1454a-79c4-420b-885a-b25d338195f4",
+                            "title": "Amy Gilroy school cafeteria",
+                            "author": "Oregon Department of Agriculture",
+                            "author_url": "https://www.flickr.com/photos/87721025@N08",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "initiative",
+        "alternateForms": ["initiatives" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A planned, coordinated group of activities or procedures, often for a specific purpose.",
+                "examples": [ "The city plans initiatives for the summer so that kids have interesting things to do during vacation." ],
+                "images": [
+                    {
+                        "src": "glossimages/program1.jpg",
+                        "alt": "Photo of people standing in cafeterial lunch line",
+                        "description": "The photo shows two lines of people. One line of people stand in front of food, placing the food on dishes. The other line of people, which includes adults and children, stand with trays. On the trays are plates filled with food. ",
+                        "caption": "School lunch is a program that all students can take advantage of. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/78c1454a-79c4-420b-885a-b25d338195f4",
+                            "title": "Amy Gilroy school cafeteria",
+                            "author": "Oregon Department of Agriculture",
+                            "author_url": "https://www.flickr.com/photos/87721025@N08",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "document",
+        "alternateForms": ["documents" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A written or printed paper that gives factual information or proof of something.",
+                "examples": [ "Birth certificates, marriage licenses, and passports are kinds of documents." ],
+                "images": [
+                    {
+                        "src": "glossimages/document1.jpg",
+                        "alt": "Photo of four U.S. passports",
+                        "description": "Photo of four small booklets. The booklets are on a table and overlap each other. The cover of the booklet on the top is fully visible. In the center of the booklet cover is a drawing of an eagle holding olive branches in one talon, and arrows in the other. An official seal is over the chest of the eagle. Above and below the eagle are the words, \"Passport United States of America.\" ",
+                        "caption": "A passport is an official document or paper that you need to travel in and out of a country.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/fff898fd-4675-42fd-83d1-2936d6c079d5",
+                            "title": "Passport 1 ",
+                            "author": "The Wide Wide World ",
+                            "author_url": "https://www.flickr.com/photos/62734019@N00",
+                            "license": " CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "paper",
+        "alternateForms": ["papers" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A written or printed paper that gives factual information or proof of something.",
+                "examples": [ "Birth certificates, marriage licenses, and passports are kinds of documents." ],
+                "images": [
+                    {
+                        "src": "glossimages/document1.jpg",
+                        "alt": "Photo of four U.S. passports",
+                        "description": "Photo of four small booklets. The booklets are on a table and overlap each other. The cover of the booklet on the top is fully visible. In the center of the booklet cover is a drawing of an eagle holding olive branches in one talon, and arrows in the other. An official seal is over the chest of the eagle. Above and below the eagle are the words, \"Passport United States of America.\"",
+                        "caption": "A passport is an official document or paper that you need to travel in and out of a country.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/fff898fd-4675-42fd-83d1-2936d6c079d5",
+                            "title": "Passport 1 ",
+                            "author": "The Wide Wide World ",
+                            "author_url": "https://www.flickr.com/photos/62734019@N00",
+                            "license": " CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "record",
+        "alternateForms": ["records" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A written or printed paper that gives factual information or proof of something.",
+                "examples": [ "Birth certificates, marriage licenses, and passports are kinds of documents." ],
+                "images": [
+                    {
+                        "src": "glossimages/document1.jpg",
+                        "alt": "Photo of four U.S. passports",
+                        "description": "Photo of four small booklets. The booklets are on a table and overlap each other. The cover of the booklet on the top is fully visible. In the center of the booklet cover is a drawing of an eagle holding olive branches in one talon, and arrows in the other. An official seal is over the chest of the eagle. Above and below the eagle are the words, \"Passport United States of America.\"",
+                        "caption": "A passport is an official document or paper that you need to travel in and out of a country.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/fff898fd-4675-42fd-83d1-2936d6c079d5",
+                            "title": "Passport 1 ",
+                            "author": "The Wide Wide World ",
+                            "author_url": "https://www.flickr.com/photos/62734019@N00",
+                            "license": " CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "argue",
+        "alternateForms": ["argues", "argued", "arguing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give reasons for or against something.",
+                "examples": [ "Some students argued against being forced to wear school uniforms." ],
+                "images": [
+                    {
+                        "src": "glossimages/argue1.jpg",
+                        "alt": "Photo of baseball players and an umpire. ",
+                        "description": "Two baseball players and an umpire standing on a field. One of the players stands in the background with his hands behind his back. The other player faces the umpire, has his hand up, and is talking. The umpire looks at the player facing him and has an irritated expression on his face.  ",
+                        "caption": "The umpire does not look like he is convinced by what the baseball player is saying.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/19cf713d-0c0c-42f9-bc92-deefdfb75654",
+                            "title": "Calm Argument",
+                            "author": "ensign_beedrill",
+                            "author_url": "https://www.flickr.com/photos/27914970@N04",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "state",
+        "alternateForms": ["states", "stated", "stating" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give reasons for or against something.",
+                "examples": [ "Some students argued against being forced to wear school uniforms." ],
+                "images": [
+                    {
+                        "src": "glossimages/argue1.jpg",
+                        "alt": "Photo of baseball players and an umpire. ",
+                        "description": "Two baseball players and an umpire standing on a field. One of the players stands in the background with his hands behind his back. The other player faces the umpire, has his hand up, and is talking. The umpire looks at the player facing him and has an irritated expression on his face.  ",
+                        "caption": "The umpire does not look like he is convinced by what the baseball player is saying.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/19cf713d-0c0c-42f9-bc92-deefdfb75654",
+                            "title": "Calm Argument",
+                            "author": "ensign_beedrill",
+                            "author_url": "https://www.flickr.com/photos/27914970@N04",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "assert",
+        "alternateForms": ["asserts", "asserted", "asserting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give reasons for or against something.",
+                "examples": [ "Some students argued against being forced to wear school uniforms." ],
+                "images": [
+                    {
+                        "src": "glossimages/argue1.jpg",
+                        "alt": "Photo of baseball players and an umpire. ",
+                        "description": "Two baseball players and an umpire standing on a field. One of the players stands in the background with his hands behind his back. The other player faces the umpire, has his hand up, and is talking. The umpire looks at the player facing him and has an irritated expression on his face.  ",
+                        "caption": "The umpire does not look like he is convinced by what the baseball player is saying.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/19cf713d-0c0c-42f9-bc92-deefdfb75654",
+                            "title": "Calm Argument",
+                            "author": "ensign_beedrill",
+                            "author_url": "https://www.flickr.com/photos/27914970@N04",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "protect",
+        "alternateForms": ["protects", "protected", "protecting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To keep from injury or danger.",
+                "examples": [ "The umbrella protected them from the rain." ],
+                "images": [
+                    {
+                        "src": "glossimages/protect1.jpg",
+                        "alt": "Photo of people holding umbrellas in the rain.",
+                        "description": "Four people hold umbrellas over their heads as they walk in the rain.",
+                        "caption": "The umbrellas stop the rain from getting these people wet. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/a780107a-04bb-42b4-b66f-652b95ab5c95",
+                            "title": "Silhouettes in the Rain",
+                            "author": "Keith's Photos - Bird's Eye View ",
+                            "author_url": "https://www.flickr.com/photos/76690667@N08",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "defend",
+        "alternateForms": ["defends", "defended", "defending" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To keep from injury or danger.",
+                "examples": [ "The umbrella defended them from the impact of the rain." ],
+                "images": [
+                    {
+                        "src": "glossimages/protect1.jpg",
+                        "alt": "Photo of people holding umbrellas in the rain.",
+                        "description": "Four people hold umbrellas over their heads as they walk in the rain.",
+                        "caption": "The umbrellas stop the rain from getting these people wet. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/a780107a-04bb-42b4-b66f-652b95ab5c95",
+                            "title": "Silhouettes in the Rain",
+                            "author": "Keith's Photos - Bird's Eye View ",
+                            "author_url": "https://www.flickr.com/photos/76690667@N08",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "safeguard",
+        "alternateForms": ["safeguards", "safeguarded", "safeguarding" ],
+        "meanings": [
+            {
+                 "pos": "verb",
+                "definition": "To keep from injury or danger.",
+                "examples": [ "The umbrella safeguarded them from getting wet from the rain." ],
+                "images": [
+                    {
+                        "src": "glossimages/protect1.jpg",
+                        "alt": "Photo of people holding umbrellas in the rain.",
+                        "description": "Four people hold umbrellas over their heads as they walk in the rain.",
+                        "caption": "The umbrellas stop the rain from getting these people wet. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/a780107a-04bb-42b4-b66f-652b95ab5c95",
+                            "title": "Silhouettes in the Rain",
+                            "author": "Keith's Photos - Bird's Eye View ",
+                            "author_url": "https://www.flickr.com/photos/76690667@N08",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "proper",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "According to rules that have been accepted as correct.",
+                "examples": [ "To get a college degree, you have to go through the proper steps and meet all the requirements." ],
+                "images": [
+                    {
+                        "src": "glossimages/proper1.jpg",
+                        "alt": "Photo of a table set for dinner for two. ",
+                        "description": "A table set for dinner for two is shown. The table has a white tablecloth, two glasses for each person, two knives for each person, and two forks for each person. A napkin is neatly folded in at each place. ",
+                        "caption": "This table is set following very formal rules of what is needed and appropriate. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/c267613b-b7ee-4cf6-be70-44fa0e20fd88",
+                            "title": "Table",
+                            "author": "Inspirational Food",
+                            "author_url": "https://www.flickr.com/photos/100142027@N04",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "right",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "According to rules that have been accepted as correct.",
+                "examples": [ "To get a college degree, you have to go through the right steps and meet all the requirements." ],
+                "images": [
+                    {
+                        "src": "glossimages/proper1.jpg",
+                        "alt": "Photo of a table set for dinner for two. ",
+                        "description": "A table set for dinner for two is shown. The table has a white tablecloth, two glasses for each person, two knives for each person, and two forks for each person. A napkin is neatly folded in at each place. ",
+                        "caption": "This table is set following very formal rules of what is needed and appropriate. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/c267613b-b7ee-4cf6-be70-44fa0e20fd88",
+                            "title": "Table",
+                            "author": "Inspirational Food",
+                            "author_url": "https://www.flickr.com/photos/100142027@N04",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "established",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "According to rules that have been accepted as correct.",
+                "examples": [ "To get a college degree, you have to go through the established steps and meet all the requirements." ],
+                "images": [
+                    {
+                        "src": "glossimages/proper1.jpg",
+                        "alt": "Photo of a table set for dinner for two. ",
+                        "description": "A table set for dinner for two is shown. The table has a white tablecloth, two glasses for each person, two knives for each person, and two forks for each person. A napkin is neatly folded in at each place. ",
+                        "caption": "This table is set following very formal rules of what is needed and appropriate. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/c267613b-b7ee-4cf6-be70-44fa0e20fd88",
+                            "title": "Table",
+                            "author": "Inspirational Food",
+                            "author_url": "https://www.flickr.com/photos/100142027@N04",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
