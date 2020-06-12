@@ -82,7 +82,10 @@ class GlossaryTestCase(TestCase):
                 glossfile = os.path.join(book_dir, 'glossary.json')
                 if os.path.exists(glossfile):
                     with open(glossfile, 'r', encoding='utf-8') as file:
-                        glossary = json.load(file)
+                        try:
+                            glossary = json.load(file)
+                        except:
+                            assert False, "JSON Decode error in %s" % (glossfile)
                         for entry in glossary:
                             assert 'headword' in entry, \
                                 "In %s, missing headword in %s" % (glossfile, entry)
