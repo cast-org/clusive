@@ -153,8 +153,13 @@ var pub_version = "{{ version }}";
                 updateCurrentlocation: function (locator) {
                     // Grey out navigation buttons when necessary.
                     var nRes = D2Reader.currentResource();
-                    document.getElementById('prevResourceButton').disabled = (nRes===0);
-                    document.getElementById('nextResourceButton').disabled = (nRes===D2Reader.totalResources()-1);
+                    var firstResource = (nRes===0);
+                    var lastResource = (nRes===D2Reader.totalResources()-1);
+                    var elt = document.scrollingElement;
+                    var atTop = (elt.scrollTop===0);
+                    var atBottom = (elt.scrollHeight - elt.scrollTop === elt.clientHeight);
+                    document.getElementById('prevResourceButton').disabled = (firstResource && atTop);
+                    document.getElementById('nextResourceButton').disabled = (lastResource && atBottom);
                     return trackReadingLocation(pub_id, locator);
                 },
                 updateUserSettings: function (userSettings) {
