@@ -1,0 +1,467 @@
+[
+    {
+        "headword": "analyze",
+        "alternateForms": ["analyzes", "analyzed", "analyzing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To examine; to study." ,
+                "examples": [ "Some think schools should teach students to analyze critically what they see, hear, and read." ],
+                "images": [
+                    {
+                        "src": "glossimages/analyze1.jpg",
+                        "alt": " ",
+                        "description": " ",
+                        "caption": " ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/13988072-fe23-49c3-87bf-c90d14653689",
+                            "title": "Big & Small",
+                            "author": "Skokie Public Library",
+                            "author_url": "https://www.flickr.com/photos/66074203@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "factor",
+        "alternateForms": ["factors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that influences the result of something else.",
+                "examples": [ "People have different ideas about the most important factors in providing a good education." ]
+                
+            }
+        ]
+    },
+    {
+        "headword": "function",
+        "alternateForms": ["functions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Purpose; role; use.",
+                "examples": [ "Each of the three branches of government has a different function." ]
+                
+            }
+        ]
+    },
+    {
+        "headword": "interpret",
+        "alternateForms": ["interprets", "interpreted", "interpreting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To understand or explain something’s meaning.",
+                "examples": [ "Others interpret the main role of school as one of preparing students to join the workforce." ],
+                "images": [
+                    {
+                        "src": "glossimages/interpret1.jpg",
+                        "alt": "Photo of sign in English and Spanish",
+                        "description": "Sign with English and Spanish translations.",
+                        "caption": "It is handy to have translations help interpret the meaning of signs.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/ce609487-7c6b-45d7-9248-943beed40b3d",
+                            "title": "Language barriers",
+                            "author": "Gadget Virtuoso",
+                            "author_url": "https://www.flickr.com/photos/98075820@N00",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "structure",
+        "alternateForms": ["structures"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The way that parts of something relate to each other and work together.",
+                "examples": [ "They believe that this will help students understand the structure of our democratic government." ],
+                "images": [
+                    {
+                        "src": "glossimages/structure1.jpg",
+                        "alt": "Close up photo of part of metal structure",
+                        "description": "Close up photo of a part of the Eiffel Tower, showing the metal parts that make up the building.",
+                        "caption": "This close up of the Eiffel Tower help us see how the individual pieces of the structure combine to make the shape of the building.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/a11fba23-88b2-4a76-8512-3e8133a113aa",
+                            "title": "Paris",
+                            "author": "golepers",
+                            "author_url": "https://www.flickr.com/photos/10102047@N07",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "specific",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Clearly defined or identified.",
+                "examples": [ "Did you have a specific person in mind when you bought that gift?" ],
+                "images": [
+                    {
+                        "src": "glossimages/specific1.jpg",
+                        "alt": "Photo of a table with toys.",
+                        "description": "A table with many different kinds of toy cars.",
+                        "caption": "Toy cars are one type of toy. Which specific one do you like best?  ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/dd3c4f48-cfa7-46bc-93bf-20736bf4cdab",
+                            "title": "toys ",
+                            "author": "osde8info ",
+                            "author_url": "https://www.flickr.com/photos/8764442@N07",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "precise",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Clearly defined or identified.",
+                "examples": [ "Did you have a precise person in mind when you bought that gift?" ],
+                "images": [
+                    {
+                        "src": "glossimages/specific1.jpg",
+                        "alt": "Photo of a table with toys.",
+                        "description": "A table with many different kinds of toy cars.",
+                        "caption": "Toy cars are one type of toy. Which specific one do you like best?  ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/dd3c4f48-cfa7-46bc-93bf-20736bf4cdab",
+                            "title": "toys ",
+                            "author": "osde8info ",
+                            "author_url": "https://www.flickr.com/photos/8764442@N07",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "definite",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Clearly defined or identified.",
+                "examples": [ "Did you have a precise person in mind when you bought that gift?" ],
+                "images": [
+                    {
+                       "src": "glossimages/specific1.jpg",
+                        "alt": "Photo of a table with toys.",
+                        "description": "A table with many different kinds of toy cars.",
+                        "caption": "Toy cars are one type of toy. Which specific one do you like best?  ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/dd3c4f48-cfa7-46bc-93bf-20736bf4cdab",
+                            "title": "toys ",
+                            "author": "osde8info ",
+                            "author_url": "https://www.flickr.com/photos/8764442@N07",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "primary",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of chief importance.",
+                "examples": [ "The primary aim of the government is to lower unemployment. " ]
+
+            }
+        ]
+    },
+    {
+        "headword": "main",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of chief importance.",
+                "examples": [ "The primary aim of the government is to lower unemployment. " ]
+
+            }
+        ]
+    },
+    {
+        "headword": "principal",
+        "alternateForms": [],
+        "meanings":[
+            {
+                "pos": "adjective",
+                "definition": "Of chief importance.",
+                "examples": [ "The primary aim of the government is to lower unemployment. " ]
+                
+            }
+        ]
+    },
+    {
+        "headword": "concern",
+        "alternateForms": ["concerns", "concerned", "concerning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be disturbed or troubled.",
+                "examples": [ "Her careless attitude concerns me." ],
+                "images": [
+                    {
+                        "src": "glossimages/concern1.jpg",
+                        "alt": " ",
+                        "description": " ",
+                        "caption": " ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/ac198bfe-4c6d-46e6-bac1-ade2eebb058c",
+                            "title": "Worried Kei",
+                            "author": "Joshua Rappeneker",
+                            "author_url": "https://www.flickr.com/photos/41894167210@N01",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "worry",
+        "alternateForms": ["worries", "worried", "worrying"],
+        "meanings":  [
+            {
+                "pos": "verb",
+                "definition": "To be disturbed or troubled.",
+                "examples": [ "Her careless attitude worries me." ],
+                "images": [
+                    {
+                        "src": "glossimages/concern1.jpg",
+                        "alt": " ",
+                        "description": " ",
+                        "caption": " ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/ac198bfe-4c6d-46e6-bac1-ade2eebb058c",
+                            "title": "Worried Kei",
+                            "author": "Joshua Rappeneker",
+                            "author_url": "https://www.flickr.com/photos/41894167210@N01",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "perturb",
+        "alternateForms": ["perturbs", "perturbed", "perturbing"],
+        "meanings":  [
+            {
+                "pos": "verb",
+                "definition": "To be disturbed or troubled.",
+                "examples": [ "Her careless attitude perturbs me." ],
+                "images": [
+                    {
+                        "src": "glossimages/concern1.jpg",
+                        "alt": " ",
+                        "description": " ",
+                        "caption": " ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/ac198bfe-4c6d-46e6-bac1-ade2eebb058c",
+                            "title": "Worried Kei",
+                            "author": "Joshua Rappeneker",
+                            "author_url": "https://www.flickr.com/photos/41894167210@N01",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "critically",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In a way that involves a close examination of the merits and faults.",
+                "examples": [ "The safety inspector examined each car critically to make sure it was safe." ],
+                "images": [
+                    {
+                        "src": "glossimages/critically1.jpg",
+                        "alt": "Photo of brush bristles seen through a magnifying glass.",
+                        "description": "Rubber brush bristles as seen through a magnifying glass. The parts of the brush look very large and many details are visible because of the use of the magnifying glass. ",
+                        "caption": "You often need to look closely and carefully to see the details of something.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/f0b583ee-d478-497b-8edd-0e36a7ac960d",
+                            "title": "Magnified Brush",
+                            "author": "b_ungar",
+                            "author_url": "https://www.flickr.com/photos/33636393@N02",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "carefully",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In a way that involves a close examination of the merits and faults.",
+                "examples": [ "The safety inspector examined each car carefully to make sure it was safe." ],
+                "images": [
+                    {
+                        "src": "glossimages/critically1.jpg",
+                        "alt": "Photo of brush bristles seen through a magnifying glass.",
+                        "description": "Rubber brush bristles as seen through a magnifying glass. The parts of the brush look very large and many details are visible because of the use of the magnifying glass. ",
+                        "caption": "You often need to look closely and carefully to see the details of something.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/f0b583ee-d478-497b-8edd-0e36a7ac960d",
+                            "title": "Magnified Brush",
+                            "author": "b_ungar",
+                            "author_url": "https://www.flickr.com/photos/33636393@N02",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "purposefully",
+        "alternateForms": [],
+        "meanings":  [
+            {
+                "pos": "adverb",
+                "definition": "In a way that involves a close examination of the merits and faults.",
+                "examples": [ "The safety inspector purposefully checked each car to make sure it was safe." ],
+                "images": [
+                    {
+                        "src": "glossimages/critically1.jpg",
+                        "alt": "Photo of brush bristles seen through a magnifying glass.",
+                        "description": "Rubber brush bristles as seen through a magnifying glass. The parts of the brush look very large and many details are visible because of the use of the magnifying glass. ",
+                        "caption": "You often need to look closely and carefully to see the details of something.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/f0b583ee-d478-497b-8edd-0e36a7ac960d",
+                            "title": "Magnified Brush",
+                            "author": "b_ungar",
+                            "author_url": "https://www.flickr.com/photos/33636393@N02",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "essential",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Extremely important.",
+                "examples": [ "It is essential to keep up-to-date records." ],
+                "images": [
+                    {
+                        "src": "glossimages/essential1.jpg",
+                        "alt": "Photo of 3 packages.",
+                        "description": "Three packages, one of marshmallows, one of chocolate labeled 'Hershey's', and one of graham crackers, labeled 'Honey Maid.'",
+                        "caption": "To make the treat called S'mores, you must have graham crackers, marshmallows, and chocolate!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/d2c353ab-a225-4e3c-9ef5-aef8dd809829",
+                            "title": "S'mores",
+                            "author": "magzalez",
+                            "author_url": "https://www.flickr.com/photos/76487126@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "key",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Extremely important.",
+                "examples": [ "It is key to keep up-to-date records." ],
+                "images": [
+                    {
+                        "src": "glossimages/essential1.jpg",
+                        "alt": "Photo of 3 packages.",
+                        "description": "Three packages, one of marshmallows, one of chocolate labeled 'Hershey's', and one of graham crackers, labeled 'Honey Maid.'",
+                        "caption": "To make the treat called S'mores, you must have graham crackers, marshmallows, and chocolate!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/d2c353ab-a225-4e3c-9ef5-aef8dd809829",
+                            "title": "S'mores",
+                            "author": "magzalez",
+                            "author_url": "https://www.flickr.com/photos/76487126@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "crucial",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Extremely important.",
+                "examples": [ "It is crucial to keep up-to-date records." ],
+                "images": [
+                    {
+                        "src": "glossimages/essential1.jpg",
+                        "alt": "Photo of 3 packages.",
+                        "description": "Three packages, one of marshmallows, one of chocolate labeled 'Hershey's', and one of graham crackers, labeled 'Honey Maid.'",
+                        "caption": "To make the treat called S'mores, you must have graham crackers, marshmallows, and chocolate!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/d2c353ab-a225-4e3c-9ef5-aef8dd809829",
+                            "title": "S'mores",
+                            "author": "magzalez",
+                            "author_url": "https://www.flickr.com/photos/76487126@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

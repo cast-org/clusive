@@ -1,13 +1,17 @@
 .site-header {
     position: relative;
-    left: -6rem;
     z-index: 1;
-    padding: 1.375rem 1rem;
-    margin-right: -6rem;
-    margin-bottom: 2rem;
+    padding: 1.375rem  1rem;
+    margin-right: $sidebar-width + $sidebar-gutter + ($grid-gutter-width / -2);
+    margin-bottom: 2.5rem;
+    margin-left: ($grid-gutter-width / -2);
     line-height: 1;
-    background: linear-gradient(90deg, var(--CT_headerBgStart) 0%, var(--CT_headerBgEnd) $header-opacity-stop);
+    background: var(--CT_headerBg);
     @include border-radius($header-border-radius);
+
+    @include media-breakpoint-up(sm) {
+        margin-right: $sidebar-sm-width + $sidebar-sm-gutter + ($grid-gutter-width / -2);
+    }
 
     @include media-breakpoint-up(md) {
         margin-bottom: 1rem;
@@ -15,10 +19,16 @@
 
     .page-title {
         display: inline-block;
+        margin-top: .25rem;
         margin-bottom: 0;
-        margin-left: 1rem;
+        margin-left: 3.125rem;
         vertical-align: middle;
         border-bottom: 3px solid var(--CT_pageTitleBorderColor);
+
+        @include media-breakpoint-up(md) {
+            margin-top: 0;
+            margin-left: 1rem;
+        }
     }
 }
 
@@ -44,10 +54,8 @@
 }
 
 .site-header-small {
-    left: -4rem;
     z-index: 0;
     padding: 1.125rem 1rem 1.125rem 4rem;
-    margin-right: -4rem;
 
     .site-header-logo {
         @include font-size(1rem);
@@ -55,14 +63,7 @@
     }
 
     @include media-breakpoint-up(sm) {
-        left: -5rem;
         padding-left: 5rem;
-        margin-right: -5rem;
-    }
-    @include media-breakpoint-up(md) {
-        left: -6rem;
-        padding-left: 5rem;
-        margin-right: -6rem;
     }
 }
 
@@ -80,8 +81,28 @@
     right: 0;
     display: inline-block;
     @include font-size(.875rem);
+    line-height: 1.25;
 
     @include media-breakpoint-down(sm) {
-        top: 100%;
+        top: calc(100% + .5rem);
+    }
+
+    .nav-item + .nav-item {
+        padding-left: .125rem;
+        margin-left: .125rem;
+        border-left: 1px solid;
+    }
+
+    .nav-link {
+        padding: .25rem .5rem;
+
+        @include hover-focus() {
+            color: var(--CT_btnPrimaryHoverColor);
+            background-color: var(--CT_btnPrimaryHoverBg);
+        }
+    }
+
+    .dropdown-menu {
+        line-height: 1.5;
     }
 }

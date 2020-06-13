@@ -18,6 +18,12 @@
             <img class="figure-img img-fluid" src="{% static 'shared/pubs/' %}{{ pub_id }}/{{img.src}}" alt="{{img.alt}}" />
             <div class="figure-caption">
                 {{img.caption}}
+                {% if img.description %}
+                <details>
+                    <summary>details</summary>
+                    <p>{{img.description}}</p>
+                </details>
+                {% endif %}
             </div>
         </figure>
     {% endfor %}

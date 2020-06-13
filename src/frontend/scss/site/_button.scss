@@ -3,10 +3,15 @@
     [class*=" icon-"]::before {
         @include font-size(1.25em);
     }
+
+    &.disabled,
+    &:disabled {
+        opacity: var(--CT_btnNavDisabledOpacity);
+    }
 }
 
 .btn-setting {
-    text-shadow: .0625em .0625em 0 rgba(var(--CT_btnSettingTextShadowColorRGB), var(--CT_btnSettingTextShadowOpacity));
+    text-shadow: var(--CT_btnSettingTextShadow);
 
     [class^="icon-"]::before,
     [class*=" icon-"]::before {
@@ -21,10 +26,8 @@
 %btn-option-active-hover {
     border-color: var(--CT_btnOptionActiveHoverBorderColor);
 }
-.btn-option,
-.btn-default,
-.btn-night,
-.btn-sepia {
+.btn.btn-option,
+.btn.btn-theme {
     &:active,
     &.active,
     &.open[data-cfw="dropdown"] {

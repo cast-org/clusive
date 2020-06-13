@@ -1,6 +1,13 @@
 import MarkLoader from 'script-loader!mark.js'
 
+// Reference from within the iframe to the clusivePrefs global in the parent window
+var clusivePrefs = window.parent.window.clusivePrefs;
+
 window.cuedWordMap = null;
+
+if (!window.debug) {
+    console.log = function () {};
+}
 
 // Filter function that, when applied as part of Mark options, only marks up the first occurrence
 function onlyFirstMatch(node, term, totalCount, count) {
@@ -25,13 +32,6 @@ var primaryMarkOptions = {
     className: "gloss",
     each: function (node) {
         $(node).attr("href", "#");
-        $(node).on('click touchstart', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            let word = $(this).text();
-            window.parent.load_definition(1, word);
-            window.parent.$('#glossaryButton').CFW_Popover('show');
-        });
     },
 };
 
@@ -49,18 +49,18 @@ var secondaryMarkOptions = {
 // Explicitly attached to "window" so that uglify won't change it and it can be called from elsewhere.
 window.markCuedWords = function() {
     if (window.cuedWordMap === null) {
-        $.get('/glossary/cuelist/'+window.parent.pub_id)
+        $.get('/glossary/cuelist/'+window.parent.pub_id+'/'+window.parent.pub_version)
             .done(function(data, status) {
-                console.log("Received cuelist: ", data);
-                window.cuedWordMap = data.words;
+                console.debug("Received cuelist: ", data);
+                window.cuedWordMap = data.words;                
                 markCuedWords();
             })
             .fail(function(err) {
-                console.log(err);
+                console.error(err);
             });
     } else {
         // "cuedWordMap" is a map from main form to a list of all forms.
-        var altmap = {};
+        var altmap = {};        
         for (var i in window.cuedWordMap) {
             for (var alt in window.cuedWordMap[i]) {
                 altmap[window.cuedWordMap[i][alt]] = i;
@@ -78,19 +78,17 @@ window.unmarkCuedWords = function() {
 
 
 $(function() {
-    // window.markCuedWords();
-    // This doesn't work on mobile since Readium intercepts the touch events and this never fires.
-    // $('body').on('click touchstart', 'a.gloss', function(e) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     let word = $(this).text();
-    //     console.log('clicked ', word);
-    //     window.parent.load_definition(1, word);
-    //     window.parent.$('#glossaryButton').CFW_Popover('show');
-    // })
+    var $body = $('body');
+    $body.on('click touchstart', 'a.gloss', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let word = $(this).text();
+        window.parent.load_definition(1, word);
+        window.parent.$('#glossaryButton').CFW_Popover('show');
+        window.parent.glossaryPop_focus($(this));
+    })
+    window.parent.setUpImageDetails($body);
 });
-
-
 
 
 // // Additional actions when popover opens
@@ -110,3 +108,17 @@ $(function() {
 //         console.log("Closed: ", $(this).data("word"));
 //         scope.unmark({ element: "span" });
 //     });
+
+// TODO: make preferences editor properly aware of page changes
+if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoader.prefsEditor) {    
+    console.info('getting settings')
+    var prefsPromise = clusivePrefs.prefsEditorLoader.getSettings();
+    prefsPromise.then(function (prefs) {
+        console.debug('prefs received', prefs)
+        if(prefs.preferences["cisl_prefs_glossary"]) {
+            window.markCuedWords();
+        }
+    }, function (e) {
+        console.error('error fetching prefs', e)
+    })    
+}

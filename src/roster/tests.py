@@ -1,10 +1,18 @@
+from contextlib import contextmanager
+from unittest import mock
+
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Site, Period, ClusiveUser, Roles
+
+from eventlog.models import Event
+from eventlog.signals import preference_changed
+from .models import Site, Period, ClusiveUser, Roles, Preference
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.test import Client
+from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+
+from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
 
 # TODO: make sure all tests have helpful messages
 
@@ -137,9 +145,13 @@ class PeriodTestCase(TestCase):
             self.assertEqual(e.message_dict["anon_id"][0], "Period with this Anon id already exists.")                
 
 class ClusiveUserTestCase(TestCase):
+    maxDiff = None
+    
+    # Load the preference sets 
+    fixtures = ['preferencesets.json']
 
     def setUp(self):
-        set_up_test_users()
+        set_up_test_users()               
 
     def test_defaults(self):
         """ A user has the expected defaults, if not set """
@@ -147,8 +159,9 @@ class ClusiveUserTestCase(TestCase):
         new_clusive_user = ClusiveUser.objects.create(user=new_user)
 
         self.assertEqual(new_clusive_user.anon_id, None)
-        self.assertEqual(new_clusive_user.permission, ClusiveUser.ResearchPermissions.TEST_ACCOUNT)
+        self.assertEqual(new_clusive_user.permission, ResearchPermissions.TEST_ACCOUNT)        
         self.assertEqual(new_clusive_user.role, Roles.GUEST)
+        self.check_user_has_default_preferences(new_clusive_user)
 
     def test_manual_anon_id(self):
         """ A user can have an anon_id set manually """
@@ -182,26 +195,97 @@ class ClusiveUserTestCase(TestCase):
         clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
         clusive_user_2 = ClusiveUser.objects.get(anon_id="Student2")
 
-        clusive_user_1.permission = ClusiveUser.ResearchPermissions.PERMISSIONED
+        clusive_user_1.permission = ResearchPermissions.PERMISSIONED
 
         self.assertTrue(clusive_user_1.is_permissioned)        
         
         nonpermissioned_states = [
-            ClusiveUser.ResearchPermissions.TEST_ACCOUNT,
-            ClusiveUser.ResearchPermissions.PENDING,
-            ClusiveUser.ResearchPermissions.WITHDREW,
-            ClusiveUser.ResearchPermissions.DECLINED
+            ResearchPermissions.TEST_ACCOUNT,
+            ResearchPermissions.PENDING,
+            ResearchPermissions.WITHDREW,
+            ResearchPermissions.DECLINED
         ]
 
         for state in nonpermissioned_states:
             clusive_user_2.permission = state 
             self.assertFalse(clusive_user_2.is_permissioned)
 
+    def test_adopt_preferences_set(self):        
+        user = ClusiveUser.objects.get(user__username='user1')        
+        user.adopt_preferences_set("default")
+        self.check_user_has_default_preferences(user)
+
+    def check_user_has_default_preferences(self, user):
+        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True'}
+        user_prefs = user.get_preferences()
+        
+        for p_key in default_pref_set.keys():            
+            self.assertEqual(default_pref_set[p_key], user.get_preference(p_key).value, "preference '%s' not at expected default value of '%s'" % (p_key, default_pref_set[p_key]))
+
+    def test_preference_convert_from_string(self):
+        self.assertEqual(Preference.convert_from_string("1"), 1, "int as string was not converted as expected")
+        self.assertEqual(Preference.convert_from_string("1.57"), 1.57, "float as string was not converted as expected")
+        self.assertEqual(Preference.convert_from_string("False"), False, "boolean:False as string was converted as expected")
+        self.assertEqual(Preference.convert_from_string("True"), True, "boolean:True as string was converted as expected")
+
+    default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"fluid_prefs_letterSpace":1,"cisl_prefs_glossary":true}'
+
+    def test_preference_sets(self):
+        # delete any existing preferences so we're starting with a clean set
+        user = ClusiveUser.objects.get(user__username='user1')
+        user.delete_preferences()
+
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.post('/account/prefs/profile', {'adopt': 'default'}, content_type='application/json')
+        self.assertJSONEqual(response.content, self.default_pref_set_json, 'Changing to default preferences profile did not return expected response')
+
+    def test_preferences(self):
+        # delete any existing preferences so we're starting with a clean set
+        user = ClusiveUser.objects.get(user__username='user1')
+        user.delete_preferences()
+
+        login = self.client.login(username='user1', password='password1')
+        
+        # Setting one preference
+        response = self.client.post('/account/prefs', {'foo': 'bar'}, content_type='application/json')
+        self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
+
+        response = self.client.get('/account/prefs')
+        # TODO: currently default settings are always applied, so more than this one item is returned.
+        # self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
+        self.assertContains(response, '"foo": "bar"')
+
+        # Now that defaults are established, we should get accurate event logging
+        with catch_signal(preference_changed) as handler:
+            response = self.client.post('/account/prefs', {'foo': 'baz'}, content_type='application/json')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to new value did not return expected response')
+
+            response = self.client.post('/account/prefs', {'foo': 'baz'}, content_type='application/json')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to same value did not return expected response')
+
+        handler.assert_called_once()
+        handler.calls.kwargs.preference.pref='foo'
+        handler.calls.kwargs.preference.value='bar'
+
+        # Setting two preferences where one already exists at the same value; handler should
+        # still only get triggered once
+        with catch_signal(preference_changed) as handler:        
+            response = self.client.post('/account/prefs', {'foo': 'bar', 'baz': 'lur'}, content_type='application/json')
+            self.assertJSONEqual(response.content, {'success': 1}, 'Setting prefs did not return expected response')
+            
+            response = self.client.get('/account/prefs')
+            # TODO: currently default settings are always applied, so more than this one item is returned.
+            # self.assertJSONEqual(response.content, {'foo': 'bar', 'baz': 'lur'}, 'Fetching prefs did not return values that were set')
+            self.assertContains(response, '"foo": "bar", "baz": "lur"')
+        self.assertEqual(handler.call_count, 2)
+        # TODO: clarify what this is doing; is it intended to test the handler?
+        handler.calls.kwargs.preference.pref='baz'
+        handler.calls.kwargs.preference.value='lur'
 
 class PageTestCases(TestCase):
 
         def setUp(self):
-            set_up_test_users()
+            set_up_test_users()            
 
         def test_login_page(self):                
             url = reverse('login')
@@ -236,3 +320,12 @@ class PageTestCases(TestCase):
             html = response.content.decode('utf8')        
             self.assertIn('Username', html)
             self.assertIn('Password', html)
+
+
+@contextmanager
+def catch_signal(signal):
+    """Catch django signal and return the mocked call."""
+    handler = mock.Mock()
+    signal.connect(handler)
+    yield handler
+    signal.disconnect(handler)

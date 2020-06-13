@@ -1,0 +1,299 @@
+[
+  {
+    "headword": "conserve",
+    "alternateForms": [ "conserves", "conserved", "conserving" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To keep (something) from being wasted, destroyed, or used up.",
+        "examples": [ "Because there had been so little rain, everyone had to conserve water."],
+        "images": [
+          {
+            "src": "glossimages/conserve1.jpg",
+            "alt": "Drawing of recycling symbol with text.",
+            "description": "In the upper right corner of the drawing is a triangle made up of three arrows. In the area in the center of the triangle is a circle made up of drawings of small objects, such as a bicycle, leafs, trees, a house, and more. A drawing of an open trash can is in the center of the circle. To the left of the triangle are three words, arranged in three rows with one word on each row. The words are: REUSE, REDUCE, and RECYCLE. The first two letters of each word are in bold text.",
+            "caption": "A triangle made from three arrows is the symbol for recycling, a form of conservation.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Reduce_Reuse_Recycle.jpg",
+              "title": "Reduce Reuse Recycle.jpg",
+              "author": "Nadine3103",
+              "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Nadine3103&action=edit&redlink=1",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "invest",
+    "alternateForms": [ "invests", "invested", "investing" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To put money or resources toward something, expecting a future benefit.",
+        "examples": [ "I'm going to invest money into stocks and hope that I'll have more money in a few years." ]
+
+      }
+    ]
+  },
+  {
+    "headword": "maximize",
+    "alternateForms": [ "maximizes", "maximized", "maximizing" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make as large or as much as possible.",
+        "examples": ["We added more chairs to the room to maximize the amount of seating for people."]
+
+      }
+    ]
+  },
+  {
+    "headword": "proceed",
+    "alternateForms": [ "proceeds", "proceeded", "proceeding" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To continue, to keep on.",
+        "examples": ["The students were told to proceed through the line to get their lunch from the cafeteria."]
+
+      }
+    ]
+  },
+  {
+    "headword": "renewable",
+    "alternateForms": [  ],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Able to be replaced.",
+        "examples": ["Renewable resources include air, plants, water, and animals, and other things that are replaceable within a person's lifetime."],
+        "images": [
+          {
+            "src": "glossimages/renewable1.jpg",
+            "alt": "Photo of solar panels in a field.",
+            "description": "Three rows of solar panels extend from the foreground of the picture to the background, up to a barrier of trees.",
+            "caption": "Solar power and wind power are renewable resources.",
+            "source": {
+              "url": "https://ccsearch.creativecommons.org/photos/33ec0c69-e9ae-4054-89d1-0cc18cca9ec8",
+              "title": "DSC_0050",
+              "author": "Montgomery County Planning Commission",
+              "author_url": "https://www.flickr.com/photos/75012107@N05",
+              "license": "CC BY-SA 2.0 ",
+              "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "minimize",
+    "alternateForms": [ "minimizing", "minimized", "minimizes" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": " Making as small or unimportant as possible. ",
+        "examples": [ " I bring my own canvas bags to the market, minimizing the number of plastic bags I use. " ]
+
+      }
+    ]
+  },
+  {
+    "headword": "pollute",
+    "alternateForms": [ "pollutes", "polluted", "polluting" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": " To make dirty or harmful. ",
+        "examples": [ "Dumping oil or other trash into a stream will pollute the water." ],
+        "images": [
+          {
+            "src": "glossimages/pollute1.jpg",
+            "alt": "Photo of black smoke over a city.",
+            "description": "In the foreground, this photo shows buildings and the sky above a city. In the distance a large area of black smoke covers the sky. To the right and left of the black smoke, in the sky but near the horizon, is an area of yellow-green haze. Above the black smoke is an area of blue sky.",
+            "caption": "Thick black smoke pollutes the air around a city.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Polluted_Delhi.jpg",
+              "title": "Polluted Delhi.jpg",
+              "author": "Tarkeshwar Rawat",
+              "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Tarkeshwar_Rawat&action=edit&redlink=1",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "development",
+    "alternateForms": [ "developments"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "In the process of being made known or prepared.",
+        "examples": [ "Travis' marshmallow tower is still under development because it is not yet finished." ]
+      }
+    ]
+  },
+  {
+    "headword": "install",
+    "alternateForms": [ "installed", "installs", "installing" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To put into a particular place.",
+        "examples": [ "Hand sanitizers have been installed in all our classrooms so that we can clean our hands." ],
+        "images": [
+          {
+            "src": "glossimages/install1.jpg",
+            "alt": "Photo of a park with statues of elephants and rainbows.",
+            "description": "Photo of a park with a small building and benches in the background, and grass, trees, and bushes throughout. In the park are two gray statues, in the shape of a small and a large elephant, and three rainbow arches: one small rainbow arch and two larger rainbow arches.",
+            "caption": "Statues of elephants and rainbows installed as an art exhibition. ",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Tai_Po_Waterfront_Park_elephant_rainbow_Installation_art.jpg",
+              "title": "Tai Po Waterfront Park elephant rainbow Installation art.jpg",
+              "author": "Blacktc",
+              "author_url": "https://commons.wikimedia.org/wiki/User:Blacktc",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "maintenance",
+    "alternateForms": [ ],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "watching over something; keeping something working well.",
+        "examples": [ "The maintenance of a grass sports field means mowing and fertilizing it so that it stays in good condition." ]
+      }
+    ]
+  },
+  {
+    "headword": "contaminate",
+    "alternateForms": [ "contaminates", "contaminated", "contaminating" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make dirty or harmful.",
+        "examples": [ "Dumping oil and toxic chemicals into the river contaminated the water." ],
+        "images": [
+          {
+            "src": "glossimages/contaminate1.jpg",
+            "alt": "Photo of water, workers, and containment barriers.",
+            "description": "Photo showing two workers in the background, wearing boots, gloves, and coveralls. The workers stand on the far side of a body of water. The ground they stand on is black. Plastic bags filled with trash are scattered around on either side of the body of water. Floating on the water are long tubes, some partially covered in black.",
+            "caption": "Special crews work to clean a river contaminated by an oil spill.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Contaminated_soil_(4888593988).jpg",
+              "title": "Contaminated soil (4888593988).jpg",
+              "author": "USEPA Environmental-Protection-Agency",
+              "author_url": "https://www.flickr.com/people/24400159@N05",
+              "license": "Public Domain",
+              "license_url": "https://commons.wikimedia.org/wiki/File:Contaminated_soil_(4888593988).jpg"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "emerge",
+    "alternateForms": [ "emerging" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make known.",
+        "examples": [ "Facts about the event are emerging and giving us a better idea of what really happened." ],
+        "images": [
+          {
+            "src": "glossimages/emerging1.jpg",
+            "alt": "Photo of bridge with heavy clouds below and around it. ",
+            "description": "San Francisco's Golden Gate Bridge is pictured. Thick white clouds are below the bridge and cover the far end so that where the bridge connects to the land is not visible. A city can be seen in the background of the photo.",
+            "caption": "A bridge seems to be emerging out of the clouds.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_at_sunset_1.jpg",
+              "title": "Golden Gate Bridge at sunset 1.jpg",
+              "author": "Brocken Inaglory",
+              "author_url": "https://sites.google.com/site/thebrockeninglory/",
+              "license": "CC BY-SA 3.0,",
+              "license_url": "https://creativecommons.org/licenses/by-sa/3.0/deed.en"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "situate",
+    "alternateForms": [ "situates", "situated", "situating" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To put into a particular place.",
+        "examples": [ "Our apartment is situated on the 3rd floor of the building." ],
+        "images": [
+          {
+            "src": "glossimages/situate1.jpg",
+            "alt": "Photo of a park with statues of elephants and rainbows.",
+            "description": "Photo of a park with a small building and benches in the background, and grass, trees, and bushes throughout. In the park are two gray statues, in the shape of a small and a large elephant, and three rainbow arches: one small rainbow arch and two larger rainbow arches.",
+            "caption": "Statues of elephants and rainbows installed as an art exhibition. ",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Tai_Po_Waterfront_Park_elephant_rainbow_Installation_art.jpg",
+              "title": "Tai Po Waterfront Park elephant rainbow Installation art.jpg",
+              "author": "Blacktc",
+              "author_url": "https://commons.wikimedia.org/wiki/User:Blacktc",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "supervision",
+    "alternateForms": [ ],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Watching over something; keeping something working well.",
+        "examples": [ "Small children need close supervision so that they stay safe." ],
+        "images": [
+          {
+            "src": "glossimages/supervision1.jpg",
+            "alt": "Photo of people voting while an observer monitors the process.",
+            "description": "Photo of a person holding a clipboard in the foreground. The person is watching another person, in the background, putting a piece of paper in a tall silver box.",
+            "caption": "Election supervision makes sure that voting is fair and accurate.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:2009_Elections,_Indonesia_(10656134003).jpg",
+              "title": "2009 Elections, Indonesia (10656134003).jpg",
+              "author": "Josh Estey/AusAID",
+              "author_url": "",
+              "license": "CC BY 2.0",
+              "license_url": "https://creativecommons.org/licenses/by/2.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "diminish",
+    "alternateForms": [ "diminishes", "diminished", "diminishing" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make smaller or unimportant.",
+        "examples": [ "Using electric cars can diminish the amount of gasoline we use for transportation."]
+      }
+    ]
+  }
+]

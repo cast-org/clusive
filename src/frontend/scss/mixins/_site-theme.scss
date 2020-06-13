@@ -17,17 +17,14 @@
         --CT_skiplinkColor: #{$skiplink-color};
         --CT_skiplinkBorderColor: #{$skiplink-border-color};
 
-        --CT_headerBgStart: #{rgba($header-bg, $header-opacity-start)};
-        --CT_headerBgEnd: #{rgba($header-bg, $header-opacity-end)};
+        --CT_headerBg: #{$header-bg};
         --CT_headerColor: #{$header-color};
         --CT_headerLogoIconColor: #{$header-logo-icon-color};
         --CT_headerLogoTextColor: #{$header-logo-text-color};
         --CT_pageTitleBorderColor: #{$page-title-border-color};
 
-        --CT_sidebarBgStart: #{rgba($sidebar-bg, $sidebar-opacity-start)};
-        --CT_sidebarBgEnd: #{rgba($sidebar-bg, $sidebar-opacity-end)};
-        --CT_sidebarEndBgStart: #{rgba($sidebar-end-bg, $sidebar-end-opacity-start)};
-        --CT_sidebarEndBgEnd: #{rgba($sidebar-end-bg, $sidebar-end-opacity-end)};
+        --CT_sidebarStartBg: #{$sidebar-start-bg};
+        --CT_sidebarEndBg: #{$sidebar-end-bg};
 
         --CT_libraryBodyBg: #{$library-bg};
         --CT_libraryLogoIconColor: #{$library-logo-icon-color};
@@ -40,10 +37,9 @@
         --CT_cardColor: #{$card-color};
         --CT_cardBorderColor: #{$card-border-color};
         --CT_cardImgBg: #{$card-img-bg};
-        --CT_cardLibraryBoxShadowRGB: #{red($card-library-box-shadow), green($card-library-box-shadow), blue($card-library-box-shadow)};
+        --CT_cardLibraryBoxShadow: #{$card-library-box-shadow};
 
-        --CT_cardLoginBgRGB: #{red($card-login-bg), green($card-login-bg), blue($card-login-bg)};
-        --CT_cardLoginBgOpacity: #{$card-login-bg-opacity};
+        --CT_cardLoginBg: #{$card-login-bg)};
         --CT_cardLoginColor: #{$card-login-color};
         --CT_cardLoginForgotBorderColor: #{$card-login-forgot-border-color};
 
@@ -82,6 +78,7 @@
         --CT_btnNavActiveBg: #{$btn-nav-active-bg};
         --CT_btnNavActiveColor: #{$btn-nav-active-color};
         --CT_btnNavActiveBorderColor: #{$btn-nav-active-border-color};
+        --CT_btnNavDisabledOpacity: #{$btn-nav-disabled-opacity};
 
         --CT_btnSettingFocusRingRGB: #{red($btn-setting-focus-ring), green($btn-setting-focus-ring), blue($btn-setting-focus-ring)};
         --CT_btnSettingBg: #{$btn-setting-bg};
@@ -93,8 +90,7 @@
         --CT_btnSettingActiveBg: #{$btn-setting-active-bg};
         --CT_btnSettingActiveColor: #{$btn-setting-active-color};
         --CT_btnSettingActiveBorderColor: #{$btn-setting-active-border-color};
-        --CT_btnSettingTextShadowColorRGB: #{red($btn-setting-text-shadow-color), green($btn-setting-text-shadow-color), blue($btn-setting-text-shadow-color)};
-        --CT_btnSettingTextShadowOpacity: #{$btn-setting-text-shadow-opacity};
+        --CT_btnSettingTextShadow: #{$btn-setting-text-shadow};
 
         --CT_btnToolFocusRingRGB: #{red($btn-tool-focus-ring), green($btn-tool-focus-ring), blue($btn-tool-focus-ring)};
         --CT_btnToolBg: #{$btn-tool-bg};
@@ -120,6 +116,16 @@
         --CT_btnOptionActiveBoxShadowRGB: #{red($btn-option-active-box-shadow-color), green($btn-option-active-box-shadow-color), blue($btn-option-active-box-shadow-color)};
         --CT_btnOptionActiveBoxShadowOpacity: #{$btn-option-active-box-shadow-opacity};
         --CT_btnOptionActiveHoverBorderColor: #{$btn-option-active-hover-border-color};
+
+        --CT_errorListBg: #{$error-bg};
+        --CT_errorListColor: #{$error-color};
+
+        --CT_dropdownBg: #{$dropdown-bg};
+        --CT_dropdownColor: #{$dropdown-color};
+        --CT_dropdownBorderColor: #{$dropdown-border-color};
+        --CT_dropdownLinkColor: #{$dropdown-link-color};
+        --CT_dropdownLinkHoverBg: #{$dropdown-link-hover-bg};
+        --CT_dropdownLinkHoverColor: #{$dropdown-link-hover-color};
 
         --CT_popoverBg: #{$popover-bg};
         --CT_popoverBorderColor: #{$popover-border-color};
@@ -151,12 +157,62 @@
         --CT_settingModalContentColor: #{$setting-modal-content-color};
         --CT_settingModalContentBorderColor: #{$setting-modal-content-border-color};
         --CT_settingModalHeaderBg: #{$setting-modal-header-bg};
-        --CT_settingModalHeaderBgRGB: #{red($setting-modal-header-bg), green($setting-modal-header-bg), blue($setting-modal-header-bg)};
-        --CT_settingModalHeaderBgOpacity: #{$setting-modal-header-bg-opacity};
         --CT_settingModalHeaderColor: #{$setting-modal-header-color};
         --CT_settingModalHeaderBorderColor: #{$setting-modal-header-border-color};
         --CT_settingModalFooterBg: #{$setting-modal-footer-bg};
         --CT_settingModalFooterBorderColor: #{$setting-modal-footer-border-color};
+
+        --CT_settingTabBg: #{$toc-tab-bg};
+        --CT_settingTabColor: #{$toc-tab-color};
+        --CT_settingTabBorderColor: #{$toc-tab-border-color};
+        --CT_settingTabHoverBg: #{$toc-tab-hover-bg};
+        --CT_settingTabHoverColor: #{$toc-tab-hover-color};
+        --CT_settingTabHoverBorderColor: #{$toc-tab-hover-border-color};
+        --CT_settingTabActiveBg: #{$toc-tab-active-bg};
+        --CT_settingTabActiveColor: #{$toc-tab-active-color};
+        --CT_settingTabActiveBorderColor: #{$toc-tab-active-border-color};
+
+        --CT_tocModalContentBg: #{$toc-modal-content-bg};
+        --CT_tocModalContentColor: #{$toc-modal-content-color};
+        --CT_tocModalContentBorderColor: #{$toc-modal-content-border-color};
+        --CT_tocModalHeaderBg: #{$toc-modal-header-bg};
+        --CT_tocModalHeaderColor: #{$toc-modal-header-color};
+        --CT_tocModalHeaderBorderColor: #{$toc-modal-header-border-color};
+
+        --CT_tocTabBg: #{$toc-tab-bg};
+        --CT_tocTabColor: #{$toc-tab-color};
+        --CT_tocTabBorderColor: #{$toc-tab-border-color};
+        --CT_tocTabHoverBg: #{$toc-tab-hover-bg};
+        --CT_tocTabHoverColor: #{$toc-tab-hover-color};
+        --CT_tocTabHoverBorderColor: #{$toc-tab-hover-border-color};
+        --CT_tocTabActiveBg: #{$toc-tab-active-bg};
+        --CT_tocTabActiveColor: #{$toc-tab-active-color};
+        --CT_tocTabActiveBorderColor: #{$toc-tab-active-border-color};
+
+        --CT_tocActiveBg: #{$toc-active-bg};
+        --CT_tocLinkColor: #{$toc-link-color};
+        --CT_tocLinkBg: #{$toc-link-bg};
+        --CT_tocLinkBorderColor: #{$toc-link-border-color};
+        --CT_tocLinkHoverColor: #{$toc-link-hover-color};
+        --CT_tocLinkHoverBg: #{$toc-link-hover-bg};
+        --CT_tocLinkHoverBorderColor: #{$toc-link-hover-border-color};
+        --CT_tocCaretColor: #{$toc-caret-color};
+        --CT_tocCaretBg: #{$toc-caret-bg};
+        --CT_tocCaretHoverColor: #{$toc-caret-hover-color};
+        --CT_tocCaretHoverBg: #{$toc-caret-hover-bg};
+
+        --CT_tocLinkBgD0: #{$toc-nav-link-bg-d0};
+        --CT_tocLinkColorD0: #{$toc-nav-link-color-d0};
+        --CT_tocCaretBgD0: #{$toc-nav-caret-bg-d0};
+        --CT_tocCaretColorD0: #{$toc-nav-caret-color-d0};
+        --CT_tocLinkBgD1: #{$toc-nav-link-bg-d1};
+        --CT_tocLinkColorD1: #{$toc-nav-link-color-d1};
+        --CT_tocCaretBgD1: #{$toc-nav-caret-bg-d1};
+        --CT_tocCaretColorD1: #{$toc-nav-caret-color-d1};
+        --CT_tocLinkBgD2: #{$toc-nav-link-bg-d2};
+        --CT_tocLinkColorD2: #{$toc-nav-link-color-d2};
+        --CT_tocCaretBgD2: #{$toc-nav-caret-bg-d2};
+        --CT_tocCaretColorD2: #{$toc-nav-caret-color-d2};
 
         --CT_goalModalTitleColor: #{$goal-modal-title-color};
         --CT_goalModalSubtitleColor: #{$goal-modal-subtitle-color};
@@ -222,5 +278,22 @@
         --CT_ttsTextColor: #{$tts-highlight-color};
 
         --CT_imageDescCiteColor: #{$image-desc-cite-color};
+
+        --CT_highlightBg: #{$highlight-bg};
+        --CT_highlightColor: #{$highlight-color};
+        --CT_highlightHoverBg: #{$highlight-hover-bg};
+        --CT_highlightHoverColor: #{$highlight-hover-color};
+        --CT_highlightUndeleteBg: #{$highlight-undelete-bg};
+
+        --CT_noteTitleColor: #{$note-title-color};
+        --CT_noteUndeleteBg: #{$note-undelete-bg};
+
+        --CT_toolboxMenuBg: #{$toolbox-menu-bg};
+        --CT_toolboxMenuColor: #{$toolbox-menu-color};
+        --CT_toolboxMenuBorderColor: #{$toolbox-menu-border-color};
+        --CT_toolboxBtnBg: #{$toolbox-btn-bg};
+        --CT_toolboxBtnColor: #{$toolbox-btn-color};
+        --CT_toolboxBtnHoverBg: #{$toolbox-btn-hover-bg};
+        --CT_toolboxBtnHoverColor: #{$toolbox-btn-hover-color};
     }
 }

@@ -59,27 +59,28 @@ $enable-jumbotron:                      false;
 $enable-list-bulleted:                  false;
 $enable-list-ordered:                   false;
 $enable-list-group:                     false;
-$enable-list-horizontal:                false;
 $enable-list-item-colors:               false;
-$enable-media:                          false;
+$enable-media:                          true;
 $enable-navbar-text:                    false;
 $enable-navbar-divider:                 false;
 $enable-navbar-collapse:                false;
 $enable-navbar-toggle:                  false;
 $enable-navbar-light:                   false;
 $enable-navbar-dark:                    false;
-$enable-nav-tabs:                       false;
-$enable-nav-pills:                      false;
-$enable-nav-vertical:                   false;
+$enable-nav-tabs:                       true;
+$enable-nav-pills:                      true;
+$enable-nav-vertical:                   true;
 $enable-nav-fill:                       false;
 $enable-nav-justify:                    false;
-$enable-tab-content:                    false;
+$enable-tab-content:                    true;
 $enable-pagination:                     false;
 $enable-progress:                       false;
 
 // Widgets
-$enable-dropdown:                       false;
-$enable-tooltip:                        false;
+$enable-modal-fullscreen:               false;
+$enable-modal-fullscreen-responsive:    false;
+$enable-dropdown:                       true;
+$enable-tooltip:                        true;
 
 // Utilities
 $enable-utility-bg:                     false;
@@ -142,11 +143,21 @@ $primary:                               #40998b;
 $palette-interval-light:                .2%;
 $palette-interval-dark:                 .15%;
 
+$container-max-widths: (
+    sm: rem(544px),
+    md: rem(720px),
+    lg: rem(960px),
+    xl: rem(1152px)
+);
+
+$grid-gutter-width:                     2rem;
+
 $border-radius:                         .5rem;
 
 $body-bg:                               var(--CT_bodyBg);
 $body-color:                            var(--CT_bodyColor);
-$body-padding:                          .625rem;
+$body-padding-y:                        .625rem;
+$body-padding-x:                        .625rem;
 
 $link-color:                            var(--CT_linkColor);
 $link-hover-color:                      var(--CT_linkHoverColor);
@@ -167,16 +178,19 @@ $grid-row-columns:                      4;
 $figure-caption-padding:                .5rem;
 $figure-caption-font-size:              .875rem;
 
+$list-item-active-bg:                   unset;
+$list-item-active-color:                unset;
+
 $btn-font-weight:                       700;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
 $btn-focus-box-shadow-alpha:            .85;
-$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
-$btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
+$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRing), $btn-focus-box-shadow-alpha);
+$btn-default-focus-box-shadow-color:    var(--CT_focusRing);
 
 $input-bg:                              #fff;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
-$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
+$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRing), $input-focus-box-shadow-alpha);
 
 $form-group-margin-bottom:              .5rem;
 
@@ -218,6 +232,17 @@ $form-switch-thumb-focus-bg:                var(--CT_formSwitchThumbFocusBg);
 $form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
 $form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
 $form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
+
+$dropdown-bg:                               var(--CT_dropdownBg);
+$dropdown-color:                            var(--CT_dropdownColor);
+$dropdown-border-width:                     3px;
+$dropdown-border-color:                     var(--CT_dropdownBorderColor);
+$dropdown-link-color:                       var(--CT_dropdownLinkColor);
+$dropdown-link-hover-bg:                    var(--CT_dropdownLinkHoverBg);
+$dropdown-link-hover-color:                 var(--CT_dropdownLinkHoverColor);
+
+$nav-tabs-hover-bg:                         rgba(0, 0, 0, .1);
+$nav-tabs-active-color:                     var(--CT_bodyColor);
 
 $card-bg:                               var(--CT_cardBg);
 $card-color:                            var(--CT_cardColor);
@@ -279,15 +304,20 @@ $modal-footer-border-width:             1px;
 
 $skiplink-offset-top:                   .25rem;
 $skiplink-padding:                      .25rem .5rem;
-$skiplink-border-width:                 2px;
+$skiplink-border-width:                 1px;
 
 $header-border-radius:                  $border-radius;
-$header-opacity-stop:                   65%;
 
 $sidebar-border-radius:                 $header-border-radius;
+$sidebar-width:                         3rem;
+$sidebar-padding:                       .75rem .25rem;
+$sidebar-gutter:                        1rem;
+$sidebar-sm-width:                      4rem;
+$sidebar-sm-padding:                    .75rem;
+$sidebar-sm-gutter:                     2rem;
 // Sidebar stretched max width is half of:
 // vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)
-$sidebar-xl-width:                      calc((100vw - 72rem + ((4rem - 1rem) * 2)) / 2);
+$sidebar-xl-width:                      calc((100vw - #{map-get($container-max-widths, xl)} + ((#{$sidebar-sm-width} - #{$body-padding-x}) * 2)) / 2);
 
 $library-grid-gutter:                   2rem;
 
@@ -301,11 +331,35 @@ $setting-title-font-weight:             700;
 $setting-modal-header-border-width:     3px;
 $setting-modal-footer-border-width:     3px;
 
+$setting-theme-options: (
+    "default":
+    (
+        "bg": $white,
+        "color": #111,
+        "border-color": #636b82
+    ),
+    "night":
+    (
+        "bg": #000,
+        "color": #fefefe,
+        "border-color": #636b82
+    ),
+    "sepia":
+    (
+        "bg": #faf4e8,
+        "color": #121212,
+        "border-color": #363740
+    )
+);
+
 $ranking-margin-x:                      .375em;
 $ranking-margin-bottom:                 1.75em;
 $ranking-font-size:                     1.5rem;
 $ranking-border-width:                  4px;
 $ranking-label-font-size:               .875rem;
+
+$toc-modal-dialoag-max-width:           22rem;
+$toc-modal-header-border-width:         7px;
 
 $goal-modal-title-font-size:            .875rem;
 $goal-modal-title-font-weight:          400;
@@ -326,3 +380,10 @@ $imgdesc-modal-title-font-family:       $font-family-sans-serif;
 $imgdesc-modal-title-font-size:         1rem;
 $imgdesc-modal-title-font-weight:       700;
 $imgdesc-modal-title-font-style:        null;
+
+$toolbox-menu-border-width:             3px;
+$toolbox-menu-border-radius:            .5rem;
+$toolbox-menu-arrow-width:              1.5rem;
+$toolbox-menu-arrow-height:             1rem;
+$toolbox-btn-padding:                   .125rem .375rem;
+$toobox-btn-font-size:                  1.25rem;

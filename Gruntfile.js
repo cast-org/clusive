@@ -117,6 +117,9 @@ module.exports = function (grunt) {
                 outputStyle: 'expanded'
             },
             mockup: {
+                options: {
+                    sourceMap: true
+                },
                 files: {
                     'src/frontend/dist/css/<%= pkg.name %>.css': 'src/frontend/scss/<%= pkg.name %>.scss',
                     'src/frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'src/frontend/scss/<%= pkg.name %>-prefs-panel.scss',
@@ -138,7 +141,7 @@ module.exports = function (grunt) {
         postcss: {
             mockup: {
                 options: {
-                    map: false,
+                    map: true,
                     processors: [flexbugs, calc, autoprefixer]
                 },
                 src: ['src/frontend/dist/css/*.css', '!src/frontend/dist/css/*.min.css']
@@ -206,6 +209,12 @@ module.exports = function (grunt) {
                     }
                 }]
             }
+        },
+        watch: {
+            devRebuild: {
+                files: 'src/**',
+                tasks: ['build-noclean']
+            }
         }
     });
 
@@ -215,6 +224,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-eslint");
     grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-stylelint");
@@ -226,7 +236,6 @@ module.exports = function (grunt) {
     grunt.registerTask("build-noclean", "Build front end JS dependencies and copy over needed static assets from node_modules without a clean",
         ["copy:python", "frontend-dist", "webpack:dev", "copy:lib"]);
 
-    grunt.registerTask("buildWithoutClean", "build front end JS dependencies and copy over needed static assets from node_modules", ["copy:python", "frontend-dist", "webpack:dev", "copy:lib"])
 
     // Frontend build tasks
     grunt.registerTask('frontend-test', ['css-test', 'js-test']);

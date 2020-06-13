@@ -15,9 +15,9 @@
 <link href="../dist/css/clusive.css" rel="stylesheet">
 
 <!-- jQuery and Figuration JS -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.15.0/dist/umd/popper.min.js" integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.1/dist/js/figuration.min.js" integrity="sha384-DrdWrMNeApnhVY4UgXQhKObnNAhkqMxJra/LyQTa2BHGg8XFsv+PlMWenTy0K1ZP" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.5/dist/js/figuration.min.js" integrity="sha384-qxJIAaCm2yIk7HvSXNiSadX6nVf5VaAO9zw+rIsjkAl3cpu4CEnsupskg4ZvPL4i" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="../js/theme-test.js"></script>
@@ -35,36 +35,37 @@
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-<div class="container-xl">
-    <div class="row">
-        <div class="col-auto sidebar sidebar-start">
-        </div>
+<div class="page-wrapper">
+    <div class="container-xl">
+        <header class="site-header">
+            <div class="site-header-logo">
+                <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                <span class="icon-logo-clusive" aria-hidden="true"></span>
+                <span class="sr-only">Clusive</span>
+            </div>
 
-        <div class="col-auto sidebar sidebar-end" role="region" aria-label="Reading tools">
-        </div>
+            <!--
+            <h1 class="page-title">Library</h1>
 
-        <div class="col content">
+            <div class="user-actions" role="region" aria-label="">
+                <a href="#">Word bank</a> |
+                Username
+                <a href="#">Log out</a>
+            </div>
+            -->
+        </header>
 
-            <header class="site-header">
-                <div class="site-header-logo">
-                    <a href="#">
-                        <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-                    </a>
-                    <span class="icon-logo-clusive" aria-hidden="true"></span>
-                    <span class="sr-only">Clusive</span>
+        <div class="sidebars-wrapper">
+            <div class="sidebars">
+                <div class="sidebar sidebar-start">
                 </div>
 
-                <!--
-                <h1 class="page-title">Library</h1>
-
-                <div class="user-actions" role="region" aria-label="">
-                    <a href="#">Word bank</a> |
-                    Username
-                    <a href="#">Log out</a>
+                <div class="sidebar sidebar-end" role="region" aria-label="Reading tools">
                 </div>
-                -->
-            </header>
+            </div>
+        </div>
 
+        <div class="content">
             <main id="content" tabindex="-1">
                 <h1>Welcome to Clusive</h1>
                 <p>This is the <a href="#">Center on Inclusive Software for Learning</a>'s flexible, adaptive, and customizable digital reader.</p>
@@ -84,6 +85,11 @@
                         <div class="card card-login">
                             <div class="card-body">
                                 <h2>I already have an account.</h2>
+                                <ul class="errorlist">
+                                    <li>I am some error.</li>
+                                    <li>I am another error with a longer amount of text to get some wrapping.</li>
+                                </ul>
+
                                 <form>
                                     <div class="form-group">
                                         <label for="username" class="form-label">Username:</label>
@@ -113,7 +119,6 @@
             </footer>
         </div>
     </div>
-
 </div>
 
 </body>

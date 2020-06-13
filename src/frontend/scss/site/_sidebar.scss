@@ -1,19 +1,44 @@
+.sidebars-wrapper {
+    position: fixed;
+    top: $body-padding-y;
+    left: 50%;
+    width: 100%;
+    max-width: 100%;
+    height: 0;
+    transform: translateX(-50%);
+
+    @include media-breakpoint-up(md) {
+        width: calc(100% - #{($body-padding-x * 2)});
+        max-width: calc(100% - #{($body-padding-x * 2)});
+    }
+
+    @include media-breakpoint-up(xl) {
+        max-width: map-get($container-max-widths, xl);
+    }
+}
+
+.sidebars {
+    display: flex;
+    justify-content: space-between;
+    height: 0;
+}
+
 .sidebar {
     position: relative;
-    z-index: 1;
     display: flex;
-    flex: 0 0 3rem;
-    width: 3rem;
-    max-width: 3rem;
-    padding: .75rem .25rem;
-    background: linear-gradient(180deg, var(--CT_sidebarBgStart) 0%, var(--CT_sidebarBgEnd) 100%);
+    flex: 0 0 $sidebar-width;
+    width: $sidebar-width;
+    max-width: $sidebar-width;
+    height: calc(100vh - #{$body-padding-y * 2});
+    padding: $sidebar-padding;
+    background: var(--CT_sidebarStartBg);
     @include border-radius($sidebar-border-radius);
 
     @include media-breakpoint-up(sm) {
-        flex-basis: 4rem;
-        width: 4rem;
-        max-width: 4rem;
-        padding: .75rem;
+        flex-basis: $sidebar-sm-width;
+        width: $sidebar-sm-width;
+        max-width: $sidebar-sm-width;
+        padding: $sidebar-sm-padding;
     }
 
     @include media-breakpoint-up(xl) {
@@ -27,18 +52,12 @@
             z-index: -1;
             display: block;
             width: $sidebar-xl-width;
-            min-width: 4rem;
+            min-width: $sidebar-sm-width;
             max-width: $sidebar-xl-width;
             content: "";
-            background: linear-gradient(180deg, var(--CT_sidebarBgStart) 0%, var(--CT_sidebarBgEnd) 100%);
+            background: var(--CT_sidebarStartBg);
             @include border-radius($sidebar-border-radius);
         }
-    }
-
-    @supports (position: sticky) {
-        position: sticky;
-        top: $body-padding;
-        height: calc(100vh - #{$body-padding * 2});
     }
 
     .btn-glossary {
@@ -61,6 +80,7 @@
     flex-direction: column;
     align-items: center;
     align-self: flex-end;
+    margin-top: 1rem;
 
     .btn + .btn {
         margin-top: .5rem;
@@ -80,7 +100,7 @@
     flex-direction: column;
     order: 1;
     margin-left: 1rem;
-    background: linear-gradient(180deg, var(--CT_sidebarEndBgStart) 0%, var(--CT_sidebarEndBgEnd) 100%);
+    background: var(--CT_sidebarEndBg);
 
     @include media-breakpoint-up(xl) {
         background: none;
@@ -88,7 +108,7 @@
         &::after {
             right: auto;
             left: 0;
-            background: linear-gradient(180deg, var(--CT_sidebarEndBgStart) 0%, var(--CT_sidebarEndBgEnd) 100%);
+            background: var(--CT_sidebarEndBg);
         }
     }
 }

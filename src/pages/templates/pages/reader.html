@@ -7,62 +7,102 @@
 <script>
 var exports = {};
 var pub_id = "{{ pub_id }}";
+var pub_version = "{{ version }}";
 </script>
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
 {% endblock %}
 
-{% block title %}{{ pub_title }} | Clusive{% endblock %}
+{% block title %}{{ pub.title }} | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header_small.html" with user_actions=True %}
+{% endblock %}
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
-{% include "shared/partial/sidebar_start.html" with index_reader=True nav=False why=True %}
+{% include "shared/partial/sidebar_start.html" with index_reader=True nav=True why=True %}
 {% endblock %}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 
 {% block content %}
-{% include "shared/partial/site_header_small.html" with user_actions=True %}
+<!-- TODO: this is required due to a bug in Reader 1.1.4, remove when fixed -->
+<div id="headerMenu"></div>
 
 <div id="D2Reader-Container" style="position: relative;">
-    <main style="overflow: hidden" tabindex=-1 id="iframe-wrapper">
+    <main style="overflow: hidden" tabindex="-1" id="iframe-wrapper">
         <span id="content" tabindex="-1"></span>
-        <h1 class="sr-only">Reading: {{ pub_title }}</h1>
+        <h1 class="sr-only">Reading: {{ pub.title }}</h1>
 
         <div id="reader-loading" class="loading"></div>
         <div id="reader-error" class="error"></div>
         <div id="reader-info-top" class="info top">
             <span class="book-title"></span>
         </div>
-        <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" SCROLLING="no" style="max-width: 100%; Border: 0px; display: block;" width="100%" height="100%"></iframe>
+        <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
         <div id="reader-info-bottom" class="info bottom">
             <span class="chapter-position"></span>
             <span class="chapter-title"></span>
         </div>
     </main>
 
+    {% include "shared/partial/toolbox_menu.html" %}
+
+    <button id="image-info-trigger" style="display:none;" data-cfw="modal" data-cfw-modal-target="#image-info-modal">
+        Show image details
+    </button>
+    <div id="image-info-modal" class="modal imgdesc-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-block">
+                        <h2 class="modal-title">Image Details</h2>
+                    </div>
+                    <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                        <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        var url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "{% static 'shared/pubs/' %}" + "{{ pub_id }}/manifest.json"
+        var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% static "shared/pubs/" %}'
+            + pub_id + '/' + pub_version + '/manifest.json';
         var injectables = [
-            {type: 'script', url: 'https://code.jquery.com/jquery-3.4.1.min.js'},
-            {type: 'script', url: "{% static 'shared/js/lib/internal.js' %}"},
+            {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
+            {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-before.css" %}', r2before: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-default.css" %}', r2default: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-after.css" %}', r2after: true},
-            {type: 'style', url: '{% static "shared/css/reader-frame.css" %}'},
+            {type: 'style', url: '{% static "shared/css/reader-frame.min.css" %}'},
             {type: 'style', url: '{% static "shared/js/lib/reader/fonts/open-dyslexic/open-dyslexic-regular.css" %}', fontFamily: 'OpenDyslexicRegular'},
             {type: 'style', systemFont: true, fontFamily: 'Arial, Helvetica'},
             {type: 'style', systemFont: true, fontFamily: 'Georgia, Times, Times New Roman, serif'},
             {type: 'style', systemFont: true, fontFamily: 'Verdana'},
             {type: 'style', systemFont: true, fontFamily: 'Comic Sans MS, sans-serif'},
-            {type: 'style', url: '{% static "shared/css/clusive-reader-theme-sepia.css" %}', r2after: true, appearance: 'clusive-sepia'},
-            {type: 'style', url: '{% static "shared/css/clusive-reader-theme-night.css" %}', r2after: true, appearance: 'clusive-night'},
+            {type: 'style', url: '{% static "shared/css/clusive-reader-theme-sepia.min.css" %}', r2after: true, appearance: 'clusive-sepia'},
+            {type: 'style', url: '{% static "shared/css/clusive-reader-theme-night.min.css" %}', r2after: true, appearance: 'clusive-night'},
             // {type:'script', url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML&latest'},
         ];
 
-        userSettings = { textAlignment:'start' };
-
-        var lastReadingPosition, annotations, baseUrl = null;
+        var userSettings = { textAlignment:'start' };
+        var lastReadingPosition = {{ last_position|safe }};
+        var annotations = JSON.parse('{{ annotations|safe }}');
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
+
+        var selectionMenuItems = [
+            {
+                id: 'lookupIcon',
+                callback: function (selection) {
+                    console.debug('looking up: ', selection);
+                    window.parent.load_definition(1, selection);
+                    window.parent.$('#glossaryButton').CFW_Popover('show');
+                    glossaryPop_focus($('#lookupIcon'));
+                }
+            }
+        ];
 
         D2Reader.load({
                 url: new URL(url),
@@ -77,48 +117,73 @@ var pub_id = "{{ pub_id }}";
                     },
                 },
                 rights: {
-                    enableBookmarks: true
+                    enableBookmarks: true,
+                    enableAnnotations: true
                 },
                 material: false,
                 userSettings: userSettings,
-                annotations: annotations,
+                initialAnnotations: {"bookmarks":[], "highlights": annotations},
                 lastReadingPosition: lastReadingPosition,
                 injectables: injectables,
-                api: {
-                    addBookmark: function (bookmark) {
-                        bookmark.id = Math.random()
-                        return Promise.resolve(bookmark);
-                    },
-                    deleteBookmark: function (bookmark) {
-                        return Promise.resolve();
-                    },
-                    updateCurrentlocation: function (location) {
-                        return Promise.resolve();
-                    },
-                    updateUserSettings: function (userSettings) {
-                        return Promise.resolve();
-                    },
-                }
-            }).then(instance => {
-                console.log("D2Reader loaded ", instance);
-                console.log("instance.bookmarkModule ", instance.bookmarkModule);   
+
+                selectionMenuItems: selectionMenuItems,
+                initialAnnotationColor: "#FFDD66",
+
+            api: {
+                addBookmark: function (bookmark) {
+                    console.error('Bookmark saving is not implemented yet. Received: ', bookmark);
+                    return Promise.reject();
+                },
+                deleteBookmark: function (bookmark) {
+                    console.error('Bookmark deletion is not implemented yet. Received: ', bookmark);
+                    return Promise.reject();
+                },
+                addAnnotation: function (annotation) {
+                    return addNewAnnotation(annotation, pub_id, pub_version);
+                },
+                selectedAnnotation: function (annotation) {
+                    console.debug('Selected annotation: ', annotation.id);
+                    showExistingAnnotation(annotation);
+                    return Promise.resolve();
+                },
+                deleteAnnotation: function (annotation) {
+                    console.warn('Not implemented: Delete annotation: ', annotation.id);
+                    return Promise.reject();
+                },
+                updateCurrentlocation: function (locator) {
+                    // Grey out navigation buttons when necessary.
+                    var nRes = D2Reader.currentResource();
+                    var firstResource = (nRes===0);
+                    var lastResource = (nRes===D2Reader.totalResources()-1);
+                    var elt = document.scrollingElement;
+                    var atTop = (elt.scrollTop===0);
+                    var atBottom = (elt.scrollHeight - elt.scrollTop === elt.clientHeight);
+                    document.getElementById('prevResourceButton').disabled = (firstResource && atTop);
+                    document.getElementById('nextResourceButton').disabled = (lastResource && atBottom);
+                    return trackReadingLocation(pub_id, locator);
+                },
+                updateUserSettings: function (userSettings) {
+                    return Promise.resolve();
+                },
+            }
+        }).then(instance => {
+                console.debug("D2Reader loaded ", instance);
                 // Create the preference editor when the Reader has loaded,
                 // after a short delay
                 // TODO: improve this sequencing
-                $(document).ready(function () {     
+                $(document).ready(function () {
+                    buildTableOfContents();
+                    buildAnnotationList();
                     setTimeout(function() {
-                        createClusivePrefsEditor();
-                    }, 250);       
-                    
-                });            
-                
+                        clusivePrefs = createClusivePrefsEditor();
+                    }, 250);
+                });
+
             }).catch(error => {
-                console.error("error.message ", error.message);
+                console.error("error loading: ", error);
             });
     </script>
-
-    <!--
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    -->
 </div>
+
+{% include "shared/partial/modal_toc.html" %}
 {% endblock %}

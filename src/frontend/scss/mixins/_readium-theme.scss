@@ -8,6 +8,11 @@
 
     :#{$selector} {
         --RS__backgroundColor: #{$body-bg};
+
+        @if $bg-image-override != null {
+            --RS__backgroundImage: #{if($bg-image-override != null, $bg-image-override, null)};
+        }
+
         --RS__textColor: #{$body-color};
         --RS__linkColor: #{$link-color};
         --RS__visitedColor: #{$link-color};
@@ -36,6 +41,12 @@
             // Should be transparent but Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=711955&q=mix-blend-mode&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified
             color: var(--RS__textColor);
             background-color: var(--RS__backgroundColor);
+        }
+
+        * {
+            @if $bg-image-override != null {
+                background-image: var(--RS__backgroundImage);
+            }
         }
 
         a:link,

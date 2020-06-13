@@ -6,7 +6,7 @@
             This div is for the sliding panel bar that shows and hides the Preference Editor controls in the mobile view.
             A separate panel bar for mobile displays is needed to preserver the correct tab order.
         -->
-        <div class="fl-panelBar fl-panelBar-smallScreen">
+        <div class="fl-panelBar fl-panelBar-smallScreen" style="display: none;">
             <span class="fl-prefsEditor-buttons">
                 <button class="flc-slidingPanel-toggleButton fl-prefsEditor-showHide"> Show/Hide</button>
                 <button class="flc-prefsEditor-reset fl-prefsEditor-reset"><span class="fl-icon-undo"></span> Reset</button>
@@ -29,7 +29,36 @@
     </div>
     <!-- END markup for Preference Editor -->
     <script>
-        var prefsEditor;            
+        var prefsEditor;         
+
+        fluid.defaults("clusive.prefs.djangoStoreMapper", {
+            gradeNames: ["fluid.component", "fluid.resolveRoot"],
+            distributeOptions: {
+                record: {
+                    listeners: {
+                        "onCreate.announce": {
+                            "this": "console",
+                            "method": "log",
+                            "args": ["Global settings store created,", "{that}"]
+                        }
+                    },
+                    contextAwareness: {
+                        strategy: {
+                            checks: {
+                                clusiveLoggedInUser: {
+                                    contextValue: "{clusive.loggedInUser}",
+                                    gradeNames: "clusive.prefs.djangoStore"
+                                }
+                            }
+                        }
+                    }
+                },
+                target: "{/ fluid.prefs.globalSettingsStore}.options.components.settingsStore.options"
+            }
+        });
+
+        clusive.prefs.djangoStoreMapper();
+
         var createClusivePrefsEditor = function() {
             var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
             var buildGradeNames =  [
@@ -38,7 +67,7 @@
                             ]                
 
             return fluid.prefs.create(".flc-prefsEditor-separatedPanel", {
-                        build: {                        
+                        build: {                                                
                             gradeNames: buildGradeNames,
                             auxiliarySchema: {
                                 "loaderGrades": ["cisl.prefs.composite.separatedPanel"],
@@ -50,10 +79,21 @@
                             },
                         },
                         prefsEditor: {   
-                            components: {                         
+                            components: {      
                                 prefsEditorLoader: {
-                                    options: {
-                                        components: {                                        
+                                    options: {                                      
+                                        components: {   
+                                            prefsEditor: {
+                                                options: {
+                                                    listeners: {
+                                                        "onCreate.announce": {
+                                                            "this": "console",
+                                                            "method": "log",
+                                                            "args": ["Prefs editor created,", "{that}"]
+                                                        }
+                                                    },
+                                                }
+                                            },                                     
                                             readerPrefs: {
                                                 type: "cisl.prefs.readerPreferencesBridge",
                                                 createOnEvent: "{prefsEditorLoader}.events.onReady",
@@ -95,7 +135,7 @@
         {% if not prefs_is_reader %}        
         // If not on the Reader page, we can create the preference editor now
         $(document).ready(function () {            
-                createClusivePrefsEditor();
+                clusivePrefs = createClusivePrefsEditor();
         });
         {% endif %}
 

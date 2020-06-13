@@ -1,7 +1,108 @@
-/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT */
+/* global cisl, clusive, fluid_3_0_0, gpii, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
 
 (function(fluid) {
     'use strict';
+
+    fluid.defaults('clusive.prefs.djangoStore', {
+        gradeNames: ['fluid.dataSource'],
+        storeConfig: {
+            getURL: '/account/prefs',
+            setURL: '/account/prefs',
+            resetURL: '/account/prefs/profile'
+        },
+        components: {
+            encoding: {
+                type: 'fluid.dataSource.encoding.none'
+            }
+        },
+        listeners: {
+            'onRead.impl': {
+                listener: 'clusive.prefs.djangoStore.getUserPreferences',
+                args: ['{arguments}.1']
+            }
+        },
+        invokers: {
+            get: {
+                args: ['{that}', '{arguments}.0', '{that}.options.storeConfig']
+            }
+        }
+    });
+
+    fluid.defaults('clusive.prefs.djangoStore.writable', {
+        gradeNames: ['fluid.dataSource.writable'],
+        listeners: {
+            'onWrite.impl': {
+                listener: 'clusive.prefs.djangoStore.setUserPreferences'
+            }
+        },
+        invokers: {
+            set: {
+                args: ['{that}', '{arguments}.0', '{arguments}.1', '{that}.options.storeConfig']
+            }
+        }
+    });
+
+    fluid.makeGradeLinkage('clusive.prefs.djangoStore.linkage', ['fluid.dataSource.writable', 'clusive.prefs.djangoStore'], 'clusive.prefs.djangoStore.writable');
+
+    clusive.prefs.djangoStore.getUserPreferences = function(directModel) {
+        console.debug('clusive.prefs.djangoStore.getUserPreferences', directModel);
+
+        var getURL = directModel.getURL;
+
+        var djangoStorePromise = fluid.promise();
+
+        $.get(getURL, function(data) {
+            console.debug('Get user preferences from ', getURL);
+            console.debug('Received preferences: ', data);
+            djangoStorePromise.resolve({
+                preferences: data
+            });
+        }).fail(function(error) {
+            console.error('Error getting preferences:', error);
+            djangoStorePromise.reject('error');
+        });
+
+        return djangoStorePromise;
+    };
+
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel) {
+        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model);
+
+        if ($.isEmptyObject(model)) {
+            var resetURL = directModel.resetURL;
+            $.ajax(resetURL, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify({
+                    adopt: 'default'
+                })
+            })
+                .done(function(data) {
+                    console.debug('resetting preferences to default', data);
+                    clusive.prefs.djangoStore.getUserPreferences(directModel);
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
+                });
+        } else {
+            var setURL = directModel.setURL;
+            $.ajax(setURL, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify(fluid.get(model, 'preferences'))
+            })
+                .done(function(data) {
+                    console.debug('storing preferences to server', data);
+                })
+                .fail(function(err) {
+                    console.error('Failed storing prefs to server: ', err);
+                });
+        }
+    };
 
     // This removes the tableOfContents and
     // enhanceInputs preferences from the
@@ -33,17 +134,16 @@
                 panel: null
             },
             glossary: {
-                type: "cisl.prefs.glossary",
+                type: 'cisl.prefs.glossary',
                 enactor: {
-                    type: "cisl.prefs.enactor.glossary"
+                    type: 'cisl.prefs.enactor.glossary'
                 },
-                panel: null,
+                panel: null
             }
         }
     });
 
     // Redefine the existing contrast schema used by the starter
-    // to remove
     fluid.defaults('fluid.prefs.schemas.contrast', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
@@ -55,54 +155,67 @@
         }
     });
 
-    // Add a boolean preference for the glossary
-    fluid.defaults("cisl.prefs.schemas.glossary", {
-        gradeNames: ["fluid.prefs.schemas"],
+    fluid.defaults('fluid.prefs.schemas.lineSpace', {
+        gradeNames: ['fluid.prefs.schemas'],
         schema: {
-            "cisl.prefs.glossary": {
-                "type": "boolean",
-                "default": true
+            'fluid.prefs.lineSpace': {
+                type: 'number',
+                default: 1.6,
+                minimum: 0.7,
+                maximum: 2,
+                multipleOf: 0.1
             }
         }
     });
 
-    fluid.defaults("cisl.prefs.enactor.glossary", {
-        gradeNames: ["fluid.prefs.enactor"],
+    // Add a boolean preference for the glossary
+    fluid.defaults('cisl.prefs.schemas.glossary', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.glossary': {
+                type: 'boolean',
+                default: true
+            }
+        }
+    });
+
+    fluid.defaults('cisl.prefs.enactor.glossary', {
+        gradeNames: ['fluid.prefs.enactor'],
         preferenceMap: {
-            "cisl.prefs.glossary": {
-                "model.glossary": "value"
+            'cisl.prefs.glossary': {
+                'model.glossary': 'value'
             }
         },
         modelListeners: {
             glossary: {
-                listener: "{that}.enactGlossary",
-                args: ["{that}.model.glossary"],
-                namespace: "enactGlossary"
+                listener: '{that}.enactGlossary',
+                args: ['{that}.model.glossary'],
+                namespace: 'enactGlossary'
             }
         },
         invokers: {
             enactGlossary: {
-                funcName: "cisl.prefs.enactor.glossary.enactGlossary",
-                args: ["{arguments}.0", "{that}"]
+                funcName: 'cisl.prefs.enactor.glossary.enactGlossary',
+                args: ['{arguments}.0', '{that}']
             }
         }
     });
-    
+
     cisl.prefs.enactor.glossary.enactGlossary = function(enableGlossary, that) {
-        console.log("enact glossary", enableGlossary, that);
-        var readerIframe = $("#D2Reader-Container").find("iframe"); 
+        console.debug('enact glossary', enableGlossary, that);
+        var readerIframe = $('#D2Reader-Container').find('iframe');
         var readerWindow;
-        if(readerIframe.length > 0) {
+        if (readerIframe.length > 0) {
             readerWindow = readerIframe[0].contentWindow;
-        }        
-        
-        if(readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
-            console.log("readerWindow");
-            if(enableGlossary) {
-                console.log("mark");
+        }
+
+        if (readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
+            console.debug('readerWindow');
+            if (enableGlossary) {
+                console.debug('mark cued words');
                 readerWindow.markCuedWords();
             } else {
-                console.log("unmark");
+                console.debug('unmark cued words');
                 readerWindow.unmarkCuedWords();
             }
         }
@@ -125,6 +238,11 @@
             }
         }
     });
+
+    cisl.prefs.getSettings = function(that) {
+        console.debug('calling CISL prefs Editor fetch impl');
+        return that.getSettings();
+    };
 
     fluid.defaults('cisl.prefs.modalSettings', {
         gradeNames: ['gpii.binder.bindOnCreate'],
@@ -191,7 +309,7 @@
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_glossary', '{that}'],
                 excludeSource: 'init'
-            },            
+            },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
                 includeSource: 'init'
@@ -211,46 +329,42 @@
             lineSpacing: 'modalSettings.lineSpacing',
             letterSpacing: 'modalSettings.letterSpacing',
             font: 'modalSettings.font',
-            color: 'modalSettings.color',            
+            color: 'modalSettings.color',
             glossaryCheckbox: {
-                selector: "glossary",
-                path: "modalSettings.glossary",
+                selector: 'glossary',
+                path: 'modalSettings.glossary',
                 rules: {
                     domToModel: {
-                        "": {
+                        '': {
                             transform: {
-                                type: "gpii.binder.transforms.checkToBoolean",
-                                inputPath: ""
+                                type: 'gpii.binder.transforms.checkToBoolean',
+                                inputPath: ''
                             }
                         }
                     },
                     modelToDom: {
-                        "": {
+                        '': {
                             transform: {
-                                type: "gpii.binder.transforms.booleanToCheck",
-                                inputPath: ""
+                                type: 'gpii.binder.transforms.booleanToCheck',
+                                inputPath: ''
                             }
                         }
-                    }                    
+                    }
                 }
-            },
-            
+            }
+
         }
     });
 
     cisl.prefs.modalSettings.getMappedValue = function(changedValue, map) {
-        // console.log("getMappedValue", changedValue, map)
         return map[changedValue];
     };
 
     cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
-        // console.log("applyModalSetting", changedValue, path, that);        
         that.applier.change(path, changedValue);
     };
 
     cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {
-        console.log('cisl.prefs.modalSettings.setModalSettingsByPreferences', preferences);
-
         that.applier.change('modalSettings.textSize', fluid.get(preferences, 'fluid_prefs_textSize'));
 
         that.applier.change('modalSettings.font', fluid.get(preferences, 'fluid_prefs_textFont'));
@@ -264,7 +378,7 @@
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
     };
 
-    fluid.registerNamespace("gpii.binder.transforms");
+    fluid.registerNamespace('gpii.binder.transforms');
 
     /**
      *
@@ -274,18 +388,18 @@
      * @return {Boolean} - `true` if the first value is checked, `false`.
      *
      */
-    gpii.binder.transforms.checkToBoolean = function (value) {
-        return fluid.get(value, 0) ? true : false;
+    gpii.binder.transforms.checkToBoolean = function(value) {
+        return Boolean(fluid.get(value, 0));
     };
 
-    gpii.binder.transforms.checkToBoolean.invert = function (transformSpec) {
-        transformSpec.type = "gpii.binder.transforms.booleanToCheck";
+    gpii.binder.transforms.checkToBoolean.invert = function(transformSpec) {
+        transformSpec.type = 'gpii.binder.transforms.booleanToCheck';
         return transformSpec;
     };
 
-    fluid.defaults("gpii.binder.transforms.checkToBoolean", {
-        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
-        invertConfiguration: "gpii.binder.transforms.checkToBoolean.invert"
+    fluid.defaults('gpii.binder.transforms.checkToBoolean', {
+        gradeNames: ['fluid.standardTransformFunction', 'fluid.lens'],
+        invertConfiguration: 'gpii.binder.transforms.checkToBoolean.invert'
     });
 
     /**
@@ -296,18 +410,17 @@
      * @return {Array} - An array with the first value set to "on" if the value is `true`, an empty Array otherwise.
      *
      */
-    gpii.binder.transforms.booleanToCheck = function (value) {
-        return value ? ["on"] : [];
+    gpii.binder.transforms.booleanToCheck = function(value) {
+        return value ? ['on'] : [];
     };
 
-    gpii.binder.transforms.booleanToCheck.invert = function (transformSpec) {
-        transformSpec.type = "gpii.binder.transforms.checkToBoolean";
+    gpii.binder.transforms.booleanToCheck.invert = function(transformSpec) {
+        transformSpec.type = 'gpii.binder.transforms.checkToBoolean';
         return transformSpec;
     };
 
-    fluid.defaults("gpii.binder.transforms.booleanToCheck", {
-        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
-        invertConfiguration: "gpii.binder.transforms.booleanToCheck.invert"
+    fluid.defaults('gpii.binder.transforms.booleanToCheck', {
+        gradeNames: ['fluid.standardTransformFunction', 'fluid.lens'],
+        invertConfiguration: 'gpii.binder.transforms.booleanToCheck.invert'
     });
-    
 }(fluid_3_0_0));

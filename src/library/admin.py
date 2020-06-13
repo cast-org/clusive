@@ -8,15 +8,23 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 from glossary.util import base_form
-from library.models import Book
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation
 from library.parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
 
 
+class VersionsInline(admin.StackedInline):
+    model = BookVersion
+    extra = 0
+
+
+@admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('path', 'title')
     sortable_by = ('title', 'path')
+    inlines = [VersionsInline]
+
     change_list_template = 'library/book_changelist.html'
 
     def get_urls(self):
@@ -32,27 +40,62 @@ class BookAdmin(admin.ModelAdmin):
         return HttpResponseRedirect("../")
 
 
-admin.site.register(Book, BookAdmin)
+@admin.register(BookVersion)
+class BookVersionAdmin(admin.ModelAdmin):
+    list_display = ('book', 'sortOrder')
+
+
+@admin.register(BookAssignment)
+class BookAssignmentAdmin(admin.ModelAdmin):
+    list_display = ('book', 'period', 'dateAssigned')
+    list_filter = ('book', 'period' )
+
+
+@admin.register(Paradata)
+class ParadataAdmin(admin.ModelAdmin):
+    list_display = ('book', 'user', 'viewCount', 'lastVersion', 'lastLocation')
+    sortable_by = ('book', 'user', 'viewCount')
+    list_filter = ('book', 'user' )
+
+
+@admin.register(Annotation)
+class AnnotationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'bookVersion', 'dateAdded', 'dateDeleted', 'progression', 'clean_text')
+    sortable_by = ('progression', 'user', 'bookVersion', 'dateAdded', 'dateDeleted')
+    list_filter = ('bookVersion', 'user' )
 
 
 def load_static_books():
     pubs_directory = finders.find('shared/pubs')
     book_dirs = os.scandir(pubs_directory)
     for book_dir in book_dirs:
-        # Read the book manifest
-        manifestfile = os.path.join(book_dir, 'manifest.json')
-        if os.path.exists(manifestfile):
-            with open(manifestfile, 'r') as file:
-                b, created = Book.objects.get_or_create(path=book_dir.name)
-                manifest = json.load(file)
-                b.title = find_title(manifest)
-                b.description = find_description(manifest)
-                b.cover = find_cover(manifest)
-                b.glossary_words = find_glossary_words(book_dir)
-                b.all_words = find_all_words(book_dir, manifest)
-                b.save()
-        else:
-            logger.warning("Ignoring directory without manifest: %s", book_dir)
+        for version_dir in os.scandir(book_dir):
+            if (version_dir.is_dir() and version_dir.name.isnumeric()):
+                version = int(version_dir.name)
+                # Read the book manifest
+                manifestfile = os.path.join(version_dir, 'manifest.json')
+                if os.path.exists(manifestfile):
+                    with open(manifestfile, 'r') as file:
+                        manifest = json.load(file)
+                        b, b_created = Book.objects.get_or_create(path=book_dir.name)
+                        b.title = find_title(manifest)
+                        b.description = find_description(manifest)
+                        cover_link = find_cover(manifest)
+                        b.cover = version_dir.name + "/" + cover_link if cover_link else None
+                        b.save()
+                        bv, bv_created = BookVersion.objects.get_or_create(book=b, sortOrder=version)
+                        bv.all_word_list = find_all_words(version_dir, manifest)
+                        bv.glossary_word_list = find_glossary_words(book_dir, bv.all_word_list)
+                        bv.save()
+                else:
+                    logger.warning("Ignoring directory without manifest: %s", version_dir)
+        versions = BookVersion.objects.filter(book__path=book_dir.name)
+        # After all versions are read, determine new words added in each version.
+        if len(versions)>1:
+            for bv in versions:
+                if bv.sortOrder > 0:
+                    bv.new_word_list = list(set(bv.all_word_list)-set(versions[bv.sortOrder-1].all_word_list))
+                    bv.save()
 
 
 def find_title(manifest):
@@ -73,23 +116,23 @@ def find_cover(manifest):
     return None
 
 
-def find_glossary_words(book_dir):
+def find_glossary_words(book_dir, all_words):
     glossaryfile = os.path.join(book_dir, 'glossary.json')
     if os.path.exists(glossaryfile):
         with open(glossaryfile, 'r', encoding='utf-8') as file:
             glossary = json.load(file)
             words = [base_form(e['headword']) for e in glossary]
-            return json.dumps(words)
+            this_version_words = sorted(set(words).intersection(all_words))
+            return this_version_words
     else:
-        return "[]"
+        return []
 
 
-def find_all_words(book_dir, manifest):
+def find_all_words(version_dir, manifest):
     # Look up content files in manifest
     # For each one, gather words
     # Format word set as JSON and return it for storage in database
     te = TextExtractor()
     for file_info in manifest['readingOrder']:
-        te.feed_file(os.path.join(book_dir, file_info['href']))
-    return json.dumps(sorted(te.get_word_set()))
-
+        te.feed_file(os.path.join(version_dir, file_info['href']))
+    return sorted(te.get_word_set())

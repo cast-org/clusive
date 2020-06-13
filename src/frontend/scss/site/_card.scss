@@ -1,7 +1,7 @@
 .card-img {
     overflow: hidden;
     text-align: center;
-    background-color: var(--CT_cardImgBg);
+    background: var(--CT_cardImgBg);
 
     .is-portrait {
         width: auto;
@@ -13,7 +13,7 @@
 
 .card-login {
     color: var(--CT_cardLoginColor);
-    background-color: rgba(var(--CT_cardLoginBgRGB), var(--CT_cardLoginBgOpacity));
+    background: var(--CT_cardLoginBg);
     border-color: transparent;
 
     .card-body {
@@ -23,11 +23,4 @@
 
 .card-login-forgot {
     border-top: 3px solid var(--CT_cardLoginForgotBorderColor);
-}
-
-.card-login-error {
-    padding: .25rem .5rem;
-    color: #fbfbfb;
-    background-color: #d42314;
-    @include border-radius(.25rem);
 }

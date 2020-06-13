@@ -1,0 +1,41 @@
+{% load static %}
+<div id="modalToc" class="modal toc-modal">
+    <div class="modal-dialog modal-dialog-side-start modal-dialog-scrollable modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5 sr-only">Contents, Highlights, and Notes</h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+                    <span class="icon-cancel" aria-hidden="true"></span>
+                </button>
+                <ul class="nav nav-tabs-toc">
+                    <li class="nav-item"><a id="tocTab" href="#tocPanel" class="nav-link" data-cfw="tab">Contents</a></li>
+                    <li class="nav-item"><a id="notesTab" href="#notesPanel" class="nav-link" data-cfw="tab">Highlights &amp; Notes</a></li>
+                </ul>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div id="tocPanel" class="tab-pane">
+                        <div class="media media-toc">
+                            {% if pub.cover %}
+                            <div class="media-img">
+                                <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{pub.cover}}" class="img-fluid" alt="Cover image">
+                            </div>
+                            {% endif %}
+                            <div class="media-body">
+                                <h3 class="h5 media-title">{{ pub.title }}</h3>
+                                <!-- author would go here -->
+                            </div>
+                        </div>
+                        <nav class="nav-toc" aria-label="Contents">
+                            <ul id="tocList" class="nav nav-vertical">
+                            </ul>
+                        </nav>
+                    </div>
+                    <div id="notesPanel" class="tab-pane">
+                        <div id="notesList">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

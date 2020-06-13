@@ -1,0 +1,24 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Cash for grades is a hot topic.",
+        "identifier": "d8ff109e-d534-40b3-8c3a-4032609416ea",
+        "language": "en",
+        "modified": "2020-06-11T20:31:30.160607Z",
+        "title": "Should Students Be Paid to Do Well in School?"
+    },
+    "readingOrder": [
+        {
+            "href": "v2_paidschool.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/cover.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        }
+    ]
+}

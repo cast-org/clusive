@@ -4,6 +4,10 @@
 {% block bodyClass %}home{% endblock %}
 {% block title %}Welcome to Clusive{% endblock %}
 
+{% block header %}
+{% include "shared/partial/site_header.html" %}
+{% endblock %}
+
 {% block sidebar_start %}
 {% endblock %}
 
@@ -11,8 +15,6 @@
 {% endblock %}
 
 {% block content %}
-{% include "shared/partial/site_header.html" %}
-
 <main id="content" tabindex="-1">
     <h1>Welcome to Clusive</h1>
     <p>This is the <a href="http://cisl.cast.org">Center on Inclusive Software for Learning</a>'s flexible, adaptive, and customizable digital learning environment.</p>
@@ -26,7 +28,7 @@
             <div class="home-create">
                 <h2>Interested in working with us?</h2>
                 <p>Volunteer to help out our project as a co-designer or beta tester.<br />
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_k5nU0Gghj_tkH7XrrOOqKENz-7ptIZIJLgVE2i4u3Vhf6g/viewform">Contact us to sign up.</a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSe6o77PFqgzBZTxxIG2ZIvuWHaqOodltQ2i3dcU64LtEJaBAQ/viewform">Contact us to sign up.</a>
                 </p>
             </div>
         </div>
@@ -35,7 +37,7 @@
                 <div class="card-body">
 
                     {% if form.errors %}
-                    <div class="card-login-error">
+                    <div class="errorlist">
                         Your username and password didn't match. Please try again.
                     </div>
                     {% else %}
@@ -59,7 +61,7 @@
                     </form>
                 </div>
                 <div class="card-body card-login-forgot">
-                    <a href="#">I forgot my username or password.</a>
+                    <a href="{% url 'password_reset' %}">I forgot my username or password.</a>
                 </div>
             </div>
         </div>

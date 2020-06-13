@@ -14,12 +14,12 @@ function themeCSS(name) {
 
     var $body = $(document.body);
     if (typeof $body.attr('class') !== 'undefined') {
-        $body.attr('class', function(i, c){
+        $body.attr('class', function(i, c) {
             return c.replace(/(^|\s)clusive-theme-\S+/g, '');
         });
     }
     $('#themeCSS').remove();
-    if (typeof name != 'undefined') {
+    if (typeof name !== 'undefined') {
         $body.addClass('clusive-theme-' + name);
     }
     return false;

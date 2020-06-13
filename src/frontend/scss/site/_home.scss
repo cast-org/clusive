@@ -1,32 +1,15 @@
 .home {
     background-color: var(--CT_homeBodyBg);
 
-    .content {
-        max-width: 100%;
-        padding-right: 1rem;
-        padding-left: 1rem;
-    }
+    .site-header-logo {
+        color: var(--CT_libraryLogoTextColor);
 
-    .site-header {
-        left: 0;
-        margin-right: 0;
-    }
-
-    @include media-breakpoint-up(md) {
-        .site-header {
-            left: -5rem;
-            margin-right: -5rem;
-        }
-
-        .site-header-small {
-            left: -5.25rem;
-            margin-right: -5.25rem;
+        .icon-logo-clusive-toggle {
+            color: var(--CT_libraryLogoIconColor);
         }
     }
 
     .sidebar {
-        flex-basis: 3rem;
-        max-width: 3rem;
         background-color: transparent;
         background-image: none;
 
@@ -40,6 +23,15 @@
         }
     }
 
+    .content {
+        padding-right: 1rem;
+        padding-left: 1rem;
+
+        @include media-breakpoint-up(sm) {
+            padding-right: $sidebar-sm-width + 1rem;
+            padding-left: $sidebar-sm-width + 1rem;
+        }
+    }
 }
 
 .home-create {

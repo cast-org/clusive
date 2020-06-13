@@ -15,9 +15,9 @@
 <link href="../dist/css/clusive.css" rel="stylesheet">
 
 <!-- jQuery and Figuration JS -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.15.0/dist/umd/popper.min.js" integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.1/dist/js/figuration.min.js" integrity="sha384-DrdWrMNeApnhVY4UgXQhKObnNAhkqMxJra/LyQTa2BHGg8XFsv+PlMWenTy0K1ZP" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.5/dist/js/figuration.min.js" integrity="sha384-qxJIAaCm2yIk7HvSXNiSadX6nVf5VaAO9zw+rIsjkAl3cpu4CEnsupskg4ZvPL4i" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="../js/theme-test.js"></script>
@@ -39,171 +39,409 @@
     <div class="modal-dialog modal-dialog-side-end modal-dialog-scrollable modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title h5">Settings</h2>
-                <button type="button" class="btn btn-xsmall btn-primary">Reset</button>
+                <h2 class="modal-title h5">
+                    <span class="setting-brand">
+                        <span class="icon-settings" aria-hidden="true"></span>
+                    </span>
+                    Settings
+                </h2>
                 <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
                     <span class="icon-cancel" aria-hidden="true"></span>
                 </button>
+                <ul class="nav nav-tabs-setting">
+                    <li class="nav-item"><a href="#setting0" class="nav-link" data-cfw="tab">Display</a></li>
+                    <li class="nav-item"><a href="#setting1" class="nav-link" data-cfw="tab">Reading Tools</a></li>
+                </ul>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Text size</legend>
-                            <div class="option-font-size">
-                                <label for="set-size" class="sr-only">Text size</label>
-                                <input id="set-size" type="range" class="form-range" min="0" max="5" step="1" value="1">
+                <div class="tab-content">
+                    <div id="setting0" class="tab-pane">
+                        <form>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Text size</legend>
+                                    <div class="option-font-size">
+                                        <label for="set-size" class="sr-only">Text size</label>
+                                        <input id="set-size" type="range" class="form-range" min="0" max="5" step="1" value="1">
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Line spacing</legend>
-                            <div class="setting-btn-row">
-                                <div class="btn-check">
-                                    <input id="option-line-height-1" name="option-line-height" class="btn-check-input" type="radio" checked>
-                                    <label for="option-line-height-1" class="btn btn-option">
-                                        <span class="icon-line-height-1" aria-hidden="true"></span>
-                                        <span class="sr-only">Default</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-line-height-2" name="option-line-height" class="btn-check-input" type="radio">
-                                    <label for="option-line-height-2" class="btn btn-option">
-                                        <span class="icon-line-height-2" aria-hidden="true"></span>
-                                        <span class="sr-only">Tall</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-line-height-3" name="option-line-height" class="btn-check-input" type="radio">
-                                    <label for="option-line-height-3" class="btn btn-option">
-                                        <span class="icon-line-height-3" aria-hidden="true"></span>
-                                        <span class="sr-only">Taller</span>
-                                    </label>
-                                </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Line spacing</legend>
+                                    <div class="setting-btn-row">
+                                        <div class="btn-check">
+                                            <input id="option-line-height-1" name="option-line-height" class="btn-check-input" type="radio" checked>
+                                            <label for="option-line-height-1" class="btn btn-option">
+                                                <span class="icon-line-height-1" aria-hidden="true"></span>
+                                                <span class="sr-only">Default</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-line-height-2" name="option-line-height" class="btn-check-input" type="radio">
+                                            <label for="option-line-height-2" class="btn btn-option">
+                                                <span class="icon-line-height-2" aria-hidden="true"></span>
+                                                <span class="sr-only">Tall</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-line-height-3" name="option-line-height" class="btn-check-input" type="radio">
+                                            <label for="option-line-height-3" class="btn btn-option">
+                                                <span class="icon-line-height-3" aria-hidden="true"></span>
+                                                <span class="sr-only">Taller</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Letter spacing</legend>
-                            <div class="setting-btn-row">
-                                <div class="btn-check">
-                                    <input id="option-letter-spacing-1" name="option-letter-spacing" class="btn-check-input" type="radio" checked>
-                                    <label for="option-letter-spacing-1" class="btn btn-option">
-                                        <span class="icon-text-space-1" aria-hidden="true"></span>
-                                        <span class="sr-only">Default</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-letter-spacing-2" name="option-letter-spacing" class="btn-check-input" type="radio">
-                                    <label for="option-letter-spacing-2" class="btn btn-option">
-                                        <span class="icon-text-space-2" aria-hidden="true"></span>
-                                        <span class="sr-only">Wide</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-letter-spacing-3" name="option-letter-spacing" class="btn-check-input" type="radio">
-                                    <label for="option-letter-spacing-3" class="btn btn-option">
-                                        <span class="icon-text-space-3" aria-hidden="true"></span>
-                                        <span class="sr-only">Wider</span>
-                                    </label>
-                                </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Letter spacing</legend>
+                                    <div class="setting-btn-row">
+                                        <div class="btn-check">
+                                            <input id="option-letter-spacing-1" name="option-letter-spacing" class="btn-check-input" type="radio" checked>
+                                            <label for="option-letter-spacing-1" class="btn btn-option">
+                                                <span class="icon-text-space-1" aria-hidden="true"></span>
+                                                <span class="sr-only">Default</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-letter-spacing-2" name="option-letter-spacing" class="btn-check-input" type="radio">
+                                            <label for="option-letter-spacing-2" class="btn btn-option">
+                                                <span class="icon-text-space-2" aria-hidden="true"></span>
+                                                <span class="sr-only">Wide</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-letter-spacing-3" name="option-letter-spacing" class="btn-check-input" type="radio">
+                                            <label for="option-letter-spacing-3" class="btn btn-option">
+                                                <span class="icon-text-space-3" aria-hidden="true"></span>
+                                                <span class="sr-only">Wider</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Font</legend>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-0" name="option-font-family" class="form-check-input" type="radio" checked>
-                                <label for="option-font-family-0" class="form-check-label">Default</label>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Font</legend>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-0" name="option-font-family" class="form-check-input" type="radio" checked>
+                                        <label for="option-font-family-0" class="form-check-label">Default</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-1" name="option-font-family" class="form-check-input" type="radio">
+                                        <label for="option-font-family-1" class="form-check-label">Font option #1</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-2" name="option-font-family" class="form-check-input" type="radio">
+                                        <label for="option-font-family-2" class="form-check-label">Font option #2</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-3" name="option-font-family" class="form-check-input" type="radio">
+                                        <label for="option-font-family-3" class="form-check-label">Font option #3</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-4" name="option-font-family" class="form-check-input" type="radio">
+                                        <label for="option-font-family-4" class="form-check-label">Font option #4</label>
+                                    </div>
+                                </fieldset>
                             </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-1" name="option-font-family" class="form-check-input" type="radio">
-                                <label for="option-font-family-1" class="form-check-label">Font option #1</label>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Color</legend>
+                                    <div class="setting-btn-row option-color-theme">
+                                        <div class="form-check form-checkradio">
+                                            <input id="option-color-theme-0" name="option-color-theme" class="form-check-input" type="radio" checked>
+                                            <label for="option-color-theme-0" class="form-check-label">
+                                                <span class="sr-only">Day</span>
+                                                <span class="theme-sample theme-sample-default" aria-hidden="true">a</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input id="option-color-theme-1" name="option-color-theme" class="form-check-input" type="radio">
+                                            <label for="option-color-theme-1" class="form-check-label">
+                                                <span class="sr-only">Sepia</span>
+                                                <span class="theme-sample theme-sample-sepia" aria-hidden="true">a</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input id="option-color-theme-2" name="option-color-theme" class="form-check-input" type="radio">
+                                            <label for="option-color-theme-2" class="form-check-label">
+                                                <span class="sr-only">Night</span>
+                                                <span class="theme-sample theme-sample-night" aria-hidden="true">a</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!--
+                                    <div class="setting-btn-row option-color-theme">
+                                        <div class="btn-check">
+                                            <input id="option-color-theme-0" name="option-color-theme" class="btn-check-input" type="radio" checked>
+                                            <label for="option-color-theme-0" class="btn btn-theme btn-default">
+                                                <span class="sr-only">Day</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-color-theme-1" name="option-color-theme" class="btn-check-input" type="radio">
+                                            <label for="option-color-theme-1" class="btn btn-theme btn-sepia">
+                                                <span class="sr-only">Sepia</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-color-theme-2" name="option-color-theme" class="btn-check-input" type="radio">
+                                            <label for="option-color-theme-2" class="btn btn-theme btn-night">
+                                                <span class="sr-only">Night</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    -->
+                                </fieldset>
                             </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-2" name="option-font-family" class="form-check-input" type="radio">
-                                <label for="option-font-family-2" class="form-check-label">Font option #2</label>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Columns</legend>
+                                    <div class="setting-btn-row">
+                                        <div class="btn-check">
+                                            <input id="option-column-count-1" name="option-column-count" class="btn-check-input" type="radio" checked>
+                                            <label for="option-column-count-1" class="btn btn-xlarge btn-option">
+                                                <span class="icon-column-1" aria-hidden="true"></span>
+                                                <span class="sr-only">Single</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-column-count-2" name="option-column-count" class="btn-check-input" type="radio">
+                                            <label for="option-column-count-2" class="btn btn-xlarge btn-option">
+                                                <span class="icon-column-2" aria-hidden="true"></span>
+                                                <span class="sr-only">Double</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-3" name="option-font-family" class="form-check-input" type="radio">
-                                <label for="option-font-family-3" class="form-check-label">Font option #3</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-4" name="option-font-family" class="form-check-input" type="radio">
-                                <label for="option-font-family-4" class="form-check-label">Font option #4</label>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Color</legend>
-                            <div class="setting-btn-row option-color-theme">
-                                <div class="btn-check">
-                                    <input id="option-color-theme-0" name="option-color-theme" class="btn-check-input" type="radio" checked>
-                                    <label for="option-color-theme-0" class="btn btn-default">
-                                        <span class="sr-only">Day</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-color-theme-1" name="option-color-theme" class="btn-check-input" type="radio">
-                                    <label for="option-color-theme-1" class="btn btn-sepia">
-                                        <span class="sr-only">Sepia</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-color-theme-2" name="option-color-theme" class="btn-check-input" type="radio">
-                                    <label for="option-color-theme-2" class="btn btn-night">
-                                        <span class="sr-only">Night</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Columns</legend>
-                            <div class="setting-btn-row">
-                                <div class="btn-check">
-                                    <input id="option-column-count-1" name="option-column-count" class="btn-check-input" type="radio" checked>
-                                    <label for="option-column-count-1" class="btn btn-xlarge btn-option">
-                                        <span class="icon-column-1" aria-hidden="true"></span>
-                                        <span class="sr-only">Single</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-column-count-2" name="option-column-count" class="btn-check-input" type="radio">
-                                    <label for="option-column-count-2" class="btn btn-xlarge btn-option">
-                                        <span class="icon-column-2" aria-hidden="true"></span>
-                                        <span class="sr-only">Double</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Lookup</legend>
-                            <div class="form-check form-switch">
-                                <input id="option-lookup" class="form-check-input" type="checkbox">
-                                <label for="option-lookup" class="form-check-label">Enable</label>
-                            </div>
-                        </fieldset>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Lookup</legend>
+                                    <div class="form-check form-switch">
+                                        <input id="option-lookup" class="form-check-input" type="checkbox">
+                                        <label for="option-lookup" class="form-check-label">Enable</label>
+                                    </div>
+                                </fieldset>
 
-                        <fieldset>
-                            <legend class="setting-title">Lookup</legend>
-                            <div class="form-switch-dual">
-                                <label for="option-lookup-dual" class="form-check-label-pre" aria-hidden="true">Off</label>
-                                <div class="form-check form-switch">
-                                    <input id="option-lookup-dual" class="form-check-input" type="checkbox">
-                                    <label for="option-lookup-dual" class="form-check-label">On</label>
-                                </div>
+                                <fieldset>
+                                    <legend class="setting-title">Lookup</legend>
+                                    <div class="form-switch-dual">
+                                        <label for="option-lookup-dual" class="form-check-label-pre" aria-hidden="true">Off</label>
+                                        <div class="form-check form-switch">
+                                            <input id="option-lookup-dual" class="form-check-input" type="checkbox">
+                                            <label for="option-lookup-dual" class="form-check-label">On</label>
+                                        </div>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
+                        </form>
                     </div>
-                </form>
+                    <div id="setting1" class="tab-pane">
+                        Reading tools pane
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-small btn-primary">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#modalToc">TOC</button>
+
+<div id="modalToc" class="modal toc-modal">
+    <div class="modal-dialog modal-dialog-side-start modal-dialog-scrollable modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5 sr-only">Contents, Highlights, and Notes</h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel" aria-hidden="true"></span>
+                </button>
+                <ul class="nav nav-tabs-toc">
+                    <li class="nav-item"><a href="#toc0" class="nav-link" data-cfw="tab">Contents</a></li>
+                    <li class="nav-item"><a href="#toc1" class="nav-link" data-cfw="tab">Highlights &amp; Notes</a></li>
+                </ul>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div id="toc0" class="tab-pane">
+                        <div class="media media-toc">
+                            <div class="media-img">
+                                <img src="./img/cover.svg" class="img-fluid" alt="Article cover image">
+                            </div>
+                            <div class="media-body">
+                                <h3 class="h5 media-title">Some longer article title</h3>
+                                Author's Name
+                            </div>
+                        </div>
+
+                        <nav class="nav-toc" aria-label="Contents">
+                            <ul class="nav nav-vertical">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link toc-depth-0">Editor's Note</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link toc-depth-0">Reading Shakespeare's Language</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link toc-depth-0">Character List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link toc-depth-0 active">The Tragedy of King Lear</a>
+                                    <a href="#tocnav1" role="button" class="has-children toc-depth-0 open" data-cfw="collapse" data-cfw-collapse-animate="false" aria-current="true">
+                                        <span class="icon-angle-right" aria-hidden="true"></span>
+                                        <span class="sr-only">Toggle menu for The Tragedy of King Lear</span>
+                                    </a>
+                                    <div id="tocnav1" class="collapse">
+                                        <ul class="nav nav-vertical">
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link toc-depth-1 active">Act I</a>
+                                                <a href="#tocnav1-1" role="button" class="has-children toc-depth-1 open" data-cfw="collapse" data-cfw-collapse-animate="false" aria-current="true">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act I</span>
+                                                </a>
+                                                <div id="tocnav1-1" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2 active" aria-current="true">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link toc-depth-1">Act II</a>
+                                                <a href="#tocnav1-2" role="button" class="has-children toc-depth-1" data-cfw="collapse" data-cfw-collapse-animate="false">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act II</span>
+                                                </a>
+                                                <div id="tocnav1-2" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link toc-depth-1">Act III</a>
+                                                <a href="#tocnav1-3" role="button" class="has-children toc-depth-1" data-cfw="collapse" data-cfw-collapse-animate="false">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act III</span>
+                                                </a>
+                                                <div id="tocnav1-3" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link toc-depth-1">Act IV</a>
+                                                <a href="#tocnav1-4" role="button" class="has-children toc-depth-1" data-cfw="collapse" data-cfw-collapse-animate="false">
+                                                    <span class="icon-angle-right" aria-hidden="true"></span>
+                                                    <span class="sr-only">Toggle menu for Act IV</span>
+                                                </a>
+                                                <div id="tocnav1-4" class="collapse">
+                                                    <ul class="nav nav-vertical">
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 1</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 2</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 3</a></li>
+                                                        <li class="nav-item"><a href="#" class="nav-link toc-depth-2">Scene 4</a></li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div id="toc1" class="tab-pane">
+                        <p>No highlights or notes yet.</p>
+
+                        <nav class="nav-highlight" aria-label="Highlights and notes">
+                            <ul class="list list-divided list-highlight">
+                                <div class="list-item">
+                                    <p><span class="highlight">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat mi nisi.</span></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Add a note</a></li>
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+                                </div>
+                                <div class="list-item">
+                                    <p><a href="#" class="highlight">Fusce rutrum ligula orci, vitae vulputate nisl dignissim sit amet.</a></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+
+                                    <div class="note">
+                                        <form>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-small" placeholder="Add a note..." aria-label="Add a note">
+                                            </div>
+                                            <div>
+                                                <button type="submit" class="btn btn-primary btn-small">Save</button>
+                                                <button type="button" class="btn btn-link btn-small">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="list-item active" aria-current="true">
+                                    <p><a href="#" class="highlight">Vivamus et accumsan nisl, sed condimentum massa.</a></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+
+                                    <div class="note">
+                                        <div class="note-title">
+                                            <span class="icon-sticky-note-o" aria-hidden="true"></span>Note
+                                        </div>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        <ul class="list list-divided list-horizontal list-note-action">
+                                            <li class="list-item"><a href="#" role="button">Edit</a></li>
+                                            <li class="list-item"><a href="#" role="button">Delete note</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <p><a href="#" class="highlight">Aliquam maximus placerat nibh, nec tristique felis tempus a.</a></p>
+
+                                    <ul class="list list-divided list-horizontal list-highlight-action">
+                                        <li class="list-item"><a href="#" role="button">Add a note</a></li>
+                                        <li class="list-item"><a href="#" role="button">Delete highlight</a></li>
+                                    </ul>
+
+                                    <div class="note">
+                                        <div class="note-undelete">
+                                            Deleted
+                                            <a href="#" class="link-undelete">Undo</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="highlight-undelete">
+                                        Deleted
+                                        <a href="#" class="link-undelete">Undo</a>
+                                    </div>
+                                </div>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -400,10 +638,10 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat mi nisi. Fusce rutrum ligula orci, vitae vulputate nisl dignissim sit amet. Vivamus et accumsan nisl, sed condimentum massa. Aliquam maximus placerat nibh, nec tristique felis tempus a.</p>
                 <p><strong>Where is your just-right challenge?</strong></p>
                 <div class="row why-level">
-                    <div class="col-sm-4 why-level-item">
+                    <div class="col-sm-4 why-level-item disabled">
                         <span class="icon-walk why-icon" aria-hidden="true"></span>
                         <!-- <a href="#" class="btn btn-primary btn-small"><span class="aria-hidden">&lt;</span> Less Challenge</a> -->
-                        <span class="btn btn-primary btn-small disabled"><span class="aria-hidden">&lt;</span> Less Challenge</span>
+                        <span class="btn btn-primary btn-small disabled">Less Challenge</span>
                     </div>
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-hike why-icon active" aria-hidden="true"></span>
@@ -412,7 +650,7 @@
                     </div>
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-climb why-icon" aria-hidden="true"></span>
-                        <a href="#" class="btn btn-primary btn-small">More challenge <span class="aria-hidden">&gt;</span></a>
+                        <a href="#" class="btn btn-primary btn-small">More challenge</a>
                     </div>
                 </div>
             </div>

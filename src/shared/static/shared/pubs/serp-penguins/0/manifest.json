@@ -1,0 +1,29 @@
+{
+  "@context": "https://readium.org/webpub-manifest/context.jsonld",
+  "metadata": {
+    "@type": "http://schema.org/Book",
+    "title": "Penguins are funny birds",
+    "description": "Find out about these amazing animals that live in the harshest climate on Earth.",
+    "identifier": "54003de2-dcfc-4418-ab70-c9ebf522ba0a",
+    "language": "en",
+    "modified": "2020-02-14T13:19:44.749Z"
+  },
+  "readingOrder": [
+    {
+      "href": "GoogleDoc/L1_Penguins.xhtml",
+      "type": "application/xhtml+xml"
+    }
+  ],
+  "resources": [
+    {
+      "href": "GoogleDoc/nav.xhtml",
+      "type": "application/xhtml+xml",
+      "rel": "contents"
+    },
+    {
+      "rel": "cover",
+      "href": "GoogleDoc/images/image1.jpg",
+      "type": "image/jpeg"
+    }
+  ]
+}

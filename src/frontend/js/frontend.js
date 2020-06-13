@@ -1,9 +1,17 @@
-function imgCheckPortrait($img) {
+
+function imgCheckPortrait($img, useAlt) {
     'use strict';
 
+    if (typeof useAlt === 'undefined') { useAlt = false; }
     var imgWidth = $img[0].naturalWidth;
     var imgHeight = $img[0].naturalHeight;
     var isPortrait = false;
+
+    if (useAlt) {
+        $img.removeClass('is-portrait');
+        imgWidth = $img[0].width;
+        imgHeight = $img[0].height;
+    }
 
     if (imgWidth / imgHeight < 1) { isPortrait = true; }
 
@@ -12,9 +20,6 @@ function imgCheckPortrait($img) {
     }
 }
 
-// Temporary replacement for $.CFW_imageLoaded() until next
-// Figuration release.
-// Currently using: 4.0.0-beta.1
 function isImageLoaded($img, instance, callback) {
     'use strict';
 
@@ -30,7 +35,7 @@ function isImageLoaded($img, instance, callback) {
 
     var _doCallback = function() {
         $proxyImg
-            .off('load.cfw.imageLoaded' + instance)
+            .off('load.imageLoaded' + instance)
             .remove();
         callback();
     };
@@ -39,15 +44,31 @@ function isImageLoaded($img, instance, callback) {
         return img.complete && typeof img.naturalWidth !== 'undefined';
     };
 
-    if (_isImageComplete() && img.naturalWidth !== 0) {
+    // Firefox reports img.naturalWidth=0 for SVG
+    // if (_isImageComplete() && img.naturalWidth !== 0) {
+    if (_isImageComplete()) {
         _doCallback();
         return;
     }
 
     $proxyImg
-        .off('load.cfw.imageLoaded' + instance)
-        .one('load.cfw.imageLoaded' + instance, _doCallback);
+        .off('load.imageLoaded' + instance)
+        .one('load.imageLoaded' + instance, _doCallback);
     proxyImg.src = img.src;
+}
+
+function doPortraitCheck($img, i) {
+    'use strict';
+
+    isImageLoaded($img, i, function() {
+        // Firefox reports img.naturalWidth=0 for SVG
+        // Also currently borked in most browsers: https://github.com/whatwg/html/issues/3510
+        if ($img[0].naturalWidth !== 0) {
+            imgCheckPortrait($img, false);
+        } else {
+            imgCheckPortrait($img, true);
+        }
+    });
 }
 
 $(window).ready(function() {
@@ -55,14 +76,6 @@ $(window).ready(function() {
 
     var $imgs = $('.card-img img');
     for (var i = 0; i < $imgs.length; i++) {
-        var $img = $($imgs[i]);
-
-        /* eslint-disable no-loop-func */
-        var callback = function() {
-            imgCheckPortrait($img);
-        };
-        /* eslint-enable no-loop-func */
-
-        isImageLoaded($img, i, callback);
+        doPortraitCheck($($imgs[i]), i);
     }
 });

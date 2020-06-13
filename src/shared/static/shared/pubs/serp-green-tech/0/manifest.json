@@ -1,0 +1,29 @@
+{
+  "@context": "https://readium.org/webpub-manifest/context.jsonld",
+  "metadata": {
+    "@type": "http://schema.org/Book",
+    "title": "Are green technologies worth the investment?",
+    "description": "Green technologies reduce pollution, but are they worth their high cost?",
+    "identifier": "19f039f4-84dd-4645-9dcb-4cac6f27e1da",
+    "language": "en",
+    "modified": "2020-02-18T14:17:27.227Z"
+  },
+  "readingOrder": [
+    {
+      "href": "GoogleDoc/L1_Aregreentechnologiesworththeinvestment.xhtml",
+      "type": "application/xhtml+xml"
+    }
+  ],
+  "resources": [
+    {
+      "href": "GoogleDoc/nav.xhtml",
+      "type": "application/xhtml+xml",
+      "rel": "contents"
+    },
+    {
+      "rel": "cover",
+      "href": "GoogleDoc/images/image1.jpg",
+      "type": "image/jpeg"
+    }
+  ]
+}

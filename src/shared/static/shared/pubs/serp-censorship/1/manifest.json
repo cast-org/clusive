@@ -1,0 +1,24 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Help draw the line between appropriate and unacceptable.",
+        "identifier": "9868e8d2-2cba-44fe-af06-7ad861dd5ea1",
+        "language": "en",
+        "modified": "2020-06-11T14:32:03.808053Z",
+        "title": "Censorship: Who Should Decide What Young People Read?"
+    },
+    "readingOrder": [
+        {
+            "href": "v2_censorship.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/censorship_cover.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        }
+    ]
+}

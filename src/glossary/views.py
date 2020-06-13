@@ -9,7 +9,7 @@ from eventlog.signals import vocab_lookup
 from glossary.apps import GlossaryConfig
 from glossary.models import WordModel
 from glossary.util import base_form, all_forms, lookup, has_definition
-from library.models import Book
+from library.models import Book, BookVersion
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -19,44 +19,89 @@ def checklist(request, document):
     """Return up to five words that should be presented in the vocab check dialog"""
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        book = Book.objects.get(path=document)
-        all_glossary_words = json.loads(book.glossary_words)
-        all_words = json.loads(book.all_words) + all_glossary_words # FIXME might not be necessary with stemming, glossary should be a subset of all
-        user_words = WordModel.objects.filter(user=user, word__in=all_words)
-
+        versions = BookVersion.objects.filter(book__path=document)
         to_find = 5
-        # First, look for any glossary words that we don't have a rating for yet.
-        #logger.debug("Checking: %s", all_glossary_words)
-        #logger.debug("Against:  %s", [[wm.word, wm.rating] for wm in user_words])
-        gloss_words = [w for w in all_glossary_words if not any(wm.word==w and wm.rating!=None for wm in user_words)]
-        logger.debug("Check words from glossary: %s", gloss_words)
-        check_words = random.sample(gloss_words, k=min(to_find, len(gloss_words)))
-        # TODO: consider other challenging words from article if all glossary words already have ratings
+        check_words = set()
+
+        if len(versions) > 1:
+            # Multiple versions, so we want to use our check words to determine which version to show.
+            # Create two lists for each version above the simplest:
+            #   All "new" words in this version that are not yet rated
+            #   The subset of that list that are glossary words.
+            for bv in versions:
+                if bv.sortOrder > 0:
+                    user_words = WordModel.objects.filter(user=user, word__in=bv.new_word_list)
+                    bv.potential_words = [w for w in bv.new_word_list if not any(wm.word==w and wm.rating!=None for wm in user_words)]
+                    logger.debug("%s potential: %s", bv, bv.potential_words)
+                    bv.potential_gloss_words = [w for w in bv.potential_words if w in bv.glossary_word_list]
+                    logger.debug("%s glossary:  %s", bv, bv.potential_gloss_words)
+            # Now pick words from these lists, round-robin style so we get a reasonably even distribution.
+            some_potential_words_remain = True # Make sure there are words left somewhere
+            while len(check_words) < to_find and some_potential_words_remain:
+                some_potential_words_remain = False
+                for bv in versions:
+                    if bv.sortOrder > 0:
+                        if len(bv.potential_gloss_words) > 0:  # Glossary word is preferred if there is one
+                            word = random.choice(bv.potential_gloss_words)
+                            check_words.add(word)
+                            bv.potential_gloss_words.remove(word)
+                            bv.potential_words.remove(word)
+                        else:
+                            if len(bv.potential_words) > 0:    # Otherwise any new word.
+                                word = random.choice(bv.potential_words)
+                                check_words.add(word)
+                                bv.potential_words.remove(word)
+                        if len(check_words) == to_find:
+                            break
+                        if len(bv.potential_words) > 0:
+                            some_potential_words_remain = True
+            logger.debug("Picked: %s", check_words)
+        else:
+            # There is only one version.  Pick a sample of unrated glossary words.
+            bv = versions[0]
+            glossary_words = bv.glossary_word_list
+            user_words = WordModel.objects.filter(user=user, word__in=glossary_words)
+
+            # Look for any glossary words that we don't have a rating for yet.
+            #logger.debug("Checking: %s", all_glossary_words)
+            #logger.debug("Against:  %s", [[wm.word, wm.rating] for wm in user_words])
+            gloss_words = [w for w in glossary_words if not any(wm.word==w and wm.rating!=None for wm in user_words)]
+            logger.debug("Single version. Check words from glossary: %s", gloss_words)
+            check_words = random.sample(gloss_words, k=min(to_find, len(gloss_words)))
+            # TODO: consider other challenging words from article if all glossary words already have ratings
         return JsonResponse({'words': sorted(check_words)})
     except ClusiveUser.DoesNotExist:
         logger.warning("Could not fetch check words, no Clusive user: %s", request.user)
         return JsonResponse({'words': []})
-    except Book.DoesNotExist:
-        logger.error("Unknown book %s", document)
+    except BookVersion.DoesNotExist:
+        logger.error("No BookVersions found for doc_path %s", document)
         return JsonResponse({'words': []})
 
 
-def cuelist(request, document):
+def cuelist(request, document, version):
     """Return the list of words that should be cued in this document for this user"""
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        book = Book.objects.get(path=document)
-        all_glossary_words = json.loads(book.glossary_words)
-        all_words = json.loads(book.all_words)
-        user_words = WordModel.objects.filter(user=user, word__in=all_words)
+        bv = BookVersion.lookup(path=document, version_number=version)
+        all_glossary_words = json.loads(bv.glossary_words)
+        all_book_words = json.loads(bv.all_words)
+
+        # Get all a user's words
+        all_user_words = list(WordModel.objects.filter(user=user))
+
+        # Filter user's word list by words in the book
+        user_words = [wm for wm in all_user_words
+                      if wm.word in all_book_words
+                      ]        
 
         # Target number of words.  For now, just pick an arbitrary number.
         # TODO: target number should depend on word count of the book.
         to_find = 10
 
-        # First, find any words where we think the user is interested
-        interest_words = [wm.word for wm in user_words
-                          if wm.interest_est()>0
+        # First, find any words where we think the user is interested  
+
+        interest_words = [wm.word for wm in user_words                                    
+                          if wm.interest_est()>0                                                                              
                           and (wm.knowledge_est()==None or wm.knowledge_est()<3)
                           and has_definition(document, wm.word)]
         logger.debug("Found %d interest words: %s", len(interest_words), interest_words)

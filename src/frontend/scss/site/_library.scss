@@ -11,6 +11,10 @@
 }
 
 .library-grid {
+    // Set a z-index to keep this below the header, works as long as no acestors
+    // have any z-index asjustments (up to the sibling of the header)
+    position: relative;
+    z-index: 0;
     display: flex;
     flex-flow: row wrap;
     align-items: stretch;
@@ -37,7 +41,7 @@
 }
 
 .card-library {
-    box-shadow: -.125rem -.5rem 0 .125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1), -.125rem -.125rem 0 .125rem rgba(var(--CT_cardLibraryBoxShadowRGB), 1);
+    box-shadow: var(--CT_cardLibraryBoxShadow);
 
     .link-stretch {
         color: inherit;

@@ -15,9 +15,9 @@
 <link href="../dist/css/clusive.css" rel="stylesheet">
 
 <!-- jQuery and Figuration JS -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.15.0/dist/umd/popper.min.js" integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.1/dist/js/figuration.min.js" integrity="sha384-DrdWrMNeApnhVY4UgXQhKObnNAhkqMxJra/LyQTa2BHGg8XFsv+PlMWenTy0K1ZP" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.5/dist/js/figuration.min.js" integrity="sha384-qxJIAaCm2yIk7HvSXNiSadX6nVf5VaAO9zw+rIsjkAl3cpu4CEnsupskg4ZvPL4i" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="../js/theme-test.js"></script>
@@ -35,51 +35,53 @@
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-<div class="container-xl">
-    <div class="row">
-        <div class="col-auto sidebar sidebar-start">
-            <div class="sidebar-support" role="region" aria-label="Support">
-                <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
-                    <span class="icon-help" aria-hidden="true"></span>
-                    <span class="icon-attention" aria-hidden="true"></span>
-                </button>
+<div class="page-wrapper">
+    <div class="container-xl">
+
+        <header class="site-header">
+            <div class="site-header-logo">
+                <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                <span class="icon-logo-clusive" aria-hidden="true"></span>
+                <span class="sr-only">Clusive</span>
+            </div>
+
+            <h1 class="page-title">Library</h1>
+
+            <div class="user-actions" role="region" aria-label="">
+                <a href="#">Word bank</a> |
+                <a href="#">Log in</a> |
+                <a href="#">Create an account</a>
+            </div>
+        </header>
+
+        <div class="sidebars-wrapper">
+            <div class="sidebars">
+                <div class="sidebar sidebar-start">
+                    <div class="sidebar-support" role="region" aria-label="Support">
+                        <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
+                            <span class="icon-help" aria-hidden="true"></span>
+                            <span class="icon-attention" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar sidebar-end" role="region" aria-label="Reading tools">
+                    <div class="sidebar-tool" role="region" aria-label="Reading tools">
+                        <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
+                            <span class="icon-settings" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tool" aria-label="Read aloud">
+                            <span class="icon-play" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tool" aria-label="Lookup definition">
+                            <span class="icon-book" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-auto sidebar sidebar-end" role="region" aria-label="Reading tools">
-            <div class="sidebar-tool" role="region" aria-label="Reading tools">
-                <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
-                    <span class="icon-settings" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-tool" aria-label="Read aloud">
-                    <span class="icon-play" aria-hidden="true"></span>
-                </button>
-                <button type="button" class="btn btn-tool" aria-label="Lookup definition">
-                    <span class="icon-book" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-
-        <div class="col">
-
-            <header class="site-header">
-                <div class="site-header-logo">
-                    <a href="#">
-                        <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-                    </a>
-                    <span class="icon-logo-clusive" aria-hidden="true"></span>
-                    <span class="sr-only">Clusive</span>
-                </div>
-
-                <h1 class="page-title">Library</h1>
-
-                <div class="user-actions" role="region" aria-label="">
-                    <a href="#">Word bank</a> |
-                    <a href="#">Log in</a> |
-                    <a href="#">Create an account</a>
-                </div>
-            </header>
-
+        <div class="content">
             <main id="content" tabindex="-1">
                 <div class="library-grid">
                     <div class="card card-library">
@@ -102,7 +104,18 @@
                     </div>
                     <div class="card card-library">
                         <div class="card-img card-img-top">
-                            <img class="img-fluid" src="./img/sample-3.jpg" alt="">
+                            <!-- <img class="img-fluid" src="./img/sample-3.jpg" alt=""> -->
+                            <img class="img-fluid" src="./img/cover.svg" alt="">
+                        </div>
+                        <div class="card-body">
+                            <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </div>
+                    <div class="card card-library">
+                        <div class="card-img card-img-top">
+                            <!--<img class="img-fluid" data-cfw-lazy-src="./img/crane.jpg" data-cfw="lazy" alt="">-->
+                            <img class="img-fluid" src="./img/crane.jpg" alt="">
                         </div>
                         <div class="card-body">
                             <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
@@ -116,16 +129,6 @@
                         <div class="card-body">
                             <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
                             <p>Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
-                        </div>
-                    </div>
-                    <div class="card card-library">
-                        <div class="card-img card-img-top">
-                            <!--<img class="img-fluid" data-cfw-lazy-src="./img/crane.jpg" data-cfw="lazy" alt="">-->
-                            <img class="img-fluid" src="./img/crane.jpg" alt="">
-                        </div>
-                        <div class="card-body">
-                            <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                         </div>
                     </div>
                 </div>
@@ -163,7 +166,6 @@
             </footer>
         </div>
     </div>
-
 </div>
 
 </body>

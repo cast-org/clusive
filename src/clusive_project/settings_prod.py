@@ -4,15 +4,19 @@ This file is read when the DJANGO_CONFIG environment variable is set to "prod".
 """
 import os
 
-# To improve production settings,
-# see https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 # Key not set here; must be set from environment variable.
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+
+#######################
+# SECURITY MIDDLEWARE #
+#######################
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
 
 ALLOWED_HOSTS = ['clusive.cast.org',
                  'clusive.qa.cast.org',
@@ -37,3 +41,16 @@ DATABASES = {
         'CONN_MAX_AGE': 60,
     }
 }
+
+if os.environ.get('DJANGO_ADMIN_EMAIL'):
+    ADMINS = [os.environ.get('DJANGO_ADMIN_NAME'), os.environ.get('DJANGO_ADMIN_EMAIL')]
+
+DEFAULT_FROM_EMAIL  = os.environ.get('DJANGO_DEFAULT_EMAIL', 'cisl@cast.org')
+SERVER_EMAIL        = os.environ.get('DJANGO_SERVER_EMAIL', 'cisl@cast.org')
+
+EMAIL_HOST          = os.environ.get('DJANGO_EMAIL_HOST', 'localhost')
+EMAIL_PORT          = os.environ.get('DJANGO_EMAIL_PORT', '25')
+EMAIL_HOST_USER     = os.environ.get('DJANGO_EMAIL_USER', None)
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_PASSWORD', None)
+EMAIL_USE_TLS       = os.environ.get('DJANGO_EMAIL_TLS', False)
+EMAIL_USE_SSL       = os.environ.get('DJANGO_EMAIL_SSL', False)

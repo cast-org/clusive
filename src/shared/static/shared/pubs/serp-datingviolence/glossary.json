@@ -1,0 +1,476 @@
+[
+    {
+        "headword": "assault",
+        "alternateForms": ["assaults", "assaulted", "assaulting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To attack suddenly or violently." ,
+                "examples": [ "Fans were shocked that the beloved pop music singer physically assaulted his girlfriend." ],
+                "images": [
+                    {
+                        "src": "glossimages/assault1.jpg",
+                        "alt": "Photo of a person being hit by another.",
+                        "description": "A person standing over another person, who is on the ground and holding an arm over his face. ",
+                        "caption": "This person is being assaulted by another.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/b5b9d44b-673f-46e0-94eb-5397041b1d41",
+                            "title": "Assault",
+                            "author": "alh1",
+                            "author_url": "https://www.flickr.com/photos/50638285@N00",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch "
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "abuse",
+        "alternateForms": ["abuses", "abused", "abusing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To inflict harm.",
+                "examples": [ "One in three adolescents is physically, emotionally, or verbally abused by a dating partner." ],
+                "images": [
+                    {
+                        "src": "glossimages/abuse1.jpg",
+                        "alt": "Illustration of a person with a fist coming from his mouth.",
+                        "description": "An artistic representation of verbal abuse. A fist extends out of one person's mouth and hits another person.",
+                        "caption": "This representation of verbal abuse shows the damaging impact of words.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/52d49493-47e6-4efc-bdea-41b811ca0d73",
+                            "title": "verbal-abuse",
+                            "author": "thelampnyc ",
+                            "author_url": "https://www.flickr.com/photos/27894975@N06",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "trigger",
+        "alternateForms": ["triggers", "triggered", "triggering"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make something happen.",
+                "examples": [ "The smell of delicious food cooking can trigger feelings of hunger." ]
+            }
+        ]
+    },
+    {
+        "headword": "distort",
+        "alternateForms": ["distorts", "distorted", "distorting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To misrepresent or give false meaning to.",
+                "examples": [ "The map was a drawing, not a scientific map, and distored the distance from the house to the beach. " ],
+                "images": [
+                    {
+                        "src": "glossimages/distort1.jpg",
+                        "alt": "Photo of a dog seen through a glass.",
+                        "description": "A dog, mishapen because it is viewed through the curve of a glass.",
+                        "caption": "The image of the dog is distored and misshapen because it is seen through the curve of the glass.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/f9684e2f-2b28-4315-84e2-20db79c0bbec",
+                            "title": "Drunken Dog",
+                            "author": "Damon Hudac",
+                            "author_url": "https://www.flickr.com/photos/157596664@N07",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": " "
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "physical",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or involving the body.",
+                "examples": [ "Bruises and broken bones are evidence of physical abuse." ],
+                "images": [
+                    {
+                        "src": "glossimages/physical1.jpg",
+                        "alt": " ",
+                        "description": " ",
+                        "caption": " ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/7c02360c-c57e-4d57-82c4-31ce65960334",
+                            "title": "Evolution Of A Bruise",
+                            "author": "Vicious Bits",
+                            "author_url": "https://www.flickr.com/photos/42798669@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": " "
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "couple",
+        "alternateForms": ["couples"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Two people who are together by marriage or by being in a romantic relationship.",
+                "examples": [ "The couple had been together for 10 years." ],
+                "images": [
+                    {
+                        "src": "glossimages/couple1.jpg",
+                        "alt": "Photo of two people kissing.",
+                        "description": "Photo shows two people kissing. One person sits on a window sill while the other stands on the ground.",
+                        "caption": "Couples can show affection for each other.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/dbaf4f53-5939-418a-af7a-a5948e7b25bf",
+                            "author": "vic xia  ",
+                            "author_url": "https://www.flickr.com/photos/34060845@N04",
+                            "license": " CC by-nc-nd 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch "
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "pair",
+        "alternateForms": ["pairs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Two people who are together by marriage or by being in a romantic relationship.",
+                "examples": [ "The couple had been together for 10 years." ],
+                "images": [
+                    {
+                        "src": "glossimages/couple1.jpg",
+                        "alt": "Photo of two people kissing.",
+                        "description": "Photo shows two people kissing. One person sits on a window sill while the other stands on the ground.",
+                        "caption": "Couples can show affection for each other.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/dbaf4f53-5939-418a-af7a-a5948e7b25bf",
+                            "author": "vic xia  ",
+                            "author_url": "https://www.flickr.com/photos/34060845@N04",
+                            "license": " CC by-nc-nd 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch "
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "twosome",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Two people who are together by marriage or by being in a romantic relationship.",
+                "examples": [ "The couple had been together for 10 years." ],
+                "images": [
+                    {
+                        "src": "glossimages/couple1.jpg",
+                        "alt": "Photo of two people kissing.",
+                        "description": "Photo shows two people kissing. One person sits on a window sill while the other stands on the ground.",
+                        "caption": "Couples can show affection for each other.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/dbaf4f53-5939-418a-af7a-a5948e7b25bf",
+                            "author": "vic xia  ",
+                            "author_url": "https://www.flickr.com/photos/34060845@N04",
+                            "license": " CC by-nc-nd 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch "
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "serious",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Marked by careful thinking or consideration.",
+                "examples": [ "Air pollution is a serious matter." ],
+                "images": [
+                    {
+                        "src": "glossimages/serious1.jpg",
+                        "alt": "Photo of a woman with her hand to her face.",
+                        "description": "A woman looks at the viewer. She is not smiling. She has her hand up at the side of her cheek.",
+                        "caption": "This person looks like she is thinking carefully about something serious.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/24c2d78f-cea2-4b4d-be78-a9b4e54cd920",
+                            "title": "Mom",
+                            "author": "birdvoyeur",
+                            "author_url": "https://www.flickr.com/photos/13787814@N07",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "important",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Marked by careful thinking or consideration.",
+                "examples": [ "Air pollution is an important matter." ],
+                "images": [
+                    {
+                        "src": "glossimages/serious1.jpg",
+                        "alt": "Photo of a woman with her hand to her face.",
+                        "description": "A woman looks at the viewer. She is not smiling. She has her hand up at the side of her cheek.",
+                        "caption": "This person looks like she is thinking carefully about something serious.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/24c2d78f-cea2-4b4d-be78-a9b4e54cd920",
+                            "title": "Mom",
+                            "author": "birdvoyeur",
+                            "author_url": "https://www.flickr.com/photos/13787814@N07",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "significant",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Marked by careful thinking or consideration.",
+                "examples": [ "Air pollution is a significant issue." ],
+                "images": [
+                    {
+                        "src": "glossimages/serious1.jpg",
+                        "alt": "Photo of a woman with her hand to her face.",
+                        "description": "A woman looks at the viewer. She is not smiling. She has her hand up at the side of her cheek.",
+                        "caption": "This person looks like she is thinking carefully about something serious.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/24c2d78f-cea2-4b4d-be78-a9b4e54cd920",
+                            "title": "Mom",
+                            "author": "birdvoyeur",
+                            "author_url": "https://www.flickr.com/photos/13787814@N07",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "attitude",
+        "alternateForms": ["attitudes"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A way of thinking or feeling about someone or something.",
+                "examples": [ "The thing that made the teacher sad was Max’s negative attitude toward school." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "opinion",
+        "alternateForms": ["opinions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A way of thinking or feeling about someone or something.",
+                "examples": [ "The thing that made the teacher sad was Max’s negative opinion about school." ]
+            }
+        ]
+    },
+    {
+        "headword": "perspective",
+        "alternateForms": ["perspectives"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A way of thinking or feeling about someone or something.",
+                "examples": [ "The thing that made the teacher sad was Max’s negative perspective toward school." ]
+            }
+        ]
+    },
+    {
+        "headword": "eventually",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In the end, especially after a while.",
+                "examples": [ "Eventually, after a long winter and spring, summer will come again." ],
+                "images": [
+                    {
+                        "src": "glossimages/eventually1.jpg",
+                        "alt": "Photo of a flower growing out of a layer of snow. ",
+                        "description": "The photo shows a flower emerging after a long winter. ",
+                        "caption": "After a long winter, spring will finally come and flowers will bloom.",
+                        "source": {
+                            "url": " https://ccsearch.creativecommons.org/photos/dbaf4f53-5939-418a-af7a-a5948e7b25bf",
+                            "title": "Flower in snow",
+                            "author": "HatM",
+                            "author_url": "https://www.flickr.com/photos/14993459@N08",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "ultimately",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In the end, especially after a while.",
+                "examples": [ "Ultimately, after a long winter and spring, summer will come again. " ],
+                "images": [
+                    {
+                        "src": "glossimages/eventually1.jpg",
+                        "alt": "Photo of a flower growing out of a layer of snow. ",
+                        "description": "The photo shows a flower emerging after a long winter. ",
+                        "caption": "After a long winter, spring will finally come and flowers will bloom.",
+                        "source": {
+                            "url": " https://ccsearch.creativecommons.org/photos/dbaf4f53-5939-418a-af7a-a5948e7b25bf",
+                            "title": "Flower in snow",
+                            "author": "HatM",
+                            "author_url": "https://www.flickr.com/photos/14993459@N08",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "someday",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In the end, especially after a while.",
+                "examples": [ "Someday, after a long winter and spring, summer will come again." ],
+                "images": [
+                    {
+                        "src": "glossimages/eventually1.jpg",
+                        "alt": "Photo of a flower growing out of a layer of snow. ",
+                        "description": "The photo shows a flower emerging after a long winter. ",
+                        "caption": "After a long winter, spring will finally come and flowers will bloom.",
+                        "source": {
+                            "url": " https://ccsearch.creativecommons.org/photos/dbaf4f53-5939-418a-af7a-a5948e7b25bf",
+                            "title": "Flower in snow",
+                            "author": "HatM",
+                            "author_url": "https://www.flickr.com/photos/14993459@N08",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "private",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Personal and not to be shared.",
+                "examples": [ "This is my private opinion, so I'm trusting you not to announce it to others. " ],
+                "images": [
+                    {
+                        "src": "glossimages/private1.jpg",
+                        "alt": "Photo of a person with her finger over her lips.",
+                        "description": "A person with her finger crossing over her lips. She is making a sign to be quiet. ",
+                        "caption": "If something is private, it's a secret that should not be shared.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/1a62485e-0ee4-4ffe-94ec-56b086c8c93f",
+                            "title": "i've got a secret...do you?",
+                            "author": " j.lee43 ",
+                            "author_url": "https://www.flickr.com/photos/45676611@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "secret",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Personal and not to be shared.",
+                "examples": [ "This is my secret, so I'm trusting you not to announce it to others. " ],
+                "images": [
+                    {
+                        "src": "glossimages/private1.jpg",
+                        "alt": "Photo of a person with her finger over her lips.",
+                        "description": "A person with her finger crossing over her lips. She is making a sign to be quiet. ",
+                        "caption": "If something is private, it's a secret that should not be shared.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/1a62485e-0ee4-4ffe-94ec-56b086c8c93f",
+                            "title": "i've got a secret...do you?",
+                            "author": " j.lee43 ",
+                            "author_url": "https://www.flickr.com/photos/45676611@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "confidential",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Personal and not to be shared.",
+                "examples": [ "This is confidential information, so I'm trusting you not to announce it to others. " ],
+                "images": [
+                    {
+                        "src": "glossimages/private1.jpg",
+                        "alt": "Photo of a person with her finger over her lips.",
+                        "description": "A person with her finger crossing over her lips. She is making a sign to be quiet. ",
+                        "caption": "If something is private, it's a secret that should not be shared.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/1a62485e-0ee4-4ffe-94ec-56b086c8c93f",
+                            "title": "i've got a secret...do you?",
+                            "author": " j.lee43 ",
+                            "author_url": "https://www.flickr.com/photos/45676611@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

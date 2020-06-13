@@ -3,6 +3,10 @@
 
 {% block title %}Word bank{% endblock %}
 
+{% block header %}
+{% include "shared/partial/site_header_small.html" with user_actions=True %}
+{% endblock %}
+
 {% block sidebar_start %}
 {% include "shared/partial/sidebar_start.html" with index_reader=True nav=False %}
 {% endblock %}
@@ -12,8 +16,6 @@
 {% endblock %}
 
 {% block content %}
-{% include "shared/partial/site_header_small.html" with user_actions=True %}
-
 <main id="content" tabindex="-1">
     <div class="link-back">
         <a href="#" onclick="window.history.back(); return false;" class="link-prev">back</a>
@@ -52,9 +54,9 @@
                 {% for wm in words %}
                     <div data-rating="{{wm.knowledge_est}}" class="wordbank-item offset{{wm.knowledge_est}}">
                         <a href="#" role="button" class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
-                        <a href="#" role="button" class="wordbank-prev" aria-label="decrease rating for '{{wm.word}}'"><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                        <a href="#" role="button" class="wordbank-next" aria-label="increase rating for '{{wm.word}}'"><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                        <a href="#" role="button" class="wordbank-del" aria-label="remove '{{wm.word}}' from word bank"><span class="icon-cancel" aria-hidden="true"></span></a>
+                        <a href="#" role="button" class="wordbank-prev" aria-label="Decrease rating for '{{wm.word}}'" title="Move left"><span class="icon-chevron-left" aria-hidden="true"></span><span class="sr-only">Decrease rating for '{{wm.word}}'</span></a>
+                        <a href="#" role="button" class="wordbank-next" aria-label="Increase rating for '{{wm.word}}'" title="Move right"><span class="icon-chevron-right" aria-hidden="true"></span><span class="sr-only">Increase rating for '{{wm.word}}'</span></a>
+                        <a href="#" role="button" class="wordbank-del" aria-label="Remove '{{wm.word}}' from word bank" title="Remove"><span class="icon-cancel" aria-hidden="true"></span><span class="sr-only">Remove '{{wm.word}}' from word bank</span></a>
                     </div>
                 {% endfor %}
                 </div>

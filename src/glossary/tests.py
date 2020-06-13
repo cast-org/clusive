@@ -5,7 +5,7 @@ import os
 from django.contrib.auth.models import User
 
 from glossary.util import base_form, all_forms
-from library.models import Book
+from library.models import Book, BookVersion
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -20,9 +20,11 @@ class GlossaryTestCase(TestCase):
         user_1 = User.objects.create_user(username="user1", password="password1")
         user_1.save()
         ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
-        book_1 = Book.objects.create(path='test', title='Test Book',
-                                     all_words='["test", "the", "end"]',
-                                     glossary_words='["test"]')
+        book = Book.objects.create(path='test', title='Test Book')
+        book.save()
+        book_1 = BookVersion.objects.create(book=book, sortOrder=0,
+                                            glossary_words='["test"]',
+                                            all_words='["test", "the", "end"]')
         book_1.save()
 
     def test_set_and_get_rating(self):
@@ -45,7 +47,7 @@ class GlossaryTestCase(TestCase):
 
     def test_cuelist(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/cuelist/test')
+        response = self.client.get('/glossary/cuelist/test/0')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                                  {'words': {'test': ['test', 'tested', 'testing', 'tests']}})
@@ -80,7 +82,10 @@ class GlossaryTestCase(TestCase):
                 glossfile = os.path.join(book_dir, 'glossary.json')
                 if os.path.exists(glossfile):
                     with open(glossfile, 'r', encoding='utf-8') as file:
-                        glossary = json.load(file)
+                        try:
+                            glossary = json.load(file)
+                        except:
+                            assert False, "JSON Decode error in %s" % (glossfile)
                         for entry in glossary:
                             assert 'headword' in entry, \
                                 "In %s, missing headword in %s" % (glossfile, entry)
