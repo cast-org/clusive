@@ -20,3 +20,13 @@ jobs:
           tag_with_ref: true
           tag_with_sha: true
           add_git_labels: true
+      - name: Update QA
+        uses: wei/curl@v1
+        with:
+          args: -Lis -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}?tag=sha-${{ GITHUB_SHA }}"
+      - name: Slack Notification
+        uses: tokorom/action-slack-incoming-webhook@v1.1.0
+        env:
+          INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          text: New build deployed to https://clusive.qa.cast.org
