@@ -1,4 +1,4 @@
-name: Docker Image Build
+name: Publish Docker image
 
 on:
   push:
@@ -6,11 +6,17 @@ on:
 
 jobs:
 
-  build:
-
+  build_and_push:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag clusive:$(GITHUB_SHA) --tag clusive:development
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build and push
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PW }}
+          repository: castudl/clusive
+          tag_with_ref: true
+          tag_with_sha: true
+          add_git_labels: true
