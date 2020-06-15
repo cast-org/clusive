@@ -20,7 +20,6 @@ $enable-img-thumbnail:                  false;
 $enable-figure:                         false;
 $enable-table-striped:                  false;
 $enable-table-hover:                    false;
-$enable-table-active:                   false;
 $enable-table-colors:                   false;
 $enable-table-scroll-responsive:        false;
 $enable-btn-outline:                    false;
@@ -181,16 +180,21 @@ $figure-caption-font-size:              .875rem;
 $list-item-active-bg:                   unset;
 $list-item-active-color:                unset;
 
+$table-bg-active:                       var(--CT_tableActiveBg);
+$table-border-color:                    var(--CT_tableBorderColor);
+$table-head-border-width:               5px;
+
+
 $btn-font-weight:                       700;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
 $btn-focus-box-shadow-alpha:            .85;
-$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRing), $btn-focus-box-shadow-alpha);
+//$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRing), $btn-focus-box-shadow-alpha);
 $btn-default-focus-box-shadow-color:    var(--CT_focusRing);
 
 $input-bg:                              #fff;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
-$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRing), $input-focus-box-shadow-alpha);
+$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
 
 $form-group-margin-bottom:              .5rem;
 
@@ -240,6 +244,8 @@ $dropdown-border-color:                     var(--CT_dropdownBorderColor);
 $dropdown-link-color:                       var(--CT_dropdownLinkColor);
 $dropdown-link-hover-bg:                    var(--CT_dropdownLinkHoverBg);
 $dropdown-link-hover-color:                 var(--CT_dropdownLinkHoverColor);
+$dropdown-link-active-bg:                   var(--CT_dropdownLinkActiveBg);
+$dropdown-link-active-color:                var(--CT_dropdownLinkActiveColor);
 
 $nav-tabs-hover-bg:                         rgba(0, 0, 0, .1);
 $nav-tabs-active-color:                     var(--CT_bodyColor);

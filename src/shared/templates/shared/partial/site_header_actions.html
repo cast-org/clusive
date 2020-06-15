@@ -1,7 +1,12 @@
 <div class="user-actions">
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a href="{% url 'word_bank' %}" class="nav-link">Word bank</a>
+            {% url 'word_bank' as word_bank_url %}
+            {% if request.path == word_bank_url %}
+            <span class="current">Word bank</span>
+            {% else %}
+            <a href="{{ word_bank_url }}" class="nav-link">Word bank</a>
+            {% endif %}
         </li>
         {% if not user.is_anonymous %}
         <li class="nav-item">

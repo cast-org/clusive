@@ -52,6 +52,11 @@ $card-login-bg:                         rgba(#636b82, .3);
 $card-login-color:                      $body-color;
 $card-login-forgot-border-color:        #d3cfc9;
 
+// Tables
+$table-active-bg:                       #272727;
+$table-border-color:                    #363740;
+$table-roster-head-color:               #eceff5;
+
 // Buttons
 $btn-primary-focus-ring:                #a0abfd;
 $btn-primary-bg:                        #a0abfd;
@@ -135,6 +140,8 @@ $dropdown-border-color:                 #636b82;
 $dropdown-link-color:                   $dropdown-color;
 $dropdown-link-hover-bg:                #6268ad;
 $dropdown-link-hover-color:             #fbfbfb;
+$dropdown-link-active-bg:               #ff554d;
+$dropdown-link-active-color:            #111;
 
 // Popovers
 $popover-bg:                            #191919;
@@ -285,6 +292,7 @@ $wordbank-border-color:                 #363740;
 $wordbank-col-bg:                       #272727;
 $wordbank-control-color:                #a0abfd;
 $wordbank-control-hover-color:          #6268ad;
+$wordbank-title-color:                  #eceff5;
 $wordbank-count-bg:                     #ff554d;
 $wordbank-count-color:                  #111;
 $wordbank-count-border-color:           #ff554d;

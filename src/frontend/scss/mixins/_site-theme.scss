@@ -46,6 +46,11 @@
         --CT_figureCaptionBg: #{$figure-caption-bg};
         --CT_figureCaptionColor: #{$figure-caption-color};
 
+        --CT_tableActiveBg: #{$table-active-bg};
+        --CT_tableBorderColor: #{$table-border-color};
+
+        --CT_tableRosterHeadColor: #{$table-roster-head-color};
+
         --CT_btnPrimaryFocusRingRGB: #{red($btn-primary-focus-ring), green($btn-primary-focus-ring), blue($btn-primary-focus-ring)};
         --CT_btnPrimaryBg: #{$btn-primary-bg};
         --CT_btnPrimaryColor: #{$btn-primary-color};
@@ -126,6 +131,8 @@
         --CT_dropdownLinkColor: #{$dropdown-link-color};
         --CT_dropdownLinkHoverBg: #{$dropdown-link-hover-bg};
         --CT_dropdownLinkHoverColor: #{$dropdown-link-hover-color};
+        --CT_dropdownLinkActiveBg: #{$dropdown-link-active-bg};
+        --CT_dropdownLinkActiveColor: #{$dropdown-link-active-color};
 
         --CT_popoverBg: #{$popover-bg};
         --CT_popoverBorderColor: #{$popover-border-color};
@@ -264,6 +271,7 @@
         --CT_wordbankColBg: #{$wordbank-col-bg};
         --CT_wordbankControlColor: #{$wordbank-control-color};
         --CT_wordbankControlHoverColor: #{$wordbank-control-hover-color};
+        --CT_wordbankTitleColor: #{$wordbank-title-color};
         --CT_wordbankCountBg: #{$wordbank-count-bg};
         --CT_wordbankCountColor: #{$wordbank-count-color};
         --CT_wordbankCountBorderColor: #{$wordbank-count-border-color};

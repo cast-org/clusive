@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Roster - Clusive Mockup</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap" rel="stylesheet">
+<link href="./font/fontello/fontello.css" rel="stylesheet">
+
+<!-- Figuration CSS -->
+<link href="../dist/css/clusive.css" rel="stylesheet">
+
+<!-- jQuery and Figuration JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.5/dist/js/figuration.min.js" integrity="sha384-qxJIAaCm2yIk7HvSXNiSadX6nVf5VaAO9zw+rIsjkAl3cpu4CEnsupskg4ZvPL4i" crossorigin="anonymous"></script>
+<!--<script src="../dist/js/frontend.js"></script>-->
+<script src="../js/frontend.js"></script>
+<script src="../js/theme-test.js"></script>
+
+</head>
+<body>
+
+<a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
+
+<div class="page-wrapper">
+    <div class="container-xl">
+        <header class="site-header site-header-small">
+            <div class="site-header-logo">
+                <span class="icon-logo-clusive" aria-hidden="true"></span>
+                <span class="sr-only">Clusive</span>
+            </div>
+
+            <div class="user-actions" role="region" aria-label="">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <span class="current">Manage</span>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Word bank</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-cfw="dropdown">Username <span class="caret" aria-hidden="true"></span></a>
+                        <ul class="dropdown-menu dropreverse">
+                            <li><a href="#">Change password</a></li>
+                            <li><a href="#">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="sidebars-wrapper">
+            <div class="sidebars">
+                <div class="col-auto sidebar sidebar-start">
+                    <nav aria-label="Clusive">
+                        <a href="./library.html" class="btn btn-nav btn-icon" aria-label="Back to library">
+                            <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                        </a>
+                    </nav>
+                    <div class="sidebar-support" role="region" aria-label="Support">
+                        <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
+                            <span class="icon-help" aria-hidden="true"></span>
+                            <span class="icon-attention" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-auto sidebar sidebar-end" role="region" aria-label="Reading tools">
+                    <div class="sidebar-tool" role="region" aria-label="Reading tools">
+                        <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
+                            <span class="icon-settings" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tool" aria-label="Read aloud">
+                            <span class="icon-play" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tool" aria-label="Lookup definition">
+                            <span class="icon-book" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <main id="content" tabindex="-1">
+                <div class="row">
+                    <div class="col">
+                        <h1>Manage: Morning class</h1>
+                    </div>
+                    <div class="col-md-auto dropdown">
+                        <button type="button" class="btn btn-primary" data-cfw="dropdown">Morning class<span class="caret" aria-hidden="true"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="active" aria-current="true">Morning class</a></li>
+                            <li><a href="#">Afternoon class</a></li>
+                            <li><a href="#">Evening class</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-scroll">
+                    <table class="table table-divided table-roster">
+                        <thead>
+                            <tr>
+                                <th scope="col">First name</th>
+                                <th scope="col">Last name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Password</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Diego</td>
+                                <td>One</td>
+                                <td>d@mail.edu</td>
+                                <td>dguy</td>
+                                <td>****</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xsmall">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Stevie</td>
+                                <td>Two</td>
+                                <td>t@mail.edu</td>
+                                <td>tgirl4</td>
+                                <td>****</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xsmall">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Stevie</td>
+                                <td>Two</td>
+                                <td>t@mail.edu</td>
+                                <td>tgirl4</td>
+                                <td>****</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xsmall">Edit</button>
+                                </td>
+                            </tr>
+                            <tr class="table-active">
+                                <td><input type="text" class="form-control" aria-label="First name" value="Jo"></td>
+                                <td><input type="text" class="form-control" aria-label="Last name" value="Three"></td>
+                                <td><input type="email" class="form-control" aria-label="email" value="g@mail.edu"></td>
+                                <td><input type="text" class="form-control" aria-label="Username" value="hurl"></td>
+                                <td>****</td>
+                                <td>
+                                    <button type="submit" class="btn btn-secondary btn-xsmall">Save</button>
+                                    <button type="button" class="btn btn-link btn-xsmall">Cancel</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Elliot</td>
+                                <td>Four</td>
+                                <td>e@mail.edu</td>
+                                <td>yugi</td>
+                                <td>****</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xsmall">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
+            <footer>
+                <!-- anything here? -->
+            </footer>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
