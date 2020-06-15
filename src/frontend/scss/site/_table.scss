@@ -8,4 +8,8 @@
 
 .table-roster {
     white-space: nowrap;
+
+    thead {
+        color: var(--CT_tableRosterHeadColor);
+    }
 }

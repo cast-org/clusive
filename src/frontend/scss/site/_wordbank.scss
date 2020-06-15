@@ -58,6 +58,7 @@
 
 .wordbank-title {
     @include font-size(.875rem);
+    color: var(--CT_wordbankTitleColor);
     text-align: center;
 }
 

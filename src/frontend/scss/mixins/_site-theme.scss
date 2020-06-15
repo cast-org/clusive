@@ -49,6 +49,8 @@
         --CT_tableActiveBg: #{$table-active-bg};
         --CT_tableBorderColor: #{$table-border-color};
 
+        --CT_tableRosterHeadColor: #{$table-roster-head-color};
+
         --CT_btnPrimaryFocusRingRGB: #{red($btn-primary-focus-ring), green($btn-primary-focus-ring), blue($btn-primary-focus-ring)};
         --CT_btnPrimaryBg: #{$btn-primary-bg};
         --CT_btnPrimaryColor: #{$btn-primary-color};
@@ -269,6 +271,7 @@
         --CT_wordbankColBg: #{$wordbank-col-bg};
         --CT_wordbankControlColor: #{$wordbank-control-color};
         --CT_wordbankControlHoverColor: #{$wordbank-control-hover-color};
+        --CT_wordbankTitleColor: #{$wordbank-title-color};
         --CT_wordbankCountBg: #{$wordbank-count-bg};
         --CT_wordbankCountColor: #{$wordbank-count-color};
         --CT_wordbankCountBorderColor: #{$wordbank-count-border-color};
