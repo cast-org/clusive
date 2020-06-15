@@ -137,5 +137,4 @@ class WordBankView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
         context = { 'words': WordModel.objects.filter(user=clusive_user, interest__gt=0).order_by('word') }
-        setattr(request, 'view', 'wordbank')
         return render(request, 'pages/wordbank.html', context=context)
