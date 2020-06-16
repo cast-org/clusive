@@ -27,7 +27,10 @@ $library-logo-icon-color:               #fbfbfb;
 $library-logo-text-color:               #333;
 
 $home-bg:                               #72c0b2;
-$home-create-border-color:              #636b82;
+$home-section-border-color:             #636b82;
+$login-section-border-color:            #d3cfc9;
+
+$footer-border-color:                   #636b82;
 
 $header-bg:                             linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, 0) 65%);
 $header-color:                          inherit;
@@ -50,7 +53,6 @@ $card-img-bg:                           rgba(#72c0b2, .3);
 $card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
 $card-login-bg:                         rgba(#acfdf0, .3);
 $card-login-color:                      inherit;
-$card-login-forgot-border-color:        #d3cfc9;
 
 // Tables
 $table-active-bg:                       #f6f4f0;

@@ -34,13 +34,33 @@
     }
 }
 
-.home-create {
-    padding-top: .5rem;
+.home-section {
+    padding-top: 1rem;
     margin-top: 1rem;
-    margin-bottom: 2rem;
-    border-top: 3px solid var(--CT_homeBodyCreateBorderColor);
+    margin-bottom: 1rem;
+    border-top: 3px solid var(--CT_homeSectionBorderColor);
 
-    @include media-breakpoint-up(sm) {
-        margin-bottom: 1rem;
+    & + & {
+        margin-top: -1rem;
+    }
+}
+
+.login-section {
+    padding-top: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 3px solid var(--CT_loginSectionBorderColor);
+
+    &:first-child {
+        margin-top: 0;
+        border-top: 0;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    & + & {
+        margin-top: -1rem;
     }
 }

@@ -23,6 +23,8 @@
         --CT_headerLogoTextColor: #{$header-logo-text-color};
         --CT_pageTitleBorderColor: #{$page-title-border-color};
 
+        --CT_footerBorderColor: #{$footer-border-color};
+
         --CT_sidebarStartBg: #{$sidebar-start-bg};
         --CT_sidebarEndBg: #{$sidebar-end-bg};
 
@@ -31,7 +33,8 @@
         --CT_libraryLogoTextColor: #{$library-logo-text-color};
 
         --CT_homeBodyBg: #{$home-bg};
-        --CT_homeBodyCreateBorderColor: #{$home-create-border-color};
+        --CT_homeSectionBorderColor: #{$home-section-border-color};
+        --CT_loginSectionBorderColor: #{$login-section-border-color};
 
         --CT_cardBg: #{$card-bg};
         --CT_cardColor: #{$card-color};
@@ -41,7 +44,6 @@
 
         --CT_cardLoginBg: #{$card-login-bg)};
         --CT_cardLoginColor: #{$card-login-color};
-        --CT_cardLoginForgotBorderColor: #{$card-login-forgot-border-color};
 
         --CT_figureCaptionBg: #{$figure-caption-bg};
         --CT_figureCaptionColor: #{$figure-caption-color};
