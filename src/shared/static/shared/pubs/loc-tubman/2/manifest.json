@@ -1,0 +1,64 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Read about Harriet Tubman and learn about this amazing woman's life and experiences. ",
+        "identifier": "a83d302b-2509-4197-a2b3-4c78150fd02b",
+        "language": "en",
+        "modified": "2020-06-16T18:32:04.707665Z",
+        "title": "Harriet Tubman: Meet Amazing Americans"
+    },
+    "readingOrder": [
+        {
+            "href": "v3_harriet_tubman.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/02_tubman_portrait.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/10_tubman_river.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/09_tubman_gunboat.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/06_tubman_poster.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/01_tubman_banner.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/05_tubman_moses.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/03_tubman_nursemaid.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/04_tubman_whipped.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/11_tubman_lily.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/08_tubman_railroad.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/07_tubman_music.jpg",
+            "type": "image/jpeg"
+        }
+    ]
+}

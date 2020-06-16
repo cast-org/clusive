@@ -1,0 +1,297 @@
+[
+    {
+        "headword": "federal",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having to do with a system of government that unites several states under a central government. The states have their own governments, yet they recognize the rule of the central government as well." ,
+                "examples": [ "The founding fathers decided on a federal system of government for this country." ]
+            }
+        ]
+    },
+    {
+        "headword": "react",
+        "alternateForms": ["reacts", "reacted", "reacting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To respond" ,
+                "examples": [ "If animal testing is designed to protect humans, then why do so many people react negatively to it?" ],
+                "images": [
+                    {
+                        "src": "images/glossary/react1.jpg",
+                        "alt": "Photo of a soccer goalie stopping a ball.",
+                        "description": "A soccer goalie is on the ground, arms fully extended, holding a soccer ball.",
+                        "caption": "Quick reaction time enabled this soccer goalie to stop the ball.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e2c464a3-5ff6-4319-9668-a7e10edf62a8",
+                            "title": "Stopped",
+                            "author": "Chris Hunkeler",
+                            "author_url": "https://www.flickr.com/photos/14913305@N00",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "former",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Happening in or having to do with the past; previous." ,
+                "examples": [ "I saw one of my former teachers from last year." ]
+ 
+            }
+        ]
+    },
+    {
+        "headword": "underground",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not in public; hidden." ,
+                "examples": [ "Many Quaker families worked for the Underground Railroad." ]
+             }
+        ]
+    },
+    {
+        "headword": "network",
+        "alternateForms": ["networks"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A system that involves a number of persons or groups." ,
+                "examples": [ "The Underground Railroad was a network of homes and people that were hiding places for people escaping from slavery. " ],
+                "images": [
+                    {
+                        "src": "images/glossary/network1.jpg",
+                        "alt": "Photo of a subway map",
+                        "description": "This photo shows an area of land and different subway lines that connect together to form a transportation network.",
+                        "caption": "Different subway lines combine together to make a transportation network.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/824f1f2c-8601-4de1-8f8e-a299c86ae8e3",
+                            "title": "Moorgate Maps",
+                            "author": "Sparkyscrum",
+                            "author_url": "https://www.flickr.com/photos/8572970@N04",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "gain",
+        "alternateForms": ["gains", "gained", "gaining"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To come to have or hold.",
+                "examples": [ "He worked hard to gain respect." ]
+            }
+        ]
+    },
+    {
+        "headword": "embarrassment",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A feeling of discomfort or being ill at ease." ,
+                "examples": [ "Embarrassment would be the best way to describe my feelings when I tried to do that new dance in front of all those people." ],
+                "images": [
+                    {
+                        "src": "images/glossary/embarrassment1.jpg",
+                        "alt": "Photo of two people, with one shrugging and leaning away.",
+                        "description": "Two people stand in front of a table. One person holds an open folder and looks toward the other person. The other person is smiling shyly as she shurgs her shoulders and clasps her hands together in front of her. She looks embarassed. ",
+                        "caption": "Some people can have a feeling of embarrassment when they stand in front of a group. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/704325a9-4772-4cec-9467-4f87c243f013",
+                            "title": "It's so embarrassing!",
+                            "author": "college.library ",
+                            "author_url": "https://www.flickr.com/people/20245378@N03",
+                            "license": "CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "seizure",
+        "alternateForms": ["seizures"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A sudden attack caused by a disease such as epilepsy. " ,
+                "examples": [ "A nurse helped the boy who was having a seizure." ],
+                "images": [
+                    {
+                        "src": "images/glossary/seizure1.jpg",
+                        "alt": "Photo of firefighters helping a person laying on a floor.",
+                        "description": "Firefighters kneal around a person laying on a floor.",
+                        "caption": "A person who has a seizure needs immediate medical attention.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/98f7a0d7-444f-4614-adbb-fe178b361ca7",
+                            "title": "Firemen on the Scene",
+                            "author": "cobalt123",
+                            "author_url": "https://www.flickr.com/photos/66606673@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "detail",
+        "alternateForms": ["details"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "All the individual parts of something considered together. " ,
+                "examples": [ "If you get the details right, the model plane will be perfect." ],
+                "images": [
+                    {
+                        "src": "images/glossary/detail1.jpg",
+                        "alt": "Photo of a bee on a flower.",
+                        "description": "Close up photo of a bee on a yellow flower. Flecks of pollen can be seen on the bee's body, head, legs, and parts of its wings.",
+                        "caption": "Each detail and particular part of this bee and flower can be seen when looked at it close-up and carefully. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/30098f6d-6027-4ce8-9531-882f30ccb47f ",
+                            "title": "Pollen",
+                            "author": "nutmeg66",
+                            "author_url": "https://www.flickr.com/photos/50717535@N00 ",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "realize",
+        "alternateForms": ["realizes","realized","realizing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To understand completely. " ,
+                "examples": [ "Do you realize how huge a redwood tree is?" ]
+
+            }
+        ]
+    },
+    {
+        "headword": "secure",
+        "alternateForms": ["secures", "secured", "securing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To come to have or hold.",
+                "examples": [ "He worked hard to secure respect." ]
+            }
+        ]
+    },
+    {
+        "headword": "humiliation",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A feeling of discomfort or being ill at ease." ,
+                "examples": [ "Humiliation would be the best way to describe my feelings when I tried to do that new dance in front of all those people." ],
+                "images": [
+                    {
+                        "src": "images/glossary/embarrassment1.jpg",
+                        "alt": "Photo of two people, with one shrugging and leaning away.",
+                        "description": "Two people stand in front of a table. One person holds an open folder and looks toward the other person. The other person is smiling shyly as she shurgs her shoulders and clasps her hands together in front of her. She looks embarassed. ",
+                        "caption": "Some people can have a feeling of humiliation when they stand in front of a group. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/704325a9-4772-4cec-9467-4f87c243f013",
+                            "title": "It's so embarrassing!",
+                            "author": "college.library ",
+                            "author_url": "https://www.flickr.com/people/20245378@N03",
+                            "license": "CC BY 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "convulsion",
+        "alternateForms": ["convulsions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A sudden attack caused by a disease such as epilepsy. " ,
+                "examples": [ "A nurse helped the boy who was having a convulsion." ],
+                "images": [
+                    {
+                        "src": "images/glossary/seizure1.jpg",
+                        "alt": "Photo of firefighters helping a person laying on a floor.",
+                        "description": "Firefighters kneal around a person laying on a floor.",
+                        "caption": "A person who has a convulsion needs immediate medical attention.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/98f7a0d7-444f-4614-adbb-fe178b361ca7",
+                            "title": "Firemen on the Scene",
+                            "author": "cobalt123",
+                            "author_url": "https://www.flickr.com/photos/66606673@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "particular",
+        "alternateForms": ["particulars"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "All the individual parts of something considered together. " ,
+                "examples": [ "If you get the particulars right, the model plane will be perfect." ],
+                "images": [
+                    {
+                        "src": "images/glossary/detail1.jpg",
+                        "alt": "Photo of a bee on a flower.",
+                        "description": "Close up photo of a bee on a yellow flower. Flecks of pollen can be seen on the bee's body, head, legs, and parts of its wings.",
+                        "caption": "Each detail and particular part of this bee and flower can be seen when looked at it close-up and carefully. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/30098f6d-6027-4ce8-9531-882f30ccb47f ",
+                            "title": "Pollen",
+                            "author": "nutmeg66",
+                            "author_url": "https://www.flickr.com/photos/50717535@N00 ",
+                            "license": "CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "fathom",
+        "alternateForms": ["fathoms","fathomed","fathoming"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To understand completely. " ,
+                "examples": [ "Can you fathom how huge a redwood tree is?" ]
+            }
+        ]
+    }
+]
