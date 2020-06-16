@@ -20,7 +20,7 @@
                 "examples": [ "If animal testing is designed to protect humans, then why do so many people react negatively to it?" ],
                 "images": [
                     {
-                        "src": "images/glossary/react1.jpg",
+                        "src": "glossimages/react1.jpg",
                         "alt": "Photo of a soccer goalie stopping a ball.",
                         "description": "A soccer goalie is on the ground, arms fully extended, holding a soccer ball.",
                         "caption": "Quick reaction time enabled this soccer goalie to stop the ball.",
@@ -70,7 +70,7 @@
                 "examples": [ "The Underground Railroad was a network of homes and people that were hiding places for people escaping from slavery. " ],
                 "images": [
                     {
-                        "src": "images/glossary/network1.jpg",
+                        "src": "glossimages/network1.jpg",
                         "alt": "Photo of a subway map",
                         "description": "This photo shows an area of land and different subway lines that connect together to form a transportation network.",
                         "caption": "Different subway lines combine together to make a transportation network.",
@@ -108,7 +108,7 @@
                 "examples": [ "Embarrassment would be the best way to describe my feelings when I tried to do that new dance in front of all those people." ],
                 "images": [
                     {
-                        "src": "images/glossary/embarrassment1.jpg",
+                        "src": "glossimages/embarrassment1.jpg",
                         "alt": "Photo of two people, with one shrugging and leaning away.",
                         "description": "Two people stand in front of a table. One person holds an open folder and looks toward the other person. The other person is smiling shyly as she shurgs her shoulders and clasps her hands together in front of her. She looks embarassed. ",
                         "caption": "Some people can have a feeling of embarrassment when they stand in front of a group. ",
@@ -135,7 +135,7 @@
                 "examples": [ "A nurse helped the boy who was having a seizure." ],
                 "images": [
                     {
-                        "src": "images/glossary/seizure1.jpg",
+                        "src": "glossimages/seizure1.jpg",
                         "alt": "Photo of firefighters helping a person laying on a floor.",
                         "description": "Firefighters kneal around a person laying on a floor.",
                         "caption": "A person who has a seizure needs immediate medical attention.",
@@ -162,7 +162,7 @@
                 "examples": [ "If you get the details right, the model plane will be perfect." ],
                 "images": [
                     {
-                        "src": "images/glossary/detail1.jpg",
+                        "src": "glossimages/detail1.jpg",
                         "alt": "Photo of a bee on a flower.",
                         "description": "Close up photo of a bee on a yellow flower. Flecks of pollen can be seen on the bee's body, head, legs, and parts of its wings.",
                         "caption": "Each detail and particular part of this bee and flower can be seen when looked at it close-up and carefully. ",
@@ -212,7 +212,7 @@
                 "examples": [ "Humiliation would be the best way to describe my feelings when I tried to do that new dance in front of all those people." ],
                 "images": [
                     {
-                        "src": "images/glossary/embarrassment1.jpg",
+                        "src": "glossimages/embarrassment1.jpg",
                         "alt": "Photo of two people, with one shrugging and leaning away.",
                         "description": "Two people stand in front of a table. One person holds an open folder and looks toward the other person. The other person is smiling shyly as she shurgs her shoulders and clasps her hands together in front of her. She looks embarassed. ",
                         "caption": "Some people can have a feeling of humiliation when they stand in front of a group. ",
@@ -239,7 +239,7 @@
                 "examples": [ "A nurse helped the boy who was having a convulsion." ],
                 "images": [
                     {
-                        "src": "images/glossary/seizure1.jpg",
+                        "src": "glossimages/seizure1.jpg",
                         "alt": "Photo of firefighters helping a person laying on a floor.",
                         "description": "Firefighters kneal around a person laying on a floor.",
                         "caption": "A person who has a convulsion needs immediate medical attention.",
@@ -266,7 +266,7 @@
                 "examples": [ "If you get the particulars right, the model plane will be perfect." ],
                 "images": [
                     {
-                        "src": "images/glossary/detail1.jpg",
+                        "src": "glossimages/detail1.jpg",
                         "alt": "Photo of a bee on a flower.",
                         "description": "Close up photo of a bee on a yellow flower. Flecks of pollen can be seen on the bee's body, head, legs, and parts of its wings.",
                         "caption": "Each detail and particular part of this bee and flower can be seen when looked at it close-up and carefully. ",
