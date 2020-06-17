@@ -323,6 +323,11 @@ $highlight-undelete-bg:                 #d3cfc9;
 $note-title-color:                      #666;
 $note-undelete-bg:                      #d3cfc9;
 
+// Highlight R2D2BC overlay
+$highlight-overlay-bg:                  rgba(#a0abfd, .3);
+$highlight-overlay-hover-bg:            rgba(#a0abfd, .5);
+$highlight-overlay-mix-blend-mode:      multiply;
+
 // Toolbox (Context menu)
 $toolbox-menu-bg:                       #fff;
 $toolbox-menu-color:                    #6e6355;
