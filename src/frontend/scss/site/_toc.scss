@@ -221,7 +221,7 @@
 
         @include hover-focus() {
             color: var(--CT_highlightHoverColor);
-            text-decoration: underline;
+            text-decoration: none;
             background-color: var(--CT_highlightHoverBg);
         }
     }

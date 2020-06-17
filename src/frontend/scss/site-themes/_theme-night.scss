@@ -314,18 +314,18 @@ $definition-speech-color:               #eceff5;
 $image-desc-cite-color:                 #eceff5;
 
 // Highlight/Note
-$highlight-bg:                          #636b82;
+$highlight-bg:                          rgba(#a0abfd, .5);
 $highlight-color:                       $body-color;
-$highlight-hover-bg:                    $toc-link-hover-bg;
-$highlight-hover-color:                 $toc-link-hover-color;
+$highlight-hover-bg:                    rgba(#a0abfd, .75);
+$highlight-hover-color:                 $body-color;
 $highlight-undelete-bg:                 #363740;
 
 $note-title-color:                      #eceff5;
 $note-undelete-bg:                      #363740;
 
 // Highlight R2D2BC overlay
-$highlight-overlay-bg:                  rgba(#a0abfd, .3);
-$highlight-overlay-hover-bg:            rgba(#a0abfd, .5);
+$highlight-overlay-bg:                  rgba(#a0abfd, .5);
+$highlight-overlay-hover-bg:            rgba(#a0abfd, .75);
 $highlight-overlay-mix-blend-mode:      lighten; //normal;
 
 // Toolbox (Context menu)

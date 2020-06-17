@@ -314,9 +314,9 @@ $definition-speech-color:               #666;
 $image-desc-cite-color:                 #666;
 
 // Highlight/Note
-$highlight-bg:                          #fd6;
+$highlight-bg:                          rgba(#a0abfd, .5);
 $highlight-color:                       $body-color;
-$highlight-hover-bg:                    #acfdf0;
+$highlight-hover-bg:                    rgba(#a0abfd, .75);
 $highlight-hover-color:                 $body-color;
 $highlight-undelete-bg:                 #d3cfc9;
 
