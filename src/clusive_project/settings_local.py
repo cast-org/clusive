@@ -29,3 +29,10 @@ DATABASES = {
 # Don't actually send email, just log to console.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'cisl@cast.org'
+
+# Log database queries
+LOGGING['loggers']['django.db.backends'] = {
+    'handlers': ['console'],
+    'level': 'DEBUG',
+    'propagate': False,
+}
