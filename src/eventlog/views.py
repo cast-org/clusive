@@ -22,16 +22,27 @@ def event_log_report(request):
 def row_generator(events):
     pseudo_buffer = Echo()
     writer = csv.writer(pseudo_buffer)
-    yield writer.writerow(['Timestamp', 'Event ID', 'Session Id', 'User', 'Role', 'Period',
-                           'Type', 'Action', 'Document', 'Page', 'Control', 'Value'])
+    yield writer.writerow(['Timestamp', 'User', 'Role', 'Period', 'Site',
+                           'Type', 'Action', 'Document', 'Page', 'Control', 'Value',
+                           'Event ID', 'Session Id'])
+    period_site = {}
     for e in events:
-        yield writer.writerow(row_for_event(e))
+        yield writer.writerow(row_for_event(e, period_site))
 
 
-def row_for_event(e):
+def row_for_event(e, period_site):
     period = e.group.anon_id if e.group else None
-    return [e.eventTime, e.id, e.session.id, e.actor.anon_id, e.membership, period,
-            e.type, e.action, e.document, e.page, e.control, e.value]
+    # period_site map caches lookups of the site anon_id for each period.
+    if period:
+        site = period_site.get(period)
+        if not site:
+            site = e.group.site.anon_id
+            period_site[period] = site
+    else:
+        site = None
+    return [e.eventTime, e.actor.anon_id, e.membership, period, site,
+            e.type, e.action, e.document, e.page, e.control, e.value,
+            e.id, e.session.id]
 
 
 class Echo:
