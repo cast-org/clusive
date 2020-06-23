@@ -105,29 +105,30 @@ var pub_version = "{{ version }}";
         ];
 
         D2Reader.load({
-                url: new URL(url),
-                upLinkUrl: upLink,
-                ui: {
-                    settings: {
-                        fontFamily: true,
-                        fontSize: true,
-                        appearance: true,
-                        scroll: true,
-                        lineHeight: true
-                    },
+            url: new URL(url),
+            upLinkUrl: upLink,
+            ui: {
+                settings: {
+                    fontFamily: true,
+                    fontSize: true,
+                    appearance: true,
+                    scroll: true,
+                    lineHeight: true
                 },
-                rights: {
-                    enableBookmarks: true,
-                    enableAnnotations: true
-                },
-                material: false,
-                userSettings: userSettings,
-                initialAnnotations: {"bookmarks":[], "highlights": annotations},
-                lastReadingPosition: lastReadingPosition,
-                injectables: injectables,
+            },
+            rights: {
+                enableBookmarks: true,
+                enableAnnotations: true
+            },
+            material: false,
+            userSettings: userSettings,
+            initialAnnotations: {"bookmarks":[], "highlights": annotations},
+            lastReadingPosition: lastReadingPosition,
+            injectables: injectables,
 
-                selectionMenuItems: selectionMenuItems,
-                initialAnnotationColor: "#a0abfd",
+            selectionMenuItems: selectionMenuItems,
+            //initialAnnotationColor: "#a0abfd",
+            initialAnnotationColor: "var(--CRT_highlightOverlayBg)",
 
             api: {
                 addBookmark: function (bookmark) {
