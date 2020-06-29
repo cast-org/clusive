@@ -69,6 +69,8 @@ class Event(models.Model):
                 period_id = session.get(PERIOD_KEY, None)
                 group = Period.objects.filter(id=period_id).first()
             clusive_user = login_session.user
+            if value and len(value) > 128:
+                value = value[:126] + '…'
             event = cls(type=type,
                         action=action,
                         actor=clusive_user,
