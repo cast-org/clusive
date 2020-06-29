@@ -88,9 +88,12 @@ var pub_version = "{{ version }}";
         ];
 
         var userSettings = { textAlignment:'start' };
-        var lastReadingPosition = {{ last_position|safe }};
-        var annotations = JSON.parse('{{ annotations|safe }}');
+        var annotations = [];
+        {% for a in annotations %}
+            annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
+        {% endfor %}
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
+        var lastReadingPosition = {{ last_position|safe }};
 
         var selectionMenuItems = [
             {
@@ -160,7 +163,7 @@ var pub_version = "{{ version }}";
                     var atBottom = (elt.scrollHeight - elt.scrollTop === elt.clientHeight);
                     document.getElementById('prevResourceButton').disabled = (firstResource && atTop);
                     document.getElementById('nextResourceButton').disabled = (lastResource && atBottom);
-                    return trackReadingLocation(pub_id, locator);
+                    return trackReadingLocation(pub_id, pub_version, locator);
                 },
                 updateUserSettings: function (userSettings) {
                     return Promise.resolve();

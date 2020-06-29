@@ -126,7 +126,7 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                                    'prev_version' : bv_prev,
                                    'next_version' : bv_next,
                                    'last_position' : pdata.lastLocation or "null",
-                                   'annotations' : json.dumps(annotationList),
+                                   'annotations' : annotationList,
                                    }
             page_viewed.send(self.__class__, request=request, document=pub_id)
         return super().get(request, *args, **kwargs)

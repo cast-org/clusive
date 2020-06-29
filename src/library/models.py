@@ -1,5 +1,6 @@
 import json
 import logging
+import textwrap
 from base64 import b64encode
 from json import JSONDecodeError
 
@@ -124,11 +125,16 @@ class Paradata(models.Model):
         return para
 
     @classmethod
-    def record_last_location(cls, path, user, locator):
+    def record_last_location(cls, path, version, user, locator):
         b = Book.objects.get(path=path)
         para, created = cls.objects.get_or_create(book=b, user=user)
-        para.lastLocation = locator
-        para.save()
+        if para.lastVersion.sortOrder == version:
+            para.lastLocation = locator
+            para.save()
+            logger.debug('Set last reading location for %s', para)
+        else:
+            logger.debug('Book version has changed since this location was recorded, ignoring. %d but we have %d',
+                         version, para.lastVersion.sortOrder)
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
@@ -171,6 +177,9 @@ class Annotation(models.Model):
         except KeyError:
             return None
 
+    def clean_text_limited(self):
+        return textwrap.shorten(self.clean_text(), 200, placeholder='…')
+
     def update_id(self):
         """Rewrite JSON with the database ID as the annotation's ID
         so that client & server agree on one ID."""
@@ -193,9 +202,8 @@ class Annotation(models.Model):
             return 0
 
     @classmethod
-    def get_list(self, user, book_version):
-        return [a.highlight_object for a in
-                Annotation.objects.filter(user=user, bookVersion=book_version, dateDeleted=None)]
+    def get_list(cls, user, book_version):
+        return cls.objects.filter(user=user, bookVersion=book_version, dateDeleted=None)
 
     def __str__(self):
         return "[Annotation %d for %s]" % (self.pk, self.user)

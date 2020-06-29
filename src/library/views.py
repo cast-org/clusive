@@ -25,13 +25,20 @@ class UpdateLastLocationView(LoginRequiredMixin,View):
     def post(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
         book_path = request.POST.get('book')
+        version = request.POST.get('version')
         locator = request.POST.get('locator')
-        if not book_path or not locator:
-            raise Http404('POST must contain book and locator string.')
+        if not (book_path and version and locator):
+            return JsonResponse({
+                'status': 'error',
+                'error': 'POST must contain book, version, and locator string.'
+            }, status=500)
         try:
-            Paradata.record_last_location(book_path, clusive_user, locator)
+            Paradata.record_last_location(book_path, int(version), clusive_user, locator)
         except Book.DoesNotExist:
-            raise Http404('Unknown book path')
+            return JsonResponse({
+                'status': 'error',
+                'error': 'Unknown book.'
+            }, status=500)
         else:
             return JsonResponse({'status': 'ok'})
 
