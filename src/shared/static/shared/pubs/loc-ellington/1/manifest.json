@@ -1,0 +1,68 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Learn more about the life and career of Duke Ellington, an amazing American musician. ",
+        "identifier": "2fcdfac2-25c3-4262-907d-357ace4c6636",
+        "language": "en",
+        "modified": "2020-07-01T12:49:57.923182Z",
+        "title": "Duke Ellington: Meet Amazing Americans"
+    },
+    "readingOrder": [
+        {
+            "href": "v2_duke_ellington.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/03_ellington_rosary.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/06_ellington_downbeat.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/09_ellington_friends.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/10_ellington_ailey.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/11_ellington_ivories.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/04_ellington_soda.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/08_ellington_performs.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/07_ellington_strayhorn.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/01_ellington_banner.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/05_ellington_johnson.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/02_ellington_portrait.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/library_congress.png",
+            "type": "image/png"
+        }
+    ]
+}

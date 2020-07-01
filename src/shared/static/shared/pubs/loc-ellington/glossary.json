@@ -1,0 +1,278 @@
+[
+    {
+        "headword": "compose",
+        "alternateForms": ["composes", "composed", "composing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To create or write." ,
+                "examples": [ "She has composed several poems to read aloud to the class." ],
+                "images": [
+                    {
+                        "src": "glossimages/compose1.jpg",
+                        "alt": "Photo of a person at a piano, writing on paper.",
+                        "description": "A person sits at a piano. Sheets of paper lean on a stand at the top of the piano. With one hand, the person writes on one of the sheets of paper. His other hand is on the piano keys.",
+                        "caption": "A musician composes a song.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/2459f713-d514-4d71-8e43-84bc0cf50c39",
+                            "title": "Composer Photoshoot 2",
+                            "author": "akintsy_photo",
+                            "author_url": "https://www.flickr.com/photos/48952837@N04",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "professional",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Needing special training or study." ,
+                "examples": [ "He was a professional attorney after finishing law school." ],
+                "images": [
+                    {
+                        "src": "glossimages/professional1.jpg",
+                        "alt": "Photo of a doctor talking with a patient.",
+                        "description": "A doctor is at a table with another person. The doctor wears a white coat and has a stethescope around her neck. She holds a clipboard in her hand. The doctor points to something on the clipboard while she looks at the other person. The other person looks at the clipboard, too.",
+                        "caption": "Doctors go through years of training to become professionals. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/99f59e46-8890-461a-90eb-0b8a76a5741e",
+                            "author": "www.ilmicrofono.it",
+                            "author_url": "https://www.flickr.com/photos/115089924@N02",
+                            "license": " CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "instrument",
+        "alternateForms": ["instruments"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A tool, musical, or mechanical device used for special work." ,
+                "examples": [ "The musician plays several different instruments." ],
+                "images": [
+                    {
+                        "src": "glossimages/instrument2.jpg",
+                        "alt": "Photo of a person playing a saxophone",
+                        "description": "A person playing a musical instrument called the saxophone. The saxophone is long, curved. It has a mouthpiece at its narrow upper end, and it opens up to a wide bell shape at its lower end. The saxophone is made of gold colored metal called brass. You can see many keys down the front of the saxophone. ",
+                        "caption": "A saxophone is just one type of musical instrument",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/bb3bb0ae-055d-4e77-9143-36385d7a2c1e",
+                            "title": "Slapnation band",
+                            "author": "watts_photos",
+                            "author_url": "https://www.flickr.com/photos/126288307@N05",
+                            "license": "CC by 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "commission",
+        "alternateForms": ["commissions", "commissioned", "commissioning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give an order giving permission to perform a certain task." ,
+                "examples": [ "The author was commissioned to write a biography of the film star." ]
+            }
+        ]
+    },
+    {
+        "headword": "engagement",
+        "alternateForms": ["engagements"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Employment, or a period or post of employment, especially in the performing arts" ,
+                "examples": [ "The band had three engagements in three different cities over the next week. " ]
+            }
+        ]
+    },
+    {
+        "headword": "abroad",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In or to a country that is not one's own." ,
+                "examples": [ "The Americans were travelling abroad to England and France." ]
+            }
+        ]
+    },
+    {
+        "headword": "career",
+        "alternateForms": ["careers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The work a person chooses to do through life. " ,
+                "examples": [ "She wants to have a career as a scientist." ],
+                "images": [
+                    {
+                        "src": "glossimages/career1.jpg",
+                        "alt": "Photo of two people working in a lab.",
+                        "description": "Two people wearing lab goggles and lab coats. They are working with scientific materials.",
+                        "caption": "Science is just one field to go into. Music, art, and teacher are other options.  ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/061675e2-b2a5-483a-aebc-2969052b4fd5",
+                            "title": "Preparing Scientific Equipment",
+                            "author": "National Eye Institute",
+                            "author_url": "https://www.flickr.com/photos/80030261@N06 ",
+                            "license": "CC BY 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "familiar",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Known by many people; easily recognized." ,
+                "examples": [ "The song was so familiar, the audience could sing along with the band." ]
+            }
+        ]
+    },
+    {
+        "headword": "refer",
+        "alternateForms": ["refers","refered","refering"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To speak of; mention." ,
+                "examples": [ "She referred to his work in her speech." ]
+            }
+        ]
+    },
+    {
+        "headword": "project",
+        "alternateForms": ["projects"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Any activity that takes great effort or planning." ,
+                "examples": [ "The building project will take five years to complete." ],
+                "images": [
+                    {
+                        "src": "glossimages/project1.jpg",
+                        "alt": "Photo of people working on a building.",
+                        "description": "People working on a garage. Ladders lean against the front of the garage. Someone stands on a ladder at the side of the garage, working near the roof. People in front of the garage are cutting wood.",
+                        "caption": "Multiple people are working on the garage, showing that it's not a small project!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/cedeadfd-a1be-4e36-822b-11b7afe4cd9f",
+                            "title": "Butler Project 2010",
+                            "author": "marcia.furman ",
+                            "author_url": "https://www.flickr.com/photos/21975603@N00",
+                            "license": "CC by-nc-nd 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "overseas",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In or to a country that is not one's own." ,
+                "examples": [ "The Americans were travelling overseas to England and France." ]
+            }
+        ]
+    },
+    {
+        "headword": "vocation",
+        "alternateForms": ["vocations"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The work a person chooses to do through life. " ,
+                "examples": [ "She wants to pursue science as her vocation. " ],
+                "images": [
+                    {
+                        "src": "glossimages/career1.jpg",
+                        "alt": "Photo of two people working in a lab.",
+                        "description": "Two people wearing lab goggles and lab coats. They are working with scientific materials.",
+                        "caption": "Science is just one field to go into. Music, art, and teacher are other options.  ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/061675e2-b2a5-483a-aebc-2969052b4fd5",
+                            "title": "Preparing Scientific Equipment",
+                            "author": "National Eye Institute",
+                            "author_url": "https://www.flickr.com/photos/80030261@N06 ",
+                            "license": "CC BY 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "renowned",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Known by many people; easily recognized." ,
+                "examples": [ "The song was so well renowned, the audience could sing along with the band." ]
+            }
+        ]
+    },
+    {
+        "headword": "cite",
+        "alternateForms": ["cites", "cited", "citing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To speak of; mention." ,
+                "examples": [ "She cited his work in her speech." ]
+            }
+        ]
+    },
+    {
+        "headword": "enterprise",
+        "alternateForms": ["enterprises"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Any activity that takes great effort or planning." ,
+                "examples": [ "The business enterprise will take five years to get completely started." ],
+                "images": [
+                    {
+                        "src": "glossimages/project1.jpg",
+                        "alt": "Photo of people working on a building.",
+                        "description": "People working on a garage. Ladders lean against the front of the garage. Someone stands on a ladder at the side of the garage, working near the roof. People in front of the garage are cutting wood.",
+                        "caption": "Multiple people are working on the garage, showing that it's not a small project!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/cedeadfd-a1be-4e36-822b-11b7afe4cd9f",
+                            "title": "Butler Project 2010",
+                            "author": "marcia.furman ",
+                            "author_url": "https://www.flickr.com/photos/21975603@N00",
+                            "license": "CC by-nc-nd 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

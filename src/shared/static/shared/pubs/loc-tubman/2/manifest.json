@@ -3,9 +3,9 @@
     "metadata": {
         "@type": "http://schema.org/Book",
         "description": "Read about Harriet Tubman and learn about this amazing woman's life and experiences. ",
-        "identifier": "a83d302b-2509-4197-a2b3-4c78150fd02b",
+        "identifier": "cc4f4434-2a85-46b5-9865-b3361d55ea71",
         "language": "en",
-        "modified": "2020-06-16T18:32:04.707665Z",
+        "modified": "2020-06-30T22:05:31.804591Z",
         "title": "Harriet Tubman: Meet Amazing Americans"
     },
     "readingOrder": [
@@ -59,6 +59,10 @@
         {
             "href": "images/07_tubman_music.jpg",
             "type": "image/jpeg"
+        },
+        {
+            "href": "images/library_congress.png",
+            "type": "image/png"
         }
     ]
 }
