@@ -1,0 +1,64 @@
+{
+    "@context": "https://readium.org/webpub-manifest/context.jsonld",
+    "metadata": {
+        "@type": "http://schema.org/Book",
+        "description": "Frederick Douglass became the first black citizen to hold high rank in the U.S. government.",
+        "identifier": "3fc4c0de-bfbb-4278-a982-457737976332",
+        "language": "en",
+        "modified": "2020-07-01T13:02:41.859789Z",
+        "title": "Frederick Douglass: Meet Amazing Americans"
+    },
+    "readingOrder": [
+        {
+            "href": "v2_frederick_douglass.xhtml",
+            "type": "application/xhtml+xml"
+        }
+    ],
+    "resources": [
+        {
+            "href": "images/06_douglass_northstar.jpg",
+            "rel": "cover",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/05_douglass_song.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/03_douglass_life.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/02_douglass_1890.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/08_douglass_mass.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/09_douglass_letter.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/04_douglass_certificate.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/07_douglass_pioneers.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/01_douglass_banner.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/10_douglass_son.jpg",
+            "type": "image/jpeg"
+        },
+        {
+            "href": "images/library_congress.png",
+            "type": "image/png"
+        }
+    ]
+}
