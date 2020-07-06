@@ -1,0 +1,22 @@
+<div class="dropdown">
+    <button type="button" class="btn btn-primary" data-cfw="dropdown">
+        {{ period.name }}
+        <span class="caret" aria-hidden="true"></span>
+    </button>
+    <ul class="dropdown-menu">
+        {% for p in clusive_user.periods.all %}
+            <li>
+                <a href="{% url 'library' period_id=p.id %}"
+                 {% if p == period %}class="active" aria-current="true"{% endif %}>
+                    {{ p.name }}
+                </a>
+            </li>
+        {% endfor %}
+        <li>
+            <a href="">All content</a>
+        </li>
+        <li>
+            <a href="{% url 'upload' %}">My content</a>
+        </li>
+    </ul>
+</div>

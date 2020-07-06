@@ -14,6 +14,9 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
+    <p>
+       {% include "shared/partial/library_view_selector.html" %}
+    </p>
     {% if object_list|length == 0 %}
         No articles found.
     {% else %}

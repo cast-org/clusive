@@ -15,10 +15,18 @@ logger = logging.getLogger(__name__)
 class Book(models.Model):
     """Metadata about a single reading, to be represented as an item on the Library page.
     There may be multiple versions of a single Book, which are separate EPUB files."""
-    path = models.CharField(max_length=256, db_index=True, unique=True)
+    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=256)
+    author = models.CharField(max_length=256)
     description = models.TextField(default="")
     cover = models.CharField(max_length=256, null=True)
+
+    @property
+    def path(self):
+        if self.owner:
+            return '%d/%d' % (self.owner.pk, self.pk)
+        else:
+            return 'public/%d' % self.pk
 
     def __str__(self):
         return self.path
@@ -34,6 +42,10 @@ class BookVersion(models.Model):
     glossary_words = models.TextField(default="[]")  # Words in the glossary that occur in this version
     all_words = models.TextField(default="[]")  # All words that occur in this version
     new_words = models.TextField(default="[]")  # Words that occur in this version but not the previous one.
+
+    @property
+    def path(self):
+        return '%s/%d' % (self.book.path, self.sortOrder)
 
     @property
     def glossary_word_list(self):

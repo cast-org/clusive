@@ -1,19 +1,63 @@
 import logging
+import os
+from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse, Http404, HttpResponseForbidden
+from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView, FormView
+from ebooklib.epub import EpubException
 
 from eventlog.signals import annotation_action
+from library.forms import UploadForm
 from library.models import Paradata, Book, Annotation, BookVersion
+from library.parsing import unpack_epub_file
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
+
+
+class UploadView(LoginRequiredMixin,FormView):
+    template_name = 'library/upload.html'
+    form_class = UploadForm
+    success_url = '/library/metadata'
+
+    def form_valid(self, form):
+        clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+        upload = self.request.FILES['file']
+        fd, tempfile = mkstemp()
+        try:
+            with os.fdopen(fd, 'wb') as f:
+                for chunk in upload.chunks():
+                   f.write(chunk)
+            self.bv = unpack_epub_file(clusive_user, tempfile)
+            return super().form_valid(form)
+
+        except EpubException:
+            logger.warning('Could not process uploaded file, filename=%s', str(upload))
+            form.add_error('file', 'Could not process uploaded file. Are you sure it is an EPUB file?')
+            return super().form_invalid(form)
+
+        finally:
+            logger.debug("Removing temp file %s" % (tempfile))
+            os.remove(tempfile)
+
+    def get_success_url(self):
+        return self.success_url + '?bv=%d' % (self.bv.pk)
+
+
+class MetadataFormView(LoginRequiredMixin,TemplateView):
+    template_name = 'library/metadata.html'
+
+    def get(self, request, *args, **kwargs):
+        bv_id = request.GET.get('bv')
+        bv = get_object_or_404(BookVersion, pk=bv_id)
+        self.extra_context = { 'src': bv.path + '/' + bv.book.cover }
+        return super().get(request, *args, **kwargs)
 
 
 class UpdateLastLocationView(LoginRequiredMixin,View):

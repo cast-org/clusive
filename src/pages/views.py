@@ -1,29 +1,42 @@
-import json
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView, TemplateView, RedirectView
 
 from eventlog.signals import page_viewed
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation
-from roster.models import ClusiveUser
+from roster.models import ClusiveUser, Period
 
 logger = logging.getLogger(__name__)
 
+class ReaderIndexView(LoginRequiredMixin,RedirectView):
+    """This is the 'home page', currently just redirects to an appropriate library view."""
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            logger.debug("Staff login")
+            return 'admin'
+        else:
+            clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+            period_id = clusive_user.periods.first().id
+            kwargs['period_id'] = period_id
+            logger.debug('Redir to period %s' % (period_id))
+            return reverse('library', kwargs = {'period_id': period_id})
+
+
 class LibraryView(LoginRequiredMixin,ListView):
-    """Library page showing all books"""
+    """Library page showing a list of books"""
     template_name = 'pages/library.html'
 
     def get_queryset(self):
-        self.clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
-        period = self.clusive_user.periods.first()
-        logger.debug("User is in period %s" % (period))
-        if period:
-            books = [ba.book for ba in BookAssignment.objects.filter(period=period)]
-            logger.debug("Books: %s", books)
+        if self.period:
+            books = [ba.book for ba in BookAssignment.objects.filter(period=self.period)]
             return books
         else:
             return Book.objects.all()
@@ -31,11 +44,19 @@ class LibraryView(LoginRequiredMixin,ListView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             page_viewed.send(self.__class__, request=request, page='library')
+            self.clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+            if kwargs.get('period_id'):
+                self.period = get_object_or_404(Period, id=kwargs.get('period_id'))
+                if not self.clusive_user.periods.filter(id=self.period.id).exists():
+                    raise Http404('Not a Period of this User.')
+            else:
+                self.period = self.clusive_user.periods.first()
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['clusive_user'] = self.clusive_user
+        context['period'] = self.period
         return context
 
 
