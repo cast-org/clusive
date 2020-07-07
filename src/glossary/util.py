@@ -14,17 +14,17 @@ logger = logging.getLogger(__name__)
 book_glossaries = {}
 
 
-def has_definition(document, word):
+def has_definition(book_id, word):
     """Determine whether the given word exists in our dictionary.
      We don't want to query or cue words when we don't have a defintion."""
-    return lookup(document, word) is not None
+    return lookup(book_id, word) is not None
 
 
-def lookup(document, word):
+def lookup(book_id, word):
     # First try to find in a book glossary
-    if not book_glossaries.get(document):
-        book_glossaries[document] = BookGlossary(document)
-    defs = book_glossaries[document].lookup(word)
+    if not book_glossaries.get(book_id):
+        book_glossaries[book_id] = BookGlossary(book_id)
+    defs = book_glossaries[book_id].lookup(word)
     if (defs):
         defs['source'] = 'Book'
     else:

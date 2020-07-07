@@ -15,7 +15,16 @@
 {% block content %}
 <main id="content" tabindex="-1">
     <p>
-       {% include "shared/partial/library_view_selector.html" %}
+        <div class="row">
+            <div class="col">
+                {% include "shared/partial/library_view_selector.html" %}
+            </div>
+            {% if current_view == 'My content' %}
+            <div class="col text-end">
+                <a href="{% url 'upload' %}" class="btn btn-primary">+ Upload content</a>
+            </div>
+            {% endif %}
+        </div>
     </p>
     {% if object_list|length == 0 %}
         No articles found.
@@ -25,11 +34,11 @@
             <div class="card card-library">
                 {% if pub.cover %}
                 <div class="card-img card-img-top">
-                    <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{ pub.cover }}" alt="Cover image for {{ pub.title }}" class="img-fluid" />
+                    <img src="{% get_media_prefix %}{{pub.path}}/0/{{ pub.cover }}" alt="Cover image for {{ pub.title }}" class="img-fluid" />
                 </div>
                 {% endif %}
                 <div class="card-body">
-                    <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{pub.path}}'); return false;"><h2 class="card-title">{{ pub.title }}</h2></a>
+                    <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{pub.id}}'); return false;"><h2 class="card-title">{{ pub.title }}</h2></a>
                     {% if pub.description %}<p>{{ pub.description }}</p>{% endif %}
                 </div>
             </div>

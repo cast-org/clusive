@@ -1,9 +1,11 @@
 import json
 import logging
+import os
 import textwrap
 from base64 import b64encode
 from json import JSONDecodeError
 
+from django.core.files.storage import default_storage
 from django.db import models
 from django.utils import timezone
 
@@ -28,8 +30,16 @@ class Book(models.Model):
         else:
             return 'public/%d' % self.pk
 
+    @property
+    def storage_dir(self):
+        return default_storage.path(self.path)
+
+    @property
+    def glossary_path(self):
+        return os.path.join(self.storage_dir, 'glossary.json')
+
     def __str__(self):
-        return self.path
+        return '<Book %s/%s>' % (self.owner, self.title)
 
     class Meta:
         ordering = ['title']
@@ -46,6 +56,15 @@ class BookVersion(models.Model):
     @property
     def path(self):
         return '%s/%d' % (self.book.path, self.sortOrder)
+
+    @property
+    def manifest_path(self):
+        return '%s/manifest.json' % (self.path)
+
+    @property
+    def storage_dir(self):
+        return os.path.join(self.book.storage_dir, str(self.sortOrder))
+
 
     @property
     def glossary_word_list(self):
@@ -85,11 +104,11 @@ class BookVersion(models.Model):
         self.new_words = json.dumps(val)
 
     @classmethod
-    def lookup(cls, path, version_number):
-        return cls.objects.get(book__path=path, sortOrder=version_number)
+    def lookup(cls, book_id, version_number):
+        return cls.objects.get(book__pk=book_id, sortOrder=version_number)
 
     def __str__(self):
-        return "%s[%d]" % (self.book, self.sortOrder)
+        return '<BV %s[%d]>' % (self.book, self.sortOrder)
 
     class Meta:
         ordering = ['book', 'sortOrder']
@@ -137,8 +156,8 @@ class Paradata(models.Model):
         return para
 
     @classmethod
-    def record_last_location(cls, path, version, user, locator):
-        b = Book.objects.get(path=path)
+    def record_last_location(cls, book_id, version, user, locator):
+        b = Book.objects.get(pk=book_id)
         para, created = cls.objects.get_or_create(book=b, user=user)
         if para.lastVersion.sortOrder == version:
             para.lastLocation = locator

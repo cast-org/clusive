@@ -42,7 +42,7 @@ def unpack_epub_file(clusive_user, file):
         book.save()
         bv = BookVersion(book=book, sortOrder=0)
         bv.save()
-        dir = default_storage.path(bv.path)
+        dir = bv.storage_dir
         os.makedirs(dir)
         with ZipFile(file) as zf:
             zf.extractall(path=dir)

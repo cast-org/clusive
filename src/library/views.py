@@ -12,16 +12,57 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, TemplateView, FormView
 from ebooklib.epub import EpubException
 
-from eventlog.signals import annotation_action
+from eventlog.signals import annotation_action, page_viewed
 from library.forms import UploadForm
-from library.models import Paradata, Book, Annotation, BookVersion
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
 from library.parsing import unpack_epub_file
-from roster.models import ClusiveUser
+from roster.models import ClusiveUser, Period
 
 logger = logging.getLogger(__name__)
 
 
-class UploadView(LoginRequiredMixin,FormView):
+class LibraryView(LoginRequiredMixin, ListView):
+    """Library page showing a list of books"""
+    template_name = 'library/library.html'
+    view = 'public'
+    view_name = None  # User-visible name for the current view
+    period = None
+
+    def get_queryset(self):
+        if self.view == 'period' and self.period:
+            self.view_name = self.period.name
+            return [ba.book for ba in BookAssignment.objects.filter(period=self.period)]
+        elif self.view == 'mine':
+            self.view_name = 'My content'
+            return Book.objects.filter(owner=self.clusive_user)
+        elif self.view == 'public':
+            self.view_name = 'Public content'
+            return Book.objects.filter(owner=None)
+        else:
+            raise Http404('Unknown view type')
+
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+        self.view = kwargs.get('view')
+        if self.view == 'period':
+            if kwargs.get('period_id'):
+                self.period = get_object_or_404(Period, id=kwargs.get('period_id'))
+                if not self.clusive_user.periods.filter(id=self.period.id).exists():
+                    raise Http404('Not a Period of this User.')
+            else:
+                self.period = self.clusive_user.periods.first()
+        page_viewed.send(self.__class__, request=request, page='library')
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clusive_user'] = self.clusive_user
+        context['period'] = self.period
+        context['current_view'] = self.view_name
+        return context
+
+
+class UploadView(LoginRequiredMixin, FormView):
     template_name = 'library/upload.html'
     form_class = UploadForm
     success_url = '/library/metadata'
@@ -33,7 +74,7 @@ class UploadView(LoginRequiredMixin,FormView):
         try:
             with os.fdopen(fd, 'wb') as f:
                 for chunk in upload.chunks():
-                   f.write(chunk)
+                    f.write(chunk)
             self.bv = unpack_epub_file(clusive_user, tempfile)
             return super().form_valid(form)
 
@@ -50,17 +91,18 @@ class UploadView(LoginRequiredMixin,FormView):
         return self.success_url + '?bv=%d' % (self.bv.pk)
 
 
-class MetadataFormView(LoginRequiredMixin,TemplateView):
+class MetadataFormView(LoginRequiredMixin, TemplateView):
     template_name = 'library/metadata.html'
 
     def get(self, request, *args, **kwargs):
         bv_id = request.GET.get('bv')
         bv = get_object_or_404(BookVersion, pk=bv_id)
-        self.extra_context = { 'src': bv.path + '/' + bv.book.cover }
+        cover = bv.path + '/' + bv.book.cover if bv.book.cover else None
+        self.extra_context = {'title': bv.book.title, 'cover_src': cover}
         return super().get(request, *args, **kwargs)
 
 
-class UpdateLastLocationView(LoginRequiredMixin,View):
+class UpdateLastLocationView(LoginRequiredMixin, View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -68,16 +110,16 @@ class UpdateLastLocationView(LoginRequiredMixin,View):
 
     def post(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
-        book_path = request.POST.get('book')
+        book_id = request.POST.get('book')
         version = request.POST.get('version')
         locator = request.POST.get('locator')
-        if not (book_path and version and locator):
+        if not (book_id and version and locator):
             return JsonResponse({
                 'status': 'error',
                 'error': 'POST must contain book, version, and locator string.'
             }, status=500)
         try:
-            Paradata.record_last_location(book_path, int(version), clusive_user, locator)
+            Paradata.record_last_location(int(book_id), int(version), clusive_user, locator)
         except Book.DoesNotExist:
             return JsonResponse({
                 'status': 'error',
@@ -87,7 +129,7 @@ class UpdateLastLocationView(LoginRequiredMixin,View):
             return JsonResponse({'status': 'ok'})
 
 
-class AnnotationView(LoginRequiredMixin,View):
+class AnnotationView(LoginRequiredMixin, View):
     """
     POST to this view to add a new highlight to the database.
     DELETE to it to remove one.
@@ -108,17 +150,17 @@ class AnnotationView(LoginRequiredMixin,View):
             logger.debug('Undeleting annotation %s', anno)
             annotation_action.send(sender=AnnotationView.__class__,
                                    request=request,
-                                   annotation = anno,
+                                   annotation=anno,
                                    action='HIGHLIGHTED')
             return JsonResponse({'success': True})
         else:
-            book_path = request.POST.get('book')
+            book_id = request.POST.get('book')
             version_number = int(request.POST.get('version'))
             highlight = request.POST.get('highlight')
-            if not book_path or not highlight:
+            if not book_id or not highlight:
                 raise Http404('POST must contain book, version, and highlight string.')
             try:
-                book_version = BookVersion.lookup(book_path, version_number)
+                book_version = BookVersion.lookup(book_id, version_number)
                 annotation = Annotation(user=clusive_user, bookVersion=book_version, highlight=highlight)
                 annotation.update_progression()
                 annotation.save()
@@ -128,10 +170,10 @@ class AnnotationView(LoginRequiredMixin,View):
                 logger.debug('Created annotation %s', annotation)
                 annotation_action.send(sender=AnnotationView.__class__,
                                        request=request,
-                                       annotation = annotation,
+                                       annotation=annotation,
                                        action='HIGHLIGHTED')
             except BookVersion.DoesNotExist:
-                raise Http404('Unknown BookVersion: %s / %d' % (book_path, version_number))
+                raise Http404('Unknown BookVersion: %s / %d' % (book_id, version_number))
             else:
                 return JsonResponse({'success': True, 'id': annotation.pk})
 
@@ -144,16 +186,16 @@ class AnnotationView(LoginRequiredMixin,View):
         anno.save()
         annotation_action.send(sender=AnnotationView.__class__,
                                request=request,
-                               annotation = anno,
+                               annotation=anno,
                                action='REMOVED')
         return JsonResponse({'success': True})
 
 
-class AnnotationListView(LoginRequiredMixin,ListView):
+class AnnotationListView(LoginRequiredMixin, ListView):
     template_name = 'library/annotation_list.html'
     context_object_name = 'annotations'
 
     def get_queryset(self):
         clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
-        bookVersion = BookVersion.lookup(self.kwargs['document'], self.kwargs['version'])
+        bookVersion = BookVersion.lookup(self.kwargs['book'], self.kwargs['version'])
         return Annotation.objects.filter(bookVersion=bookVersion, user=clusive_user, dateDeleted=None)
