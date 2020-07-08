@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +11,6 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, TemplateView, FormView
-from ebooklib.epub import EpubException
 
 from eventlog.signals import annotation_action, page_viewed
 from library.forms import UploadForm
@@ -78,8 +78,10 @@ class UploadView(LoginRequiredMixin, FormView):
             self.bv = unpack_epub_file(clusive_user, tempfile)
             return super().form_valid(form)
 
-        except EpubException:
-            logger.warning('Could not process uploaded file, filename=%s', str(upload))
+        except:
+            e = sys.exc_info()[0]
+            logger.warning('Could not process uploaded file, filename=%s, error=%s',
+                           str(upload), e)
             form.add_error('file', 'Could not process uploaded file. Are you sure it is an EPUB file?')
             return super().form_invalid(form)
 
