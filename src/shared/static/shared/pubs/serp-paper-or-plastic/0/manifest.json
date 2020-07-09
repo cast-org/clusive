@@ -18,14 +18,14 @@
             "author": "Duncan Hull",
             "source": "Flickr (https://www.flickr.com/photos/dullhunk/14516738482)",
             "license": "CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/)"
-            }},
-        {"href": "images/plastic-bags-evelyngiggles.jpg", "type": "image/jpeg", "attribution": {
-            "title": "plastic bags awaiting recycling",
-            "author": "EvelynGiggles",
-            "source": "Flickr (https://www.flickr.com/photos/evelynishere/2840300715)",
-            "license": "CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/)"
-        }},
-        {"href": "images/recycle-symbol.jpg", "type": "image/jpeg"}
+            }
+        },
+        {"href": "images/recycle-symbol.jpg", "type": "image/jpeg"},
+        {"href" : "images/landfill-1.jpg", "type": "image/jpeg"},
+        {
+            "href": "stylesheet.css",
+            "type": "text/css"
+        }
     ],
     "links": []
 }

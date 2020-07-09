@@ -2,7 +2,7 @@
     "@context": "https://readium.org/webpub-manifest/context.jsonld",
     "metadata": {
         "@type": "https://schema.org/Article",
-        "headline": "Battle of Lexington",
+        "title": "Battle of Lexington",
         "description": "Read accounts of the American Revolution from people who lived at the time.",
         "publisher": "CAST",
         "language": "en",
@@ -21,7 +21,7 @@
             }
         },
         {
-            "href": "css/stylesheet.css",
+            "href": "stylesheet.css",
             "type": "text/css"
         }
     ],

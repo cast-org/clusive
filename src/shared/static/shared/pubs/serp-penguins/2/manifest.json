@@ -24,6 +24,10 @@
       "rel": "cover",
       "href": "GoogleDoc/images/image1.jpg",
       "type": "image/jpeg"
+    },
+    {
+      "href": "GoogleDoc/stylesheet.css",
+      "type": "text/css"
     }
   ]
 }

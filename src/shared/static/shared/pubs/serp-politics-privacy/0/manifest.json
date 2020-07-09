@@ -28,6 +28,10 @@
     {
       "href": "GoogleDoc/images/image2.gif",
       "type": "image/gif"
+    },
+    {
+      "href": "GoogleDoc/stylesheet.css",
+      "type": "text/css"
     }
   ]
 }

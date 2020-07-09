@@ -19,6 +19,10 @@
             "href": "images/onlinepredators.jpg",
             "rel": "cover",
             "type": "image/jpeg"
+        },
+        {
+            "href": "stylesheet.css",
+            "type": "text/css"
         }
     ]
 }
