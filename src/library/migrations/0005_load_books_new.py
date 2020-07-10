@@ -3,8 +3,6 @@ import logging
 
 from django.db import migrations
 
-from library.admin import load_static_books
-
 logger = logging.getLogger(__name__)
 
 

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Book(models.Model):
     """Metadata about a single reading, to be represented as an item on the Library page.
     There may be multiple versions of a single Book, which are separate EPUB files."""
-    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=256)
     author = models.CharField(max_length=256)
     description = models.TextField(default="")
@@ -47,7 +47,7 @@ class Book(models.Model):
 
 class BookVersion(models.Model):
     """Database representation of metadata about a single EPUB file."""
-    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='versions')
     sortOrder = models.SmallIntegerField()
     glossary_words = models.TextField(default="[]")  # Words in the glossary that occur in this version
     all_words = models.TextField(default="[]")  # All words that occur in this version
@@ -55,16 +55,23 @@ class BookVersion(models.Model):
 
     @property
     def path(self):
+        """Relative, URL-style path from MEDIA_URL to this book version."""
         return '%s/%d' % (self.book.path, self.sortOrder)
 
     @property
     def manifest_path(self):
+        """Relative, URL-style path from MEDIA_URL to the manifest for this book version."""
         return '%s/manifest.json' % (self.path)
 
     @property
     def storage_dir(self):
+        """Absolute filesystem location of this book version's content."""
         return os.path.join(self.book.storage_dir, str(self.sortOrder))
 
+    @property
+    def manifest_file(self):
+        """Absolute filesystem location of this book version's manifest."""
+        return os.path.join(self.storage_dir, 'manifest.json')
 
     @property
     def glossary_word_list(self):

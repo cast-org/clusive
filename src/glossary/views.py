@@ -3,7 +3,7 @@ import logging
 import random
 
 from django.http import JsonResponse, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from eventlog.signals import vocab_lookup
 from glossary.apps import GlossaryConfig
@@ -143,6 +143,7 @@ def glossdef(request, book_id, cued, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
     base = base_form(word)
     defs = lookup(book_id, base)
+    book = get_object_or_404(Book, pk=book_id)
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
@@ -151,7 +152,7 @@ def glossdef(request, book_id, cued, word):
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
-        context = {'defs': defs, 'pub_id': book_id}
+        context = {'defs': defs, 'book_path': book.path}
         return render(request, 'glossary/glossdef.html', context=context)
     else:
         return HttpResponseNotFound("<p>No definition found</p>")

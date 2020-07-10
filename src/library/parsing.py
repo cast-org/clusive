@@ -16,31 +16,47 @@ from library.models import Book, BookVersion
 logger = logging.getLogger(__name__)
 
 
-def unpack_epub_file(clusive_user, file):
+class BookMismatch(Exception):
+    pass
+
+
+def unpack_epub_file(clusive_user, file, book=None, version=0):
     """
-    Process an uploaded EPUB file, returns BookVersion
+    Process an uploaded EPUB file, returns BookVersion.
+
+    If book and version arguments are given, it is created as that version.
+    Otherwise, a new Book is created and this is the first version.
 
     This method will:
      * unzip the file into the user media area
      * find metadata
      * create a manifest
      * make a database record
+
+    It does NOT look for glossary words or parse the text content for vocabulary lists,
+    call scan_book for that.
+
     If there are any errors (such as a non-EPUB file), an exception will be raised.
     """
     with open(file, 'rb') as f, dawn.open(f) as upload:
-        logger.debug('Upload EPUB%s: %s', upload.version, str(upload))
+        logger.debug('Unpacking EPUB%s: %s', upload.version, str(upload))
         manifest = make_manifest(upload)
         title = get_metadata_item(upload, 'titles') or 'Untitled'
         author = get_metadata_item(upload, 'creators') or 'Unknown'
         description = get_metadata_item(upload, 'description') or 'No description'
         cover = adjust_href(upload, upload.cover.href) if upload.cover else None
-        book = Book(owner=clusive_user,
-                    title=title,
-                    author=author,
-                    description=description,
-                    cover=cover)
-        book.save()
-        bv = BookVersion(book=book, sortOrder=0)
+
+        if book:
+            if book.title != title:
+                raise BookMismatch('Does not appear to be a version of the same book, titles differ.')
+        else:
+            book = Book(owner=clusive_user,
+                        title=title,
+                        author=author,
+                        description=description,
+                        cover=cover)
+            book.save()
+        bv = BookVersion(book=book, sortOrder=version)
         bv.save()
         dir = bv.storage_dir
         os.makedirs(dir)
@@ -148,6 +164,81 @@ def make_toc_item(epub, it):
     if it.children:
         res['children'] = [make_toc_item(epub, c) for c in it.children]
     return res
+
+
+def scan_all_books():
+    """Go through all books and versions and update the database"""
+    for book in Book.objects.all():
+        scan_book(book)
+
+
+def scan_book(b):
+    """Looks through book manifest and text files and sets or updates database metadata."""
+    versions = b.versions.all()
+    for bv in versions:
+        # Read the book manifest
+        if os.path.exists(bv.manifest_file):
+            with open(bv.manifest_file, 'r') as file:
+                manifest = json.load(file)
+                # I think we don't want to do this, if metadata may be editable through the web
+                # but not quite ready to delete it outright.
+                # b.title = find_title(manifest)
+                # b.description = find_description(manifest)
+                # cover_link = find_cover(manifest)
+                # b.cover = str(bv.sortOrder) + "/" + cover_link if cover_link else None
+                # b.save()
+                bv.all_word_list = find_all_words(bv.storage_dir, manifest)
+                logger.debug('%s: parsed %d words', bv, len(bv.all_word_list))
+                bv.glossary_word_list = find_glossary_words(b.storage_dir, bv.all_word_list)
+                bv.save()
+        else:
+            logger.error("Book directory had no manifest: %s", bv.manifest_file)
+    # After all versions are read, determine new words added in each version.
+    if len(versions) > 1:
+        for bv in versions:
+            if bv.sortOrder > 0:
+                bv.new_word_list = list(set(bv.all_word_list) - set(versions[bv.sortOrder - 1].all_word_list))
+                bv.save()
+
+
+def find_title(manifest):
+    title = manifest['metadata'].get('title')
+    if not title:
+        title = manifest['metadata'].get('headline')
+    return title
+
+
+def find_description(manifest):
+    return manifest['metadata'].get('description') or ""
+
+
+def find_cover(manifest):
+    for item in manifest['resources']:
+        if item.get('rel') == 'cover':
+            return item.get('href')
+    return None
+
+
+def find_glossary_words(book_dir, all_words):
+    glossaryfile = os.path.join(book_dir, 'glossary.json')
+    if os.path.exists(glossaryfile):
+        with open(glossaryfile, 'r', encoding='utf-8') as file:
+            glossary = json.load(file)
+            words = [base_form(e['headword']) for e in glossary]
+            this_version_words = sorted(set(words).intersection(all_words))
+            return this_version_words
+    else:
+        return []
+
+
+def find_all_words(version_dir, manifest):
+    # Look up content files in manifest
+    # For each one, gather words
+    # Format word set as JSON and return it for storage in database
+    te = TextExtractor()
+    for file_info in manifest['readingOrder']:
+        te.feed_file(os.path.join(version_dir, file_info['href']))
+    return sorted(te.get_word_set())
 
 
 class TextExtractor(HTMLParser):
