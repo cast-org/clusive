@@ -1,0 +1,333 @@
+[
+    {
+        "headword": "grip",
+        "alternateForms": ["grips", "gripped", "gripping" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To hold onto.",
+                "examples": [ "The door was stuck shut so Tomi had to grip the door knob and pull hard to open the door." ],
+                "images": [
+                    {
+                        "src": "glossimages/grip1.jpg",
+                        "alt": "Photo of worker holding tightly to a metal bar. ",
+                        "description": "In the foreground, a person uses two hands to hold a long silver metal bar, which is attached to a large round metal object. Opposite to the person in the foreground, another person holds a long orange bar, also attached to the large round metal object. In the background are three more people and four tall tanks labeled: Oxygen.",
+                        "caption": "A worker grips a metal bar with two hands.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:US_Navy_050114-N-8148A-651_Machinist%27s_Mate_Fireman_Roy_Leneave,_left,_of_Salem,_Va.,_tightens_his_grip_on_a_24.jpg",
+                            "title": "Machinist's Mate Fireman tightens his grip",
+                            "author": "U.S. Navy photo by Photographer's Mate 3rd Class Kitt Amaritnant",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "predator",
+        "alternateForms": ["predators" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "any animal that hunts other animals for food.",
+                "examples": [ "Mice try to avoid being caught by predators that will catch and eat them." ],
+                "images": [
+                    {
+                        "src": "glossimages/predator1.jpg",
+                        "alt": "Photo of a cheetah hunting prey.",
+                        "description": "Photo shows a small gazelle running from right to left. A short distance behind the gazelle is a large cheetah, a light brown animal with dark brown spots. The cheetah is leaping toard the small gazelle.",
+                        "caption": "The cheetah, a type of large cat, is a predator and hunts other animals.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Cheetah_Hunting.jpg",
+                            "title": "Cheetah Hunting",
+                            "author": "Vinodtiwari2608",
+                            "author_url": "",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "amazement",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Great surprise or wonder.",
+                "examples": [ "The crowd watched in amazement as the magician performed his tricks. " ],
+                "images": [
+                    {
+                        "src": "glossimages/amazement1.jpg",
+                        "alt": "Photo of a child with wide open eyes and mouth. ",
+                        "description": "A child looking directly at the viewer. Her expression is happy. Her mouth and eyes are wide open. ",
+                        "caption": "If you are surprised by something good or beautiful, you might experience amazement!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/f494181b-ba18-4429-b69d-12ffd47253bb",
+                            "title": "Excited! You Bet!",
+                            "author": "smileham",
+                            "author_url": "https://www.flickr.com/photos/58472333@N00",
+                            "license": " CC BY-NC 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "camouflage",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that helps to change or hide appearance in order to prevent being seen or recognized.",
+                "examples": [ "The camouflage of some animals is so good, you can't see them even when you are looking right at them." ],
+                "images": [
+                    {
+                        "src": "glossimages/camouflage1.jpg",
+                        "alt": "Photo of a green frog in a green mossy background.",
+                        "description": "Green moss with brown flecks surrounds a frog. The frog has green, brown, and black areas. The frog blends in with the mossy background.",
+                        "caption": "Camouflage helps this frog blend into the plants around it.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/1f4f6a89-b492-4566-af43-af7cb5dcad78",
+                            "title": "",
+                            "author": "Mexicaans fotomagazijn",
+                            "author_url": "https://www.flickr.com/photos/29344843@N00",
+                            "license": "CC by-nc 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "baffle",
+        "alternateForms": [ "baffles", "baffled", "baffling" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be confused or unable to understand.  ",
+                "examples": [ "I was baffled when the magician made the building completely disappear.  " ]
+
+            }
+        ]
+    },
+    {
+        "headword": "disguise",
+        "alternateForms": ["disguises", "disguised", "disguising" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To change how something looks to hide an identity. ",
+                "examples": [ "Julie was able to disguise herself so well, none of her friends realized who she was.  " ],
+                "images": [
+                    {
+                        "src": "glossimages/disguise1.jpg",
+                        "alt": "Photo of a person wearing a mask and costume.",
+                        "description": "Photo of a person wearing a black, white, and red hat and cape. Black gloves with fingernails cover the person's hands and arms. A white mask with red lips and eye holes outlined in black completely cover the person's face.",
+                        "caption": "A mask and costume completely disguise the wearer's identity.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Venezia_carnevale_11.jpg",
+                            "title": "Venezia carnevale ",
+                            "author": "wanblee",
+                            "author_url": "",
+                            "license": "CC BY-SA 3.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/3.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "den",
+        "alternateForms": ["dens" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An animal's shelter or home.",
+                "examples": [ "Bears hibernate in their dens during cold winter months." ],
+                "images": [
+                    {
+                        "src": "glossimages/den1.jpg",
+                        "alt": "Photo of a wolf near a hole under a log.",
+                        "description": "A wolf lays on the ground, only its head visible, surrounded by dirt, logs, and grass. A log is behind the wolf. Beneath the log is a hole, the wolf's home, or den. ",
+                        "caption": "A wolf rests in front of its well-hidden den.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Wolf_rests_in_front_of_the_wolfs_lair.jpg",
+                            "title": "Wolf rests in front of the wolfs lair",
+                            "author": "U.S. Fish and Wildlife Service",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "lair",
+        "alternateForms": ["lairs" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An animal's shelter or home.",
+                "examples": [ "Sticking his hand into a hole, Brian recoiled in horror when he felt the body of a snake asleep in its lair." ],
+                "images": [
+                    {
+                        "src": "glossimages/lair1.jpg",
+                        "alt": "Photo of a wolf near a hole under a log.",
+                        "description": "A wolf lays on the ground, only its head visible, surrounded by dirt, logs, and grass. A log is behind the wolf. Beneath the log is a hole, the wolf's home, or den. ",
+                        "caption": "A wolf rests in front of its well-hidden den.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Wolf_rests_in_front_of_the_wolfs_lair.jpg",
+                            "title": "Wolf rests in front of the wolfs lair",
+                            "author": "U.S. Fish and Wildlife Service",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "creature",
+        "alternateForms": ["creatures" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "a single living being.",
+                "examples": [ "My cat is a friendly creature." ],
+                "images": [
+                    {
+                        "src": "glossimages/creature1.jpg",
+                        "alt": "Photo of bird sitting on vine branches.",
+                        "description": "A bird with feathers of different shades of green sits on a branch. In the background are plant leaves in verying shades of green. The color of leaves and the bird make them blend together.",
+                        "caption": "The bird in this picture is a beautiful creature that blends in with the plants that surround it. ",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:African_emerald_cuckoo_(Chrysococcyx_cupreus)_male.jpg",
+                            "title": "African emerald cuckoo",
+                            "author": "Charles J Sharp",
+                            "author_url": "https://www.sharpphotography.co.uk/",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "organism",
+        "alternateForms": ["organisms" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "a single living being.",
+                "examples": [ "Every organism starts from a parent organism of the same kind." ],
+                "images": [
+                    {
+                        "src": "glossimages/organism1.jpg",
+                        "alt": "Photo of bird sitting on vine branches.",
+                        "description": "A bird with feathers of different shades of green sits on a branch. In the background are plant leaves in verying shades of green. The color of leaves and the bird make them blend together.",
+                        "caption": "The bird in this picture is a beautiful creature that blends in with the plants that surround it. ",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:African_emerald_cuckoo_(Chrysococcyx_cupreus)_male.jpg",
+                            "title": "African emerald cuckoo",
+                            "author": "Charles J Sharp",
+                            "author_url": "https://www.sharpphotography.co.uk/",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "concealment",
+        "alternateForms": ["" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The action of hiding something or preventing it from being known.",
+                "examples": [ "The police insisted on concealment of facts because leaking of information could tip off the suspect." ],
+                "images": [
+                    {
+                        "src": "glossimages/concealment1.jpg",
+                        "alt": "Photo of book with some pages replaced with radio parts. ",
+                        "description": "A book is opened, and on the left side can be seen regular pages of text, while on the right side, parts of several pages have been cut out to form a hole. Stuffed inside the hole is a battery, wires, and other electronic parts that make up a radio. When closed, the radio parts would not be visible at all.",
+                        "caption": "During World War II, radios were often concealed inside books with pages removed.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/Category:Book_safes#/media/File:Radio_hidden_in_a_book.jpg",
+                            "title": "Radio hidden in a book",
+                            "author": "Mork",
+                            "author_url": "",
+                            "license": "Public Domain",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "mysterious",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Unknown; not able to be understood or explained. ",
+                "examples": [ "No one touched the light switch, so the light flashing on and off by itself was mysterious." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "instantly",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "At once; right away.",
+                "examples": [ "When she fell and heard a loud snap, Leah instantly knew that she had broken her arm." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "inexplicable",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Impossible to understand or explain.",
+                "examples": [ "Because the weather was clear and sunny a few moments ago, the sudden thunderstorm is inexplicable." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "instantaneously",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "At once; right away.",
+                "examples": [ "Knowing that her friend lied to her instantaneously changed her feelings for her friend. " ]
+
+            }
+        ]
+    }
+]

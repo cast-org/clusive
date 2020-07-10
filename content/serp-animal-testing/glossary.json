@@ -1,0 +1,378 @@
+[
+    {
+        "headword": "rely",
+        "alternateForms": ["relies", "relied", "relying"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To depend." ,
+                "examples": [ "Why do we rely on animals when we test our products for safety?" ],
+                "images": [
+                    {
+                        "src": "glossimages/rely1.jpg",
+                        "alt": "Photo of a group ready to catch a person.",
+                        "description": "A group of cheer leaders stand, gathered in a circle, ready to catch another, single, cheerleader who is high up in the air. ",
+                        "caption": "The cheer leader in the air relies on her team mates to catch her.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/5c14eae9-cd81-4ec4-b94b-bbe283c777c3",
+                            "title": "Cheerleading Championships - SHAPE",
+                            "author": "heraldpost",
+                            "author_url": "https://www.flickr.com/photos/24122959@N08",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "react",
+        "alternateForms": ["reacts", "reacted", "reacting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To respond.",
+                "examples": [ "If animal testing is designed to protect humans, then why do so many people react negatively to it?" ],
+                "images": [
+                    {
+                        "src": "glossimages/react1.jpg",
+                        "alt": "Photo of a soccer goalie stopping a ball.",
+                        "description": "A soccer goalie is on the ground, arms fully extended, holding a soccer ball.",
+                        "caption": "Quick reaction time enabled this soccer goalie to stop the ball.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e2c464a3-5ff6-4319-9668-a7e10edf62a8",
+                            "title": "Stopped",
+                            "author": "Chris Hunkeler",
+                            "author_url": "https://www.flickr.com/photos/14913305@N00",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "alternative",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Other, different.",
+                "examples": [ "Companies that use alternative methods of testing products advertise to people who avoid products tested on animals." ],
+                "images": [
+                    {
+                        "src": "glossimages/alternative1.jpg",
+                        "alt": "Drawing of four types of transportation.",
+                        "description": "A drawing showing four types of transportation, including airplane, ship, train, and car. ",
+                        "caption": "Instead of driving, alternative ways to travel include trains, airplanes, and sometimes even boats. ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/29503306-3a08-4c7a-a9da-8b5f7ab06b59",
+                            "title": "Drawing",
+                            "author": "Public Record Office Victoria",
+                            "author_url": "https://www.flickr.com/photos/33246905@N04",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": " "
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "justify",
+        "alternateForms": ["justifies", "justified", "justifying" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To show or prove to be right; to defend.",
+                "examples": [ "Some people argue that helping humans does not justify animal testing." ]
+            }
+        ]
+    },
+    {
+        "headword": "methods",
+        "alternateForms": ["method" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organized way of doing something.",
+                "examples": [ "His method of working has been successful for him." ]
+            }
+        ]
+    },
+    {
+        "headword": "potentially",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "Likely, in the future, but not yet.",
+                "examples": [ "I am potentially going on a trip next month." ]
+            }
+        ]
+    },
+    {
+        "headword": "research",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organized investigation in order to establish facts and reach new conclusions.",
+                "examples": [ "We are fighting meningitis by raising money for medical research." ]
+            }
+        ]
+    },
+    {
+        "headword": "seek",
+        "alternateForms": ["seeks", "sought", "seeking"  ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "to try to find.",
+                "examples": [ "The dog was seeking the bone that he had left in the yard." ],
+                "images": [
+                    {
+                        "src": "glossimages/seek1.jpg",
+                        "alt": "Photo of a dog with its head close to the ground. ",
+                        "description": "A dog walking near a fence. The dog's head is close to the ground.",
+                        "caption": "The dog keeps its head close to the ground so that it can use its sense of smell to find things.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/f10bf6e8-bda8-4ede-a869-3f41f41c5972",
+                            "author": "stefernie",
+                            "author_url": "https://www.flickr.com/photos/64913090@N00",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "advance",
+        "alternateForms": ["advances", "advanced", "advancing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make progress, build, make stronger.",
+                "examples": [ "The protests advanced the pressure on the government to bring about reform." ],
+                "images": [
+                    {
+                        "src": "glossimages/advance1.jpg",
+                        "alt": "Photo of people holding signs.",
+                        "description": "A group of people holding signs about protecting the Earth and the environment.",
+                        "caption": "Marching and respectfully explaining your position are great ways to help causes you believe in. ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/44694013-e514-4e2e-84a1-58790abf9a8a",
+                            "title": "Earth Day March in NYC 2017",
+                            "author": "Terry Ballard from Merrick, New York, USA",
+                            "author_url": "https://www.flickr.com/people/50631360@N00",
+                            "license": "CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+     {
+        "headword": "routine",
+        "alternateForms": ["routines" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organized way of doing something.",
+                "examples": [ "His routine of working has been successful for him." ]
+            }
+        ]
+    },
+    {
+        "headword": "possibly",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "Likely, in the future, but not yet.",
+                "examples": [ "I am possibly going on a trip next month." ]
+            }
+        ]
+    },
+    {
+        "headword": "study",
+        "alternateForms": ["studies" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organized investigation in order to establish facts and reach new conclusions.",
+                "examples": [ "We are fighting meningitis by raising money for medical studies." ]
+            }
+        ]
+    },
+    {
+        "headword": "look",
+        "alternateForms": ["looks", "looked", "looking"  ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "to try to find.",
+                "examples": [ "The dog was looking for the bone that he had left in the yard." ],
+                "images": [
+                    {
+                        "src": "glossimages/seek1.jpg",
+                        "alt": "Photo of a dog with its head close to the ground. ",
+                        "description": "A dog walking near a fence. The dog's head is close to the ground.",
+                        "caption": "The dog keeps its head close to the ground so that it can use its sense of smell to find things.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/f10bf6e8-bda8-4ede-a869-3f41f41c5972",
+                            "author": "stefernie",
+                            "author_url": "https://www.flickr.com/photos/64913090@N00",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "boost",
+        "alternateForms": ["boosts", "boosted", "boosting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make progress, build, make stronger.",
+                "examples": [ "The protests boosted the pressure on the government to bring about reform." ],
+                "images": [
+                    {
+                        "src": "glossimages/advance1.jpg",
+                        "alt": "Photo of people holding signs.",
+                        "description": "A group of people holding signs about protecting the Earth and the environment.",
+                        "caption": "Marching and respectfully explaining your position are great ways to help causes you believe in. ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/44694013-e514-4e2e-84a1-58790abf9a8a",
+                            "title": "Earth Day March in NYC 2017",
+                            "author": "Terry Ballard from Merrick, New York, USA",
+                            "author_url": "https://www.flickr.com/people/50631360@N00",
+                            "license": "CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+  {
+        "headword": "procedure",
+        "alternateForms": ["procedures" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organized way of doing something.",
+                "examples": [ "His proceduresof working has been successful for him." ]
+            }
+        ]
+    },
+    {
+        "headword": "presumably",
+        "alternateForms": [ ],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "Likely, in the future, but not yet.",
+                "examples": [ "I am presumably going on a trip next month." ]
+            }
+        ]
+    },
+    {
+        "headword": "analysis",
+        "alternateForms": ["analyses" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organized investigation in order to establish facts and reach new conclusions.",
+                "examples": [ "We are fighting meningitis by raising money for medical analyses." ]
+            }
+        ]
+    },
+    {
+        "headword": "probe",
+        "alternateForms": ["probes", "probed", "probing"  ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "to try to find.",
+                "examples": [ "The dog was probing for the bone that he had left in the yard." ],
+                "images": [
+                    {
+                        "src": "glossimages/seek1.jpg",
+                        "alt": "Photo of a dog with its head close to the ground. ",
+                        "description": "A dog walking near a fence. The dog's head is close to the ground.",
+                        "caption": "The dog keeps its head close to the ground so that it can use its sense of smell to find things.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/f10bf6e8-bda8-4ede-a869-3f41f41c5972",
+                            "author": "stefernie",
+                            "author_url": "https://www.flickr.com/photos/64913090@N00",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "enhance",
+        "alternateForms": ["enhances", "enhanced", "enhancing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make progress, build, make stronger.",
+                "examples": [ "The protests enhanced the pressure on the government to bring about reform." ],
+                "images": [
+                    {
+                        "src": "glossimages/advance1.jpg",
+                        "alt": "Photo of people holding signs.",
+                        "description": "A group of people holding signs about protecting the Earth and the environment.",
+                        "caption": "Marching and respectfully explaining your position are great ways to help causes you believe in. ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/44694013-e514-4e2e-84a1-58790abf9a8a",
+                            "title": "Earth Day March in NYC 2017",
+                            "author": "Terry Ballard from Merrick, New York, USA",
+                            "author_url": "https://www.flickr.com/people/50631360@N00",
+                            "license": "CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "proportion",
+        "alternateForms": ["proportions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Fraction; compared amounts; amount as compared to a whole.",
+                "examples": [ "Only a small proportion of medical researchers inflict pain or harm on animals." ],
+                "images": [
+                    {
+                        "src": "glossimages/proportion1.jpg",
+                        "alt": "Pie chart with percentages labeled.",
+                        "description": "A pie chart graphic with percentages labeled for each of four sections.",
+                        "caption": "Each section of the pie chart represents a different proportion of the whole.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/e9c84198-4d12-4604-b6f8-96b6ea42f336",
+                            "title": "Composition of Milk Pie Chart",
+                            "author": "Prachika hans",
+                            "license": "CC BY-SA 4.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
