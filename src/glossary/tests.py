@@ -20,9 +20,9 @@ class GlossaryTestCase(TestCase):
         user_1 = User.objects.create_user(username="user1", password="password1")
         user_1.save()
         ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
-        book = Book.objects.create(path='test', title='Test Book')
-        book.save()
-        book_1 = BookVersion.objects.create(book=book, sortOrder=0,
+        self.book = Book.objects.create(title='Test Book')
+        self.book.save()
+        book_1 = BookVersion.objects.create(book=self.book, sortOrder=0,
                                             glossary_words='["test"]',
                                             all_words='["test", "the", "end"]')
         book_1.save()
@@ -47,14 +47,14 @@ class GlossaryTestCase(TestCase):
 
     def test_cuelist(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/cuelist/test/0')
+        response = self.client.get('/glossary/cuelist/%d/0'  % self.book.pk)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                                  {'words': {'test': ['test', 'tested', 'testing', 'tests']}})
 
     def test_definition(self):
         #login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/glossdef/test/0/word')
+        response = self.client.get('/glossary/glossdef/%d/0/word' % self.book.pk)
         self.assertEqual(response.status_code, 200)
         self.assertInHTML('<span class="definition-example">we had a word or two about it</span>', response.content.decode('utf8'), 1)
 

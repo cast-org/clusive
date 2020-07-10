@@ -56,12 +56,12 @@ class LibraryApiTestCase(TestCase):
 
     def test_setlocation_error_for_nonexistent_book(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.post(reverse('setlocation'), { 'book' : self.book.pk, 'version': '0', 'locator' : 'testtest'})
+        response = self.client.post(reverse('setlocation'), { 'book' : 999, 'version': '0', 'locator' : 'testtest'})
         self.assertEqual(response.status_code, 500)
 
     def test_setlocation(self):
         login = self.client.login(username='user1', password='password1')
         response = self.client.post(reverse('setlocation'), { 'book' : self.book.pk, 'version': '0', 'locator' : 'testtest'})
         self.assertEqual(response.status_code, 200)
-        pd = Paradata.objects.get(book__path='book1')
+        pd = Paradata.objects.get(book=self.book)
         self.assertEqual('testtest', pd.lastLocation)
