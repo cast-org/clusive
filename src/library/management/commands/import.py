@@ -6,6 +6,7 @@ from zipfile import BadZipFile
 
 from django.core.management.base import BaseCommand
 
+from glossary.util import test_glossary_file
 from library.parsing import unpack_epub_file, scan_book
 
 logger = logging.getLogger(__name__)
@@ -47,6 +48,10 @@ class Command(BaseCommand):
                     directories += 1
                 elif self.looks_like_a_glossary(label):
                     glossary += 1
+                    glossary_errors = test_glossary_file(file)
+                    if glossary_errors:
+                        self.stderr.write('Glossary errors: %s' % glossary_errors)
+                        exit(1)
                 elif self.looks_like_an_epub(label):
                     epubs += 1
                 else:

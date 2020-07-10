@@ -23,10 +23,14 @@ class ReaderIndexView(LoginRequiredMixin,RedirectView):
             return 'admin'
         else:
             clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
-            period_id = clusive_user.periods.first().id
-            kwargs['period_id'] = period_id
-            logger.debug('Redir to period %s' % (period_id))
-            return reverse('library', kwargs = {'view': 'period', 'period_id': period_id})
+            periods = clusive_user.periods.all()
+            if periods:
+                period_id = periods.first().id
+                kwargs['period_id'] = period_id
+                logger.debug('Redir to period %s' % (period_id))
+                return reverse('library', kwargs = {'view': 'period', 'period_id': period_id})
+            else:
+                return reverse('library', kwargs = {'view': 'public'})
 
 
 class ReaderChooseVersionView(RedirectView):
