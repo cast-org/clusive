@@ -127,7 +127,6 @@ docker run -p 8000:8000 \\
   -e DJANGO_DB_USER=<user> -e DJANGO_DB_PASSWORD=<password> \\
   clusive
 ```
-Docker will run any pending database migrations at startup, but users and books are added manually:
+Docker will run any pending database migrations and import the default books at startup, but users must be added manually:
 
 * `docker exec -it <container_id> python manage.py createsuperuser`
-* `docker exec -it <container_id> python manage.py import ...`
