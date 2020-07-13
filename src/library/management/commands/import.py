@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 from zipfile import BadZipFile
 
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 from glossary.util import test_glossary_file
 from library.parsing import unpack_epub_file, scan_book
@@ -55,22 +55,17 @@ class Command(BaseCommand):
                 elif self.looks_like_an_epub(label):
                     epubs += 1
                 else:
-                    self.stderr.write('Do not know how to import file: %s' % label)
-                    exit(1)
+                    raise CommandError('Do not know how to import file: %s' % label)
             else:
-                self.stderr.write('File not found: %s' % label)
+                raise CommandError('File not found: %s' % label)
         if epubs == 0:
-            self.stderr.write('No .epub files provided, cannot import.')
-            exit(1)
+            raise CommandError('No .epub files provided, cannot import.')
         if directories > 1:
-            self.stderr.write('At most one directory (of glossary images) should be included.')
-            exit(1)
+            raise CommandError('At most one directory (of glossary images) should be included.')
         if glossary > 1:
-            self.stderr.write('At most one JSON glossary file should be included.')
-            exit(1)
+            raise CommandError('At most one JSON glossary file should be included.')
         if directories > glossary:
-            self.stderr.write('Directory given without a corresponding glossary JSON file.')
-            exit(1)
+            raise CommandError('Directory given without a corresponding glossary JSON file.')
 
     def looks_like_an_epub(self, label):
         return label.lower().endswith(('.epub', '.epub3'))
@@ -89,11 +84,9 @@ class Command(BaseCommand):
                 self.book = bv.book
             self.version += 1
         except FileNotFoundError:
-            self.stderr.write('File not found')
-            exit(1)
+            raise CommandError('File not found')
         except BadZipFile:
-            self.stderr.write('Not an EPUB file')
-            exit(1)
+            raise CommandError('Not an EPUB file')
 
     def handle_copy(self, label: str):
         if self.looks_like_a_glossary(label):
