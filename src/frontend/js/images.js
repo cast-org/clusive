@@ -58,7 +58,7 @@ function setUpImageDetails(scope) {
     'use strict';
 
     // Click event to override normal behavior of the <details> and <summary> elements.
-    var details = $(scope).find('details summary');
+    var details = $(scope).find('figure details summary');
     details.on('click', showImageDetails);
 }
 

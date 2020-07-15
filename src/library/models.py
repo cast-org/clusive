@@ -25,10 +25,16 @@ class Book(models.Model):
 
     @property
     def path(self):
+        """URL-style path to the book's location."""
         if self.owner:
             return '%d/%d' % (self.owner.pk, self.pk)
         else:
             return 'public/%d' % self.pk
+
+    @property
+    def cover_path(self):
+        """URL-style path to the book's cover image."""
+        return self.path + '/0/' + str(self.cover)
 
     @property
     def storage_dir(self):
