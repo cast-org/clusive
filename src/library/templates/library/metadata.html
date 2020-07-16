@@ -1,0 +1,27 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block title %}Upload | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_title="Upload" user_actions=True %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Success!</h1>
+    <p>Uploaded <em>{{ title }}</em>.</p>
+
+    {% if cover_src %}
+        <img src="{% get_media_prefix %}{{ cover_src }}">
+    {% else %}
+        <p>No cover image</p>
+    {% endif %}
+
+    <p><a href="{% url 'library' view='mine' %}">Back to My Content</a></p>
+</main>
+{% endblock %}

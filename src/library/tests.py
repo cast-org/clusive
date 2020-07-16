@@ -42,11 +42,11 @@ class LibraryApiTestCase(TestCase):
         user_1.save()
         cuser = ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST')
         cuser.save()
-        book = Book.objects.create(path='book1', title='Book One', description='')
-        book.save()
-        bv = BookVersion.objects.create(book=book, sortOrder=0)
+        self.book = Book.objects.create(title='Book One', description='')
+        self.book.save()
+        bv = BookVersion.objects.create(book=self.book, sortOrder=0)
         bv.save()
-        para = Paradata.objects.create(book=book, user=cuser, lastVersion = bv)
+        para = Paradata.objects.create(book=self.book, user=cuser, lastVersion = bv)
         para.save()
 
     def test_setlocation_error_for_get(self):
@@ -56,12 +56,12 @@ class LibraryApiTestCase(TestCase):
 
     def test_setlocation_error_for_nonexistent_book(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.post(reverse('setlocation'), { 'book' : 'book2', 'version': '0', 'locator' : 'testtest'})
+        response = self.client.post(reverse('setlocation'), { 'book' : 999, 'version': '0', 'locator' : 'testtest'})
         self.assertEqual(response.status_code, 500)
 
     def test_setlocation(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.post(reverse('setlocation'), { 'book' : 'book1', 'version': '0', 'locator' : 'testtest'})
+        response = self.client.post(reverse('setlocation'), { 'book' : self.book.pk, 'version': '0', 'locator' : 'testtest'})
         self.assertEqual(response.status_code, 200)
-        pd = Paradata.objects.get(book__path='book1')
+        pd = Paradata.objects.get(book=self.book)
         self.assertEqual('testtest', pd.lastLocation)

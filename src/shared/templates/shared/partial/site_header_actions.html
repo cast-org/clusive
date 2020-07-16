@@ -14,7 +14,7 @@
                 {{ user }} <span class="caret" aria-hidden="true"></span>
             </a>
             <ul class="dropdown-menu dropreverse">
-                {% if clusive_user.can_set_password %}
+                {% if request.clusive_user.can_set_password %}
                 <li><a href="{% url 'password_change' %}">Change password</a></li>
                 {% endif %}
                 <li><a href="{% url 'logout' %}">Log out</a></li>
