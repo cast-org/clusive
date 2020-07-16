@@ -49,7 +49,7 @@ RUN rm -rf node_modules Grunt* package*
 FROM python:3.7-slim-buster
 
 RUN apt-get update && \
-  apt-get -y install --no-install-recommends libpq5 netcat-traditional && \
+  apt-get -y install --no-install-recommends libpq5 netcat-traditional wget && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
