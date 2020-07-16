@@ -1,6 +1,6 @@
 <div class="dropdown">
     <button type="button" class="btn btn-primary" data-cfw="dropdown">
-        {{ current_view }}
+        {{ current_view_name }}
         <span class="caret" aria-hidden="true"></span>
     </button>
     <ul class="dropdown-menu">
@@ -14,18 +14,18 @@
         {% endfor %}
         <li>
             <a href="{% url 'library' view='public' %}"
-               {% if current_view == 'Public content' %}class="active" aria-current="true"{% endif %}>
-                Public content</a>
+               {% if current_view == 'public' %}class="active" aria-current="true"{% endif %}>
+            {{view_names.public}}</a>
         </li>
         <li>
             <a href="{% url 'library' view='mine' %}"
-               {% if current_view == 'My content' %}class="active" aria-current="true"{% endif %}>
-                My content</a>
+               {% if current_view == 'mine' %}class="active" aria-current="true"{% endif %}>
+            {{view_names.mine}}</a>
         </li>
         <a>
             <a href="{% url 'library' view='all' %}"
-               {% if current_view == 'All content' %}class="active" aria-current="true"{% endif %}>
-               All content</a>
+               {% if current_view == 'all' %}class="active" aria-current="true"{% endif %}>
+            {{view_names.all}}</a>
         </li>
     </ul>
 </div>

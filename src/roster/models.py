@@ -78,6 +78,24 @@ class ResearchPermissions:
     ]
 
 
+class LibraryViews:
+    ALL = 'all'
+    PUBLIC = 'public'
+    MINE = 'mine'
+    PERIOD = 'period'
+
+    CHOICES = [
+        (ALL, 'All content'),
+        (PUBLIC, 'Public content'),
+        (MINE, 'My content'),
+        (PERIOD, 'Period assignments')
+    ]
+
+    @staticmethod
+    def display_name_of(view):
+        return next(x[1] for x in LibraryViews.CHOICES if x[0] == view)
+
+
 class ClusiveUser(models.Model):
     
     # Django standard user class contains the following fields already
@@ -88,9 +106,18 @@ class ClusiveUser(models.Model):
     # - email
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    # Anonymous ID for privacy protection when logging activities for research
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    periods = models.ManyToManyField(Period, blank=True)    
+    # List of all class periods the user is part of
+    periods = models.ManyToManyField(Period, blank=True, related_name='periods')
+
+    # Which period will be shown by default, eg in library or manage rosters view
+    current_period = models.ForeignKey(Period, null=True, blank=True, on_delete=models.SET_NULL)
+
+    # Which view of the library page the user last viewed. This choice is persistent.
+    library_view = models.CharField(max_length=10, default=LibraryViews.PERIOD,
+                                    choices=LibraryViews.CHOICES)
 
     @property 
     def is_permissioned(self):

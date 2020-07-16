@@ -5,8 +5,9 @@ from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -17,7 +18,7 @@ from eventlog.signals import annotation_action, page_viewed
 from library.forms import UploadForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
 from library.parsing import unpack_epub_file
-from roster.models import ClusiveUser, Period
+from roster.models import ClusiveUser, Period, LibraryViews
 
 logger = logging.getLogger(__name__)
 
@@ -31,16 +32,12 @@ class LibraryView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         if self.view == 'period' and self.period:
-            self.view_name = self.period.name
             return Book.objects.filter(assignments__period=self.period)
         elif self.view == 'mine':
-            self.view_name = 'My content'
             return Book.objects.filter(owner=self.clusive_user)
         elif self.view == 'public':
-            self.view_name = 'Public content'
             return Book.objects.filter(owner=None)
         elif self.view == 'all':
-            self.view_name = 'All content'
             # ALL = assigned in one of my periods, or public, or owned by me.
             return Book.objects.filter(
                 Q(assignments__period__in=self.clusive_user.periods.all())
@@ -53,12 +50,24 @@ class LibraryView(LoginRequiredMixin, ListView):
         self.clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
         self.view = kwargs.get('view')
         if self.view == 'period':
+            # Make sure period_id is specified and legal.
             if kwargs.get('period_id'):
                 self.period = get_object_or_404(Period, id=kwargs.get('period_id'))
                 if not self.clusive_user.periods.filter(id=self.period.id).exists():
                     raise Http404('Not a Period of this User.')
             else:
+                # Need to set a default period.
                 self.period = self.clusive_user.periods.first()
+                if not self.period:
+                    # No periods, must be a guest user.  Switch to showing public content.
+                    return HttpResponseRedirect(redirect_to=reverse('library', kwargs = {'view': 'public'}))
+            self.view_name = self.period.name
+        else:
+            self.view_name = LibraryViews.display_name_of(self.view)
+        # Set defaults for next time
+        self.clusive_user.library_view = self.view
+        self.clusive_user.current_period = self.period
+        self.clusive_user.save()
         page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
 
@@ -66,7 +75,9 @@ class LibraryView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['clusive_user'] = self.clusive_user
         context['period'] = self.period
-        context['current_view'] = self.view_name
+        context['current_view'] = self.view
+        context['current_view_name'] = self.view_name
+        context['view_names'] = dict(LibraryViews.CHOICES)
         return context
 
 

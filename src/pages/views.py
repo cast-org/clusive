@@ -14,7 +14,7 @@ from roster.models import ClusiveUser
 logger = logging.getLogger(__name__)
 
 class ReaderIndexView(LoginRequiredMixin,RedirectView):
-    """This is the 'home page', currently just redirects to an appropriate library view."""
+    """This is the 'home page', currently just redirects to the user's default library view."""
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
@@ -22,15 +22,13 @@ class ReaderIndexView(LoginRequiredMixin,RedirectView):
             logger.debug("Staff login")
             return 'admin'
         else:
+            clusive_user : ClusiveUser
             clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
-            periods = clusive_user.periods.all()
-            if periods:
-                period_id = periods.first().id
-                kwargs['period_id'] = period_id
-                logger.debug('Redir to period %s' % (period_id))
-                return reverse('library', kwargs = {'view': 'period', 'period_id': period_id})
+            view = clusive_user.library_view
+            if view == 'period' and clusive_user.current_period:
+                return reverse('library', kwargs = {'view': 'period', 'period_id': clusive_user.current_period.id})
             else:
-                return reverse('library', kwargs = {'view': 'public'})
+                return reverse('library', kwargs = {'view': view})
 
 
 class ReaderChooseVersionView(RedirectView):
