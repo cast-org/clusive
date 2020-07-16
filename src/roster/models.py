@@ -139,6 +139,10 @@ class ClusiveUser(models.Model):
     def can_set_password(self):
         return self.role and self.role != Roles.GUEST
 
+    @property
+    def can_upload(self):
+        return self.role and self.role != Roles.GUEST
+
     def get_preference(self, pref):
         pref, created = Preference.objects.get_or_create(user=self, pref=pref)
         return pref

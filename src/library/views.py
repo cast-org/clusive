@@ -47,7 +47,7 @@ class LibraryView(LoginRequiredMixin, ListView):
             raise Http404('Unknown view type')
 
     def get(self, request, *args, **kwargs):
-        self.clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+        self.clusive_user = request.clusive_user
         self.view = kwargs.get('view')
         if self.view == 'period':
             # Make sure period_id is specified and legal.
@@ -87,14 +87,13 @@ class UploadView(LoginRequiredMixin, FormView):
     success_url = '/library/metadata'
 
     def form_valid(self, form):
-        clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
         upload = self.request.FILES['file']
         fd, tempfile = mkstemp()
         try:
             with os.fdopen(fd, 'wb') as f:
                 for chunk in upload.chunks():
                     f.write(chunk)
-            self.bv = unpack_epub_file(clusive_user, tempfile)
+            self.bv = unpack_epub_file(self.request.clusive_user, tempfile)
             return super().form_valid(form)
 
         except:

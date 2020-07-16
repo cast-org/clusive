@@ -47,6 +47,7 @@ MIDDLEWARE = [
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'clusive_project.middleware.LookupClusiveUserMiddleware',
 ]
 
 FILE_UPLOAD_HANDLERS = (

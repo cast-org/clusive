@@ -19,15 +19,15 @@
             <div class="col">
                 {% include "shared/partial/library_view_selector.html" %}
             </div>
-            {% if current_view == 'My content' %}
+            {% if current_view == 'mine' %}
             <div class="col text-end">
-                <a href="{% url 'upload' %}" class="btn btn-primary">+ Upload content</a>
+                <a href="{% url 'upload' %}" class="btn btn-primary">+ Add content</a>
             </div>
             {% endif %}
         </div>
     </p>
     {% if object_list|length == 0 %}
-        No articles found.
+        No content found.
     {% else %}
     <div class="library-grid">
         {% for pub in object_list %}
