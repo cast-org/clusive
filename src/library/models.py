@@ -132,7 +132,7 @@ class BookVersion(models.Model):
 
 class BookAssignment(models.Model):
     """Records Books that are visible by Periods."""
-    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='assignments')
     period = models.ForeignKey(to=Period, on_delete=models.CASCADE, db_index=True)
     dateAssigned = models.DateTimeField()
 

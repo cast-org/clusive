@@ -22,5 +22,10 @@
                {% if current_view == 'My content' %}class="active" aria-current="true"{% endif %}>
                 My content</a>
         </li>
+        <a>
+            <a href="{% url 'library' view='all' %}"
+               {% if current_view == 'All content' %}class="active" aria-current="true"{% endif %}>
+               All content</a>
+        </li>
     </ul>
 </div>

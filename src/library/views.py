@@ -4,6 +4,7 @@ import sys
 from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -31,13 +32,20 @@ class LibraryView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         if self.view == 'period' and self.period:
             self.view_name = self.period.name
-            return [ba.book for ba in BookAssignment.objects.filter(period=self.period)]
+            return Book.objects.filter(assignments__period=self.period)
         elif self.view == 'mine':
             self.view_name = 'My content'
             return Book.objects.filter(owner=self.clusive_user)
         elif self.view == 'public':
             self.view_name = 'Public content'
             return Book.objects.filter(owner=None)
+        elif self.view == 'all':
+            self.view_name = 'All content'
+            # ALL = assigned in one of my periods, or public, or owned by me.
+            return Book.objects.filter(
+                Q(assignments__period__in=self.clusive_user.periods.all())
+                | Q(owner=None)
+                | Q(owner=self.clusive_user))
         else:
             raise Http404('Unknown view type')
 
