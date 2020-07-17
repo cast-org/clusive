@@ -84,7 +84,7 @@ STOPSIGNAL SIGINT
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-HEALTHCHECK --interval=10s --timeout=3s \
+HEALTHCHECK --interval=10s --timeout=3s --start-period=120s \
 	CMD wget --quiet --tries=1 --spider http://localhost:8000/ || exit 1
 
 # gunicorn configuration suggestions from https://pythonspeed.com/articles/gunicorn-in-docker/
