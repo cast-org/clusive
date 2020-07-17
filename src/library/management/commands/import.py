@@ -7,16 +7,18 @@ from zipfile import BadZipFile
 from django.core.management.base import BaseCommand, CommandError
 
 from glossary.util import test_glossary_file
-from library.parsing import unpack_epub_file, scan_book
+from library.parsing import unpack_epub_file, scan_book, BookNotUnique, BookMismatch
 
 logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     help = 'Import files into the application that together become a public-library book. ' \
            'All EPUB files given on the command-line are considered to be' \
            'alternate versions of the same book. ' \
            'A glossary.json file and directory of images may also be listed, ' \
-           'and will be attached to the book.'
+           'and will be attached to the book.\n\n' \
+           'Note, if a public-library book with the same title already exists, it will not be imported.'
     label = 'file'
 
     copy_files = []
@@ -87,6 +89,8 @@ class Command(BaseCommand):
             raise CommandError('File not found')
         except BadZipFile:
             raise CommandError('Not an EPUB file')
+        except BookMismatch:
+            raise CommandError('Mismatched titles, stopping import')
 
     def handle_copy(self, label: str):
         if self.looks_like_a_glossary(label):

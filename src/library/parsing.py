@@ -20,6 +20,10 @@ class BookMismatch(Exception):
     pass
 
 
+class BookNotUnique(Exception):
+    pass
+
+
 def unpack_epub_file(clusive_user, file, book=None, version=0):
     """
     Process an uploaded EPUB file, returns BookVersion.
@@ -39,7 +43,6 @@ def unpack_epub_file(clusive_user, file, book=None, version=0):
     If there are any errors (such as a non-EPUB file), an exception will be raised.
     """
     with open(file, 'rb') as f, dawn.open(f) as upload:
-        logger.debug('Unpacking EPUB%s: %s', upload.version, str(upload))
         manifest = make_manifest(upload)
         title = get_metadata_item(upload, 'titles') or 'Untitled'
         author = get_metadata_item(upload, 'creators') or 'Unknown'
@@ -50,12 +53,17 @@ def unpack_epub_file(clusive_user, file, book=None, version=0):
             if book.title != title:
                 raise BookMismatch('Does not appear to be a version of the same book, titles differ.')
         else:
+            # For public books, check for uniqueness before creating the new Book.
+            if not clusive_user:
+                if Book.objects.filter(owner=None, title=title):
+                    raise BookNotUnique('Title %s already exists in the public library' % title)
             book = Book(owner=clusive_user,
                         title=title,
                         author=author,
                         description=description,
                         cover=cover)
             book.save()
+            logger.debug('Created new book for import: %s', book)
         bv = BookVersion(book=book, sortOrder=version)
         bv.save()
         dir = bv.storage_dir

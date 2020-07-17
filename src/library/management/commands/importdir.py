@@ -1,8 +1,11 @@
 import logging
+import sys
 from pathlib import Path
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
+
+from library.parsing import BookNotUnique
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +16,8 @@ class Command(BaseCommand):
            'Each of those directories should have one or more EPUB files ' \
            'for the alternate versions, and may also contain ' \
            'a glossary.json file and directory of images, ' \
-           'which will be attached to the book.'
+           'which will be attached to the book.\n\n' \
+           'If a public-library book with the same name already exists, the directory will be skipped.'
     label = 'directory'
 
     def add_arguments(self, parser):
@@ -31,4 +35,8 @@ class Command(BaseCommand):
         args = []
         for file in subdir.iterdir():
             args.append(file.absolute())
-        call_command('import', *args)
+        try:
+            call_command('import', *args)
+        except BookNotUnique as e:
+            # Skip this import, but we catch the exception so that other imports can proceed.
+            self.stderr.write(str(e))
