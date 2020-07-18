@@ -26,18 +26,18 @@ var assert = chai.assert;
 fluid.defaults("clusive.testMessageQueue", {
   gradeNames: ["clusive.messageQueue"],
   invokers: {
-    emptyQueueImpl: {
-      funcName: "clusive.messageQueue.testEmptyQueueImplSuccess"
+    flushQueueImpl: {
+      funcName: "clusive.messageQueue.testFlushQueueImplSuccess"
     }
   }
 });
 
-clusive.messageQueue.testEmptyQueueImplSuccess = function (that, emptyPromise) {  
-  emptyPromise.resolve({"success": 1});
+clusive.messageQueue.testFlushQueueImplSuccess = function (that, flushPromise) {  
+  flushPromise.resolve({"success": 1});
 }
 
-clusive.messageQueue.testEmptyQueueImplFailure = function (that, emptyPromise) {  
-  emptyPromise.reject({"failure": 0});
+clusive.messageQueue.testFlushQueueImplFailure = function (that, flushPromise) {  
+  flushPromise.reject({"failure": 0});
 }
 
 describe('Message Queue', function () {
@@ -78,16 +78,16 @@ describe('Message Queue', function () {
       assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
     });       
 
-    it('should fire the queueShouldEmpty event on a recurring interval', function (done) {
-      var queueShouldEmptyEventsFired = 0;
+    it('should fire the queueShouldFlush event on a recurring interval', function (done) {
+      var queueShouldFlushEventsFired = 0;
       messageQueue = clusive.testMessageQueue({
         config: {
           holdLength: 200
         },
         listeners: {
-          "queueShouldEmpty.done": function () {
-            queueShouldEmptyEventsFired++;
-            if(queueShouldEmptyEventsFired >= 5) {
+          "queueShouldFlush.done": function () {
+            queueShouldFlushEventsFired++;
+            if(queueShouldFlushEventsFired >= 5) {
               done();
             }
           }
@@ -95,33 +95,37 @@ describe('Message Queue', function () {
       });
     });
 
-    it('should fire the queueEmptySuccess event on a successful queue empty', function (done) {
+    it('should fire the queueFlushSuccess event on a successful queue flush attempt, and clear the queue', function (done) {
       messageQueue = clusive.testMessageQueue({
         listeners: {
-          "queueEmptySuccess.done": function (value) {
+          "queueFlushSuccess.done": function (value) {
             assert.strictEqual(value.success, 1);
+            assert.deepEqual(messageQueue.model.queue, []);
             done();
           }
         }
-      })
-      messageQueue.empty();
+      });
+      messageQueue.add({"greeting": "Hello, successful world!"});
+      messageQueue.flush();
     });
 
-   it('should fire the queueEmptyFailure event on a failed queue empty', function (done) {
+   it('should fire the queueFlushFailure event on a failed queue flush attempt, and leave the queue in place', function (done) {
       messageQueue = clusive.testMessageQueue({
         invokers: {
-          emptyQueueImpl: {
-            funcName: "clusive.messageQueue.testEmptyQueueImplFailure"
+          flushQueueImpl: {
+            funcName: "clusive.messageQueue.testFlushQueueImplFailure"
           }
         },
         listeners: {
-          "queueEmptyFailure.done": function (error) {
+          "queueFlushFailure.done": function (error) {
             assert.strictEqual(error.failure, 0);
             done();
           }
         }
-      })
-      messageQueue.empty();
+      });
+
+      messageQueue.add({"greeting": "Hello, failed world!"});
+      messageQueue.flush();
     });    
 
 });

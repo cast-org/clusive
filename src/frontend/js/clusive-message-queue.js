@@ -9,26 +9,30 @@
             queue: []
         },
         config: {
-            // Where to send messages to when emptying
+            // Where and how to send messages to when trying to flush
             target: {
                 url: null,
                 method: "POST"
             },
-            // Interval for trying to empty queue
+            // Interval for trying to flush queue
             holdLength: 60000
         },
         events: {
-            queueShouldEmpty: null,
-            queueEmptySuccess: null,
-            queueEmptyFailure: null
+            queueShouldFlush: null,
+            queueFlushSuccess: null,
+            queueFlushFailure: null
         },
         listeners: {
-            "onCreate.setEmptyInterval": {
-                func: "clusive.messageQueue.setEmptyInterval",
+            "onCreate.setFlushInterval": {
+                func: "clusive.messageQueue.setFlushInterval",
                 args: ["{that}"]
             },
-            "queueShouldEmpty.emptyQueue": {
-                funcName: "{that}.empty"
+            "queueShouldFlush.flushQueue": {
+                funcName: "{that}.flush"
+            },
+            "queueFlushSuccess.clearQueue": {
+                func: "{that}.applier.change",
+                args: ["queue", []]
             }
         },
         invokers: {
@@ -40,33 +44,33 @@
                 funcName: "clusive.messageQueue.wrapMessage",
                 args: ["{arguments}.0"]
             },
-            empty: {
-                funcName: "clusive.messageQueue.emptyQueue",
+            flush: {
+                funcName: "clusive.messageQueue.flushQueue",
                 args: ["{that}"]
             },
-            emptyQueueImpl: {
+            flushQueueImpl: {
                 funcName: "fluid.notImplemented",
                 args: ["{that}", "{arguments}.0"]
             }
         },
     });    
 
-    clusive.messageQueue.emptyQueue = function (that) {
+    clusive.messageQueue.flushQueue = function (that) {
         var promise = fluid.promise();
         promise.then(
             function(value) {
-                that.events.queueEmptySuccess.fire(value);
+                that.events.queueFlushSuccess.fire(value);
             },
             function(error) {
-                that.events.queueEmptyFailure.fire(error);
+                that.events.queueFlushFailure.fire(error);
             })
-        that.emptyQueueImpl(promise);            
+        that.flushQueueImpl(promise);            
     }
 
-    clusive.messageQueue.setEmptyInterval = function (that) {
+    clusive.messageQueue.setFlushInterval = function (that) {
         var holdLength = that.options.config.holdLength;
         setInterval(function () {
-            that.events.queueShouldEmpty.fire();
+            that.events.queueShouldFlush.fire();
         }, holdLength)
     }
 
