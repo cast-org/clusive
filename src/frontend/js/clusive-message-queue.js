@@ -15,7 +15,7 @@
                 method: "POST"
             },
             // Interval for trying to flush queue
-            holdLength: 60000
+            flushInterval: 60000
         },
         events: {
             queueShouldFlush: null,
@@ -68,10 +68,10 @@
     }
 
     clusive.messageQueue.setFlushInterval = function (that) {
-        var holdLength = that.options.config.holdLength;
+        var flushInterval = that.options.config.flushInterval;
         setInterval(function () {
             that.events.queueShouldFlush.fire();
-        }, holdLength)
+        }, flushInterval)
     }
 
     // A message is any POJO

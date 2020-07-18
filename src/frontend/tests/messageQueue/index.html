@@ -82,7 +82,7 @@ describe('Message Queue', function () {
       var queueShouldFlushEventsFired = 0;
       messageQueue = clusive.testMessageQueue({
         config: {
-          holdLength: 200
+          flushInterval: 200
         },
         listeners: {
           "queueShouldFlush.done": function () {
@@ -119,6 +119,7 @@ describe('Message Queue', function () {
         listeners: {
           "queueFlushFailure.done": function (error) {
             assert.strictEqual(error.failure, 0);
+            assert.strictEqual(messageQueue.model.queue.length, 1);
             done();
           }
         }
