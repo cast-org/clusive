@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+    <script src="/target/shared/static/shared/js/lib/infusion/dist/infusion-all.js"></script>
+    <script src="../../js/clusive-message-queue.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup('bdd');
+      mocha.checkLeaks();
+    </script>
+
+<script>
+
+var assert = chai.assert;
+
+fluid.defaults("clusive.testMessageQueue", {
+  gradeNames: ["clusive.messageQueue"],
+  invokers: {
+    emptyQueueImpl: {
+      funcName: "clusive.messageQueue.testEmptyQueueImplSuccess"
+    }
+  }
+});
+
+clusive.messageQueue.testEmptyQueueImplSuccess = function (that, emptyPromise) {  
+  emptyPromise.resolve({"success": 1});
+}
+
+clusive.messageQueue.testEmptyQueueImplFailure = function (that, emptyPromise) {  
+  emptyPromise.reject({"failure": 0});
+}
+
+describe('Message Queue', function () {
+    
+    var messageQueue;    
+
+    afterEach(function () {
+      messageQueue.destroy();
+    })
+
+    it('should start with an empty array for the message queue', function () {
+      messageQueue = clusive.testMessageQueue();
+      assert.deepEqual(messageQueue.model.queue, []);
+    });
+
+    it('should add a message', function () {
+      messageQueue = clusive.testMessageQueue();
+      messageQueue.add({"greeting": "Hello, world!"});
+      assert.strictEqual(messageQueue.model.queue.length, 1);
+    });    
+
+    it('should wrap a message when it\'s added', function () {           
+      messageQueue = clusive.testMessageQueue();
+      messageQueue.add({"greeting": "Hello, world, again!"});
+      var addedMessage = messageQueue.model.queue[0];
+      assert.strictEqual(addedMessage.message.greeting, "Hello, world, again!");
+      var timestamp = addedMessage.timestamp;
+      var parsedTimestamp = Date.parse(timestamp);
+      assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
+    });    
+
+    it('should timestamp message when it\'s added', function () { 
+      messageQueue = clusive.testMessageQueue();          
+      messageQueue.add({"greeting": "Hello, world, at this time!"});   
+      var addedMessage = messageQueue.model.queue[0];   
+      var timestamp = addedMessage.timestamp;
+      var parsedTimestamp = Date.parse(timestamp);
+      assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
+    });       
+
+    it('should fire the queueShouldEmpty event on a recurring interval', function (done) {
+      var queueShouldEmptyEventsFired = 0;
+      messageQueue = clusive.testMessageQueue({
+        config: {
+          holdLength: 200
+        },
+        listeners: {
+          "queueShouldEmpty.done": function () {
+            queueShouldEmptyEventsFired++;
+            if(queueShouldEmptyEventsFired >= 5) {
+              done();
+            }
+          }
+        }
+      });
+    });
+
+    it('should fire the queueEmptySuccess event on a successful queue empty', function (done) {
+      messageQueue = clusive.testMessageQueue({
+        listeners: {
+          "queueEmptySuccess.done": function (value) {
+            assert.strictEqual(value.success, 1);
+            done();
+          }
+        }
+      })
+      messageQueue.empty();
+    });
+
+   it('should fire the queueEmptyFailure event on a failed queue empty', function (done) {
+      messageQueue = clusive.testMessageQueue({
+        invokers: {
+          emptyQueueImpl: {
+            funcName: "clusive.messageQueue.testEmptyQueueImplFailure"
+          }
+        },
+        listeners: {
+          "queueEmptyFailure.done": function (error) {
+            assert.strictEqual(error.failure, 0);
+            done();
+          }
+        }
+      })
+      messageQueue.empty();
+    });    
+
+});
+
+</script>
+
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+  </body>
+</html>
