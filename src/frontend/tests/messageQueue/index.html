@@ -23,12 +23,17 @@
 
 var assert = chai.assert;
 
+var testLocalStorageKey = "clusive.messageQueueTest.queue";
+
 fluid.defaults("clusive.testMessageQueue", {
   gradeNames: ["clusive.messageQueue"],
   invokers: {
     flushQueueImpl: {
       funcName: "clusive.messageQueue.testFlushQueueImplSuccess"
     }
+  },
+  config: {
+    localStorageKey: testLocalStorageKey
   }
 });
 
@@ -41,93 +46,153 @@ clusive.messageQueue.testFlushQueueImplFailure = function (that, flushPromise) {
 }
 
 describe('Message Queue', function () {
-    
-    var messageQueue;    
 
-    afterEach(function () {
-      messageQueue.destroy();
-    })
+  after(function () {
+    localStorage.removeItem(testLocalStorageKey);
+  })
 
     it('should start with an empty array for the message queue', function () {
-      messageQueue = clusive.testMessageQueue();
-      assert.deepEqual(messageQueue.model.queue, []);
+      var mqEmptyArray = clusive.testMessageQueue();
+      assert.deepEqual(mqEmptyArray.model.queue, []);
+      mqEmptyArray.destroy();
     });
 
     it('should add a message', function () {
-      messageQueue = clusive.testMessageQueue();
-      messageQueue.add({"greeting": "Hello, world!"});
-      assert.strictEqual(messageQueue.model.queue.length, 1);
+      var mqAdd = clusive.testMessageQueue();
+      mqAdd.add({"greeting": "Hello, world!"});
+      assert.strictEqual(mqAdd.model.queue.length, 1);
+      mqAdd.destroy();
     });    
 
     it('should wrap a message when it\'s added', function () {           
-      messageQueue = clusive.testMessageQueue();
-      messageQueue.add({"greeting": "Hello, world, again!"});
-      var addedMessage = messageQueue.model.queue[0];
+      var mqWrap = clusive.testMessageQueue();
+      mqWrap.add({"greeting": "Hello, world, again!"});
+      var addedMessage = mqWrap.model.queue[0];
       assert.strictEqual(addedMessage.content.greeting, "Hello, world, again!");
       var timestamp = addedMessage.timestamp;
       var parsedTimestamp = Date.parse(timestamp);
       assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
+      mqWrap.destroy();
     });    
 
     it('should timestamp message when it\'s added', function () { 
-      messageQueue = clusive.testMessageQueue();          
-      messageQueue.add({"greeting": "Hello, world, at this time!"});   
-      var addedMessage = messageQueue.model.queue[0];   
+      var mqTimeStamp = clusive.testMessageQueue();          
+      mqTimeStamp.add({"greeting": "Hello, world, at this time!"});   
+      var addedMessage = mqTimeStamp.model.queue[0];   
       var timestamp = addedMessage.timestamp;
       var parsedTimestamp = Date.parse(timestamp);
       assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
+      mqTimeStamp.destroy();
     });       
 
     it('should fire the queueShouldFlush event on a recurring interval', function (done) {
       var queueShouldFlushEventsFired = 0;
-      messageQueue = clusive.testMessageQueue({
+      var mqShouldFlush = clusive.testMessageQueue({
         config: {
           flushInterval: 200
         },
         listeners: {
-          "queueShouldFlush.done": function () {
-            queueShouldFlushEventsFired++;
-            if(queueShouldFlushEventsFired >= 5) {
-              done();
-            }
+          "queueShouldFlush.done": {
+            func: function () {
+              queueShouldFlushEventsFired++;
+              if(queueShouldFlushEventsFired === 5) {
+                mqShouldFlush.destroy();
+                done();
+              }
+            },
+            priority: "last"
           }
         }
       });
     });
 
     it('should fire the queueFlushSuccess event on a successful queue flush attempt, and clear the queue', function (done) {
-      messageQueue = clusive.testMessageQueue({
+      var mqFlushSuccess = clusive.testMessageQueue({
         listeners: {
-          "queueFlushSuccess.done": function (value) {
-            assert.strictEqual(value.success, 1);
-            assert.deepEqual(messageQueue.model.queue, []);
-            done();
+          "queueFlushSuccess.done": {
+            func: function (value) {
+              assert.strictEqual(value.success, 1);
+              assert.deepEqual(mqFlushSuccess.model.queue, []);
+              mqFlushSuccess.destroy();
+              done();
+            },
+            priority: "last"
           }
+          
         }
       });
-      messageQueue.add({"greeting": "Hello, successful world!"});
-      messageQueue.flush();
+      mqFlushSuccess.add({"greeting": "Hello, successful world!"});
+      mqFlushSuccess.flush();
     });
 
    it('should fire the queueFlushFailure event on a failed queue flush attempt, and leave the queue in place', function (done) {
-      messageQueue = clusive.testMessageQueue({
+      var mqFlushFailure = clusive.testMessageQueue({
         invokers: {
           flushQueueImpl: {
             funcName: "clusive.messageQueue.testFlushQueueImplFailure"
           }
         },
         listeners: {
-          "queueFlushFailure.done": function (error) {
-            assert.strictEqual(error.failure, 0);
-            assert.strictEqual(messageQueue.model.queue.length, 1);
-            done();
+          "queueFlushFailure.done": {
+            func: function (error) {
+              assert.strictEqual(error.failure, 0);
+              assert.strictEqual(mqFlushFailure.model.queue.length, 1);
+              mqFlushFailure.destroy();
+              done();
+            },
+            priority: "last"
           }
         }
       });
 
-      messageQueue.add({"greeting": "Hello, failed world!"});
-      messageQueue.flush();
+      mqFlushFailure.add({"greeting": "Hello, failed world!"});
+      mqFlushFailure.flush();
     });    
+
+
+    it('should sync messages from localStorage when created', function(done) {
+      var message1 = clusive.messageQueue.wrapMessage({"greeting": "Hello, world, from syncing from local storage!"});
+      var message2 = clusive.messageQueue.wrapMessage({"greeting": "Hello, world, from syncing from local storage - again."});
+      var messages = [message1, message2];
+      localStorage.setItem(testLocalStorageKey, JSON.stringify(messages));
+      
+      var mqSyncFromLocalStorage = clusive.testMessageQueue({                 
+        listeners: {         
+          "onCreate.done": {
+            func: function (that) {
+              var messagesInLocalStorage = JSON.parse(localStorage.getItem(testLocalStorageKey));                                          
+              assert.deepEqual(that.model.queue, messagesInLocalStorage);
+              localStorage.removeItem(testLocalStorageKey);
+              that.destroy();
+              done();
+            },
+            priority: "last"            
+          }
+          }        
+        }          
+      );        
+    })
+
+  it('should sync new messages to localStorage', function(done) {
+    var syncedToLocalStorageEvents = 0;
+    var mqSyncToLocalStorage = clusive.testMessageQueue({
+      listeners: {
+        "syncedToLocalStorage.done": {
+          func: function () {
+            var messagesInLocalStorage = JSON.parse(localStorage.getItem(testLocalStorageKey));                                          
+              assert.deepEqual(mqSyncToLocalStorage.model.queue, messagesInLocalStorage);
+              syncedToLocalStorageEvents++;
+              if(syncedToLocalStorageEvents === 2) {
+                done();
+              }
+          }
+        }
+        }                
+    })
+    mqSyncToLocalStorage.add({"greeting": "Hello, world, from syncing to local storage!"});
+    mqSyncToLocalStorage.add({"greeting": "Hello, world, again, from syncing to local storage!"});    
+
+  })
 
 });
 

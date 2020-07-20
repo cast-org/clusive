@@ -15,17 +15,22 @@
                 method: "POST"
             },
             // Interval for trying to flush queue
-            flushInterval: 60000
+            flushInterval: 60000,
+            localStorageKey: "clusive.messageQueue.queue"
         },
         events: {
             queueShouldFlush: null,
             queueFlushSuccess: null,
-            queueFlushFailure: null
+            queueFlushFailure: null,
+            syncedToLocalStorage: null        
         },
         listeners: {
+            "onCreate.syncFromLocalStorage": {
+                func: "clusive.messageQueue.syncFromLocalStorage",
+                args: ["{that}"]                
+            },
             "onCreate.setFlushInterval": {
-                func: "clusive.messageQueue.setFlushInterval",
-                args: ["{that}"]
+                funcName: "{that}.setFlushInterval"                
             },
             "queueShouldFlush.flushQueue": {
                 funcName: "{that}.flush"
@@ -33,7 +38,7 @@
             "queueFlushSuccess.clearQueue": {
                 func: "{that}.applier.change",
                 args: ["queue", []]
-            }
+            }           
         },
         invokers: {
             add: {
@@ -51,7 +56,19 @@
             flushQueueImpl: {
                 funcName: "fluid.notImplemented",
                 args: ["{that}", "{arguments}.0"]
-            }
+            },
+            setFlushInterval: {
+                funcName: "clusive.messageQueue.setFlushInterval",
+                args: ["{that}"]
+            },
+            syncFromLocalStorage: {
+                funcName: "clusive.messageQueue.syncFromLocalStorage",
+                args: ["{that}"]
+            },
+            syncToLocalStorage: {
+                funcName: "clusive.messageQueue.syncToLocalStorage",
+                args: ["{that}"]
+            }            
         },
     });    
 
@@ -75,10 +92,14 @@
     }
 
     // A message is any POJO
-    clusive.messageQueue.addMessage = function(that, message) {        
+    clusive.messageQueue.addMessage = function(that, message) {  
+        // Make sure we're synced up with any changes in local storage
+        // that other components might have caused
+        that.syncFromLocalStorage();      
         var newQueue = fluid.get(that.model, "queue");        
         newQueue.push(that.wrapMessage(message));
         that.applier.change("queue", newQueue);
+        that.syncToLocalStorage();
     }
 
     clusive.messageQueue.wrapMessage = function(message) {
@@ -88,6 +109,20 @@
             timestamp: timestamp
         };
         return wrappedMessage;
+    }
+
+    clusive.messageQueue.syncFromLocalStorage = function(that) {            
+        var messagesInLocalStorage = localStorage.getItem(that.options.config.localStorageKey);                
+        if(messagesInLocalStorage) {             
+            var parsedMessages = JSON.parse(messagesInLocalStorage);            
+            that.applier.change("queue", parsedMessages);
+        }
+    }
+
+    clusive.messageQueue.syncToLocalStorage = function(that) {   
+        console.log("syncToLocalStorage", JSON.stringify(that.model.queue));
+        localStorage.setItem(that.options.config.localStorageKey, JSON.stringify(that.model.queue));
+        that.events.syncedToLocalStorage.fire();
     }
 
 }(fluid_3_0_0));
