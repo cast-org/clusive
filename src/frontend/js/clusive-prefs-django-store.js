@@ -4,7 +4,7 @@
     'use strict';
 
     // Message queue implementation to work with the Django store
-    fluid.defaults("clusive.restMessageQueue", {
+    fluid.defaults("clusive.djangoMessageQueue", {
         gradeNames: ["clusive.messageQueue"],
         config: {
             // Where and how to send messages to when trying to flush
@@ -15,12 +15,12 @@
         },
         invokers: {
             flushQueueImpl: {
-                funcName: "clusive.restMessageQueue.flushQueueImpl"                
+                funcName: "clusive.djangoMessageQueue.flushQueueImpl"                
             }
         }
     });
 
-    clusive.restMessageQueue.flushQueueImpl = function (that, flushPromise) {
+    clusive.djangoMessageQueue.flushQueueImpl = function (that, flushPromise) {
         $.ajax(that.options.config.target.url, {
             method: that.options.config.target.method,
             headers: {
