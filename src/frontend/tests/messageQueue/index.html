@@ -47,27 +47,27 @@ clusive.messageQueue.testFlushQueueImplFailure = function (that, flushPromise) {
 
 describe('Message Queue', function () {
 
-  after(function () {
+  afterEach(function () {
     localStorage.removeItem(testLocalStorageKey);
   })
 
     it('should start with an empty array for the message queue', function () {
       var mqEmptyArray = clusive.testMessageQueue();
-      assert.deepEqual(mqEmptyArray.model.queue, []);
+      assert.deepEqual(mqEmptyArray.getMessages(), []);
       mqEmptyArray.destroy();
     });
 
     it('should add a message', function () {
       var mqAdd = clusive.testMessageQueue();
       mqAdd.add({"greeting": "Hello, world!"});
-      assert.strictEqual(mqAdd.model.queue.length, 1);
+      assert.strictEqual(mqAdd.getMessages().length, 1);
       mqAdd.destroy();
     });    
 
     it('should wrap a message when it\'s added', function () {           
       var mqWrap = clusive.testMessageQueue();
       mqWrap.add({"greeting": "Hello, world, again!"});
-      var addedMessage = mqWrap.model.queue[0];
+      var addedMessage = mqWrap.getMessages()[0];
       assert.strictEqual(addedMessage.content.greeting, "Hello, world, again!");
       var timestamp = addedMessage.timestamp;
       var parsedTimestamp = Date.parse(timestamp);
@@ -78,7 +78,7 @@ describe('Message Queue', function () {
     it('should timestamp message when it\'s added', function () { 
       var mqTimeStamp = clusive.testMessageQueue();          
       mqTimeStamp.add({"greeting": "Hello, world, at this time!"});   
-      var addedMessage = mqTimeStamp.model.queue[0];   
+      var addedMessage = mqTimeStamp.getMessages()[0];   
       var timestamp = addedMessage.timestamp;
       var parsedTimestamp = Date.parse(timestamp);
       assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
@@ -112,7 +112,7 @@ describe('Message Queue', function () {
           "queueFlushSuccess.done": {
             func: function (value) {
               assert.strictEqual(value.success, 1);
-              assert.deepEqual(mqFlushSuccess.model.queue, []);
+              assert.deepEqual(mqFlushSuccess.getMessages(), []);
               mqFlushSuccess.destroy();
               done();
             },
@@ -136,7 +136,7 @@ describe('Message Queue', function () {
           "queueFlushFailure.done": {
             func: function (error) {
               assert.strictEqual(error.failure, 0);
-              assert.strictEqual(mqFlushFailure.model.queue.length, 1);
+              assert.strictEqual(mqFlushFailure.getMessages().length, 1);
               mqFlushFailure.destroy();
               done();
             },
@@ -161,8 +161,7 @@ describe('Message Queue', function () {
           "onCreate.done": {
             func: function (that) {
               var messagesInLocalStorage = JSON.parse(localStorage.getItem(testLocalStorageKey));                                          
-              assert.deepEqual(that.model.queue, messagesInLocalStorage);
-              localStorage.removeItem(testLocalStorageKey);
+              assert.deepEqual(that.getMessages(), messagesInLocalStorage);              
               that.destroy();
               done();
             },
@@ -180,9 +179,10 @@ describe('Message Queue', function () {
         "syncedToLocalStorage.done": {
           func: function () {
             var messagesInLocalStorage = JSON.parse(localStorage.getItem(testLocalStorageKey));                                          
-              assert.deepEqual(mqSyncToLocalStorage.model.queue, messagesInLocalStorage);
+              assert.deepEqual(mqSyncToLocalStorage.getMessages(), messagesInLocalStorage);
               syncedToLocalStorageEvents++;
-              if(syncedToLocalStorageEvents === 2) {
+              if(syncedToLocalStorageEvents === 2) {                
+                mqSyncToLocalStorage.destroy();
                 done();
               }
           }
@@ -193,6 +193,20 @@ describe('Message Queue', function () {
     mqSyncToLocalStorage.add({"greeting": "Hello, world, again, from syncing to local storage!"});    
 
   })
+
+  it('should share the message queue between different components using the localStorage', function(done) {
+    var mqShareViaLocalStorage1 = clusive.testMessageQueue();
+    
+    mqShareViaLocalStorage1.add({"greeting": "Hello, world, from mqShareViaLocalStorage1!"});
+
+    var mqShareViaLocalStorage2 = clusive.testMessageQueue();
+
+    mqShareViaLocalStorage2.add({"greeting": "Hello, world, from, mqShareViaLocalStorage2!"});
+
+    mqShareViaLocalStorage1.add({"greeting": "Hello, world, from mqShareViaLocalStorage1 - again."});
+
+    console.log(mqShareViaLocalStorage1.getMessages(), mqShareViaLocalStorage2.getMessages())
+  });
 
 });
 

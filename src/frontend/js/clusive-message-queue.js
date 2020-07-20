@@ -4,8 +4,8 @@
     'use strict';
 
     fluid.defaults('clusive.messageQueue', {       
-        gradeNames: ["fluid.modelComponent"],
-        model: {
+        gradeNames: ["fluid.component"],    
+        members: {
             queue: []
         },
         config: {
@@ -36,8 +36,7 @@
                 funcName: "{that}.flush"
             },
             "queueFlushSuccess.clearQueue": {
-                func: "{that}.applier.change",
-                args: ["queue", []]
+                func: "{that}.clearQueue",                
             }           
         },
         invokers: {
@@ -45,6 +44,14 @@
                 funcName: "clusive.messageQueue.addMessage",
                 args: ["{that}", "{arguments}.0"]
             },
+            clearQueue: {
+                funcName: "clusive.messageQueue.clearQueue",
+                args: ["{that}"]                
+            },
+            getMessages: {
+                funcName: "clusive.messageQueue.getMessages",
+                args: ["{that}"]
+            },            
             wrapMessage: {
                 funcName: "clusive.messageQueue.wrapMessage",
                 args: ["{arguments}.0"]
@@ -96,10 +103,16 @@
         // Make sure we're synced up with any changes in local storage
         // that other components might have caused
         that.syncFromLocalStorage();      
-        var newQueue = fluid.get(that.model, "queue");        
+        var newQueue = fluid.get(that, "queue");        
         newQueue.push(that.wrapMessage(message));
-        that.applier.change("queue", newQueue);
+        that.queue = newQueue;
         that.syncToLocalStorage();
+    }
+
+    // Get the current queue of messages
+    clusive.messageQueue.getMessages = function(that) {
+        that.syncFromLocalStorage();
+        return that.queue;
     }
 
     clusive.messageQueue.wrapMessage = function(message) {
@@ -114,15 +127,19 @@
     clusive.messageQueue.syncFromLocalStorage = function(that) {            
         var messagesInLocalStorage = localStorage.getItem(that.options.config.localStorageKey);                
         if(messagesInLocalStorage) {             
-            var parsedMessages = JSON.parse(messagesInLocalStorage);            
-            that.applier.change("queue", parsedMessages);
+            var parsedMessages = JSON.parse(messagesInLocalStorage);  
+            that.queue = parsedMessages;                      
         }
     }
 
-    clusive.messageQueue.syncToLocalStorage = function(that) {   
-        console.log("syncToLocalStorage", JSON.stringify(that.model.queue));
-        localStorage.setItem(that.options.config.localStorageKey, JSON.stringify(that.model.queue));
+    clusive.messageQueue.syncToLocalStorage = function(that) {           
+        localStorage.setItem(that.options.config.localStorageKey, JSON.stringify(that.queue));
         that.events.syncedToLocalStorage.fire();
+    }
+
+    clusive.messageQueue.clearQueue = function(that) { 
+        that.queue = [];        
+        localStorage.removeItem(that.options.config.localStorageKey);
     }
 
 }(fluid_3_0_0));
