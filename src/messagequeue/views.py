@@ -7,9 +7,10 @@ import json
 # Create your views here.
 
 class MessageQueueView(View):
-    def post(self, request):
+    def post(self, request):        
         try:
-            messages = json.loads(request.body)
+            messages = json.loads(request.body)        
+            print(messages)
         except json.JSONDecodeError:
-            return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})        
-        return JsonResponse({'success': 1})
+            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})        
+        return JsonResponse({'success': messages})

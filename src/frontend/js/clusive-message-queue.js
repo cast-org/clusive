@@ -3,26 +3,6 @@
 (function(fluid) {
     'use strict';
 
-    fluid.defaults("clusive.restMessageQueue", {
-        gradeNames: ["clusive.messageQueue"],
-        config: {
-            // Where and how to send messages to when trying to flush
-            target: {
-                url: null,
-                method: "POST"
-            },
-        },
-        invokers: {
-            flushQueueImpl: {
-                funcName: "clusive.restMessageQueue.flushQueueImpl"                
-            }
-        }
-    })
-
-    clusive.restMessageQueue.flushQueueImpl = function (that, flushPromise) {
-
-    };
-
     fluid.defaults("clusive.messageQueue", {       
         gradeNames: ["fluid.component"],    
         members: {
@@ -96,15 +76,18 @@
     });    
 
     clusive.messageQueue.flushQueue = function (that) {
-        var promise = fluid.promise();
-        promise.then(
-            function(value) {
-                that.events.queueFlushSuccess.fire(value);
-            },
-            function(error) {
-                that.events.queueFlushFailure.fire(error);
-            })
-        that.flushQueueImpl(promise);            
+        // Don't flush if we have an empty queue
+        if(that.queue.length > 0 ) {
+            var promise = fluid.promise();
+            promise.then(
+                function(value) {
+                    that.events.queueFlushSuccess.fire(value);
+                },
+                function(error) {
+                    that.events.queueFlushFailure.fire(error);
+                })
+            that.flushQueueImpl(promise);            
+        }
     }
 
     clusive.messageQueue.setFlushInterval = function (that) {

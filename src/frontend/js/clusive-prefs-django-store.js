@@ -3,6 +3,39 @@
 (function(fluid) {
     'use strict';
 
+    // Message queue implementation to work with the Django store
+    fluid.defaults("clusive.restMessageQueue", {
+        gradeNames: ["clusive.messageQueue"],
+        config: {
+            // Where and how to send messages to when trying to flush
+            target: {
+                url: '/messagequeue/',
+                method: "POST"
+            },
+        },
+        invokers: {
+            flushQueueImpl: {
+                funcName: "clusive.restMessageQueue.flushQueueImpl"                
+            }
+        }
+    });
+
+    clusive.restMessageQueue.flushQueueImpl = function (that, flushPromise) {
+        $.ajax(that.options.config.target.url, {
+            method: that.options.config.target.method,
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: JSON.stringify(that.getMessages())
+        })
+            .done(function(data) {
+                flushPromise.resolve({"success": 1});
+            })
+            .fail(function(err) {
+                flushPromise.reject({"error": err});
+            });
+    };
+
     fluid.defaults('clusive.prefs.djangoStore', {
         gradeNames: ['fluid.dataSource'],
         storeConfig: {
