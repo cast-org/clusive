@@ -12,6 +12,7 @@
                 url: '/messagequeue/',
                 method: "POST"
             },
+            flushInterval: 30000,
         },
         invokers: {
             flushQueueImpl: {
@@ -65,7 +66,13 @@
         gradeNames: ['fluid.dataSource.writable'],
         listeners: {
             'onWrite.impl': {
-                listener: 'clusive.prefs.djangoStore.setUserPreferences'
+                listener: 'clusive.prefs.djangoStore.setUserPreferences',
+                args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue"]
+            }
+        },
+        components: {
+            messageQueue: {
+                type: "clusive.djangoMessageQueue"
             }
         },
         invokers: {
@@ -98,9 +105,9 @@
         return djangoStorePromise;
     };
 
-    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel) {
-        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model);
-
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue) {
+        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
+    
         if ($.isEmptyObject(model)) {
             var resetURL = directModel.resetURL;
             $.ajax(resetURL, {
@@ -120,20 +127,21 @@
                     console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
                 });
         } else {
-            var setURL = directModel.setURL;
-            $.ajax(setURL, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': DJANGO_CSRF_TOKEN
-                },
-                data: JSON.stringify(fluid.get(model, 'preferences'))
-            })
-                .done(function(data) {
-                    console.debug('storing preferences to server', data);
-                })
-                .fail(function(err) {
-                    console.error('Failed storing prefs to server: ', err);
-                });
+            messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')})
+            // var setURL = directModel.setURL;
+            // $.ajax(setURL, {
+            //     method: 'POST',
+            //     headers: {
+            //         'X-CSRFToken': DJANGO_CSRF_TOKEN
+            //     },
+            //     data: JSON.stringify(fluid.get(model, 'preferences'))
+            // })
+            //     .done(function(data) {
+            //         console.debug('storing preferences to server', data);
+            //     })
+            //     .fail(function(err) {
+            //         console.error('Failed storing prefs to server: ', err);
+            //     });
         }
     };
 }(fluid_3_0_0));
