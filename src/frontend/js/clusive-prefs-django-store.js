@@ -13,7 +13,7 @@
         components: {
             encoding: {
                 type: 'fluid.dataSource.encoding.none'
-            }
+            },
         },
         listeners: {
             'onRead.impl': {

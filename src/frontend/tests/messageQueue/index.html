@@ -25,27 +25,27 @@ var assert = chai.assert;
 
 var testLocalStorageKey = "clusive.messageQueueTest.queue";
 
-fluid.defaults("clusive.testMessageQueue", {
-  gradeNames: ["clusive.messageQueue"],
-  invokers: {
-    flushQueueImpl: {
-      funcName: "clusive.messageQueue.testFlushQueueImplSuccess"
+describe('Basic Message Queue Functionality', function () {
+
+  fluid.defaults("clusive.testMessageQueue", {
+    gradeNames: ["clusive.messageQueue"],
+    invokers: {
+      flushQueueImpl: {
+        funcName: "clusive.testMessageQueue.testFlushQueueImplSuccess"
+      }
+    },
+    config: {
+      localStorageKey: testLocalStorageKey
     }
-  },
-  config: {
-    localStorageKey: testLocalStorageKey
+  });
+
+  clusive.testMessageQueue.testFlushQueueImplSuccess = function (that, flushPromise) {  
+    flushPromise.resolve({"success": 1});
   }
-});
 
-clusive.messageQueue.testFlushQueueImplSuccess = function (that, flushPromise) {  
-  flushPromise.resolve({"success": 1});
-}
-
-clusive.messageQueue.testFlushQueueImplFailure = function (that, flushPromise) {  
-  flushPromise.reject({"failure": 0});
-}
-
-describe('Message Queue', function () {
+  clusive.testMessageQueue.testFlushQueueImplFailure = function (that, flushPromise) {  
+    flushPromise.reject({"failure": 0});
+  }
 
   afterEach(function () {
     localStorage.removeItem(testLocalStorageKey);
@@ -129,7 +129,7 @@ describe('Message Queue', function () {
       var mqFlushFailure = clusive.testMessageQueue({
         invokers: {
           flushQueueImpl: {
-            funcName: "clusive.messageQueue.testFlushQueueImplFailure"
+            funcName: "clusive.testMessageQueue.testFlushQueueImplFailure"
           }
         },
         listeners: {
@@ -194,7 +194,7 @@ describe('Message Queue', function () {
 
   })
 
-  it('should share the message queue between different components using the localStorage', function(done) {
+  it('should share the message queue between different components using the localStorage', function() {
     var mqShareViaLocalStorage1 = clusive.testMessageQueue();
     
     mqShareViaLocalStorage1.add({"greeting": "Hello, world, from mqShareViaLocalStorage1!"});
@@ -205,7 +205,11 @@ describe('Message Queue', function () {
 
     mqShareViaLocalStorage1.add({"greeting": "Hello, world, from mqShareViaLocalStorage1 - again."});
 
-    console.log(mqShareViaLocalStorage1.getMessages(), mqShareViaLocalStorage2.getMessages())
+    assert.deepEqual(mqShareViaLocalStorage1.getMessages(), mqShareViaLocalStorage2.getMessages())
+
+    mqShareViaLocalStorage2.add({"greeting": "Hello, world, from, mqShareViaLocalStorage2 - once again."});
+
+    assert.deepEqual(mqShareViaLocalStorage1.getMessages(), mqShareViaLocalStorage2.getMessages())
   });
 
 });

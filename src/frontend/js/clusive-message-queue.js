@@ -3,19 +3,35 @@
 (function(fluid) {
     'use strict';
 
-    fluid.defaults('clusive.messageQueue', {       
-        gradeNames: ["fluid.component"],    
-        members: {
-            queue: []
-        },
+    fluid.defaults("clusive.restMessageQueue", {
+        gradeNames: ["clusive.messageQueue"],
         config: {
             // Where and how to send messages to when trying to flush
             target: {
                 url: null,
                 method: "POST"
             },
+        },
+        invokers: {
+            flushQueueImpl: {
+                funcName: "clusive.restMessageQueue.flushQueueImpl"                
+            }
+        }
+    })
+
+    clusive.restMessageQueue.flushQueueImpl = function (that, flushPromise) {
+
+    };
+
+    fluid.defaults("clusive.messageQueue", {       
+        gradeNames: ["fluid.component"],    
+        members: {
+            queue: []
+        },
+        config: {
             // Interval for trying to flush queue
             flushInterval: 60000,
+            // Namespace for local storage key
             localStorageKey: "clusive.messageQueue.queue"
         },
         events: {
