@@ -84,7 +84,7 @@
     clusive.messageQueue.wrapMessage = function(message) {
         var timestamp = new Date().toISOString();
         var wrappedMessage = {
-            message: message,            
+            content: message,            
             timestamp: timestamp
         };
         return wrappedMessage;

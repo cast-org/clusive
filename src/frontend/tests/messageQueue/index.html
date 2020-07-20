@@ -63,7 +63,7 @@ describe('Message Queue', function () {
       messageQueue = clusive.testMessageQueue();
       messageQueue.add({"greeting": "Hello, world, again!"});
       var addedMessage = messageQueue.model.queue[0];
-      assert.strictEqual(addedMessage.message.greeting, "Hello, world, again!");
+      assert.strictEqual(addedMessage.content.greeting, "Hello, world, again!");
       var timestamp = addedMessage.timestamp;
       var parsedTimestamp = Date.parse(timestamp);
       assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
