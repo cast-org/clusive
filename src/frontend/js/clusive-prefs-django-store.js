@@ -12,7 +12,7 @@
                 url: '/messagequeue/',
                 method: "POST"
             },
-            flushInterval: 30000,
+            flushInterval: 60000,
         },
         invokers: {
             flushQueueImpl: {
@@ -21,6 +21,8 @@
         }
     });
 
+    // Concrete implementation of the queue flushing that works with 
+    // the server-side message queue
     clusive.djangoMessageQueue.flushQueueImpl = function (that, flushPromise) {
         $.ajax(that.options.config.target.url, {
             method: that.options.config.target.method,
@@ -47,12 +49,16 @@
         components: {
             encoding: {
                 type: 'fluid.dataSource.encoding.none'
-            },
+            },            
+            messageQueue: {
+                type: "clusive.djangoMessageQueue"
+            }
+            
         },
         listeners: {
             'onRead.impl': {
                 listener: 'clusive.prefs.djangoStore.getUserPreferences',
-                args: ['{arguments}.1']
+                args: ['{arguments}.1', "{that}.messageQueue"]
             }
         },
         invokers: {
@@ -70,11 +76,6 @@
                 args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue"]
             }
         },
-        components: {
-            messageQueue: {
-                type: "clusive.djangoMessageQueue"
-            }
-        },
         invokers: {
             set: {
                 args: ['{that}', '{arguments}.0', '{arguments}.1', '{that}.options.storeConfig']
@@ -84,24 +85,43 @@
 
     fluid.makeGradeLinkage('clusive.prefs.djangoStore.linkage', ['fluid.dataSource.writable', 'clusive.prefs.djangoStore'], 'clusive.prefs.djangoStore.writable');
 
-    clusive.prefs.djangoStore.getUserPreferences = function(directModel) {
-        console.debug('clusive.prefs.djangoStore.getUserPreferences', directModel);
-
-        var getURL = directModel.getURL;
+    clusive.prefs.djangoStore.getUserPreferences = function(directModel, messageQueue) {
+        console.debug('clusive.prefs.djangoStore.getUserPreferences', directModel, messageQueue);
 
         var djangoStorePromise = fluid.promise();
 
-        $.get(getURL, function(data) {
-            console.debug('Get user preferences from ', getURL);
-            console.debug('Received preferences: ', data);
+        var preferenceChangeMessages = [].concat(messageQueue.queue).filter(function (item) {
+            if(item.content.type === "PC") {
+                return true;
+            }
+        }) 
+        
+        if(preferenceChangeMessages.length > 0) {
+            // Check for any preference changes in the message queue; 
+            // if there are any, the latest is them, not what's 
+            // available from the server; return the last preference change 
+            // from the queue
+            var latestPreferences = preferenceChangeMessages.pop().content.preferences;
+            console.debug("Got user preferences from the message queue", latestPreferences);
             djangoStorePromise.resolve({
-                preferences: data
+                preferences: latestPreferences
+            });            
+            
+        } else {
+            var getURL = directModel.getURL;
+        
+            $.get(getURL, function(data) {
+                console.debug('Get user preferences from the server ', getURL);
+                console.debug('Received preferences: ', data);
+                djangoStorePromise.resolve({
+                    preferences: data
+                });
+            }).fail(function(error) {
+                console.error('Error getting preferences:', error);
+                djangoStorePromise.reject('error');
             });
-        }).fail(function(error) {
-            console.error('Error getting preferences:', error);
-            djangoStorePromise.reject('error');
-        });
-
+                
+        }
         return djangoStorePromise;
     };
 
