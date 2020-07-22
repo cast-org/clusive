@@ -6,7 +6,8 @@
     fluid.defaults("clusive.messageQueue", {       
         gradeNames: ["fluid.component"],    
         members: {
-            queue: []
+            queue: [],
+            sentQueue: []            
         },
         config: {
             // Interval for trying to flush queue
@@ -31,19 +32,27 @@
             "queueShouldFlush.flushQueue": {
                 funcName: "{that}.flush"
             },
-            "queueFlushSuccess.clearQueue": {
-                func: "{that}.clearQueue",                
-            }           
+            "queueFlushSuccess.clearSentQueue": {
+                func: "{that}.clearSentQueue",                
+            },
+            "queueFlushFailure.restoreQueue": {
+                func: "{that}.restoreQueue"                            
+            },            
+
         },
         invokers: {
             add: {
                 funcName: "clusive.messageQueue.addMessage",
                 args: ["{that}", "{arguments}.0"]
             },
-            clearQueue: {
-                funcName: "clusive.messageQueue.clearQueue",
+            clearSentQueue: {
+                funcName: "clusive.messageQueue.clearSentQueue",
                 args: ["{that}"]                
             },
+            restoreQueue: {
+                funcName: "clusive.messageQueue.restoreQueue",
+                args: ["{that}"]                
+            },            
             getMessages: {
                 funcName: "clusive.messageQueue.getMessages",
                 args: ["{that}"]
@@ -78,6 +87,9 @@
     clusive.messageQueue.flushQueue = function (that) {
         // Don't flush if we have an empty queue
         if(that.queue.length > 0 ) {
+            that.sentQueue = [].concat(that.queue);
+            that.queue = [];
+            that.syncToLocalStorage();
             var promise = fluid.promise();
             promise.then(
                 function(value) {
@@ -136,9 +148,14 @@
         that.events.syncedToLocalStorage.fire();
     }
 
-    clusive.messageQueue.clearQueue = function(that) { 
-        that.queue = [];        
-        localStorage.removeItem(that.options.config.localStorageKey);
+    clusive.messageQueue.clearSentQueue = function(that) { 
+        that.sentQueue = [];                
+    }
+
+    clusive.messageQueue.restoreQueue = function(that) {         
+        that.queue = that.queue.concat(that.sentQueue);
+        that.sentQueue = [];
+        that.syncToLocalStorage();        
     }
 
 }(fluid_3_0_0));

@@ -47,6 +47,18 @@ describe('Basic Message Queue Functionality', function () {
     flushPromise.reject({"failure": 0});
   }
 
+  clusive.testMessageQueue.testFlushQueueImplRoundTripSuccess = function (that, flushPromise) {
+    setTimeout(function () {
+      flushPromise.resolve({"success": 1})
+    }, 500)
+  }
+
+  clusive.testMessageQueue.testFlushQueueImplRoundTripFailure = function (that, flushPromise) {
+      setTimeout(function () {
+        flushPromise.reject({"failure": 0})
+      }, 500)
+    }
+
   afterEach(function () {
     localStorage.removeItem(testLocalStorageKey);
   })
@@ -125,6 +137,36 @@ describe('Basic Message Queue Functionality', function () {
       mqFlushSuccess.flush();
     });
 
+    it('should keep messages added to the queue during any round-trip interval when a queueFlushSuccess event is fired', function (done) {
+      var mqFlushSuccessRoundTrip = clusive.testMessageQueue({
+        invokers: {
+          flushQueueImpl: {
+            funcName: "clusive.testMessageQueue.testFlushQueueImplRoundTripSuccess"
+          }
+        },        
+        listeners: {
+          "queueFlushSuccess.done": {
+            func: function (value) {
+              assert.strictEqual(value.success, 1);
+              // queue length should be 1               
+              assert.strictEqual(mqFlushSuccessRoundTrip.getMessages().length, 1);
+              // message content should be from the message added after flush was called, 
+              // but before the round-trip finished and queueFlushSuccess fired
+              assert.strictEqual(mqFlushSuccessRoundTrip.getMessages()[0].content.greeting, "Hello, successful world - this message should stick around, since it was added after the flush!");
+              mqFlushSuccessRoundTrip.destroy();
+              done();
+            },
+            priority: "last"
+          }
+          
+        }
+      });
+      mqFlushSuccessRoundTrip.add({"greeting": "Hello, successful world - this message should be gone after the flush!"});
+      mqFlushSuccessRoundTrip.add({"greeting": "Hello, successful world - this message should also be gone after the flush!"});
+      mqFlushSuccessRoundTrip.flush();
+      mqFlushSuccessRoundTrip.add({"greeting": "Hello, successful world - this message should stick around, since it was added after the flush!"});
+    });
+
    it('should fire the queueFlushFailure event on a failed queue flush attempt, and leave the queue in place', function (done) {
       var mqFlushFailure = clusive.testMessageQueue({
         invokers: {
@@ -135,7 +177,7 @@ describe('Basic Message Queue Functionality', function () {
         listeners: {
           "queueFlushFailure.done": {
             func: function (error) {
-              assert.strictEqual(error.failure, 0);
+              assert.strictEqual(error.failure, 0);              
               assert.strictEqual(mqFlushFailure.getMessages().length, 1);
               mqFlushFailure.destroy();
               done();
@@ -146,8 +188,34 @@ describe('Basic Message Queue Functionality', function () {
       });
 
       mqFlushFailure.add({"greeting": "Hello, failed world!"});
-      mqFlushFailure.flush();
+      mqFlushFailure.flush();      
     });    
+
+   it('it should keep messages added to the queue during any round trip interval when a queueFlushFailure event is called, along with any messages that failed to be flushed', function (done) {
+      var mqFlushFailureRoundTrip = clusive.testMessageQueue({
+        invokers: {
+          flushQueueImpl: {
+            funcName: "clusive.testMessageQueue.testFlushQueueImplRoundTripFailure"
+          }
+        },
+        listeners: {
+          "queueFlushFailure.done": {
+            func: function (error) {              
+              assert.strictEqual(error.failure, 0);                 
+              assert.strictEqual(mqFlushFailureRoundTrip.getMessages().length, 2);
+              mqFlushFailureRoundTrip.destroy();
+              done();
+            },
+            priority: "last"
+          }
+        }
+      });
+
+      mqFlushFailureRoundTrip.add({"greeting": "Hello, failed world - I won't get removed!"});
+      mqFlushFailureRoundTrip.flush();  
+      mqFlushFailureRoundTrip.add({"greeting": "Hello, failed world - I won't get removed, but was added after the flush was called!"});
+          
+    });     
 
 
     it('should sync messages from localStorage when created', function(done) {

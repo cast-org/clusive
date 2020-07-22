@@ -9,7 +9,8 @@ import json
 
 # Create your views here.
 
-
+# TODO: this needs to be replaced with something that actually works with the Model 
+# definition and the signals code
 def process_messages(messages, user, request):
     for message in messages:
         message["userId"] = user.id
