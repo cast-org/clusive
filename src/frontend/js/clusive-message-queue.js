@@ -7,11 +7,11 @@
         gradeNames: ["fluid.component"],    
         members: {
             queue: [],
-            sendingQueue: []            
+            sendingQueue: {}
         },
         config: {
             // Interval for trying to flush queue
-            flushInterval: 60000,
+            flushInterval: 5000,
             // Namespace for local storage key
             localStorageKey: "clusive.messageQueue.queue"
         },
@@ -86,8 +86,9 @@
 
     clusive.messageQueue.flushQueue = function (that) {
         // Don't flush if we have an empty queue
-        if(that.queue.length > 0 ) {
-            that.sendingQueue = [].concat(that.queue);
+        if(that.queue.length > 0 ) {            
+            that.sendingQueue.timeStamp = new Date().toISOString();
+            that.sendingQueue.messages = [].concat(that.queue);
             that.queue = [];
             that.syncToLocalStorage();
             var promise = fluid.promise();
@@ -153,8 +154,8 @@
     }
 
     clusive.messageQueue.restoreQueue = function(that) {         
-        that.queue = that.queue.concat(that.sendingQueue);
-        that.sendingQueue = [];
+        that.queue = that.sendingQueue.messages.concat(that.queue);
+        that.sendingQueue = {};
         that.syncToLocalStorage();        
     }
 

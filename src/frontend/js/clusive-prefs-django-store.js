@@ -29,7 +29,7 @@
             headers: {
                 'X-CSRFToken': DJANGO_CSRF_TOKEN
             },
-            data: JSON.stringify(that.getMessages())
+            data: JSON.stringify(that.sendingQueue)
         })
             .done(function(data) {
                 flushPromise.resolve({"success": 1});

@@ -22,7 +22,9 @@ def process_messages(messages, user, request):
 class MessageQueueView(View):
     def post(self, request):        
         try:
-            messages = json.loads(request.body)        
+            receivedQueue = json.loads(request.body)     
+            print(receivedQueue);
+            messages = receivedQueue["messages"]
             user = ClusiveUser.from_request(request)
             process_messages(messages, user, request)
         except json.JSONDecodeError:
