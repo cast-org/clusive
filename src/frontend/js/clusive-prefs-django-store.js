@@ -52,7 +52,9 @@
             // Holds the time a request was last made
             lastRequestTime: null,
             // Holds the last response for reuse if within the debounce time
-            lastResponse: null
+            lastResponse: null,
+            // Holds whether or not a request is in flight
+            requestIsInFlight: false
         },
         components: {
             encoding: {
@@ -124,7 +126,7 @@
             }
 
             var debounce = directModel.debounce;
-            console.log("timeDiff/debounce/lastRequestTime/currentTime", timeDiff, debounce, lastRequestTime, currentTime);
+            
             var getURL = directModel.getURL;
             
             // Use cached result if within debounce time
@@ -133,8 +135,12 @@
                 djangoStorePromise.resolve({
                     preferences: that.lastResponse
                 });
+            } else if(that.requestIsInFlight) {
+                djangoStorePromise.reject('Won\'t get user preferences from server, another GET request is currently in flight')                
             } else {
+                that.requestIsInFlight = true;
                 $.get(getURL, function(data) {
+                    that.requestIsInFlight = false;
                     console.debug('Get user preferences from the server ', getURL);
                     console.debug('Received preferences: ', data);
                     that.lastResponse = data;
@@ -144,6 +150,7 @@
                         preferences: data
                     });
                 }).fail(function(error) {
+                    that.requestIsInFlight = false;
                     console.error('Error getting preferences:', error);
                     djangoStorePromise.reject('error');
                 });
