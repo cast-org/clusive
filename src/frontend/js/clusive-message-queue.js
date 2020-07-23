@@ -7,7 +7,7 @@
         gradeNames: ["fluid.component"],    
         members: {
             queue: [],
-            sentQueue: []            
+            sendingQueue: []            
         },
         config: {
             // Interval for trying to flush queue
@@ -32,8 +32,8 @@
             "queueShouldFlush.flushQueue": {
                 funcName: "{that}.flush"
             },
-            "queueFlushSuccess.clearSentQueue": {
-                func: "{that}.clearSentQueue",                
+            "queueFlushSuccess.clearsendingQueue": {
+                func: "{that}.clearsendingQueue",                
             },
             "queueFlushFailure.restoreQueue": {
                 func: "{that}.restoreQueue"                            
@@ -45,8 +45,8 @@
                 funcName: "clusive.messageQueue.addMessage",
                 args: ["{that}", "{arguments}.0"]
             },
-            clearSentQueue: {
-                funcName: "clusive.messageQueue.clearSentQueue",
+            clearsendingQueue: {
+                funcName: "clusive.messageQueue.clearsendingQueue",
                 args: ["{that}"]                
             },
             restoreQueue: {
@@ -87,7 +87,7 @@
     clusive.messageQueue.flushQueue = function (that) {
         // Don't flush if we have an empty queue
         if(that.queue.length > 0 ) {
-            that.sentQueue = [].concat(that.queue);
+            that.sendingQueue = [].concat(that.queue);
             that.queue = [];
             that.syncToLocalStorage();
             var promise = fluid.promise();
@@ -148,13 +148,13 @@
         that.events.syncedToLocalStorage.fire();
     }
 
-    clusive.messageQueue.clearSentQueue = function(that) { 
-        that.sentQueue = [];                
+    clusive.messageQueue.clearsendingQueue = function(that) { 
+        that.sendingQueue = [];                
     }
 
     clusive.messageQueue.restoreQueue = function(that) {         
-        that.queue = that.queue.concat(that.sentQueue);
-        that.sentQueue = [];
+        that.queue = that.queue.concat(that.sendingQueue);
+        that.sendingQueue = [];
         that.syncToLocalStorage();        
     }
 
