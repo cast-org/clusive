@@ -71,8 +71,38 @@ function doPortraitCheck($img, i) {
     });
 }
 
+function formFileText() {
+    'use strict';
+
+    function formFileInputUpdate(node) {
+        var input = node;
+        var $input = $(node);
+
+        var name = (typeof input === 'object')
+            && (typeof input.files === 'object')
+            && (typeof input.files[0] === 'object')
+            && (typeof input.files.name === 'object')
+            ? input.files[0].name : $input.val();
+
+        name = name.split('\\').pop().split('/').pop();
+        if (name === null) { name = ''; }
+        if (name !== '') {
+            $input.closest('.form-file').find('.form-file-text').first().text(name);
+        }
+    }
+
+    $(document).on('change', '.form-file-input', function() {
+        formFileInputUpdate(this);
+    });
+    $('.form-file-input').each(function() {
+        formFileInputUpdate(this);
+    });
+}
+
 $(window).ready(function() {
     'use strict';
+
+    formFileText();
 
     var $imgs = $('.card-img img');
     for (var i = 0; i < $imgs.length; i++) {
