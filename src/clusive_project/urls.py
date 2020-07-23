@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
@@ -23,4 +25,5 @@ urlpatterns = [
     path('sessions/', include('django_session_timeout.urls')),
     path('glossary/', include('glossary.urls')),
     path('library/', include('library.urls')),
-]
+    path('progressbarupload/', include('progressbarupload.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

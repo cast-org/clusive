@@ -1,0 +1,447 @@
+[
+    {
+        "headword": "capable",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Able to do or accomplish something." ,
+                "examples": [ "Davonte Reese wanted a dog, but his parents didn't think he was capable of taking care of one." ]
+            }
+        ]
+    },
+    {
+        "headword": "ongoing",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Continuing without interruption.",
+                "examples": [ "Each dog has a special right to a permanent home with ongoing companionship." ]
+            }
+        ]
+    },
+    {
+        "headword": "compatible",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Able to exist together well.",
+                "examples": [ "People domesticated dogs to be socially compatible and live with humans." ],
+                "images": [
+                    {
+                        "src": "glossimages/compatible1.jpg",
+                        "alt": "Photo of two people walking together.",
+                        "description": "Two people walking together.",
+                        "caption": "People get married when they feel that they are compativle with each other. ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/510afaa7-2ef7-4180-a54f-9312c03b4b26",
+                            "title": "Ed & Jenna's Wedding",
+                            "author": "danfish13 ",
+                            "author_url": "https://www.flickr.com/photos/82404160@N02",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "notion",
+        "alternateForms": ["notions" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Idea or belief.",
+                "examples": [ " Marlena Davis disagrees with the notion that pet rental is bad for dogs." ],
+                "images": [
+                    {
+                        "src": "glossimages/notion1.jpg",
+                        "alt": "Photo of person with a drawn thought bubble.",
+                        "description": "A thought bubble is drawn above the head of a person.",
+                        "caption": "Notion is another word for 'thought.'",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Privacy_thinking_-_quote_in_Czech.png",
+                            "author": "Petr Kopač",
+                            "license": "CC BY-SA 3.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/3.0"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "whereas",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "conjunction",
+                "definition": "Although, in contrast with the fact that.",
+                "examples": [ "Whereas people who own dogs leave them home alone, Marlena says people who rent dogs give the animals lots of attention." ]
+             }
+        ]
+    },
+    {
+        "headword": "evolve",
+        "alternateForms": ["evolves", "evolved", "evolving"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To go through a gradual process of change and growth,",
+                "examples": [ "Dogs evolved from wild predators into animals that rely on humans for company." ],
+                "images": [
+                    {
+                        "src": "glossimages/evolve1.jpg",
+                        "alt": "Drawing of evolution over time of sea animals.",
+                        "description": "The drawing shows five sea animals and how they evolved, or changed, over time. The animal at the top is the sea animal furthest back in time. The animals pictured further down are closer to present-day time. The animals change in body shape and fin shape and size over time.",
+                        "caption": "Animals change over time. These sea creatures changed over millions of years to become what we see today. Dogs and cats changed over a shorter time to become the friends of people.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/ccbead56-70b1-44e8-a9c0-f7dbcff0170d",
+                            "title": "Marine Reptiles Evolution    CC BY-NC-SA 2.0",
+                            "author": "RobinGoodfellow_m",
+                            "author_url": "https://www.flickr.com/photos/130140542@N03",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://www.flickr.com/photos/130140542@N03"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "develop",
+        "alternateForms": ["develops", "developed", "developing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To go through a gradual process of change and growth,",
+                "examples": [ "Dogs developed from wild predators into animals that rely on humans for company." ],
+                "images": [
+                    {
+                        "src": "glossimages/evolve1.jpg",
+                        "alt": "Drawing of evolution over time of sea animals.",
+                        "description": "The drawing shows five sea animals and how they evolved, or changed, over time. The animal at the top is the sea animal furthest back in time. The animals pictured further down are closer to present-day time. The animals change in body shape and fin shape and size over time.",
+                        "caption": "Animals change over time. These sea creatures changed over millions of years to become what we see today. Dogs and cats changed over a shorter time to become the friends of people.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/ccbead56-70b1-44e8-a9c0-f7dbcff0170d",
+                            "title": "Marine Reptiles Evolution    CC BY-NC-SA 2.0",
+                            "author": "RobinGoodfellow_m",
+                            "author_url": "https://www.flickr.com/photos/130140542@N03",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://www.flickr.com/photos/130140542@N03"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "transform",
+        "alternateForms": ["transforms", "transformed", "transforming"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To go through a gradual process of change and growth,",
+                "examples": [ "Dogs transformed from wild predators into animals that rely on humans for company." ],
+                "images": [
+                    {
+                        "src": "glossimages/evolve1.jpg",
+                        "alt": "Drawing of evolution over time of sea animals.",
+                        "description": "The drawing shows five sea animals and how they evolved, or changed, over time. The animal at the top is the sea animal furthest back in time. The animals pictured further down are closer to present-day time. The animals change in body shape and fin shape and size over time.",
+                        "caption": "Animals change over time. These sea creatures changed over millions of years to become what we see today. Dogs and cats changed over a shorter time to become the friends of people.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/ccbead56-70b1-44e8-a9c0-f7dbcff0170d",
+                            "title": "Marine Reptiles Evolution    CC BY-NC-SA 2.0",
+                            "author": "RobinGoodfellow_m",
+                            "author_url": "https://www.flickr.com/photos/130140542@N03",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://www.flickr.com/photos/130140542@N03"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "domesticate",
+        "alternateForms": ["domesticates", "domesticated", "domesticating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To bring under the control of and make usable by humans.",
+                "examples": [ "Horses and oxen have been domesticated to work on farms." ],
+                "images": [
+                    {
+                        "src": "glossimages/domesticate1.jpg",
+                        "alt": "Photo of horse with a harness.",
+                        "description": "A horse stands with a harness over its head. A lead, like a leash, is connected to the harness and a person holds the other end of the lead.",
+                        "caption": "Horses are a type of animal that were once wild and that people have tamed over time.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e46c40a7-566a-44d3-b375-b318147a1027",
+                            "title": "HORSES ",
+                            "author": "forkcandles ",
+                            "author_url": "https://www.flickr.com/photos/10688293@N00",
+                            "license": " CC by-nd 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "tame",
+        "alternateForms": ["tames", "tamed", "taming"],
+        "meanings": [
+            {
+                 "pos": "verb",
+                "definition": "To bring under the control of and make usable by humans.",
+                "examples": [ "Horses and oxen have been tamed to work on farms." ],
+                "images": [
+                    {
+                        "src": "glossimages/domesticate1.jpg",
+                        "alt": "Photo of horse with a harness.",
+                        "description": "A horse stands with a harness over its head. A lead, like a leash, is connected to the harness and a person holds the other end of the lead.",
+                        "caption": "Horses are a type of animal that were once wild and that people have tamed over time.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e46c40a7-566a-44d3-b375-b318147a1027",
+                            "title": "HORSES ",
+                            "author": "forkcandles ",
+                            "author_url": "https://www.flickr.com/photos/10688293@N00",
+                            "license": " CC by-nd 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "acculturate",
+        "alternateForms": ["acculturates", "acculturated", "acculturating"],
+        "meanings": [
+            {
+                 "pos": "verb",
+                "definition": "To bring under the control of and make usable by humans.",
+                "examples": [ "Horses and oxen have been acculturated to work on farms." ],
+                "images": [
+                    {
+                        "src": "glossimages/domesticate1.jpg",
+                        "alt": "Photo of horse with a harness.",
+                        "description": "A horse stands with a harness over its head. A lead, like a leash, is connected to the harness and a person holds the other end of the lead.",
+                        "caption": "Horses are a type of animal that were once wild and that people have tamed over time.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e46c40a7-566a-44d3-b375-b318147a1027",
+                            "title": "HORSES ",
+                            "author": "forkcandles ",
+                            "author_url": "https://www.flickr.com/photos/10688293@N00",
+                            "license": " CC by-nd 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "ensure",
+        "alternateForms": ["ensures", "ensured", "ensuring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make certain that something will occur.",
+                "examples": [ "I measure my pet's food to ensure she gets enough to eat every day." ]
+               
+            }
+        ]
+    },
+    {
+        "headword": "guarantee",
+        "alternateForms": ["guarantees", "guaranteed", "guaranteeing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make certain that something will occur.",
+                "examples": [ "I measure my pet's food to guarantee she gets enough to eat every day." ]
+               
+            }
+        ]
+    },
+    {
+        "headword": "ascertain",
+        "alternateForms": ["ascertains", "ascertained", "ascertaining"],
+         "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make certain that something will occur.",
+                "examples": [ "I measure my pet's food to ascertain that she gets enough to eat every day." ]
+               
+            }
+        ]
+    },
+    {
+        "headword": "companionship",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A feeling of fellowship or affection with others.",
+                "examples": [ "I have a pet cat at home for companionship. " ],
+                "images": [
+                    {
+                        "src": "glossimages/companionship1.jpg",
+                        "alt": "Photo of a man and a dog inside a room.",
+                        "description": "A man and a dog sit on a chair inside a room. The dog is partially on the man's lap.",
+                        "caption": "People are very fond of dogs, and often see them as their friends. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e0de0cef-4c89-4a53-a0c2-547feb72331e",
+                            "title": "Dad and Woody",
+                            "author": "sarahstierch",
+                            "author_url": "https://www.flickr.com/photos/7633518@N08",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "friendship",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A feeling of fellowship or affection with others.",
+                "examples": [ "I have a pet cat at home for friendship." ],
+                "images": [
+                    {
+                        "src": "glossimages/companionship1.jpg",
+                        "alt": "Photo of a man and a dog inside a room.",
+                        "description": "A man and a dog sit on a chair inside a room. The dog is partially on the man's lap.",
+                        "caption": "People are very fond of dogs, and often see them as their friends. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e0de0cef-4c89-4a53-a0c2-547feb72331e",
+                            "title": "Dad and Woody",
+                            "author": "sarahstierch",
+                            "author_url": "https://www.flickr.com/photos/7633518@N08",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "comradeship",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A feeling of fellowship or affection with others.",
+                "examples": [ "I have a pet cat at home for comradeship." ],
+                "images": [
+                    {
+                        "src": "glossimages/companionship1.jpg",
+                        "alt": "Photo of a man and a dog inside a room.",
+                        "description": "A man and a dog sit on a chair inside a room. The dog is partially on the man's lap.",
+                        "caption": "People are very fond of dogs, and often see them as their friends. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e0de0cef-4c89-4a53-a0c2-547feb72331e",
+                            "title": "Dad and Woody",
+                            "author": "sarahstierch",
+                            "author_url": "https://www.flickr.com/photos/7633518@N08",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "herd",
+        "alternateForms": ["herds", "herded", "herding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To bring together to move.",
+                "examples": [ "Sheep dogs are better than people at herding animals. " ],
+                "images": [
+                    {
+                        "src": "glossimages/herd1.jpg",
+                        "alt": "Photo of a group of animals walking on a road.",
+                        "description": "A group of sheep walk along the side of the road. A horse can be side on the road beside the group of sheep.",
+                        "caption": "A group, or herd, of sheep.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/0329307c-8f7b-4235-9c10-340d70622e6b",
+                            "title": "Xinjiang July 2010",
+                            "author": "Remko Tanis",
+                            "author_url": "https://www.flickr.com/photos/35036603@N06",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "shepherd",
+        "alternateForms": ["shepherds", "shepherded", "shepherding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To bring together to move.",
+                "examples": [ "Sheep dogs are better than people at shepherding animals." ],
+                "images": [
+                    {
+                        "src": "glossimages/herd1.jpg",
+                        "alt": "Photo of a group of animals walking on a road.",
+                        "description": "A group of sheep walk along the side of the road. A horse can be side on the road beside the group of sheep.",
+                        "caption": "A group, or herd, of sheep.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/0329307c-8f7b-4235-9c10-340d70622e6b",
+                            "title": "Xinjiang July 2010",
+                            "author": "Remko Tanis",
+                            "author_url": "https://www.flickr.com/photos/35036603@N06",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "gather",
+        "alternateForms": ["gathers", "gathered", "gathering"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To bring together.",
+                "examples": [ "Sheep dogs are better than people at gathering animals." ],
+                "images": [
+                    {
+                        "src": "glossimages/herd1.jpg",
+                        "alt": "Photo of a group of animals walking on a road.",
+                        "description": "A group of sheep walk along the side of the road. A horse can be side on the road beside the group of sheep.",
+                        "caption": "A group, or herd, of sheep.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/0329307c-8f7b-4235-9c10-340d70622e6b",
+                            "title": "Xinjiang July 2010",
+                            "author": "Remko Tanis",
+                            "author_url": "https://www.flickr.com/photos/35036603@N06",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

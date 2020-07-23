@@ -11,6 +11,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+MEDIA_ROOT = '/app/uploads'
+MEDIA_URL = '/uploads/'
+
 #######################
 # SECURITY MIDDLEWARE #
 #######################

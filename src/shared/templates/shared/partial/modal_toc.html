@@ -18,7 +18,7 @@
                         <div class="media media-toc">
                             {% if pub.cover %}
                             <div class="media-img">
-                                <img src="{% get_static_prefix %}shared/pubs/{{pub.path}}/{{pub.cover}}" class="img-fluid" alt="Cover image">
+                                <img src="{% get_media_prefix %}{{pub.cover_path }}" class="img-fluid" alt="Cover image">
                             </div>
                             {% endif %}
                             <div class="media-body">

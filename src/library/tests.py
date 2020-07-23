@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from roster.models import ClusiveUser
-from .models import Book, Paradata
+from .models import Book, Paradata, BookVersion
 from .parsing import TextExtractor
 
 
@@ -40,7 +40,14 @@ class LibraryApiTestCase(TestCase):
     def setUp(self):
         user_1 = User.objects.create_user(username="user1", password="password1")
         user_1.save()
-        ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
+        cuser = ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST')
+        cuser.save()
+        self.book = Book.objects.create(title='Book One', description='')
+        self.book.save()
+        bv = BookVersion.objects.create(book=self.book, sortOrder=0)
+        bv.save()
+        para = Paradata.objects.create(book=self.book, user=cuser, lastVersion = bv)
+        para.save()
 
     def test_setlocation_error_for_get(self):
         login = self.client.login(username='user1', password='password1')
@@ -49,14 +56,12 @@ class LibraryApiTestCase(TestCase):
 
     def test_setlocation_error_for_nonexistent_book(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.post(reverse('setlocation'), { 'book' : 'book1', 'locator' : 'testtest'})
-        self.assertEqual(response.status_code, 404)
+        response = self.client.post(reverse('setlocation'), { 'book' : 999, 'version': '0', 'locator' : 'testtest'})
+        self.assertEqual(response.status_code, 500)
 
     def test_setlocation(self):
-        book = Book.objects.create(path='book1', title='Book One', description='')
-        book.save()
         login = self.client.login(username='user1', password='password1')
-        response = self.client.post(reverse('setlocation'), { 'book' : 'book1', 'locator' : 'testtest'})
+        response = self.client.post(reverse('setlocation'), { 'book' : self.book.pk, 'version': '0', 'locator' : 'testtest'})
         self.assertEqual(response.status_code, 200)
-        pd = Paradata.objects.get(book__path='book1')
+        pd = Paradata.objects.get(book=self.book)
         self.assertEqual('testtest', pd.lastLocation)

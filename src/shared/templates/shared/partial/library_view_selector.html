@@ -1,0 +1,31 @@
+<div class="dropdown">
+    <button type="button" class="btn btn-primary" data-cfw="dropdown">
+        {{ current_view_name }}
+        <span class="caret" aria-hidden="true"></span>
+    </button>
+    <ul class="dropdown-menu">
+        {% for p in clusive_user.periods.all %}
+            <li>
+                <a href="{% url 'library' view='period' period_id=p.id %}"
+                 {% if p == period %}class="active" aria-current="true"{% endif %}>
+                    {{ p.name }}
+                </a>
+            </li>
+        {% endfor %}
+        <li>
+            <a href="{% url 'library' view='public' %}"
+               {% if current_view == 'public' %}class="active" aria-current="true"{% endif %}>
+            {{view_names.public}}</a>
+        </li>
+        <li>
+            <a href="{% url 'library' view='mine' %}"
+               {% if current_view == 'mine' %}class="active" aria-current="true"{% endif %}>
+            {{view_names.mine}}</a>
+        </li>
+        <a>
+            <a href="{% url 'library' view='all' %}"
+               {% if current_view == 'all' %}class="active" aria-current="true"{% endif %}>
+            {{view_names.all}}</a>
+        </li>
+    </ul>
+</div>

@@ -6,8 +6,9 @@
 
 <script>
 var exports = {};
-var pub_id = "{{ pub_id }}";
+var pub_id = "{{ pub.id }}";
 var pub_version = "{{ version }}";
+var manifest_path = "{{ manifest_path }}";
 </script>
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
 {% endblock %}
@@ -68,8 +69,8 @@ var pub_version = "{{ version }}";
     </div>
 
     <script>
-        var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% static "shared/pubs/" %}'
-            + pub_id + '/' + pub_version + '/manifest.json';
+        var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port +
+            '{% get_media_prefix %}' + manifest_path;
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
@@ -88,16 +89,19 @@ var pub_version = "{{ version }}";
         ];
 
         var userSettings = { textAlignment:'start' };
-        var lastReadingPosition = {{ last_position|safe }};
-        var annotations = JSON.parse('{{ annotations|safe }}');
+        var annotations = [];
+        {% for a in annotations %}
+            annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
+        {% endfor %}
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
+        var lastReadingPosition = {{ last_position|safe }};
 
         var selectionMenuItems = [
             {
                 id: 'lookupIcon',
                 callback: function (selection) {
                     console.debug('looking up: ', selection);
-                    window.parent.load_definition(1, selection);
+                    window.parent.load_definition(0, selection);
                     window.parent.$('#glossaryButton').CFW_Popover('show');
                     glossaryPop_focus($('#lookupIcon'));
                 }
@@ -161,7 +165,7 @@ var pub_version = "{{ version }}";
                     var atBottom = (elt.scrollHeight - elt.scrollTop === elt.clientHeight);
                     document.getElementById('prevResourceButton').disabled = (firstResource && atTop);
                     document.getElementById('nextResourceButton').disabled = (lastResource && atBottom);
-                    return trackReadingLocation(pub_id, locator);
+                    return trackReadingLocation(pub_id, pub_version, locator);
                 },
                 updateUserSettings: function (userSettings) {
                     return Promise.resolve();

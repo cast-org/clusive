@@ -1,42 +1,34 @@
-import json
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views import View
-from django.views.generic import ListView, TemplateView, RedirectView
+from django.views.generic import TemplateView, RedirectView
 
 from eventlog.signals import page_viewed
 from glossary.models import WordModel
-from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation
+from library.models import Book, BookVersion, Paradata, Annotation
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
 
-class LibraryView(LoginRequiredMixin,ListView):
-    """Library page showing all books"""
-    template_name = 'pages/library.html'
+class ReaderIndexView(LoginRequiredMixin,RedirectView):
+    """This is the 'home page', currently just redirects to the user's default library view."""
+    permanent = False
 
-    def get_queryset(self):
-        self.clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
-        period = self.clusive_user.periods.first()
-        logger.debug("User is in period %s" % (period))
-        if period:
-            books = [ba.book for ba in BookAssignment.objects.filter(period=period)]
-            logger.debug("Books: %s", books)
-            return books
+    def get_redirect_url(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            logger.debug("Staff login")
+            return 'admin'
         else:
-            return Book.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            page_viewed.send(self.__class__, request=request, page='library')
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['clusive_user'] = self.clusive_user
-        return context
+            clusive_user : ClusiveUser
+            clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
+            view = clusive_user.library_view
+            if view == 'period' and clusive_user.current_period:
+                return reverse('library', kwargs = {'view': 'period', 'period_id': clusive_user.current_period.id})
+            else:
+                return reverse('library', kwargs = {'view': view})
 
 
 class ReaderChooseVersionView(RedirectView):
@@ -44,8 +36,8 @@ class ReaderChooseVersionView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        pub_id = kwargs.get('pub_id')
-        versions = BookVersion.objects.filter(book__path=pub_id)
+        book_id = kwargs.get('book_id')
+        versions = BookVersion.objects.filter(book__pk=book_id)
         v = None
         if len(versions) == 1:
             # Shortcut: only one version exists, go there.
@@ -53,7 +45,7 @@ class ReaderChooseVersionView(RedirectView):
         else:
             clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
             try:
-                paradata = Paradata.objects.get(book__path=pub_id, user=clusive_user)
+                paradata = Paradata.objects.get(book__pk=book_id, user=clusive_user)
                 # Return to the last version this user viewed.
                 v = paradata.lastVersion.sortOrder
                 logger.debug('Returning to last version viewed (%d)', v)
@@ -111,9 +103,9 @@ class ReaderView(LoginRequiredMixin,TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             context = self.get_context_data(**kwargs)
-            pub_id = context.get('pub_id')
+            book_id = context.get('book_id')
             version = int(context.get('version'))
-            book = Book.objects.get(path=pub_id)
+            book = Book.objects.get(pk=book_id)
             clusive_user = get_object_or_404(ClusiveUser, user=request.user)
             bookVersion = BookVersion.objects.get(book=book, sortOrder=version)
             annotationList = Annotation.get_list(user=clusive_user, book_version=bookVersion)
@@ -122,13 +114,15 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                 else False
             bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
                 else False
-            self.extra_context = { 'pub' : book,
-                                   'prev_version' : bv_prev,
-                                   'next_version' : bv_next,
-                                   'last_position' : pdata.lastLocation or "null",
-                                   'annotations' : json.dumps(annotationList),
-                                   }
-            page_viewed.send(self.__class__, request=request, document=pub_id)
+            self.extra_context = {
+                'pub': book,
+                'manifest_path': bookVersion.manifest_path,
+                'prev_version': bv_prev,
+                'next_version': bv_next,
+                'last_position': pdata.lastLocation or "null",
+                'annotations': annotationList,
+            }
+            page_viewed.send(self.__class__, request=request, document=book_id)
         return super().get(request, *args, **kwargs)
 
 
