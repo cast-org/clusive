@@ -44,7 +44,15 @@
         storeConfig: {
             getURL: '/account/prefs',
             setURL: '/account/prefs',
-            resetURL: '/account/prefs/profile'
+            resetURL: '/account/prefs/profile',
+            // In milliseconds, helps prevent repeated calls on initial construction
+            debounce: 1000
+        },
+        members: {
+            // Holds the time a request was last made
+            lastRequestTime: null,
+            // Holds the last response for reuse if within the debounce time
+            lastResponse: null
         },
         components: {
             encoding: {
@@ -58,7 +66,7 @@
         listeners: {
             'onRead.impl': {
                 listener: 'clusive.prefs.djangoStore.getUserPreferences',
-                args: ['{arguments}.1', "{that}.messageQueue"]
+                args: ['{arguments}.1', "{that}.messageQueue", "{that}.lastRequestTime", "{that}"]
             }
         },
         invokers: {
@@ -85,7 +93,7 @@
 
     fluid.makeGradeLinkage('clusive.prefs.djangoStore.linkage', ['fluid.dataSource.writable', 'clusive.prefs.djangoStore'], 'clusive.prefs.djangoStore.writable');
 
-    clusive.prefs.djangoStore.getUserPreferences = function(directModel, messageQueue) {
+    clusive.prefs.djangoStore.getUserPreferences = function(directModel, messageQueue, lastRequestTime, that) {
         console.debug('clusive.prefs.djangoStore.getUserPreferences', directModel, messageQueue);
 
         var djangoStorePromise = fluid.promise();
@@ -102,32 +110,52 @@
             // available from the server; return the last preference change 
             // from the queue
             var latestPreferences = preferenceChangeMessages.pop().content.preferences;
-            console.debug("Got user preferences from the message queue", latestPreferences);
+            console.debug("Get user preferences from the outstanding message queue", latestPreferences);
             djangoStorePromise.resolve({
                 preferences: latestPreferences
             });            
             
         } else {
+            // Implement debounce here
+            var currentTime = new Date();
+            var timeDiff;
+            if(lastRequestTime) {
+                timeDiff = currentTime.getTime() - lastRequestTime.getTime();
+            }
+
+            var debounce = directModel.debounce;
+            console.log("timeDiff/debounce/lastRequestTime/currentTime", timeDiff, debounce, lastRequestTime, currentTime);
             var getURL = directModel.getURL;
-        
-            $.get(getURL, function(data) {
-                console.debug('Get user preferences from the server ', getURL);
-                console.debug('Received preferences: ', data);
+            
+            // Use cached result if within debounce time
+            if(timeDiff < debounce && that.lastResponse) {
+                console.debug('Get user preferences from cache of last result');
                 djangoStorePromise.resolve({
-                    preferences: data
+                    preferences: that.lastResponse
                 });
-            }).fail(function(error) {
-                console.error('Error getting preferences:', error);
-                djangoStorePromise.reject('error');
-            });
-                
+            } else {
+                $.get(getURL, function(data) {
+                    console.debug('Get user preferences from the server ', getURL);
+                    console.debug('Received preferences: ', data);
+                    that.lastResponse = data;
+                    that.lastRequestTime = currentTime;
+    
+                    djangoStorePromise.resolve({
+                        preferences: data
+                    });
+                }).fail(function(error) {
+                    console.error('Error getting preferences:', error);
+                    djangoStorePromise.reject('error');
+                });
+            }                            
         }
         return djangoStorePromise;
     };
 
     clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue) {
         console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
-    
+        
+        // TODO: switch this over to use the messageQueue as well
         if ($.isEmptyObject(model)) {
             var resetURL = directModel.resetURL;
             $.ajax(resetURL, {
@@ -147,21 +175,7 @@
                     console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
                 });
         } else {
-            messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')})
-            // var setURL = directModel.setURL;
-            // $.ajax(setURL, {
-            //     method: 'POST',
-            //     headers: {
-            //         'X-CSRFToken': DJANGO_CSRF_TOKEN
-            //     },
-            //     data: JSON.stringify(fluid.get(model, 'preferences'))
-            // })
-            //     .done(function(data) {
-            //         console.debug('storing preferences to server', data);
-            //     })
-            //     .fail(function(err) {
-            //         console.error('Failed storing prefs to server: ', err);
-            //     });
+            messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')})          
         }
     };
 }(fluid_3_0_0));
