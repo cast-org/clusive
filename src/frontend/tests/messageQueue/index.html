@@ -93,7 +93,7 @@ describe('Basic Message Queue Functionality', function () {
       var addedMessage = mqTimeStamp.getMessages()[0];   
       var timestamp = addedMessage.timestamp;
       var parsedTimestamp = Date.parse(timestamp);
-      assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
+      assert(! isNaN(parsedTimestamp), "Generated message timestamp parsed as NaN by Date.parse()");
       mqTimeStamp.destroy();
     });       
 
@@ -166,6 +166,30 @@ describe('Basic Message Queue Functionality', function () {
       mqFlushSuccessRoundTrip.flush();
       mqFlushSuccessRoundTrip.add({"greeting": "Hello, successful world - this message should stick around, since it was added after the flush!"});
     });
+
+  it('should timestamp the sendingQueue at the time of the sending attempt', function (done) {
+ var mqFlushTimeStamp = clusive.testMessageQueue({
+        invokers: {
+          flushQueueImpl: {
+            funcName: "clusive.testMessageQueue.testFlushQueueImplRoundTripSuccess"
+          }
+        },        
+        listeners: {
+          "queueFlushStarting.done": {
+            func: function () {
+              console.log("queueFlushStarting.done", mqFlushTimeStamp.sendingQueue)
+              var timestamp = mqFlushTimeStamp.sendingQueue.timestamp;
+              var parsedTimestamp = Date.parse(timestamp);
+              assert(! isNaN(parsedTimestamp), "Generated timestamp for sending queue parsed as NaN by Date.parse()");
+              mqFlushTimeStamp.destroy();
+              done();
+            }            
+          }          
+        }
+      });    
+      mqFlushTimeStamp.add({"greeting": "Hello, timestamped world!"});
+      mqFlushTimeStamp.flush();
+  })
 
    it('should fire the queueFlushFailure event on a failed queue flush attempt, and leave the queue in place', function (done) {
       var mqFlushFailure = clusive.testMessageQueue({

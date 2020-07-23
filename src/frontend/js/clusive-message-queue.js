@@ -17,6 +17,7 @@
         },
         events: {
             queueShouldFlush: null,
+            queueFlushStarting: null,
             queueFlushSuccess: null,
             queueFlushFailure: null,
             syncedToLocalStorage: null        
@@ -86,12 +87,13 @@
 
     clusive.messageQueue.flushQueue = function (that) {
         // Don't flush if we have an empty queue
-        if(that.queue.length > 0 ) {            
-            that.sendingQueue.timeStamp = new Date().toISOString();
+        if(that.queue.length > 0 ) {                   
+            that.sendingQueue.timestamp = new Date().toISOString();
             that.sendingQueue.messages = [].concat(that.queue);
             that.queue = [];
             that.syncToLocalStorage();
             var promise = fluid.promise();
+            that.events.queueFlushStarting.fire();     
             promise.then(
                 function(value) {
                     that.events.queueFlushSuccess.fire(value);
