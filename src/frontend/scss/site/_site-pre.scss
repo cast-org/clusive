@@ -62,7 +62,7 @@ $enable-list-item-colors:               false;
 $enable-media:                          true;
 $enable-navbar-text:                    false;
 $enable-navbar-divider:                 false;
-$enable-navbar-collapse:                false;
+$enable-navbar-collapse:                true;
 $enable-navbar-toggle:                  false;
 $enable-navbar-light:                   false;
 $enable-navbar-dark:                    false;
@@ -311,9 +311,18 @@ $skiplink-offset-top:                   .25rem;
 $skiplink-padding:                      .25rem .5rem;
 $skiplink-border-width:                 1px;
 
-$header-border-radius:                  $border-radius;
+$header-navbar-padding:                 0;
+$header-navbar-height:                  2.25rem;
+$header-height:                         $header-navbar-height + $body-padding-y;
+$header-navbar-border-radius:           null;
 
-$sidebar-border-radius:                 $header-border-radius;
+$header-md-navbar-height:               2.75rem;
+$header-md-height:                      $header-md-navbar-height + $body-padding-y;
+
+$logo-font-size:                        1.25rem;
+$logo-md-font-size:                     1.375rem;
+
+$sidebar-border-radius:                 $border-radius;
 $sidebar-width:                         3rem;
 $sidebar-padding:                       .75rem .25rem;
 $sidebar-gutter:                        1rem;

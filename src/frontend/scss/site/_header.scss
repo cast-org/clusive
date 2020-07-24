@@ -1,116 +1,112 @@
 .site-header {
-    position: relative;
-    z-index: 1;
-    padding: 1.375rem  1rem;
-    margin-right: $sidebar-width + $sidebar-gutter + ($grid-gutter-width / -2);
-    margin-bottom: 2.5rem;
-    margin-left: ($grid-gutter-width / -2);
-    line-height: 1;
-    background: var(--CT_headerBg);
-    @include border-radius($header-border-radius);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: $zindex-fixed;
+    min-height: $header-height;
+    background-color: var(--CT_headerOuterBg);
 
-    @include media-breakpoint-up(sm) {
-        margin-right: $sidebar-sm-width + $sidebar-sm-gutter + ($grid-gutter-width / -2);
+    @include media-breakpoint-up(md) {
+        height: $header-md-height;
+    }
+}
+
+.site-header-navbar {
+    position: relative;
+    min-height: $header-navbar-height;
+    padding: $header-navbar-padding;
+    background: var(--CT_headerBg);
+    @include border-radius($header-navbar-border-radius);
+
+    .site-header-container {
+        justify-content: space-between;
+    }
+
+    .navbar-toggle {
+        &:not(.open) {
+            .not-open {
+                display: none;
+            }
+        }
+
+        &.open {
+            .is-open {
+                display: none;
+            }
+        }
     }
 
     @include media-breakpoint-up(md) {
-        margin-bottom: 1rem;
-    }
+        height: $header-md-navbar-height;
 
-    .page-title {
-        display: inline-block;
-        margin-top: .25rem;
-        margin-bottom: 0;
-        margin-left: 3.125rem;
-        vertical-align: middle;
-        border-bottom: 3px solid var(--CT_pageTitleBorderColor);
-
-        @include media-breakpoint-up(md) {
-            margin-top: 0;
-            margin-left: 1rem;
+        &.navbar-expand-md .navbar-toggle {
+            display: none;
         }
     }
 }
 
 .site-header-logo {
-    display: inline-block;
-    @include font-size(1.75rem);
-    color: var(--CT_headerLogoTextColor);
+    display: inline-flex;
+    align-items: center;
+    min-height: $header-navbar-height;
+    @include font-size($logo-font-size);
+    line-height: 1;
+    color: var(--CT_headerLogoColor);
     white-space: nowrap;
     vertical-align: middle;
 
     .icon-logo-clusive-toggle {
         color: var(--CT_headerLogoIconColor);
-    }
-
-    a {
-        color: inherit;
-        text-decoration: none;
+        margin-right: .25rem;
     }
 
     @include media-breakpoint-up(md) {
-        @include font-size(2.25rem);
+        //height: $header-md-navbar-height;
+        @include font-size($logo-md-font-size);
     }
 }
 
-.site-header-small {
-    padding: 1.125rem 1rem 1.125rem 4rem;
-
-    .site-header-logo {
-        @include font-size(1rem);
-        line-height: 1;
-    }
-
-    @include media-breakpoint-up(sm) {
-        padding-left: 5rem;
-    }
-}
-
-.page-title {
-    @include font-size(1.375rem);
-
-    &:empty {
-        display: none;
-    }
-}
-
-.user-actions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: inline-block;
+.site-header-actions {
     @include font-size(.875rem);
     line-height: 1.25;
 
-    @include media-breakpoint-down(sm) {
-        top: calc(100% + .5rem);
-    }
-
-    .nav {
-        align-items: center;
-    }
-
-    .nav-item + .nav-item {
-        padding-left: .125rem;
-        margin-left: .125rem;
-        border-left: 1px solid;
-    }
-
     .nav-link {
+        display: inline-flex;
+        align-items: center;
         padding: .25rem .5rem;
+
+        .caret {
+            margin-left: .125rem;
+        }
 
         @include hover-focus() {
             color: var(--CT_btnPrimaryHoverColor);
             background-color: var(--CT_btnPrimaryHoverBg);
         }
+
+        @include media-breakpoint-up(md) {
+            height: $header-md-navbar-height;
+        }
     }
 
     .current {
-        padding: .25rem .5rem;
         font-weight: 600;
     }
 
-    .dropdown-menu {
-        line-height: 1.5;
+    @include media-breakpoint-up(md) {
+        .navbar-nav {
+            margin-left: auto;
+        }
     }
 }
+
+/*
+.site-header-large {
+    padding: 1.375rem  1rem;
+
+    .site-header-logo {
+        @include font-size(1.75rem);
+    }
+}
+*/

@@ -32,10 +32,12 @@ $login-section-border-color:            #d3cfc9;
 
 $footer-border-color:                   #636b82;
 
-$header-bg:                             linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, 0) 65%);
+$header-outer-bg:                       $body-bg;
+$header-bg:                             linear-gradient(90deg, rgba(#636b82, .25) 0%, rgba(#636b82, .15) 100%);
 $header-color:                          inherit;
-$header-logo-icon-color:                #fbfbfb;
-$header-logo-text-color:                #636b82;
+$header-logo-color:                     #636b82;
+$header-logo-icon-color:                $header-logo-color;
+
 $page-title-border-color:               #acfdf0;
 
 $sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .15) 0%, rgba(#636b82, .3) 100%);

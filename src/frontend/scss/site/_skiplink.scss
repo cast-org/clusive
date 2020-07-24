@@ -4,7 +4,7 @@
     position: absolute !important;
     top: $skiplink-offset-top;
     left: 50%;
-    z-index: 2;
+    z-index: $zindex-fixed + 5;
     padding: $skiplink-padding;
     color: var(--CT_skiplinkColor);
     text-align: center;

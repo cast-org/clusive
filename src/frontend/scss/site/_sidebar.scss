@@ -1,6 +1,6 @@
 .sidebars-wrapper {
     position: fixed;
-    top: $body-padding-y;
+    top: $header-height;
     left: 50%;
     width: 100%;
     max-width: 100%;
@@ -8,17 +8,13 @@
     transform: translateX(-50%);
 
     @include media-breakpoint-up(md) {
+        top: $header-md-height;
         width: calc(100% - #{($body-padding-x * 2)});
         max-width: calc(100% - #{($body-padding-x * 2)});
     }
 
     @include media-breakpoint-up(xl) {
         max-width: map-get($container-max-widths, xl);
-    }
-
-    // Bring sidebar up 'above' header
-    .site-header-small ~ & {
-        z-index: 1;
     }
 }
 
@@ -34,7 +30,7 @@
     flex: 0 0 $sidebar-width;
     width: $sidebar-width;
     max-width: $sidebar-width;
-    height: calc(100vh - #{$body-padding-y * 2});
+    height: calc(100vh - #{$header-height + $body-padding-y});
     padding: $sidebar-padding;
     background: var(--CT_sidebarStartBg);
     @include border-radius($sidebar-border-radius);
@@ -44,6 +40,10 @@
         width: $sidebar-sm-width;
         max-width: $sidebar-sm-width;
         padding: $sidebar-sm-padding;
+    }
+
+    @include media-breakpoint-up(md) {
+        height: calc(100vh - #{$header-md-height + $body-padding-y});
     }
 
     @include media-breakpoint-up(xl) {
