@@ -28,7 +28,7 @@ class MessageQueueView(View):
             receivedQueue = json.loads(request.body)     
             logger.debug("Received a message queue: %s" % receivedQueue);
             messages = receivedQueue["messages"]
-            user = ClusiveUser.from_request(request)
+            user = request.clusive_user
             process_messages(messages, user, request)
         except json.JSONDecodeError:
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})        
