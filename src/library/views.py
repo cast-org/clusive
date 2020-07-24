@@ -1,23 +1,23 @@
 import imghdr
 import logging
 import os
-import sys
 from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, TemplateView, FormView, UpdateView
+from django.views.generic import ListView, FormView, UpdateView
 
 from eventlog.signals import annotation_action, page_viewed
 from library.forms import UploadForm, MetadataForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
+from library.models import Paradata, Book, Annotation, BookVersion
 from library.parsing import unpack_epub_file
 from roster.models import ClusiveUser, Period, LibraryViews
 
@@ -117,12 +117,6 @@ class MetadataFormView(LoginRequiredMixin, UpdateView):
     form_class = MetadataForm
     success_url = '/library/mine'
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        cover = self.object.cover_path
-        data['cover_src'] = cover
-        return data
-
     def form_valid(self, form):
         cover = self.request.FILES.get('cover')
         if cover:
@@ -148,6 +142,16 @@ class MetadataFormView(LoginRequiredMixin, UpdateView):
         else:
             logger.debug('Form valid, no cover image')
         return super().form_valid(form)
+
+
+class RemoveBookView(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, pk=kwargs['pk'])
+        if book.owner != request.clusive_user:
+            raise PermissionDenied()
+        book.delete()
+        return redirect('library', view='mine')
 
 
 class UpdateLastLocationView(LoginRequiredMixin, View):

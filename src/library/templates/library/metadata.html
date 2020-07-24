@@ -27,7 +27,7 @@
                         <hr />
                         <div class="form-group">
                             <input type="submit" class="btn btn-primary" value="Add to My Content" />
-                            &nbsp;<a href="{% url 'library' view='mine' %}">Cancel</a>
+                            &nbsp;<a href="{% url 'remove' pk=object.pk %}">Cancel</a>
                         </div>
                     </form>
                 </div>

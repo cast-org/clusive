@@ -15,6 +15,8 @@ urlpatterns = [
          name='upload'),
     path('metadata/<int:pk>', views.MetadataFormView.as_view(),
          name='metadata'),
+    path('remove/<int:pk>', views.RemoveBookView.as_view(),
+         name='remove'),
     path('<str:view>/<int:period_id>', views.LibraryView.as_view(),
          name='library'),
     path('<str:view>', views.LibraryView.as_view(),

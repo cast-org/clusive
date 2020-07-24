@@ -49,14 +49,14 @@ class ReaderChooseVersionView(RedirectView):
                 # Return to the last version this user viewed.
                 v = paradata.lastVersion.sortOrder
                 logger.debug('Returning to last version viewed (%d)', v)
-            except Paradata.DoesNotExist:
+            except:
                 # No previous view - determine where to send the user based on vocabulary.
                 logger.debug('New book for this user, choosing from versions...')
                 # Compute an estimate of the fraction of words in each version that the user does not know
                 # This is attached to the versions as "novel_frac".
                 for bv in versions:
                     logger.debug('Considering version: %s', bv)
-                    if (bv.sortOrder==0):
+                    if bv.sortOrder==0:
                         words = bv.all_word_list
                         wordcount = len(words)
                         logger.debug('  Word count: %d', wordcount)
