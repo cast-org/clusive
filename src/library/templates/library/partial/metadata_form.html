@@ -1,0 +1,40 @@
+{% load static figuration %}
+
+{% csrf_token %}
+<fieldset class="module aligned">
+    <div class="form-group">
+        {{ form.title.errors }}
+        {{ form.title.label_tag | formlabel }}
+        {{ form.title | formcontrol }}
+    </div>
+    <div class="form-group">
+        {{ form.author.errors }}
+        {{ form.author.label_tag | formlabel }}
+        {{ form.author | formcontrol }}
+    </div>
+    <div class="form-group">
+        {{ form.description.errors }}
+        {{ form.description.label_tag | formlabel }}
+        {{ form.description | formcontrol }}
+    </div>
+</fieldset>
+{% if cover_src %}
+    <div class="form-group">
+        <div class="form-text">Cover image:</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <img class="img-fluid" src="{% get_media_prefix %}{{ cover_src }}">
+            </div>
+        </div>
+    </div>
+{% else %}
+<p>No cover image</p>
+{% endif %}
+{{ form.cover.errors }}
+<div class="form-file">
+    <input type="file" class="form-file-input" accept="image/*" name="{{ form.cover.name }}" id="{{ form.cover.id_for_label }}">
+    <label class="form-file-label" for="{{ form.cover.id_for_label }}">
+        <span class="form-file-text">{{ form.cover.label }}</span>
+        <span class="form-file-button">Browse</span>
+    </label>
+</div>

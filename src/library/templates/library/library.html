@@ -40,6 +40,11 @@
                 <div class="card-body">
                     <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{pub.id}}'); return false;"><h2 class="card-title">{{ pub.title }}</h2></a>
                     {% if pub.description %}<p>{{ pub.description }}</p>{% endif %}
+                    <!-- Currently unclickable due to the way card links are stretched
+                    {% if pub.owner == request.clusive_user %}
+                    <div class="text-end"><a href="{% url 'metadata' pk=pub.id %}">edit</a></div>
+                    {% endif %}
+                     -->
                 </div>
             </div>
         {% endfor %}

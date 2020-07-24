@@ -1,3 +1,4 @@
+import imghdr
 import logging
 import os
 import sys
@@ -12,10 +13,10 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, TemplateView, FormView
+from django.views.generic import ListView, TemplateView, FormView, UpdateView
 
 from eventlog.signals import annotation_action, page_viewed
-from library.forms import UploadForm
+from library.forms import UploadForm, MetadataForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
 from library.parsing import unpack_epub_file
 from roster.models import ClusiveUser, Period, LibraryViews
@@ -96,8 +97,7 @@ class UploadView(LoginRequiredMixin, FormView):
             self.bv = unpack_epub_file(self.request.clusive_user, tempfile)
             return super().form_valid(form)
 
-        except:
-            e = sys.exc_info()[0]
+        except Exception as e:
             logger.warning('Could not process uploaded file, filename=%s, error=%s',
                            str(upload), e)
             form.add_error('file', 'Could not process uploaded file. Are you sure it is an EPUB file?')
@@ -108,18 +108,46 @@ class UploadView(LoginRequiredMixin, FormView):
             os.remove(tempfile)
 
     def get_success_url(self):
-        return self.success_url + '?bv=%d' % (self.bv.pk)
+        return self.success_url + '/%d' % (self.bv.book.pk)
 
 
-class MetadataFormView(LoginRequiredMixin, TemplateView):
+class MetadataFormView(LoginRequiredMixin, UpdateView):
+    model = Book
     template_name = 'library/metadata.html'
+    form_class = MetadataForm
+    success_url = '/library/mine'
 
-    def get(self, request, *args, **kwargs):
-        bv_id = request.GET.get('bv')
-        bv = get_object_or_404(BookVersion, pk=bv_id)
-        cover = bv.path + '/' + bv.book.cover if bv.book.cover else None
-        self.extra_context = {'title': bv.book.title, 'cover_src': cover}
-        return super().get(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        cover = self.object.cover_path
+        data['cover_src'] = cover
+        return data
+
+    def form_valid(self, form):
+        cover = self.request.FILES.get('cover')
+        if cover:
+            filetype = imghdr.what(cover)
+            if not filetype:
+                form.add_error('cover', 'Cover must be an image file')
+                return super().form_invalid(form)
+            else:
+                logger.debug('Cover=%s, type is %s', cover, filetype)
+                filename = 'cover.' + filetype
+                path = os.path.join(self.object.storage_dir, filename)
+                try:
+                    with open(path, 'wb') as f:
+                        for chunk in cover.chunks():
+                            f.write(chunk)
+                except Exception as e:
+                    logger.error('Could not process uploaded cover image, filename=%s, error=%s',
+                               str(cover), str(e))
+                    form.add_error('cover', 'Could not process uploaded cover image.')
+                    return super().form_invalid(form)
+                self.object.cover = filename
+
+        else:
+            logger.debug('Form valid, no cover image')
+        return super().form_valid(form)
 
 
 class UpdateLastLocationView(LoginRequiredMixin, View):

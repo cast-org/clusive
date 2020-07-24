@@ -13,7 +13,7 @@ urlpatterns = [
          name='annotation_list'),
     path('upload', views.UploadView.as_view(),
          name='upload'),
-    path('metadata', views.MetadataFormView.as_view(),
+    path('metadata/<int:pk>', views.MetadataFormView.as_view(),
          name='metadata'),
     path('<str:view>/<int:period_id>', views.LibraryView.as_view(),
          name='library'),

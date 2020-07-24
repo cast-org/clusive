@@ -24,11 +24,11 @@ class BookNotUnique(Exception):
     pass
 
 
-def unpack_epub_file(clusive_user, file, book=None, version=0):
+def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
-    If book and version arguments are given, it is created as that version.
+    If book and sort_order arguments are given, it is created as a new version with the given sort_order.
     Otherwise, a new Book is created and this is the first version.
 
     This method will:
@@ -47,7 +47,12 @@ def unpack_epub_file(clusive_user, file, book=None, version=0):
         title = get_metadata_item(upload, 'titles') or 'Untitled'
         author = get_metadata_item(upload, 'creators') or 'Unknown'
         description = get_metadata_item(upload, 'description') or 'No description'
-        cover = adjust_href(upload, upload.cover.href) if upload.cover else None
+        if upload.cover:
+            cover = adjust_href(upload, upload.cover.href)
+            # For cover path, need to prefix this path with the directory holding this version of the book.
+            cover = os.path.join(str(sort_order), cover)
+        else:
+            cover = None
 
         if book:
             if book.title != title:
@@ -64,7 +69,7 @@ def unpack_epub_file(clusive_user, file, book=None, version=0):
                         cover=cover)
             book.save()
             logger.debug('Created new book for import: %s', book)
-        bv = BookVersion(book=book, sortOrder=version)
+        bv = BookVersion(book=book, sortOrder=sort_order)
         bv.save()
         dir = bv.storage_dir
         os.makedirs(dir)
