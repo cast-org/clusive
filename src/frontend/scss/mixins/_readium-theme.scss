@@ -79,7 +79,8 @@
             background-color: var(--CRT_highlightOverlayBg) !important;
             mix-blend-mode: var(--CRT_highlightOverlayMixBlendMode) !important;
 
-            &:hover {
+            &:hover,
+            &.hover {
                 background-color: var(--CRT_highlightOverlayHoverBg) !important;
             }
         }
