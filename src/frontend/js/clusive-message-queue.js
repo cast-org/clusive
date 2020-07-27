@@ -152,7 +152,7 @@
     }
 
     clusive.messageQueue.clearsendingQueue = function(that) { 
-        that.sendingQueue = [];                
+        that.sendingQueue = {};                
     }
 
     clusive.messageQueue.restoreQueue = function(that) {         

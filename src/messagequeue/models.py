@@ -11,5 +11,5 @@ class MessageTypes:
 
 class Message(models.Model):
     type = models.CharField(max_length=10, choices=MessageTypes.CHOICES)
-    timestamp = models.DateField()
+    timestamp = models.DateTimeField()
     content = models.TextField(max_length=500)
