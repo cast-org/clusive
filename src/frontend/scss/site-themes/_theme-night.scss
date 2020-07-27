@@ -23,23 +23,37 @@ $skiplink-color:                        #fbfbfb;
 $skiplink-border-color:                 #6268ad;
 
 $library-bg:                            #121212;
-$library-logo-icon-color:               #eceff5;
-$library-logo-text-color:               #eceff5;
+$library-header-outer-bg:               $library-bg;
+$library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
+$library-logo-color:                    #eceff5;
+$library-logo-icon-color:               #d7ddee;
 
 $home-bg:                               #353841;
+$home-header-outer-bg:                  $home-bg;
+$home-header-bg:                        linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, 0) 75%);
+$home-logo-color:                       #eceff5;
+$home-logo-icon-color:                  #d7ddee;
 $home-section-border-color:             #636b82;
 $login-section-border-color:            #d3cfc9;
 
 $footer-border-color:                   #636b82;
 
 $header-outer-bg:                       $body-bg;
-$header-bg:                             linear-gradient(90deg, rgba(#636b82, .25) 0%, rgba(#636b82, 0) 100%);
+$header-bg:                             linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
 $header-color:                          inherit;
-$header-logo-icon-color:                #eceff5;
-$header-logo-text-color:                #eceff5;
+$header-logo-color:                     #eceff5;
+$header-logo-icon-color:                $header-logo-color;
+
+$action-bg:                             transparent;
+$action-color:                          $link-color;
+$action-hover-bg:                       #6268ad;
+$action-hover-color:                    #fbfbfb;
+$action-current-bg:                     rgba(#636b82, .4);
+$action-current-color:                  $body-color;
+
 $page-title-border-color:               #ff554d;
 
-$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .1) 0%, rgba(#636b82, .25) 100%);
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .225) 0%, rgba(#636b82, .325) 100%);
 $sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .3) 0%, rgba(#636b82, .45) 100%);
 
 // Figure

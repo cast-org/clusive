@@ -23,6 +23,13 @@
         --CT_headerLogoColor: #{$header-logo-color};
         --CT_headerLogoIconColor: #{$header-logo-icon-color};
 
+        --CT_actionBg: #{$action-bg};
+        --CT_actionColor: #{$action-color};
+        --CT_actionHoverBg: #{$action-hover-bg};
+        --CT_actionHoverColor: #{$action-hover-color};
+        --CT_actionCurrentBg: #{$action-current-bg};
+        --CT_actionCurrentColor: #{$action-current-color};
+
         --CT_pageTitleBorderColor: #{$page-title-border-color};
 
         --CT_footerBorderColor: #{$footer-border-color};
@@ -31,10 +38,16 @@
         --CT_sidebarEndBg: #{$sidebar-end-bg};
 
         --CT_libraryBodyBg: #{$library-bg};
+        --CT_libraryHeaderOuterBg: #{$library-header-outer-bg};
+        --CT_libraryHeaderBg: #{$library-header-bg};
+        --CT_libraryLogoColor: #{$library-logo-color};
         --CT_libraryLogoIconColor: #{$library-logo-icon-color};
-        --CT_libraryLogoTextColor: #{$library-logo-text-color};
 
         --CT_homeBodyBg: #{$home-bg};
+        --CT_homeHeaderOuterBg: #{$home-header-outer-bg};
+        --CT_homeHeaderBg: #{$home-header-bg};
+        --CT_homeLogoColor: #{$home-logo-color};
+        --CT_homeLogoIconColor: #{$home-logo-icon-color};
         --CT_homeSectionBorderColor: #{$home-section-border-color};
         --CT_loginSectionBorderColor: #{$login-section-border-color};
 

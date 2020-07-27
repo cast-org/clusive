@@ -1,18 +1,28 @@
 {% load static %}
 <header class="site-header">
-    <div class="site-header-logo">
-        {% if home_link %}<a href="{% url 'index' %}">{% endif %}
-            <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-            <span class="icon-logo-clusive" aria-hidden="true"></span>
-            <span class="sr-only">Clusive</span>
-        {% if home_link %}</a>{% endif %}
+    <div class="site-header-navbar navbar navbar-expand-md">
+        <div class="site-header-container container-xl">
+            <div class="site-header-logo">
+                <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                <span class="icon-logo-clusive" aria-hidden="true"></span>
+                <span class="sr-only">Clusive</span>
+            </div>
+
+            <button class="navbar-toggle btn btn-primary btn-small" type="button" data-cfw="collapse" data-cfw-collapse-target="#siteNav">
+                <span class="is-open">
+                    <span class="icon-menu" aria-hidden="true"></span>
+                    <span class="sr-only">Open</span>
+                </span>
+                <span class="not-open">
+                    <span class="icon-cancel" aria-hidden="true"></span>
+                    <span class="sr-only">Close</span>
+                </span>
+                Menu
+            </button>
+
+            <nav id="siteNav" class="site-header-nav navbar-collapse collapse" aria-label="Main">
+                {% include "shared/partial/site_header_actions.html" %}
+            </nav>
+        </div>
     </div>
-
-    {% if page_title|length > 0 %}
-    <h1 class="page-title">{{ page_title }}</h1>
-    {% endif %}
-
-    {% if user_actions %}
-    {% include "shared/partial/site_header_actions.html" %}
-    {% endif %}
 </header>

@@ -23,25 +23,37 @@ $skiplink-color:                        #fbfbfb;
 $skiplink-border-color:                 #6268ad;
 
 $library-bg:                            #faf4e8;
+$library-header-outer-bg:               $library-bg;
+$library-header-bg:                     linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, .25) 100%);
+$library-logo-color:                    #333;
 $library-logo-icon-color:               #ff554d;
-$library-logo-text-color:               #333;
 
 $home-bg:                               #faf4e8;
+$home-header-outer-bg:                  $home-bg;
+$home-header-bg:                        linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, 0) 75%);
+$home-logo-color:                       #333;
+$home-logo-icon-color:                  #ff554d;
 $home-section-border-color:             #636b82;
 $login-section-border-color:            #d3cfc9;
 
 $footer-border-color:                   #636b82;
 
 $header-outer-bg:                       $body-bg;
-$header-bg:                             linear-gradient(90deg, rgba(#b09f88, .3) 0%, rgba(#b09f88, 0) 100%);
+$header-bg:                             linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, .25) 100%);
 $header-color:                          inherit;
 $header-logo-color:                     #89775f;
 $header-logo-icon-color:                $header-logo-color;
-//$header-logo-icon-color:                #fbfbfb;
+
+$action-bg:                             transparent;
+$action-color:                          $link-color;
+$action-hover-bg:                       #6268ad;
+$action-hover-color:                    #fbfbfb;
+$action-current-bg:                     rgba(#b09f88, .25);
+$action-current-color:                  $body-color;
 
 $page-title-border-color:               #a0abfd;
 
-$sidebar-start-bg:                      linear-gradient(180deg, rgba(#b09f88, .15) 0%, rgba(#b09f88, .3) 100%);
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#b09f88, .175) 0%, rgba(#b09f88, .325) 100%);
 $sidebar-end-bg:                        linear-gradient(180deg, rgba(#b09f88, .6) 0%, rgba(#b09f88, .8) 100%);
 
 // Figure

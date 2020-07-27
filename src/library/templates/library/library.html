@@ -14,18 +14,17 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
-    <p>
-        <div class="row">
-            <div class="col">
-                {% include "shared/partial/library_view_selector.html" %}
-            </div>
-            {% if current_view == 'mine' %}
-            <div class="col text-end">
-                <a href="{% url 'upload' %}" class="btn btn-primary">+ Add content</a>
-            </div>
-            {% endif %}
+    <div class="row mb-1">
+        <div class="col">
+            {% include "shared/partial/library_view_selector.html" %}
         </div>
-    </p>
+        {% if current_view == 'mine' %}
+        <div class="col text-end">
+            <a href="{% url 'upload' %}" class="btn btn-primary">+ Add content</a>
+        </div>
+        {% endif %}
+    </div>
+
     {% if object_list|length == 0 %}
         No content found.
     {% else %}

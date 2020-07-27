@@ -55,7 +55,7 @@
                 Menu
             </button>
 
-            <nav id="siteNav" class="site-header-actions navbar-collapse collapse" aria-label="Main">
+            <nav id="siteNav" class="site-header-nav navbar-collapse collapse" aria-label="Main">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a href="#" class="nav-link">Library</a>
@@ -79,60 +79,57 @@
     </div>
 </header>
 
-<div class="page-wrapper">
-    <div class="container-xl">
-
-        <div class="sidebars-wrapper">
-            <div class="sidebars">
-                <div class="sidebar sidebar-start">
-                    <nav class="sidebar-nav" aria-label="Article">
-                        <button type="button" class="btn btn-nav btn-icon" aria-label="Contents">
-                            <span class="icon-menu" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
-                            <span class="icon-chevron-left" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-nav btn-icon" aria-label="Next page" disabled>
-                            <span class="icon-chevron-right" aria-hidden="true"></span>
-                        </button>
-                    </nav>
-                    <div class="sidebar-support" role="region" aria-label="Support">
-                        <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
-                            <span class="icon-help" aria-hidden="true"></span>
-                            <span class="icon-attention" aria-hidden="true"></span>
-                        </button>
-                    </div>
+<div class="container-xl">
+    <div class="sidebars-wrapper">
+        <div class="sidebars">
+            <div class="sidebar sidebar-start">
+                <nav class="sidebar-nav" aria-label="Article">
+                    <button type="button" class="btn btn-nav btn-icon" aria-label="Contents">
+                        <span class="icon-menu" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-nav btn-icon" aria-label="Previous page">
+                        <span class="icon-chevron-left" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-nav btn-icon" aria-label="Next page" disabled>
+                        <span class="icon-chevron-right" aria-hidden="true"></span>
+                    </button>
+                </nav>
+                <div class="sidebar-support" role="region" aria-label="Support">
+                    <button type="button" class="btn btn-nav btn-icon btn-help" aria-label="Help/Information">
+                        <span class="icon-help" aria-hidden="true"></span>
+                        <span class="icon-attention" aria-hidden="true"></span>
+                    </button>
                 </div>
+            </div>
 
-                <div class="sidebar sidebar-end">
-                    <div class="sidebar-tool" role="region" aria-label="Reading tools">
-                        <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
-                            <span class="icon-settings" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-tool" aria-label="Read aloud">
-                            <span class="icon-play" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-tool" aria-label="Lookup definition">
-                            <span class="icon-book" aria-hidden="true"></span>
-                        </button>
-                    </div>
+            <div class="sidebar sidebar-end">
+                <div class="sidebar-tool" role="region" aria-label="Reading tools">
+                    <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
+                        <span class="icon-settings" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-tool" aria-label="Read aloud">
+                        <span class="icon-play" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-tool" aria-label="Lookup definition">
+                        <span class="icon-book" aria-hidden="true"></span>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="content">
-            <main id="content" tabindex="-1">
-                <!--
-                <h1 class="page-title">Lorem ipsum dolor sit amet</h1>
-                -->
+    <div class="content">
+        <main id="content" tabindex="-1">
+            <!--
+            <h1 class="page-title">Lorem ipsum dolor sit amet</h1>
+            -->
 
-                <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; border: 0px; display: block; opacity: 1;" width="1133px" height="1189" src="./reader-frame.html" class=""></iframe>
-            </main>
+            <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; border: 0px; display: block; opacity: 1;" width="1133px" height="1189" src="./reader-frame.html" class=""></iframe>
+        </main>
 
-            <footer>
-                <!-- anything here? -->
-            </footer>
-        </div>
+        <footer>
+            <!-- anything here? -->
+        </footer>
     </div>
 </div>
 

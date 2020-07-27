@@ -1,11 +1,35 @@
 .home {
     background-color: var(--CT_homeBodyBg);
 
+    .site-header {
+        position: static;
+        height: auto;
+        min-height: auto;
+        padding: $body-padding-y $body-padding-x;
+        margin-bottom: .5rem;
+        background-color: var(--CT_homeHeaderOuterBg);
+    }
+
+    .site-header-navbar {
+        height: auto;
+        min-height: auto;
+        padding-top: 1.375rem;
+        padding-bottom: 1.375rem;
+        background-color: var(--CT_homeHeaderBg);
+        @include border-start-radius($border-radius);
+    }
+
     .site-header-logo {
-        color: var(--CT_libraryLogoTextColor);
+        @include font-size(1.75rem);
+        color: var(--CT_homeLogoColor);
 
         .icon-logo-clusive-toggle {
-            color: var(--CT_libraryLogoIconColor);
+            margin-right: .375rem;
+            color: var(--CT_homeLogoIconColor);
+        }
+
+        @include media-breakpoint-up(md) {
+            @include font-size(2.25rem);
         }
     }
 
@@ -24,6 +48,7 @@
     }
 
     .content {
+        padding-top: 0;
         padding-right: 1rem;
         padding-left: 1rem;
 

@@ -23,20 +23,33 @@ $skiplink-color:                        #fbfbfb;
 $skiplink-border-color:                 #6268ad;
 
 $library-bg:                            #72c0b2;
+$library-header-outer-bg:               $library-bg;
+$library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, .15) 100%);
+$library-logo-color:                    #333;
 $library-logo-icon-color:               #fbfbfb;
-$library-logo-text-color:               #333;
 
 $home-bg:                               #72c0b2;
+$home-header-outer-bg:                  $home-bg;
+$home-header-bg:                        linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, 0) 75%);
+$home-logo-color:                       #333;
+$home-logo-icon-color:                  #fbfbfb;
 $home-section-border-color:             #636b82;
 $login-section-border-color:            #d3cfc9;
 
 $footer-border-color:                   #636b82;
 
 $header-outer-bg:                       $body-bg;
-$header-bg:                             linear-gradient(90deg, rgba(#636b82, .25) 0%, rgba(#636b82, .15) 100%);
+$header-bg:                             linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, .15) 100%);
 $header-color:                          inherit;
 $header-logo-color:                     #636b82;
 $header-logo-icon-color:                $header-logo-color;
+
+$action-bg:                             transparent;
+$action-color:                          $link-color;
+$action-hover-bg:                       #6268ad;
+$action-hover-color:                    #fbfbfb;
+$action-current-bg:                     rgba(#636b82, .25);
+$action-current-color:                  $body-color;
 
 $page-title-border-color:               #acfdf0;
 

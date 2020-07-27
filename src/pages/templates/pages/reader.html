@@ -16,7 +16,7 @@ var manifest_path = "{{ manifest_path }}";
 {% block title %}{{ pub.title }} | Clusive{% endblock %}
 
 {% block header %}
-{% include "shared/partial/site_header_small.html" with user_actions=True %}
+{% include "shared/partial/site_header.html" %}
 {% endblock %}
 
 {% block sidebar_start %}

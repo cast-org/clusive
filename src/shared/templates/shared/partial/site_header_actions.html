@@ -1,32 +1,53 @@
-<div class="user-actions">
-    <ul class="nav nav-pills">
-        <li class="nav-item">
-            {% url 'word_bank' as word_bank_url %}
-            {% if request.path == word_bank_url %}
-            <span class="current">Word bank</span>
-            {% else %}
-            <a href="{{ word_bank_url }}" class="nav-link">Word bank</a>
-            {% endif %}
-        </li>
-        {% if not user.is_anonymous %}
-        <li class="nav-item">
-            <a href="#" class="nav-link"data-cfw="dropdown">
-                {{ user }} <span class="caret" aria-hidden="true"></span>
-            </a>
-            <ul class="dropdown-menu dropreverse">
-                {% if request.clusive_user.can_set_password %}
-                <li><a href="{% url 'password_change' %}">Change password</a></li>
-                {% endif %}
-                <li><a href="{% url 'logout' %}">Log out</a></li>
-            </ul>
-        </li>
+{% url 'word_bank' as url_word_bank %}
+
+{% comment %}
+{% url 'manage' as url_manage %}
+{% endcomment %}
+
+<ul class="navbar-nav">
+    <li class="nav-item">
+        {% if request.path == '/library/public' %}
+        <span class="nav-link current" aria-current="true">Library</span>
         {% else %}
-        <li class="nav-item">
-            <a href="{% url 'login' %}">Log in</a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'login' %}">Create an account</a>
-        </li>
+        <a href="{% url 'reader_index' %}" class="nav-link">Library</a>
         {% endif %}
-    </ul>
-</div>
+    </li>
+    {% comment %}
+    <li class="nav-item">
+        {% if request.path == url_manage %}
+        <span class="nav-link current" aria-current="true">Manage</span>
+        {% else %}
+        <a href="{{ url_manage }}" class="nav-link">Manage</a>
+        {% endif %}
+    </li>
+    {% endcomment %}
+
+    <li class="nav-item">
+        {% if request.path == url_word_bank %}
+        <span class="nav-link current" aria-current="true">Word bank</span>
+        {% else %}
+        <a href="{{ url_word_bank }}" class="nav-link">Word bank</a>
+        {% endif %}
+    </li>
+
+    {% if not user.is_anonymous %}
+    <li class="nav-item">
+        <a href="#" class="nav-link"data-cfw="dropdown">
+            {{ user }} <span class="caret" aria-hidden="true"></span>
+        </a>
+        <ul class="dropdown-menu dropreverse">
+            {% if request.clusive_user.can_set_password %}
+            <li><a href="{% url 'password_change' %}">Change password</a></li>
+            {% endif %}
+            <li><a href="{% url 'logout' %}">Log out</a></li>
+        </ul>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a href="{% url 'login' %}">Log in</a>
+    </li>
+    <li class="nav-item">
+        <a href="{% url 'login' %}">Create an account</a>
+    </li>
+    {% endif %}
+</ul>

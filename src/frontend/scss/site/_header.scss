@@ -1,5 +1,5 @@
 .site-header {
-    position: fixed;
+    position: sticky;
     top: 0;
     right: 0;
     left: 0;
@@ -57,8 +57,8 @@
     vertical-align: middle;
 
     .icon-logo-clusive-toggle {
-        color: var(--CT_headerLogoIconColor);
         margin-right: .25rem;
+        color: var(--CT_headerLogoIconColor);
     }
 
     @include media-breakpoint-up(md) {
@@ -67,7 +67,7 @@
     }
 }
 
-.site-header-actions {
+.site-header-nav {
     @include font-size(.875rem);
     line-height: 1.25;
 
@@ -75,23 +75,40 @@
         display: inline-flex;
         align-items: center;
         padding: .25rem .5rem;
+        color: var(--CT_actionColor);
+        background-color: var(--CT_actionBg);
 
         .caret {
             margin-left: .125rem;
         }
 
         @include hover-focus() {
-            color: var(--CT_btnPrimaryHoverColor);
-            background-color: var(--CT_btnPrimaryHoverBg);
+            color: var(--CT_actionHoverColor);
+            background-color: var(--CT_actionHoverBg);
+        }
+
+        &.current {
+            position: relative;
+            font-weight: 600;
+            color: var(--CT_actionCurrentColor);
+            background-color: var(--CT_actionCurrentBg);
+
+            &::after {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: 0;
+                display: block;
+                height: .625rem;
+                content: "";
+                background-color: var(--CT_actionCurrentBg);
+                @include border-bottom-radius($border-radius);
+            }
         }
 
         @include media-breakpoint-up(md) {
             height: $header-md-navbar-height;
         }
-    }
-
-    .current {
-        font-weight: 600;
     }
 
     @include media-breakpoint-up(md) {

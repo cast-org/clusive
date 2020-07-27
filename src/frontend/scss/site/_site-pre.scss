@@ -92,7 +92,10 @@ $enable-utility-overflow:               false;
 $enable-utility-position:               false;
 $enable-utility-shadow:                 false;
 $enable-utility-sizing:                 false;
-$enable-utility-spacing:                false;
+$enable-utility-spacing-padding:        false;
+$enable-utility-spacing-margin:         true;
+$enable-utility-spacing-margin-auto:    false;
+$enable-utility-spacing-margin-negative:    false;
 $enable-utility-text-justify:           false;
 $enable-utility-text-wrap:              false;
 $enable-utility-text-nowrap:            false;
@@ -140,6 +143,14 @@ $primary:                               #40998b;
 
 $palette-interval-light:                .2%;
 $palette-interval-dark:                 .15%;
+
+$spacer:                                1rem;
+$spacers: (
+    "0":    0,
+    "0_25": ($spacer * .25),
+    "0_5":  ($spacer * .5),
+    "1":    $spacer,
+);
 
 $container-max-widths: (
     sm: rem(544px),
