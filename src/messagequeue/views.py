@@ -8,15 +8,14 @@ from roster.views import set_user_preferences
 import json
 import logging
 
+import django.dispatch
+
 logger = logging.getLogger(__name__)
-
-# Allowed message types
-class MessageTypes:
-    PREF_CHANGE = 'PC'
-
-    CHOICES = [
-        (PREF_CHANGE, 'Preference Change'),
-    ]    
+ 
+class MessageProcesser:    
+    # Allowed message types
+    class MessageTypes:
+        PREF_CHANGE = 'PC'
 
 # TODO: replace with Signals-based code?
 def process_messages(queue_timestamp, messages, user, request):    
@@ -25,7 +24,7 @@ def process_messages(queue_timestamp, messages, user, request):
         message_timestamp = message["timestamp"]
         message_content = message["content"]
         message_type = message["content"]["type"]
-        if(message_type == MessageTypes.PREF_CHANGE):
+        if(message_type == MessageProcesser.MessageTypes.PREF_CHANGE):
             logger.debug("Found a preference change message: %s" % message)
             
             set_user_preferences(user, message_content["preferences"], request)
@@ -41,4 +40,4 @@ class MessageQueueView(View):
             process_messages(queue_timestamp, messages, user, request)
         except json.JSONDecodeError:
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})        
-        return JsonResponse({'success': messages})
+        return JsonResponse({'success': 1})
