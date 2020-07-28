@@ -1,20 +1,15 @@
-{% url 'word_bank' as url_word_bank %}
-
-{% comment %}
-{% url 'manage' as url_manage %}
-{% endcomment %}
-
 <ul class="navbar-nav">
     <li class="nav-item">
-        {% if request.path == '/library/public' %}
+        {% if page_group == 'library' %}
         <span class="nav-link current" aria-current="true">Library</span>
         {% else %}
         <a href="{% url 'reader_index' %}" class="nav-link">Library</a>
         {% endif %}
     </li>
+
     {% comment %}
     <li class="nav-item">
-        {% if request.path == url_manage %}
+        {% if page_group == 'roster' %}
         <span class="nav-link current" aria-current="true">Manage</span>
         {% else %}
         <a href="{{ url_manage }}" class="nav-link">Manage</a>
@@ -23,7 +18,7 @@
     {% endcomment %}
 
     <li class="nav-item">
-        {% if request.path == url_word_bank %}
+        {% if page_group == 'word_bank' %}
         <span class="nav-link current" aria-current="true">Word bank</span>
         {% else %}
         <a href="{{ url_word_bank }}" class="nav-link">Word bank</a>

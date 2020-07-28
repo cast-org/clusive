@@ -98,16 +98,19 @@ $btn-secondary-active-color:            $btn-secondary-hover-color;
 $btn-secondary-active-border-color:     transparent;
 
 $btn-nav-focus-ring:                    #a0abfd;
-$btn-nav-bg:                            transparent;
+$btn-nav-bg:                            rgba(#f0f0f0, .2);
 $btn-nav-color:                         #eceff5;
 $btn-nav-border-color:                  transparent;
-$btn-nav-hover-bg:                      $btn-nav-bg;
-$btn-nav-hover-color:                   palette($btn-nav-color, 650);
+$btn-nav-hover-bg:                      rgba(#f0f0f0, .1675);
+$btn-nav-hover-color:                   palette($btn-nav-color, 450);
 $btn-nav-hover-border-color:            transparent;
-$btn-nav-active-bg:                     $btn-nav-bg;
-$btn-nav-active-color:                  palette($btn-nav-color, 800);
+$btn-nav-active-bg:                     rgba(#f0f0f0, .125);
+$btn-nav-active-color:                  palette($btn-nav-color, 400);
 $btn-nav-active-border-color:           transparent;
-$btn-nav-disabled-opacity:              .4;
+$btn-nav-disabled-bg:                   transparent;
+$btn-nav-disabled-color:                palette($btn-nav-color, 850);
+$btn-nav-disabled-border-color:         transparent;
+$btn-nav-disabled-opacity:              1;
 
 $btn-setting-focus-ring:                #a0abfd;
 $btn-setting-bg:                        #565c6e;

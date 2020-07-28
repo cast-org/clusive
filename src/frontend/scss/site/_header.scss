@@ -92,17 +92,20 @@
             font-weight: 600;
             color: var(--CT_actionCurrentColor);
             background-color: var(--CT_actionCurrentBg);
+            @include border-radius($border-radius);
 
-            &::after {
-                position: absolute;
-                top: 100%;
-                right: 0;
-                left: 0;
-                display: block;
-                height: .625rem;
-                content: "";
-                background-color: var(--CT_actionCurrentBg);
-                @include border-bottom-radius($border-radius);
+            @include media-breakpoint-up(md) {
+                @include border-radius(0);
+
+                &::after {
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    display: block;
+                    width: auto;
+                    height: .625rem;
+                    @include border-radius(0 0 $border-radius $border-radius);
+                }
             }
         }
 

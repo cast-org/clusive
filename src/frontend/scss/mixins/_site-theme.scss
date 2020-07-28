@@ -100,6 +100,9 @@
         --CT_btnNavActiveBg: #{$btn-nav-active-bg};
         --CT_btnNavActiveColor: #{$btn-nav-active-color};
         --CT_btnNavActiveBorderColor: #{$btn-nav-active-border-color};
+        --CT_btnNavDisabledBg: #{$btn-nav-disabled-bg};
+        --CT_btnNavDisabledColor: #{$btn-nav-disabled-color};
+        --CT_btnNavDisabledBorderColor: #{$btn-nav-disabled-border-color};
         --CT_btnNavDisabledOpacity: #{$btn-nav-disabled-opacity};
 
         --CT_btnSettingFocusRingRGB: #{red($btn-setting-focus-ring), green($btn-setting-focus-ring), blue($btn-setting-focus-ring)};
