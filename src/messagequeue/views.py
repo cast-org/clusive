@@ -5,17 +5,20 @@ from django.views import View
 from roster.models import ClusiveUser
 from roster.views import set_user_preferences
 
-from .models import Message, MessageTypes
-
 import json
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Create your views here.
+# Allowed message types
+class MessageTypes:
+    PREF_CHANGE = 'PC'
 
-# TODO: this needs to be replaced with something that actually works with the Model 
-# definition and the signals code
+    CHOICES = [
+        (PREF_CHANGE, 'Preference Change'),
+    ]    
+
+# TODO: replace with Signals-based code?
 def process_messages(queue_timestamp, messages, user, request):    
     for message in messages:
         message["content"]["userId"] = user.id
@@ -26,9 +29,6 @@ def process_messages(queue_timestamp, messages, user, request):
             logger.debug("Found a preference change message: %s" % message)
             
             set_user_preferences(user, message_content["preferences"], request)
-            pref_change_message = Message(type=message_type, content=message_content, timestamp=message_timestamp)
-            pref_change_message.save()
-
 
 class MessageQueueView(View):
     def post(self, request):        

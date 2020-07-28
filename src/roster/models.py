@@ -8,8 +8,6 @@ from django.dispatch import receiver
 
 from pytz import country_timezones
 
-from messagequeue.models import Message
-
 import json
 
 logger = logging.getLogger(__name__)
@@ -313,11 +311,6 @@ class Preference (models.Model):
 
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
-
-def handle_preference_change_message(sender, instance, created, **kwargs):
-    logger.debug("Message signal received, instance: %s" % instance.content)    
-
-post_save.connect(handle_preference_change_message, sender=Message)
 
 class PreferenceSet(models.Model):
     """Store a set of preference keys and values as a JSON string"""
