@@ -407,6 +407,18 @@
       "css": "edit",
       "code": 59424,
       "src": "fontawesome"
+    },
+    {
+      "uid": "dd492243d64e21dfe16a92452f7861cb",
+      "css": "th-large",
+      "code": 59425,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f805bb95d40c7ef2bc51b3d50d4f2e5c",
+      "css": "th-list",
+      "code": 59426,
+      "src": "fontawesome"
     }
   ]
 }

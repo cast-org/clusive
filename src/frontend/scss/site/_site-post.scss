@@ -57,7 +57,10 @@ $btn-themes: map-merge(
             "hover-border-color": var(--CT_btnNavHoverBorderColor),
             "active-bg": var(--CT_btnNavActiveBg),
             "active-color": var(--CT_btnNavActiveColor),
-            "active-border-color": var(--CT_btnNavActiveBorderColor)
+            "active-border-color": var(--CT_btnNavActiveBorderColor),
+            "disabled-bg": var(--CT_btnNavDisabledBg),
+            "disabled-color":var(--CT_btnNavDisabledColor),
+            "disabled-border":var(--CT_btnNavDisabledBorderColor)
         ),
         "setting":
         (

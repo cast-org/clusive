@@ -23,22 +23,37 @@ $skiplink-color:                        #fbfbfb;
 $skiplink-border-color:                 #6268ad;
 
 $library-bg:                            #faf4e8;
+$library-header-outer-bg:               $library-bg;
+$library-header-bg:                     linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, .25) 100%);
+$library-logo-color:                    #333;
 $library-logo-icon-color:               #ff554d;
-$library-logo-text-color:               #333;
 
 $home-bg:                               #faf4e8;
+$home-header-outer-bg:                  $home-bg;
+$home-header-bg:                        linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, 0) 75%);
+$home-logo-color:                       #333;
+$home-logo-icon-color:                  #ff554d;
 $home-section-border-color:             #636b82;
 $login-section-border-color:            #d3cfc9;
 
 $footer-border-color:                   #636b82;
 
-$header-bg:                             linear-gradient(90deg, rgba(#b09f88, .3) 0%, rgba(#b09f88, 0) 65%);
+$header-outer-bg:                       $body-bg;
+$header-bg:                             linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, .25) 100%);
 $header-color:                          inherit;
-$header-logo-icon-color:                #fbfbfb;
-$header-logo-text-color:                #89775f;
+$header-logo-color:                     #89775f;
+$header-logo-icon-color:                $header-logo-color;
+
+$action-bg:                             transparent;
+$action-color:                          $link-color;
+$action-hover-bg:                       #6268ad;
+$action-hover-color:                    #fbfbfb;
+$action-current-bg:                     rgba(#b09f88, .25);
+$action-current-color:                  $body-color;
+
 $page-title-border-color:               #a0abfd;
 
-$sidebar-start-bg:                      linear-gradient(180deg, rgba(#b09f88, .15) 0%, rgba(#b09f88, .3) 100%);
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#b09f88, .175) 0%, rgba(#b09f88, .325) 100%);
 $sidebar-end-bg:                        linear-gradient(180deg, rgba(#b09f88, .6) 0%, rgba(#b09f88, .8) 100%);
 
 // Figure
@@ -83,16 +98,19 @@ $btn-secondary-active-color:            $btn-secondary-hover-color;
 $btn-secondary-active-border-color:     transparent;
 
 $btn-nav-focus-ring:                    #636b82;
-$btn-nav-bg:                            transparent;
+$btn-nav-bg:                            rgba(#f5f5f5, .9);
 $btn-nav-color:                         #6e6355;
 $btn-nav-border-color:                  transparent;
-$btn-nav-hover-bg:                      $btn-nav-bg;
+$btn-nav-hover-bg:                      rgba(#f5f5f5, .95);
 $btn-nav-hover-color:                   palette($btn-nav-color, 700);
 $btn-nav-hover-border-color:            transparent;
-$btn-nav-active-bg:                     $btn-nav-bg;
+$btn-nav-active-bg:                     #f5f5f5;
 $btn-nav-active-color:                  palette($btn-nav-color, 800);
 $btn-nav-active-border-color:           transparent;
-$btn-nav-disabled-opacity:              .4;
+$btn-nav-disabled-bg:                   transparent;
+$btn-nav-disabled-color:                palette($btn-nav-color, 350);
+$btn-nav-disabled-border-color:         transparent;
+$btn-nav-disabled-opacity:              1;
 
 $btn-setting-focus-ring:                #636b82;
 $btn-setting-bg:                        #ece4d6;
