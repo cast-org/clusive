@@ -101,10 +101,12 @@
                     position: absolute;
                     top: 100%;
                     right: 0;
+                    left: 0;
                     display: block;
-                    width: auto;
                     height: .625rem;
-                    @include border-radius(0 0 $border-radius $border-radius);
+                    content: "";
+                    background-color: var(--CT_actionCurrentBg);
+                    @include border-bottom-radius($border-radius);
                 }
             }
         }
