@@ -1,3 +1,45 @@
+function modalAdjust() {
+    'use strict';
+
+    var scrollbarWidth = $.CFW_measureScrollbar();
+    var $items = $('.site-header, .sidebars');
+
+    var scrollbarCheck = function() {
+        var rect = document.body.getBoundingClientRect();
+        return Math.round(rect.left + rect.right) < window.innerWidth;
+    };
+
+    var scrollbarSet = function() {
+        if (scrollbarCheck()) {
+            $items.each(function() {
+                var $this = $(this);
+                var actualPadding = this.style['padding-right'];
+                var calculatedPadding = parseFloat($this.css('padding-right'));
+                $this
+                    .data('cfw.padding-dim', actualPadding)
+                    .css('padding-right', calculatedPadding + scrollbarWidth + 'px');
+            });
+        }
+    };
+
+    var scrollbarReset = function() {
+        $items.each(function() {
+            var $this = $(this);
+            var padding = $this.data('cfw.padding-dim');
+            if (typeof padding !== 'undefined') {
+                $this.css('padding-right', padding);
+                $this.removeData('cfw.padding-dim');
+            }
+        });
+    };
+
+    $(document).on('beforeShow.cfw.modal', function() {
+        scrollbarSet();
+    });
+    $(document).on('afterHide.cfw.modal', function() {
+        scrollbarReset();
+    });
+}
 
 function imgCheckPortrait($img, useAlt) {
     'use strict';
@@ -103,6 +145,7 @@ $(window).ready(function() {
     'use strict';
 
     formFileText();
+    modalAdjust();
 
     var $imgs = $('.card-img img');
     for (var i = 0; i < $imgs.length; i++) {
