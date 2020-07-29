@@ -3,7 +3,7 @@
         {% if page_group == 'library' %}
         <span class="nav-link current" aria-current="true">Library</span>
         {% else %}
-        <a href="{% url 'reader_index' %}" class="nav-link">Library</a>
+        <a href="{% url 'library' view='public' %}" class="nav-link">Library</a>
         {% endif %}
     </li>
 
@@ -12,7 +12,7 @@
         {% if page_group == 'roster' %}
         <span class="nav-link current" aria-current="true">Manage</span>
         {% else %}
-        <a href="{{ url_manage }}" class="nav-link">Manage</a>
+        <a href="{% url 'roster' %}" class="nav-link">Manage</a>
         {% endif %}
     </li>
     {% endcomment %}
@@ -21,7 +21,7 @@
         {% if page_group == 'word_bank' %}
         <span class="nav-link current" aria-current="true">Word bank</span>
         {% else %}
-        <a href="{{ url_word_bank }}" class="nav-link">Word bank</a>
+        <a href="{% url 'word_bank' %}" class="nav-link">Word bank</a>
         {% endif %}
     </li>
 
