@@ -1,3 +1,12 @@
+html {
+    scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: inherit;
+    }
+}
+
 // stylelint-disable declaration-no-important, selector-max-id
 #ff-default,
 .ff-default {
@@ -51,7 +60,7 @@ h2,
 
 .content {
     //max-width: calc(100vw - 8rem);
-    padding-top: $header-height + 1rem;
+    padding-top: $header-height + $content-offset-top;
     padding-right: $sidebar-width + $sidebar-gutter;
     padding-left: $sidebar-width + $sidebar-gutter;
     margin-right: ($grid-gutter-width / -2);
@@ -65,7 +74,7 @@ h2,
     }
 
     @include media-breakpoint-up(md) {
-        padding-top: $header-md-height + 1rem;
+        padding-top: $header-md-height + $content-offset-top;
     }
 }
 

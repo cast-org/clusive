@@ -1,4 +1,5 @@
 .skiplink {
+    position: absolute;
     top: $skiplink-offset-top;
     left: 50%;
     z-index: $zindex-fixed + 5;

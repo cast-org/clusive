@@ -3,7 +3,14 @@
     <div class="site-header-navbar navbar navbar-expand-md">
         <div class="site-header-container container-xl">
             <div class="site-header-logo">
+                {% if page_group == 'library' %}
                 <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                {% else %}
+                <a href="{% url 'reader_index' %}" class="icon-logo-clusive-link">
+                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                    <span class="sr-only">Back to Library</span>
+                </a>
+                {% endif %}
                 <span class="icon-logo-clusive" aria-hidden="true"></span>
                 <span class="sr-only">Clusive</span>
             </div>

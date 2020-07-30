@@ -43,12 +43,13 @@ $header-bg:                             linear-gradient(90deg, rgba(#636b82, .3)
 $header-color:                          inherit;
 $header-logo-color:                     #636b82;
 $header-logo-icon-color:                $header-logo-color;
+$header-logo-icon-hover-color:          palette($header-logo-icon-color, 700);
 
 $action-bg:                             transparent;
 $action-color:                          $link-color;
 $action-hover-bg:                       #6268ad;
 $action-hover-color:                    #fbfbfb;
-$action-current-bg:                     rgba(#636b82, .25);
+$action-current-bg:                     rgba(#636b82, .2);
 $action-current-color:                  $body-color;
 
 $page-title-border-color:               #acfdf0;
@@ -108,7 +109,7 @@ $btn-nav-active-bg:                     #f5f5f5;
 $btn-nav-active-color:                  palette($btn-nav-color, 800);
 $btn-nav-active-border-color:           transparent;
 $btn-nav-disabled-bg:                   transparent;
-$btn-nav-disabled-color:                palette($btn-nav-color, 350);
+$btn-nav-disabled-color:                palette($btn-nav-color, 300);
 $btn-nav-disabled-border-color:         transparent;
 $btn-nav-disabled-opacity:              1;
 

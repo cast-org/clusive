@@ -8,6 +8,7 @@
 .btn-nav-toc {
     [class^="icon-"]::before,
     [class*=" icon-"]::before {
+        @include font-size(1.25rem);
         transform: rotate(180deg);
     }
 }
@@ -17,6 +18,7 @@
     [class*=" icon-"]::before {
         position: relative;
         top: .125rem;
+        @include font-size(1.5rem);
     }
 }
 
