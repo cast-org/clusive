@@ -3,13 +3,16 @@
 {% csrf_token %}
 <fieldset class="module aligned">
     <div class="form-group">
+        <div class="form-text">* = required</div>
+    </div>
+    <div class="form-group">
         {{ form.title.errors }}
-        {{ form.title.label_tag | formlabel }}
+        {{ form.title.label_tag | formlabel }}*
         {{ form.title | formcontrol }}
     </div>
     <div class="form-group">
         {{ form.author.errors }}
-        {{ form.author.label_tag | formlabel }}
+        *{{ form.author.label_tag | formlabel }}
         {{ form.author | formcontrol }}
     </div>
     <div class="form-group">

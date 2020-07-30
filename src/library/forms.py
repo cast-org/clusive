@@ -24,3 +24,8 @@ class MetadataForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = ['title', 'author', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Title of the content item'}),
+            'author': forms.TextInput(attrs={'placeholder': 'Author of the content item'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Brief description to show on the library page.'}),
+        }
