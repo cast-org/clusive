@@ -20,7 +20,7 @@
     "@d-i-t-a/reader": "^1.1.8",
     "expose-loader": "0.7.5",
     "figuration": "^4.0.0",
-    "gpii-binder": "git+https://github.com/GPII/gpii-binder.git",
+    "gpii-binder": "git+https://github.com/fluid-project/fluid-binder",
     "infusion": "3.0.0-dev.20200326T173810Z.24ddb2718.FLUID-6482",
     "jquery": "^3.5.1",
     "jquery-ui": "1.12.1",
