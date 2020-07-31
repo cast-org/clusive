@@ -1,9 +1,7 @@
-import os
+from zipfile import ZipFile
 
 from django.contrib.auth.models import User
-from django.contrib.staticfiles import finders
 from django.test import TestCase
-
 # Create your tests here.
 from django.urls import reverse
 
@@ -24,7 +22,9 @@ class LibraryTestCase(TestCase):
 
     def test_parse_file(self):
         te = TextExtractor()
-        te.feed_file(finders.find('shared/pubs/serp-penguins/1/OEBPS/content.xhtml'))
+        zip = ZipFile('../content/serp-penguins/serp-penguins-1.epub')
+        file = zip.open('OEBPS/content.xhtml')
+        te.feed(file.read().decode('utf-8'))
         te.close()
         result = te.text
         self.assertRegex(result, "Penguins are funny birds")

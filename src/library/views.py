@@ -117,6 +117,12 @@ class MetadataFormView(LoginRequiredMixin, UpdateView):
     form_class = MetadataForm
     success_url = '/library/mine'
 
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        if self.object.owner != request.clusive_user:
+            return self.handle_no_permission()
+        return response
+
     def form_valid(self, form):
         cover = self.request.FILES.get('cover')
         if cover:
