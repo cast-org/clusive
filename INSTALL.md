@@ -84,9 +84,13 @@ Run in the Clusive\target directory:
 
 ### Import public content
 There are a number of learning materials ready for import in the Clusive\content directory.
+
 For each one that you want to make available, run a command like this in 
 the Clusive\target directory:
 * `python manage.py import ..\content\cast-lexington\*`
+
+You can also import the entire `content` directory in one go:
+* `python manage.py importdir ..\content`
 
 The `import` command can be used to import a single EPUB file, 
 or multiple files which are considered to be a set of leveled versions 
