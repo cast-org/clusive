@@ -9,43 +9,6 @@ if (!window.debug) {
     console.log = function () {};
 }
 
-// Filter function that, when applied as part of Mark options, only marks up the first occurrence
-function onlyFirstMatch(node, term, totalCount, count) {
-    "use strict";
-    return count === 0;
-}
-
-// Filter function that avoids marking a word that is already marked
-function notAlreadyMarked(node) {
-    "use strict";
-    return ($(node).closest("a.gloss").length === 0);
-}
-
-// Options hash for marking the primary occurrence of words
-var primaryMarkOptions = {
-    accuracy : { value: "exactly", limiters: [ ".", ",", ";", ":", ")"] },
-    separateWordSearch: false,
-    acrossElements: true,
-    exclude: [ "h1", "h2", "h3", "h4", "h5", "h6", "figure" ],
-    filter: onlyFirstMatch,
-    element: "a",
-    className: "gloss",
-    each: function (node) {
-        $(node).attr("href", "#");
-    },
-};
-
-// Options hash for marking additional occurrences of a word
-var secondaryMarkOptions = {
-    accuracy : { value: "exactly", limiters: [ ".", ",", ";", ":", ")"] },
-    separateWordSearch: false,
-    acrossElements: true,
-    // synonyms: alternatesMap,
-    filter: notAlreadyMarked,
-    element: "span",
-    className: "glossOther"
-};
-
 // Explicitly attached to "window" so that uglify won't change it and it can be called from elsewhere.
 window.markCuedWords = function() {
     if (window.cuedWordMap === null) {
@@ -60,13 +23,26 @@ window.markCuedWords = function() {
             });
     } else {
         // "cuedWordMap" is a map from main form to a list of all forms.
-        var altmap = {};        
-        for (var i in window.cuedWordMap) {
-            for (var alt in window.cuedWordMap[i]) {
-                altmap[window.cuedWordMap[i][alt]] = i;
+        for (var main in window.cuedWordMap) {
+            var alts = window.cuedWordMap[main];
+            // Build up a CSS selector that will match any of the forms of the word.
+            //  TODO exclude: [ "h1", "h2", "h3", "h4", "h5", "h6", "figure" ]
+            var selector = '';
+            for (var j in alts) {
+                selector += ',span.word[data-word="' + alts[j] + '"]';
             }
-            primaryMarkOptions['synonyms'] = altmap;
-            $('body').mark(i, primaryMarkOptions);
+            // Find and mark first occurrence of any form.  Substr removes leading comma.
+            var occurrence = document.querySelector(selector.substr(1));
+            if (occurrence) {
+                // data-gloss attribute indicates that this is a glossary cue, and what the main form is.
+                occurrence.setAttribute('data-gloss', main);
+                // tabindex makes it accessible to keyboard navigation
+                occurrence.setAttribute('tabindex', '0');
+                // TODO is this helpful?
+                occurrence.setAttribute('role', 'button');
+            } else {
+                console.warn('No occurrence of glossary word found, selector=', selector.substr(1));
+            }
         }
     }
 };
@@ -79,10 +55,11 @@ window.unmarkCuedWords = function() {
 
 $(function() {
     var $body = $('body');
-    $body.on('click touchstart', 'a.gloss', function(e) {
+    // FIXME how do we handle keyboard activation of these links as well?
+    $body.on('click touchstart', 'span[data-gloss]', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        let word = $(this).text();
+        let word = $(this).data('gloss');
         window.parent.load_definition(1, word);
         window.parent.$('#glossaryButton').CFW_Popover('show');
         window.parent.glossaryPop_focus($(this));

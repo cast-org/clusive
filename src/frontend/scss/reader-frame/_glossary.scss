@@ -1,7 +1,7 @@
 // stylelint-disable selector-no-qualifying-type
 
-a.gloss,
-a.gloss:hover {
+span[data-gloss],
+span[data-gloss]:hover {
     font-weight: $font-weight-bold;
     color: inherit !important; // stylelint-disable-line declaration-no-important
     text-decoration: none;
