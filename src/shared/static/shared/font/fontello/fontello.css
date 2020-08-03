@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('./fontello.eot?55577375');
-  src: url('./fontello.eot?55577375#iefix') format('embedded-opentype'),
-       url('./fontello.woff2?55577375') format('woff2'),
-       url('./fontello.woff?55577375') format('woff'),
-       url('./fontello.ttf?55577375') format('truetype'),
-       url('./fontello.svg?55577375#fontello') format('svg');
+  src: url('./fontello.eot?92262716');
+  src: url('./fontello.eot?92262716#iefix') format('embedded-opentype'),
+       url('./fontello.woff2?92262716') format('woff2'),
+       url('./fontello.woff?92262716') format('woff'),
+       url('./fontello.ttf?92262716') format('truetype'),
+       url('./fontello.svg?92262716#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('./fontello.svg?55577375#fontello') format('svg');
+    src: url('./fontello.svg?92262716#fontello') format('svg');
   }
 }
 */
@@ -88,8 +88,16 @@
 .icon-column-2:before { content: '\e81e'; } /* '' */
 .icon-play-circled2:before { content: '\e81f'; } /* '' */
 .icon-edit:before { content: '\e820'; } /* '' */
+.icon-th-large:before { content: '\e821'; } /* '' */
+.icon-th-list:before { content: '\e822'; } /* '' */
+.icon-heart:before { content: '\e823'; } /* '' */
+.icon-heart-empty:before { content: '\e824'; } /* '' */
+.icon-star:before { content: '\e825'; } /* '' */
+.icon-star-empty:before { content: '\e826'; } /* '' */
+.icon-bookmark:before { content: '\e827'; } /* '' */
 .icon-crown:before { content: '\e844'; } /* '' */
 .icon-move:before { content: '\f047'; } /* '' */
+.icon-bookmark-empty:before { content: '\f097'; } /* '' */
 .icon-menu:before { content: '\f0c9'; } /* '' */
 .icon-angle-left:before { content: '\f104'; } /* '' */
 .icon-angle-right:before { content: '\f105'; } /* '' */
@@ -97,4 +105,6 @@
 .icon-angle-down:before { content: '\f107'; } /* '' */
 .icon-help:before { content: '\f128'; } /* '' */
 .icon-attention:before { content: '\f12a'; } /* '' */
+.icon-ellipsis:before { content: '\f141'; } /* '' */
+.icon-ellipsis-vert:before { content: '\f142'; } /* '' */
 .icon-sticky-note-o:before { content: '\f24a'; } /* '' */
