@@ -198,8 +198,8 @@ $table-head-border-width:               5px;
 $btn-font-weight:                       700;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
 $btn-focus-box-shadow-alpha:            .85;
-//$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRing), $btn-focus-box-shadow-alpha);
-$btn-default-focus-box-shadow-color:    var(--CT_focusRing);
+//$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
+$btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
 
 $input-bg:                              #fff;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
@@ -267,6 +267,10 @@ $card-padding-x:                        .75rem;
 $card-title-margin-bottom:              .25rem;
 $card-border-color:                     var(--CT_cardBorderColor);
 $card-border-radius:                    $border-radius;
+$card-header-padding-y:                 $card-padding-y;
+$card-header-padding-x:                 $card-padding-x;
+$card-footer-padding-y:                 $card-padding-y;
+$card-footer-padding-x:                 $card-padding-x;
 
 $popover-bg:                            var(--CT_popoverBg);
 $popover-border-width:                  3px;

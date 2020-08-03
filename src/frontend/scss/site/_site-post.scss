@@ -101,6 +101,22 @@ $btn-themes: map-merge(
             "active-color": var(--CT_btnOptionActiveColor),
             "active-border-color": var(--CT_btnOptionActiveBorderColor)
         ),
+        "flag":
+        (
+            "base": var(--CT_btnFlagFocusRingRGB),
+            "bg": var(--CT_btnFlagBg),
+            "color": var(--CT_btnFlagColor),
+            "border-color": var(--CT_btnFlagBorderColor),
+            "hover-bg": var(--CT_btnFlagHoverBg),
+            "hover-color": var(--CT_btnFlagHoverColor),
+            "hover-border-color": var(--CT_btnFlagHoverBorderColor),
+            "active-bg": var(--CT_btnFlagActiveBg),
+            "active-color": var(--CT_btnFlagActiveColor),
+            "active-border-color": var(--CT_btnFlagActiveBorderColor),
+            "disabled-bg": var(--CT_btnFlagDisabledBg),
+            "disabled-color":var(--CT_btnFlagDisabledColor),
+            "disabled-border":var(--CT_btnFlagDisabledBorderColor)
+        ),
         "default":
         (
             "base": #636b82,

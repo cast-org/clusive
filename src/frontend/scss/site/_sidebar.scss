@@ -86,17 +86,6 @@
     align-items: center;
     align-self: flex-end;
 
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.5rem;
-        height: 2.5rem;
-        padding: 0;
-        line-height: 1;
-        @include border-radius(10rem);
-    }
-
     .btn + .btn {
         margin-top: .75rem;
     }
@@ -109,10 +98,6 @@
     align-self: flex-end;
     justify-content: flex-end;
     margin-top: auto;
-
-    .btn {
-        @include border-radius(10rem);
-    }
 }
 
 .sidebar-end {
@@ -137,18 +122,6 @@
     flex-direction: column;
     align-items: center;
     align-self: flex-start;
-
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.5rem;
-        height: 2.5rem;
-        padding: 0;
-        line-height: 1;
-        @include font-size(1.75rem);
-        @include border-radius(10rem);
-    }
 
     .btn + .btn {
         margin-top: .75rem;

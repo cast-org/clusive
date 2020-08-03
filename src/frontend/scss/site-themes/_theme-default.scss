@@ -67,6 +67,7 @@ $card-color:                            inherit;
 $card-border-color:                     #ebe9e4;
 $card-img-bg:                           rgba(#72c0b2, .3);
 $card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
+$card-library-author-color:             #666;
 $card-login-bg:                         rgba(#acfdf0, .3);
 $card-login-color:                      inherit;
 
@@ -149,6 +150,17 @@ $btn-option-active-border-color:        transparent;
 $btn-option-active-box-shadow-color:    #636b82;
 $btn-option-active-box-shadow-opacity:  .9;
 $btn-option-active-hover-border-color:  #636b82;
+
+$btn-flag-focus-ring:                   #636b82;
+$btn-flag-bg:                           transparent;
+$btn-flag-color:                        #636b82;
+$btn-flag-border-color:                 transparent;
+$btn-flag-hover-bg:                     transparent;
+$btn-flag-hover-color:                  palette($btn-flag-color, 700);
+$btn-flag-hover-border-color:           transparent;
+$btn-flag-active-bg:                    transparent;
+$btn-flag-active-color:                 palette($btn-flag-color, 800);
+$btn-flag-active-border-color:          transparent;
 
 // Error
 $error-bg:                              #d42314;

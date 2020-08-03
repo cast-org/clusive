@@ -57,6 +57,7 @@
         --CT_cardBorderColor: #{$card-border-color};
         --CT_cardImgBg: #{$card-img-bg};
         --CT_cardLibraryBoxShadow: #{$card-library-box-shadow};
+        --CT_cardLibraryAuthorColor: #{$card-library-author-color};
 
         --CT_cardLoginBg: #{$card-login-bg};
         --CT_cardLoginColor: #{$card-login-color};
@@ -142,6 +143,17 @@
         --CT_btnOptionActiveBoxShadowRGB: #{red($btn-option-active-box-shadow-color), green($btn-option-active-box-shadow-color), blue($btn-option-active-box-shadow-color)};
         --CT_btnOptionActiveBoxShadowOpacity: #{$btn-option-active-box-shadow-opacity};
         --CT_btnOptionActiveHoverBorderColor: #{$btn-option-active-hover-border-color};
+
+        --CT_btnFlagFocusRingRGB: #{red($btn-flag-focus-ring), green($btn-flag-focus-ring), blue($btn-flag-focus-ring)};
+        --CT_btnFlagBg: #{$btn-flag-bg};
+        --CT_btnFlagColor: #{$btn-flag-color};
+        --CT_btnFlagBorderColor: #{$btn-flag-border-color};
+        --CT_btnFlagHoverBg: #{$btn-flag-hover-bg};
+        --CT_btnFlagHoverColor: #{$btn-flag-hover-color};
+        --CT_btnFlagHoverBorderColor: #{$btn-flag-hover-border-color};
+        --CT_btnFlagActiveBg: #{$btn-flag-active-bg};
+        --CT_btnFlagActiveColor: #{$btn-flag-active-color};
+        --CT_btnFlagActiveBorderColor: #{$btn-flag-active-border-color};
 
         --CT_errorListBg: #{$error-bg};
         --CT_errorListColor: #{$error-color};
