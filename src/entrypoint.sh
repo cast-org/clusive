@@ -16,13 +16,13 @@ then
 fi
 
 echo "Applying any pending migrations..."
-python manage.py migrate
+gosu app:app python manage.py migrate
 
 echo "Loading preference sets"
-python manage.py loaddata preferencesets
+gosu app:app python manage.py loaddata preferencesets
 
 echo "Loading default content"
-python manage.py importdir /content
+gosu app:app python manage.py importdir /content
 
 # The below does not actually work since createsuperuser command does not allow password to be
 # specified on the command line. Need to write a custom admin command or do this as a Migration.
@@ -32,4 +32,4 @@ python manage.py importdir /content
 #  python manage.py createsuperuser --username $DJANGO_ADMIN_USER --password $DJANGO_ADMIN_PASSWORD
 #fi
 
-exec gosu app "$@"
+exec gosu app:app "$@"
