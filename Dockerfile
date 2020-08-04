@@ -49,7 +49,7 @@ RUN rm -rf node_modules Grunt* package*
 FROM python:3.7-slim-buster
 
 RUN apt-get update && \
-  apt-get -y install --no-install-recommends libpq5 netcat-traditional wget && \
+  apt-get -y install --no-install-recommends libpq5 netcat-traditional wget gosu && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -68,7 +68,6 @@ COPY --from=base /usr/local/share/nltk_data /usr/local/share/nltk_data
 RUN addgroup --system app && adduser --system --ingroup app app
 RUN mkdir -p /app /content
 RUN chown -R app:app /app /content
-USER app
 
 WORKDIR /app
 
@@ -77,7 +76,7 @@ COPY src/entrypoint.sh /app
 
 COPY content /content
 
-RUN python manage.py collectstatic --no-input
+RUN gosu app:app python manage.py collectstatic --no-input
 
 EXPOSE 8000
 STOPSIGNAL SIGINT

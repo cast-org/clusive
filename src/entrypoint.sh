@@ -1,19 +1,19 @@
 #!/bin/sh
 # Commands run in the docker container before starting up the application.
 
-# Wait for Postgres to be ready before attempting to apply migrations
-
 if [ "$DJANGO_CONFIG" = "prod" ]
 then
-    echo "Waiting for postgres..."
+    # Make sure our upload directory has correct ownership and is writable.
+    chown app:app /app/uploads
+    chmod ug+rwX /app/uploads
 
+    # Wait for Postgres to be ready before attempting to apply migrations
+    echo "Waiting for postgres..."
     while ! nc -z ${DJANGO_DB_HOST:=127.0.0.1} ${DJANGO_DB_PORT:=5432}; do
       sleep 1
     done
-
     echo "PostgreSQL found"
 fi
-
 
 echo "Applying any pending migrations..."
 python manage.py migrate
@@ -32,4 +32,4 @@ python manage.py importdir /content
 #  python manage.py createsuperuser --username $DJANGO_ADMIN_USER --password $DJANGO_ADMIN_PASSWORD
 #fi
 
-exec "$@"
+exec gosu app "$@"
