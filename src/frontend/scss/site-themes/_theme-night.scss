@@ -159,8 +159,19 @@ $btn-flag-hover-bg:                     transparent;
 $btn-flag-hover-color:                  palette($btn-flag-color, 450);
 $btn-flag-hover-border-color:           transparent;
 $btn-flag-active-bg:                    transparent;
-$btn-flag-active-color:                 palette($btn-flag-color, 400);
+$btn-flag-active-color:                 $btn-flag-color;
 $btn-flag-active-border-color:          transparent;
+
+$btn-tag-focus-ring:                    #a0abfd;
+$btn-tag-bg:                            rgba(#f0f0f0, .2);
+$btn-tag-color:                         #eceff5;
+$btn-tag-border-color:                  transparent;
+$btn-tag-hover-bg:                      rgba(#f0f0f0, .1675);
+$btn-tag-hover-color:                   palette($btn-tag-color, 450);
+$btn-tag-hover-border-color:            transparent;
+$btn-tag-active-bg:                     rgba(#f0f0f0, .25);
+$btn-tag-active-color:                  $btn-tag-color;
+$btn-tag-active-border-color:           transparent;
 
 // Error
 $error-bg:                              #d42314;

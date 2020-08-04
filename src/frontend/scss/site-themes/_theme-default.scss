@@ -156,11 +156,22 @@ $btn-flag-bg:                           transparent;
 $btn-flag-color:                        #636b82;
 $btn-flag-border-color:                 transparent;
 $btn-flag-hover-bg:                     transparent;
-$btn-flag-hover-color:                  palette($btn-flag-color, 700);
+$btn-flag-hover-color:                  palette($btn-flag-color, 750);
 $btn-flag-hover-border-color:           transparent;
 $btn-flag-active-bg:                    transparent;
-$btn-flag-active-color:                 palette($btn-flag-color, 800);
+$btn-flag-active-color:                 $btn-flag-color;
 $btn-flag-active-border-color:          transparent;
+
+$btn-tag-focus-ring:                    #636b82;
+$btn-tag-bg:                            rgba(#fff, .95);
+$btn-tag-color:                         #636b82;
+$btn-tag-border-color:                  transparent;
+$btn-tag-hover-bg:                      rgba(#fff, 1);
+$btn-tag-hover-color:                   palette($btn-tag-color, 750);
+$btn-tag-hover-border-color:            transparent;
+$btn-tag-active-bg:                     #636b82;
+$btn-tag-active-color:                  #f5f5f5;
+$btn-tag-active-border-color:           transparent;
 
 // Error
 $error-bg:                              #d42314;

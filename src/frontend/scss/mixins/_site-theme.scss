@@ -155,6 +155,17 @@
         --CT_btnFlagActiveColor: #{$btn-flag-active-color};
         --CT_btnFlagActiveBorderColor: #{$btn-flag-active-border-color};
 
+        --CT_btnTagFocusRingRGB: #{red($btn-tag-focus-ring), green($btn-tag-focus-ring), blue($btn-tag-focus-ring)};
+        --CT_btnTagBg: #{$btn-tag-bg};
+        --CT_btnTagColor: #{$btn-tag-color};
+        --CT_btnTagBorderColor: #{$btn-tag-border-color};
+        --CT_btnTagHoverBg: #{$btn-tag-hover-bg};
+        --CT_btnTagHoverColor: #{$btn-tag-hover-color};
+        --CT_btnTagHoverBorderColor: #{$btn-tag-hover-border-color};
+        --CT_btnTagActiveBg: #{$btn-tag-active-bg};
+        --CT_btnTagActiveColor: #{$btn-tag-active-color};
+        --CT_btnTagActiveBorderColor: #{$btn-tag-active-border-color};
+
         --CT_errorListBg: #{$error-bg};
         --CT_errorListColor: #{$error-color};
 

@@ -113,3 +113,22 @@
     line-height: 1;
     @include border-radius(10rem);
 }
+
+.btn-check-input {
+    &:checked + .btn-flag-favorite {
+        [class^="icon-"],
+        [class*=" icon-"] {
+            &::before {
+                content: "\e825";
+            }
+        }
+    }
+}
+
+.btn-tag {
+    padding: .125em .5em;
+    margin-top: .125rem;
+    margin-bottom: .125rem;
+    @include font-size(.875rem);
+    font-weight: $font-weight-normal;
+}
