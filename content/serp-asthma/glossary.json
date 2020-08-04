@@ -1,0 +1,369 @@
+[
+    {
+        "headword": "pattern",
+        "alternateForms": ["patterns"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An arrangement of shapes, lines, letters, numbers, or colors that can be repeated or used again and again" ,
+                "examples": [ "Beth drew a pattern of squares and triangles." ],
+                "images": [
+                    {
+                        "src": "glossimages/pattern1.jpg",
+                        "alt": "An image with white background and repeated patterns of lines and shapes",
+                        "description": "A white background with repeated patterns in two rows. One pattern is made of lines forming partial squares, the other pattern is made of circles with radiating spikes, with angled lines between each repetition.",
+                        "caption": "There are two main repeating patterns in this image. Can you find them?",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/a085689a-01fb-4826-8c21-ca3954a7026b",
+                            "title": "Pattern",
+                            "author": " walmarc04 ",
+                            "author_url": "https://www.flickr.com/photos/30924550@N04",
+                            "license": " CC PDM 1.0 ",
+                            "license_url": "https://creativecommons.org/publicdomain/mark/1.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "condition",
+        "alternateForms": ["conditions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The state of being of someone or something.",
+                "examples": [
+                    "The patient is in good condition after receiving treatment."
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/condition1.jpg",
+                        "alt": "A person having his ears examined",
+                        "description": "A person having his ears examined by doctors",
+                        "caption": "This person is having his ears examined so that his condition can be treated.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/4ddff7f8-c38e-4a45-9c49-7e0e8c99af15",
+                            "title": "Otoscopy both sides",
+                            "author": "erikenmieke",
+                            "author_url": "https://www.flickr.com/photos/54494856@N02",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "locate",
+        "alternateForms": ["locates","located","locating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To find the position of.",
+                "examples": [
+                    "Have you located his house?"
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/locate1.jpg",
+                        "alt": "Photo of globe showing part of North America",
+                        "description": "Section of globe showing the eastern half of North America.",
+                        "caption": "Can you locate the Gulf of Mexico on this map?",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/atlas-ball-shaped-business-compass-269633/",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "expensive",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "High in price or charging high prices" ,
+                "examples": [ "Buying a new car is expensive." ]
+            }
+        ]
+    },
+    {
+        "headword": "facility",
+        "alternateForms": ["facilities"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A building made or used for a particular activity" ,
+                "examples": [ "The new sports facility will offer evening basketball." ],
+                "images": [
+                    {
+                        "src": "glossimages/facility1.jpg",
+                        "alt": "Photo of basketball on a floor.",
+                        "description": "A basketball on a wood floor with players in the background.",
+                        "caption": "Sports facilities give lots of options for people to get in shape.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/brown-basketball-on-grey-floor-945471/",
+                            "author": "Bk Aguilar",
+                            "author_url": "https://www.pexels.com/@bk-aguilar-296797",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "commonality",
+        "alternateForms": ["commonalities"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An arrangement of shapes, lines, letters, numbers, or colors that can be repeated or used again and again",
+                "examples": [
+                    "Beth drew a pattern of squares and triangles."
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/pattern1.jpg",
+                        "alt": "An image with white background and repeated patterns of lines and shapes",
+                        "description": "A white background with repeated patterns in two rows. One pattern is made of lines forming partial squares, the other pattern is made of circles with radiating spikes, with angled lines between each repetition.",
+                        "caption": "There are two main repeating patterns in this image. Can you find them?",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/a085689a-01fb-4826-8c21-ca3954a7026b",
+                            "title": "Pattern",
+                            "author": " walmarc04 ",
+                            "author_url": "https://www.flickr.com/photos/30924550@N04",
+                            "license": " CC PDM 1.0 ",
+                            "license_url": "https://creativecommons.org/publicdomain/mark/1.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "ailment",
+        "alternateForms": ["ailments"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The state of being of someone or something.",
+                "examples": [
+                    "The patient is in good condition after receiving treatment for his ailments."
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/condition1.jpg",
+                        "alt": "A person having his ears examined",
+                        "description": "A person having his ears examined by doctors",
+                        "caption": "This person is having his ears examined so that his ailment can be treated.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/4ddff7f8-c38e-4a45-9c49-7e0e8c99af15",
+                            "title": "Otoscopy both sides",
+                            "author": " erikenmieke ",
+                            "author_url": "https://www.flickr.com/photos/54494856@N02",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "situate",
+        "alternateForms": [
+            "situates",
+            "situatee",
+            "situating"
+        ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To find the position of.",
+                "examples": [
+                    "Have you situated his house?"
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/locate1.jpg",
+                        "alt": "Photo of globe showing part of North America",
+                        "description": "Section of globe showing the eastern half of North America.",
+                        "caption": "A map can help you situate yourself and the location of other places.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/atlas-ball-shaped-business-compass-269633/",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "pricey",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "High in price or charging high prices" ,
+                "examples": [ "Buying a new car is expensive." ]
+            }
+        ]
+    },
+    {
+        "headword": "building",
+        "alternateForms": [
+            "buildings"
+        ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A structure made or used for a particular activity",
+                "examples": [
+                    "The new gym building will have sports equipment and offer evening basketball."
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/facility1.jpg",
+                        "alt": "Photo of basketball on a floor.",
+                        "description": "A basketball on a wood floor with players in the background.",
+                        "caption": "Gyms and other buildings with sports equipment give lots of options for people to get in shape.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/brown-basketball-on-grey-floor-945471/",
+                            "author": "Bk Aguilar",
+                            "author_url": "https://www.pexels.com/@bk-aguilar-296797",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "intervention",
+        "alternateForms": ["interventions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Action intended to solve a problem.",
+                "examples": [
+                    "It is unclear who should pay for expensive interventions to improve the air quality in homes, schools, and neighborhoods."
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "phenomenon",
+        "alternateForms": ["phenomena"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that happens that can be observed",
+                "examples": [
+                    "Since widespread asthma is a public health phenomenon that is directly linked to pollution, many people think something should be done to decrease the amount of pollution."
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/phenomenon1.jpg",
+                        "alt": "Photo of green swirls of light in a dark sky",
+                        "description": "Green swirls of light in a dark sky, with water and snow covered mountains at the lower part of the picture. ",
+                        "caption": "The Northern Lights, or aurora borealis, is a phenomenon that sometimes can be seen near the poles of the Earth.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/aurora-borealis-1933239/",
+                            "title": "Aurora borealis",
+                            "author": "stein egil liland",
+                            "author_url": "https://www.pexels.com/@therato",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "priority",
+        "alternateForms": [
+            "priorities"
+        ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something of high importance.",
+                "examples": [
+                    "Some people believe that the government should make asthma prevention a priority."
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "suspend",
+        "alternateForms": ["suspends","suspended","suspending"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To stop temporarily.",
+                "examples": [
+                    "Operations in power plants could be suspended until they lower their pollution levels."
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/suspend1.jpg",
+                        "alt": "Photo of a stop sign",
+                        "description": "A red stop sign.",
+                        "caption": "A stop sign temporarily suspends the movement of traffic.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/red-stop-signage-under-clear-blue-sky-1292296/",
+                            "title": "Red Stop Signage Under Clear Blue Sky",
+                            "author": "Martin Péchy",
+                            "author_url": "https://www.pexels.com/@martinpechy",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "transmit",
+        "alternateForms": ["transmits","transmitted","transmitting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To pass on from one place or person to another.",
+                "examples": [
+                    "Asthma is not a contagious illness; it cannot be transmitted from person to person."
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/transmit1.jpg",
+                        "alt": "Photo of a person and germs.",
+                        "description": "Photo of person with mouth open and, against a black background, large and small droplets representing germs.",
+                        "caption": "Diseases can be transmitted, or spread, through germs. Asthma cannot be spread like this.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/cc36bb6a-3928-4f8d-8f0f-86a562435e0f",
+                            "title": "Estornudo",
+                            "author": "Happy faet",
+                            "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Happy_faet&action=edit&redlink=1",
+                            "license": "CC BY-SA 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
