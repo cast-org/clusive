@@ -5,8 +5,8 @@ $theme-name-readium:                    "night";
 $body-bg:                               #121212;
 $body-color:                            #fbfbfb;
 
-$link-color:                            #eceff5;
-$link-hover-color:                      #fff;
+$link-color:                            #d3cfc9; //#eceff5;
+$link-hover-color:                      #eceff5; //#fff;
 
 $focus-ring-color:                      #a0abfd;
 
@@ -27,6 +27,9 @@ $library-header-outer-bg:               $library-bg;
 $library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
 $library-logo-color:                    #eceff5;
 $library-logo-icon-color:               #d7ddee;
+
+$library-filter-bg:                     rgba(#636b82, .3);
+$library-filter-color:                  $body-color;
 
 $home-bg:                               #353841;
 $home-header-outer-bg:                  $home-bg;
