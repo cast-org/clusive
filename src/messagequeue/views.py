@@ -5,17 +5,12 @@ from django.views import View
 from roster.models import ClusiveUser
 from roster.views import set_user_preferences
 
+from .models import Message
+
 import json
 import logging
 
-import django.dispatch
-
 logger = logging.getLogger(__name__)
- 
-class MessageProcesser:    
-    # Allowed message types
-    class MessageTypes:
-        PREF_CHANGE = 'PC'
 
 # TODO: replace with Signals-based code?
 def process_messages(queue_timestamp, messages, user, request):    
@@ -24,10 +19,12 @@ def process_messages(queue_timestamp, messages, user, request):
         message_timestamp = message["timestamp"]
         message_content = message["content"]
         message_type = message["content"]["type"]
-        if(message_type == MessageProcesser.MessageTypes.PREF_CHANGE):
-            logger.debug("Found a preference change message: %s" % message)
+        if(message_type == Message.AllowedTypes.PREF_CHANGE):
+            logger.debug("Found a preference change message: %s" % message)            
             
-            set_user_preferences(user, message_content["preferences"], request)
+            message = Message(message_type, message_timestamp, message_content, request)
+
+            set_user_preferences(user, message_content["preferences"], request)            
 
 class MessageQueueView(View):
     def post(self, request):        
