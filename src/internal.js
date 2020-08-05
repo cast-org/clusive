@@ -25,23 +25,19 @@ window.markCuedWords = function() {
         // "cuedWordMap" is a map from main form to a list of all forms.
         for (var main in window.cuedWordMap) {
             var alts = window.cuedWordMap[main];
-            // Build up a CSS selector that will match any of the forms of the word.
-            //  TODO exclude: [ "h1", "h2", "h3", "h4", "h5", "h6", "figure" ]
-            var selector = '';
-            for (var j in alts) {
-                selector += ',span[data-word="' + alts[j] + '"]';
-            }
-            // Find and mark first occurrence of any form.  Substr removes leading comma.
-            var occurrence = document.querySelector(selector.substr(1));
+            // Build up a selector that will match any of the forms of the word.
+            // Something like: span[data-word='dog'],span[data-word='dogs']
+            var selector = "span[data-word='"
+                + alts.join("'],span[data-word='")
+                + "']";
+            var occurrence = $(selector).filter(':not(:header *):not(figure *)').first();
             if (occurrence) {
                 // data-gloss attribute indicates that this is a glossary cue, and what the main form is.
-                occurrence.setAttribute('data-gloss', main);
+                occurrence.attr('data-gloss', main);
                 // tabindex makes it accessible to keyboard navigation
-                occurrence.setAttribute('tabindex', '0');
-                // TODO is this helpful?
-                occurrence.setAttribute('role', 'button');
+                occurrence.attr('tabindex', '0');
             } else {
-                console.warn('No occurrence of glossary word found, selector=', selector.substr(1));
+                console.warn('No occurrence of glossary word found, selector=', selector);
             }
         }
     }
@@ -52,17 +48,28 @@ window.unmarkCuedWords = function() {
     return $('body').unmark();
 };
 
+function openGlossaryForCue(elt) {
+    'use strict';
+
+    let word = $(elt).data('gloss');
+    window.parent.load_definition(1, word);
+    window.parent.$('#glossaryButton').CFW_Popover('show');
+    window.parent.glossaryPop_focus($(this));
+}
+
 
 $(function() {
     var $body = $('body');
-    // FIXME how do we handle keyboard activation of these links as well?
-    $body.on('click touchstart', 'span[data-gloss]', function(e) {
+    $body.on('click touchstart keydown', 'span[data-gloss]', function(e) {
+        if (e.type === 'keydown') {
+            // Respond to Enter and Space keys, ignore anything else.
+            if (e.which !== 13 && e.which !== 32) {
+                return;
+            }
+        }
         e.preventDefault();
         e.stopPropagation();
-        let word = $(this).data('gloss');
-        window.parent.load_definition(1, word);
-        window.parent.$('#glossaryButton').CFW_Popover('show');
-        window.parent.glossaryPop_focus($(this));
+        openGlossaryForCue($(this));
     });
     window.parent.setUpImageDetails($body);
 });
