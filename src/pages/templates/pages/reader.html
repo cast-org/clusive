@@ -2,8 +2,6 @@
 {% load static %}
 
 {% block head_additional %}
-{% comment %} Readium reader dependencies {% endcomment %}
-
 <script>
 var exports = {};
 var pub_id = "{{ pub.id }}";
@@ -23,6 +21,10 @@ var manifest_path = "{{ manifest_path }}";
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
 {% include "shared/partial/sidebar_start.html" with nav=True why=True %}
 {% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
+{% endblock%}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 
@@ -127,10 +129,7 @@ var manifest_path = "{{ manifest_path }}";
             },
             tts: {
                 enableSplitter: true,
-                splitterWordClass: ".word",
-                highlight: "word", // lines, word
-                color: "var(--CRT_ttsBackgroundColor)",
-                // would like to be able to set text color as well: --CRT_ttsTextColor
+                highlight: "words", // lines, words
                 autoScroll: true,
                 rate: 1.2,
                 pitch: 1.0,

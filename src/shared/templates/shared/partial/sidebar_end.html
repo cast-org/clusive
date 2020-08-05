@@ -4,8 +4,12 @@
         <span class="sr-only">Settings</span>
     </button>
 {% if read_aloud %}
+    {% if read_aloud == 'Readium' %}
+    <button type="button" class="btn btn-tool" aria-label="Read aloud" title="Read aloud" id="readiumReadAloud">
+    {% else %}
     <button type="button" class="btn btn-tool" aria-label="Read aloud" title="Read aloud" id="readAloudButton">
-        <span id="readAloudIcon" class="icon-play" aria-hidden="true"></span>
+    {% endif %}
+        <span id="readAloudIcon" class="icon icon-play" aria-hidden="true"></span>
         <span id="readAloudSrText" class="sr-only">Read aloud</span>
     </button>
 {% endif %}

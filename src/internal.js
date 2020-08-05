@@ -29,7 +29,7 @@ window.markCuedWords = function() {
             //  TODO exclude: [ "h1", "h2", "h3", "h4", "h5", "h6", "figure" ]
             var selector = '';
             for (var j in alts) {
-                selector += ',span.word[data-word="' + alts[j] + '"]';
+                selector += ',span[data-word="' + alts[j] + '"]';
             }
             // Find and mark first occurrence of any form.  Substr removes leading comma.
             var occurrence = document.querySelector(selector.substr(1));
@@ -63,7 +63,7 @@ $(function() {
         window.parent.load_definition(1, word);
         window.parent.$('#glossaryButton').CFW_Popover('show');
         window.parent.glossaryPop_focus($(this));
-    })
+    });
     window.parent.setUpImageDetails($body);
 });
 
