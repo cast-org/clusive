@@ -50,10 +50,14 @@
                     <div class="row">
                         <div class="col card-library-action">
                             <div class="text-end">
-                                <a href="{% url 'metadata_edit' pk=pub.id %}" class="btn btn-flag link-above">
+                                <button type="button" class="btn btn-flag link-above" data-cfw="dropdown">
                                     <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                     <span class="sr-only">Publication settings</span>
-                                </a>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'metadata_edit' pk=pub.id %}">Edit</a></li>
+                                    <li><a href="{% url 'remove' pk=pub.id %}">Delete</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
