@@ -85,7 +85,6 @@ class LibraryView(LoginRequiredMixin, ListView):
 class UploadView(LoginRequiredMixin, FormView):
     template_name = 'library/upload.html'
     form_class = UploadForm
-    success_url = '/library/metadata'
 
     def form_valid(self, form):
         upload = self.request.FILES['file']
@@ -108,12 +107,11 @@ class UploadView(LoginRequiredMixin, FormView):
             os.remove(tempfile)
 
     def get_success_url(self):
-        return self.success_url + '/%d' % (self.bv.book.pk)
+        return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
 
 
 class MetadataFormView(LoginRequiredMixin, UpdateView):
     model = Book
-    template_name = 'library/metadata.html'
     form_class = MetadataForm
     success_url = '/library/mine'
 
@@ -148,6 +146,14 @@ class MetadataFormView(LoginRequiredMixin, UpdateView):
         else:
             logger.debug('Form valid, no cover image')
         return super().form_valid(form)
+
+
+class MetadataCreateFormView(MetadataFormView):
+    template_name = 'library/metadata_create.html'
+
+
+class MetadataEditFormView(MetadataFormView):
+    template_name = 'library/metadata_edit.html'
 
 
 class RemoveBookView(LoginRequiredMixin, View):
