@@ -56,7 +56,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="{% url 'metadata_edit' pk=pub.id %}">Edit</a></li>
-                                    <li><a href="{% url 'remove' pk=pub.id %}">Delete</a></li>
+                                    <li><button type="button" class="dropdown-item" data-clusive="confirmPubDel" data-clusive-book-id="{{ pub.id }}">Delete</button></li>
                                 </ul>
                             </div>
                         </div>
@@ -70,4 +70,5 @@
 </main>
 
 {% include "shared/partial/modal_vocab_check.html" %}
+{% include "shared/partial/modal_confirm.html" %}
 {% endblock %}
