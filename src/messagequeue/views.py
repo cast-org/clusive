@@ -5,6 +5,11 @@ from django.views import View
 from roster.models import ClusiveUser
 from roster.views import set_user_preferences
 
+from datetime import datetime, timezone
+from dateutil.parser import parse as dateutil_parse
+from dateutil.relativedelta import relativedelta
+
+
 from .models import Message
 
 import json
@@ -28,6 +33,12 @@ class MessageQueueView(View):
             receivedQueue = json.loads(request.body)     
             logger.debug("Received a message queue: %s" % receivedQueue);
             queue_timestamp = receivedQueue["timestamp"]
+
+            client_reported_time = dateutil_parse(queue_timestamp)    
+            server_time = datetime.now(timezone.utc) 
+            delta = relativedelta(client_reported_time, server_time)
+            logger.debug("Relative delta: %s " % delta)
+
             messages = receivedQueue["messages"]
             user = request.clusive_user
             process_messages(queue_timestamp, messages, user, request)

@@ -3,9 +3,23 @@ import json
 
 from roster.tests import set_up_test_users
 
+from datetime import datetime, timezone
+from dateutil.relativedelta import relativedelta
+
 from .models import Message, client_side_prefs_change
 
-preference_change_message_queue = '{"timestamp":"2020-07-28T21:01:29.448Z","messages":[{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"comic","textFont":"comic","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"2020-07-28T21:00:26.602Z"},{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"2020-07-28T21:00:30.134Z"},{"content":{"type":"PC","preferences":{"fluid_prefs_contrast":"sepia","theme":"sepia","fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"2020-07-28T21:00:32.938Z"}]}'    
+now = datetime.now(timezone.utc)
+first_pref_timestamp = now+relativedelta(seconds=-9)
+second_pref_timestamp = now+relativedelta(seconds=-6)
+third_pref_timestamp = now+relativedelta(seconds=-4)
+
+now_str = now.isoformat()
+first_pref_timestamp_str = first_pref_timestamp.isoformat()
+second_pref_timestamp_str = second_pref_timestamp.isoformat()
+third_pref_timestamp_str = third_pref_timestamp.isoformat()
+
+
+preference_change_message_queue = '{"timestamp":"%s","messages":[{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"comic","textFont":"comic","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_contrast":"sepia","theme":"sepia","fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
 
 class MessageQueueTestCase(TestCase):
 
