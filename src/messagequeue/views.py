@@ -12,7 +12,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# TODO: replace with Signals-based code?
 def process_messages(queue_timestamp, messages, user, request):    
     for message in messages:
         message["content"]["userId"] = user.id
@@ -20,11 +19,8 @@ def process_messages(queue_timestamp, messages, user, request):
         message_content = message["content"]
         message_type = message["content"]["type"]
         if(message_type == Message.AllowedTypes.PREF_CHANGE):
-            logger.debug("Found a preference change message: %s" % message)            
-            
-            message = Message(message_type, message_timestamp, message_content, request)
-
-            set_user_preferences(user, message_content["preferences"], request)            
+            logger.debug("Found a preference change message: %s" % message)                        
+            message = Message(message_type, message_timestamp, message_content, request)            
 
 class MessageQueueView(View):
     def post(self, request):        

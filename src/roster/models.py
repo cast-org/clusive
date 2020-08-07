@@ -8,6 +8,10 @@ from django.dispatch import receiver
 
 from pytz import country_timezones
 
+from messagequeue.models import Message, client_side_prefs_change
+
+from .views import set_user_preferences
+
 import json
 
 logger = logging.getLogger(__name__)
@@ -275,6 +279,12 @@ def set_default_preferences(sender, instance, created, **kwargs):
     if(created):
         logger.info("New user created, setting preferences to 'default' set")
         instance.adopt_preferences_set('default')
+
+@receiver(client_side_prefs_change, sender=Message)
+def set_preferences_from_message(sender, timestamp, content, request, **kwargs):
+    logger.info("client_side_prefs_change message received")
+    user = request.clusive_user
+    set_user_preferences(user, content["preferences"], request)                
 
 class Preference (models.Model):
     """Store a single user preference setting."""

@@ -35,8 +35,7 @@ class MessageQueueTestCase(TestCase):
 
         # Following pattern for testing signals described at https://www.freecodecamp.org/news/how-to-testing-django-signals-like-a-pro-c7ed74279311/
         self.signal_was_called = False;
-        def handler(sender, timestamp, content, request, **kwargs):
-            print(sender, timestamp, content, request)
+        def handler(sender, timestamp, content, request, **kwargs):            
             self.signal_was_called = True;
 
         client_side_prefs_change.connect(handler)
