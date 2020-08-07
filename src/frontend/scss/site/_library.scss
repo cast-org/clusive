@@ -18,6 +18,76 @@
     }
 }
 
+.library-filter {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .75rem;
+    margin-bottom: 1rem;
+    line-height: $line-height-base;
+    color: var(--CT_libraryFilterColor);
+    background-color: var(--CT_libraryFilterBg);
+    @include border-radius($border-radius);
+
+    .nav-item {
+        white-space: nowrap;
+
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+    }
+    .nav-link {
+        display: inline-block;
+        padding: 0;
+
+        @include hover-focus() {
+            text-decoration: underline;
+        }
+    }
+}
+
+.library-filter-label {
+    padding-right: .125rem;
+    font-weight: 600;
+}
+
+
+.library-filter-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+    @include list-unstyled();
+}
+
+.library-filter-item {
+    display: flex;
+
+    + .library-filter-item {
+        padding-left: .25rem;
+
+        &::before {
+            display: inline-block;
+            padding-right: .25rem;
+            color: var(--CT_libraryFilterColor);
+            content: "|";
+        }
+    }
+}
+
+.library-filter-link {
+    [class^="icon-"],
+    [class*=" icon-"] {
+        margin-right: .25rem;
+    }
+
+    &[href] {
+        text-decoration: none;
+
+        @include hover-focus() {
+            text-decoration: underline;
+        }
+    }
+}
+
+
 .library-grid {
     // Set a z-index to keep this below the header, works as long as no acestors
     // have any z-index asjustments (up to the sibling of the header)
@@ -61,4 +131,8 @@
             text-decoration: underline;
         }
     }
+}
+
+.card-library-action {
+    white-space: nowrap;
 }

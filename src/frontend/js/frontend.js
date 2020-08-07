@@ -1,43 +1,27 @@
-function modalAdjust() {
+function confirmationPublicationDelete() {
     'use strict';
 
-    var scrollbarWidth = $.CFW_measureScrollbar();
-    var $items = $('.site-header, .sidebars');
+    $(document.body).on('click', '[data-clusive="confirmPubDel"]', function(e) {
+        var $trigger = $(e.currentTarget);
+        var $modal = $('#modalConfirm');
+        var article = $trigger.data('clusive-book-id');
 
-    var scrollbarCheck = function() {
-        var rect = document.body.getBoundingClientRect();
-        return Math.round(rect.left + rect.right) < window.innerWidth;
-    };
+        if ($trigger.data('cfw') !== 'modal') {
+            e.preventDefault();
+            $modal.CFW_Modal('unlink');
 
-    var scrollbarSet = function() {
-        if (scrollbarCheck()) {
-            $items.each(function() {
-                var $this = $(this);
-                var actualPadding = this.style['padding-right'];
-                var calculatedPadding = parseFloat($this.css('padding-right'));
-                $this
-                    .data('cfw.padding-dim', actualPadding)
-                    .css('padding-right', calculatedPadding + scrollbarWidth + 'px');
+            $.get('/library/remove/confirm/' + article)
+                // eslint-disable-next-line no-unused-vars
+                .done(function(data, status) {
+                    $modal.find('.modal-content').html(data);
+                });
+
+            $trigger.CFW_Modal({
+                target: '#modalConfirm',
+                unlink: true
             });
+            $trigger.CFW_Modal('show');
         }
-    };
-
-    var scrollbarReset = function() {
-        $items.each(function() {
-            var $this = $(this);
-            var padding = $this.data('cfw.padding-dim');
-            if (typeof padding !== 'undefined') {
-                $this.css('padding-right', padding);
-                $this.removeData('cfw.padding-dim');
-            }
-        });
-    };
-
-    $(document).on('beforeShow.cfw.modal', function() {
-        scrollbarSet();
-    });
-    $(document).on('afterHide.cfw.modal', function() {
-        scrollbarReset();
     });
 }
 
@@ -116,7 +100,7 @@ function doPortraitCheck($img, i) {
 function formFileText() {
     'use strict';
 
-    function formFileInputUpdate(node) {
+    var formFileInputUpdate = function(node) {
         var input = node;
         var $input = $(node);
 
@@ -131,7 +115,7 @@ function formFileText() {
         if (name !== '') {
             $input.closest('.form-file').find('.form-file-text').first().text(name);
         }
-    }
+    };
 
     $(document).on('change', '.form-file-input', function() {
         formFileInputUpdate(this);
@@ -145,7 +129,7 @@ $(window).ready(function() {
     'use strict';
 
     formFileText();
-    modalAdjust();
+    confirmationPublicationDelete();
 
     var $imgs = $('.card-img img');
     for (var i = 0; i < $imgs.length; i++) {

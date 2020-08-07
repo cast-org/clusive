@@ -101,6 +101,32 @@ $btn-themes: map-merge(
             "active-color": var(--CT_btnOptionActiveColor),
             "active-border-color": var(--CT_btnOptionActiveBorderColor)
         ),
+        "flag":
+        (
+            "base": var(--CT_btnFlagFocusRingRGB),
+            "bg": var(--CT_btnFlagBg),
+            "color": var(--CT_btnFlagColor),
+            "border-color": var(--CT_btnFlagBorderColor),
+            "hover-bg": var(--CT_btnFlagHoverBg),
+            "hover-color": var(--CT_btnFlagHoverColor),
+            "hover-border-color": var(--CT_btnFlagHoverBorderColor),
+            "active-bg": var(--CT_btnFlagActiveBg),
+            "active-color": var(--CT_btnFlagActiveColor),
+            "active-border-color": var(--CT_btnFlagActiveBorderColor)
+        ),
+        "tag":
+        (
+            "base": var(--CT_btnTagFocusRingRGB),
+            "bg": var(--CT_btnTagBg),
+            "color": var(--CT_btnTagColor),
+            "border-color": var(--CT_btnTagBorderColor),
+            "hover-bg": var(--CT_btnTagHoverBg),
+            "hover-color": var(--CT_btnTagHoverColor),
+            "hover-border-color": var(--CT_btnTagHoverBorderColor),
+            "active-bg": var(--CT_btnTagActiveBg),
+            "active-color": var(--CT_btnTagActiveColor),
+            "active-border-color": var(--CT_btnTagActiveBorderColor)
+        ),
         "default":
         (
             "base": #636b82,

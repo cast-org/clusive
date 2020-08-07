@@ -28,6 +28,9 @@ $library-header-bg:                     linear-gradient(90deg, rgba(#b09f88, .37
 $library-logo-color:                    #333;
 $library-logo-icon-color:               #ff554d;
 
+$library-filter-bg:                     rgba(#b09f88, .3);
+$library-filter-color:                  $body-color;
+
 $home-bg:                               #faf4e8;
 $home-header-outer-bg:                  $home-bg;
 $home-header-bg:                        linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, 0) 75%);
@@ -67,6 +70,7 @@ $card-color:                            inherit;
 $card-border-color:                     #ebe3d5;
 $card-img-bg:                           rgba(#b09f88, .2);
 $card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
+$card-library-author-color:             #666;
 $card-login-bg:                         rgba(#b09f88, .3);
 $card-login-color:                      inherit;
 
@@ -149,6 +153,28 @@ $btn-option-active-border-color:        transparent;
 $btn-option-active-box-shadow-color:    #636b82;
 $btn-option-active-box-shadow-opacity:  .9;
 $btn-option-active-hover-border-color:  #636b82;
+
+$btn-flag-focus-ring:                   #636b82;
+$btn-flag-bg:                           transparent;
+$btn-flag-color:                        #6e6355;
+$btn-flag-border-color:                 transparent;
+$btn-flag-hover-bg:                     transparent;
+$btn-flag-hover-color:                  palette($btn-flag-color, 700);
+$btn-flag-hover-border-color:           transparent;
+$btn-flag-active-bg:                    transparent;
+$btn-flag-active-color:                 $btn-flag-color;
+$btn-flag-active-border-color:          transparent;
+
+$btn-tag-focus-ring:                    #636b82;
+$btn-tag-bg:                            rgba(#f5f5f5, .9);
+$btn-tag-color:                         #6e6355;
+$btn-tag-border-color:                  transparent;
+$btn-tag-hover-bg:                      rgba(#f5f5f5, 1);
+$btn-tag-hover-color:                   palette($btn-tag-color, 700);
+$btn-tag-hover-border-color:            transparent;
+$btn-tag-active-bg:                     #6e6355;
+$btn-tag-active-color:                  #f5f5f5;
+$btn-tag-active-border-color:           transparent;
 
 // Error
 $error-bg:                              #d42314;

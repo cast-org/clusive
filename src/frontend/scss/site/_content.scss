@@ -114,6 +114,11 @@ h2,
     }
 }
 
+.link-above {
+    position: relative;
+    z-index: 2;
+}
+
 .link-prev {
     position: relative;
 
