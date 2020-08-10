@@ -1,4 +1,4 @@
-/* global cisl, clusive, fluid_3_0_0, gpii, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global cisl, clusive, fluid_3_0_0, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
 
 (function(fluid) {
     'use strict';
@@ -142,5 +142,5 @@
         console.debug('calling CISL prefs Editor fetch impl');
         return that.getSettings();
     };
-    
+
 }(fluid_3_0_0));

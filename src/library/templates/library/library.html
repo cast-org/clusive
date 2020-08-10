@@ -5,7 +5,7 @@
 {% block title %}Library | Clusive{% endblock %}
 
 {% block header %}
-{% include "shared/partial/site_header.html" with page_title="Library" user_actions=True %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
 {% endblock %}
 
 {% block sidebar_end %}
@@ -14,18 +14,19 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
-    <p>
-        <div class="row">
-            <div class="col">
-                {% include "shared/partial/library_view_selector.html" %}
-            </div>
-            {% if current_view == 'mine' %}
-            <div class="col text-end">
-                <a href="{% url 'upload' %}" class="btn btn-primary">+ Add content</a>
-            </div>
-            {% endif %}
+    <h1>Library</h1>
+
+    <div class="row mb-1">
+        <div class="col">
+            {% include "shared/partial/library_view_selector.html" %}
         </div>
-    </p>
+        {% if current_view == 'mine' %}
+        <div class="col text-end">
+            <a href="{% url 'upload' %}" class="btn btn-primary">+ Add content</a>
+        </div>
+        {% endif %}
+    </div>
+
     {% if object_list|length == 0 %}
         No content found.
     {% else %}
@@ -40,6 +41,11 @@
                 <div class="card-body">
                     <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{pub.id}}'); return false;"><h2 class="card-title">{{ pub.title }}</h2></a>
                     {% if pub.description %}<p>{{ pub.description }}</p>{% endif %}
+                    <!-- Currently unclickable due to the way card links are stretched
+                    {% if pub.owner == request.clusive_user %}
+                    <div class="text-end"><a href="{% url 'metadata' pk=pub.id %}">edit</a></div>
+                    {% endif %}
+                     -->
                 </div>
             </div>
         {% endfor %}

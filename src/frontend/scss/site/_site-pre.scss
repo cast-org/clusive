@@ -31,7 +31,7 @@ $enable-form-control-sizing:            false;
 $enable-form-control-static:            false;
 $enable-form-label-sizing:              false;
 $enable-form-text:                      false;
-$enable-form-file:                      false;
+$enable-form-file:                      true;
 $enable-form-color:                     false;
 $enable-form-row:                       false;
 $enable-form-inline:                    false;
@@ -62,7 +62,7 @@ $enable-list-item-colors:               false;
 $enable-media:                          true;
 $enable-navbar-text:                    false;
 $enable-navbar-divider:                 false;
-$enable-navbar-collapse:                false;
+$enable-navbar-collapse:                true;
 $enable-navbar-toggle:                  false;
 $enable-navbar-light:                   false;
 $enable-navbar-dark:                    false;
@@ -92,7 +92,10 @@ $enable-utility-overflow:               false;
 $enable-utility-position:               false;
 $enable-utility-shadow:                 false;
 $enable-utility-sizing:                 false;
-$enable-utility-spacing:                false;
+$enable-utility-spacing-padding:        false;
+$enable-utility-spacing-margin:         true;
+$enable-utility-spacing-margin-auto:    false;
+$enable-utility-spacing-margin-negative:    false;
 $enable-utility-text-justify:           false;
 $enable-utility-text-wrap:              false;
 $enable-utility-text-nowrap:            false;
@@ -140,6 +143,14 @@ $primary:                               #40998b;
 
 $palette-interval-light:                .2%;
 $palette-interval-dark:                 .15%;
+
+$spacer:                                1rem;
+$spacers: (
+    "0":    0,
+    "0_25": ($spacer * .25),
+    "0_5":  ($spacer * .5),
+    "1":    $spacer,
+);
 
 $container-max-widths: (
     sm: rem(544px),
@@ -311,9 +322,19 @@ $skiplink-offset-top:                   .25rem;
 $skiplink-padding:                      .25rem .5rem;
 $skiplink-border-width:                 1px;
 
-$header-border-radius:                  $border-radius;
+$header-navbar-padding:                 0;
+$header-navbar-height:                  2.25rem;
+$header-height:                         $header-navbar-height + $body-padding-y;
+$header-navbar-border-radius:           null;
 
-$sidebar-border-radius:                 $header-border-radius;
+$header-md-navbar-height:               2.75rem;
+$header-md-height:                      $header-md-navbar-height + $body-padding-y;
+$content-offset-top:                    1rem;
+
+$logo-font-size:                        1.25rem;
+$logo-md-font-size:                     1.375rem;
+
+$sidebar-border-radius:                 $border-radius;
 $sidebar-width:                         3rem;
 $sidebar-padding:                       .75rem .25rem;
 $sidebar-gutter:                        1rem;

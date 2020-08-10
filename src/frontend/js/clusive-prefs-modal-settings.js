@@ -1,10 +1,10 @@
-/* global cisl, clusive, fluid_3_0_0, gpii, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global cisl, clusive, fluid_3_0_0, fluid, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
 
 (function(fluid) {
     'use strict';
     
     fluid.defaults('cisl.prefs.modalSettings', {
-        gradeNames: ['gpii.binder.bindOnCreate'],
+        gradeNames: ['fluid.binder.bindOnCreate'],
         model: {
             modalSettings: {},
             // Linked to preferences editor preferences
@@ -96,7 +96,7 @@
                     domToModel: {
                         '': {
                             transform: {
-                                type: 'gpii.binder.transforms.checkToBoolean',
+                                type: 'fluid.binder.transforms.checkToBoolean',
                                 inputPath: ''
                             }
                         }
@@ -104,7 +104,7 @@
                     modelToDom: {
                         '': {
                             transform: {
-                                type: 'gpii.binder.transforms.booleanToCheck',
+                                type: 'fluid.binder.transforms.booleanToCheck',
                                 inputPath: ''
                             }
                         }
@@ -137,7 +137,7 @@
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
     };
 
-    fluid.registerNamespace('gpii.binder.transforms');
+    fluid.registerNamespace('fluid.binder.transforms');
 
     /**
      *
@@ -147,18 +147,18 @@
      * @return {Boolean} - `true` if the first value is checked, `false`.
      *
      */
-    gpii.binder.transforms.checkToBoolean = function(value) {
+    fluid.binder.transforms.checkToBoolean = function(value) {
         return Boolean(fluid.get(value, 0));
     };
 
-    gpii.binder.transforms.checkToBoolean.invert = function(transformSpec) {
-        transformSpec.type = 'gpii.binder.transforms.booleanToCheck';
+    fluid.binder.transforms.checkToBoolean.invert = function(transformSpec) {
+        transformSpec.type = 'fluid.binder.transforms.booleanToCheck';
         return transformSpec;
     };
 
-    fluid.defaults('gpii.binder.transforms.checkToBoolean', {
+    fluid.defaults('fluid.binder.transforms.checkToBoolean', {
         gradeNames: ['fluid.standardTransformFunction', 'fluid.lens'],
-        invertConfiguration: 'gpii.binder.transforms.checkToBoolean.invert'
+        invertConfiguration: 'fluid.binder.transforms.checkToBoolean.invert'
     });
 
     /**
@@ -169,17 +169,17 @@
      * @return {Array} - An array with the first value set to "on" if the value is `true`, an empty Array otherwise.
      *
      */
-    gpii.binder.transforms.booleanToCheck = function(value) {
+    fluid.binder.transforms.booleanToCheck = function(value) {
         return value ? ['on'] : [];
     };
 
-    gpii.binder.transforms.booleanToCheck.invert = function(transformSpec) {
-        transformSpec.type = 'gpii.binder.transforms.checkToBoolean';
+    fluid.binder.transforms.booleanToCheck.invert = function(transformSpec) {
+        transformSpec.type = 'fluid.binder.transforms.checkToBoolean';
         return transformSpec;
     };
 
-    fluid.defaults('gpii.binder.transforms.booleanToCheck', {
+    fluid.defaults('fluid.binder.transforms.booleanToCheck', {
         gradeNames: ['fluid.standardTransformFunction', 'fluid.lens'],
-        invertConfiguration: 'gpii.binder.transforms.booleanToCheck.invert'
+        invertConfiguration: 'fluid.binder.transforms.booleanToCheck.invert'
     });
 }(fluid_3_0_0));

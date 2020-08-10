@@ -1,12 +1,24 @@
 .btn-nav {
-    [class^="icon-"]::before,
-    [class*=" icon-"]::before {
-        @include font-size(1.25em);
-    }
-
     &.disabled,
     &:disabled {
         opacity: var(--CT_btnNavDisabledOpacity);
+    }
+}
+
+.btn-nav-toc {
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        @include font-size(1.25rem);
+        transform: rotate(180deg);
+    }
+}
+.btn-nav-prev,
+.btn-nav-next {
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        position: relative;
+        top: .125rem;
+        @include font-size(1.5rem);
     }
 }
 
@@ -48,7 +60,7 @@
     }
 }
 
-.btn-help {
+.btn-support-help {
     padding-right: 0;
     padding-left: 0;
     white-space: nowrap;

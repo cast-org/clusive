@@ -7,6 +7,11 @@ to client-side Javascript
 <script>
 var DJANGO_STATIC_ROOT = "{% static '' %}";
 var DJANGO_CSRF_TOKEN = $("[name=csrfmiddlewaretoken]").val();
+{% if user.is_authenticated %}
+    var DJANGO_USER_ID = "{{ user.get_username }}"
+{% else %}
+    var DJANGO_USER_ID = null;
+{% endif %}
 // Global reference to the preferences editor for non-Infusion code
 // Initialized with the results of createClusivePrefsEditor() when that's called
 var clusivePrefs;

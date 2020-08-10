@@ -1,10 +1,8 @@
-// stylelint-disable declaration-no-important, selector-max-id
-
 .skiplink {
-    position: absolute !important;
+    position: absolute;
     top: $skiplink-offset-top;
     left: 50%;
-    z-index: 2;
+    z-index: $zindex-fixed + 5;
     padding: $skiplink-padding;
     color: var(--CT_skiplinkColor);
     text-align: center;
@@ -19,6 +17,7 @@
     }
 }
 
+// stylelint-disable-next-line selector-max-id
 #content {
     outline: 0;
 }

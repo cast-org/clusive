@@ -17,10 +17,20 @@
         --CT_skiplinkColor: #{$skiplink-color};
         --CT_skiplinkBorderColor: #{$skiplink-border-color};
 
+        --CT_headerOuterBg: #{$header-outer-bg};
         --CT_headerBg: #{$header-bg};
         --CT_headerColor: #{$header-color};
+        --CT_headerLogoColor: #{$header-logo-color};
         --CT_headerLogoIconColor: #{$header-logo-icon-color};
-        --CT_headerLogoTextColor: #{$header-logo-text-color};
+        --CT_headerLogoIconHoverColor: #{$header-logo-icon-hover-color};
+
+        --CT_actionBg: #{$action-bg};
+        --CT_actionColor: #{$action-color};
+        --CT_actionHoverBg: #{$action-hover-bg};
+        --CT_actionHoverColor: #{$action-hover-color};
+        --CT_actionCurrentBg: #{$action-current-bg};
+        --CT_actionCurrentColor: #{$action-current-color};
+
         --CT_pageTitleBorderColor: #{$page-title-border-color};
 
         --CT_footerBorderColor: #{$footer-border-color};
@@ -29,10 +39,16 @@
         --CT_sidebarEndBg: #{$sidebar-end-bg};
 
         --CT_libraryBodyBg: #{$library-bg};
+        --CT_libraryHeaderOuterBg: #{$library-header-outer-bg};
+        --CT_libraryHeaderBg: #{$library-header-bg};
+        --CT_libraryLogoColor: #{$library-logo-color};
         --CT_libraryLogoIconColor: #{$library-logo-icon-color};
-        --CT_libraryLogoTextColor: #{$library-logo-text-color};
 
         --CT_homeBodyBg: #{$home-bg};
+        --CT_homeHeaderOuterBg: #{$home-header-outer-bg};
+        --CT_homeHeaderBg: #{$home-header-bg};
+        --CT_homeLogoColor: #{$home-logo-color};
+        --CT_homeLogoIconColor: #{$home-logo-icon-color};
         --CT_homeSectionBorderColor: #{$home-section-border-color};
         --CT_loginSectionBorderColor: #{$login-section-border-color};
 
@@ -85,6 +101,9 @@
         --CT_btnNavActiveBg: #{$btn-nav-active-bg};
         --CT_btnNavActiveColor: #{$btn-nav-active-color};
         --CT_btnNavActiveBorderColor: #{$btn-nav-active-border-color};
+        --CT_btnNavDisabledBg: #{$btn-nav-disabled-bg};
+        --CT_btnNavDisabledColor: #{$btn-nav-disabled-color};
+        --CT_btnNavDisabledBorderColor: #{$btn-nav-disabled-border-color};
         --CT_btnNavDisabledOpacity: #{$btn-nav-disabled-opacity};
 
         --CT_btnSettingFocusRingRGB: #{red($btn-setting-focus-ring), green($btn-setting-focus-ring), blue($btn-setting-focus-ring)};
