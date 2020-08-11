@@ -18,14 +18,26 @@ import logging
 logger = logging.getLogger(__name__)
 
 def process_messages(queue_timestamp, messages, user, request):    
+    client_reported_time = dateutil_parse(queue_timestamp)    
+    delta = get_delta_from_now(client_reported_time)    
+
     for message in messages:
         message["content"]["userId"] = user.id
         message_timestamp = message["timestamp"]
+        message_time = dateutil_parse(message_timestamp)
+        adjusted_message_time = message_time+delta
+        message_timestamp = adjusted_message_time.isoformat()
+        logger.debug("Adjusted message time from %s to %s" % (message_time, adjusted_message_time))
         message_content = message["content"]
+        
         message_type = message["content"]["type"]
         if(message_type == Message.AllowedTypes.PREF_CHANGE):
             logger.debug("Found a preference change message: %s" % message)                        
             message = Message(message_type, message_timestamp, message_content, request)            
+
+def get_delta_from_now(compare_time):
+    now = datetime.now(timezone.utc) 
+    return relativedelta(now, compare_time)
 
 class MessageQueueView(View):
     def post(self, request):        
@@ -33,12 +45,6 @@ class MessageQueueView(View):
             receivedQueue = json.loads(request.body)     
             logger.debug("Received a message queue: %s" % receivedQueue);
             queue_timestamp = receivedQueue["timestamp"]
-
-            client_reported_time = dateutil_parse(queue_timestamp)    
-            server_time = datetime.now(timezone.utc) 
-            delta = relativedelta(client_reported_time, server_time)
-            logger.debug("Relative delta: %s " % delta)
-
             messages = receivedQueue["messages"]
             user = request.clusive_user
             process_messages(queue_timestamp, messages, user, request)

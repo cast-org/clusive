@@ -35,6 +35,11 @@ class MessageQueueTestCase(TestCase):
         response = self.client.post('/messagequeue/', preference_change_message_queue, content_type='application/json')
         self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')
 
+    def test_time_adjustment(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.post('/messagequeue/', preference_change_message_queue, content_type='application/json')
+        self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')
+
     def test_client_side_prefs_change_message(self):            
         login = self.client.login(username='user1', password='password1')
 
