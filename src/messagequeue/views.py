@@ -5,7 +5,8 @@ from django.views import View
 from roster.models import ClusiveUser
 from roster.views import set_user_preferences
 
-from datetime import datetime, timezone
+from django.utils import timezone
+
 from dateutil.parser import parse as dateutil_parse
 from dateutil.relativedelta import relativedelta
 
@@ -36,7 +37,7 @@ def process_messages(queue_timestamp, messages, user, request):
             message = Message(message_type, message_timestamp, message_content, request)            
 
 def get_delta_from_now(compare_time):
-    now = datetime.now(timezone.utc) 
+    now = timezone.now()
     return relativedelta(now, compare_time)
 
 class MessageQueueView(View):
