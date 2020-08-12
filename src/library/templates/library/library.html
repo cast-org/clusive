@@ -35,7 +35,7 @@
             <div class="card card-library">
                 <div class="card-header">
                     <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{pub.id}}'); return false;"><h2 class="card-title">{{ pub.title }}</h2></a>
-                    {% if pub.author %}<div class="card-author">by {{ pub.author }}</div>{% endif %}
+                    {% if pub.author %}<div class="card-author">{{ pub.author }}</div>{% endif %}
                 </div>
                 {% if pub.cover %}
                 <div class="card-img">

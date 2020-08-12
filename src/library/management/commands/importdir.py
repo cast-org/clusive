@@ -29,7 +29,10 @@ class Command(BaseCommand):
             if not (path.exists() and path.is_dir()):
                 raise CommandError('Argument is not a directory')
             for subdir in path.iterdir():
-                self.import_from_dir(subdir)
+                if subdir.is_dir():
+                    self.import_from_dir(subdir)
+                else:
+                    logger.warning('Ignoring non-directory %s' % subdir)
 
     def import_from_dir(self, subdir : Path):
         args = []
