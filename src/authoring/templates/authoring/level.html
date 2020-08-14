@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static figuration %}
+    <head>
+    <title>Authoring Proof of Concept</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% include "shared/partial/head.html" %}
+    </head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Text Checker</h1>
+        </div>
+    </div>
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.text.label_tag | formlabel }} *
+                    {{ form.text.errors }}
+                    {{ form.text | formcontrol }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Check" />
+            </div>
+            <div class="col text-end">
+                <span><strong>{{ word_count }} words.</strong></span>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col">
+            <p>Words found, rarest at the top:</p>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Word</th>
+                    <th>Frequency</th>
+                    <th>Count</th>
+                </tr>
+                {% for w in words %}
+                <tr>
+                    <th>{{w.word}}</th>
+                    <td>{{w.freq}}</td>
+                    <td>{{w.count}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
