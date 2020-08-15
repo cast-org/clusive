@@ -36,6 +36,16 @@
     </form>
     <div class="row">
         <div class="col">
+            <ul>
+                {% for stat in stats %}
+                <li>
+                    <strong>{{ stat.name }}</strong>: {{ stat.value }}
+                    {% if stat.desc %}({{ stat.desc }}){% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+    <div class="row">
+        <div class="col">
             <p>Words found, rarest at the top:</p>
             <table class="table table-bordered">
                 <tr>
@@ -45,7 +55,10 @@
                 </tr>
                 {% for w in words %}
                 <tr>
-                    <th>{{w.word}}</th>
+                    <th>
+                        {{w.hw}}
+                        {% if w.alts %}({{ w.alts | join:", " }}){% endif %}
+                    </th>
                     <td>{{w.freq}}</td>
                     <td>{{w.count}}</td>
                 </tr>
