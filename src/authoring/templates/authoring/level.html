@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static figuration %}
+    <head>
+    <title>Authoring Proof of Concept</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% include "shared/partial/head.html" %}
+<script>
+    $(document).on('click', 'a.inplace', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var link = $(this);
+        $.get($(this).attr('href'))
+            .done(function(data, status) {
+                link.replaceWith(data);
+            });
+        return false;
+    })
+</script>
+    </head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Text Checker</h1>
+        </div>
+    </div>
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.text.label_tag | formlabel }} *
+                    {{ form.text.errors }}
+                    {{ form.text | formcontrol }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Check" />
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col">
+            <ul>
+                {% for stat in stats %}
+                <li>
+                    <strong>{{ stat.name }}</strong>: {{ stat.value }}
+                    {% if stat.desc %}({{ stat.desc }}){% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p>Words found, rarest at the top:</p>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Word</th>
+                    <th>Frequency</th>
+                    <th>Count</th>
+                    <th>Info</th>
+                </tr>
+                {% for w in words %}
+                <tr>
+                    <th>
+                        {{w.hw}}
+                        {% if w.alts %}({{ w.alts | join:", " }}){% endif %}
+                    </th>
+                    <td>{{w.freq}}</td>
+                    <td>{{w.count}}</td>
+                    <td><a class="inplace" data-word="{{w.hw}}" href="{% url 'synonyms' w.hw %}">[+]</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

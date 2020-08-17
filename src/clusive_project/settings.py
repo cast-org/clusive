@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'eventlog.apps.EventlogConfig',
     'library.apps.LibraryConfig',
     'glossary.apps.GlossaryConfig',
+    'authoring.apps.AuthoringConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
 ]
