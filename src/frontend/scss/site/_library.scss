@@ -52,22 +52,29 @@
 
 
 .library-filter-list {
-    display: inline-flex;
-    flex-wrap: wrap;
-    @include list-unstyled();
+    padding-left: 1.5rem;
+    list-style: disc;
+
+    @include media-breakpoint-up(sm) {
+        display: inline-flex;
+        flex-direction: row;
+        @include list-unstyled();
+    }
 }
 
 .library-filter-item {
-    display: flex;
+    @include media-breakpoint-up(sm) {
+        display: flex;
 
-    + .library-filter-item {
-        padding-left: .25rem;
+        + .library-filter-item {
+            padding-left: .25rem;
 
-        &::before {
-            display: inline-block;
-            padding-right: .25rem;
-            color: var(--CT_libraryFilterColor);
-            content: "|";
+            &::before {
+                display: inline-block;
+                padding-right: .25rem;
+                color: var(--CT_libraryFilterColor);
+                content: "|";
+            }
         }
     }
 }
@@ -86,7 +93,6 @@
         }
     }
 }
-
 
 .library-grid {
     // Set a z-index to keep this below the header, works as long as no acestors
