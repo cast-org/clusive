@@ -2,8 +2,6 @@
 {% load static %}
 
 {% block head_additional %}
-{% comment %} Readium reader dependencies {% endcomment %}
-
 <script>
 var exports = {};
 var pub_id = "{{ pub.id }}";
@@ -23,6 +21,10 @@ var manifest_path = "{{ manifest_path }}";
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
 {% include "shared/partial/sidebar_start.html" with nav=True why=True %}
 {% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
+{% endblock%}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 
@@ -122,7 +124,21 @@ var manifest_path = "{{ manifest_path }}";
             },
             rights: {
                 enableBookmarks: true,
-                enableAnnotations: true
+                enableAnnotations: true,
+                enableTTS: true
+            },
+            tts: {
+                enableSplitter: true,
+                highlight: "words", // lines, words
+                autoScroll: true,
+                rate: 1.2,
+                pitch: 1.0,
+                volume: 1.0,
+                voice: {
+                    usePublication: true,
+                    // name : "Daniel",
+                    // lang : "en-GB",
+                }
             },
             material: false,
             userSettings: userSettings,
