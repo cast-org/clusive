@@ -25,6 +25,7 @@
     "jquery": "^3.5.1",
     "jquery-ui": "1.12.1",
     "mark.js": "8.11.1",
+    "masonry-layout": "^4.2.2",
     "open-dyslexic": "^1.0.3",
     "popper.js": "1.16.1",
     "readium-css": "git+https://github.com/readium/readium-css.git#bd6462780d1ed724181df4fce3d3a22b2f15ab45",

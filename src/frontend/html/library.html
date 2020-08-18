@@ -18,6 +18,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0/dist/js/figuration.min.js" integrity="sha384-XqIV+6/aPbInuDsESPata3SBmFPBP6fSRj8dE/LgKX9dkNoGJeLRa8/q9jUo0vW4" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="../js/theme-test.js"></script>
@@ -113,38 +114,62 @@
 
             <h1>Library</h1>
 
-            <div class="library-filter" role="region" aria-label="View and sort options">
-                <ul class="nav">
-                    <li class="nav-item">
-                        <span class="library-filter-label">View:</span>
-                        <a href="#" role="button" class="nav-link" data-cfw="dropdown">All content <span class="caret aria-hidden="true"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" class="active">All content</a></li>
-                            <li><a href="#">Public content</a></li>
-                            <li><a href="#">My content</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <span class="library-filter-label">Sort by:</span>
-                        <a href="#" role="button" class="nav-link" data-cfw="dropdown">Date added <span class="caret aria-hidden="true"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Option</a></li>
-                            <li><a href="#" class="active">Date added</a></li>
-                            <li><a href="#">Option</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <span class="library-filter-label">View as:</span>
-                        <ul class="library-filter-list">
-                            <li class="library-filter-item">
-                                <span class="library-filter-link"><span class="icon-th-large aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+            <div class="row">
+                <div class="col">
+                    <div class="library-filter" role="region" aria-label="View and sort options">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <span class="library-filter-label">View:</span>
+                                <a href="#" role="button" class="nav-link" data-cfw="dropdown">All content <span class="caret aria-hidden="true"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="active">All content</a></li>
+                                    <li><a href="#">Public content</a></li>
+                                    <li><a href="#">My content</a></li>
+                                </ul>
                             </li>
-                            <li class="library-filter-item">
-                                <a href="#" class="library-filter-link"><span class="icon-menu aria-hidden="true"></span>list</a>
+                            <li class="nav-item">
+                                <span class="library-filter-label">Sort by:</span>
+                                <a href="#" role="button" class="nav-link" data-cfw="dropdown">Date added <span class="caret aria-hidden="true"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Option</a></li>
+                                    <li><a href="#" class="active">Date added</a></li>
+                                    <li><a href="#">Option</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <span class="library-filter-label">View as:</span>
+                                <ul class="library-filter-list">
+                                    <li class="library-filter-item">
+                                        <span class="library-filter-link"><span class="icon-th-large aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+                                    </li>
+                                    <li class="library-filter-item">
+                                        <a href="#" class="library-filter-link"><span class="icon-menu aria-hidden="true"></span>list</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
-                    </li>
-                </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="library-filter" role="region" aria-label="Grid options">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <span class="library-filter-label">Cascading grid: </span>
+                                <ul class="library-filter-list">
+                                    <li class="library-filter-item">
+                                        <button type="button" class="link-btn masonry-on" onclick="masonryEnable();">Enable</button>
+                                    </li>
+                                    <li class="library-filter-item">
+                                        <button type="button" class="link-btn masonry-off" onclick="masonryDisable();" disabled>Disable</button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <div class="library-grid">
@@ -284,6 +309,38 @@
         </footer>
     </div>
 </div>
+
+<script>
+var masonryApi = null;
+var masonryEnable = function() {
+    var elem = document.querySelector('.library-grid');
+    masonryApi = new Masonry( elem, {
+      itemSelector: '.card-library',
+      // use element for option
+      columnWidth: '.card-library',
+      percentPosition: true
+    });
+
+    var masonryImgs = elem.querySelectorAll('img');
+    masonryImgs.forEach(function(img) {
+        $.CFW_imageLoaded($(img), null, function() {
+            masonryApi.layout();
+        });
+    });
+    document.querySelector('.masonry-on').setAttribute('disabled', '');
+    document.querySelector('.masonry-off').removeAttribute('disabled');
+}
+
+var masonryDisable = function() {
+    if (masonryApi !== null) {
+        masonryApi.destroy();
+        masonryApi = null;
+    }
+    document.querySelector('.masonry-on').removeAttribute('disabled');
+    document.querySelector('.masonry-off').setAttribute('disabled', '');
+};
+
+</script>
 
 </body>
 </html>

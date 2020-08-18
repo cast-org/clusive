@@ -175,6 +175,39 @@ h2,
     margin-left: .5rem;
 }
 
+.link-btn {
+    display: inline-block;
+    padding: 0;
+    font-family: $font-family-base;
+    @include font-size(inherit);
+    font-weight: $font-weight-normal;
+    color: var(--CT_linkColor);
+    text-decoration: none;
+    vertical-align: baseline;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 0 solid transparent;
+    @include border-radius(0);
+    @include box-shadow(none);
+
+    @include hover-focus() {
+        color: var(--CT_linkHoverColor);
+        text-decoration: underline;
+    }
+
+    &:active {
+        @include box-shadow(none);
+    }
+
+    &:disabled {
+        color: var(--CT_bodyColor);
+        text-decoration: none;
+        pointer-events: none;
+        @include box-shadow(none);
+    }
+}
+
 .definition-speech {
     @include font-size(.875rem);
     color: var(--CT_definitionSpeechColor);
