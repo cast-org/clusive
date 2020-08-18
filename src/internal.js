@@ -15,7 +15,7 @@ window.markCuedWords = function() {
         $.get('/glossary/cuelist/'+window.parent.pub_id+'/'+window.parent.pub_version)
             .done(function(data, status) {
                 console.debug("Received cuelist: ", data);
-                window.cuedWordMap = data.words;                
+                window.cuedWordMap = data.words;
                 markCuedWords();
             })
             .fail(function(err) {
@@ -45,7 +45,11 @@ window.markCuedWords = function() {
 
 // Explicitly attached to "window" so that uglify won't change it and it can be called from elsewhere.
 window.unmarkCuedWords = function() {
-    return $('body').unmark();
+    document.body.querySelectorAll('[data-gloss]')
+        .forEach(element => {
+            element.removeAttribute('tabindex');
+            element.removeAttribute('data-gloss');
+        });
 };
 
 function openGlossaryForCue(elt) {
@@ -94,7 +98,7 @@ $(function() {
 //     });
 
 // TODO: make preferences editor properly aware of page changes
-if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoader.prefsEditor) {    
+if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoader.prefsEditor) {
     console.info('getting settings')
     var prefsPromise = clusivePrefs.prefsEditorLoader.getSettings();
     prefsPromise.then(function (prefs) {
@@ -104,5 +108,5 @@ if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoa
         }
     }, function (e) {
         console.error('error fetching prefs', e)
-    })    
+    })
 }
