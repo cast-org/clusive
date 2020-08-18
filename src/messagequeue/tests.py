@@ -5,8 +5,10 @@ from roster.tests import set_up_test_users
 
 from datetime import datetime, timezone
 from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse as dateutil_parse
 
 from .models import Message, client_side_prefs_change
+from .views import get_delta_from_now, adjust_message_timestamp
 
 now = datetime.now(timezone.utc)
 first_pref_timestamp = now+relativedelta(seconds=-9)
@@ -36,9 +38,22 @@ class MessageQueueTestCase(TestCase):
         self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')
 
     def test_time_adjustment(self):
-        login = self.client.login(username='user1', password='password1')
-        response = self.client.post('/messagequeue/', preference_change_message_queue, content_type='application/json')
-        self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')
+        queue_timestamp = now_str
+        client_reported_time = dateutil_parse(queue_timestamp)    
+        delta = get_delta_from_now(client_reported_time)        
+        
+        adjusted_queue_timestamp = adjust_message_timestamp(queue_timestamp, delta)
+        adjusted_first = adjust_message_timestamp(first_pref_timestamp_str, delta)
+        adjusted_second = adjust_message_timestamp(second_pref_timestamp_str, delta)
+        adjusted_third = adjust_message_timestamp(third_pref_timestamp_str, delta)
+
+        def test_deltas(adjusted_message_timestamp, expected_seconds):
+            testing_delta = relativedelta(dateutil_parse(adjusted_queue_timestamp), dateutil_parse(adjusted_message_timestamp))
+            self.assertEqual(testing_delta.seconds, expected_seconds, "Delta of timestamp not as expected after adjustment")                 
+
+        test_deltas(adjusted_first, 9)
+        test_deltas(adjusted_second, 6)
+        test_deltas(adjusted_third, 4)
 
     def test_client_side_prefs_change_message(self):            
         login = self.client.login(username='user1', password='password1')
