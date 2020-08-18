@@ -4,11 +4,12 @@ pytz==2019.2
 whitenoise==4.1.3
 gunicorn==19.9.0
 nltk==3.4.5
-lemminflect==0.2.0
+lemminflect==0.2.1
 future==0.18.2
 numpy==1.17.4
 django-settings-export==1.2.1
 dawn==0.11.0
+marisa-trie==0.7.5
 wordfreq==2.3.2
 textstat==0.6.2
 -e git+https://github.com/IMSGlobal/caliper-python@1.1.0.2#egg=imsglobal_caliper
