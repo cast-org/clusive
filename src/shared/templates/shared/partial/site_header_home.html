@@ -3,7 +3,14 @@
     <div class="site-header-navbar navbar navbar-expand-md">
         <div class="site-header-container container-xl">
             <div class="site-header-logo">
-                <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                {% if home_link %}
+                    <a href="{% url 'login' %}">
+                    <span class="sr-only">Back to Login</span>
+                {% endif %}
+                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                {% if home_link %}
+                    </a>
+                {% endif %}
                 <span class="icon-logo-clusive" aria-hidden="true"></span>
                 <span class="sr-only">Clusive</span>
             </div>

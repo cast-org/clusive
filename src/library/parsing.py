@@ -44,9 +44,9 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     """
     with open(file, 'rb') as f, dawn.open(f) as upload:
         manifest = make_manifest(upload)
-        title = get_metadata_item(upload, 'titles') or 'Untitled'
-        author = get_metadata_item(upload, 'creators') or 'Unknown'
-        description = get_metadata_item(upload, 'description') or 'No description'
+        title = get_metadata_item(upload, 'titles') or ''
+        author = get_metadata_item(upload, 'creators') or ''
+        description = get_metadata_item(upload, 'description') or ''
         if upload.cover:
             cover = adjust_href(upload, upload.cover.href)
             # For cover path, need to prefix this path with the directory holding this version of the book.

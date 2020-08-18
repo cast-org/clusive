@@ -20,7 +20,7 @@ class Book(models.Model):
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=256)
     author = models.CharField(max_length=256)
-    description = models.TextField(default="")
+    description = models.TextField(default="", blank=True)
     cover = models.CharField(max_length=256, null=True)
 
     @property

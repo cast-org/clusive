@@ -113,52 +113,140 @@
 
             <h1>Library</h1>
 
+            <div class="library-filter" role="region" aria-label="View and sort options">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <span class="library-filter-label">View:</span>
+                        <a href="#" role="button" class="nav-link" data-cfw="dropdown">All content <span class="caret aria-hidden="true"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="active">All content</a></li>
+                            <li><a href="#">Public content</a></li>
+                            <li><a href="#">My content</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <span class="library-filter-label">Sort by:</span>
+                        <a href="#" role="button" class="nav-link" data-cfw="dropdown">Date added <span class="caret aria-hidden="true"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Option</a></li>
+                            <li><a href="#" class="active">Date added</a></li>
+                            <li><a href="#">Option</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <span class="library-filter-label">View as:</span>
+                        <ul class="library-filter-list">
+                            <li class="library-filter-item">
+                                <span class="library-filter-link"><span class="icon-th-large aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+                            </li>
+                            <li class="library-filter-item">
+                                <a href="#" class="library-filter-link"><span class="icon-menu aria-hidden="true"></span>list</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
             <div class="library-grid">
                 <div class="card card-library">
-                    <div class="card-img card-img-top">
+                    <div class="card-header">
+                        <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                        <div class="card-author">
+                            by Firstname Lastname
+                        </div>
+                    </div>
+                    <div class="card-img">
                         <img class="img-fluid" src="./img/sample-1.jpg" alt="">
                     </div>
                     <div class="card-body">
-                        <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col card-library-tag">
+                                <a href="#" class="btn btn-tag link-above">abolition</a>
+                                <a href="#" class="btn btn-tag link-above">autobiography</a>
+                                <a href="#" class="btn btn-tag link-above">United States History</a>
+                            </div>
+                            <div class="col-auto card-library-action">
+                                <span class="btn-check link-above">
+                                    <input id="fav0" type="checkbox" class="btn-check-input">
+                                    <label for="fav0" class="btn btn-flag btn-flag-favorite">
+                                        <span class="icon-star-empty" aria-hidden="true"></span>
+                                        <span class="sr-only">Favorite</span>
+                                    </label>
+                                </span>
+                                <span class="dropdown link-above">
+                                    <button type="button" class="btn btn-flag" data-cfw="dropdown">
+                                        <span class="icon-ellipsis-vert" aria-hidden="true"></span>
+                                        <span class="sr-only">Publication settings</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropreverse">
+                                        <li><a href="#">Edit</a></li>
+                                        <li><a href="#">Assign</a></li>
+                                        <li><a href="#">Delete</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-img card-img-top">
+                    <div class="card-header">
+                        <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
+                    </div>
+                    <div class="card-img">
                         <img class="img-fluid" src="./img/sample-2.jpg" alt="">
                     </div>
                     <div class="card-body">
-                        <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
-                        <p>Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                        <p class="card-text">Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col card-library-tag"></div>
+                            <div class="col-auto card-library-action">
+                                <span class="dropdown link-above">
+                                    <button type="button" class="btn btn-flag" data-cfw="dropdown">
+                                        <span class="icon-ellipsis-vert" aria-hidden="true"></span>
+                                        <span class="sr-only">Publication settings</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropreverse">
+                                        <li><a href="#">Edit</a></li>
+                                        <li><a href="#">Assign</a></li>
+                                        <li><a href="#">Delete</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-img card-img-top">
+                    <div class="card-img">
                         <!-- <img class="img-fluid" src="./img/sample-3.jpg" alt=""> -->
                         <img class="img-fluid" src="./img/cover.svg" alt="">
                     </div>
                     <div class="card-body">
                         <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-img card-img-top">
+                    <div class="card-img">
                         <!--<img class="img-fluid" data-cfw-lazy-src="./img/crane.jpg" data-cfw="lazy" alt="">-->
                         <img class="img-fluid" src="./img/crane.jpg" alt="">
                     </div>
                     <div class="card-body">
                         <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-img card-img-top">
+                    <div class="card-img">
                         <img class="img-fluid" src="./img/sample-4.jpg" alt="">
                     </div>
                     <div class="card-body">
                         <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
-                        <p>Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                        <p class="card-text">Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
                     </div>
                 </div>
             </div>

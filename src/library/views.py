@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -85,7 +85,6 @@ class LibraryView(LoginRequiredMixin, ListView):
 class UploadView(LoginRequiredMixin, FormView):
     template_name = 'library/upload.html'
     form_class = UploadForm
-    success_url = '/library/metadata'
 
     def form_valid(self, form):
         upload = self.request.FILES['file']
@@ -108,14 +107,19 @@ class UploadView(LoginRequiredMixin, FormView):
             os.remove(tempfile)
 
     def get_success_url(self):
-        return self.success_url + '/%d' % (self.bv.book.pk)
+        return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
 
 
 class MetadataFormView(LoginRequiredMixin, UpdateView):
     model = Book
-    template_name = 'library/metadata.html'
     form_class = MetadataForm
     success_url = '/library/mine'
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        if self.object.owner != request.clusive_user:
+            return self.handle_no_permission()
+        return response
 
     def form_valid(self, form):
         cover = self.request.FILES.get('cover')
@@ -144,6 +148,14 @@ class MetadataFormView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
+class MetadataCreateFormView(MetadataFormView):
+    template_name = 'library/metadata_create.html'
+
+
+class MetadataEditFormView(MetadataFormView):
+    template_name = 'library/metadata_edit.html'
+
+
 class RemoveBookView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
@@ -153,6 +165,13 @@ class RemoveBookView(LoginRequiredMixin, View):
         book.delete()
         return redirect('library', view='mine')
 
+class RemoveBookConfirmView(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, pk=kwargs['pk'])
+        owner = book.owner == request.clusive_user
+        context = {'pub': book, 'owner': owner }
+        return render(request, 'library/partial/book_delete_confirm.html', context=context)
 
 class UpdateLastLocationView(LoginRequiredMixin, View):
 

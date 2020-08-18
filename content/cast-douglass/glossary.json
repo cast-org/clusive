@@ -1,0 +1,295 @@
+[
+    {
+        "headword": "situate",
+        "alternateForms": ["situates","situated","situating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To put in a particular place or position; place or locate." ,
+                "examples": [ "The house is situated on a busy road." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_situate1.jpg",
+                        "alt": "Photo of a house being built on a new street.",
+                        "description": "A house being built at the corner of a new street",
+                        "caption": "This new house will be situated at the corner of this new street.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/3e8956d5-6e69-43db-9485-f4d20face15d",
+                            "title": "",
+                            "author": "mmmarzio ",
+                            "author_url": "https://www.flickr.com/photos/17122949@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "facility",
+        "alternateForms": ["facilities"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A building made or used for a particular activity." ,
+                "examples": [ "The new kitchen will allow the group to make meals for hundreds of people each night." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_facility1.jpg",
+                        "alt": "Photo of people working in a large, modern kitchen.",
+                        "description": "People working in a modern kitchen equipped with pots, pans, large stoves. They have everything they need to prepare food.",
+                        "caption": "These workers have all they need in this facility to cook and serve meals to customers.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/a253631a-6f27-48b8-b890-cf6736ee77b8",
+                            "title": "Brown Sugar Kitchen",
+                            "author": "niallkennedy ",
+                            "author_url": "https://www.flickr.com/photos/35034351734@N01",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+        }
+        ]
+    },
+    {
+        "headword": "characterize",
+        "alternateForms": ["characterizes","characterized","characterizing"],
+        "meanings": [
+                    {
+                    "pos": "verb",
+                    "definition": "To describe the particular qualities of; give certain characteristics to." ,
+                    "examples": [ "The press characterized him as a criminal." ]
+                    }
+                    ]
+    },
+    {
+        "headword": "deprive",
+        "alternateForms": ["deprives","deprived","depriving"],
+        "meanings": [
+                {
+                "pos": "verb",
+                "definition": "To deny the possession or use of something." ,
+                "examples": [ "When her driving license was taken away, she was deprived the use of her car." ]
+            }
+            ]
+    },
+    {
+        "headword": "literally",
+        "alternateForms": [""],
+        "meanings": [
+                    {
+                "pos": "adverb",
+                "definition": "Actually." ,
+                "examples": [ "By blow up, do you mean literally or figuratively?" ]
+            }
+            ]
+    },
+    {
+        "headword": "profane",
+        "alternateForms": [""],
+        "meanings": [
+                    {
+                "pos": "adjective",
+                "definition": "Vulgar or obscene." ,
+                "examples": [ "Profane language is one way a movie can get a mature rating." ]
+            }
+            ]
+    },
+    {
+        "headword": "utter",
+        "alternateForms": [""],
+        "meanings": [
+                    {
+                "pos": "adjective",
+                "definition": "Complete or total; absolute." ,
+                "examples": [ "He was in utter dismay when his team lost its final game." ]
+            }
+            ]
+    },
+    {
+        "headword": "considerable",
+        "alternateForms": [""],
+        "meanings": [
+                {
+                "pos": "adjective",
+                "definition": "Large in size or amount." ,
+                "examples": [ "I walked 4 miles, a considerable distance!" ]
+            }
+            ]
+    },
+    {
+        "headword": "hinder",
+        "alternateForms": ["hinder","hindereds","hindering"],
+        "meanings": [
+                {
+                "pos": "verb",
+                "definition": "To hold back or stop the progress of." ,
+                "examples": [ "Heavy chains hindered the elephant's movements." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_hinder1.jpg",
+                        "alt": "Photo of two elephants with chains on their ankles.",
+                        "description": "Two elephants standing. Each elephant has a chain around one front foot, and one rear foot. The chains prevent the elephants from moving.",
+                        "caption": "These elephants are prevented from moving by the heavy chains tied around their ankles.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/521b2ac1-7224-40a6-9978-70a569721710",
+                            "title": "Pair o' Elephants",
+                            "author": "macloo",
+                            "author_url": "https://www.flickr.com/photos/21421696@N00",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+            ]
+    },
+    {
+        "headword": "affect",
+        "alternateForms": ["affects","affected","affecting"],
+        "meanings": [
+                {
+                "pos": "verb",
+                "definition": "To cause a change in; influence." ,
+                "examples": [ "When the sun came out, it affected my plan to stay inside and finish my book." ]
+            }
+            ]
+    },
+    {
+        "headword": "cowskin",
+        "alternateForms": ["cowskins"],
+        "meanings": [
+                {
+                "pos": "noun",
+                "definition": "[historical definition] A heavy flexible whip braided from leather made from the hide of a cow." ,
+                "examples": [ "He used the cowskin to punish whatever person or animal displeased him." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_cowskin1.jpg",
+                        "alt": "Photo of a person holding a whip",
+                        "description": "A hand, holding a whip and swinging it forward.",
+                        "caption": "Each small leather strip separates as it is swung, and causes pain and damage to whatever it hits.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/85b5bb0d-20c3-4d78-b406-6b9df1f22ed8",
+                            "title": "flogged",
+                            "author": "Crimsonically Yours ",
+                            "author_url": "https://www.flickr.com/photos/61445417@N00",
+                            "license": "CC by-nc-sa 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+            ]
+    },
+    {
+        "headword": "overseer",
+        "alternateForms": ["overseers"],
+        "meanings": [
+                {
+                "pos": "noun",
+                "definition": "One who oversees or supervises. (historical) The manager of a plantation of slaves." ,
+                "examples": [ "The overseer was responsible for making sure each person did the required amount of work for the day." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_overseer1.jpg",
+                        "alt": "Drawing of an overseer chasing people.",
+                        "description": "The overseer, the light-skinned man holding a whip, chases a group of people down stairs. Some of the people are running and some have fallen down.",
+                        "caption": "The overseer holds a whip as he chases the enslaved people.",
+                        "source": {
+                            "url": "http://hdl.loc.gov/loc.pnp/cph.3b35698",
+                            "title": "The 'contraband' schottische",
+                            "author": "Published by Lee & Walker, 1861.",
+                            "author_url": "",
+                            "license": "Public domain.",
+                            "license_url": ""
+                        }
+                    }
+                ]
+        }
+        ]
+    },
+    {
+        "headword": "flesh-monger",
+        "alternateForms": ["flesh-mongers", "fleshmonger", "fleshmongers"],
+        "meanings": [
+                {
+                "pos": "noun",
+                "definition": "One who deals in human 'flesh', a slave-trader. " ,
+                "examples": [ "The human flesh-mongers earned their living by trading on the misery and greed of others." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_fleshmonger1.jpg",
+                        "alt": "Drawing of a dark-skinned man standing with a light-skinned man touching his head.",
+                        "description": "A dark-skinned man stands in the center of the drawing. One light-skinned man touches his head. Another light-skinned man on the left side of the drawing sits on a crate and leans back, watching the men in the center. Another group of dark and light men are on the right side of the drawing. The drawing is captioned at the bottom, 'Inspection and Sale of a Negro.' ",
+                        "caption": "People were captured and sold into slavery.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/6e69a986-fb18-4b9b-9858-cbc2c6babd01",
+                            "title": "The inspection and sale of a slave",
+                            "author": "paukrus ",
+                            "author_url": "https://www.flickr.com/photos/26244825@N05",
+                            "license": " CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+        }
+        ]
+    },
+    {
+        "headword": "fieldhand",
+        "alternateForms": ["field hands", "field hand", "fieldhands"],
+        "meanings": [
+               {
+                "pos": "noun",
+                "definition": "A person employed as a farm laborer." ,
+                "examples": [ "Field hands are often itinerant laborers, people who move from one farm to another to pick crops." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_fieldhand1.jpg",
+                        "alt": "Photo of people working in a field.",
+                        "description": "People working in a field picking crops.",
+                        "caption": "Four field hands harvest crops in a field.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/94cc2fe2-51a5-4e91-af81-8f09f0282b22",
+                            "title": "Tedious farming",
+                            "author": "aakash_gautam ",
+                            "author_url": "https://www.flickr.com/photos/62344190@N04",
+                            "license": "CC BY-NC 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+        }
+        ]
+    },
+    {
+        "headword": "impertinent",
+        "alternateForms": [""],
+        "meanings": [
+               {
+                "pos": "adjective",
+                "definition": "Not showing proper respect; rude." ,
+                "examples": [ "It is impertinent to interrupt someone while they are speaking." ],
+                "images": [
+                    {
+                        "src": "glossimages/1_impertinent1.jpg",
+                        "alt": "Photo of a man sticking his tongue out at the camera.",
+                        "description": "Two people look at the camera. One person is sticking his tongue out.",
+                        "caption": "While this picture may be funny, impertinence was no laughing matter for an enslaved person; being rude could result in punishment, including whipping.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/e749aca7-b29a-417c-9f65-a464870af853",
+                            "title": "In Al's Office",
+                            "author": "Vicious Bits ",
+                            "author_url": "https://www.flickr.com/photos/42798669@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

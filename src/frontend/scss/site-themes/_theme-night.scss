@@ -5,8 +5,8 @@ $theme-name-readium:                    "night";
 $body-bg:                               #121212;
 $body-color:                            #fbfbfb;
 
-$link-color:                            #eceff5;
-$link-hover-color:                      #fff;
+$link-color:                            #d3cfc9; //#eceff5;
+$link-hover-color:                      #eceff5; //#fff;
 
 $focus-ring-color:                      #a0abfd;
 
@@ -27,6 +27,9 @@ $library-header-outer-bg:               $library-bg;
 $library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
 $library-logo-color:                    #eceff5;
 $library-logo-icon-color:               #d7ddee;
+
+$library-filter-bg:                     rgba(#636b82, .3);
+$library-filter-color:                  $body-color;
 
 $home-bg:                               #353841;
 $home-header-outer-bg:                  $home-bg;
@@ -67,6 +70,7 @@ $card-color:                            inherit;
 $card-border-color:                     #272727;
 $card-img-bg:                           rgba(#636b82, .2);
 $card-library-box-shadow:               -.125rem -.5rem 0 .125rem #636b82, -.125rem -.125rem 0 .125rem #636b82;
+$card-library-author-color:             #eceff5;
 $card-login-bg:                         rgba(#636b82, .3);
 $card-login-color:                      $body-color;
 
@@ -149,6 +153,28 @@ $btn-option-active-border-color:        transparent;
 $btn-option-active-box-shadow-color:    #fbfbfb;
 $btn-option-active-box-shadow-opacity:  .9;
 $btn-option-active-hover-border-color:  #636b82;
+
+$btn-flag-focus-ring:                   #a0abfd;
+$btn-flag-bg:                           transparent;
+$btn-flag-color:                        #eceff5;
+$btn-flag-border-color:                 transparent;
+$btn-flag-hover-bg:                     transparent;
+$btn-flag-hover-color:                  palette($btn-flag-color, 450);
+$btn-flag-hover-border-color:           transparent;
+$btn-flag-active-bg:                    transparent;
+$btn-flag-active-color:                 $btn-flag-color;
+$btn-flag-active-border-color:          transparent;
+
+$btn-tag-focus-ring:                    #a0abfd;
+$btn-tag-bg:                            rgba(#f0f0f0, .2);
+$btn-tag-color:                         #eceff5;
+$btn-tag-border-color:                  transparent;
+$btn-tag-hover-bg:                      rgba(#f0f0f0, .1675);
+$btn-tag-hover-color:                   palette($btn-tag-color, 450);
+$btn-tag-hover-border-color:            transparent;
+$btn-tag-active-bg:                     rgba(#f0f0f0, .25);
+$btn-tag-active-color:                  $btn-tag-color;
+$btn-tag-active-border-color:           transparent;
 
 // Error
 $error-bg:                              #d42314;
