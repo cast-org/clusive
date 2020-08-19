@@ -171,7 +171,7 @@ class RemoveBookConfirmView(LoginRequiredMixin, View):
         book = get_object_or_404(Book, pk=kwargs['pk'])
         owner = book.owner == request.clusive_user
         context = {'pub': book, 'owner': owner }
-        return render(request, 'library/partial/book_delete_confirm.html', context=context)
+        return render(request, 'library/partial/modal_book_delete_confirm.html', context=context)
 
 class UpdateLastLocationView(LoginRequiredMixin, View):
 
