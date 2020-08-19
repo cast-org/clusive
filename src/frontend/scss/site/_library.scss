@@ -95,10 +95,6 @@
 }
 
 .library-grid {
-    // Set a z-index to keep this below the header, works as long as no acestors
-    // have any z-index asjustments (up to the sibling of the header)
-    position: relative;
-    z-index: 0;
     display: flex;
     flex-flow: row wrap;
     align-items: stretch;
@@ -124,21 +120,64 @@
     }
 }
 
-.card-library {
-    box-shadow: var(--CT_cardLibraryBoxShadow);
+.library-grid-options {
+    @include media-breakpoint-down(sm) {
+        display: none;
+    }
+}
 
-    .link-stretch {
-        color: inherit;
-        text-decoration: none;
+.library-list {
+    padding-top: .75rem;
 
-        &:hover,
-        &:focus {
-            color: inherit;
-            text-decoration: underline;
+    > .card {
+        margin-bottom: 2rem;
+    }
+
+    .card-img {
+        img {
+            max-height: 45vw;
+
+            @include media-breakpoint-up(sm) {
+                max-height: 10vw;
+            }
+
+            @include media-breakpoint-up(md) {
+                max-height: 13vw;
+            }
+
+            @include media-breakpoint-up(xl) {
+                max-height: 10rem;
+            }
+        }
+    }
+
+    .card-body {
+        padding-top: 0;
+    }
+
+    .card-toggle {
+        @include media-breakpoint-up(md) {
+            display: none;
+        }
+    }
+
+    .card-toggle-btn.open {
+        [class^="icon-"],
+        [class*=" icon-"] {
+            transform: rotate(90deg) translateY(5%);
+            transform-origin: center center;
+        }
+    }
+
+    .card-collapse {
+        @include media-breakpoint-up(md) {
+            display: block;
         }
     }
 }
 
-.card-library-action {
-    white-space: nowrap;
+.library-list-options {
+    @include media-breakpoint-up(md) {
+        display: none;
+    }
 }

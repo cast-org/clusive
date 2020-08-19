@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck */
+/* global vocabCheck, glossaryBeenDragged */
 
 // Glossary-related functionality
 
