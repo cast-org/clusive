@@ -21,7 +21,7 @@ second_pref_timestamp_str = second_pref_timestamp.isoformat()
 third_pref_timestamp_str = third_pref_timestamp.isoformat()
 
 
-preference_change_message_queue = '{"timestamp":"%s","messages":[{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"comic","textFont":"comic","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_contrast":"sepia","theme":"sepia","fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
+preference_change_message_queue = '{"username": "user1", "timestamp":"%s","messages":[{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"comic","textFont":"comic","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_contrast":"sepia","theme":"sepia","fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
 
 class MessageQueueTestCase(TestCase):
 
@@ -35,7 +35,7 @@ class MessageQueueTestCase(TestCase):
         login = self.client.login(username='user1', password='password1')
 
         response = self.client.post('/messagequeue/', preference_change_message_queue, content_type='application/json')
-        self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')
+        self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')    
 
     def test_time_adjustment(self):
         queue_timestamp = now_str

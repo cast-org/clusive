@@ -24,6 +24,7 @@
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue
     clusive.djangoMessageQueue.flushQueueImpl = function (that, flushPromise) {
+        that.sendingQueue.username = DJANGO_USERNAME;
         $.ajax(that.options.config.target.url, {
             method: that.options.config.target.method,
             headers: {
