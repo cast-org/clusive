@@ -1,11 +1,12 @@
-html {
-    scroll-behavior: smooth;
-}
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: inherit;
-    }
-}
+// Browser-based scroll causing extra page movement - disable for now
+// html {
+//     scroll-behavior: smooth;
+// }
+// @media (prefers-reduced-motion: reduce) {
+//     html {
+//         scroll-behavior: inherit;
+//     }
+// }
 
 // stylelint-disable declaration-no-important, selector-max-id
 #ff-default,
