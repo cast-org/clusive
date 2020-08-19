@@ -16,12 +16,19 @@
 <main id="content" tabindex="-1">
     <h1>Library</h1>
 
-    <div class="row mb-1">
+    <div class="row">
         <div class="col">
-            {% include "shared/partial/library_view_selector.html" %}
+            {% include "library/partial/library_view_selector.html" %}
+
+            {% comment "FIXME: Update placeholder user preference check" %}{% endcomment %}
+            {% if clusive_user.library.view == "list" %}
+            {% include "library/partial/library_list_options.html" %}
+            {% else %}
+            {% include "library/partial/library_grid_options.html" %}
+            {% endif %}
         </div>
         {% if current_view == 'mine' %}
-        <div class="col text-end">
+        <div class="col-md-auto text-md-end mb-1 mb-md-0">
             <a href="{% url 'upload' %}" class="btn btn-primary">+ Add content</a>
         </div>
         {% endif %}
