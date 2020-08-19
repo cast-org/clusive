@@ -93,7 +93,11 @@ class LibraryViews:
 
     @staticmethod
     def display_name_of(view):
-        return next(x[1] for x in LibraryViews.CHOICES if x[0] == view)
+        try:
+            return next(x[1] for x in LibraryViews.CHOICES if x[0] == view)
+        except StopIteration:
+            logger.warning('Found no name for library view ' + view)
+            return None
 
 
 class ClusiveUser(models.Model):
