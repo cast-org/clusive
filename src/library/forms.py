@@ -3,7 +3,7 @@ import logging
 from django import forms
 
 from library.models import Book
-from roster.models import Period
+from roster.models import Period, ClusiveUser
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +36,9 @@ class ShareForm(forms.Form):
         queryset=Period.objects.all())
 
     def __init__(self, *args, **kwargs):
+        clusive_user : ClusiveUser
+        clusive_user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
+        self.fields['periods'].queryset = clusive_user.periods
 
-    
+

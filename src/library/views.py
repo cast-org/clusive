@@ -179,7 +179,7 @@ class ShareDialogView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, pk=kwargs['pk'])
-        form = ShareForm()
+        form = ShareForm(user=request.clusive_user)
         context = {'book': book, 'form': form }
         return render(request, 'library/partial/book_share.html', context=context)
 
