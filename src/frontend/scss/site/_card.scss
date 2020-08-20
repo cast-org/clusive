@@ -71,6 +71,10 @@
 }
 
 .card-library-action {
+    // 1. Use flex to remove whitespace between items
+    // 2. Reduce right margin to pull buttons out more
+    display: flex; // 1
+    padding-right: .25rem; // 2
     white-space: nowrap;
 }
 
