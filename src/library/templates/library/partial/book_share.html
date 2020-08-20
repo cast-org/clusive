@@ -1,0 +1,29 @@
+{% load static figuration %}
+<div class="modal-header">
+    <h2  id="modalConfirmTitle" class="modal-title">Select classes or groups to share</h2>
+    <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+        <span class="icon-cancel-circled2" aria-hidden="true"></span>
+    </button>
+</div>
+<form class="form-inline">
+<div class="modal-body">
+    <p><strong>Add or remove this content from student library pages using the checkboxes below.</strong></p>
+    <p>
+        <img style="max-height:60px; max-width:60px;" src="{% get_media_prefix %}{{book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+        {{ book.title }}
+    </p>
+
+    <ul class="list">
+        {% for checkbox in form.periods %}
+        <li>
+            {{ checkbox.tag | formcontrol }}
+            <label for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn btn-secondary" onclick="">Save</a>
+    <button type="button" class="btn btn-link" data-cfw-dismiss="modal">Cancel</button>
+</div>
+</form>

@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, FormView, UpdateView
 
 from eventlog.signals import annotation_action, page_viewed
-from library.forms import UploadForm, MetadataForm
+from library.forms import UploadForm, MetadataForm, ShareForm
 from library.models import Paradata, Book, Annotation, BookVersion
 from library.parsing import unpack_epub_file
 from roster.models import ClusiveUser, Period, LibraryViews
@@ -165,6 +165,7 @@ class RemoveBookView(LoginRequiredMixin, View):
         book.delete()
         return redirect('library', view='mine')
 
+
 class RemoveBookConfirmView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
@@ -172,6 +173,16 @@ class RemoveBookConfirmView(LoginRequiredMixin, View):
         owner = book.owner == request.clusive_user
         context = {'pub': book, 'owner': owner }
         return render(request, 'library/partial/book_delete_confirm.html', context=context)
+
+
+class ShareDialogView(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, pk=kwargs['pk'])
+        form = ShareForm()
+        context = {'book': book, 'form': form }
+        return render(request, 'library/partial/book_share.html', context=context)
+
 
 class UpdateLastLocationView(LoginRequiredMixin, View):
 

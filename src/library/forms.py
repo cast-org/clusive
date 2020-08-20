@@ -3,6 +3,7 @@ import logging
 from django import forms
 
 from library.models import Book
+from roster.models import Period
 
 logger = logging.getLogger(__name__)
 
@@ -27,3 +28,14 @@ class MetadataForm(forms.ModelForm):
             'author': forms.TextInput(attrs={'placeholder': 'Author of the content'}),
             'description': forms.Textarea(attrs={'placeholder': 'Provide a brief description to show on the Library page.'}),
         }
+
+
+class ShareForm(forms.Form):
+    periods = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+        queryset=Period.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    

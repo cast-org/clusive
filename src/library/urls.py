@@ -21,6 +21,8 @@ urlpatterns = [
          name='remove'),
     path('remove/confirm/<int:pk>', views.RemoveBookConfirmView.as_view(),
         name='remove_confirm'),
+    path('share/<int:pk>', views.ShareDialogView.as_view(),
+         name='share'),
     path('<str:view>/<int:period_id>', views.LibraryView.as_view(),
          name='library'),
     path('<str:view>', views.LibraryView.as_view(),
