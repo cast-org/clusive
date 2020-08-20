@@ -156,6 +156,7 @@
     }
 
     .card-toggle {
+        padding-right: .25rem;
         @include media-breakpoint-up(md) {
             display: none;
         }
