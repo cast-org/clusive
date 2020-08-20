@@ -121,7 +121,7 @@
 }
 
 .library-grid-options {
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(xs) {
         display: none;
     }
 }
