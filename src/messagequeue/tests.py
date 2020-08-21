@@ -23,6 +23,8 @@ third_pref_timestamp_str = third_pref_timestamp.isoformat()
 
 preference_change_message_queue = '{"timestamp":"%s","messages":[{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"comic","textFont":"comic","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"PC","preferences":{"fluid_prefs_contrast":"sepia","theme":"sepia","fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
 
+invalid_type_message_queue = '{"timestamp":"%s","messages":[{"content":{"type":"AA","preferences":{"fluid_prefs_textFont":"comic","textFont":"comic","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"AA","preferences":{"fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"},{"content":{"type":"AA","preferences":{"fluid_prefs_contrast":"sepia","theme":"sepia","fluid_prefs_textFont":"times","textFont":"times","fluid_prefs_textSize":0.9,"textSize":0.9}},"timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
+
 class MessageQueueTestCase(TestCase):
 
     # Load the preference sets 
@@ -30,6 +32,11 @@ class MessageQueueTestCase(TestCase):
 
     def setUp(self):
         set_up_test_users()
+
+    def test_catch_invalid_message_type(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.post('/messagequeue/', preference_change_message_queue, content_type='application/json')
+        self.assertRaises(AttributeError, msg="Invalid message type did not raise expected AttributeError")
 
     def test_send_message(self):                            
         login = self.client.login(username='user1', password='password1')

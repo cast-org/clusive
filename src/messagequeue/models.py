@@ -14,10 +14,9 @@ class Message:
         self.type = type
         self.timestamp = timestamp 
         self.content = content
-        self.request = request
-        self.send_message_signal()
+        self.request = request        
 
-    def send_message_signal(self):
+    def send_signal(self):
         if(self.type == Message.AllowedTypes.PREF_CHANGE):
             self.send_client_side_prefs_change()
 

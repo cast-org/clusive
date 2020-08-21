@@ -28,9 +28,15 @@ def process_messages(queue_timestamp, messages, user, request):
         message_content = message["content"]
         
         message_type = message["content"]["type"]
+        message = None
+        
         if(message_type == Message.AllowedTypes.PREF_CHANGE):
             logger.debug("Found a preference change message: %s" % message)                        
             message = Message(message_type, message_timestamp, message_content, request)            
+        try:            
+            message.send_signal()            
+        except AttributeError:
+            logger.debug("Message type %s is not a valid type" % message_type)
 
 def adjust_message_timestamp(timestamp, delta):
     message_time = dateutil_parse(timestamp)
