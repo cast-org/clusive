@@ -34,7 +34,7 @@
             {% if request.clusive_user.can_set_password %}
             <li><a href="{% url 'password_change' %}">Change password</a></li>
             {% endif %}
-            <li><a href="{% url 'logout' %}">Log out</a></li>
+            <li><a id="logoutLink" href="{% url 'logout' %}">Log out</a></li>
         </ul>
     </li>
     {% else %}
@@ -46,3 +46,25 @@
     </li>
     {% endif %}
 </ul>
+
+<script>
+
+function flushSettingsStoreMessageQueue () {
+    clusivePrefs.store.settingsStore.messageQueue.flush();
+}
+
+$("#logoutLink").mouseenter(
+    function () {   
+        console.debug("Mouse entered logout link, flushing message queue.");
+        flushSettingsStoreMessageQueue();        
+    }
+);
+
+$("#logoutLink").focus(
+    function () {      
+        console.debug("Keyboard focus entered logout link, flushing message queue.");  
+        flushSettingsStoreMessageQueue();        
+    }
+);
+
+</script>
