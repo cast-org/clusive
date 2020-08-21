@@ -15,6 +15,9 @@ from roster import csvparser
 from roster.csvparser import parse_file
 from roster.models import ClusiveUser, Site, Period, PreferenceSet
 
+from django.dispatch import receiver
+from messagequeue.models import Message, client_side_prefs_change
+
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -65,7 +68,6 @@ class PreferenceSetView(View):
         # Return the newly-established preferences
         return JsonResponse(user.get_preferences_dict())
 
-
 # Set user preferences from a dictionary
 def set_user_preferences(user, new_prefs, request):
     """Sets User's preferences to match the given dictionary of preference values.
@@ -75,13 +77,21 @@ def set_user_preferences(user, new_prefs, request):
     prefs_to_use.update(new_prefs)
     for pref_key in prefs_to_use:
         old_val = old_prefs.get(pref_key)
-        if old_val != prefs_to_use[pref_key]:
-            pref = user.set_preference(pref_key, prefs_to_use[pref_key])
+        if old_val != prefs_to_use[pref_key]:            
+            set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], request)
             # logger.debug("Pref %s changed %s (%s) -> %s (%s)", pref_key,
             #              old_val, type(old_val),
             #              pref.typed_value, type(pref.typed_value))
-            preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=pref)
+            
+def set_user_preference_and_log_event(user, pref_key, pref_value, request):
+    pref = user.set_preference(pref_key, pref_value)
+    preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=pref)
 
+@receiver(client_side_prefs_change, sender=Message)
+def set_preferences_from_message(sender, timestamp, content, request, **kwargs):
+    logger.info("client_side_prefs_change message received")
+    user = request.clusive_user
+    set_user_preferences(user, content["preferences"], request)
 
 @staff_member_required
 def upload_csv(request):
