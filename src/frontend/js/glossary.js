@@ -4,43 +4,20 @@
 // Glossary-related functionality
 
 var glossaryCurrentWord = null;
+var glossaryBeenDragged = false;
 
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
 function glossaryPop_focus($elm) {
-    $('#glossaryButton')
+    $('#lookupIcon')
         .off('afterHide.cfw.popover')
         .one('afterHide.cfw.popover', function() {
-            if ($elm.get(0) !== $('#glossaryButton').get(0)) {
+            if ($elm.get(0) !== $('#lookupIcon').get(0)) {
+                console.debug('Returning focus to ', $elm.get(0))
                 $elm.trigger('focus');
             }
         });
     $('#glossaryPop').trigger('focus');
-}
-
-function find_selected_word() {
-    // Look for selected text, first in the reader iframe, then in the top-level frame.
-    var sel = null;
-    var word = null;
-    var reader = $('#D2Reader-Container iframe');
-    if (reader.length) {
-        sel = reader.get(0).contentDocument.getSelection();
-    }
-    if (sel === null || !sel.rangeCount) {
-        sel = window.getSelection();
-    }
-    if (sel !== null && sel.rangeCount) {
-        var text = sel.toString();
-        var match = text.match('\\w+');
-        if (match) {
-            word = match[0];
-        } else {
-            console.info('Did not find any word in selection: %s', text);
-        }
-    } else {
-        console.info('No text selection found');
-    }
-    return word;
 }
 
 function load_definition(cued, word) {
@@ -133,7 +110,8 @@ window.wordBank.wordClicked = function(elt) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
-    $('#glossaryButton').CFW_Popover('show');
+    $('#lookupIcon').CFW_Popover('show');
+    console.debug('Setting focus reminder to ', $(elt));
     glossaryPop_focus($(elt));
 };
 
@@ -222,10 +200,18 @@ vocabCheck.done = function() {
 // Set up listener functions after page is loaded
 
 $(function() {
-    $('#glossaryButton').CFW_Popover({
+    $('#lookupIcon').CFW_Popover({
         target: '#glossaryPop',
         trigger: 'manual',
-        placement: 'reverse',
+        // eslint-disable-next-line no-unused-vars
+        placement: function(tip, trigger) {
+            // Position relative to 'settings' icon.
+            var offset = $('.btn-setting').offset();
+            console.debug('Position of settings icon: ', offset);
+            offset.left -= $(tip).width();
+            console.debug('Positioning glossary panel at ', offset);
+            return offset;
+        },
         drag: true,
         popperConfig: {
             positionFixed: true,
@@ -238,18 +224,6 @@ $(function() {
                     gpuAcceleration: false
                 }
             }
-        }
-    });
-
-    // When lookup button clicked, show definition of selected word
-    $('#glossaryButton').on('click', function(e) {
-        var selWord = find_selected_word();
-        if ($('#glossaryPop').is(':visible') && selWord === null) {
-            $(this).CFW_Popover('hide');
-        } else {
-            load_definition(0, selWord);
-            $(this).CFW_Popover('show');
-            glossaryPop_focus($(e.currentTarget));
         }
     });
 

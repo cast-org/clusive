@@ -104,8 +104,8 @@ var manifest_path = "{{ manifest_path }}";
                 callback: function (selection) {
                     console.debug('looking up: ', selection);
                     window.parent.load_definition(0, selection);
-                    window.parent.$('#glossaryButton').CFW_Popover('show');
-                    glossaryPop_focus($('#lookupIcon'));
+                    window.parent.$('#lookupIcon').CFW_Popover('show');
+                    window.parent.glossaryPop_focus($('#lookupIcon'));
                 }
             }
         ];

@@ -42,26 +42,3 @@
         </div>
     </div>
 </div>
-<script>
-var glossaryBeenDragged = false;
-
-$('#glossaryButton').CFW_Popover({
-    target: '#glossaryPop',
-    trigger: 'manual',
-    placement: 'reverse',
-    viewport: 'viewport',
-    drag: true,
-    popperConfig: {
-        positionFixed: true,
-        eventsEnabled: false
-    }
-});
-
-$('#glossaryButton')
-    .on('afterHide.cfw.popover', function() {
-        glossaryBeenDragged = false;
-    })
-    .on('dragStart.cfw.popover', function() {
-        glossaryBeenDragged = true;
-    });
-</script>
