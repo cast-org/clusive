@@ -141,11 +141,18 @@ class ClusiveUser(models.Model):
 
     @property
     def can_set_password(self):
+        """True if this user can change their own password."""
         return self.role and self.role != Roles.GUEST
 
     @property
     def can_upload(self):
+        """True if this user can upload content."""
         return self.role and self.role != Roles.GUEST
+
+    @property
+    def can_manage_periods(self):
+        """True if this user can edit the users and content connected to Periods they are in."""
+        return self.role and (self.role == Roles.TEACHER or self.role == Roles.PARENT)
 
     def get_preference(self, pref):
         pref, created = Preference.objects.get_or_create(user=self, pref=pref)

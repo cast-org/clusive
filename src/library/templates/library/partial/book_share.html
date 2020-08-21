@@ -1,0 +1,37 @@
+{% load static figuration %}
+<div class="modal-header">
+    <div class="modal-header-block">
+        <h2 id="modalConfirmTitle" class="modal-title">Select classes or groups to share</h2>
+    </div>
+    <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+        <span class="icon-cancel-circled2" aria-hidden="true"></span>
+    </button>
+</div>
+<form method="post" action="{% url 'share' pk=book.pk %}" class="form-inline">{% csrf_token %}
+    <div class="modal-body">
+        <p><strong>Add or remove this content from student library pages using the checkboxes below.</strong></p>
+        <div class="media">
+            <div class="media-img">
+                <img src="{% get_media_prefix %}{{book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+            </div>
+            <div class="media-body">
+                <h3 class="h6">{{ book.title }}</h3>
+            </div>
+        </div>
+
+        <ul class="list list-ruled list-spaced-y">
+            {% for checkbox in form.periods %}
+            <li class="list-item">
+                <div class="form-check form-checkradio">
+                    {{ checkbox.tag | formcontrol }}
+                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <input type="submit" class="btn btn-secondary" value="Save"/>
+        <button type="button" class="btn btn-link" data-cfw-dismiss="modal">Cancel</button>
+    </div>
+</form>

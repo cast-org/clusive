@@ -216,6 +216,7 @@ $form-checkradio-radio-icon:            none;
 $form-checkradio-focus-border-color:    var(--CT_formCheckradioFocusBorderColor);
 $form-checkradio-focus-box-shadow:      0 0 0 .1875rem rgba(var(--CT_formCheckradioFocusBoxShadowRGB), var(--CT_formCheckradioFocusBoxShadowOpacity));
 $form-checkradio-checked-box-shadow:    .0625em .0625em 0 .03125em rgba(var(--CT_formCheckradioCheckedBoxShadowRGB), var(--CT_formCheckradioCheckedBoxShadowOpacity));
+$form-checkradio-checkbox-border-radius: .25rem;
 
 $form-range-track-height:               .375rem;
 $form-range-track-bg:                   var(--CT_formRangeTrackBg);

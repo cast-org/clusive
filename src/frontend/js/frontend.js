@@ -25,6 +25,33 @@ function confirmationPublicationDelete() {
     });
 }
 
+function confirmationSharing() {
+    'use strict';
+
+    $(document.body).on('click', '[data-clusive="confirmSharing"]', function(e) {
+        var $trigger = $(e.currentTarget);
+        var $modal = $('#modalConfirm');
+        var book = $trigger.data('clusive-book-id');
+
+        if ($trigger.data('cfw') !== 'modal') {
+            e.preventDefault();
+            $modal.CFW_Modal('unlink');
+
+            $.get('/library/share/' + book)
+                // eslint-disable-next-line no-unused-vars
+                .done(function(data, status) {
+                    $modal.find('.modal-content').html(data);
+                });
+
+            $trigger.CFW_Modal({
+                target: '#modalConfirm',
+                unlink: true
+            });
+            $trigger.CFW_Modal('show');
+        }
+    });
+}
+
 function imgCheckPortrait($img, useAlt) {
     'use strict';
 
@@ -130,6 +157,7 @@ $(window).ready(function() {
 
     formFileText();
     confirmationPublicationDelete();
+    confirmationSharing();
 
     var $imgs = $('.card-img img');
     for (var i = 0; i < $imgs.length; i++) {
