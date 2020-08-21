@@ -7,7 +7,7 @@
         <span class="icon-cancel-circled2" aria-hidden="true"></span>
     </button>
 </div>
-<form class="form-inline">
+<form method="post" action="{% url 'share' pk=book.pk %}" class="form-inline">{% csrf_token %}
     <div class="modal-body">
         <p><strong>Add or remove this content from student library pages using the checkboxes below.</strong></p>
         <div class="media">
@@ -31,7 +31,7 @@
         </ul>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn btn-secondary" onclick="">Save</a>
+        <input type="submit" class="btn btn-secondary" value="Save"/>
         <button type="button" class="btn btn-link" data-cfw-dismiss="modal">Cancel</button>
     </div>
 </form>

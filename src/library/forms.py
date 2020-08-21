@@ -33,12 +33,14 @@ class MetadataForm(forms.ModelForm):
 class ShareForm(forms.Form):
     periods = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(),
-        queryset=Period.objects.all())
+        queryset=Period.objects.all(),
+        required=False)
 
     def __init__(self, *args, **kwargs):
         clusive_user : ClusiveUser
         clusive_user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.fields['periods'].queryset = clusive_user.periods
+        periods = clusive_user.periods.all()
+        self.fields['periods'].queryset = periods
 
 
