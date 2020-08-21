@@ -9,10 +9,10 @@ var glossaryBeenDragged = false;
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
 function glossaryPop_focus($elm) {
-    $('#lookupIcon')
-        .off('afterHide.cfw.popover')
-        .one('afterHide.cfw.popover', function() {
-            if ($elm.get(0) !== $('#lookupIcon').get(0)) {
+    $('#glossaryLocator')
+        .off('afterHide.cfw.popover.refocus')
+        .one('afterHide.cfw.popover.refocus', function() {
+            if ($elm.get(0) !== $('#glossaryLocator').get(0)) {
                 console.debug('Returning focus to ', $elm.get(0))
                 $elm.trigger('focus');
             }
@@ -110,7 +110,7 @@ window.wordBank.wordClicked = function(elt) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
-    $('#lookupIcon').CFW_Popover('show');
+    $('#glossaryLocator').CFW_Popover('show');
     console.debug('Setting focus reminder to ', $(elt));
     glossaryPop_focus($(elt));
 };
@@ -200,18 +200,10 @@ vocabCheck.done = function() {
 // Set up listener functions after page is loaded
 
 $(function() {
-    $('#lookupIcon').CFW_Popover({
+    $('#glossaryLocator').CFW_Popover({
         target: '#glossaryPop',
         trigger: 'manual',
-        // eslint-disable-next-line no-unused-vars
-        placement: function(tip, trigger) {
-            // Position relative to 'settings' icon.
-            var offset = $('.btn-setting').offset();
-            console.debug('Position of settings icon: ', offset);
-            offset.left -= $(tip).width();
-            console.debug('Positioning glossary panel at ', offset);
-            return offset;
-        },
+        placement: 'reverse',
         drag: true,
         popperConfig: {
             positionFixed: true,
@@ -225,6 +217,12 @@ $(function() {
                 }
             }
         }
+    })
+    .on('afterHide.cfw.popover', function() {
+        glossaryBeenDragged = false;
+    })
+    .on('dragStart.cfw.popover', function() {
+        glossaryBeenDragged = true;
     });
 
     // When ranking in the glossary popup is selected, notify server

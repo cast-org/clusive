@@ -12,6 +12,9 @@
 {% endblock %}
 
 {% block sidebar_end %}
+<!-- Item needed to anchor the definition popover -->
+<button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
+
 {% include "shared/partial/sidebar_end.html" with lookup=True %}
 {% endblock %}
 
@@ -23,8 +26,6 @@
 <main id="content" tabindex="-1">
 
     <h1>Word bank</h1>
-    <!-- icon needed to anchor the definition popover -->
-    <a href="#" id="lookupIcon" style="display: none;">Lookup</a>
 
     <div class="wordbank-scroll">
         <div class="wordbank">
