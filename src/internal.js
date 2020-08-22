@@ -56,7 +56,6 @@ function openGlossaryForCue(elt) {
     let word = $(elt).data('gloss');
     window.parent.load_definition(1, word);
     window.parent.$('#glossaryLocator').CFW_Popover('show');
-    console.debug('Focus reminder: ', $(elt));
     window.parent.glossaryPop_focus($(elt));
 }
 

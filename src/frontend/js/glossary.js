@@ -13,7 +13,6 @@ function glossaryPop_focus($elm) {
         .off('afterHide.cfw.popover.refocus')
         .one('afterHide.cfw.popover.refocus', function() {
             if ($elm.get(0) !== $('#glossaryLocator').get(0)) {
-                console.debug('Returning focus to ', $elm.get(0))
                 $elm.trigger('focus');
             }
         });
@@ -111,7 +110,6 @@ window.wordBank.wordClicked = function(elt) {
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
     $('#glossaryLocator').CFW_Popover('show');
-    console.debug('Setting focus reminder to ', $(elt));
     glossaryPop_focus($(elt));
 };
 
@@ -218,12 +216,12 @@ $(function() {
             }
         }
     })
-    .on('afterHide.cfw.popover', function() {
-        glossaryBeenDragged = false;
-    })
-    .on('dragStart.cfw.popover', function() {
-        glossaryBeenDragged = true;
-    });
+        .on('afterHide.cfw.popover', function() {
+            glossaryBeenDragged = false;
+        })
+        .on('dragStart.cfw.popover', function() {
+            glossaryBeenDragged = true;
+        });
 
     // When ranking in the glossary popup is selected, notify server
     $('#glossaryInput').on('change', 'input', function() {
