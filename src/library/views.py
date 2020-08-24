@@ -43,7 +43,7 @@ class LibraryView(LoginRequiredMixin, ListView):
             return Book.objects.filter(
                 Q(assignments__period__in=self.clusive_user.periods.all())
                 | Q(owner=None)
-                | Q(owner=self.clusive_user))
+                | Q(owner=self.clusive_user)).distinct()
         else:
             raise Http404('Unknown view type')
 
