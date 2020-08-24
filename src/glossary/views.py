@@ -21,17 +21,19 @@ def checklist(request, book_id):
         user = ClusiveUser.objects.get(user=request.user)
         versions = BookVersion.objects.filter(book__pk=book_id)
         to_find = 5
+        min_word_length = 4
         check_words = set()
 
         if len(versions) > 1:
             # Multiple versions, so we want to use our check words to determine which version to show.
             # Create two lists for each version above the simplest:
-            #   All "new" words in this version that are not yet rated
+            #   All "new" words in this version that are not yet rated and > 3 letters
             #   The subset of that list that are glossary words.
             for bv in versions:
                 if bv.sortOrder > 0:
+                    logger.debug("%s all new words: %s", bv, bv.new_word_list)
                     user_words = WordModel.objects.filter(user=user, word__in=bv.new_word_list)
-                    bv.potential_words = [w for w in bv.new_word_list if not any(wm.word==w and wm.rating!=None for wm in user_words)]
+                    bv.potential_words = [w for w in bv.new_word_list if len(w)>=min_word_length and not any(wm.word==w and wm.rating!=None for wm in user_words)]
                     logger.debug("%s potential: %s", bv, bv.potential_words)
                     bv.potential_gloss_words = [w for w in bv.potential_words if w in bv.glossary_word_list]
                     logger.debug("%s glossary:  %s", bv, bv.potential_gloss_words)
