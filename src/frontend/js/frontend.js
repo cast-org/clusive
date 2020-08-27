@@ -9,9 +9,9 @@ function libraryMasonryEnable() {
     var elem = document.querySelector('.library-grid');
     libraryMasonryApi = new Masonry(elem, {
         itemSelector: '.card-library',
-        // use element for option
         columnWidth: '.card-library',
-        percentPosition: true
+        percentPosition: true,
+        transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
     });
 
     var imgs = elem.querySelectorAll('img');

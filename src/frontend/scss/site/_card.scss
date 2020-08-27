@@ -80,7 +80,6 @@
 
 .card-author {
     @include font-size(.875rem);
-    font-weight: $font-weight-bold;
     color: var(--CT_cardLibraryAuthorColor);
 }
 

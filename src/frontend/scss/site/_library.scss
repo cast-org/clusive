@@ -133,7 +133,15 @@
         margin-bottom: 1.5rem;
     }
 
+    .card-col-img {
+        @include media-breakpoint-down(sm) {
+            display: none;
+        }
+    }
+
     .card-img {
+        flex: 1 0 auto;
+
         img {
             max-height: 45vw;
 
