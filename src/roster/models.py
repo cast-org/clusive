@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from pytz import country_timezones
 
@@ -141,11 +142,18 @@ class ClusiveUser(models.Model):
 
     @property
     def can_set_password(self):
+        """True if this user can change their own password."""
         return self.role and self.role != Roles.GUEST
 
     @property
     def can_upload(self):
+        """True if this user can upload content."""
         return self.role and self.role != Roles.GUEST
+
+    @property
+    def can_manage_periods(self):
+        """True if this user can edit the users and content connected to Periods they are in."""
+        return self.role and (self.role == Roles.TEACHER or self.role == Roles.PARENT)
 
     def get_preference(self, pref):
         pref, created = Preference.objects.get_or_create(user=self, pref=pref)
@@ -273,13 +281,11 @@ class ClusiveUser(models.Model):
 # This is the current recommended way to ensure additional code is run after 
 # the initial creation of an object; 'created' is True only on the save() from 
 # initial creation
+@receiver(post_save, sender=ClusiveUser)
 def set_default_preferences(sender, instance, created, **kwargs):    
     if(created):
         logger.info("New user created, setting preferences to 'default' set")
         instance.adopt_preferences_set('default')
-
-post_save.connect(set_default_preferences, sender=ClusiveUser)
-
 
 class Preference (models.Model):
     """Store a single user preference setting."""
@@ -317,7 +323,6 @@ class Preference (models.Model):
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
 
-
 class PreferenceSet(models.Model):
     """Store a set of preference keys and values as a JSON string"""
 
@@ -333,3 +338,4 @@ class PreferenceSet(models.Model):
 
     def __str__(self):
         return 'PreferenceSet:%s' % (self.name)
+

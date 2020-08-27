@@ -16,8 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, FormView, UpdateView
 
 from eventlog.signals import annotation_action, page_viewed
-from library.forms import UploadForm, MetadataForm
-from library.models import Paradata, Book, Annotation, BookVersion
+from library.forms import UploadForm, MetadataForm, ShareForm
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
 from library.parsing import unpack_epub_file
 from roster.models import ClusiveUser, Period, LibraryViews
 
@@ -43,7 +43,7 @@ class LibraryView(LoginRequiredMixin, ListView):
             return Book.objects.filter(
                 Q(assignments__period__in=self.clusive_user.periods.all())
                 | Q(owner=None)
-                | Q(owner=self.clusive_user))
+                | Q(owner=self.clusive_user)).distinct()
         else:
             raise Http404('Unknown view type')
 
@@ -165,6 +165,7 @@ class RemoveBookView(LoginRequiredMixin, View):
         book.delete()
         return redirect('library', view='mine')
 
+
 class RemoveBookConfirmView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
@@ -172,6 +173,72 @@ class RemoveBookConfirmView(LoginRequiredMixin, View):
         owner = book.owner == request.clusive_user
         context = {'pub': book, 'owner': owner }
         return render(request, 'library/partial/modal_book_delete_confirm.html', context=context)
+
+
+class ShareDialogView(LoginRequiredMixin, FormView):
+    form_class = ShareForm
+    template_name = 'library/partial/book_share.html'
+    success_url = '/'
+    clusive_user = None
+    book = None
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.clusive_user.can_manage_periods:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            self.handle_no_permission()
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.clusive_user
+        return kwargs
+
+    def get_initial(self):
+        return {'periods': self.get_currently_assigned_periods()}
+
+    def get_currently_assigned_periods(self):
+        periods = self.clusive_user.periods.all()
+        book_assignments = BookAssignment.objects.filter(book=self.book, period__in=periods)
+        return [c.period for c in book_assignments]
+
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.book = get_object_or_404(Book, pk=kwargs['pk'])
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.book = get_object_or_404(Book, pk=kwargs['pk'])
+        logger.debug('Posted with user=%s and book=%s', self.clusive_user, self.book)
+        return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['book'] = self.book
+        return data
+
+    def form_valid(self, form):
+        current_assignments = self.get_currently_assigned_periods()
+        desired_assignments = form.cleaned_data['periods']
+        logger.debug('Submitted: %s', desired_assignments)
+        for period in self.clusive_user.periods.all():
+            if period in desired_assignments:
+                if period not in current_assignments:
+                    new_assignment = BookAssignment(book=self.book, period=period)
+                    new_assignment.save()
+                    logger.debug('Added: %s', new_assignment)
+            else:
+                if period in current_assignments:
+                    old_assignment = BookAssignment.objects.get(book=self.book, period=period)
+                    logger.debug('Removed:  %s', old_assignment)
+                    old_assignment.delete()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Any combination of periods is reasonable, so there isn't much reason it should come back invalid.
+        logger.debug('Submitted form invalid: %s', form.errors)
+        return super().form_invalid(form)
+
 
 class UpdateLastLocationView(LoginRequiredMixin, View):
 

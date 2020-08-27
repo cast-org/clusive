@@ -12,6 +12,9 @@
 {% endblock %}
 
 {% block sidebar_end %}
+<!-- Item needed to anchor the definition popover -->
+<button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
+
 {% include "shared/partial/sidebar_end.html" with lookup=True %}
 {% endblock %}
 

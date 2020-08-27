@@ -4,43 +4,19 @@
 // Glossary-related functionality
 
 var glossaryCurrentWord = null;
+var glossaryBeenDragged = false;
 
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
 function glossaryPop_focus($elm) {
-    $('#glossaryButton')
-        .off('afterHide.cfw.popover')
-        .one('afterHide.cfw.popover', function() {
-            if ($elm.get(0) !== $('#glossaryButton').get(0)) {
+    $('#glossaryLocator')
+        .off('afterHide.cfw.popover.refocus')
+        .one('afterHide.cfw.popover.refocus', function() {
+            if ($elm.get(0) !== $('#glossaryLocator').get(0)) {
                 $elm.trigger('focus');
             }
         });
     $('#glossaryPop').trigger('focus');
-}
-
-function find_selected_word() {
-    // Look for selected text, first in the reader iframe, then in the top-level frame.
-    var sel = null;
-    var word = null;
-    var reader = $('#D2Reader-Container iframe');
-    if (reader.length) {
-        sel = reader.get(0).contentDocument.getSelection();
-    }
-    if (sel === null || !sel.rangeCount) {
-        sel = window.getSelection();
-    }
-    if (sel !== null && sel.rangeCount) {
-        var text = sel.toString();
-        var match = text.match('\\w+');
-        if (match) {
-            word = match[0];
-        } else {
-            console.info('Did not find any word in selection: %s', text);
-        }
-    } else {
-        console.info('No text selection found');
-    }
-    return word;
 }
 
 function load_definition(cued, word) {
@@ -133,7 +109,7 @@ window.wordBank.wordClicked = function(elt) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
-    $('#glossaryButton').CFW_Popover('show');
+    $('#glossaryLocator').CFW_Popover('show');
     glossaryPop_focus($(elt));
 };
 
@@ -222,7 +198,7 @@ vocabCheck.done = function() {
 // Set up listener functions after page is loaded
 
 $(function() {
-    $('#glossaryButton').CFW_Popover({
+    $('#glossaryLocator').CFW_Popover({
         target: '#glossaryPop',
         trigger: 'manual',
         placement: 'reverse',
@@ -239,19 +215,13 @@ $(function() {
                 }
             }
         }
-    });
-
-    // When lookup button clicked, show definition of selected word
-    $('#glossaryButton').on('click', function(e) {
-        var selWord = find_selected_word();
-        if ($('#glossaryPop').is(':visible') && selWord === null) {
-            $(this).CFW_Popover('hide');
-        } else {
-            load_definition(0, selWord);
-            $(this).CFW_Popover('show');
-            glossaryPop_focus($(e.currentTarget));
-        }
-    });
+    })
+        .on('afterHide.cfw.popover', function() {
+            glossaryBeenDragged = false;
+        })
+        .on('dragStart.cfw.popover', function() {
+            glossaryBeenDragged = true;
+        });
 
     // When ranking in the glossary popup is selected, notify server
     $('#glossaryInput').on('change', 'input', function() {

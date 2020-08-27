@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+    <script src="/target/shared/static/shared/js/lib/infusion/dist/infusion-all.js"></script>
+    <script src="../../js/clusive-message-queue.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup('bdd');
+      mocha.checkLeaks();
+    </script>
+
+<script>
+
+var assert = chai.assert;
+
+var testLocalStorageKey = "clusive.messageQueueTest.queue";
+
+describe('Basic Message Queue Functionality', function () {
+
+  fluid.defaults("clusive.testMessageQueue", {
+    gradeNames: ["clusive.messageQueue"],
+    invokers: {
+      flushQueueImpl: {
+        funcName: "clusive.testMessageQueue.testFlushQueueImplSuccess"
+      }
+    },
+    config: {
+      localStorageKey: testLocalStorageKey
+    }
+  });
+
+  clusive.testMessageQueue.testFlushQueueImplSuccess = function (that, flushPromise) {  
+    flushPromise.resolve({"success": 1});
+  }
+
+  clusive.testMessageQueue.testFlushQueueImplFailure = function (that, flushPromise) {  
+    flushPromise.reject({"failure": 0});
+  }
+
+  clusive.testMessageQueue.testFlushQueueImplRoundTripSuccess = function (that, flushPromise) {
+    setTimeout(function () {
+      flushPromise.resolve({"success": 1})
+    }, 500)
+  }
+
+  clusive.testMessageQueue.testFlushQueueImplRoundTripFailure = function (that, flushPromise) {
+      setTimeout(function () {
+        flushPromise.reject({"failure": 0})
+      }, 500)
+    }
+
+  afterEach(function () {
+    localStorage.removeItem(testLocalStorageKey);
+  })
+
+    it('should start with an empty array for the message queue', function () {
+      var mqEmptyArray = clusive.testMessageQueue();
+      assert.deepEqual(mqEmptyArray.getMessages(), []);
+      mqEmptyArray.destroy();
+    });
+
+    it('should add a message', function () {
+      var mqAdd = clusive.testMessageQueue();
+      mqAdd.add({"greeting": "Hello, world!"});
+      assert.strictEqual(mqAdd.getMessages().length, 1);
+      mqAdd.destroy();
+    });    
+
+    it('should wrap a message when it\'s added', function () {           
+      var mqWrap = clusive.testMessageQueue();
+      mqWrap.add({"greeting": "Hello, world, again!"});
+      var addedMessage = mqWrap.getMessages()[0];
+      assert.strictEqual(addedMessage.content.greeting, "Hello, world, again!");
+      var timestamp = addedMessage.timestamp;
+      var parsedTimestamp = Date.parse(timestamp);
+      assert(! isNaN(parsedTimestamp), "Generated timestamp parsed as NaN by Date.parse()");
+      mqWrap.destroy();
+    });    
+
+    it('should timestamp message when it\'s added', function () { 
+      var mqTimeStamp = clusive.testMessageQueue();          
+      mqTimeStamp.add({"greeting": "Hello, world, at this time!"});   
+      var addedMessage = mqTimeStamp.getMessages()[0];   
+      var timestamp = addedMessage.timestamp;
+      var parsedTimestamp = Date.parse(timestamp);
+      assert(! isNaN(parsedTimestamp), "Generated message timestamp parsed as NaN by Date.parse()");
+      mqTimeStamp.destroy();
+    });       
+
+    it('should fire the queueShouldFlush event on a recurring interval', function (done) {
+      var queueShouldFlushEventsFired = 0;
+      var mqShouldFlush = clusive.testMessageQueue({
+        config: {
+          flushInterval: 200
+        },
+        listeners: {
+          "queueShouldFlush.done": {
+            func: function () {
+              queueShouldFlushEventsFired++;
+              if(queueShouldFlushEventsFired === 5) {
+                mqShouldFlush.destroy();
+                done();
+              }
+            },
+            priority: "last"
+          }
+        }
+      });
+    });
+
+    it('should fire the queueFlushSuccess event on a successful queue flush attempt, and clear the queue', function (done) {
+      var mqFlushSuccess = clusive.testMessageQueue({
+        listeners: {
+          "queueFlushSuccess.done": {
+            func: function (value) {
+              assert.strictEqual(value.success, 1);
+              assert.deepEqual(mqFlushSuccess.getMessages(), []);
+              mqFlushSuccess.destroy();
+              done();
+            },
+            priority: "last"
+          }
+          
+        }
+      });
+      mqFlushSuccess.add({"greeting": "Hello, successful world!"});
+      mqFlushSuccess.flush();
+    });
+
+    it('should keep messages added to the queue during any round-trip interval when a queueFlushSuccess event is fired', function (done) {
+      var mqFlushSuccessRoundTrip = clusive.testMessageQueue({
+        invokers: {
+          flushQueueImpl: {
+            funcName: "clusive.testMessageQueue.testFlushQueueImplRoundTripSuccess"
+          }
+        },        
+        listeners: {
+          "queueFlushSuccess.done": {
+            func: function (value) {
+              assert.strictEqual(value.success, 1);
+              // queue length should be 1               
+              assert.strictEqual(mqFlushSuccessRoundTrip.getMessages().length, 1);
+              // message content should be from the message added after flush was called, 
+              // but before the round-trip finished and queueFlushSuccess fired
+              assert.strictEqual(mqFlushSuccessRoundTrip.getMessages()[0].content.greeting, "Hello, successful world - this message should stick around, since it was added after the flush!");
+              mqFlushSuccessRoundTrip.destroy();
+              done();
+            },
+            priority: "last"
+          }
+          
+        }
+      });
+      mqFlushSuccessRoundTrip.add({"greeting": "Hello, successful world - this message should be gone after the flush!"});
+      mqFlushSuccessRoundTrip.add({"greeting": "Hello, successful world - this message should also be gone after the flush!"});
+      mqFlushSuccessRoundTrip.flush();
+      mqFlushSuccessRoundTrip.add({"greeting": "Hello, successful world - this message should stick around, since it was added after the flush!"});
+    });
+
+  it('should timestamp the sendingQueue at the time of the sending attempt', function (done) {
+ var mqFlushTimeStamp = clusive.testMessageQueue({
+        invokers: {
+          flushQueueImpl: {
+            funcName: "clusive.testMessageQueue.testFlushQueueImplRoundTripSuccess"
+          }
+        },        
+        listeners: {
+          "queueFlushStarting.done": {
+            func: function () {
+              console.log("queueFlushStarting.done", mqFlushTimeStamp.sendingQueue)
+              var timestamp = mqFlushTimeStamp.sendingQueue.timestamp;
+              var parsedTimestamp = Date.parse(timestamp);
+              assert(! isNaN(parsedTimestamp), "Generated timestamp for sending queue parsed as NaN by Date.parse()");
+              mqFlushTimeStamp.destroy();
+              done();
+            }            
+          }          
+        }
+      });    
+      mqFlushTimeStamp.add({"greeting": "Hello, timestamped world!"});
+      mqFlushTimeStamp.flush();
+  })
+
+   it('should fire the queueFlushFailure event on a failed queue flush attempt, and leave the queue in place', function (done) {
+      var mqFlushFailure = clusive.testMessageQueue({
+        invokers: {
+          flushQueueImpl: {
+            funcName: "clusive.testMessageQueue.testFlushQueueImplFailure"
+          }
+        },
+        listeners: {
+          "queueFlushFailure.done": {
+            func: function (error) {
+              assert.strictEqual(error.failure, 0);              
+              assert.strictEqual(mqFlushFailure.getMessages().length, 1);
+              mqFlushFailure.destroy();
+              done();
+            },
+            priority: "last"
+          }
+        }
+      });
+
+      mqFlushFailure.add({"greeting": "Hello, failed world!"});
+      mqFlushFailure.flush();      
+    });    
+
+   it('it should keep messages added to the queue during any round trip interval when a queueFlushFailure event is called, along with any messages that failed to be flushed', function (done) {
+      var mqFlushFailureRoundTrip = clusive.testMessageQueue({
+        invokers: {
+          flushQueueImpl: {
+            funcName: "clusive.testMessageQueue.testFlushQueueImplRoundTripFailure"
+          }
+        },
+        listeners: {
+          "queueFlushFailure.done": {
+            func: function (error) {              
+              assert.strictEqual(error.failure, 0);                 
+              assert.strictEqual(mqFlushFailureRoundTrip.getMessages().length, 2);
+              mqFlushFailureRoundTrip.destroy();
+              done();
+            },
+            priority: "last"
+          }
+        }
+      });
+
+      mqFlushFailureRoundTrip.add({"greeting": "Hello, failed world - I won't get removed!"});
+      mqFlushFailureRoundTrip.flush();  
+      mqFlushFailureRoundTrip.add({"greeting": "Hello, failed world - I won't get removed, but was added after the flush was called!"});
+          
+    });     
+
+
+    it('should sync messages from localStorage when created', function(done) {
+      var message1 = clusive.messageQueue.wrapMessage({"greeting": "Hello, world, from syncing from local storage!"});
+      var message2 = clusive.messageQueue.wrapMessage({"greeting": "Hello, world, from syncing from local storage - again."});
+      var messages = [message1, message2];
+      localStorage.setItem(testLocalStorageKey, JSON.stringify(messages));
+      
+      var mqSyncFromLocalStorage = clusive.testMessageQueue({                 
+        listeners: {         
+          "onCreate.done": {
+            func: function (that) {
+              var messagesInLocalStorage = JSON.parse(localStorage.getItem(testLocalStorageKey));                                          
+              assert.deepEqual(that.getMessages(), messagesInLocalStorage);              
+              that.destroy();
+              done();
+            },
+            priority: "last"            
+          }
+          }        
+        }          
+      );        
+    })
+
+  it('should sync new messages to localStorage', function(done) {
+    var syncedToLocalStorageEvents = 0;
+    var mqSyncToLocalStorage = clusive.testMessageQueue({
+      listeners: {
+        "syncedToLocalStorage.done": {
+          func: function () {
+            var messagesInLocalStorage = JSON.parse(localStorage.getItem(testLocalStorageKey));                                          
+              assert.deepEqual(mqSyncToLocalStorage.getMessages(), messagesInLocalStorage);
+              syncedToLocalStorageEvents++;
+              if(syncedToLocalStorageEvents === 2) {                
+                mqSyncToLocalStorage.destroy();
+                done();
+              }
+          }
+        }
+        }                
+    })
+    mqSyncToLocalStorage.add({"greeting": "Hello, world, from syncing to local storage!"});
+    mqSyncToLocalStorage.add({"greeting": "Hello, world, again, from syncing to local storage!"});    
+
+  })
+
+  it('should share the message queue between different components using the localStorage', function() {
+    var mqShareViaLocalStorage1 = clusive.testMessageQueue();
+    
+    mqShareViaLocalStorage1.add({"greeting": "Hello, world, from mqShareViaLocalStorage1!"});
+
+    var mqShareViaLocalStorage2 = clusive.testMessageQueue();
+
+    mqShareViaLocalStorage2.add({"greeting": "Hello, world, from, mqShareViaLocalStorage2!"});
+
+    mqShareViaLocalStorage1.add({"greeting": "Hello, world, from mqShareViaLocalStorage1 - again."});
+
+    assert.deepEqual(mqShareViaLocalStorage1.getMessages(), mqShareViaLocalStorage2.getMessages())
+
+    mqShareViaLocalStorage2.add({"greeting": "Hello, world, from, mqShareViaLocalStorage2 - once again."});
+
+    assert.deepEqual(mqShareViaLocalStorage1.getMessages(), mqShareViaLocalStorage2.getMessages())
+  });
+
+});
+
+</script>
+
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+  </body>
+</html>

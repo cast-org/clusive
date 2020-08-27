@@ -25,7 +25,10 @@ class GlossaryTestCase(TestCase):
         book_1 = BookVersion.objects.create(book=self.book, sortOrder=0,
                                             glossary_words='["test"]',
                                             all_words='["test", "the", "end"]')
-        book_1.save()
+        book_2 = BookVersion.objects.create(book=self.book, sortOrder=1,
+                                            glossary_words='["test tricky"]',
+                                            all_words='["a", "tricky", "test", "the", "end"]',
+                                            new_words='["a", "tricky"]')
 
     def test_set_and_get_rating(self):
         login = self.client.login(username='user1', password='password1')
@@ -74,3 +77,11 @@ class GlossaryTestCase(TestCase):
         self.assertEqual({'noun', 'nouns'}, all_forms('noun'))
         self.assertEqual({'act', 'acts', 'acting', 'acted'}, all_forms('act'))
         self.assertEqual({'fluffy', 'fluffier', 'fluffiest'}, all_forms('fluffy'))
+
+    def test_check_list(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/glossary/checklist/%d' % self.book.pk)
+        logger.error("RESPONSE: %s", response.content)
+        self.assertEqual(200, response.status_code)
+        # Should pick new words but ignore "a" since it's too short.
+        self.assertJSONEqual(response.content, {'words': ['tricky']})

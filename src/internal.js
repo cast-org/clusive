@@ -1,5 +1,3 @@
-import MarkLoader from 'script-loader!mark.js'
-
 // Reference from within the iframe to the clusivePrefs global in the parent window
 var clusivePrefs = window.parent.window.clusivePrefs;
 
@@ -57,8 +55,8 @@ function openGlossaryForCue(elt) {
 
     let word = $(elt).data('gloss');
     window.parent.load_definition(1, word);
-    window.parent.$('#glossaryButton').CFW_Popover('show');
-    window.parent.glossaryPop_focus($(this));
+    window.parent.$('#glossaryLocator').CFW_Popover('show');
+    window.parent.glossaryPop_focus($(elt));
 }
 
 

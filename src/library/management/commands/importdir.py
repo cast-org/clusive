@@ -38,6 +38,9 @@ class Command(BaseCommand):
         args = []
         for file in subdir.iterdir():
             args.append(file.absolute())
+        # We make the assumption that version EPUBs are in lexicographic order by their difficulty.
+        # Eg penguins-0.epub, penguins-1.epub, penguins-2.epub would be fine.
+        args.sort()
         try:
             call_command('import', *args)
         except BookNotUnique as e:

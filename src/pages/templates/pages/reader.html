@@ -23,6 +23,9 @@ var manifest_path = "{{ manifest_path }}";
 {% endblock %}
 
 {% block sidebar_end %}
+<!-- Item needed to anchor the definition popover -->
+<button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
+
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}
 
@@ -104,8 +107,8 @@ var manifest_path = "{{ manifest_path }}";
                 callback: function (selection) {
                     console.debug('looking up: ', selection);
                     window.parent.load_definition(0, selection);
-                    window.parent.$('#glossaryButton').CFW_Popover('show');
-                    glossaryPop_focus($('#lookupIcon'));
+                    window.parent.$('#glossaryLocator').CFW_Popover('show');
+                    window.parent.glossaryPop_focus($('#lookupIcon'));
                 }
             }
         ];

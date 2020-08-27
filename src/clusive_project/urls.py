@@ -26,5 +26,6 @@ urlpatterns = [
     path('sessions/', include('django_session_timeout.urls')),
     path('glossary/', include('glossary.urls')),
     path('library/', include('library.urls')),
+    path('messagequeue/', include('messagequeue.urls')),
     path('progressbarupload/', include('progressbarupload.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

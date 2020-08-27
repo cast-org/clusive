@@ -9,6 +9,7 @@ future==0.18.2
 numpy==1.17.4
 django-settings-export==1.2.1
 dawn==0.11.0
+python-dateutil==2.8.1
 marisa-trie==0.7.5
 wordfreq==2.3.2
 textstat==0.6.2
