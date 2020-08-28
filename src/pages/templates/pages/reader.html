@@ -105,8 +105,14 @@ var manifest_path = "{{ manifest_path }}";
             {
                 id: 'lookupIcon',
                 callback: function (selection) {
-                    console.debug('looking up: ', selection);
-                    window.parent.load_definition(0, selection);
+                    var match = selection.match('\\w+');
+                    if (match) {
+                        word = match[0];
+                    } else {
+                        console.info('Did not find any word in selection: %s', text);
+                    }
+                    console.debug('looking up: ', word);
+                    window.parent.load_definition(0, word);
                     window.parent.$('#glossaryLocator').CFW_Popover('show');
                     window.parent.glossaryPop_focus($('#lookupIcon'));
                 }
