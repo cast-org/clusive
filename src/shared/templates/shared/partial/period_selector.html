@@ -1,0 +1,16 @@
+<div class="col-md-auto dropdown">
+    <button type="button" class="btn btn-primary" data-cfw="dropdown">
+        {{ current_period }}
+        <span class="caret" aria-hidden="true"></span>
+    </button>
+    <ul class="dropdown-menu">
+        {% for p in periods %}
+        <li>
+            <a href="{% url 'manage' period_id=p.id %}"
+               {% if p == current_period %}class="active" aria-current="true"{% endif %}>
+                {{ p.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

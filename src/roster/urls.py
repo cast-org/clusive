@@ -31,5 +31,10 @@ urlpatterns = [
     path('guest_login', views.guest_login, name='guest_login'),
 
     path('prefs', views.PreferenceView.as_view(), name='prefs'),        
-    path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile')      
+    path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile'),
+
+    path('manage/<int:period_id>/<int:user_id>', views.ManageView.as_view(), name='manage'),
+    path('manage/<int:period_id>', views.ManageView.as_view(), name='manage'),
+    path('manage', views.ManageView.as_view(), name='manage'),
+    path('manage_save/<int:pk>', views.ManageSaveView.as_view(), name='manage_save'),
 ]

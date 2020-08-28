@@ -1,24 +1,27 @@
 import csv
-import logging
 import json
+import logging
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.dispatch import receiver
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.views.generic import TemplateView, UpdateView
 
 from eventlog.signals import preference_changed
+from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.models import ClusiveUser, Site, Period, PreferenceSet
-
-from django.dispatch import receiver
-from messagequeue.models import Message, client_side_prefs_change
+from roster.forms import UserForm
+from roster.models import ClusiveUser, Period, PreferenceSet, Roles
 
 logger = logging.getLogger(__name__)
+
 
 def guest_login(request):
     clusive_user = ClusiveUser.make_guest()
@@ -38,7 +41,7 @@ class PreferenceView(View):
         except json.JSONDecodeError:
             return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})
 
-        user = ClusiveUser.from_request(request)        
+        user = ClusiveUser.from_request(request)
         set_user_preferences(user, request_prefs, request)
 
         return JsonResponse({'success': 1})
@@ -52,14 +55,15 @@ class PreferenceSetView(View):
         try:
             request_json = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})            
-        
+            return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})
+
         desired_prefs_name = request_json["adopt"]
-        
+
         try:
             desired_prefs = PreferenceSet.get_json(desired_prefs_name)
         except PreferenceSet.DoesNotExist:
-            return JsonResponse({'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_name })
+            return JsonResponse(
+                {'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_name})
 
         # Replace all existing preferences with the new set.
         # user.delete_preferences()
@@ -67,6 +71,7 @@ class PreferenceSetView(View):
 
         # Return the newly-established preferences
         return JsonResponse(user.get_preferences_dict())
+
 
 # Set user preferences from a dictionary
 def set_user_preferences(user, new_prefs, request):
@@ -77,15 +82,17 @@ def set_user_preferences(user, new_prefs, request):
     prefs_to_use.update(new_prefs)
     for pref_key in prefs_to_use:
         old_val = old_prefs.get(pref_key)
-        if old_val != prefs_to_use[pref_key]:            
+        if old_val != prefs_to_use[pref_key]:
             set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], request)
             # logger.debug("Pref %s changed %s (%s) -> %s (%s)", pref_key,
             #              old_val, type(old_val),
             #              pref.typed_value, type(pref.typed_value))
-            
+
+
 def set_user_preference_and_log_event(user, pref_key, pref_value, request):
     pref = user.set_preference(pref_key, pref_value)
     preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=pref)
+
 
 @receiver(client_side_prefs_change, sender=Message)
 def set_preferences_from_message(sender, timestamp, content, request, **kwargs):
@@ -93,10 +100,11 @@ def set_preferences_from_message(sender, timestamp, content, request, **kwargs):
     user = request.clusive_user
     set_user_preferences(user, content["preferences"], request)
 
+
 @staff_member_required
 def upload_csv(request):
     template = 'roster/upload_csv.html'
-    context = {'fields' : csvparser.FIELDS, 'title': 'Bulk add users' }
+    context = {'fields': csvparser.FIELDS, 'title': 'Bulk add users'}
 
     if request.method == "GET":
         # First render; just show the form.
@@ -127,7 +135,7 @@ def upload_csv(request):
                     messages.error(request, 'Error during creation of users - some may have been created')
 
         except csv.Error as e:
-            context['errors'] = ["CSV formatting error: %s" % e ]
+            context['errors'] = ["CSV formatting error: %s" % e]
             context['sites'] = {}
             context['users'] = {}
 
@@ -137,3 +145,63 @@ def upload_csv(request):
             messages.info(request, 'File looks good')
 
     return render(request, template, context)
+
+
+class ManageView(TemplateView, LoginRequiredMixin):
+    template_name = 'roster/manage.html'
+    periods = None
+    current_period = None
+    target_user = None
+
+    def get(self, request, *args, **kwargs):
+        user = request.clusive_user
+        if self.periods is None:
+            self.periods = user.periods.all()
+        if kwargs.get('period_id'):
+            self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
+            # Make sure you can only edit a Period you are in.
+            if self.current_period not in self.periods:
+                self.handle_no_permission()
+        if self.current_period is None:
+            p = user.current_period
+            self.current_period = p if p else self.periods[0]
+        if self.current_period != user.current_period:
+            user.current_period = self.current_period
+            user.save()
+        if kwargs.get('user_id'):
+            self.target_user = get_object_or_404(User, pk=kwargs.get('user_id'))
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['periods'] = self.periods
+        context['current_period'] = self.current_period.name
+        context['students'] = self.make_student_info_list()
+        context['target'] = self.target_user
+        logger.debug('Students: %s', context['students'])
+        return context
+
+    def make_student_info_list(self):
+        students = self.current_period.users.filter(role=Roles.STUDENT)
+        return [{
+            'info': s.user,
+            'form': UserForm(instance=s.user)
+        } for s in students]
+
+
+class ManageSaveView(UpdateView):
+    model = User
+    form_class = UserForm
+    success_url = '/roster/manage' # FIXME
+
+    def form_valid(self, form):
+        form.save()
+        user : User
+        user = form.instance
+        logger.debug('Instance: %s', user)
+        new_pw = form.cleaned_data['password_change']
+        if new_pw:
+            # TODO: validate pw strength
+            user.set_password(new_pw)
+        return JsonResponse({ 'saved': True})
+

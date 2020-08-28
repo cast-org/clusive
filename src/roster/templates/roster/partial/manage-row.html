@@ -1,0 +1,59 @@
+{% load figuration %}
+<tr>
+    <td>{{info.first_name}}</td>
+    <td>{{info.last_name}}</td>
+    <td>{{info.email}}</td>
+    <td>{{info.username}}</td>
+    <td>****</td>
+    <td>
+        <button type="button" class="btn btn-primary btn-xsmall" data-cfw="modal" data-cfw-modal-target="#edit{{ info.pk }}">Edit</button>
+        <div id="edit{{ info.pk }}" class="modal" aria-labelledby="modalConfirmTitle">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'manage_save' pk=info.pk %}">
+                        <div class="modal-header">
+                            <h2 id="modalConfirmTitle" class="modal-title">Edit user</h2>
+                            <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+                                <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                {{ form.first_name.errors }}
+                                {{ form.first_name.label_tag | formlabel }}
+                                {{ form.first_name }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.last_name.errors}}
+                                {{ form.last_name.label_tag | formlabel }}
+                                {{ form.last_name }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.email.errors}}
+                                {{ form.email.label_tag | formlabel }}
+                                {{ form.email }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.username.errors}}
+                                {{ form.username.label_tag | formlabel }}
+                                {{ form.username }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.password_change.errors}}
+                                {{ form.password_change.label_tag | formlabel }}
+                                {{ form.password_change }}
+                                <div class="form-text small">Choose something hard to guess, at least 6 characters, and not just numbers.</div>
+                                {{ form.non_field_errors }}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-secondary" value="Save"/>
+                            <button type="button" class="btn btn-link" data-cfw-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

@@ -321,6 +321,10 @@ class PageTestCases(TestCase):
             self.assertIn('Username', html)
             self.assertIn('Password', html)
 
+        def test_manage_page_renders(self):
+            login = self.client.login(username='user1', password='password1')
+            response = self.client.get(reverse('manage'))
+            self.assertEqual(403, response.status_code, 'Manage page should be denied to students')
 
 @contextmanager
 def catch_signal(signal):
