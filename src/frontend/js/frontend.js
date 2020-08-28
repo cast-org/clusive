@@ -9,19 +9,27 @@ var libraryMasonryApi = null;
 // leading edge, instead of the trailing.
 // By David Walsh (https://davidwalsh.name/javascript-debounce-function)
 function clusiveDebounce(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
-};
+    'use strict';
+
+    var timeout;
+    return function() {
+        var context = this;
+        var args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) {
+                func.apply(context, args);
+            }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+
+        if (callNow) {
+            func.apply(context, args);
+        }
+    };
+}
 
 var libraryMasonryLayout = clusiveDebounce(function() {
     'use strict';
@@ -42,7 +50,9 @@ function libraryMasonryEnable() {
         transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
     });
 
-    document.addEventListener('update.cisl.prefs', libraryMasonryLayout, { passive: true });
+    document.addEventListener('update.cisl.prefs', libraryMasonryLayout, {
+        passive: true
+    });
 
     var imgs = elem.querySelectorAll('img');
     imgs.forEach(function(img) {
