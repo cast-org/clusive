@@ -3,6 +3,34 @@
 
 var libraryMasonryApi = null;
 
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+// By David Walsh (https://davidwalsh.name/javascript-debounce-function)
+function clusiveDebounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
+
+var libraryMasonryLayout = clusiveDebounce(function() {
+    'use strict';
+
+    if (libraryMasonryApi !== null) {
+        libraryMasonryApi.layout();
+    }
+}, 150);
+
 function libraryMasonryEnable() {
     'use strict';
 
@@ -14,18 +42,23 @@ function libraryMasonryEnable() {
         transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
     });
 
+    document.addEventListener('update.cisl.prefs', libraryMasonryLayout, { passive: true });
+
     var imgs = elem.querySelectorAll('img');
     imgs.forEach(function(img) {
         $.CFW_imageLoaded($(img), null, function() {
-            libraryMasonryApi.layout();
+            libraryMasonryLayout();
         });
     });
+
     document.querySelector('.library-masonry-on').setAttribute('disabled', '');
     document.querySelector('.library-masonry-off').removeAttribute('disabled');
 }
 
 function libraryMasonryDisable() {
     'use strict';
+
+    document.removeEventListener('update.cisl.prefs', libraryMasonryLayout);
 
     if (libraryMasonryApi !== null) {
         libraryMasonryApi.destroy();

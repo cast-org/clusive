@@ -20,9 +20,7 @@
 {% if clusive_user.library.masonry != "disabled" %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // FIXME: Slight delay due to line-height being updated after page load
-    // Need to use callback / eventHandler / method call / ?? to do properly
-    setTimeout(libraryMasonryEnable(), 10);
+    libraryMasonryEnable();
 });
 </script>
 {% endif %}
