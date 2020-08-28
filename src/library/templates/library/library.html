@@ -37,47 +37,12 @@
     {% if object_list|length == 0 %}
         No content found.
     {% else %}
-    <div class="library-grid">
-        {% for pub in object_list %}
-            <div class="card card-library">
-                <div class="card-header">
-                    <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{pub.id}}'); return false;"><h2 class="card-title">{{ pub.title }}</h2></a>
-                    {% if pub.author %}<div class="card-author">{{ pub.author }}</div>{% endif %}
-                </div>
-                {% if pub.cover %}
-                <div class="card-img">
-                    <img src="{% get_media_prefix %}{{pub.cover_path }}" alt="Cover image for {{ pub.title }}" class="img-fluid" />
-                </div>
-                {% endif %}
-                <div class="card-body">
-                    {% if pub.description %}<p>{{ pub.description }}</p>{% endif %}
-                </div>
-                {% if pub.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col card-library-action">
-                            <div class="text-end">
-                                <button type="button" class="btn btn-flag link-above" data-cfw="dropdown">
-                                    <span class="icon-ellipsis-vert" aria-hidden="true"></span>
-                                    <span class="sr-only">Publication settings</span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    {% if pub.owner == request.clusive_user %}
-                                        <li><a href="{% url 'metadata_edit' pk=pub.id %}">Edit</a></li>
-                                        <li><button type="button" class="dropdown-item" data-clusive="confirmPubDel" data-clusive-book-id="{{ pub.id }}">Delete</button></li>
-                                    {% endif %}
-                                    {% if request.clusive_user.can_manage_periods %}
-                                        <li><button type="button" class="dropdown-item" data-clusive="confirmSharing" data-clusive-book-id="{{ pub.id }}">Share</button></li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-        </div>
+        {% comment "FIXME: Update placeholder user preference check" %}{% endcomment %}
+        {% if clusive_user.library.view == "list" %}
+            {% include "library/partial/library_list_content.html" %}
+        {% else %}
+            {% include "library/partial/library_grid_content.html" %}
+        {% endif %}
     {% endif %}
 </main>
 
