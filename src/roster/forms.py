@@ -1,3 +1,4 @@
+from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
@@ -16,6 +17,17 @@ class UserForm(ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['username'].required = True
+
+    def _post_clean(self):
+        super()._post_clean()
+        # Validate the password after self.instance is updated with form data
+        # by super().
+        password = self.cleaned_data.get('password_change')
+        if password:
+            try:
+                password_validation.validate_password(password, self.instance)
+            except forms.ValidationError as error:
+                self.add_error('password_change', error)
 
     class Meta:
         model = User

@@ -12,7 +12,7 @@
     <main id="content" tabindex="-1">
         <div class="row">
             <div class="col">
-                <h1>Manage: {{ current_period }}</h1>
+                <h1>Manage: {{ current_period.name }}</h1>
             </div>
             {% include "shared/partial/period_selector.html" %}
         </div>
@@ -31,7 +31,7 @@
                 </thead>
                 <tbody>
                 {% for s in students %}
-                  {% include 'roster/partial/manage-row.html' with info=s.info form=s.form %}
+                  {% include 'roster/partial/manage_row.html' with info=s.info form=s.form %}
                 {% endfor %}
                 </tbody>
             </table>

@@ -4,12 +4,13 @@ import logging
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import login
+from django.contrib.auth import login, password_validation
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, UpdateView
 
@@ -151,10 +152,11 @@ class ManageView(TemplateView, LoginRequiredMixin):
     template_name = 'roster/manage.html'
     periods = None
     current_period = None
-    target_user = None
 
     def get(self, request, *args, **kwargs):
         user = request.clusive_user
+        if not user.can_manage_periods:
+            self.handle_no_permission()
         if self.periods is None:
             self.periods = user.periods.all()
         if kwargs.get('period_id'):
@@ -163,21 +165,23 @@ class ManageView(TemplateView, LoginRequiredMixin):
             if self.current_period not in self.periods:
                 self.handle_no_permission()
         if self.current_period is None:
-            p = user.current_period
-            self.current_period = p if p else self.periods[0]
+            if user.current_period:
+                self.current_period = user.current_period
+            elif self.periods:
+                self.current_period = self.periods[0]
+            else:
+                # No periods.  If this case actually happens, should have a better error message.
+                self.handle_no_permission()
         if self.current_period != user.current_period:
             user.current_period = self.current_period
             user.save()
-        if kwargs.get('user_id'):
-            self.target_user = get_object_or_404(User, pk=kwargs.get('user_id'))
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['periods'] = self.periods
-        context['current_period'] = self.current_period.name
+        context['current_period'] = self.current_period
         context['students'] = self.make_student_info_list()
-        context['target'] = self.target_user
         logger.debug('Students: %s', context['students'])
         return context
 
@@ -185,23 +189,41 @@ class ManageView(TemplateView, LoginRequiredMixin):
         students = self.current_period.users.filter(role=Roles.STUDENT)
         return [{
             'info': s.user,
-            'form': UserForm(instance=s.user)
         } for s in students]
 
 
-class ManageSaveView(UpdateView):
+class ManageEditView(UpdateView, LoginRequiredMixin):
     model = User
     form_class = UserForm
-    success_url = '/roster/manage' # FIXME
+    template_name = 'roster/manage_edit.html'
+    period = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.period = get_object_or_404(Period, id=kwargs['period_id'])
+        # Sanity check requested period
+        cu = request.clusive_user
+        if not cu.can_manage_periods or not self.period.users.filter(id=cu.id).exists():
+            self.handle_no_permission()
+        # Sanity check requested User. Associated ClusiveUser should be a member of that Period.
+        target = get_object_or_404(User, id=kwargs['pk'])
+        if not self.period.users.filter(user__id=target.id).exists():
+            self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('manage', kwargs={'period_id': self.period.id})
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['period_id'] = self.period.id
+        return data
 
     def form_valid(self, form):
         form.save()
-        user : User
-        user = form.instance
-        logger.debug('Instance: %s', user)
+        target : User
+        target = form.instance
         new_pw = form.cleaned_data['password_change']
         if new_pw:
-            # TODO: validate pw strength
-            user.set_password(new_pw)
-        return JsonResponse({ 'saved': True})
-
+            target.set_password(new_pw)
+            target.save()
+        return super().form_valid(form)
