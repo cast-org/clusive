@@ -7,15 +7,15 @@
         {% endif %}
     </li>
 
-    {% comment %}
+    {% if request.clusive_user.can_manage_periods %}
     <li class="nav-item">
-        {% if page_group == 'roster' %}
+        {% if page_group == 'manage' %}
         <span class="nav-link current" aria-current="true">Manage</span>
         {% else %}
-        <a href="{% url 'roster' %}" class="nav-link">Manage</a>
+        <a href="{% url 'manage' %}" class="nav-link">Manage</a>
         {% endif %}
     </li>
-    {% endcomment %}
+    {% endif %}
 
     <li class="nav-item">
         {% if page_group == 'word_bank' %}

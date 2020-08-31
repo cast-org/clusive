@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from . import views
@@ -31,5 +31,11 @@ urlpatterns = [
     path('guest_login', views.guest_login, name='guest_login'),
 
     path('prefs', views.PreferenceView.as_view(), name='prefs'),        
-    path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile')      
+    path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile'),
+
+    path('manage/<int:period_id>', views.ManageView.as_view(), name='manage'),
+    path('manage', views.ManageView.as_view(), name='manage'),
+
+    path('manage_edit/<int:period_id>/<int:pk>', views.ManageEditView.as_view(), name='manage_edit'),
+
 ]
