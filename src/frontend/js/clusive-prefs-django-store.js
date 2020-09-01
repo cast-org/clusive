@@ -21,9 +21,55 @@
             wrapMessage: {
                 funcName: "clusive.djangoMessageQueue.wrapMessage",
                 args: ["{arguments}.0"]
-            }            
+            },
+            isQueueEmpty: {
+                funcName: "clusive.djangoMessageQueue.isQueueEmpty",
+                args: ["{that}"]
+            }          
+        },
+        listeners: {
+            "onCreate.attachLogoutEvents": {
+                funcName: "clusive.djangoMessageQueue.attachLogoutEvents",
+                args: ["{that}"]
+            }
         }
     });
+
+    // Check if both the queue and the sending queue are empty 
+    // (no outstanding or in-flight messages)
+    clusive.djangoMessageQueue.isQueueEmpty = function (that) {        
+        return (that.queue.length === 0 && $.isEmptyObject(that.sendingQueue));
+    };
+
+    clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
+        console.debug("Attaching logout events for djangoMessageQueue");
+        $("#logoutLink").mouseenter(
+            function () {   
+                console.debug("Mouse entered logout link, flushing message queue.");
+                that.flush();        
+            }
+        );
+        
+        $("#logoutLink").focus(
+            function () {      
+                console.debug("Keyboard focus entered logout link, flushing message queue.");  
+                that.flush();
+            }
+        );
+
+        window.addEventListener("beforeunload", function (e) {
+            console.debug("beforeunload event");        
+            if(! that.isQueueEmpty()) {
+                console.debug("queue is not empty, prompting user for unload");
+                that.flush();
+                e.preventDefault();
+                e.returnValue = "";        
+            }                        
+        }
+
+    );
+
+    };
 
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue
