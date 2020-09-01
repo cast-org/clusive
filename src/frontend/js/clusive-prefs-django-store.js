@@ -43,19 +43,23 @@
     };
 
     clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
-        var logoutLinkSelector = that.options.logoutLinkSelector;
+        var logoutLinkSelector = that.options.config.logoutLinkSelector;        
         
         $(logoutLinkSelector).mouseenter(
             function () {   
-                console.debug("Mouse entered logout link, flushing message queue.");
-                that.flush();        
+                if(! that.isQueueEmpty()) {
+                    console.debug("Mouse entered logout link, flushing message queue.");
+                    that.flush();        
+                }
             }
         );
         
         $(logoutLinkSelector).focus(
             function () {      
-                console.debug("Keyboard focus entered logout link, flushing message queue.");  
-                that.flush();
+                if(! that.isQueueEmpty()) {
+                    console.debug("Keyboard focus entered logout link, flushing message queue.");  
+                    that.flush();
+                }
             }
         );
 
