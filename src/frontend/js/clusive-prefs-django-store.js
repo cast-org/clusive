@@ -13,6 +13,7 @@
                 method: "POST"
             },
             flushInterval: 60000,
+            logoutLinkSelector: "#logoutLink"
         },
         invokers: {
             flushQueueImpl: {
@@ -42,32 +43,30 @@
     };
 
     clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
-        console.debug("Attaching logout events for djangoMessageQueue");
-        $("#logoutLink").mouseenter(
+        var logoutLinkSelector = that.options.logoutLinkSelector;
+        
+        $(logoutLinkSelector).mouseenter(
             function () {   
                 console.debug("Mouse entered logout link, flushing message queue.");
                 that.flush();        
             }
         );
         
-        $("#logoutLink").focus(
+        $(logoutLinkSelector).focus(
             function () {      
                 console.debug("Keyboard focus entered logout link, flushing message queue.");  
                 that.flush();
             }
         );
 
-        window.addEventListener("beforeunload", function (e) {
-            console.debug("beforeunload event");        
+        window.addEventListener("beforeunload", function (e) {                 
             if(! that.isQueueEmpty()) {
                 console.debug("queue is not empty, prompting user for unload");
                 that.flush();
                 e.preventDefault();
                 e.returnValue = "";        
             }                        
-        }
-
-    );
+        });
 
     };
 
