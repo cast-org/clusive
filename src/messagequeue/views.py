@@ -23,7 +23,11 @@ def process_messages(queue_timestamp, messages, user, request):
     delta = get_delta_from_now(client_reported_time)    
 
     for message in messages:
-        message["content"]["username"] = user.username
+        message_username = message["username"]
+        session_username = user.username
+        if(message_username != session_username):
+            logger.debug("Rejected individual message, message username %s did not match session username %s ", (message_username, session_username))
+            return
         message_timestamp = adjust_message_timestamp(message["timestamp"], delta)        
         message_content = message["content"]
         
@@ -62,6 +66,7 @@ class MessageQueueView(View):
             if(queue_username == username):
                 process_messages(queue_timestamp, messages, clusive_user.user, request)
             else: 
+                logger.debug("Rejected message queue, queue username %s did not match session username %s ", (queue_username, username))
                 return JsonResponse(status=501, data={'message': 'Invalid user'})            
         except json.JSONDecodeError:
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})        

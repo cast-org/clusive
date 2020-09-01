@@ -17,7 +17,11 @@
         invokers: {
             flushQueueImpl: {
                 funcName: "clusive.djangoMessageQueue.flushQueueImpl"                
-            }
+            },
+            wrapMessage: {
+                funcName: "clusive.djangoMessageQueue.wrapMessage",
+                args: ["{arguments}.0"]
+            }            
         }
     });
 
@@ -39,6 +43,13 @@
                 flushPromise.reject({"error": err});
             });
     };
+
+    // Add current username to each individual message
+    clusive.djangoMessageQueue.wrapMessage = function(message) {
+        var wrappedMessage = clusive.messageQueue.wrapMessage(message);
+        wrappedMessage.username = DJANGO_USERNAME;
+        return wrappedMessage;
+    }
 
     fluid.defaults('clusive.prefs.djangoStore', {
         gradeNames: ['fluid.dataSource'],
