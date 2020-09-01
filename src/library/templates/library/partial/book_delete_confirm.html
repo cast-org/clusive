@@ -6,8 +6,8 @@
 </div>
 <div class="modal-body">
     {% if owner %}
-    <p>Are you sure you want to permanently delete the <em>{{ pub.title }}</em> publication?</p>
-    <p>This action cannot be undone.</p>
+    <p>Are you sure you want to permanently delete <em>{{ pub.title }}</em>?</p>
+    <p>This action cannot be undone, and will also delete highlights and notes you or anyone else has made in this content.</p>
     {% else %}
     <p>No delete permission.</p>
     {% endif %}

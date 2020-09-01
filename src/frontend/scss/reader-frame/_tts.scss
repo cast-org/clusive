@@ -1,5 +1,11 @@
 // stylelint-disable selector-no-qualifying-type, selector-class-pattern, declaration-no-important
-span.tts-currentWord {
+
+[data-tts-current-word="true"] {
+    color: var(--CRT_ttsTextColor) !important;
+    background-color: var(--CRT_ttsBackgroundColor) !important;
+}
+
+[data-tts-current-line="true"] {
     color: var(--CRT_ttsTextColor) !important;
     background-color: var(--CRT_ttsBackgroundColor) !important;
 }

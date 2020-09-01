@@ -1,14 +1,11 @@
+import json
 import logging
 
 from django.contrib.auth.models import User
 from django.db import models
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from pytz import country_timezones
-
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +91,11 @@ class LibraryViews:
 
     @staticmethod
     def display_name_of(view):
-        return next(x[1] for x in LibraryViews.CHOICES if x[0] == view)
+        try:
+            return next(x[1] for x in LibraryViews.CHOICES if x[0] == view)
+        except StopIteration:
+            logger.warning('Found no name for library view ' + view)
+            return None
 
 
 class ClusiveUser(models.Model):
@@ -111,7 +112,7 @@ class ClusiveUser(models.Model):
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
     # List of all class periods the user is part of
-    periods = models.ManyToManyField(Period, blank=True, related_name='periods')
+    periods = models.ManyToManyField(Period, blank=True, related_name='users')
 
     # Which period will be shown by default, eg in library or manage rosters view
     current_period = models.ForeignKey(Period, null=True, blank=True, on_delete=models.SET_NULL)
@@ -138,11 +139,18 @@ class ClusiveUser(models.Model):
 
     @property
     def can_set_password(self):
+        """True if this user can change their own password."""
         return self.role and self.role != Roles.GUEST
 
     @property
     def can_upload(self):
+        """True if this user can upload content."""
         return self.role and self.role != Roles.GUEST
+
+    @property
+    def can_manage_periods(self):
+        """True if this user can edit the users and content connected to Periods they are in."""
+        return self.role and (self.role == Roles.TEACHER or self.role == Roles.PARENT)
 
     def get_preference(self, pref):
         pref, created = Preference.objects.get_or_create(user=self, pref=pref)

@@ -1,0 +1,53 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="manage" %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <main id="content" tabindex="-1">
+        <div class="row">
+            <div class="col">
+                <h1>Edit User</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.first_name.label_tag | formlabel }}
+                        {{ form.first_name.errors }}
+                        {{ form.first_name }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.last_name.label_tag | formlabel }}
+                        {{ form.last_name.errors}}
+                        {{ form.last_name }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.email.label_tag | formlabel }}
+                        {{ form.email.errors}}
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.username.label_tag | formlabel }}
+                        {{ form.username.errors}}
+                        {{ form.username }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password_change.label_tag | formlabel }}
+                        {{ form.password_change.errors}}
+                        {{ form.password_change }}
+                        <div class="form-text small">Choose something hard to guess, at least 6 characters, and not just numbers.</div>
+                        {{ form.non_field_errors }}
+                    </div>
+                    <input type="submit" class="btn btn-secondary" value="Save"/>
+                    <a href="{% url 'manage' period_id=period_id %}" class="btn btn-link">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
