@@ -51,10 +51,10 @@ def main() -> None:
                     else:
                         zout.writestr(item, zin.read(item.filename))
         if found:
-            os.rename(tmpname, file+'.new')
+            # os.rename(tmpname, file+'.new')
             # rename old file to backup
-            #os.rename(file, file+'.bak')
-            #os.rename(tmpname, file)
+            os.rename(file, file+'.bak')
+            os.rename(tmpname, file)
         else:
             print('No opf file found in %s' % file)
 
@@ -77,7 +77,9 @@ def update_metadata(xmlstr : str, args) -> str:
                 print('mod. title: %s -> %s' % ("".join(title.itertext()), args.title))
                 title.text = args.title
             else:
-                print('title metadata not found')
+                print('create title -> %s' % args.title)
+                title = ET.SubElement(metadata, '{http://purl.org/dc/elements/1.1/}title')
+                title.text = args.title
         if args.author:
             if author is not None:
                 print ('mod. author: %s -> %s' % ("".join(author.itertext()), args.author))

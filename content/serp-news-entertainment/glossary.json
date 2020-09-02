@@ -1,0 +1,333 @@
+[
+    {
+        "headword": "abandon",
+        "alternateForms": ["abandons","abandoned","abandoning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give up; to leave behind." ,
+                "examples": [ "Last year Jack broke his arm and had to abandon his hopes of playing on the baseball team." ]
+            }
+        ]
+    },
+    {
+        "headword": "frivolous",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not important; silly." ,
+                "examples": [ "Some people think buying expensive designer clothes is frivolous and a waste of money." ],
+                "images": [
+                    {
+                        "src": "glossimages/frivolous1.jpg",
+                        "alt": "Photo of a large room with fancy furniture and decoration.",
+                        "description": "A room with overly fancy furniture, paintings, and gold decorations.",
+                        "caption": "This room's decorations and furniture are frivolous; they are more fancy and elaborate than most people want or need.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/musical-organ-in-front-of-large-painting-1365225/",
+                            "title": "Musical Organ in Front of Large Painting",
+                            "author": "Jensen V",
+                            "author_url": "https://www.pexels.com/@delciistudio",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },    
+    {
+        "headword": "contemporary",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Modern; current." ,
+                "examples": [ "Many parents think that contemporary songs lack good lyrics." ]
+            }
+        ]
+    },    
+    {
+        "headword": "dramatic",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Exciting; full of emotion; extreme" ,
+                "examples": [ "Newscasters fear that people will not watch their programs if the stories are not dramatic enough." ],
+                "images": [
+                    {
+                        "src": "glossimages/dramatic1.jpg",
+                        "alt": "Surprised young woman browsing mobile phone",
+                        "description": "A person looking at her phone screen. She has a surprised expression on her face.",
+                        "caption": "Dramatic stories catch people's attention.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/surprised-young-woman-browsing-mobile-phone-3771127/",
+                            "title": "Surprised young woman browsing mobile phone",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },    
+    {
+        "headword": "exploit",
+        "alternateForms": ["exploits","exploited","exploiting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To take advantage of." ,
+                "examples": [ "Karla exploited her sister’s weakness for chocolate when she offered her a candy bar in exchange for help with a school project." ]
+            }
+        ]
+    },    
+    {
+        "headword": "conflict",
+        "alternateForms": ["conflicts"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A fight, battle or war." ,
+                "examples": [ "They say that today’s reporters often present only one of many views on complex issues such as immigration or the conflict in the Middle East." ],
+                "images": [
+                    {
+                        "src": "glossimages/conflict1.jpg",
+                        "alt": "Photo of two children pulling a toy in opposite directions.",
+                        "description": "Two children, each holding an arm of a stuffed toy bear. Each child pulls the toy in the direction opposite of the other child.",
+                        "caption": "Just one toy to share among two people can be a source of conflict.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/arguing-brothers-pulling-soft-toy-to-sides-4140304/",
+                            "title": "Arguing brothers pulling soft toy to sides",
+                            "author": "Victoria Borodinova",
+                            "author_url": "https://www.pexels.com/@victoria-borodinova-392079",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },    
+    {
+        "headword": "affect",
+        "alternateForms": ["affects","affected","affecting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cause a change in; influence." ,
+                "examples": [ "Some programs report on celebrity life, on everyday topics like shopping, or on strange events that do not affect many people." ]
+            }
+        ]
+    },    
+    {
+        "headword": "complex",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having a complicated structure; not simple." ,
+                "examples": [ "They say that today’s reporters often present only one of many views on complex issues such as immigration or the conflict in the Middle East." ],
+                "images": [
+                    {
+                        "src": "glossimages/complex1.jpg",
+                        "alt": "Photo of math equations written on a black board.",
+                        "description": "A person holds a piece of writing chalk in front of a chalkboard. The chalkboard has many mathematical equations written on it, suggesting that the person is trying to solve a complex math problem.",
+                        "caption": "Mathematics can help solve complex science problems.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-a-chalk-in-front-of-the-chalk-board-714699/",
+                            "title": "Person Holding a Chalk in Front of the Chalk Board",
+                            "author": "JESHOOTS.com",
+                            "author_url": "https://www.pexels.com/@jeshoots-com-147458",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },    
+    {
+        "headword": "source",
+        "alternateForms": ["sources"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The start or cause of something." ,
+                "examples": [ "Some news sources say that they are giving the public what it wants." ],
+                "images": [
+                    {
+                        "src": "glossimages/source1.jpg",
+                        "alt": "Photo of a phone and a newspaper on a table.",
+                        "description": "A phone and a newspaper on a table.",
+                        "caption": "A newspaper and a smartphone are both sources of news and information.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/iphone-on-brown-wooden-table-1369476/",
+                            "title": "Iphone On Brown Wooden Table",
+                            "author": "Lisa Fotios",
+                            "author_url": "https://www.pexels.com/@fotios-photos",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "entertain",
+        "alternateForms": [
+            "entertains",
+            "entertained",
+            "entertaining"
+        ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To amuse; keep interested.",
+                "examples": [
+                    "Is America more interested in being entertained than in learning about what’s happening in the world?"
+                ],
+                "images": [
+                    {
+                        "src": "glossimages/entertain1.jpg",
+                        "alt": "Photo of women reading a magazine",
+                        "description": "Photo of three women looking at a magazine. They are smiling.",
+                        "caption": "Are news sources meant to entertain, inform, or both?",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/sisters-enjoying-reading-magazine-3760282/",
+                            "title": "Sisters Enjoying Reading Magazine",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "discord",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A fight, battle or war." ,
+                "examples": [ "They say that today’s reporters often present only one of many views on intricate issues such as immigration or the discord in the Middle East." ],
+                "images": [
+                    {
+                        "src": "glossimages/conflict1.jpg",
+                        "alt": "Photo of two children pulling a toy in opposite directions.",
+                        "description": "Two children, each holding an arm of a stuffed toy bear. Each child pulls the toy in the direction opposite of the other child.",
+                        "caption": "Just one toy to share among two people can be a source of conflict.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/arguing-brothers-pulling-soft-toy-to-sides-4140304/",
+                            "title": "Arguing brothers pulling soft toy to sides",
+                            "author": "Victoria Borodinova",
+                            "author_url": "https://www.pexels.com/@victoria-borodinova-392079",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },    
+    {
+        "headword": "influence",
+        "alternateForms": ["influences","influenced","influencing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cause a change in; influence." ,
+                "examples": [ "Some programs report on celebrity life, on everyday topics like shopping, or on strange events that do not influence many people." ]
+            }
+        ]
+    },    
+    {
+        "headword": "intricate",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having a complicated structure; not simple." ,
+                "examples": [ "They say that today’s reporters often present only one of many views on intricate issues such as immigration or the discord in the Middle East." ],
+                "images": [
+                    {
+                        "src": "glossimages/complex1.jpg",
+                        "alt": "Photo of math equations written on a black board.",
+                        "description": "A person holds a piece of writing chalk in front of a chalkboard. The chalkboard has many mathematical equations written on it, suggesting that the person is trying to solve a complex math problem.",
+                        "caption": "Mathematics can help solve complex science problems.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-a-chalk-in-front-of-the-chalk-board-714699/",
+                            "title": "Person Holding a Chalk in Front of the Chalk Board",
+                            "author": "JESHOOTS.com",
+                            "author_url": "https://www.pexels.com/@jeshoots-com-147458",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },    
+    {
+        "headword": "outlet",
+        "alternateForms": ["outlets"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The start or originator of something." ,
+                "examples": [ "Some news outlets say that they are giving the public what it wants." ],
+                "images": [
+                    {
+                        "src": "glossimages/source1.jpg",
+                        "alt": "Photo of a phone and a newspaper on a table.",
+                        "description": "A phone and a newspaper on a table.",
+                        "caption": "A newspaper and a smartphone are both outlets for news and information.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/iphone-on-brown-wooden-table-1369476/",
+                            "title": "Iphone On Brown Wooden Table",
+                            "author": "Lisa Fotios",
+                            "author_url": "https://www.pexels.com/@fotios-photos",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },     
+    {
+        "headword": "amuse",
+        "alternateForms": ["amuses","amused","amusing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To entertain; keep interested." ,
+                "examples": [ "Is America more interested in being amused than in learning about what’s happening in the world?" ],
+                "images": [
+                    {
+                        "src": "glossimages/entertain1.jpg",
+                        "alt": "Photo of women reading a magazine",
+                        "description": "Photo of three women looking at a magazine. They are smiling.",
+                        "caption": "Are news sources meant to amuse, inform, or both?",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/sisters-enjoying-reading-magazine-3760282/",
+                            "title": "Sisters Enjoying Reading Magazine",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
