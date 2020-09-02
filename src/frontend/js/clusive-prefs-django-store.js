@@ -13,17 +13,71 @@
                 method: "POST"
             },
             flushInterval: 60000,
+            logoutLinkSelector: "#logoutLink"
         },
         invokers: {
             flushQueueImpl: {
                 funcName: "clusive.djangoMessageQueue.flushQueueImpl"                
+            },
+            wrapMessage: {
+                funcName: "clusive.djangoMessageQueue.wrapMessage",
+                args: ["{arguments}.0"]
+            },
+            isQueueEmpty: {
+                funcName: "clusive.djangoMessageQueue.isQueueEmpty",
+                args: ["{that}"]
+            }          
+        },
+        listeners: {
+            "onCreate.attachLogoutEvents": {
+                funcName: "clusive.djangoMessageQueue.attachLogoutEvents",
+                args: ["{that}"]
             }
         }
     });
 
+    // Check if both the queue and the sending queue are empty 
+    // (no outstanding or in-flight messages)
+    clusive.djangoMessageQueue.isQueueEmpty = function (that) {        
+        return (that.queue.length === 0 && $.isEmptyObject(that.sendingQueue));
+    };
+
+    clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
+        var logoutLinkSelector = that.options.config.logoutLinkSelector;        
+        
+        $(logoutLinkSelector).mouseenter(
+            function () {   
+                if(! that.isQueueEmpty()) {
+                    console.debug("Mouse entered logout link, flushing message queue.");
+                    that.flush();        
+                }
+            }
+        );
+        
+        $(logoutLinkSelector).focus(
+            function () {      
+                if(! that.isQueueEmpty()) {
+                    console.debug("Keyboard focus entered logout link, flushing message queue.");  
+                    that.flush();
+                }
+            }
+        );
+
+        window.addEventListener("beforeunload", function (e) {                 
+            if(! that.isQueueEmpty()) {
+                console.debug("queue is not empty, prompting user for unload");
+                that.flush();
+                e.preventDefault();
+                e.returnValue = "";        
+            }                        
+        });
+
+    };
+
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue
     clusive.djangoMessageQueue.flushQueueImpl = function (that, flushPromise) {
+        that.sendingQueue.username = DJANGO_USERNAME;
         $.ajax(that.options.config.target.url, {
             method: that.options.config.target.method,
             headers: {
@@ -38,6 +92,13 @@
                 flushPromise.reject({"error": err});
             });
     };
+
+    // Add current username to each individual message
+    clusive.djangoMessageQueue.wrapMessage = function(message) {
+        var wrappedMessage = clusive.messageQueue.wrapMessage(message);
+        wrappedMessage.username = DJANGO_USERNAME;
+        return wrappedMessage;
+    }
 
     fluid.defaults('clusive.prefs.djangoStore', {
         gradeNames: ['fluid.dataSource'],
