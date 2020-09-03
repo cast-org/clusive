@@ -134,7 +134,7 @@
     }
 
     .card-col-img {
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(xs) {
             display: none;
         }
     }
