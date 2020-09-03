@@ -92,6 +92,14 @@
             text-decoration: underline;
         }
     }
+
+    &.active {
+        [class^="icon-"],
+        [class*=" icon-"] {
+            color: var(--CT_libraryFilterActiveIconColor);
+            text-shadow: var(--CT_libraryFilterActiveIconTextShadow);
+        }
+    }
 }
 
 .library-grid {

@@ -34,7 +34,7 @@
             <ul class="library-filter-list">
                 <li class="library-filter-item">
                     {% if style == 'bricks' %}
-                        <span class="library-filter-link"><span class="icon-bricks" aria-hidden="true"></span>bricks <span class="sr-only">current</span></span>
+                        <span class="library-filter-link active"><span class="icon-bricks" aria-hidden="true"></span>bricks <span class="sr-only">current</span></span>
                     {% else %}
                         {% if period %}
                             <a href="{% url 'library' style='bricks' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
@@ -45,7 +45,7 @@
                 </li>
                 <li class="library-filter-item">
                     {% if style == 'grid' %}
-                        <span class="library-filter-link"><span class="icon-th-large" aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+                        <span class="library-filter-link active"><span class="icon-th-large" aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
                     {% else %}
                         {% if period %}
                             <a href="{% url 'library' style='grid' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-th-large" aria-hidden="true"></span>grid</a>
@@ -56,7 +56,7 @@
                 </li>
                 <li class="library-filter-item">
                     {% if style == 'list' %}
-                        <span class="library-filter-link"><span class="icon-menu" aria-hidden="true"></span>list <span class="sr-only">current</span></span>
+                        <span class="library-filter-link" active><span class="icon-menu" aria-hidden="true"></span>list <span class="sr-only">current</span></span>
                     {% else %}
                         {% if period %}
                             <a href="{% url 'library' style='list' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-menu" aria-hidden="true"></span>list</a>
