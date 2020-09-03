@@ -180,8 +180,11 @@ function formRangeTip(range, callback) {
 
     var tip = document.createElement('div');
     tip.classList.add('form-range-tip');
-    tip.setAttribute('aria-hidden', true);
     range.after(tip);
+
+    var tipID = $(tip).CFW_getID('clusive_range');
+    tip.setAttribute('id', tipID);
+    range.setAttribute('aria-describedby', tipID);
 
     range.parentNode.classList.add('has-form-range-tip');
 
