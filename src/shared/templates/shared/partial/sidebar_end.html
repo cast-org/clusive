@@ -1,9 +1,11 @@
-<div class="sidebar-tool" role="region" aria-label="Reading tools">
+<div class="sidebar-tool" role="region" aria-label="User preferences">
     <button type="button" class="btn btn-setting" aria-label="Settings" title="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
         <span class="icon-settings" aria-hidden="true"></span>
         <span class="sr-only">Settings</span>
     </button>
+</div>
 {% if read_aloud %}
+<div class="sidebar-tts" role="region" aria-label="Text to speech controls">
     {% if read_aloud == 'Readium' %}
     <button type="button" class="btn btn-tool" aria-label="Read aloud" title="Read aloud" id="readiumReadAloud">
     {% else %}
@@ -12,5 +14,5 @@
         <span id="readAloudIcon" class="icon icon-play" aria-hidden="true"></span>
         <span id="readAloudSrText" class="sr-only">Read aloud</span>
     </button>
-{% endif %}
 </div>
+{% endif %}

@@ -1,7 +1,8 @@
 .btn-support,
 .btn-nav,
 .btn-setting,
-.btn-tool {
+.btn-tool,
+.btn-tts {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -21,7 +22,8 @@
 }
 
 .btn-setting,
-.btn-tool {
+.btn-tool,
+.btn-tts {
     @include font-size(1.75rem);
 }
 

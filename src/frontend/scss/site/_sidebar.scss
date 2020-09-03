@@ -127,3 +127,41 @@
         margin-top: .75rem;
     }
 }
+
+.sidebar-tts {
+    margin-top: .75rem;
+    width: 2.5rem;
+    @include border-radius(2.5rem);
+
+    .btn {
+        @include border-radius(10rem);
+    }
+
+    .sidebar-tts-stop {
+        margin-top: .25rem;
+    }
+
+    &.active {
+        background-color: var(--CT_sidebarTtsActiveBg);
+
+        .sidebar-tts-inactive {
+            display: none;
+        }
+    }
+    &:not(.active) {
+        .sidebar-tts-active {
+            display: none;
+        }
+    }
+
+    &.paused {
+        .sidebar-tts-pause {
+            display: none;
+        }
+    }
+    &:not(.paused) {
+        .sidebar-tts-resume {
+            display: none;
+        }
+    }
+}
