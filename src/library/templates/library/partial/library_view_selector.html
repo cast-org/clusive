@@ -2,7 +2,7 @@
     <ul class="nav">
         <li class="nav-item">
             <span class="library-filter-label">View:</span>
-            <a href="#" role="button" class="nav-link" data-cfw="dropdown">{{ current_view_name }} <span class="caret aria-hidden="true"></span></a>
+            <button type="button" class="link-btn" data-cfw="dropdown">{{ current_view_name }} <span class="caret aria-hidden="true"></span></button>
             <ul class="dropdown-menu">
                 {% for p in clusive_user.periods.all %}
                 <li>
@@ -34,12 +34,12 @@
             <ul class="library-filter-list">
                 <li class="library-filter-item">
                     {% if style == 'bricks' %}
-                        <span class="library-filter-link"><span class="icon-th-list" aria-hidden="true"></span>bricks <span class="sr-only">current</span></span>
+                        <span class="library-filter-link"><span class="icon-bricks" aria-hidden="true"></span>bricks <span class="sr-only">current</span></span>
                     {% else %}
                         {% if period %}
-                            <a href="{% url 'library' style='bricks' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-th-list" aria-hidden="true"></span>bricks</a>
+                            <a href="{% url 'library' style='bricks' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
                         {% else %}
-                            <a href="{% url 'library' style='bricks' view=current_view %}" class="library-filter-link"><span class="icon-th-list" aria-hidden="true"></span>bricks</a>
+                            <a href="{% url 'library' style='bricks' view=current_view %}" class="library-filter-link"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
                         {% endif %}
                     {% endif %}
                 </li>
