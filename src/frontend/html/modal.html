@@ -65,7 +65,7 @@ body {
                         <form>
                             <div class="setting">
                                 <fieldset>
-                                    <legend class="setting-title">Text size</legend>
+                                    <legend class="setting-title mb-0">Text size</legend>
                                     <div class="option-font-size">
                                         <label for="set-size" class="sr-only">Text size</label>
                                         <input id="set-size" type="range" class="form-range" min="0" max="5" step="1" value="1">
@@ -247,7 +247,42 @@ body {
                         </form>
                     </div>
                     <div id="setting1" class="tab-pane">
-                        Reading tools pane
+                        <!-- Reading Tools pane -->
+                        <form>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Voice</legend>
+                                    <div class="option-read-voice">
+                                        <button type="button" class="link-btn" data-cfw="dropdown">Female #1 <span class="caret" aria-hidden="true"></span></button>
+                                        <ul class="dropdown-menu dropreverse">
+                                            <li><button type="button" class="dropdown-item active">Female #1</button></li>
+                                            <li><button type="button" class="dropdown-item">Female #2</button></li>
+                                            <li><button type="button" class="dropdown-item">Male #1</button></li>
+                                            <li><button type="button" class="dropdown-item">Male #2</button></li>
+                                        </ul>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title mb-0">Speed</legend>
+                                    <div class="option-read-speed">
+                                        <label for="set-read-speed" class="sr-only">reading speed</label>
+                                        <input id="set-read-speed" type="range" class="form-range cislc-modalSettings-readSpeed" min="0.25" max="2" step="0.25" value="1">
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </form>
+                        <div class="setting d-none"></div>
+                        <div class="setting">
+                            <legend class="setting-title">Play sample</legend>
+                            <button type="button" class="btn btn-flag" aria-label="Play sample">
+                                <span class="icon-play" aria-hidden="true"></span>
+                            </button>
+                            <button type="button" class="btn btn-flag" aria-label="Stop sample" disabled>
+                                <span class="icon-stop" aria-hidden="true"></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

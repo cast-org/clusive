@@ -11,176 +11,222 @@
                 <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
                     <span class="icon-cancel" aria-hidden="true"></span>
                 </button>
+                <ul class="nav nav-tabs-setting d-none">
+                    <li class="nav-item"><a href="#setting0" class="nav-link" data-cfw="tab">Display</a></li>
+                    <li class="nav-item"><a href="#setting1" class="nav-link" data-cfw="tab">Reading Tools</a></li>
+                </ul>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Text size</legend>
-                            <div class="option-font-size">
-                                <label for="set-size" class="sr-only">Text size</label>
-                                <input id="set-size" type="range" class="form-range cislc-modalSettings-textSize" min="0.9" max="2" step="0.1" value="1">
+                <div class="tab-content">
+                    <div id="setting0" class="tab-pane">
+                        <form>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title mb-0">Text size</legend>
+                                    <div class="option-font-size">
+                                        <label for="set-size" class="sr-only">Text size</label>
+                                        <input id="set-size" type="range" class="form-range cislc-modalSettings-textSize" min="0.9" max="2" step="0.1" value="1">
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Line spacing</legend>
+                                    <div class="setting-btn-row">
+                                        <div class="btn-check">
+                                            <input id="option-line-height-1" name="option-line-height" class="btn-check-input cislc-modalSettings-lineSpacing" value="default" type="radio">
+                                            <label for="option-line-height-1" class="btn btn-option" title="Single">
+                                                <span class="icon-line-height-1" aria-hidden="true"></span>
+                                                <span class="sr-only">Single</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-line-height-2" name="option-line-height" class="btn-check-input cislc-modalSettings-lineSpacing" value="tall" type="radio" checked>
+                                            <label for="option-line-height-2" class="btn btn-option" title="Double">
+                                                <span class="icon-line-height-2" aria-hidden="true"></span>
+                                                <span class="sr-only">Double</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-line-height-3" name="option-line-height" class="btn-check-input cislc-modalSettings-lineSpacing" value="taller" type="radio">
+                                            <label for="option-line-height-3" class="btn btn-option" title="Triple">
+                                                <span class="icon-line-height-3" aria-hidden="true"></span>
+                                                <span class="sr-only">Triple</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Letter spacing</legend>
+                                    <div class="setting-btn-row">
+                                        <div class="btn-check">
+                                            <input id="option-letter-spacing-1" name="option-letter-spacing" class="btn-check-input cislc-modalSettings-letterSpacing" type="radio" value="default" checked>
+                                            <label for="option-letter-spacing-1" class="btn btn-option" title="Tight">
+                                                <span class="icon-text-space-1" aria-hidden="true"></span>
+                                                <span class="sr-only">Tight</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-letter-spacing-2" name="option-letter-spacing" class="btn-check-input cislc-modalSettings-letterSpacing" value="wide" type="radio">
+                                            <label for="option-letter-spacing-2" class="btn btn-option" title="Medium">
+                                                <span class="icon-text-space-2" aria-hidden="true"></span>
+                                                <span class="sr-only">Medium</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-letter-spacing-3" name="option-letter-spacing" class="btn-check-input cislc-modalSettings-letterSpacing" value="wider" type="radio">
+                                            <label for="option-letter-spacing-3" class="btn btn-option" title="Wide">
+                                                <span class="icon-text-space-3" aria-hidden="true"></span>
+                                                <span class="sr-only">Wide</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Font</legend>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-0" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="default" type="radio" checked>
+                                        <label for="option-font-family-0" id="ff-default" class="form-check-label">Default</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-1" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="times" type="radio">
+                                        <label for="option-font-family-1" id="ff-times" class="form-check-label">Times New Roman</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-2" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="comic" type="radio">
+                                        <label for="option-font-family-2" id="ff-comic" class="form-check-label">Comic Sans</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-3" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="arial" type="radio">
+                                        <label for="option-font-family-3" id="ff-arial" class="form-check-label">Arial</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-4" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="verdana" type="radio">
+                                        <label for="option-font-family-4" id="ff-verdana" class="form-check-label">Verdana</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input id="option-font-family-5" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="open-dyslexic" type="radio">
+                                        <label for="option-font-family-5" id="ff-dyslexic" class="form-check-label">Open Dyslexic</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Color</legend>
+                                    <div class="setting-btn-row option-color-theme">
+                                        <div class="form-check form-checkradio">
+                                            <input id="option-color-theme-0" name="option-color-theme" class="form-check-input cislc-modalSettings-color" type="radio" value="default" checked>
+                                            <label for="option-color-theme-0" class="form-check-label">
+                                                <span class="sr-only">White</span>
+                                                <span class="theme-sample theme-sample-default" aria-hidden="true" title="White">a</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input id="option-color-theme-1" name="option-color-theme" class="form-check-input cislc-modalSettings-color" type="radio" value="sepia">
+                                            <label for="option-color-theme-1" class="form-check-label">
+                                                <span class="sr-only">Sepia</span>
+                                                <span class="theme-sample theme-sample-sepia" aria-hidden="true" title="Sepia">a</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input id="option-color-theme-2" name="option-color-theme" class="form-check-input cislc-modalSettings-color" type="radio" value="night">
+                                            <label for="option-color-theme-2" class="form-check-label">
+                                                <span class="sr-only">Dark</span>
+                                                <span class="theme-sample theme-sample-night" aria-hidden="true" title="Dark">a</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Word lookup links</legend>
+                                    <div class="form-switch-dual">
+                                        <label for="option-lookup-links" class="form-check-label-pre" aria-hidden="true">Hide</label>
+                                        <div class="form-check form-switch">
+                                            <input id="option-lookup-links" name="option-glossary" class="form-check-input cislc-modalSettings-glossary" type="checkbox">
+                                            <label for="option-lookup-links" class="form-check-label">Show</label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            {% comment %}
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Columns</legend>
+                                    <div class="setting-btn-row">
+                                        <div class="btn-check">
+                                            <input id="option-column-count-1" name="option-column-count" class="btn-check-input" type="radio" checked>
+                                            <label for="option-column-count-1" class="btn btn-xlarge btn-option">
+                                                <span class="icon-column-1" aria-hidden="true"></span>
+                                                <span class="sr-only">Single</span>
+                                            </label>
+                                        </div>
+                                        <div class="btn-check">
+                                            <input id="option-column-count-2" name="option-column-count" class="btn-check-input" type="radio">
+                                            <label for="option-column-count-2" class="btn btn-xlarge btn-option">
+                                                <span class="icon-column-2" aria-hidden="true"></span>
+                                                <span class="sr-only">Double</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Lookup</legend>
+                                    <div class="form-check form-switch">
+                                        <input id="option-lookup" class="form-check-input" type="checkbox">
+                                        <label for="option-lookup" class="form-check-label">Enable</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            {% endcomment %}
+                        </form>
                     </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Line spacing</legend>
-                            <div class="setting-btn-row">
-                                <div class="btn-check">
-                                    <input id="option-line-height-1" name="option-line-height" class="btn-check-input cislc-modalSettings-lineSpacing" value="default" type="radio">
-                                    <label for="option-line-height-1" class="btn btn-option" title="Single">
-                                        <span class="icon-line-height-1" aria-hidden="true"></span>
-                                        <span class="sr-only">Single</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-line-height-2" name="option-line-height" class="btn-check-input cislc-modalSettings-lineSpacing" value="tall" type="radio" checked>
-                                    <label for="option-line-height-2" class="btn btn-option" title="Double">
-                                        <span class="icon-line-height-2" aria-hidden="true"></span>
-                                        <span class="sr-only">Double</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-line-height-3" name="option-line-height" class="btn-check-input cislc-modalSettings-lineSpacing" value="taller" type="radio">
-                                    <label for="option-line-height-3" class="btn btn-option" title="Triple">
-                                        <span class="icon-line-height-3" aria-hidden="true"></span>
-                                        <span class="sr-only">Triple</span>
-                                    </label>
-                                </div>
+                    <div id="setting1" class="tab-pane">
+                        <!-- Reading Tools pane -->
+                        <form>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title">Voice</legend>
+                                    <div class="option-read-voice">
+                                        <button type="button" class="link-btn" data-cfw="dropdown">Female #1 <span class="caret" aria-hidden="true"></span></button>
+                                        <ul class="dropdown-menu dropreverse">
+                                            <li><button type="button" class="dropdown-item active">Female #1</button></li>
+                                            <li><button type="button" class="dropdown-item">Female #2</button></li>
+                                            <li><button type="button" class="dropdown-item">Male #1</button></li>
+                                            <li><button type="button" class="dropdown-item">Male #2</button></li>
+                                        </ul>
+                                    </div>
+                                </fieldset>
                             </div>
-                        </fieldset>
+                            <div class="setting">
+                                <fieldset>
+                                    <legend class="setting-title mb-0">Speed</legend>
+                                    <div class="option-read-speed">
+                                        <label for="set-read-speed" class="sr-only">reading speed</label>
+                                        <input id="set-read-speed" type="range" class="form-range cislc-modalSettings-readSpeed" min="0.25" max="2" step="0.25" value="1">
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </form>
+                        <div class="setting d-none"></div>
+                        <div class="setting">
+                            <legend class="setting-title">Play sample</legend>
+                            <button type="button" class="btn btn-flag" aria-label="Play sample">
+                                <span class="icon-play" aria-hidden="true"></span>
+                            </button>
+                            <button type="button" class="btn btn-flag" aria-label="Stop sample" disabled>
+                                <span class="icon-stop" aria-hidden="true"></span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Letter spacing</legend>
-                            <div class="setting-btn-row">
-                                <div class="btn-check">
-                                    <input id="option-letter-spacing-1" name="option-letter-spacing" class="btn-check-input cislc-modalSettings-letterSpacing" type="radio" value="default" checked>
-                                    <label for="option-letter-spacing-1" class="btn btn-option" title="Tight">
-                                        <span class="icon-text-space-1" aria-hidden="true"></span>
-                                        <span class="sr-only">Tight</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-letter-spacing-2" name="option-letter-spacing" class="btn-check-input cislc-modalSettings-letterSpacing" value="wide" type="radio">
-                                    <label for="option-letter-spacing-2" class="btn btn-option" title="Medium">
-                                        <span class="icon-text-space-2" aria-hidden="true"></span>
-                                        <span class="sr-only">Medium</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-letter-spacing-3" name="option-letter-spacing" class="btn-check-input cislc-modalSettings-letterSpacing" value="wider" type="radio">
-                                    <label for="option-letter-spacing-3" class="btn btn-option" title="Wide">
-                                        <span class="icon-text-space-3" aria-hidden="true"></span>
-                                        <span class="sr-only">Wide</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Font</legend>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-0" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="default" type="radio" checked>
-                                <label for="option-font-family-0" id="ff-default" class="form-check-label">Default</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-1" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="times" type="radio">
-                                <label for="option-font-family-1" id="ff-times" class="form-check-label">Times New Roman</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-2" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="comic" type="radio">
-                                <label for="option-font-family-2" id="ff-comic" class="form-check-label">Comic Sans</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-3" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="arial" type="radio">
-                                <label for="option-font-family-3" id="ff-arial" class="form-check-label">Arial</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-4" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="verdana" type="radio">
-                                <label for="option-font-family-4" id="ff-verdana" class="form-check-label">Verdana</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input id="option-font-family-5" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="open-dyslexic" type="radio">
-                                <label for="option-font-family-5" id="ff-dyslexic" class="form-check-label">Open Dyslexic</label>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Color</legend>
-                            <div class="setting-btn-row option-color-theme">
-                                <div class="form-check form-checkradio">
-                                    <input id="option-color-theme-0" name="option-color-theme" class="form-check-input cislc-modalSettings-color" type="radio" value="default" checked>
-                                    <label for="option-color-theme-0" class="form-check-label">
-                                        <span class="sr-only">White</span>
-                                        <span class="theme-sample theme-sample-default" aria-hidden="true" title="White">a</span>
-                                    </label>
-                                </div>
-                                <div class="form-check form-checkradio">
-                                    <input id="option-color-theme-1" name="option-color-theme" class="form-check-input cislc-modalSettings-color" type="radio" value="sepia">
-                                    <label for="option-color-theme-1" class="form-check-label">
-                                        <span class="sr-only">Sepia</span>
-                                        <span class="theme-sample theme-sample-sepia" aria-hidden="true" title="Sepia">a</span>
-                                    </label>
-                                </div>
-                                <div class="form-check form-checkradio">
-                                    <input id="option-color-theme-2" name="option-color-theme" class="form-check-input cislc-modalSettings-color" type="radio" value="night">
-                                    <label for="option-color-theme-2" class="form-check-label">
-                                        <span class="sr-only">Dark</span>
-                                        <span class="theme-sample theme-sample-night" aria-hidden="true" title="Dark">a</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Word lookup links</legend>
-                            <div class="form-switch-dual">
-                                <label for="option-lookup-links" class="form-check-label-pre" aria-hidden="true">Hide</label>
-                                <div class="form-check form-switch">
-                                    <input id="option-lookup-links" name="option-glossary" class="form-check-input cislc-modalSettings-glossary" type="checkbox">
-                                    <label for="option-lookup-links" class="form-check-label">Show</label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    {% comment %}
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Columns</legend>
-                            <div class="setting-btn-row">
-                                <div class="btn-check">
-                                    <input id="option-column-count-1" name="option-column-count" class="btn-check-input" type="radio" checked>
-                                    <label for="option-column-count-1" class="btn btn-xlarge btn-option">
-                                        <span class="icon-column-1" aria-hidden="true"></span>
-                                        <span class="sr-only">Single</span>
-                                    </label>
-                                </div>
-                                <div class="btn-check">
-                                    <input id="option-column-count-2" name="option-column-count" class="btn-check-input" type="radio">
-                                    <label for="option-column-count-2" class="btn btn-xlarge btn-option">
-                                        <span class="icon-column-2" aria-hidden="true"></span>
-                                        <span class="sr-only">Double</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="setting">
-                        <fieldset>
-                            <legend class="setting-title">Lookup</legend>
-                            <div class="form-check form-switch">
-                                <input id="option-lookup" class="form-check-input" type="checkbox">
-                                <label for="option-lookup" class="form-check-label">Enable</label>
-                            </div>
-                        </fieldset>
-                    </div>
-                    {% endcomment %}
-                </form>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary btn-small cislc-modalSettings-reset" type="reset">Reset</button>
