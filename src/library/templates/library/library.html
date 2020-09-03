@@ -19,12 +19,10 @@
     <div class="row">
         <div class="col">
             {% include "library/partial/library_view_selector.html" %}
-
-            {% comment "FIXME: Update placeholder user preference check" %}{% endcomment %}
-            {% if clusive_user.library.view == "list" %}
-            {% include "library/partial/library_list_options.html" %}
+            {% if style == 'list' %}
+                {% include "library/partial/library_list_options.html" %}
             {% else %}
-            {% include "library/partial/library_grid_options.html" %}
+                {% include "library/partial/library_grid_options.html" %}
             {% endif %}
         </div>
         {% if current_view == 'mine' %}
@@ -37,8 +35,7 @@
     {% if object_list|length == 0 %}
         No content found.
     {% else %}
-        {% comment "FIXME: Update placeholder user preference check" %}{% endcomment %}
-        {% if clusive_user.library.view == "list" %}
+        {% if style == 'list' %}
             {% include "library/partial/library_list_content.html" %}
         {% else %}
             {% include "library/partial/library_grid_content.html" %}
