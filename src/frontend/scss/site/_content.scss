@@ -114,6 +114,20 @@ h2,
     }
 }
 
+.has-form-range-tip {
+    position: relative;
+    line-height: 1.5;
+}
+.form-range-tip {
+    position: absolute;
+    top: 0;
+    @include font-size(.875rem);
+    line-height: 1;
+    color: var(--CT_formRangeTipColor);
+    transform: translateX(-50%);
+    user-select: none;
+}
+
 .link-above {
     position: relative;
     z-index: 2;

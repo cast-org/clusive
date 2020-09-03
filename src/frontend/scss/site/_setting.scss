@@ -127,22 +127,31 @@
     &::before,
     &::after {
         position: absolute;
+        top: 1.625rem;
         display: inline-block;
         //stylelint-disable-next-line font-family-no-missing-generic-family-keyword
         font-family: Fontello;
+        line-height: 1;
         color: inherit;
         content: "\e812";
     }
 
     &::before {
-        top: 1.5rem;
         left: 0;
         @include font-size(.875rem);
     }
     &::after{
-        top: 1.25rem;
         right: 0;
         @include font-size(1.25rem);
+    }
+
+    &.has-form-range-tip {
+        padding-top: .875rem;
+
+        &::before,
+        &::after {
+            top: 2.5rem;
+        }
     }
 }
 
