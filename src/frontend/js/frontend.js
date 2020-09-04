@@ -231,9 +231,4 @@ $(window).ready(function() {
     if (settingFontSize !== null) {
         formRangeTip(settingFontSize, formRangeFontSize);
     }
-
-    var $imgs = $('.card-img img');
-    for (var i = 0; i < $imgs.length; i++) {
-        doPortraitCheck($($imgs[i]), i);
-    }
 });
