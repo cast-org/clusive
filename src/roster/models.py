@@ -134,7 +134,7 @@ class ClusiveUser(models.Model):
                                     choices=LibraryViews.CHOICES)
 
     # What layout to use for the library cards. This choice is persistent.
-    library_style = models.CharField(max_length=1, default=LibraryStyles.BRICKS,
+    library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
                                      choices=LibraryStyles.CHOICES)
 
     @property 
