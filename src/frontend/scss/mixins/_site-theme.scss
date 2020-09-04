@@ -149,17 +149,6 @@
         --CT_btnOptionActiveBoxShadowOpacity: #{$btn-option-active-box-shadow-opacity};
         --CT_btnOptionActiveHoverBorderColor: #{$btn-option-active-hover-border-color};
 
-        --CT_btnTtsFocusRingRGB: #{red($btn-tts-focus-ring), green($btn-tts-focus-ring), blue($btn-tts-focus-ring)};
-        --CT_btnTtsBg: #{$btn-tts-bg};
-        --CT_btnTtsColor: #{$btn-tts-color};
-        --CT_btnTtsBorderColor: #{$btn-tts-border-color};
-        --CT_btnTtsHoverBg: #{$btn-tts-hover-bg};
-        --CT_btnTtsHoverColor: #{$btn-tts-hover-color};
-        --CT_btnTtsHoverBorderColor: #{$btn-tts-hover-border-color};
-        --CT_btnTtsActiveBg: #{$btn-tts-active-bg};
-        --CT_btnTtsActiveColor: #{$btn-tts-active-color};
-        --CT_btnTtsActiveBorderColor: #{$btn-tts-active-border-color};
-
         --CT_btnFlagFocusRingRGB: #{red($btn-flag-focus-ring), green($btn-flag-focus-ring), blue($btn-flag-focus-ring)};
         --CT_btnFlagBg: #{$btn-flag-bg};
         --CT_btnFlagColor: #{$btn-flag-color};
@@ -345,8 +334,6 @@
 
         --CT_ttsBackgroundColor: #{$tts-highlight-bg};
         --CT_ttsTextColor: #{$tts-highlight-color};
-
-        --CT_sidebarTtsActiveBg: #{$sidebar-tts-active-bg};
 
         --CT_imageDescCiteColor: #{$image-desc-cite-color};
 
