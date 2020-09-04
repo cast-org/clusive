@@ -9,13 +9,20 @@ var clusiveTTS = {
     readiumReadAloudButtonId: '#readiumReadAloud',
     readAloudButtonId: '#readAloudButton',
     readAloudButtonPlayAriaLabel: 'Read aloud',
-    readAloudButtonStopAriaLabel: 'Stop reading aloud',
-    readAloudIconId: '#readAloudIcon',
-    readAloudSrTextId: '#readAloudSrText'
+    readAloudButtonStopAriaLabel: 'Stop reading aloud'
+};
+
+var clusiveTTSRegionFromControl = function(ctl) {
+    'use strict';
+
+    var output = {};
+    output.region = ctl.closest('.region-tts');
+    output.mode = typeof(output.region.dataset.mode) !== "undefined" ? output.region.dataset.mode : null;
+
+    return output;
 };
 
 // Bind controls
-
 $(document).ready(function() {
     'use strict';
 
@@ -44,6 +51,9 @@ $(document).ready(function() {
             clusiveTTS.stopReading();
         }
     });
+
+    D2Reader.pauseReadAloud()
+    D2Reader.resumeReadAloud()
 });
 
 clusiveTTS.toggleButtonToPlay = function(id) {

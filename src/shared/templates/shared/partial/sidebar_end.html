@@ -5,14 +5,22 @@
     </button>
 </div>
 {% if read_aloud %}
-<div class="sidebar-tts" role="region" aria-label="Text to speech controls">
-    {% if read_aloud == 'Readium' %}
-    <button type="button" class="btn btn-tool" aria-label="Read aloud" title="Read aloud" id="readiumReadAloud">
-    {% else %}
-    <button type="button" class="btn btn-tool" aria-label="Read aloud" title="Read aloud" id="readAloudButton">
-    {% endif %}
-        <span id="readAloudIcon" class="icon icon-play" aria-hidden="true"></span>
-        <span id="readAloudSrText" class="sr-only">Read aloud</span>
-    </button>
+<div class="region-tts sidebar-tts" role="region" aria-label="Text to speech controls"{% if read_aloud == 'Readium' %} data-mode="Readium"{% endif %}>
+    <div class="sidebar-tts-inactive">
+        <button type="button" class="btn btn-tool sidebar-tts-play" aria-label="Read aloud" title="Read aloud">
+            <span class="icon-play" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div class="sidebar-tts-active">
+        <button type="button" class="btn btn-tts sidebar-tts-pause" aria-label="Pause read aloud" title="Pause read aloud">
+            <span class="icon-pause" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-tts sidebar-tts-resume" aria-label="Resume read aloud" title="Resume read aloud">
+            <span class="icon-play" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-tts sidebar-tts-stop" aria-label="Stop read aloud" title="Stop read aloud">
+            <span class="icon-stop" aria-hidden="true"></span>
+        </button>
+    </div>
 </div>
 {% endif %}
