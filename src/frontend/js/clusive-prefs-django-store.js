@@ -63,14 +63,14 @@
             }
         );
 
-        window.addEventListener("beforeunload", function (e) {                 
-            if(! that.isQueueEmpty()) {
-                console.debug("queue is not empty, prompting user for unload");
-                that.flush();
-                e.preventDefault();
-                e.returnValue = "";        
-            }                        
-        });
+        // window.addEventListener("beforeunload", function (e) {                 
+        //     if(! that.isQueueEmpty()) {
+        //         console.debug("queue is not empty, prompting user for unload");
+        //         that.flush();
+        //         e.preventDefault();
+        //         e.returnValue = "";        
+        //     }                        
+        // });
 
     };
 
@@ -235,8 +235,9 @@
                     adopt: 'default'
                 })
             })
-                .done(function(data) {
-                    console.debug('resetting preferences to default', data);
+                .done(function(data) {                    
+                    console.debug('resetting preferences to default set', data);                    
+                    messageQueue.add({"type": "PC", "preferences": data});
                     clusive.prefs.djangoStore.getUserPreferences(directModel, messageQueue, lastRequestTime, that);                              
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
