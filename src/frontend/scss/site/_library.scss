@@ -52,22 +52,29 @@
 
 
 .library-filter-list {
-    display: inline-flex;
-    flex-wrap: wrap;
-    @include list-unstyled();
+    padding-left: 1.5rem;
+    list-style: disc;
+
+    @include media-breakpoint-up(sm) {
+        display: inline-flex;
+        flex-direction: row;
+        @include list-unstyled();
+    }
 }
 
 .library-filter-item {
-    display: flex;
+    @include media-breakpoint-up(sm) {
+        display: flex;
 
-    + .library-filter-item {
-        padding-left: .25rem;
+        + .library-filter-item {
+            padding-left: .25rem;
 
-        &::before {
-            display: inline-block;
-            padding-right: .25rem;
-            color: var(--CT_libraryFilterColor);
-            content: "|";
+            &::before {
+                display: inline-block;
+                padding-right: .25rem;
+                color: var(--CT_libraryFilterColor);
+                content: "|";
+            }
         }
     }
 }
@@ -85,14 +92,17 @@
             text-decoration: underline;
         }
     }
+
+    &.active {
+        [class^="icon-"],
+        [class*=" icon-"] {
+            color: var(--CT_libraryFilterActiveIconColor);
+            text-shadow: var(--CT_libraryFilterActiveIconTextShadow);
+        }
+    }
 }
 
-
 .library-grid {
-    // Set a z-index to keep this below the header, works as long as no acestors
-    // have any z-index asjustments (up to the sibling of the header)
-    position: relative;
-    z-index: 0;
     display: flex;
     flex-flow: row wrap;
     align-items: stretch;
@@ -118,21 +128,73 @@
     }
 }
 
-.card-library {
-    box-shadow: var(--CT_cardLibraryBoxShadow);
+.library-grid-options {
+    @include media-breakpoint-down(xs) {
+        display: none;
+    }
+}
 
-    .link-stretch {
-        color: inherit;
-        text-decoration: none;
+.library-list {
+    padding-top: .75rem;
 
-        &:hover,
-        &:focus {
-            color: inherit;
-            text-decoration: underline;
+    > .card {
+        margin-bottom: 1.5rem;
+    }
+
+    .card-col-img {
+        @include media-breakpoint-down(xs) {
+            display: none;
+        }
+    }
+
+    .card-img {
+        flex: 1 0 auto;
+
+        img {
+            max-height: 45vw;
+
+            @include media-breakpoint-up(sm) {
+                max-height: 10vw;
+            }
+
+            @include media-breakpoint-up(md) {
+                max-height: 13vw;
+            }
+
+            @include media-breakpoint-up(xl) {
+                max-height: 10rem;
+            }
+        }
+    }
+
+    .card-body {
+        padding-top: 0;
+    }
+
+    .card-toggle {
+        padding-right: .25rem;
+        @include media-breakpoint-up(md) {
+            display: none;
+        }
+    }
+
+    .card-toggle-btn.open {
+        [class^="icon-"],
+        [class*=" icon-"] {
+            transform: rotate(90deg) translateY(5%);
+            transform-origin: center center;
+        }
+    }
+
+    .card-collapse {
+        @include media-breakpoint-up(md) {
+            display: block;
         }
     }
 }
 
-.card-library-action {
-    white-space: nowrap;
+.library-list-options {
+    @include media-breakpoint-up(md) {
+        display: none;
+    }
 }

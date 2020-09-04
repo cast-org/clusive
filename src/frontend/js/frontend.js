@@ -1,3 +1,95 @@
+/* global Masonry */
+/* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse */
+
+var libraryMasonryApi = null;
+
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+// By David Walsh (https://davidwalsh.name/javascript-debounce-function)
+function clusiveDebounce(func, wait, immediate) {
+    'use strict';
+
+    var timeout;
+    return function() {
+        var context = this;
+        var args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) {
+                func.apply(context, args);
+            }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+
+        if (callNow) {
+            func.apply(context, args);
+        }
+    };
+}
+
+var libraryMasonryLayout = clusiveDebounce(function() {
+    'use strict';
+
+    if (libraryMasonryApi !== null) {
+        libraryMasonryApi.layout();
+    }
+}, 150);
+
+function libraryMasonryEnable() {
+    'use strict';
+
+    var elem = document.querySelector('.library-grid');
+    libraryMasonryApi = new Masonry(elem, {
+        itemSelector: '.card-library',
+        columnWidth: '.card-library',
+        percentPosition: true,
+        transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
+    });
+
+    document.addEventListener('update.cisl.prefs', libraryMasonryLayout, {
+        passive: true
+    });
+
+    var imgs = elem.querySelectorAll('img');
+    imgs.forEach(function(img) {
+        $.CFW_imageLoaded($(img), null, function() {
+            libraryMasonryLayout();
+        });
+    });
+
+    document.querySelector('.library-masonry-on').setAttribute('disabled', '');
+    document.querySelector('.library-masonry-off').removeAttribute('disabled');
+}
+
+function libraryMasonryDisable() {
+    'use strict';
+
+    document.removeEventListener('update.cisl.prefs', libraryMasonryLayout);
+
+    if (libraryMasonryApi !== null) {
+        libraryMasonryApi.destroy();
+        libraryMasonryApi = null;
+    }
+    document.querySelector('.library-masonry-on').removeAttribute('disabled');
+    document.querySelector('.library-masonry-off').setAttribute('disabled', '');
+}
+
+function libraryListExpand() {
+    'use strict';
+
+    $('.card-toggle-btn').CFW_Collapse('show');
+}
+
+function libraryListCollapse() {
+    'use strict';
+
+    $('.card-toggle-btn').CFW_Collapse('hide');
+}
+
 function confirmationPublicationDelete() {
     'use strict';
 
@@ -48,78 +140,6 @@ function confirmationSharing() {
                 unlink: true
             });
             $trigger.CFW_Modal('show');
-        }
-    });
-}
-
-function imgCheckPortrait($img, useAlt) {
-    'use strict';
-
-    if (typeof useAlt === 'undefined') { useAlt = false; }
-    var imgWidth = $img[0].naturalWidth;
-    var imgHeight = $img[0].naturalHeight;
-    var isPortrait = false;
-
-    if (useAlt) {
-        $img.removeClass('is-portrait');
-        imgWidth = $img[0].width;
-        imgHeight = $img[0].height;
-    }
-
-    if (imgWidth / imgHeight < 1) { isPortrait = true; }
-
-    if (isPortrait) {
-        $img.addClass('is-portrait');
-    }
-}
-
-function isImageLoaded($img, instance, callback) {
-    'use strict';
-
-    var img = $img[0];
-    var proxyImg = new Image();
-    var $proxyImg = $(proxyImg);
-
-    if (typeof instance === 'undefined') {
-        instance = '';
-    } else {
-        instance = '.' + instance;
-    }
-
-    var _doCallback = function() {
-        $proxyImg
-            .off('load.imageLoaded' + instance)
-            .remove();
-        callback();
-    };
-
-    var _isImageComplete = function() {
-        return img.complete && typeof img.naturalWidth !== 'undefined';
-    };
-
-    // Firefox reports img.naturalWidth=0 for SVG
-    // if (_isImageComplete() && img.naturalWidth !== 0) {
-    if (_isImageComplete()) {
-        _doCallback();
-        return;
-    }
-
-    $proxyImg
-        .off('load.imageLoaded' + instance)
-        .one('load.imageLoaded' + instance, _doCallback);
-    proxyImg.src = img.src;
-}
-
-function doPortraitCheck($img, i) {
-    'use strict';
-
-    isImageLoaded($img, i, function() {
-        // Firefox reports img.naturalWidth=0 for SVG
-        // Also currently borked in most browsers: https://github.com/whatwg/html/issues/3510
-        if ($img[0].naturalWidth !== 0) {
-            imgCheckPortrait($img, false);
-        } else {
-            imgCheckPortrait($img, true);
         }
     });
 }
@@ -210,10 +230,5 @@ $(window).ready(function() {
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
         formRangeTip(settingFontSize, formRangeFontSize);
-    }
-
-    var $imgs = $('.card-img img');
-    for (var i = 0; i < $imgs.length; i++) {
-        doPortraitCheck($($imgs[i]), i);
     }
 });

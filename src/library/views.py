@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 class LibraryView(LoginRequiredMixin, ListView):
     """Library page showing a list of books"""
     template_name = 'library/library.html'
+    style = None
     view = 'public'
     view_name = None  # User-visible name for the current view
     period = None
@@ -50,6 +51,10 @@ class LibraryView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
         self.view = kwargs.get('view')
+        if kwargs.get('style'):
+            self.style = kwargs.get('style')
+        else:
+            self.style = self.clusive_user.library_style
         if self.view == 'period':
             # Make sure period_id is specified and legal.
             if kwargs.get('period_id'):
@@ -68,6 +73,7 @@ class LibraryView(LoginRequiredMixin, ListView):
         # Set defaults for next time
         self.clusive_user.library_view = self.view
         self.clusive_user.current_period = self.period
+        self.clusive_user.library_style = self.style
         self.clusive_user.save()
         page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
@@ -76,6 +82,7 @@ class LibraryView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['clusive_user'] = self.clusive_user
         context['period'] = self.period
+        context['style'] = self.style
         context['current_view'] = self.view
         context['current_view_name'] = self.view_name
         context['view_names'] = dict(LibraryViews.CHOICES)
@@ -172,7 +179,7 @@ class RemoveBookConfirmView(LoginRequiredMixin, View):
         book = get_object_or_404(Book, pk=kwargs['pk'])
         owner = book.owner == request.clusive_user
         context = {'pub': book, 'owner': owner }
-        return render(request, 'library/partial/book_delete_confirm.html', context=context)
+        return render(request, 'library/partial/modal_book_delete_confirm.html', context=context)
 
 
 class ShareDialogView(LoginRequiredMixin, FormView):

@@ -2,7 +2,7 @@
 
 (function(fluid) {
     'use strict';
-    
+
     // This removes the tableOfContents and
     // enhanceInputs preferences from the
     // default Infusion starter auxiliary schema
@@ -141,6 +141,12 @@
     cisl.prefs.getSettings = function(that) {
         console.debug('calling CISL prefs Editor fetch impl');
         return that.getSettings();
+    };
+
+    cisl.prefs.eventUpdate = function() {
+        // Trigger a client side event
+        var event = new Event('update.cisl.prefs');
+        document.dispatchEvent(event);
     };
 
 }(fluid_3_0_0));
