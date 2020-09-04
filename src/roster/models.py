@@ -1,14 +1,11 @@
+import json
 import logging
 
 from django.contrib.auth.models import User
 from django.db import models
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from pytz import country_timezones
-
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +124,7 @@ class ClusiveUser(models.Model):
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
     # List of all class periods the user is part of
-    periods = models.ManyToManyField(Period, blank=True, related_name='periods')
+    periods = models.ManyToManyField(Period, blank=True, related_name='users')
 
     # Which period will be shown by default, eg in library or manage rosters view
     current_period = models.ForeignKey(Period, null=True, blank=True, on_delete=models.SET_NULL)

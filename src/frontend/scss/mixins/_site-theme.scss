@@ -298,6 +298,7 @@
         --CT_formRangeThumbFocusBoxShadowRGB: #{red($form-range-thumb-focus-box-shadow-color), green($form-range-thumb-focus-box-shadow-color), blue($form-range-thumb-focus-box-shadow-color)};
         --CT_formRangeThumbFocusBoxShadowOpacity: #{$form-range-thumb-focus-box-shadow-opacity};
         --CT_formRangeThumbActiveBg: #{$form-range-thumb-active-bg};
+        --CT_formRangeTipColor: #{$form-range-tip-color};
 
         --CT_formSwitchTrackBg: #{$form-switch-track-bg};
         --CT_formSwitchTrackBorderColor: #{$form-switch-track-border-color};

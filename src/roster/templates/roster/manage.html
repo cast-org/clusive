@@ -1,0 +1,41 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block title %}Manage{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="manage" %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <main id="content" tabindex="-1">
+        <div class="row">
+            <div class="col">
+                <h1>Manage: {{ current_period.name }}</h1>
+            </div>
+            {% include "shared/partial/period_selector.html" %}
+        </div>
+
+        <div class="table-scroll">
+            <table class="table table-divided table-roster">
+                <thead>
+                <tr>
+                    <th scope="col">First name</th>
+                    <th scope="col">Last name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Password</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in students %}
+                  {% include 'roster/partial/manage_row.html' with info=s.info form=s.form %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+{% endblock %}

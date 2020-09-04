@@ -3,6 +3,15 @@ const path = require('path');
 
 module.exports = {
     mode: 'development',
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                enforce: 'pre',
+                use: ['source-map-loader']
+            }
+        ],
+    },
     entry: {
         main: './src/index.js',
         internal: './src/internal.js'

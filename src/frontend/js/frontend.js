@@ -172,10 +172,68 @@ function formFileText() {
     });
 }
 
+function formRangeFontSize(range) {
+    'use strict';
+
+    var tip = range.parentNode.querySelector('.form-range-tip');
+    tip.innerText = (range.value * 16) + 'px';
+}
+
+function formRangeTipPosition(range) {
+    'use strict';
+
+    var tip = range.parentNode.querySelector('.form-range-tip');
+    var val = range.value;
+    var min = range.min ? range.min : 0;
+    var max = range.max ? range.max : 100;
+    // var percentage = Number(((val - min) * 100) / (max - min));
+    var ratio = Number(((val - min)) / (max - min));
+    var thumbWidth = 1.25;
+    var thumbHalfWidth = thumbWidth / 2;
+    var leftCalc = 'calc(' + ratio + ' * ((100% - ' + thumbHalfWidth + 'rem) - ' + thumbHalfWidth + 'rem) + ' + thumbHalfWidth + 'rem)';
+
+    tip.style.left = leftCalc;
+}
+
+function formRangeTip(range, callback) {
+    'use strict';
+
+    var tip = document.createElement('div');
+    tip.classList.add('form-range-tip');
+    range.after(tip);
+
+    var tipID = $(tip).CFW_getID('clusive_range');
+    tip.setAttribute('id', tipID);
+    range.setAttribute('aria-describedby', tipID);
+
+    range.parentNode.classList.add('has-form-range-tip');
+
+    range.addEventListener('input', function() {
+        formRangeTipPosition(range);
+        callback(range);
+    });
+    window.addEventListener('resize', function() {
+        formRangeTipPosition(range);
+    });
+
+    formRangeTipPosition(range);
+    callback(range);
+}
+
 $(window).ready(function() {
     'use strict';
 
     formFileText();
     confirmationPublicationDelete();
     confirmationSharing();
+
+    var settingFontSize = document.querySelector('#set-size');
+    if (settingFontSize !== null) {
+        formRangeTip(settingFontSize, formRangeFontSize);
+    }
+
+    var $imgs = $('.card-img img');
+    for (var i = 0; i < $imgs.length; i++) {
+        doPortraitCheck($($imgs[i]), i);
+    }
 });
