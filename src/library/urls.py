@@ -28,8 +28,6 @@ urlpatterns = [
          name='library'),
     path('<str:style>/<str:view>/', views.LibraryView.as_view(),
          name='library'),
-    path('<str:view>/<int:period_id>', views.LibraryView.as_view(),
-         name='library'),
     path('<str:view>', views.LibraryView.as_view(),
          name='library'),
 ]

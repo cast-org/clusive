@@ -25,10 +25,18 @@ class ReaderIndexView(LoginRequiredMixin,RedirectView):
             clusive_user : ClusiveUser
             clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
             view = clusive_user.library_view
+            style = clusive_user.library_style
             if view == 'period' and clusive_user.current_period:
-                return reverse('library', kwargs = {'view': 'period', 'period_id': clusive_user.current_period.id})
+                return reverse('library', kwargs = {
+                    'style': style,
+                    'view': 'period',
+                    'period_id': clusive_user.current_period.id
+                })
             else:
-                return reverse('library', kwargs = {'view': view})
+                return reverse('library', kwargs = {
+                    'style': style,
+                    'view': view
+                })
 
 
 class ReaderChooseVersionView(RedirectView):

@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 class LibraryView(LoginRequiredMixin, ListView):
     """Library page showing a list of books"""
     template_name = 'library/library.html'
-    style = 'grid'
+    style = None
     view = 'public'
     view_name = None  # User-visible name for the current view
     period = None
@@ -53,6 +53,8 @@ class LibraryView(LoginRequiredMixin, ListView):
         self.view = kwargs.get('view')
         if kwargs.get('style'):
             self.style = kwargs.get('style')
+        else:
+            self.style = self.clusive_user.library_style
         if self.view == 'period':
             # Make sure period_id is specified and legal.
             if kwargs.get('period_id'):
@@ -71,6 +73,7 @@ class LibraryView(LoginRequiredMixin, ListView):
         # Set defaults for next time
         self.clusive_user.library_view = self.view
         self.clusive_user.current_period = self.period
+        self.clusive_user.library_style = self.style
         self.clusive_user.save()
         page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
@@ -84,13 +87,6 @@ class LibraryView(LoginRequiredMixin, ListView):
         context['current_view_name'] = self.view_name
         context['view_names'] = dict(LibraryViews.CHOICES)
         return context
-
-# class LibraryListView(LibraryView):
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['list_view'] = True
-#         return context
 
 
 class UploadView(LoginRequiredMixin, FormView):
