@@ -142,6 +142,17 @@ $btn-tool-active-bg:                    rgba(#acfdf0, 1);
 $btn-tool-active-color:                 $btn-tool-color;
 $btn-tool-active-border-color:          transparent;
 
+$btn-tts-focus-ring:                    #636b82;
+$btn-tts-bg:                            #ff554d;
+$btn-tts-color:                         #111;
+$btn-tts-border-color:                  transparent;
+$btn-tts-hover-bg:                      #6268ad;
+$btn-tts-hover-color:                   #fbfbfb;
+$btn-tts-hover-border-color:            transparent;
+$btn-tts-active-bg:                     palette($btn-tts-hover-bg, 600);
+$btn-tts-active-color:                  $btn-tts-hover-color;
+$btn-tts-active-border-color:           transparent;
+
 $btn-option-focus-ring:                 #636b82;
 $btn-option-bg:                         #fff;
 $btn-option-color:                      #333;
@@ -353,6 +364,8 @@ $wordbank-count-empty-border-color:     #636b82;
 // Text-to-Speech (TTS)
 $tts-highlight-bg:                      #fffd38;
 $tts-highlight-color:                   #636b82;
+
+$sidebar-tts-active-bg:                 #ff554d;
 
 // Glossary/definitions
 $glossary-underline:                    #acfdf0;

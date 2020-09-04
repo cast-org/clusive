@@ -179,6 +179,13 @@ function formRangeFontSize(range) {
     tip.innerText = (range.value * 16) + 'px';
 }
 
+function formRangeReadSpeed(range) {
+    'use strict';
+
+    var tip = range.parentNode.querySelector('.form-range-tip');
+    tip.innerText = range.value;
+}
+
 function formRangeTipPosition(range) {
     'use strict';
 
@@ -230,5 +237,10 @@ $(window).ready(function() {
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
         formRangeTip(settingFontSize, formRangeFontSize);
+    }
+
+    var settingReadSpeed = document.querySelector('#set-read-speed');
+    if (settingReadSpeed !== null) {
+        formRangeTip(settingReadSpeed, formRangeReadSpeed);
     }
 });

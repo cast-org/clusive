@@ -196,3 +196,39 @@
         @include sample-theme($fg, $bg, $bc);
     }
 }
+
+// Reading Options
+
+.option-read-speed {
+    position: relative;
+    margin-bottom: 1.25rem;
+
+    &::before,
+    &::after {
+        position: absolute;
+        top: 1.625rem;
+        display: inline-block;
+        @include font-size(.875rem);
+        line-height: 1;
+        color: inherit;
+        content: "\e812";
+    }
+
+    &::before {
+        left: 0;
+        content: "slow";
+    }
+    &::after{
+        right: 0;
+        content: "fast";
+    }
+
+    &.has-form-range-tip {
+        padding-top: .875rem;
+
+        &::before,
+        &::after {
+            top: 2.5rem;
+        }
+    }
+}
