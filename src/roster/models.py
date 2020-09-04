@@ -99,9 +99,9 @@ class LibraryViews:
 
 
 class LibraryStyles:
-    BRICKS = 'B'
-    GRID = 'G'
-    LIST = 'L'
+    BRICKS = 'bricks'
+    GRID = 'grid'
+    LIST = 'list'
 
     CHOICES = [
         (BRICKS, 'bricks'),
