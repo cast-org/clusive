@@ -137,7 +137,7 @@
         @include border-radius(10rem);
     }
 
-    .sidebar-tts-stop {
+    .tts-stop {
         margin-top: .25rem;
     }
 
@@ -155,12 +155,12 @@
     }
 
     &.paused {
-        .sidebar-tts-pause {
+        .tts-pause {
             display: none;
         }
     }
     &:not(.paused) {
-        .sidebar-tts-resume {
+        .tts-resume {
             display: none;
         }
     }

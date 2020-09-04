@@ -6,86 +6,124 @@
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
-    readiumReadAloudButtonId: '#readiumReadAloud',
-    readAloudButtonId: '#readAloudButton',
-    readAloudButtonPlayAriaLabel: 'Read aloud',
-    readAloudButtonStopAriaLabel: 'Stop reading aloud'
-};
-
-var clusiveTTSRegionFromControl = function(ctl) {
-    'use strict';
-
-    var output = {};
-    output.region = ctl.closest('.region-tts');
-    output.mode = typeof(output.region.dataset.mode) !== "undefined" ? output.region.dataset.mode : null;
-
-    return output;
+    region: {}
 };
 
 // Bind controls
 $(document).ready(function() {
     'use strict';
 
-    // Delegate button with this ID to Readium
-    $(clusiveTTS.readiumReadAloudButtonId).click(function() {
-        console.debug('Readium read aloud button clicked');
-        if (!clusiveTTS.synth.speaking) {
-            clusiveTTS.toggleButtonToStop(clusiveTTS.readiumReadAloudButtonId);
-            D2Reader.startReadAloud();
-            // clusiveTTS.readAll();
-        } else if (clusiveTTS.synth.speaking) {
-            clusiveTTS.toggleButtonToPlay(clusiveTTS.readiumReadAloudButtonId);
-            D2Reader.stopReadAloud();
+    // Allow play button to have toggle behavior
+    $('.tts-play').on('click', function(e) {
+        clusiveTTS.setRegion(e.currentTarget);
+
+        if (clusiveTTS.region.mode === 'Readium') {
+            console.debug('Readium read aloud play button clicked');
+            if (!clusiveTTS.synth.speaking) {
+                D2Reader.startReadAloud();
+            } else {
+                D2Reader.stopReadAloud();
+            }
+        } else {
+            console.debug('read aloud play button clicked');
+            if (!clusiveTTS.synth.speaking) {
+                clusiveTTS.read();
+            } else {
+                clusiveTTS.stopReading();
+            }
         }
+        clusiveTTS.updateUI();
     });
 
-    // Handle this button with TTS code below
-    $(clusiveTTS.readAloudButtonId).click(function() {
-        console.debug('read aloud button clicked');
-        if (!clusiveTTS.synth.speaking) {
-            clusiveTTS.toggleButtonToStop(clusiveTTS.readAloudButtonId);
-            clusiveTTS.read();
-            // clusiveTTS.readAll();
-        } else if (clusiveTTS.synth.speaking) {
-            clusiveTTS.toggleButtonToPlay(clusiveTTS.readAloudButtonId);
+    $('.tts-stop').on('click', function(e) {
+        clusiveTTS.setRegion(e.currentTarget);
+
+        if (clusiveTTS.region.mode === 'Readium') {
+            console.debug('Readium read aloud stop button clicked');
+            D2Reader.stopReadAloud();
+        } else {
+            console.debug('read aloud stop button clicked');
             clusiveTTS.stopReading();
         }
+        clusiveTTS.updateUI();
     });
 
-    D2Reader.pauseReadAloud()
-    D2Reader.resumeReadAloud()
+    $('.tts-pause').on('click', function(e) {
+        clusiveTTS.setRegion(e.currentTarget);
+
+        if (clusiveTTS.region.mode === 'Readium') {
+            console.debug('Readium read aloud pause button clicked');
+            D2Reader.pauseReadAloud();
+        } else {
+            console.debug('read aloud pause button clicked');
+            clusiveTTS.synth.pause();
+        }
+        clusiveTTS.updateUI();
+    });
+
+    $('.tts-resume').on('click', function(e) {
+        clusiveTTS.setRegion(e.currentTarget);
+
+        if (clusiveTTS.region.mode === 'Readium') {
+            console.debug('Readium read aloud pause button clicked');
+            D2Reader.resumeReadAloud();
+        } else {
+            console.debug('read aloud pause button clicked');
+            clusiveTTS.synth.resume();
+        }
+        clusiveTTS.updateUI();
+    });
 });
 
-clusiveTTS.toggleButtonToPlay = function(id) {
+clusiveTTS.setRegion = function(ctl) {
+    var newRegion = {};
+    newRegion.elm = ctl.closest('.tts-region');
+    newRegion.mode = newRegion.elm.dataset.hasOwnProperty('mode') ? newRegion.elm.dataset.mode : null;
+
+    // Stop any previous region from reading
+    if (Object.keys(clusiveTTS.region).length && (clusiveTTS.region.elm !== newRegion.elm)) {
+        if (clusiveTTS.region.mode === 'Readium') {
+            console.debug('Readium read aloud stop on region chage');
+            D2Reader.stopReadAloud();
+        } else {
+            console.debug('read aloud stop on region change');
+            clusiveTTS.stopReading();
+        }
+    }
+
+    if (clusiveTTS.region.elm !== newRegion.elm) {
+        clusiveTTS.region = newRegion;
+    }
+}
+
+clusiveTTS.updateUI = function() {
     'use strict';
 
-    var control = $(id);
-    control.attr({
-        'aria-label': clusiveTTS.readAloudButtonPlayAriaLabel,
-        'title': clusiveTTS.readAloudButtonPlayAriaLabel
-    });
-    control.find('.icon').addClass('icon-play').removeClass('icon-stop');
-    control.find('.sr-only').text(clusiveTTS.readAloudButtonPlayAriaLabel);
+    if (!Object.keys(clusiveTTS.region).length) { return; }
+
+    var region = clusiveTTS.region.elm;
+
+    if (clusiveTTS.synth.paused) {
+        region.classList.add('paused');
+    } else {
+        region.classList.remove('paused');
+    }
+
+    if (clusiveTTS.synth.speaking || clusiveTTS.synth.pending) {
+        region.classList.add('active');
+    } else {
+        region.classList.remove('paused');
+        region.classList.remove('active');
+        clusiveTTS.region = {};
+    }
 };
-
-clusiveTTS.toggleButtonToStop = function(id) {
-    'use strict';
-
-    var control = $(id);
-    control.attr({
-        'aria-label': clusiveTTS.readAloudButtonStopAriaLabel,
-        'title': clusiveTTS.readAloudButtonStopAriaLabel
-    });
-    control.find('.icon').removeClass('icon-play', false).addClass('icon-stop');
-    control.find('.sr-only').text(clusiveTTS.readAloudButtonStopAriaLabel);
-};
-
 
 // Stop an in-process reading
-
 clusiveTTS.stopReading = function() {
     clusiveTTS.elementsToRead = [];
     clusiveTTS.synth.cancel();
+    clusiveTTS.updateUI();
+
 };
 
 clusiveTTS.readQueuedElements = function() {
@@ -95,7 +133,7 @@ clusiveTTS.readQueuedElements = function() {
         clusiveTTS.readElement(toRead.element, toRead.offset, end);
     } else {
         console.debug('Done reading elements');
-        clusiveTTS.toggleButtonToPlay();
+        clusiveTTS.updateUI();
     }
 };
 
@@ -151,7 +189,7 @@ clusiveTTS.readElements = function(textElements) {
 };
 
 clusiveTTS.getAllTextElements = function(documentBody) {
-    var textElements = documentBody.find('h1,h2,h3,h4,h5,h6,p');
+    var textElements = documentBody.find('h1, h2, h3, h4, h5, h6, p');
     return textElements;
 };
 
