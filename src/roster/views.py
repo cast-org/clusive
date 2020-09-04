@@ -67,7 +67,7 @@ class PreferenceSetView(View):
                 {'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_name})
 
         # Replace all existing preferences with the new set.
-        # user.delete_preferences()
+        user.delete_preferences()
         set_user_preferences(user, desired_prefs, request)
 
         # Return the newly-established preferences
