@@ -144,7 +144,7 @@
         listeners: {
             'onWrite.impl': {
                 listener: 'clusive.prefs.djangoStore.setUserPreferences',
-                args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue"]
+                args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue", "{that}.lastRequestTime", "{that}"]
             }
         },
         invokers: {
@@ -220,7 +220,7 @@
         return djangoStorePromise;
     };
 
-    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue) {
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
         console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
         
         // TODO: switch this over to use the messageQueue as well
@@ -237,7 +237,7 @@
             })
                 .done(function(data) {
                     console.debug('resetting preferences to default', data);
-                    clusive.prefs.djangoStore.getUserPreferences(directModel);
+                    clusive.prefs.djangoStore.getUserPreferences(directModel, messageQueue, lastRequestTime, that);                              
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
                     console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
