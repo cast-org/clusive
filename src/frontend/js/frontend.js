@@ -176,7 +176,7 @@ function formRangeFontSize(range) {
     'use strict';
 
     var tip = range.parentNode.querySelector('.form-range-tip');
-    tip.innerText = (range.value * 16) + 'px';
+    tip.innerText = Math.round(range.value * 16) + 'px';
 }
 
 function formRangeReadSpeed(range) {
