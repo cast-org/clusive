@@ -94,6 +94,8 @@
     }
 
     &.active {
+        font-weight: $font-weight-bold;
+
         [class^="icon-"],
         [class*=" icon-"] {
             color: var(--CT_libraryFilterActiveIconColor);
