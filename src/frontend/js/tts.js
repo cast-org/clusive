@@ -21,18 +21,21 @@ $(document).ready(function() {
             console.debug('Readium read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
                 D2Reader.startReadAloud();
+                clusiveTTS.updateUI('play');
             } else {
                 D2Reader.stopReadAloud();
+                clusiveTTS.updateUI('stop');
             }
         } else {
             console.debug('read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
                 clusiveTTS.read();
+                clusiveTTS.updateUI('play');
             } else {
                 clusiveTTS.stopReading();
+                clusiveTTS.updateUI('stop');
             }
         }
-        clusiveTTS.updateUI();
     });
 
     $('.tts-stop').on('click', function(e) {
@@ -45,7 +48,7 @@ $(document).ready(function() {
             console.debug('read aloud stop button clicked');
             clusiveTTS.stopReading();
         }
-        clusiveTTS.updateUI();
+        clusiveTTS.updateUI('stop');
     });
 
     $('.tts-pause').on('click', function(e) {
@@ -58,20 +61,20 @@ $(document).ready(function() {
             console.debug('read aloud pause button clicked');
             clusiveTTS.synth.pause();
         }
-        clusiveTTS.updateUI();
+        clusiveTTS.updateUI('pause');
     });
 
     $('.tts-resume').on('click', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
-            console.debug('Readium read aloud pause button clicked');
+            console.debug('Readium read aloud resume button clicked');
             D2Reader.resumeReadAloud();
         } else {
-            console.debug('read aloud pause button clicked');
+            console.debug('read aloud resume button clicked');
             clusiveTTS.synth.resume();
         }
-        clusiveTTS.updateUI();
+        clusiveTTS.updateUI('resume');
     });
 });
 
@@ -89,6 +92,7 @@ clusiveTTS.setRegion = function(ctl) {
             console.debug('read aloud stop on region change');
             clusiveTTS.stopReading();
         }
+        clusiveTTS.updateUI('stop');
     }
 
     if (clusiveTTS.region.elm !== newRegion.elm) {
@@ -96,13 +100,16 @@ clusiveTTS.setRegion = function(ctl) {
     }
 }
 
-clusiveTTS.updateUI = function() {
+clusiveTTS.updateUI = function(mode) {
     'use strict';
 
     if (!Object.keys(clusiveTTS.region).length) { return; }
 
     var region = clusiveTTS.region.elm;
 
+    /*
+     * Partially works, are speechSynthesis methods async() ?
+     *
     if (clusiveTTS.synth.paused) {
         region.classList.add('paused');
     } else {
@@ -115,6 +122,25 @@ clusiveTTS.updateUI = function() {
         region.classList.remove('paused');
         region.classList.remove('active');
         clusiveTTS.region = {};
+    }
+    */
+
+    switch(mode) {
+        case 'resume':
+        case 'play': {
+            region.classList.remove('paused');
+            region.classList.add('active');
+            break;
+        }
+        case 'pause': {
+            region.classList.add('paused');
+            region.classList.add('active');
+            break;
+        }
+        default: {
+            region.classList.remove('paused');
+            region.classList.remove('active');
+        }
     }
 };
 
@@ -133,7 +159,7 @@ clusiveTTS.readQueuedElements = function() {
         clusiveTTS.readElement(toRead.element, toRead.offset, end);
     } else {
         console.debug('Done reading elements');
-        clusiveTTS.updateUI();
+        clusiveTTS.updateUI('stop');
     }
 };
 
