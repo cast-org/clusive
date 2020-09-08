@@ -61,8 +61,10 @@ function libraryMasonryEnable() {
         });
     });
 
-    document.querySelector('.library-masonry-on').setAttribute('disabled', '');
-    document.querySelector('.library-masonry-off').removeAttribute('disabled');
+    if (document.querySelector('.library-masonry-on') !== null) {
+        document.querySelector('.library-masonry-on').setAttribute('disabled', '');
+        document.querySelector('.library-masonry-off').removeAttribute('disabled');
+    }
 }
 
 function libraryMasonryDisable() {
@@ -74,8 +76,10 @@ function libraryMasonryDisable() {
         libraryMasonryApi.destroy();
         libraryMasonryApi = null;
     }
-    document.querySelector('.library-masonry-on').removeAttribute('disabled');
-    document.querySelector('.library-masonry-off').setAttribute('disabled', '');
+    if (document.querySelector('.library-masonry-on') !== null) {
+        document.querySelector('.library-masonry-on').removeAttribute('disabled');
+        document.querySelector('.library-masonry-off').setAttribute('disabled', '');
+    }
 }
 
 function libraryListExpand() {

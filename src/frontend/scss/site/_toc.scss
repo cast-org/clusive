@@ -112,7 +112,7 @@
             line-height: 1;
 
             &::before {
-                font-weight: 700;
+                font-weight: $font-weight-bold;
             }
         }
 
@@ -135,7 +135,7 @@
 
 .toc-depth-0 {
     @include font-size(1rem);
-    font-weight: 700;
+    font-weight: $font-weight-bold;
 
     &.nav-link {
         padding-left: .75rem;
@@ -149,7 +149,7 @@
 }
 .toc-depth-1 {
     @include font-size(1rem);
-    font-weight: 700;
+    font-weight: $font-weight-bold;
 
     &.nav-link {
         padding-left: 1.75rem;
@@ -176,7 +176,7 @@
 .nav-toc-header {
     margin-bottom: .125rem;
     @include font-size(1.125rem);
-    font-weight: 600;
+    font-weight: $font-weight-bold;
 }
 
 .nav-highlight {
@@ -238,7 +238,7 @@
 }
 .note-title {
     @include font-size(.875rem);
-    font-weight: 600;
+    font-weight: $font-weight-bold;
     color: var(--CT_noteTitleColor);
 
     [class^="icon-"],
