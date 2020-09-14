@@ -87,6 +87,7 @@
         text-decoration: none;
 
         @include hover-focus() {
+            color: var(--CT_linkHoverColor);
             text-decoration: underline;
         }
     }
