@@ -43,6 +43,8 @@ function libraryMasonryEnable() {
     'use strict';
 
     var elem = document.querySelector('.library-grid');
+    elem.classList.add('has-masonry');
+
     libraryMasonryApi = new Masonry(elem, {
         itemSelector: '.card-library',
         columnWidth: '.card-library',
@@ -70,12 +72,16 @@ function libraryMasonryEnable() {
 function libraryMasonryDisable() {
     'use strict';
 
+    var elem = document.querySelector('.library-grid');
+    elem.classList.remove('has-masonry');
+
     document.removeEventListener('update.cisl.prefs', libraryMasonryLayout);
 
     if (libraryMasonryApi !== null) {
         libraryMasonryApi.destroy();
         libraryMasonryApi = null;
     }
+
     if (document.querySelector('.library-masonry-on') !== null) {
         document.querySelector('.library-masonry-on').removeAttribute('disabled');
         document.querySelector('.library-masonry-off').setAttribute('disabled', '');

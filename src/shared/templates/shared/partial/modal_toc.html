@@ -23,8 +23,11 @@
                             {% endif %}
                             <div class="media-body">
                                 <h3 class="h5 media-title">{{ pub.title }}</h3>
-                                <!-- author would go here -->
+                                {{ pub.author }}
                             </div>
+                        </div>
+                        <div id="tocEmpty" class="toc-empty">
+                            <p class="toc-empty-text">There are no chapters for this content.</p>
                         </div>
                         <nav class="nav-toc" aria-label="Contents">
                             <ul id="tocList" class="nav nav-vertical">

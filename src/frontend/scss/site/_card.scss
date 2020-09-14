@@ -19,6 +19,12 @@
     }
 }
 
+.has-masonry {
+    .card-img img {
+        max-height: none;
+    }
+}
+
 .card-library {
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
@@ -46,6 +52,10 @@
                 margin-bottom: 0;
             }
         }
+    }
+
+    .card-body {
+        line-height: 1.375;
     }
 
     .card-footer {
