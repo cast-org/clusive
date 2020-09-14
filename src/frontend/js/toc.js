@@ -133,15 +133,15 @@ function buildTableOfContents() {
 
     if (typeof D2Reader === 'object') {
         D2Reader.tableOfContents().then(function(items) {
-            if (items.length > 0) {
+            if (items.length > 1) {
                 $(TOC_EMPTY).hide();
                 var out = buildTocLevel(items, 0, 'toc');
                 $(TOC_CONTAINER).html(out).CFW_Init();
 
                 // Add click event to update menu when new page selected
-                $(TOC_CONTAINER).find('.nav-link').on('click', function () {
+                $(TOC_CONTAINER).find('.nav-link').on('click', function() {
                     // Use timeout delay until we can get a callback from reader
-                    setTimeout(function () {
+                    setTimeout(function() {
                         resetCurrentTocItem(false);
                         markTocItemActive();
                     }, 100);
