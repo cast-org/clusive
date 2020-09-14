@@ -48,31 +48,61 @@
         $(logoutLinkSelector).mouseenter(
             function () {   
                 if(! that.isQueueEmpty()) {
-                    console.debug("Mouse entered logout link, flushing message queue.");
+                    clusive.djangoMessageQueue.addUnloadListener(that);
+                    console.debug("mouseenter event on logout link, flushing message queue.");
                     that.flush();        
                 }
             }
         );
-        
+
+        $(logoutLinkSelector).mouseout(
+            function () {   
+                console.debug("mouseout event on logout link.");
+                clusive.djangoMessageQueue.removeUnloadListener();
+            }
+        );        
+
         $(logoutLinkSelector).focus(
             function () {      
                 if(! that.isQueueEmpty()) {
-                    console.debug("Keyboard focus entered logout link, flushing message queue.");  
+                    clusive.djangoMessageQueue.addUnloadListener(that);
+                    console.debug("focus event on logout link, flushing message queue.");  
                     that.flush();
                 }
             }
         );
 
-        // window.addEventListener("beforeunload", function (e) {                 
-        //     if(! that.isQueueEmpty()) {
-        //         console.debug("queue is not empty, prompting user for unload");
-        //         that.flush();
-        //         e.preventDefault();
-        //         e.returnValue = "";        
-        //     }                        
-        // });
-
+        $(logoutLinkSelector).focusout(
+            function () {      
+                if(! that.isQueueEmpty()) {
+                    console.debug("focusout entered on logout link");                      
+                    clusive.djangoMessageQueue.removeUnloadListener();                    
+                }
+            }
+        );        
+        
     };
+
+        
+    clusive.djangoMessageQueue.addUnloadListener = function (that) {
+        console.debug("User focus entered logout link, adding unload listener");
+        window.addEventListener("beforeunload", (e) => clusive.djangoMessageQueue.handleUnload(e, that), false);        
+    }
+
+    clusive.djangoMessageQueue.handleUnload = function (e, that) {  
+        console.debug("handling unload");   
+        if(! that.isQueueEmpty()) {   
+            console.debug("queue is not empty, flush and prompt");   
+            that.flush();
+            e.preventDefault();
+            e.returnValue = "";        
+        }
+    }
+
+    clusive.djangoMessageQueue.removeUnloadListener = function () {
+        console.debug("Removing onbeforeunload listener")
+        window.removeEventListener("beforeunload", (e) => clusive.djangoMessageQueue.handleUnload(e, that), false);
+    }
 
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue
