@@ -68,8 +68,8 @@
 
 
 .nav-toc {
-    margin-right: -.75rem;
-    margin-left: -.75rem;
+    margin-right: -$modal-body-padding-x;
+    margin-left: -$modal-body-padding-x;
 
     .nav-item {
         position: relative;
@@ -255,4 +255,16 @@
     padding: 0 .5rem;
     @include font-size(.875rem);
     background-color: var(--CT_noteUndeleteBg);
+}
+
+.toc-empty {
+    padding: $modal-body-padding-y $modal-body-padding-x;
+    margin-right: -$modal-body-padding-x;
+    margin-left: -$modal-body-padding-x;
+    border-top: 1px solid var(--CT_tocLinkBorderColor);
+}
+
+.toc-empty-text {
+    font-style: italic;
+    color: var(--CT_textMuted);
 }
