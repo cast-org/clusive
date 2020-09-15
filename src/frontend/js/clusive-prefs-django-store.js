@@ -86,8 +86,10 @@
         
     clusive.djangoMessageQueue.addUnloadListener = function (that) {
         console.debug("User focus entered logout link, adding unload listener");
-        window.addEventListener("beforeunload", (e) => clusive.djangoMessageQueue.handleUnload(e, that), false);        
+        window.addEventListener("beforeunload", doUnload);        
     }
+
+    var doUnload = (e) => clusive.djangoMessageQueue.handleUnload(e, that);
 
     clusive.djangoMessageQueue.handleUnload = function (e, that) {  
         console.debug("handling unload");   
@@ -101,7 +103,7 @@
 
     clusive.djangoMessageQueue.removeUnloadListener = function () {
         console.debug("Removing onbeforeunload listener")
-        window.removeEventListener("beforeunload", (e) => clusive.djangoMessageQueue.handleUnload(e, that), false);
+        window.removeEventListener("beforeunload", doUnload);
     }
 
     // Concrete implementation of the queue flushing that works with 
