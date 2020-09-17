@@ -79,6 +79,12 @@ $(document).ready(function() {
     });
 });
 
+window.addEventListener('unload', function() {
+    'use strict';
+
+    clusiveTTS.stopReading();
+});
+
 clusiveTTS.setRegion = function(ctl) {
     'use strict';
 
