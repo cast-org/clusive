@@ -100,7 +100,9 @@ class UploadView(LoginRequiredMixin, FormView):
             with os.fdopen(fd, 'wb') as f:
                 for chunk in upload.chunks():
                     f.write(chunk)
-            self.bv = unpack_epub_file(self.request.clusive_user, tempfile)
+            (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
+            if not changed:
+                raise Exception('unpack_epub_file did not find new content.')
             return super().form_valid(form)
 
         except Exception as e:
