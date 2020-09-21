@@ -29,7 +29,7 @@ class Command(BaseCommand):
             if not (path.exists() and path.is_dir()):
                 raise CommandError('Argument is not a directory')
             for subdir in path.iterdir():
-                if subdir.is_dir():
+                if not subdir.name.startswith('.') and subdir.is_dir():
                     self.import_from_dir(subdir)
                 else:
                     logger.warning('Ignoring non-directory %s' % subdir)
@@ -37,7 +37,8 @@ class Command(BaseCommand):
     def import_from_dir(self, subdir : Path):
         args = []
         for file in subdir.iterdir():
-            args.append(file.absolute())
+            if not file.name.startswith('.'):
+                args.append(file.absolute())
         # We make the assumption that version EPUBs are in lexicographic order by their difficulty.
         # Eg penguins-0.epub, penguins-1.epub, penguins-2.epub would be fine.
         args.sort()

@@ -2,12 +2,15 @@ import json
 import logging
 import os
 import posixpath
+import shutil
 from html.parser import HTMLParser
 from zipfile import ZipFile
 
 import dawn
 from dawn.epub import Epub
 from django.core.files.storage import default_storage
+from django.utils import timezone
+from django.utils.timezone import is_aware, make_aware
 from nltk import RegexpTokenizer
 
 from glossary.util import base_form
@@ -24,12 +27,22 @@ class BookNotUnique(Exception):
     pass
 
 
+class BookMalformed(Exception):
+    pass
+
+
 def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
-    If book and sort_order arguments are given, it is created as a new version with the given sort_order.
-    Otherwise, a new Book is created and this is the first version.
+    The book will be owned by the given ClusiveUser. If that argument is None, it will be
+    created as a public library book.
+
+    If book and sort_order arguments are given, they will be used to locate an existing Book and
+    possibly-existing BookVersion objects. For public library books, the title is used to
+    look for a matching Book. If there is no matching Book or BookVersion, they will be created.
+    If a matching BookVersion already exists it will be overwritten only if
+    the modification date in the EPUB metadata is newer.
 
     This method will:
      * unzip the file into the user media area
@@ -40,13 +53,26 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     It does NOT look for glossary words or parse the text content for vocabulary lists,
     call scan_book for that.
 
+    Returns a tuple (bv, changed) of the BookVersion and a boolean value which will
+    be true if new book content was found.  If "changed" is False, the bv is an existing
+    one that matches the given file and was not updated.
+
     If there are any errors (such as a non-EPUB file), an exception will be raised.
     """
     with open(file, 'rb') as f, dawn.open(f) as upload:
+        book_version = None
         manifest = make_manifest(upload)
         title = get_metadata_item(upload, 'titles') or ''
         author = get_metadata_item(upload, 'creators') or ''
         description = get_metadata_item(upload, 'description') or ''
+        language = get_metadata_item(upload, 'language') or ''
+        mod_date = upload.meta.get('dates').get('modification') or None
+        # Date, if provided should be UTC according to spec.
+        if mod_date:
+            mod_date = timezone.make_aware(mod_date, timezone=timezone.utc)
+        else:
+            logger.error('No mod date found in %s', file)
+            raise BookMalformed('Malformed EPUB, no modification date metadata')
         if upload.cover:
             cover = adjust_href(upload, upload.cover.href)
             # For cover path, need to prefix this path with the directory holding this version of the book.
@@ -54,14 +80,18 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
         else:
             cover = None
 
+        # Find or create the BOOK.
         if book:
+            # Was supplied as an arg... sanity check.
             if book.title != title:
+                logger.warning('DB title: \'%s\', imported title: \'%s\'' % (repr(book.title), repr(title)))
                 raise BookMismatch('Does not appear to be a version of the same book, titles differ.')
         else:
-            # For public books, check for uniqueness before creating the new Book.
             if not clusive_user:
-                if Book.objects.filter(owner=None, title=title):
-                    raise BookNotUnique('Title %s already exists in the public library' % title)
+                # For public books, a book with the same title is assumed to be the same book.
+                book = Book.objects.filter(owner=None, title=title).first()
+        if not book:
+            # Make new Book
             book = Book(owner=clusive_user,
                         title=title,
                         author=author,
@@ -69,16 +99,38 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
                         cover=cover)
             book.save()
             logger.debug('Created new book for import: %s', book)
-        bv = BookVersion(book=book, sortOrder=sort_order)
-        bv.save()
-        dir = bv.storage_dir
+
+        # Find or create the BOOK VERSION
+        book_version = BookVersion.objects.filter(book=book, sortOrder=sort_order).first()
+        if book_version:
+            logger.info('Existing BV was found')
+            if mod_date > book_version.mod_date:
+                logger.info('Replacing older content of this book version')
+                book_version.mod_date = mod_date
+            else:
+                logger.warning('File %s not imported: already exists with same or newer date' % file)
+                # Short circuit the import and just return the existing object.
+                return book_version, False
+        else:
+            logger.info('Creating new BV: book=%s, sortOrder=%d' % (book, sort_order))
+            book_version = BookVersion(book=book, sortOrder=sort_order, mod_date=mod_date)
+
+        if language:
+            book_version.language = language[:2]
+        book_version.save()
+
+        # Unpack the EPUB file
+        dir = book_version.storage_dir
+        if os.path.isdir(dir):
+            logger.debug('Erasing existing content in %s', dir)
+            shutil.rmtree(dir)
         os.makedirs(dir)
         with ZipFile(file) as zf:
             zf.extractall(path=dir)
         with open(os.path.join(dir, 'manifest.json'), 'w') as mf:
             mf.write(json.dumps(manifest, indent=4))
         logger.debug("Unpacked epub into %s", dir)
-        return bv
+        return book_version, True
 
 
 def get_metadata_item(book, name):
@@ -86,7 +138,7 @@ def get_metadata_item(book, name):
     if item:
         if isinstance(item, list):
             if len(item)>0:
-                return item[0]
+                return str(item[0])
         else:
             return str(item)
     return None

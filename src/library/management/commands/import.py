@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+from distutils import dir_util
 from pathlib import Path
 from zipfile import BadZipFile
 
@@ -24,6 +25,7 @@ class Command(BaseCommand):
     copy_files = []
     book = None
     version = 0
+    found_new_content = False
 
     def add_arguments(self, parser):
         parser.add_argument('args', metavar=self.label, nargs='+')
@@ -36,8 +38,11 @@ class Command(BaseCommand):
         # Then copy in the other items
         for label in [l for l in labels if not self.looks_like_an_epub(l)]:
             self.handle_copy(label)
-        # Update word lists
-        scan_book(self.book)
+        if self.found_new_content:
+            # Update word lists
+            scan_book(self.book)
+        else:
+            logger.debug('No new content, skipping scan')
 
     def check_args(self, *labels):
         epubs = 0
@@ -81,8 +86,10 @@ class Command(BaseCommand):
 
     def handle_epub(self, label: str):
         try:
-            bv = unpack_epub_file(None, label, self.book, self.version)
-            if not self.book:
+            (bv, changed) = unpack_epub_file(None, label, self.book, self.version)
+            if changed:
+                self.found_new_content = True
+            if bv and not self.book:
                 self.book = bv.book
             self.version += 1
         except FileNotFoundError:
@@ -96,4 +103,6 @@ class Command(BaseCommand):
         if self.looks_like_a_glossary(label):
             shutil.copy(label, os.path.join(self.book.storage_dir, 'glossary.json'))
         elif self.looks_like_glossary_image_directory(label):
-            shutil.copytree(label, os.path.join(self.book.storage_dir, 'glossimages'))
+            glosspath = os.path.join(self.book.storage_dir, 'glossimages')
+            dir_util.copy_tree(label, glosspath)
+            logger.debug('Copied glossary images to %s', glosspath)
