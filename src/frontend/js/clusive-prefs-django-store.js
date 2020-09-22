@@ -16,7 +16,7 @@
             logoutLinkSelector: "#logoutLink"
         },
         events: {
-            logoutFlush: null
+            logoutFlushComplete: null
         },
         invokers: {
             flushQueueImpl: {

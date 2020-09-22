@@ -66,6 +66,10 @@
                 funcName: "clusive.messageQueue.flushQueue",
                 args: ["{that}"]
             },
+            setupQueueFlushPromise: {
+                funcName: "clusive.messageQueue.setupQueueFlushPromise",
+                args: ["{that}", "{arguments}.0"]
+            },
             handleQueueFlushPromiseSuccess: {
                 funcName: "clusive.messageQueue.handleQueueFlushPromiseSuccess",
                 args: ["{that}", "{arguments}.0"]
@@ -102,12 +106,12 @@
             that.syncToLocalStorage();
             var promise = fluid.promise();
             that.events.queueFlushStarting.fire();     
-            clusive.messageQueue.handleQueueFlushPromise(that, promise);
+            that.setupQueueFlushPromise(promise);
             return that.flushQueueImpl(promise);            
         }
     }
 
-    clusive.messageQueue.handleQueueFlushPromise = function (that, promise) {
+    clusive.messageQueue.setupQueueFlushPromise = function (that, promise) {
         promise.then(
             function(value) {
                 that.handleQueueFlushPromiseSuccess(value)
