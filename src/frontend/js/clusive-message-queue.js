@@ -68,7 +68,7 @@
             },
             setupQueueFlushPromise: {
                 funcName: "clusive.messageQueue.setupQueueFlushPromise",
-                args: ["{that}", "{arguments}.0"]
+                args: ["{that}", "{arguments}.0", "{that}.handleQueueFlushPromiseSuccess", "{that}.handleQueueFlushPromiseFailure"]
             },
             handleQueueFlushPromiseSuccess: {
                 funcName: "clusive.messageQueue.handleQueueFlushPromiseSuccess",
@@ -111,13 +111,13 @@
         }
     }
 
-    clusive.messageQueue.setupQueueFlushPromise = function (that, promise) {
+    clusive.messageQueue.setupQueueFlushPromise = function (that, promise, successFunc, failureFunc) {
         promise.then(
             function(value) {
-                that.handleQueueFlushPromiseSuccess(value)
+                successFunc(value)
             },
             function(error) {
-                that.handleQueueFlushPromiseFailure(error)
+                failureFunc(error)
             })
     }
 

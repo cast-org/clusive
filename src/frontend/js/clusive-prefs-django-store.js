@@ -69,6 +69,7 @@
         $(logoutLinkSelector).click(
             function (e) {
                 e.preventDefault();
+                that.flush();
                 console.log("logout link clicked")
             }
         )
