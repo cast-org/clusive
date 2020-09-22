@@ -94,15 +94,19 @@
             that.syncToLocalStorage();
             var promise = fluid.promise();
             that.events.queueFlushStarting.fire();     
-            promise.then(
-                function(value) {
-                    that.events.queueFlushSuccess.fire(value);
-                },
-                function(error) {
-                    that.events.queueFlushFailure.fire(error);
-                })
-            that.flushQueueImpl(promise);            
+            clusive.messageQueue.handleQueueFlushPromise(that, promise);
+            return that.flushQueueImpl(promise);            
         }
+    }
+
+    clusive.messageQueue.handleQueueFlushPromise = function (that, promise) {
+        promise.then(
+            function(value) {
+                that.events.queueFlushSuccess.fire(value);
+            },
+            function(error) {
+                that.events.queueFlushFailure.fire(error);
+            })
     }
 
     clusive.messageQueue.setFlushInterval = function (that) {

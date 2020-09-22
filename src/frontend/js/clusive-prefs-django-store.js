@@ -15,6 +15,9 @@
             flushInterval: 60000,
             logoutLinkSelector: "#logoutLink"
         },
+        events: {
+            logoutFlush: null
+        },
         invokers: {
             flushQueueImpl: {
                 funcName: "clusive.djangoMessageQueue.flushQueueImpl"                
@@ -54,14 +57,21 @@
             }
         );
       
-        $(logoutLinkSelector).focus(
+        $(logoutLinkSelector).focusin(
             function () {      
                 if(! that.isQueueEmpty()) {                    
                     console.debug("focusin event on logout link, flushing message queue.");  
                     that.flush();
                 }
             }
-        );                                
+        ); 
+        
+        $(logoutLinkSelector).click(
+            function (e) {
+                e.preventDefault();
+                console.log("logout link clicked")
+            }
+        )
     };
 
     // Concrete implementation of the queue flushing that works with 
