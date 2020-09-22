@@ -66,6 +66,14 @@
                 funcName: "clusive.messageQueue.flushQueue",
                 args: ["{that}"]
             },
+            handleQueueFlushPromiseSuccess: {
+                funcName: "clusive.messageQueue.handleQueueFlushPromiseSuccess",
+                args: ["{that}", "{arguments}.0"]
+            },
+            handleQueueFlushPromiseFailure: {
+                funcName: "clusive.messageQueue.handleQueueFlushPromiseFailure",
+                args: ["{that}", "{arguments}.0"]
+            },
             flushQueueImpl: {
                 funcName: "fluid.notImplemented",
                 args: ["{that}", "{arguments}.0"]
@@ -102,10 +110,10 @@
     clusive.messageQueue.handleQueueFlushPromise = function (that, promise) {
         promise.then(
             function(value) {
-                clusive.messageQueue.handleQueueFlushPromiseSuccess(that, value)
+                that.handleQueueFlushPromiseSuccess(value)
             },
             function(error) {
-                clusive.messageQueue.handleQueueFlushPromiseFailure(that, error)
+                that.handleQueueFlushPromiseFailure(error)
             })
     }
 
