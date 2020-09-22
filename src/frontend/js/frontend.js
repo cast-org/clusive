@@ -1,4 +1,4 @@
-/* global Masonry */
+/* global Masonry, clusiveTTS */
 /* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse */
 
 var libraryMasonryApi = null;
@@ -237,12 +237,39 @@ function formRangeTip(range, callback) {
     callback(range);
 }
 
+function setupVoiceListing() {
+    'use strict';
+
+    var container = $('#voiceListing');
+    if (container.length) {
+        var html = '';
+        clusiveTTS.getVoicesForLanguage('en').forEach(function(voice) {
+            html += '<li><button type="button" class="dropdown-item voice-button">' + voice.name + '</button></li>';
+        });
+        container.html(html);
+    } else {
+        console.debug('No voice listing element');
+    }
+    container.on('click', '.voice-button', function() {
+        var name = this.textContent;
+        console.debug('Voice choice: ', name);
+        // Show voice name as dropdown label
+        $('#currentVoice').html(name);
+        // Mark the dropdown item as active.
+        container.find('.voice-button').removeClass('active');
+        $(this).addClass('active');
+        // Tell ClusiveTTS to use this voice
+        clusiveTTS.setCurrentVoice(name);
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
     formFileText();
     confirmationPublicationDelete();
     confirmationSharing();
+    setupVoiceListing();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

@@ -196,12 +196,11 @@
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
                                     <div class="option-read-voice">
-                                        <button type="button" class="link-btn" data-cfw="dropdown">Female #1 <span class="caret" aria-hidden="true"></span></button>
-                                        <ul class="dropdown-menu dropreverse">
-                                            <li><button type="button" class="dropdown-item active">Female #1</button></li>
-                                            <li><button type="button" class="dropdown-item">Female #2</button></li>
-                                            <li><button type="button" class="dropdown-item">Male #1</button></li>
-                                            <li><button type="button" class="dropdown-item">Male #2</button></li>
+                                        <button type="button" class="link-btn" data-cfw="dropdown">
+                                            <span id="currentVoice">Choose...</span>
+                                            <span class="caret" aria-hidden="true"></span>
+                                        </button>
+                                        <ul id="voiceListing" class="dropdown-menu dropreverse">
                                         </ul>
                                     </div>
                                 </fieldset>
@@ -218,7 +217,7 @@
                         </form>
                         <div class="setting">
                             <legend class="setting-title">Play sample</legend>
-                            <button type="button" class="btn btn-flag" aria-label="Play sample">
+                            <button onclick="clusiveTTS.readAloudSample()" type="button" class="btn btn-flag" aria-label="Play sample">
                                 <span class="icon-play" aria-hidden="true"></span>
                             </button>
                             <button type="button" class="btn btn-flag" aria-label="Stop sample" disabled>

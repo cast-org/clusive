@@ -6,7 +6,8 @@
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
-    region: {}
+    region: {},
+    currentVoice: null
 };
 
 // Bind controls
@@ -329,6 +330,45 @@ clusiveTTS.readSelection = function(elements, selection) {
     clusiveTTS.readElements(toRead);
 };
 
+// Return all voices known to the system for the given language.
+// Language argument can be of the form "en" or "en-GB".
+// If system default voice is on this list, it will be listed first.
+clusiveTTS.getVoicesForLanguage = function(language) {
+    'use strict';
+
+    var voices = [];
+    window.speechSynthesis.getVoices().forEach(function(voice) {
+        if (voice.lang.startsWith(language)) {
+            if (voice.default) {
+                voices.unshift(voice); // Put system default voice at the beginning of the list
+            } else {
+                voices.push(voice);
+            }
+        }
+    });
+    return voices;
+};
+
+clusiveTTS.setCurrentVoice = function(name) {
+    'use strict';
+
+    window.speechSynthesis.getVoices().forEach(function(voice) {
+        if (voice.name === name) {
+            clusiveTTS.currentVoice = voice;
+        }
+    });
+};
+
+clusiveTTS.readAloudSample = function() {
+    'use strict';
+
+    // eslint-disable-next-line compat/compat
+    var utt = new SpeechSynthesisUtterance('Testing, testing, 1 2 3');
+    if (clusiveTTS.currentVoice) {
+        utt.voice = clusiveTTS.currentVoice;
+    }
+    window.speechSynthesis.speak(utt);
+};
 
 var clusiveSelection = {
     directions: {
