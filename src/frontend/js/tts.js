@@ -83,7 +83,11 @@ $(document).ready(function() {
 window.addEventListener('unload', function() {
     'use strict';
 
-    clusiveTTS.stopReading();
+    if (clusiveTTS.region.mode === 'Readium') {
+        D2Reader.stopReadAloud();
+    } else {
+        clusiveTTS.stopReading();
+    }
 });
 
 clusiveTTS.setRegion = function(ctl) {
