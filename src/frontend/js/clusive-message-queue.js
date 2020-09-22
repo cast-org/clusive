@@ -64,7 +64,7 @@
             },
             flush: {
                 funcName: "clusive.messageQueue.flushQueue",
-                args: ["{that}"]
+                args: ["{that}", "{that}.setupQueueFlushPromise"]
             },
             setupQueueFlushPromise: {
                 funcName: "clusive.messageQueue.setupQueueFlushPromise",
@@ -97,7 +97,7 @@
         },
     });    
 
-    clusive.messageQueue.flushQueue = function (that) {
+    clusive.messageQueue.flushQueue = function (that, setupPromiseFunc) {
         // Don't flush if we have an empty queue
         if(that.queue.length > 0 ) {                   
             that.sendingQueue.timestamp = new Date().toISOString();
@@ -106,7 +106,7 @@
             that.syncToLocalStorage();
             var promise = fluid.promise();
             that.events.queueFlushStarting.fire();     
-            that.setupQueueFlushPromise(promise);
+            setupPromiseFunc(promise);
             return that.flushQueueImpl(promise);            
         }
     }
