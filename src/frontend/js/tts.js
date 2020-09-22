@@ -1,6 +1,7 @@
 // There are TWO TTS systems used - Readium's built-in read-aloud functionality for the reader page,
 // and the more basic clusiveTTS defined here for other pages.
 //
+/* eslint-disable no-use-before-define */
 /* global D2Reader */
 
 var clusiveTTS = {
@@ -79,15 +80,23 @@ $(document).ready(function() {
     });
 });
 
+window.addEventListener('unload', function() {
+    'use strict';
+
+    clusiveTTS.stopReading();
+});
+
 clusiveTTS.setRegion = function(ctl) {
+    'use strict';
+
     var newRegion = {};
     newRegion.elm = ctl.closest('.tts-region');
-    newRegion.mode = newRegion.elm.dataset.hasOwnProperty('mode') ? newRegion.elm.dataset.mode : null;
+    newRegion.mode = Object.prototype.hasOwnProperty.call(newRegion.elm.dataset, 'mode') ? newRegion.elm.dataset.mode : null;
 
     // Stop any previous region from reading
     if (Object.keys(clusiveTTS.region).length && (clusiveTTS.region.elm !== newRegion.elm)) {
         if (clusiveTTS.region.mode === 'Readium') {
-            console.debug('Readium read aloud stop on region chage');
+            console.debug('Readium read aloud stop on region change');
             D2Reader.stopReadAloud();
         } else {
             console.debug('read aloud stop on region change');
@@ -99,7 +108,7 @@ clusiveTTS.setRegion = function(ctl) {
     if (clusiveTTS.region.elm !== newRegion.elm) {
         clusiveTTS.region = newRegion;
     }
-}
+};
 
 clusiveTTS.updateUI = function(mode) {
     'use strict';
@@ -126,7 +135,7 @@ clusiveTTS.updateUI = function(mode) {
     }
     */
 
-    switch(mode) {
+    switch (mode) {
         case 'resume':
         case 'play': {
             region.classList.remove('paused');
@@ -147,13 +156,16 @@ clusiveTTS.updateUI = function(mode) {
 
 // Stop an in-process reading
 clusiveTTS.stopReading = function() {
+    'use strict';
+
     clusiveTTS.elementsToRead = [];
     clusiveTTS.synth.cancel();
     clusiveTTS.updateUI();
-
 };
 
 clusiveTTS.readQueuedElements = function() {
+    'use strict';
+
     if (clusiveTTS.elementsToRead.length > 0) {
         var toRead = clusiveTTS.elementsToRead.shift();
         var end = toRead.end ? toRead.end : null;
@@ -165,6 +177,8 @@ clusiveTTS.readQueuedElements = function() {
 };
 
 clusiveTTS.readElement = function(textElement, offset, end) {
+    'use strict';
+
     var synth = clusiveTTS.synth;
     var element = $(textElement);
     var elementText = element.text();
@@ -176,6 +190,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     var copiedElement = element.clone(false);
     element.after(copiedElement);
     element.hide();
+    // eslint-disable-next-line compat/compat
     var utterance = new SpeechSynthesisUtterance(contentText);
 
     utterance.onboundary = function(e) {
@@ -194,7 +209,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
         }
     };
 
-    utterance.onend = function(e) {
+    utterance.onend = function() {
         console.debug('utterance ended');
         copiedElement.remove();
         element.show();
@@ -205,6 +220,8 @@ clusiveTTS.readElement = function(textElement, offset, end) {
 };
 
 clusiveTTS.readElements = function(textElements) {
+    'use strict';
+
     // Cancel any active reading
     clusiveTTS.stopReading();
 
@@ -216,20 +233,28 @@ clusiveTTS.readElements = function(textElements) {
 };
 
 clusiveTTS.getAllTextElements = function(documentBody) {
+    'use strict';
+
     var textElements = documentBody.find('h1, h2, h3, h4, h5, h6, p');
     return textElements;
 };
 
 clusiveTTS.getReaderIFrameBody = function() {
+    'use strict';
+
     var readerIframe = $('#D2Reader-Container').find('iframe');
     return readerIframe.contents().find('body');
 };
 
 clusiveTTS.getReaderIframeSelection = function() {
+    'use strict';
+
     return $('#D2Reader-Container').find('iframe')[0].contentWindow.getSelection();
 };
 
 clusiveTTS.filterReaderTextElementsBySelection = function(textElements, userSelection) {
+    'use strict';
+
     var filteredElements = textElements.filter(function(i, elem) {
         return userSelection.containsNode(elem, true);
     });
@@ -237,10 +262,14 @@ clusiveTTS.filterReaderTextElementsBySelection = function(textElements, userSele
 };
 
 clusiveTTS.isSelection = function(selection) {
+    'use strict';
+
     return !(selection.type === 'None' || selection.type === 'Caret');
 };
 
 clusiveTTS.read = function() {
+    'use strict';
+
     var isReader = $('#D2Reader-Container').length > 0;
     var elementsToRead;
     var isSelection; var selection;
@@ -263,6 +292,8 @@ clusiveTTS.read = function() {
 };
 
 clusiveTTS.readAll = function(elements) {
+    'use strict';
+
     var toRead = [];
     $.each(elements, function(i, elem) {
         var elementToRead = {
@@ -278,10 +309,10 @@ clusiveTTS.readAll = function(elements) {
 // TODO: this needs refactoring to (among other things) extract the Selection-related functions
 // for general usage
 clusiveTTS.readSelection = function(elements, selection) {
+    'use strict';
+
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
-
     var selectionDirection = clusiveSelection.getSelectionDirection(selection, selectionTexts);
-
     var firstNodeOffSet;
 
     if (selectionDirection === clusiveSelection.directions.FORWARD) {
@@ -295,10 +326,10 @@ clusiveTTS.readSelection = function(elements, selection) {
     // Check the selectionTexts against the filteredElements text, eliminate
     // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
 
-    selectionTexts = selectionTexts.filter(function(selectionText, i) {
+    selectionTexts = selectionTexts.filter(function(selectionText) {
         var trimmed = selectionText.trim();
         var found = false;
-        $.each(filteredElements, function(i, elem) {
+        $.each(filteredElements, function(elem) {
             var elemText = $(elem).text();
             if (elemText.includes(trimmed)) {
                 found = true;
@@ -379,6 +410,8 @@ var clusiveSelection = {
 };
 
 clusiveSelection.getSelectionDirection = function(selection) {
+    'use strict';
+
     var selectionDirection;
     var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
 
@@ -406,6 +439,8 @@ clusiveSelection.getSelectionDirection = function(selection) {
 
 // Get the selection text as an array, splitting by the newline character
 clusiveSelection.getSelectionTextAsArray = function(selection) {
+    'use strict';
+
     return selection.toString().split('\n').filter(function(text) {
         return text.length > 1;
     });
