@@ -116,7 +116,7 @@ html {
 
         &.current {
             position: relative;
-            font-weight: 600;
+            font-weight: $font-weight-bold;
             color: var(--CT_actionCurrentColor);
             background-color: var(--CT_actionCurrentBg);
             @include border-radius($border-radius);

@@ -61,6 +61,8 @@ class BookVersion(models.Model):
     glossary_words = models.TextField(default="[]")  # Words in the glossary that occur in this version
     all_words = models.TextField(default="[]")  # All words that occur in this version
     new_words = models.TextField(default="[]")  # Words that occur in this version but not the previous one.
+    mod_date = models.DateTimeField(default=timezone.now)
+    language = models.TextField(max_length=5, default="en-US")
 
     @property
     def path(self):

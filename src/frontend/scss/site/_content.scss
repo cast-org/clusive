@@ -1,11 +1,12 @@
-html {
-    scroll-behavior: smooth;
-}
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: inherit;
-    }
-}
+// Browser-based scroll causing extra page movement - disable for now
+// html {
+//     scroll-behavior: smooth;
+// }
+// @media (prefers-reduced-motion: reduce) {
+//     html {
+//         scroll-behavior: inherit;
+//     }
+// }
 
 // stylelint-disable declaration-no-important, selector-max-id
 #ff-default,
@@ -54,7 +55,7 @@ h1,
 .h1,
 h2,
 .h2 {
-    font-family: Arial, sans-serif;
+    font-family: "Arial Black", Arial, sans-serif;
     font-weight: 900;
 }
 
@@ -112,6 +113,20 @@ h2,
     .form-check {
         display: inline-block;
     }
+}
+
+.has-form-range-tip {
+    position: relative;
+    line-height: 1.5;
+}
+.form-range-tip {
+    position: absolute;
+    top: 0;
+    @include font-size(.875rem);
+    line-height: 1;
+    color: var(--CT_formRangeTipColor);
+    transform: translateX(-50%);
+    user-select: none;
 }
 
 .link-above {
@@ -173,6 +188,39 @@ h2,
 
 .link-undelete {
     margin-left: .5rem;
+}
+
+.link-btn {
+    display: inline-block;
+    padding: 0;
+    font-family: $font-family-base;
+    @include font-size(inherit);
+    font-weight: $font-weight-normal;
+    color: var(--CT_linkColor);
+    text-decoration: none;
+    vertical-align: baseline;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 0 solid transparent;
+    @include border-radius(0);
+    @include box-shadow(none);
+
+    @include hover-focus() {
+        color: var(--CT_linkHoverColor);
+        text-decoration: underline;
+    }
+
+    &:active {
+        @include box-shadow(none);
+    }
+
+    &:disabled {
+        color: var(--CT_bodyColor);
+        text-decoration: none;
+        pointer-events: none;
+        @include box-shadow(none);
+    }
 }
 
 .definition-speech {

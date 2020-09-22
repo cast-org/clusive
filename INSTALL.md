@@ -48,7 +48,7 @@ Run in the Clusive directory:
 * `npm install`
 * `grunt build`
   - Use the noclean option to preserve data on subsequent builds: \
-  `grunt build -noclean`
+  `grunt build-noclean`
 This creates the compiled, runnable server in the Clusive/target directory.
 
 #### Front-end Dependency Notes

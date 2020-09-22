@@ -8,6 +8,7 @@ var TOC_MODAL = '#modalToc';
 
 var TOC_TAB   = '#tocTab';  // links to #tocPanel
 var TOC_CONTAINER = '#tocList';
+var TOC_EMPTY = '#tocEmpty';
 
 var NOTES_TAB = '#notesTab';  // links to #notesPanel
 var NOTES_CONTAINER = '#notesList';
@@ -131,18 +132,24 @@ function buildTableOfContents() {
     'use strict';
 
     if (typeof D2Reader === 'object') {
-        D2Reader.tableOfContents().then(function(x) {
-            var out = buildTocLevel(x, 0, 'toc');
-            $(TOC_CONTAINER).html(out).CFW_Init();
+        D2Reader.tableOfContents().then(function(items) {
+            if (items.length > 1) {
+                $(TOC_EMPTY).hide();
+                var out = buildTocLevel(items, 0, 'toc');
+                $(TOC_CONTAINER).html(out).CFW_Init();
 
-            // Add click event to update menu when new page selected
-            $(TOC_CONTAINER).find('.nav-link').on('click', function() {
-                // Use timeout delay until we can get a callback from reader
-                setTimeout(function() {
-                    resetCurrentTocItem(false);
-                    markTocItemActive();
-                }, 100);
-            });
+                // Add click event to update menu when new page selected
+                $(TOC_CONTAINER).find('.nav-link').on('click', function() {
+                    // Use timeout delay until we can get a callback from reader
+                    setTimeout(function() {
+                        resetCurrentTocItem(false);
+                        markTocItemActive();
+                    }, 100);
+                });
+            } else {
+                // Empty TOC
+                $(TOC_CONTAINER).hide();
+            }
         });
     }
 }

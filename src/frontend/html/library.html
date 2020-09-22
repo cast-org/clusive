@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Library - Clusive Mockup</title>
+<title>Library (grid view) - Clusive Mockup</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap" rel="stylesheet">
@@ -18,17 +18,10 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0/dist/js/figuration.min.js" integrity="sha384-XqIV+6/aPbInuDsESPata3SBmFPBP6fSRj8dE/LgKX9dkNoGJeLRa8/q9jUo0vW4" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="../js/theme-test.js"></script>
-
-<style>
-.img-test {
-    width: auto;
-    height: 2rem;
-    border: 1px solid black;
-}
-</style>
 
 </head>
 <body class="library">
@@ -92,17 +85,34 @@
                 </div>
             </div>
 
-            <div class="sidebar sidebar-end" role="region" aria-label="Reading tools">
-                <div class="sidebar-tool" role="region" aria-label="Reading tools">
+            <div class="sidebar sidebar-end">
+                <div class="sidebar-tool" role="region" aria-label="User preferences">
                     <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
                         <span class="icon-settings" aria-hidden="true"></span>
                     </button>
-                    <button type="button" class="btn btn-tool" aria-label="Read aloud">
-                        <span class="icon-play" aria-hidden="true"></span>
-                    </button>
+                    <!--
                     <button type="button" class="btn btn-tool" aria-label="Lookup definition">
                         <span class="icon-book" aria-hidden="true"></span>
                     </button>
+                    -->
+                </div>
+                <div class="tts-region sidebar-tts" role="region" aria-label="Text to speech controls">
+                    <div class="sidebar-tts-inactive">
+                        <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud">
+                            <span class="icon-play" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="sidebar-tts-active">
+                        <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud">
+                            <span class="icon-pause" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud">
+                            <span class="icon-play" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud">
+                            <span class="icon-stop" aria-hidden="true"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,38 +123,60 @@
 
             <h1>Library</h1>
 
-            <div class="library-filter" role="region" aria-label="View and sort options">
-                <ul class="nav">
-                    <li class="nav-item">
-                        <span class="library-filter-label">View:</span>
-                        <a href="#" role="button" class="nav-link" data-cfw="dropdown">All content <span class="caret aria-hidden="true"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" class="active">All content</a></li>
-                            <li><a href="#">Public content</a></li>
-                            <li><a href="#">My content</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <span class="library-filter-label">Sort by:</span>
-                        <a href="#" role="button" class="nav-link" data-cfw="dropdown">Date added <span class="caret aria-hidden="true"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Option</a></li>
-                            <li><a href="#" class="active">Date added</a></li>
-                            <li><a href="#">Option</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <span class="library-filter-label">View as:</span>
-                        <ul class="library-filter-list">
-                            <li class="library-filter-item">
-                                <span class="library-filter-link"><span class="icon-th-large aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+            <div class="row">
+                <div class="col">
+                    <div class="library-filter" role="region" aria-label="View and sort options">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <span class="library-filter-label">View:</span>
+                                <button type="button" class="link-btn" data-cfw="dropdown">All content <span class="caret aria-hidden="true"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="active">All content</a></li>
+                                    <li><a href="#">Public content</a></li>
+                                    <li><a href="#">My content</a></li>
+                                </ul>
                             </li>
-                            <li class="library-filter-item">
-                                <a href="#" class="library-filter-link"><span class="icon-menu aria-hidden="true"></span>list</a>
+                            <li class="nav-item">
+                                <span class="library-filter-label">Sort by:</span>
+                                <button type="button" class="link-btn" data-cfw="dropdown">Date added <span class="caret aria-hidden="true"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Option</a></li>
+                                    <li><a href="#" class="active">Date added</a></li>
+                                    <li><a href="#">Option</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <span class="library-filter-label">View as:</span>
+                                <ul class="library-filter-list">
+                                    <li class="library-filter-item">
+                                        <span class="library-filter-link active"><span class="icon-th-large" aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+                                    </li>
+                                    <li class="library-filter-item">
+                                        <a href="library-list.html" class="library-filter-link"><span class="icon-menu" aria-hidden="true"></span>list</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
-                    </li>
-                </ul>
+                    </div>
+
+                    <div class="library-grid-options">
+                        <div class="library-filter" role="region" aria-label="Cascading grid options">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <span class="library-filter-label">Cascading grid:</span>
+                                    <ul class="library-filter-list">
+                                        <li class="library-filter-item">
+                                            <button type="button" class="link-btn library-masonry-on" onclick="libraryMasonryEnable();">Enable</button>
+                                        </li>
+                                        <li class="library-filter-item">
+                                            <button type="button" class="link-btn library-masonry-off" onclick="libraryMasonryDisable();" disabled>Disable</button>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="library-grid">
@@ -194,6 +226,9 @@
                 <div class="card card-library">
                     <div class="card-header">
                         <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
+                        <div class="card-author">
+                            by Firstname Lastname
+                        </div>
                     </div>
                     <div class="card-img">
                         <img class="img-fluid" src="./img/sample-2.jpg" alt="">
@@ -221,53 +256,153 @@
                     </div>
                 </div>
                 <div class="card card-library">
+                    <div class="card-header">
+                        <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                        <div class="card-author">
+                            by Firstname Lastname
+                        </div>
+                    </div>
                     <div class="card-img">
-                        <!-- <img class="img-fluid" src="./img/sample-3.jpg" alt=""> -->
                         <img class="img-fluid" src="./img/cover.svg" alt="">
                     </div>
                     <div class="card-body">
-                        <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
                         <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col card-library-tag"></div>
+                            <div class="col-auto card-library-action">
+                                <span class="dropdown link-above">
+                                    <button type="button" class="btn btn-flag" data-cfw="dropdown">
+                                        <span class="icon-ellipsis-vert" aria-hidden="true"></span>
+                                        <span class="sr-only">Publication settings</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropreverse">
+                                        <li><a href="#">Edit</a></li>
+                                        <li><a href="#">Assign</a></li>
+                                        <li><a href="#">Delete</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card card-library">
+                    <div class="card-header">
+                        <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                        <div class="card-author">
+                            by Firstname Lastname
+                        </div>
+                    </div>
                     <div class="card-img">
-                        <!--<img class="img-fluid" data-cfw-lazy-src="./img/crane.jpg" data-cfw="lazy" alt="">-->
                         <img class="img-fluid" src="./img/crane.jpg" alt="">
                     </div>
                     <div class="card-body">
-                        <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
                         <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col card-library-tag">
+                                <a href="#" class="btn btn-tag link-above">abolition</a>
+                                <a href="#" class="btn btn-tag link-above">autobiography</a>
+                                <a href="#" class="btn btn-tag link-above">United States History</a>
+                            </div>
+                            <div class="col-auto card-library-action">
+                                <span class="btn-check link-above">
+                                    <input id="fav0" type="checkbox" class="btn-check-input">
+                                    <label for="fav0" class="btn btn-flag btn-flag-favorite">
+                                        <span class="icon-star-empty" aria-hidden="true"></span>
+                                        <span class="sr-only">Favorite</span>
+                                    </label>
+                                </span>
+                                <span class="dropdown link-above">
+                                    <button type="button" class="btn btn-flag" data-cfw="dropdown">
+                                        <span class="icon-ellipsis-vert" aria-hidden="true"></span>
+                                        <span class="sr-only">Publication settings</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropreverse">
+                                        <li><a href="#">Edit</a></li>
+                                        <li><a href="#">Assign</a></li>
+                                        <li><a href="#">Delete</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card card-library">
+                    <div class="card-header">
+                        <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
+                        <div class="card-author">
+                            by Firstname Lastname
+                        </div>
+                    </div>
                     <div class="card-img">
                         <img class="img-fluid" src="./img/sample-4.jpg" alt="">
                     </div>
                     <div class="card-body">
-                        <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
                         <p class="card-text">Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col card-library-tag"></div>
+                            <div class="col-auto card-library-action">
+                                <span class="dropdown link-above">
+                                    <button type="button" class="btn btn-flag" data-cfw="dropdown">
+                                        <span class="icon-ellipsis-vert" aria-hidden="true"></span>
+                                        <span class="sr-only">Publication settings</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropreverse">
+                                        <li><a href="#">Edit</a></li>
+                                        <li><a href="#">Assign</a></li>
+                                        <li><a href="#">Delete</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-library">
+                    <div class="card-header">
+                        <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                        <div class="card-author">
+                            by Firstname Lastname
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col card-library-tag">
+                                <a href="#" class="btn btn-tag link-above">abolition</a>
+                                <a href="#" class="btn btn-tag link-above">autobiography</a>
+                                <a href="#" class="btn btn-tag link-above">United States History</a>
+                            </div>
+                            <div class="col-auto card-library-action">
+                                <span class="btn-check link-above">
+                                    <input id="fav0" type="checkbox" class="btn-check-input">
+                                    <label for="fav0" class="btn btn-flag btn-flag-favorite">
+                                        <span class="icon-star-empty" aria-hidden="true"></span>
+                                        <span class="sr-only">Favorite</span>
+                                    </label>
+                                </span>
+                                <span class="dropdown link-above">
+                                    <button type="button" class="btn btn-flag" data-cfw="dropdown">
+                                        <span class="icon-ellipsis-vert" aria-hidden="true"></span>
+                                        <span class="sr-only">Publication settings</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropreverse">
+                                        <li><a href="#">Edit</a></li>
+                                        <li><a href="#">Assign</a></li>
+                                        <li><a href="#">Delete</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!--
-            <img src="../assets/img/icon-a.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-column-1.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-column-2.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-line-focus-1.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-line-focus-2.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-line-focus-3.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-line-height-1.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-line-height-2.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-line-height-3.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-settings.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-text-space-1.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-text-space-2.svg" class="img-test" alt="">
-            <img src="../assets/img/icon-text-space-3.svg" class="img-test" alt="">
-            <img src="../assets/img/logo-clusive-toggle.svg" class="img-test" alt="">
-            <img src="../assets/img/logo-clusive.svg" class="img-test" alt="">
-            -->
 
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim. Curabitur sit amet ante odio. In eleifend lacinia ipsum, eu eleifend diam tempor et. Nullam iaculis lobortis sollicitudin. Maecenas interdum libero sit amet quam cursus, et dapibus enim facilisis. Donec non leo dapibus, elementum velit non, laoreet nisl. Sed in lacinia tortor. Suspendisse eget accumsan erat. Phasellus vel est eu ligula hendrerit condimentum sed quis nulla. Nam dignissim dolor in ipsum dapibus sagittis.</p>
             <p>Aliquam auctor, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, feugiat id porta nec, tincidunt eget quam.</p>
@@ -284,6 +419,10 @@
         </footer>
     </div>
 </div>
+
+<script>
+    libraryMasonryEnable();
+</script>
 
 </body>
 </html>

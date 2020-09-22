@@ -85,7 +85,8 @@ $enable-tooltip:                        true;
 $enable-utility-bg:                     false;
 $enable-utility-border:                 false;
 $enable-utility-clearfix:               false;
-$enable-utility-display:                false;
+$enable-utility-display-down-none:      false;
+$enable-utility-display-print:          false;
 $enable-utility-flex:                   false;
 $enable-utility-float:                  false;
 $enable-utility-overflow:               false;
@@ -119,6 +120,8 @@ $enable-utility-visibility:             false;
 
 // Default Figuration setting overrides
 // =====
+
+$utility-display:                       none;
 
 // Disable some default box-shadows
 $thumbnail-box-shadow:                  0 0 transparent;
@@ -181,6 +184,8 @@ $font-family-sans-serif:                "Source Sans Pro", -apple-system, BlinkM
 $h1-font-size:                          ($font-size-base * 1.375);
 $h2-font-size:                          ($font-size-base * 1.125);
 $h3-font-size:                          ($font-size-base * 1);
+
+$text-muted:                            var(--CT_textMuted);
 
 $grid-row-columns:                      4;
 

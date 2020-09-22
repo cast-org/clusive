@@ -23,7 +23,10 @@ urlpatterns = [
         name='remove_confirm'),
     path('share/<int:pk>', views.ShareDialogView.as_view(),
          name='share'),
-    path('<str:view>/<int:period_id>', views.LibraryView.as_view(),
+
+    path('<str:style>/<str:view>/<int:period_id>', views.LibraryView.as_view(),
+         name='library'),
+    path('<str:style>/<str:view>/', views.LibraryView.as_view(),
          name='library'),
     path('<str:view>', views.LibraryView.as_view(),
          name='library'),

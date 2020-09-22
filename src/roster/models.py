@@ -98,6 +98,18 @@ class LibraryViews:
             return None
 
 
+class LibraryStyles:
+    BRICKS = 'bricks'
+    GRID = 'grid'
+    LIST = 'list'
+
+    CHOICES = [
+        (BRICKS, 'bricks'),
+        (GRID, 'grid'),
+        (LIST, 'list'),
+    ]
+
+
 class ClusiveUser(models.Model):
     
     # Django standard user class contains the following fields already
@@ -120,6 +132,10 @@ class ClusiveUser(models.Model):
     # Which view of the library page the user last viewed. This choice is persistent.
     library_view = models.CharField(max_length=10, default=LibraryViews.PERIOD,
                                     choices=LibraryViews.CHOICES)
+
+    # What layout to use for the library cards. This choice is persistent.
+    library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
+                                     choices=LibraryStyles.CHOICES)
 
     @property 
     def is_permissioned(self):

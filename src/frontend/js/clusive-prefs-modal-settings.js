@@ -2,7 +2,7 @@
 
 (function(fluid) {
     'use strict';
-    
+
     fluid.defaults('cisl.prefs.modalSettings', {
         gradeNames: ['fluid.binder.bindOnCreate'],
         model: {
@@ -121,6 +121,8 @@
 
     cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
         that.applier.change(path, changedValue);
+
+        cisl.prefs.eventUpdate();
     };
 
     cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {

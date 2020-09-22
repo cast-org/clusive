@@ -5,6 +5,8 @@ $theme-name-readium:                    null;
 $body-bg:                               #fbfbfb;
 $body-color:                            #333;
 
+$text-muted:                            #666;
+
 $link-color:                            #0d36ab;
 $link-hover-color:                      palette($link-color, 700);
 
@@ -30,6 +32,8 @@ $library-logo-icon-color:               #fbfbfb;
 
 $library-filter-bg:                     rgba(#acfdf0, .3);
 $library-filter-color:                  $body-color;
+$library-filter-active-icon-color:      #ff554d;
+$library-filter-active-icon-text-shadow: .0625em .0625em 0 rgba(#636b82, .75);
 
 $home-bg:                               #72c0b2;
 $home-header-outer-bg:                  $home-bg;
@@ -139,6 +143,17 @@ $btn-tool-hover-border-color:           transparent;
 $btn-tool-active-bg:                    rgba(#acfdf0, 1);
 $btn-tool-active-color:                 $btn-tool-color;
 $btn-tool-active-border-color:          transparent;
+
+$btn-tts-focus-ring:                    #636b82;
+$btn-tts-bg:                            #ff554d;
+$btn-tts-color:                         #111;
+$btn-tts-border-color:                  transparent;
+$btn-tts-hover-bg:                      #6268ad;
+$btn-tts-hover-color:                   #fbfbfb;
+$btn-tts-hover-border-color:            transparent;
+$btn-tts-active-bg:                     palette($btn-tts-hover-bg, 600);
+$btn-tts-active-color:                  $btn-tts-hover-color;
+$btn-tts-active-border-color:           transparent;
 
 $btn-option-focus-ring:                 #636b82;
 $btn-option-bg:                         #fff;
@@ -315,6 +330,7 @@ $form-range-thumb-box-shadow-opacity:   .9;
 $form-range-thumb-focus-box-shadow-color:       #636b82;
 $form-range-thumb-focus-box-shadow-opacity:     .85;
 $form-range-thumb-active-bg:            #ff554d;
+$form-range-tip-color:                  #666;
 
 // Form switch input
 $form-switch-track-bg:                      #d3cfc9;
@@ -350,6 +366,8 @@ $wordbank-count-empty-border-color:     #636b82;
 // Text-to-Speech (TTS)
 $tts-highlight-bg:                      #fffd38;
 $tts-highlight-color:                   #636b82;
+
+$sidebar-tts-active-bg:                 #ff554d;
 
 // Glossary/definitions
 $glossary-underline:                    #acfdf0;

@@ -88,6 +88,19 @@ $btn-themes: map-merge(
             "active-color": var(--CT_btnToolActiveColor),
             "active-border-color": var(--CT_btnToolActiveBorderColor)
         ),
+        "tts":
+        (
+            "base": var(--CT_btnTtsFocusRingRGB),
+            "bg": var(--CT_btnTtsBg),
+            "color": var(--CT_btnTtsColor),
+            "border-color": var(--CT_btnTtsBorderColor),
+            "hover-bg": var(--CT_btnTtsHoverBg),
+            "hover-color": var(--CT_btnTtsHoverColor),
+            "hover-border-color": var(--CT_btnTtsHoverBorderColor),
+            "active-bg": var(--CT_btnTtsActiveBg),
+            "active-color": var(--CT_btnTtsActiveColor),
+            "active-border-color": var(--CT_btnTtsActiveBorderColor)
+        ),
         "option":
         (
             "base": var(--CT_btnOptionFocusRingRGB),
