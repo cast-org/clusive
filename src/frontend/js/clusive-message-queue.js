@@ -102,11 +102,19 @@
     clusive.messageQueue.handleQueueFlushPromise = function (that, promise) {
         promise.then(
             function(value) {
-                that.events.queueFlushSuccess.fire(value);
+                clusive.messageQueue.handleQueueFlushPromiseSuccess(that, value)
             },
             function(error) {
-                that.events.queueFlushFailure.fire(error);
+                clusive.messageQueue.handleQueueFlushPromiseFailure(that, error)
             })
+    }
+
+    clusive.messageQueue.handleQueueFlushPromiseSuccess = function (that, value) {
+        that.events.queueFlushSuccess.fire(value);
+    }
+
+    clusive.messageQueue.handleQueueFlushPromiseFailure = function (that, error) {
+        that.events.queueFlushFailure.fire(error);
     }
 
     clusive.messageQueue.setFlushInterval = function (that) {
