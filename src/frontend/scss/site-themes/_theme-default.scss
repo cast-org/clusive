@@ -173,11 +173,11 @@ $btn-flag-focus-ring:                   #636b82;
 $btn-flag-bg:                           transparent;
 $btn-flag-color:                        #636b82;
 $btn-flag-border-color:                 transparent;
-$btn-flag-hover-bg:                     transparent;
-$btn-flag-hover-color:                  palette($btn-flag-color, 750);
+$btn-flag-hover-bg:                     #6268ad;
+$btn-flag-hover-color:                  #fbfbfb;
 $btn-flag-hover-border-color:           transparent;
-$btn-flag-active-bg:                    transparent;
-$btn-flag-active-color:                 $btn-flag-color;
+$btn-flag-active-bg:                    palette($btn-flag-hover-bg, 600);
+$btn-flag-active-color:                 $btn-flag-hover-color;
 $btn-flag-active-border-color:          transparent;
 
 $btn-tag-focus-ring:                    #636b82;
@@ -190,6 +190,17 @@ $btn-tag-hover-border-color:            transparent;
 $btn-tag-active-bg:                     #636b82;
 $btn-tag-active-color:                  #f5f5f5;
 $btn-tag-active-border-color:           transparent;
+
+$btn-favorite-focus-ring:               #636b82;
+$btn-favorite-bg:                       transparent;
+$btn-favorite-color:                    #636b82;
+$btn-favorite-border-color:             transparent;
+$btn-favorite-hover-bg:                 transparent;
+$btn-favorite-hover-color:              palette($btn-favorite-color, 750);
+$btn-favorite-hover-border-color:       transparent;
+$btn-favorite-active-bg:                transparent;
+$btn-favorite-active-color:             $btn-favorite-color;
+$btn-favorite-active-border-color:      transparent;
 
 // Error
 $error-bg:                              #d42314;

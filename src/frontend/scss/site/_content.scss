@@ -125,8 +125,8 @@ h2,
     @include font-size(.875rem);
     line-height: 1;
     color: var(--CT_formRangeTipColor);
-    transform: translateX(-50%);
     user-select: none;
+    transform: translateX(-50%);
 }
 
 .link-above {

@@ -104,7 +104,8 @@
     }
 }
 
-.btn-flag {
+.btn-flag,
+.btn-favorite {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -117,7 +118,7 @@
 }
 
 .btn-check-input {
-    &:checked + .btn-flag-favorite {
+    &:checked + .btn-favorite {
         [class^="icon-"],
         [class*=" icon-"] {
             &::before {

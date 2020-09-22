@@ -184,6 +184,17 @@
         --CT_btnTagActiveColor: #{$btn-tag-active-color};
         --CT_btnTagActiveBorderColor: #{$btn-tag-active-border-color};
 
+        --CT_btnFavoriteFocusRingRGB: #{red($btn-favorite-focus-ring), green($btn-favorite-focus-ring), blue($btn-favorite-focus-ring)};
+        --CT_btnFavoriteBg: #{$btn-favorite-bg};
+        --CT_btnFavoriteColor: #{$btn-favorite-color};
+        --CT_btnFavoriteBorderColor: #{$btn-favorite-border-color};
+        --CT_btnFavoriteHoverBg: #{$btn-favorite-hover-bg};
+        --CT_btnFavoriteHoverColor: #{$btn-favorite-hover-color};
+        --CT_btnFavoriteHoverBorderColor: #{$btn-favorite-hover-border-color};
+        --CT_btnFavoriteActiveBg: #{$btn-favorite-active-bg};
+        --CT_btnFavoriteActiveColor: #{$btn-favorite-active-color};
+        --CT_btnFavoriteActiveBorderColor: #{$btn-favorite-active-border-color};
+
         --CT_errorListBg: #{$error-bg};
         --CT_errorListColor: #{$error-color};
 
