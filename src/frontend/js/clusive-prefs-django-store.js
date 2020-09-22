@@ -47,58 +47,21 @@
         
         $(logoutLinkSelector).mouseenter(
             function () {   
-                if(! that.isQueueEmpty()) {
-                    addUnloadListener(that);
+                if(! that.isQueueEmpty()) {                    
                     console.debug("mouseenter event on logout link, flushing message queue.");
                     that.flush();        
                 }
             }
         );
-
-        $(logoutLinkSelector).mouseout(
-            function () {   
-                console.debug("mouseout event on logout link.");
-                removeUnloadListener();
-            }
-        );        
-
+      
         $(logoutLinkSelector).focus(
             function () {      
-                if(! that.isQueueEmpty()) {
-                    addUnloadListener(that);
+                if(! that.isQueueEmpty()) {                    
                     console.debug("focusin event on logout link, flushing message queue.");  
                     that.flush();
                 }
             }
-        );
-
-        $(logoutLinkSelector).blur(
-            function () {                      
-                    console.debug("focusout event on logout link");                      
-                    removeUnloadListener();                                    
-            }
-        );        
-        
-        var addUnloadListener = function () {
-            console.debug("User focus entered logout link, adding unload listener");
-            window.addEventListener("beforeunload", handleUnload);        
-        }
-    
-        var handleUnload = function (e) {  
-            console.debug("handling unload");   
-            if(! that.isQueueEmpty()) {   
-                console.debug("queue is not empty, flush and prompt");   
-                that.flush();
-                e.preventDefault();
-                e.returnValue = "";        
-            }
-        }
-    
-        var removeUnloadListener = function () {
-            console.debug("Removing onbeforeunload listener")
-            window.removeEventListener("beforeunload", handleUnload);
-        }        
-        
+        );                                
     };
 
     // Concrete implementation of the queue flushing that works with 
