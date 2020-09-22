@@ -62,7 +62,7 @@
             }
         );        
 
-        $(logoutLinkSelector).focusin(
+        $(logoutLinkSelector).focus(
             function () {      
                 if(! that.isQueueEmpty()) {
                     addUnloadListener(that);
@@ -72,12 +72,10 @@
             }
         );
 
-        $(logoutLinkSelector).focusout(
-            function () {      
-                if(! that.isQueueEmpty()) {
-                    console.debug("focusout entered on logout link");                      
-                    removeUnloadListener();                    
-                }
+        $(logoutLinkSelector).blur(
+            function () {                      
+                    console.debug("focusout event on logout link");                      
+                    removeUnloadListener();                                    
             }
         );        
         
