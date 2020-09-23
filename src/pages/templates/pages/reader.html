@@ -147,6 +147,23 @@ var manifest_path = "{{ manifest_path }}";
                     usePublication: true,
                     // name : "Daniel",
                     // lang : "en-GB",
+                },
+                api: {
+                    started: function() {
+                        window.parent.clusiveTTS.updateUI('play');
+                    },
+                    stopped: function() {
+                        window.parent.clusiveTTS.updateUI('stop');
+                    },
+                    paused: function() {
+                        window.parent.clusiveTTS.updateUI('pause');
+                    },
+                    resumed: function() {
+                        window.parent.clusiveTTS.updateUI('resume');
+                    },
+                    finished: function() {
+                        window.parent.clusiveTTS.updateUI('stop');
+                    }
                 }
             },
             material: false,
