@@ -68,6 +68,11 @@
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_glossary', '{that}'],
                 excludeSource: 'init'
+            },     
+            'modalSettings.readSpeed': {
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',                
+                args: ['{change}.value', 'preferences.cisl_prefs_readSpeed', '{that}'],
+                excludeSource: 'init'
             },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
@@ -81,6 +86,7 @@
             font: '.cislc-modalSettings-font',
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
+            readSpeed: '.cislc-modalSettings-readSpeed',
             reset: '.cislc-modalSettings-reset'
         },
         bindings: {
@@ -89,6 +95,7 @@
             letterSpacing: 'modalSettings.letterSpacing',
             font: 'modalSettings.font',
             color: 'modalSettings.color',
+            readSpeed: 'modalSettings.readSpeed',
             glossaryCheckbox: {
                 selector: 'glossary',
                 path: 'modalSettings.glossary',
@@ -137,6 +144,8 @@
         that.applier.change('modalSettings.color', fluid.get(preferences, 'fluid_prefs_contrast'));
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
+
+        that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
     };
 
     fluid.registerNamespace('fluid.binder.transforms');
