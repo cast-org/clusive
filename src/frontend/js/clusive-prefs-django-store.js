@@ -80,6 +80,7 @@
             function (e) {                
                 if(! that.isQueueEmpty()) { 
                     console.log("logout link clicked while queue not empty");
+                    $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
                     e.preventDefault();
                     that.logoutFlush();
                 }                                
@@ -88,7 +89,8 @@
     };
 
     clusive.djangoMessageQueue.doLogout = function (that) {        
-        var logoutLinkSelector = that.options.config.logoutLinkSelector;        
+        var logoutLinkSelector = that.options.config.logoutLinkSelector;
+        $(logoutLinkSelector).text("Logging out").fadeIn();        
         window.location = $(logoutLinkSelector).attr("href");
     }
 
