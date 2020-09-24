@@ -38,6 +38,10 @@
                     type: 'cisl.prefs.enactor.glossary'
                 },
                 panel: null
+            },
+            readSpeed: {
+                type: 'cisl.prefs.readSpeed',
+                panel: null
             }
         }
     });
@@ -66,6 +70,21 @@
             }
         }
     });
+
+    // Add a voice speed preference for TTS
+    fluid.defaults('cisl.prefs.schemas.readSpeed', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.readSpeed': {
+                type: 'number',
+                default: 1,
+                mininum: 0.5,
+                maximum: 2,
+                multipleOf: 0.25
+
+            }
+        }
+    })
 
     // Add a boolean preference for the glossary
     fluid.defaults('cisl.prefs.schemas.glossary', {
