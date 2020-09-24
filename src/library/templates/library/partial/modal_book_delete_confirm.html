@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h2  id="modalConfirmTitle" class="modal-title">Delete Publication</h2>
+    <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+        <span class="icon-cancel-circled2" aria-hidden="true"></span>
+    </button>
+</div>
+<div class="modal-body">
+    {% if owner %}
+    <p>Are you sure you want to permanently delete <em>{{ pub.title }}</em>?</p>
+    <p>This action cannot be undone, and will also delete highlights and notes you or anyone else has made in this content.</p>
+    {% else %}
+    <p>No delete permission.</p>
+    {% endif %}
+</div>
+<div class="modal-footer">
+    {% if owner %}
+    <a href="{% url 'remove' pk=pub.id %}" class="btn btn-secondary" onclick="">Delete</a>
+    {% endif %}
+    <button type="button" class="btn btn-link" data-cfw-dismiss="modal">Cancel</button>
+</div>

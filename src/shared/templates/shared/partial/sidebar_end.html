@@ -1,18 +1,26 @@
-<div class="sidebar-tool" role="region" aria-label="Reading tools">
+<div class="sidebar-tool" role="region" aria-label="User preferences">
     <button type="button" class="btn btn-setting" aria-label="Settings" title="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
         <span class="icon-settings" aria-hidden="true"></span>
         <span class="sr-only">Settings</span>
     </button>
-{% if read_aloud %}
-    <button type="button" class="btn btn-tool" aria-label="Read aloud" title="Read aloud" id="readAloudButton">
-        <span id="readAloudIcon" class="icon-play" aria-hidden="true"></span>
-        <span id="readAloudSrText" class="sr-only">Read aloud</span>
-    </button>
-{% endif %}
-{% if lookup %}
-    <button id="glossaryButton" type="button" class="btn btn-tool" aria-label="Word lookup" title="Word lookup">
-        <span class="icon-book" aria-hidden="true"></span>
-        <span class="sr-only">Word lookup</span>
-    </button>
-{% endif %}
 </div>
+{% if read_aloud %}
+<div class="tts-region sidebar-tts" role="region" aria-label="Text to speech controls"{% if read_aloud == 'Readium' %} data-mode="Readium"{% endif %}>
+    <div class="sidebar-tts-inactive">
+        <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud">
+            <span class="icon-play" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div class="sidebar-tts-active">
+        <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud">
+            <span class="icon-pause" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud">
+            <span class="icon-play" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud">
+            <span class="icon-stop" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+{% endif %}

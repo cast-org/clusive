@@ -1,6 +1,6 @@
 .sidebars-wrapper {
     position: fixed;
-    top: $body-padding-y;
+    top: $header-height;
     left: 50%;
     width: 100%;
     max-width: 100%;
@@ -8,6 +8,7 @@
     transform: translateX(-50%);
 
     @include media-breakpoint-up(md) {
+        top: $header-md-height;
         width: calc(100% - #{($body-padding-x * 2)});
         max-width: calc(100% - #{($body-padding-x * 2)});
     }
@@ -29,7 +30,7 @@
     flex: 0 0 $sidebar-width;
     width: $sidebar-width;
     max-width: $sidebar-width;
-    height: calc(100vh - #{$body-padding-y * 2});
+    height: calc(100vh - #{$header-height + $body-padding-y});
     padding: $sidebar-padding;
     background: var(--CT_sidebarStartBg);
     @include border-radius($sidebar-border-radius);
@@ -39,6 +40,10 @@
         width: $sidebar-sm-width;
         max-width: $sidebar-sm-width;
         padding: $sidebar-sm-padding;
+    }
+
+    @include media-breakpoint-up(md) {
+        height: calc(100vh - #{$header-md-height + $body-padding-y});
     }
 
     @include media-breakpoint-up(xl) {
@@ -80,10 +85,9 @@
     flex-direction: column;
     align-items: center;
     align-self: flex-end;
-    margin-top: 1rem;
 
     .btn + .btn {
-        margin-top: .5rem;
+        margin-top: .75rem;
     }
 }
 
@@ -119,19 +123,45 @@
     align-items: center;
     align-self: flex-start;
 
+    .btn + .btn {
+        margin-top: .75rem;
+    }
+}
+
+.sidebar-tts {
+    margin-top: .75rem;
+    width: 2.5rem;
+    @include border-radius(2.5rem);
+
     .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.5rem;
-        height: 2.5rem;
-        padding: 0;
-        line-height: 1;
-        @include font-size(1.75rem);
         @include border-radius(10rem);
     }
 
-    .btn + .btn {
-        margin-top: .75rem;
+    .tts-stop {
+        margin-top: .25rem;
+    }
+
+    &.active {
+        background-color: var(--CT_sidebarTtsActiveBg);
+
+        .sidebar-tts-inactive {
+            display: none;
+        }
+    }
+    &:not(.active) {
+        .sidebar-tts-active {
+            display: none;
+        }
+    }
+
+    &.paused {
+        .tts-pause {
+            display: none;
+        }
+    }
+    &:not(.paused) {
+        .tts-resume {
+            display: none;
+        }
     }
 }

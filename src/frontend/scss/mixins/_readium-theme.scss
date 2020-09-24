@@ -32,6 +32,11 @@
         // Image blend
         --CRT_imgMixBlendMode: #{$img-mix-blend-mode};
 
+        // Highlight overlay
+        --CRT_highlightOverlayBg: #{$highlight-overlay-bg};
+        --CRT_highlightOverlayHoverBg: #{$highlight-overlay-hover-bg};
+        --CRT_highlightOverlayMixBlendMode: #{$highlight-overlay-mix-blend-mode};
+
         // Forcing a reflow in Blink/Webkit so that blend mode can work
         --RS__maxLineLength: 40.01rem;
 
@@ -66,5 +71,19 @@
             background-color: var(--RS__backgroundColor) !important;
             mix-blend-mode: var(--CRT_imgMixBlendMode);
         }
+
+
+        // stylelint-disable declaration-no-important
+        // stylelint-disable-next-line selector-class-pattern
+        .R2_CLASS_HIGHLIGHT_AREA {
+            background-color: var(--CRT_highlightOverlayBg) !important;
+            mix-blend-mode: var(--CRT_highlightOverlayMixBlendMode) !important;
+
+            &:hover,
+            &.hover {
+                background-color: var(--CRT_highlightOverlayHoverBg) !important;
+            }
+        }
+        // stylelint-enable declaration-no-important
     }
 }

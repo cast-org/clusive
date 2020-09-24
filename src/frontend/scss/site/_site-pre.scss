@@ -20,7 +20,6 @@ $enable-img-thumbnail:                  false;
 $enable-figure:                         false;
 $enable-table-striped:                  false;
 $enable-table-hover:                    false;
-$enable-table-active:                   false;
 $enable-table-colors:                   false;
 $enable-table-scroll-responsive:        false;
 $enable-btn-outline:                    false;
@@ -32,7 +31,7 @@ $enable-form-control-sizing:            false;
 $enable-form-control-static:            false;
 $enable-form-label-sizing:              false;
 $enable-form-text:                      false;
-$enable-form-file:                      false;
+$enable-form-file:                      true;
 $enable-form-color:                     false;
 $enable-form-row:                       false;
 $enable-form-inline:                    false;
@@ -63,7 +62,7 @@ $enable-list-item-colors:               false;
 $enable-media:                          true;
 $enable-navbar-text:                    false;
 $enable-navbar-divider:                 false;
-$enable-navbar-collapse:                false;
+$enable-navbar-collapse:                true;
 $enable-navbar-toggle:                  false;
 $enable-navbar-light:                   false;
 $enable-navbar-dark:                    false;
@@ -86,15 +85,18 @@ $enable-tooltip:                        true;
 $enable-utility-bg:                     false;
 $enable-utility-border:                 false;
 $enable-utility-clearfix:               false;
-$enable-utility-display:                false;
-$enable-utility-embed:                  false;
+$enable-utility-display-down-none:      false;
+$enable-utility-display-print:          false;
 $enable-utility-flex:                   false;
 $enable-utility-float:                  false;
 $enable-utility-overflow:               false;
 $enable-utility-position:               false;
 $enable-utility-shadow:                 false;
 $enable-utility-sizing:                 false;
-$enable-utility-spacing:                false;
+$enable-utility-spacing-padding:        false;
+$enable-utility-spacing-margin:         true;
+$enable-utility-spacing-margin-auto:    false;
+$enable-utility-spacing-margin-negative:    false;
 $enable-utility-text-justify:           false;
 $enable-utility-text-wrap:              false;
 $enable-utility-text-nowrap:            false;
@@ -119,6 +121,8 @@ $enable-utility-visibility:             false;
 // Default Figuration setting overrides
 // =====
 
+$utility-display:                       none;
+
 // Disable some default box-shadows
 $thumbnail-box-shadow:                  0 0 transparent;
 $kbd-box-shadow:                        0 0 transparent;
@@ -142,6 +146,14 @@ $primary:                               #40998b;
 
 $palette-interval-light:                .2%;
 $palette-interval-dark:                 .15%;
+
+$spacer:                                1rem;
+$spacers: (
+    "0":    0,
+    "0_25": ($spacer * .25),
+    "0_5":  ($spacer * .5),
+    "1":    $spacer,
+);
 
 $container-max-widths: (
     sm: rem(544px),
@@ -173,6 +185,8 @@ $h1-font-size:                          ($font-size-base * 1.375);
 $h2-font-size:                          ($font-size-base * 1.125);
 $h3-font-size:                          ($font-size-base * 1);
 
+$text-muted:                            var(--CT_textMuted);
+
 $grid-row-columns:                      4;
 
 $figure-caption-padding:                .5rem;
@@ -181,16 +195,21 @@ $figure-caption-font-size:              .875rem;
 $list-item-active-bg:                   unset;
 $list-item-active-color:                unset;
 
+$table-bg-active:                       var(--CT_tableActiveBg);
+$table-border-color:                    var(--CT_tableBorderColor);
+$table-head-border-width:               5px;
+
+
 $btn-font-weight:                       700;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
 $btn-focus-box-shadow-alpha:            .85;
-$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRing), $btn-focus-box-shadow-alpha);
-$btn-default-focus-box-shadow-color:    var(--CT_focusRing);
+//$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
+$btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
 
 $input-bg:                              #fff;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
-$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRing), $input-focus-box-shadow-alpha);
+$input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
 
 $form-group-margin-bottom:              .5rem;
 
@@ -202,6 +221,7 @@ $form-checkradio-radio-icon:            none;
 $form-checkradio-focus-border-color:    var(--CT_formCheckradioFocusBorderColor);
 $form-checkradio-focus-box-shadow:      0 0 0 .1875rem rgba(var(--CT_formCheckradioFocusBoxShadowRGB), var(--CT_formCheckradioFocusBoxShadowOpacity));
 $form-checkradio-checked-box-shadow:    .0625em .0625em 0 .03125em rgba(var(--CT_formCheckradioCheckedBoxShadowRGB), var(--CT_formCheckradioCheckedBoxShadowOpacity));
+$form-checkradio-checkbox-border-radius: .25rem;
 
 $form-range-track-height:               .375rem;
 $form-range-track-bg:                   var(--CT_formRangeTrackBg);
@@ -240,6 +260,8 @@ $dropdown-border-color:                     var(--CT_dropdownBorderColor);
 $dropdown-link-color:                       var(--CT_dropdownLinkColor);
 $dropdown-link-hover-bg:                    var(--CT_dropdownLinkHoverBg);
 $dropdown-link-hover-color:                 var(--CT_dropdownLinkHoverColor);
+$dropdown-link-active-bg:                   var(--CT_dropdownLinkActiveBg);
+$dropdown-link-active-color:                var(--CT_dropdownLinkActiveColor);
 
 $nav-tabs-hover-bg:                         rgba(0, 0, 0, .1);
 $nav-tabs-active-color:                     var(--CT_bodyColor);
@@ -251,6 +273,10 @@ $card-padding-x:                        .75rem;
 $card-title-margin-bottom:              .25rem;
 $card-border-color:                     var(--CT_cardBorderColor);
 $card-border-radius:                    $border-radius;
+$card-header-padding-y:                 $card-padding-y;
+$card-header-padding-x:                 $card-padding-x;
+$card-footer-padding-y:                 $card-padding-y;
+$card-footer-padding-x:                 $card-padding-x;
 
 $popover-bg:                            var(--CT_popoverBg);
 $popover-border-width:                  3px;
@@ -306,9 +332,19 @@ $skiplink-offset-top:                   .25rem;
 $skiplink-padding:                      .25rem .5rem;
 $skiplink-border-width:                 1px;
 
-$header-border-radius:                  $border-radius;
+$header-navbar-padding:                 0;
+$header-navbar-height:                  2.25rem;
+$header-height:                         $header-navbar-height + $body-padding-y;
+$header-navbar-border-radius:           null;
 
-$sidebar-border-radius:                 $header-border-radius;
+$header-md-navbar-height:               2.75rem;
+$header-md-height:                      $header-md-navbar-height + $body-padding-y;
+$content-offset-top:                    1rem;
+
+$logo-font-size:                        1.25rem;
+$logo-md-font-size:                     1.375rem;
+
+$sidebar-border-radius:                 $border-radius;
 $sidebar-width:                         3rem;
 $sidebar-padding:                       .75rem .25rem;
 $sidebar-gutter:                        1rem;

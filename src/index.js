@@ -18,6 +18,7 @@ import execJQueryUITooltip from "script-loader!jquery-ui/ui/widgets/tooltip.js"
 
 import execInfusion from 'script-loader!infusion';
 var Popper = require('script-loader!popper.js').default;
+var Masonry = require('script-loader!masonry-layout');
 import execFiguration from 'script-loader!figuration';
 
 import execGPIIBinder from "script-loader!gpii-binder/src/js/binder.js";

@@ -1,25 +1,28 @@
 #!/bin/sh
 # Commands run in the docker container before starting up the application.
 
-# Wait for Postgres to be ready before attempting to apply migrations
-
 if [ "$DJANGO_CONFIG" = "prod" ]
 then
-    echo "Waiting for postgres..."
+    # Make sure our upload directory has correct ownership and is writable.
+    chown app:app /app/uploads
+    chmod ug+rwX /app/uploads
 
+    # Wait for Postgres to be ready before attempting to apply migrations
+    echo "Waiting for postgres..."
     while ! nc -z ${DJANGO_DB_HOST:=127.0.0.1} ${DJANGO_DB_PORT:=5432}; do
       sleep 1
     done
-
     echo "PostgreSQL found"
 fi
 
-
 echo "Applying any pending migrations..."
-python manage.py migrate
+gosu app:app python manage.py migrate
 
 echo "Loading preference sets"
-python manage.py loaddata preferencesets
+gosu app:app python manage.py loaddata preferencesets
+
+echo "Loading default content"
+gosu app:app python manage.py importdir /content
 
 # The below does not actually work since createsuperuser command does not allow password to be
 # specified on the command line. Need to write a custom admin command or do this as a Migration.
@@ -29,4 +32,4 @@ python manage.py loaddata preferencesets
 #  python manage.py createsuperuser --username $DJANGO_ADMIN_USER --password $DJANGO_ADMIN_PASSWORD
 #fi
 
-exec "$@"
+exec gosu app:app "$@"

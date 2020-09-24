@@ -11,6 +11,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# Note, this MEDIA_ROOT is expected by entrypoint.sh - if you change it here, check there too.
+MEDIA_ROOT = '/app/uploads'
+MEDIA_URL = '/uploads/'
+
 #######################
 # SECURITY MIDDLEWARE #
 #######################

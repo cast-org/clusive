@@ -8,6 +8,7 @@ var TOC_MODAL = '#modalToc';
 
 var TOC_TAB   = '#tocTab';  // links to #tocPanel
 var TOC_CONTAINER = '#tocList';
+var TOC_EMPTY = '#tocEmpty';
 
 var NOTES_TAB = '#notesTab';  // links to #notesPanel
 var NOTES_CONTAINER = '#notesList';
@@ -131,18 +132,24 @@ function buildTableOfContents() {
     'use strict';
 
     if (typeof D2Reader === 'object') {
-        D2Reader.tableOfContents().then(function(x) {
-            var out = buildTocLevel(x, 0, 'toc');
-            $(TOC_CONTAINER).html(out).CFW_Init();
+        D2Reader.tableOfContents().then(function(items) {
+            if (items.length > 1) {
+                $(TOC_EMPTY).hide();
+                var out = buildTocLevel(items, 0, 'toc');
+                $(TOC_CONTAINER).html(out).CFW_Init();
 
-            // Add click event to update menu when new page selected
-            $(TOC_CONTAINER).find('.nav-link').on('click', function() {
-                // Use timeout delay until we can get a callback from reader
-                setTimeout(function() {
-                    resetCurrentTocItem(false);
-                    markTocItemActive();
-                }, 100);
-            });
+                // Add click event to update menu when new page selected
+                $(TOC_CONTAINER).find('.nav-link').on('click', function() {
+                    // Use timeout delay until we can get a callback from reader
+                    setTimeout(function() {
+                        resetCurrentTocItem(false);
+                        markTocItemActive();
+                    }, 100);
+                });
+            } else {
+                // Empty TOC
+                $(TOC_CONTAINER).hide();
+            }
         });
     }
 }
@@ -158,14 +165,16 @@ function buildTableOfContents() {
 var LOC_UPDATE_INTERVAL = 60 * 1000; // Time between server calls - once per minute, in ms.
 var LOC_LOC_KEY = 'trackReadingLocationLoc'; // Stores recorded location that has not yet been transmitted, if any.
 var LOC_BOOK_KEY = 'trackReadingLocationBook'; // Publication that LOC_LOC_KEY refers to.
+var LOC_VERSION_KEY = 'trackReadingLocationVersion'; // Version of publication that LOC_LOC_KEY refers to.
 var LOC_DATE_KEY = 'trackReadingLocationDate'; // Last time location was sent to server.
 
 // Push data to server.  Asynchronous - returns a Promise.
-function sendLocationToServer(book, locString) {
+function sendLocationToServer(book, version, locString) {
     'use strict';
 
     return $.post('/library/setlocation', {
         book: book,
+        version: version,
         locator: locString
     })
         .fail(function(err) {
@@ -173,7 +182,7 @@ function sendLocationToServer(book, locString) {
         });
 }
 
-function trackReadingLocation(book, locator) {
+function trackReadingLocation(book, version, locator) {
     'use strict';
 
     var store = window.sessionStorage;
@@ -181,12 +190,13 @@ function trackReadingLocation(book, locator) {
         // Put this location into session storage for eventual transmittal to server
         var locString = JSON.stringify(locator);
         store.setItem(LOC_BOOK_KEY, book);
+        store.setItem(LOC_VERSION_KEY, version);
         store.setItem(LOC_LOC_KEY, locString);
 
         var storedDate = store.getItem(LOC_DATE_KEY);
         // Send to server if we haven't already sent one for this book, or last did so more than a minute ago
         if (!storedDate || storedDate < Date.now() - LOC_UPDATE_INTERVAL) {
-            return sendLocationToServer(book, locString)
+            return sendLocationToServer(book, version, locString)
                 .done(function() {
                     store.setItem(LOC_DATE_KEY, Date.now());
                 });
@@ -205,11 +215,13 @@ function savePendingLocationUpdate() {
     if (store) {
         var storedLoc = store.getItem(LOC_LOC_KEY);
         var storedBook = store.getItem(LOC_BOOK_KEY);
+        var storedVersion = store.getItem(LOC_VERSION_KEY);
         if (storedLoc && storedBook) {
-            return sendLocationToServer(storedBook, storedLoc)
+            return sendLocationToServer(storedBook, storedVersion, storedLoc)
                 .done(function() {
                     store.removeItem(LOC_LOC_KEY);
                     store.removeItem(LOC_BOOK_KEY);
+                    store.removeItem(LOC_VERSION_KEY);
                     store.removeItem(LOC_DATE_KEY);
                 });
         }

@@ -14,16 +14,21 @@ def formcontrol(value):
     This gives it the Figuration look and feel.
     """
 
-    match = re.search(r'<input.*?>', value)
-    input = match.group()
-    classmatch = re.search(r'class="', input)
-    if classmatch:
-        newinput = input[:classmatch.start()] + 'class="form-control ' + input[classmatch.end():]
+    match = re.search(r'<(input|textarea).*?>', value)
+    if match:
+        input = match.group()
+        typematch  = re.search(r'type="(.*?)"', input)
+        type = typematch.group(1) if typematch else 'text'
+        classmatch = re.search(r'class="', input)
+        addclass = 'form-check-input' if type=='checkbox' else 'form-control'
+        if classmatch:
+            newinput = '%sclass="%s %s' % (input[:classmatch.start()], addclass, input[classmatch.end():])
+        else:
+            newinput = '%s class="%s">' % (input[:-1], addclass)
+
+        return value[:match.start()] + newinput + value[match.end():]
     else:
-        newinput = input[:-1] + 'class="form-control">'
-
-    return value[:match.start()] + newinput + value[match.end():]
-
+        return value
 
 @register.filter(is_safe=True)
 @stringfilter

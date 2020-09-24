@@ -361,12 +361,6 @@
       ]
     },
     {
-      "uid": "b624a1e512819d410ddbee84e6918b9d",
-      "css": "stop",
-      "code": 59412,
-      "src": "fontawesome"
-    },
-    {
       "uid": "f3f90c8c89795da30f7444634476ea4f",
       "css": "angle-left",
       "code": 61700,
@@ -407,6 +401,86 @@
       "css": "edit",
       "code": 59424,
       "src": "fontawesome"
+    },
+    {
+      "uid": "dd492243d64e21dfe16a92452f7861cb",
+      "css": "th-large",
+      "code": 59425,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f805bb95d40c7ef2bc51b3d50d4f2e5c",
+      "css": "th-list",
+      "code": 59426,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d73eceadda1f594cec0536087539afbf",
+      "css": "heart",
+      "code": 59427,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f3dc2d6d8fe9cf9ebff84dc260888cdf",
+      "css": "heart-empty",
+      "code": 59428,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "474656633f79ea2f1dad59ff63f6bf07",
+      "css": "star",
+      "code": 59429,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d17030afaecc1e1c22349b99f3c4992a",
+      "css": "star-empty",
+      "code": 59430,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f04a5d24e9e659145b966739c4fde82a",
+      "css": "bookmark",
+      "code": 59431,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "2f5ef6f6b7aaebc56458ab4e865beff5",
+      "css": "bookmark-empty",
+      "code": 61591,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "750058837a91edae64b03d60fc7e81a7",
+      "css": "ellipsis-vert",
+      "code": 61762,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "107ce08c7231097c7447d8f4d059b55f",
+      "css": "ellipsis",
+      "code": 61761,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0785c02e57804318c8fe070338f89cd9",
+      "css": "stop",
+      "code": 59412,
+      "src": "typicons"
+    },
+    {
+      "uid": "60a16cdc62b002ea38378098987cdf8b",
+      "css": "bricks",
+      "code": 59432,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M392.6 31.3H99.6C61.9 31.3 31.3 61.9 31.3 99.6V275.4C31.3 313.1 61.9 343.8 99.6 343.8H392.6C430.3 343.8 460.9 313.1 460.9 275.4V99.6C460.9 61.9 430.3 31.2 392.6 31.2ZM392.6 421.9H99.6C61.9 421.9 31.3 452.5 31.3 490.2V900.4C31.3 938.1 61.9 968.8 99.6 968.8H392.6C430.3 968.8 460.9 938.1 460.9 900.4V490.2C460.9 452.5 430.3 421.9 392.6 421.9ZM900.4 656.2H607.4C569.7 656.2 539.1 686.9 539.1 724.6V900.4C539.1 938.1 569.7 968.8 607.4 968.8H900.4C938.1 968.8 968.8 938.1 968.8 900.4V724.6C968.8 686.9 938.1 656.3 900.4 656.3ZM900.4 31.3H607.4C569.7 31.3 539.1 61.9 539.1 99.6V509.8C539.1 547.5 569.7 578.1 607.4 578.1H900.4C938.1 578.1 968.8 547.5 968.8 509.8V99.6C968.8 61.9 938.1 31.3 900.4 31.3Z",
+        "width": 1000
+      },
+      "search": [
+        "bricks"
+      ]
     }
   ]
 }

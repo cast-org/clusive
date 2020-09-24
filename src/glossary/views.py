@@ -3,7 +3,7 @@ import logging
 import random
 
 from django.http import JsonResponse, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from eventlog.signals import vocab_lookup
 from glossary.apps import GlossaryConfig
@@ -15,23 +15,25 @@ from roster.models import ClusiveUser
 logger = logging.getLogger(__name__)
 
 
-def checklist(request, document):
+def checklist(request, book_id):
     """Return up to five words that should be presented in the vocab check dialog"""
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        versions = BookVersion.objects.filter(book__path=document)
+        versions = BookVersion.objects.filter(book__pk=book_id)
         to_find = 5
+        min_word_length = 4
         check_words = set()
 
         if len(versions) > 1:
             # Multiple versions, so we want to use our check words to determine which version to show.
             # Create two lists for each version above the simplest:
-            #   All "new" words in this version that are not yet rated
+            #   All "new" words in this version that are not yet rated and > 3 letters
             #   The subset of that list that are glossary words.
             for bv in versions:
                 if bv.sortOrder > 0:
+                    logger.debug("%s all new words: %s", bv, bv.new_word_list)
                     user_words = WordModel.objects.filter(user=user, word__in=bv.new_word_list)
-                    bv.potential_words = [w for w in bv.new_word_list if not any(wm.word==w and wm.rating!=None for wm in user_words)]
+                    bv.potential_words = [w for w in bv.new_word_list if len(w)>=min_word_length and not any(wm.word==w and wm.rating!=None for wm in user_words)]
                     logger.debug("%s potential: %s", bv, bv.potential_words)
                     bv.potential_gloss_words = [w for w in bv.potential_words if w in bv.glossary_word_list]
                     logger.debug("%s glossary:  %s", bv, bv.potential_gloss_words)
@@ -74,15 +76,15 @@ def checklist(request, document):
         logger.warning("Could not fetch check words, no Clusive user: %s", request.user)
         return JsonResponse({'words': []})
     except BookVersion.DoesNotExist:
-        logger.error("No BookVersions found for doc_path %s", document)
+        logger.error("No BookVersions found for book %d", book_id)
         return JsonResponse({'words': []})
 
 
-def cuelist(request, document, version):
+def cuelist(request, book_id, version):
     """Return the list of words that should be cued in this document for this user"""
     try:
         user = ClusiveUser.objects.get(user=request.user)
-        bv = BookVersion.lookup(path=document, version_number=version)
+        bv = BookVersion.lookup(book_id=book_id, version_number=version)
         all_glossary_words = json.loads(bv.glossary_words)
         all_book_words = json.loads(bv.all_words)
 
@@ -100,10 +102,10 @@ def cuelist(request, document, version):
 
         # First, find any words where we think the user is interested  
 
-        interest_words = [wm.word for wm in user_words                                    
-                          if wm.interest_est()>0                                                                              
+        interest_words = [wm.word for wm in user_words
+                          if wm.interest_est() > 0
                           and (wm.knowledge_est()==None or wm.knowledge_est()<3)
-                          and has_definition(document, wm.word)]
+                          and has_definition(bv.book, wm.word)]
         logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
         cue_words = set(interest_words)
 
@@ -112,7 +114,7 @@ def cuelist(request, document, version):
             unknown_words = set([wm.word for wm in user_words
                                  if wm.knowledge_est()
                                  and wm.knowledge_est() < 2
-                                 and has_definition(document, wm.word)])
+                                 and has_definition(bv.book, wm.word)])
             logger.debug("Found:  %d low-knowledge words: %s", len(unknown_words), unknown_words)
             unknown_words = unknown_words-cue_words
             #logger.debug("Filter: %d low-knowledge words: %s", len(unknown_words), unknown_words)
@@ -139,10 +141,14 @@ def cuelist(request, document, version):
         return JsonResponse({'words': []})
 
 
-def glossdef(request, document, cued, word):
+def glossdef(request, book_id, cued, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
     base = base_form(word)
-    defs = lookup(document, base)
+    try:
+        book = Book.objects.get(pk=book_id)
+    except Book.DoesNotExist:
+        book = None
+    defs = lookup(book, base)
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
@@ -151,7 +157,9 @@ def glossdef(request, document, cued, word):
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
-        context = {'defs': defs, 'pub_id': document}
+        context = {'defs': defs}
+        if book:
+            context['book_path'] = book.path
         return render(request, 'glossary/glossdef.html', context=context)
     else:
         return HttpResponseNotFound("<p>No definition found</p>")

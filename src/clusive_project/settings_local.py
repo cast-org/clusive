@@ -11,6 +11,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', default='#!7*2*das3a9b29vbsv#j*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+MEDIA_ROOT = BASE_DIR + '/uploads'
+MEDIA_URL = '/uploads/'
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
@@ -29,3 +32,10 @@ DATABASES = {
 # Don't actually send email, just log to console.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'cisl@cast.org'
+
+# Log database queries
+LOGGING['loggers']['django.db.backends'] = {
+    'handlers': ['console'],
+    'level': 'INFO',
+    'propagate': False,
+}

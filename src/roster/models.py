@@ -1,13 +1,11 @@
+import json
 import logging
 
 from django.contrib.auth.models import User
 from django.db import models
-
 from django.db.models.signals import post_save
-
+from django.dispatch import receiver
 from pytz import country_timezones
-
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +76,40 @@ class ResearchPermissions:
     ]
 
 
+class LibraryViews:
+    ALL = 'all'
+    PUBLIC = 'public'
+    MINE = 'mine'
+    PERIOD = 'period'
+
+    CHOICES = [
+        (ALL, 'All content'),
+        (PUBLIC, 'Public content'),
+        (MINE, 'My content'),
+        (PERIOD, 'Period assignments')
+    ]
+
+    @staticmethod
+    def display_name_of(view):
+        try:
+            return next(x[1] for x in LibraryViews.CHOICES if x[0] == view)
+        except StopIteration:
+            logger.warning('Found no name for library view ' + view)
+            return None
+
+
+class LibraryStyles:
+    BRICKS = 'bricks'
+    GRID = 'grid'
+    LIST = 'list'
+
+    CHOICES = [
+        (BRICKS, 'bricks'),
+        (GRID, 'grid'),
+        (LIST, 'list'),
+    ]
+
+
 class ClusiveUser(models.Model):
     
     # Django standard user class contains the following fields already
@@ -88,9 +120,22 @@ class ClusiveUser(models.Model):
     # - email
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    # Anonymous ID for privacy protection when logging activities for research
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    periods = models.ManyToManyField(Period, blank=True)    
+    # List of all class periods the user is part of
+    periods = models.ManyToManyField(Period, blank=True, related_name='users')
+
+    # Which period will be shown by default, eg in library or manage rosters view
+    current_period = models.ForeignKey(Period, null=True, blank=True, on_delete=models.SET_NULL)
+
+    # Which view of the library page the user last viewed. This choice is persistent.
+    library_view = models.CharField(max_length=10, default=LibraryViews.PERIOD,
+                                    choices=LibraryViews.CHOICES)
+
+    # What layout to use for the library cards. This choice is persistent.
+    library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
+                                     choices=LibraryStyles.CHOICES)
 
     @property 
     def is_permissioned(self):
@@ -110,7 +155,18 @@ class ClusiveUser(models.Model):
 
     @property
     def can_set_password(self):
+        """True if this user can change their own password."""
         return self.role and self.role != Roles.GUEST
+
+    @property
+    def can_upload(self):
+        """True if this user can upload content."""
+        return self.role and self.role != Roles.GUEST
+
+    @property
+    def can_manage_periods(self):
+        """True if this user can edit the users and content connected to Periods they are in."""
+        return self.role and (self.role == Roles.TEACHER or self.role == Roles.PARENT)
 
     def get_preference(self, pref):
         pref, created = Preference.objects.get_or_create(user=self, pref=pref)
@@ -238,13 +294,11 @@ class ClusiveUser(models.Model):
 # This is the current recommended way to ensure additional code is run after 
 # the initial creation of an object; 'created' is True only on the save() from 
 # initial creation
+@receiver(post_save, sender=ClusiveUser)
 def set_default_preferences(sender, instance, created, **kwargs):    
     if(created):
         logger.info("New user created, setting preferences to 'default' set")
         instance.adopt_preferences_set('default')
-
-post_save.connect(set_default_preferences, sender=ClusiveUser)
-
 
 class Preference (models.Model):
     """Store a single user preference setting."""
@@ -282,7 +336,6 @@ class Preference (models.Model):
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
 
-
 class PreferenceSet(models.Model):
     """Store a set of preference keys and values as a JSON string"""
 
@@ -298,3 +351,4 @@ class PreferenceSet(models.Model):
 
     def __str__(self):
         return 'PreferenceSet:%s' % (self.name)
+

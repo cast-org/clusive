@@ -1,0 +1,386 @@
+[
+    {
+        "headword": "commitment",
+        "alternateForms": ["commitments"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A pledge or obligation to fulfill an act or function." ,
+                "examples": [ "The government has made a commitment to cleaning up the environment." ]
+            }
+        ]
+    },
+    {
+        "headword": "depression",
+        "alternateForms": ["depressions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An economic state in which business is very bad and many people are out of work and poor." ,
+                "examples": [ "With the city in a depression, it was almost impossible to find a job and many businesses were failing." ],
+                "images": [
+                    {
+                        "src": "glossimages/depression1.jpg",
+                        "alt": "Photo of people in a line outside for food.",
+                        "description": "Unemployed men lined up outside a depression soup kitchen opened in Chicago by Al Capone in 1931. The storefront sign reads \"Free Soup, Coffee and Doughnuts for the Unemployed.\"",
+                        "caption": "People lined up for food during the economic depression of the 1930s.",
+                        "source": {
+                            "url": "https://www.archives.gov/files/research/american-cities/images/american-cities-129.jpg",
+                            "title": "Unemployed men queued outside a depression soup kitchen opened in Chicago by Al Capone.",
+                            "author": "The U.S. National Archives and Records Administration",
+                            "license": "No known restrictions."
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "access",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Ability to use; right to use." ,
+                "examples": [ "Although computers seem to be everywhere in the United States, many people in the world do not have access to a computer at home or at school." ],
+                "images": [
+                    {
+                        "src": "glossimages/access1.jpg",
+                        "alt": "Photo of cat going through small door.",
+                        "description": "A cat going through a very small door that is embedded in a larger door.",
+                        "caption": "The small cat door gives this animal easy access to going in or out.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/ec2ce50b-7f51-4e63-8db8-c1c3a59f52a1",
+                            "title": "Case Study - Starbucks Bathroom Codes",
+                            "author": "Nik Payne",
+                            "author_url": "https://flickr.com/search/?text=Nik%20Payne",
+                            "license": "CC BY-NC-ND 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "prejudice",
+        "alternateForms": ["prejudices"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Hatred or unfair treatment toward a person or group without cause or reason. Prejudice is often directed toward people of a certain race or religion." ,
+                "examples": [ "There are laws that protect people against acts of prejudice." ]
+            }
+        ]
+    },
+    {
+        "headword": "severe",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Very difficult, or harsh." ,
+                "examples": [ "The living conditions without running water or electricity were severe, especially when the weather got cold." ],
+                "images": [
+                    {
+                        "src": "glossimages/severe1.jpg",
+                        "alt": "Photo of a man holding a baby in front of a shack. ",
+                        "description": "Man holding baby, behind automobile, alongside of shack. A child stands in the doorway of the shack.",
+                        "caption": "Migrant farm workers in the 1930s faced harsh working and living conditions.",
+                        "source": {
+                            "url": "https://www.loc.gov/resource/cph.3c18228/",
+                            "title": "Migratory Mexican field worker's home on the edge of a frozen pea field. Imperial Valley, California",
+                            "author": "Dorothea Lange",
+                            "license": "No known restrictions."
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "activist",
+        "alternateForms": ["activists"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An active reformer." ,
+                "examples": [ "The students decided to be activists to promote renewable energy." ],
+                "images": [
+                    {
+                        "src": "glossimages/activist1.jpg",
+                        "alt": "Photo of people holding a sign at a climate change protest. ",
+                        "description": "A group of people are gathered. A sign is held above the crowd. Words printed on the sign are, 'Ask not what your planet can do for you ask what you can do for your planet.' An image of planet Earth is on the poster.",
+                        "caption": "Many different causes motivate people to become activists.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/road-landscape-people-street-2559762/",
+                            "author": "Markus Spiske",
+                            "author_url": "https://www.pexels.com/@markusspiske",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "migrant",
+        "alternateForms": ["migrants"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A traveler who move from one place or countryto another, often to find work." ,
+                "examples": [ "Without migrant farm workers, much of our food supply would not get harvested. " ],
+                "images": [
+                    {
+                        "src": "glossimages/migrant1.jpg",
+                        "alt": "Photo of farm workers in a field.",
+                        "description": "Six farm workers in a crop field. The workers are resting; some are sitting on wooden boxes.",
+                        "caption": "Migrant farm workers harvesting crops.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/572466f7-40dc-444d-9bb1-8b73097f78bb",
+                            "title": "Working - Migrant Farm Workers",
+                            "author": "Bob Jagendorf ",
+                            "author_url": "https://www.flickr.com/photos/20801313@N00",
+                            "license": "CC BY-NC 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "laborer",
+        "alternateForms": ["laborers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who works with their hands." ,
+                "examples": [ "The laborers worked all day to paint the house and only stopped when they needed to have lunch. " ],
+                "images": [
+                    {
+                        "src": "glossimages/laborer1.jpg",
+                        "alt": "Photo of a person using a power drill.",
+                        "description": "Photo of a carpenter using a drill to work.",
+                        "caption": "Carpenters use hand and power tools to build.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-using-dewalt-cordless-impact-driver-on-brown-board-1249611/",
+                            "title": "Person Using Dewalt Cordless Impact Driver on Brown Board",
+                            "author": "Bidvine",
+                            "author_url": "https://www.pexels.com/@bidvine-517980",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "union",
+        "alternateForms": ["unions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organization of workers formed to bargain with their employer." ,
+                "examples": [ "The teachers joined together in a union to bargain for better learning conditions." ]
+            }
+        ]
+    },
+    {
+        "headword": "boycott",
+        "alternateForms": ["boycotts"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A group's refusal to have commercial dealings with a company or group. A boycott is usually done in protest against the policy's of a company." ,
+                "examples": [ "A boycott is a way people can let a company know that they are not happy with what the company is doing. " ],
+                "images": [
+                    {
+                        "src": "glossimages/boycott1.jpg",
+                        "alt": "Photo of a group of people holding signs in front of a store.",
+                        "description": "Photo of people holding signs saying, 'Don't buy Soda Stream'.",
+                        "caption": "Boycotts can put economic pressure on companies, and can bring about change.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/08409061-69a5-4737-bd26-f19d0ed0ed92",
+                            "title": "Boycott SodaStream Protest",
+                            "author": "Mr.TinDC ",
+                            "author_url": "https://www.flickr.com/photos/7471115@N08",
+                            "license": " CC BY-NC-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "inspire",
+        "alternateForms": ["inspires","inspired","inspiring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cause, urge, stimulate or influence to do." ,
+                "examples": [ "My mother's kindness inspired me to write a book about her." ],
+                "images": [
+                    {
+                        "src": "glossimages/inspire1.jpg",
+                        "alt": "Photo of a cork board covered with notes. ",
+                        "description": "A cork board with short inspirational notes.",
+                        "caption": "A vision board can inspire and motivate.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/notes-on-board-3782134/",
+                            "author": "Polina Zimmerman",
+                            "author_url": "https://www.pexels.com/@polina-zimmerman",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "motivate",
+        "alternateForms": ["motivates","motivated","motivating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cause, urge, stimulate or influence to do." ,
+                "examples": [ "My mother's kindness motivated me to write a book about her." ],
+                "images": [
+                    {
+                        "src": "glossimages/inspire1.jpg",
+                        "alt": "Photo of a cork board covered with notes. ",
+                        "description": "A cork board with short inspirational notes.",
+                        "caption": "A vision board can inspire and motivate.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/notes-on-board-3782134/",
+                            "author": "Polina Zimmerman",
+                            "author_url": "https://www.pexels.com/@polina-zimmerman",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "admittance",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Ability to use; right to use" ,
+                "examples": [ "Although computers seem to be everywhere in the United States, many people in the world cannot get admittance to computer resources at home or at school." ],
+                "images": [
+                    {
+                        "src": "glossimages/access1.jpg",
+                        "alt": "Photo of cat going through small door.",
+                        "description": "A cat going through a very small door that is embedded in a larger door.",
+                        "caption": "The small cat door gives this animal easy admittance to the house.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/ec2ce50b-7f51-4e63-8db8-c1c3a59f52a1",
+                            "title": "Case Study - Starbucks Bathroom Codes",
+                            "author": "Nik Payne",
+                            "author_url": "https://flickr.com/search/?text=Nik%20Payne",
+                            "license": "CC BY-NC-ND 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "intolerance",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Hatred or unfair treatment toward a person or group without cause or reason. Prejudice is often directed toward people of a certain race or religion." ,
+                "examples": [ "There are laws that protect people against acts of intolerance." ]
+            }
+        ]
+    },
+    {
+        "headword": "brutal",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Very difficult, or harsh." ,
+                "examples": [ "Climbing the mountain was a severe test of strength." ],
+                "images": [
+                    {
+                        "src": "glossimages/severe1.jpg",
+                        "alt": "Photo of a man holding a baby in front of a shack. ",
+                        "description": "Man holding baby, behind automobile, alongside of shack. A child stands in the doorway of the shack.",
+                        "caption": "Migrant farm workers in the 1930s faced brutal working and living conditions.",
+                        "source": {
+                            "url": "https://www.loc.gov/resource/cph.3c18228/",
+                            "title": "Migratory Mexican field worker's home on the edge of a frozen pea field. Imperial Valley, California",
+                            "author": "Dorothea Lange",
+                            "license": "No known restrictions."
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "basic",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Forming an essential foundation or starting point; fundamental." ,
+                "examples": [ "He doesn't know the basics of cooking, so he can't prepare a meal." ],
+                "images": [
+                    {
+                        "src": "glossimages/basic1.jpg",
+                        "alt": "Photo of a person washing their hands.",
+                        "description": "A person washing their hands at a sink.",
+                        "caption": "Access to clean water and housing are basic human needs.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-washing-hands-on-sink-3992952/",
+                            "author": "CDC",
+                            "author_url": "https://www.pexels.com/@cdc-library",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "vital",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Forming an essential foundation or starting point; fundamental." ,
+                "examples": [ "He doesn't know the basics of cooking, so he can't prepare a meal." ],
+                "images": [
+                    {
+                        "src": "glossimages/basic1.jpg",
+                        "alt": "Photo of a person washing their hands.",
+                        "description": "A person washing their hands at a sink.",
+                        "caption": "Access to clean water and housing is vital to human health and safety.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-washing-hands-on-sink-3992952/",
+                            "author": "CDC",
+                            "author_url": "https://www.pexels.com/@cdc-library",
+                            "license": "Pexels License",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

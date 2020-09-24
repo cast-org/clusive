@@ -4,6 +4,8 @@
         --CT_bodyBg: #{$body-bg};
         --CT_bodyColor: #{$body-color};
 
+        --CT_textMuted: #{$text-muted};
+
         --CT_linkColor: #{$link-color};
         --CT_linkHoverColor: #{$link-hover-color};
 
@@ -17,34 +19,63 @@
         --CT_skiplinkColor: #{$skiplink-color};
         --CT_skiplinkBorderColor: #{$skiplink-border-color};
 
+        --CT_headerOuterBg: #{$header-outer-bg};
         --CT_headerBg: #{$header-bg};
         --CT_headerColor: #{$header-color};
+        --CT_headerLogoColor: #{$header-logo-color};
         --CT_headerLogoIconColor: #{$header-logo-icon-color};
-        --CT_headerLogoTextColor: #{$header-logo-text-color};
+        --CT_headerLogoIconHoverColor: #{$header-logo-icon-hover-color};
+
+        --CT_actionBg: #{$action-bg};
+        --CT_actionColor: #{$action-color};
+        --CT_actionHoverBg: #{$action-hover-bg};
+        --CT_actionHoverColor: #{$action-hover-color};
+        --CT_actionCurrentBg: #{$action-current-bg};
+        --CT_actionCurrentColor: #{$action-current-color};
+
         --CT_pageTitleBorderColor: #{$page-title-border-color};
+
+        --CT_footerBorderColor: #{$footer-border-color};
 
         --CT_sidebarStartBg: #{$sidebar-start-bg};
         --CT_sidebarEndBg: #{$sidebar-end-bg};
 
         --CT_libraryBodyBg: #{$library-bg};
+        --CT_libraryHeaderOuterBg: #{$library-header-outer-bg};
+        --CT_libraryHeaderBg: #{$library-header-bg};
+        --CT_libraryLogoColor: #{$library-logo-color};
         --CT_libraryLogoIconColor: #{$library-logo-icon-color};
-        --CT_libraryLogoTextColor: #{$library-logo-text-color};
+
+        --CT_libraryFilterBg: #{$library-filter-bg};
+        --CT_libraryFilterColor: #{$library-filter-color};
+        --CT_libraryFilterActiveIconColor: #{$library-filter-active-icon-color};
+        --CT_libraryFilterActiveIconTextShadow: #{$library-filter-active-icon-text-shadow};
 
         --CT_homeBodyBg: #{$home-bg};
-        --CT_homeBodyCreateBorderColor: #{$home-create-border-color};
+        --CT_homeHeaderOuterBg: #{$home-header-outer-bg};
+        --CT_homeHeaderBg: #{$home-header-bg};
+        --CT_homeLogoColor: #{$home-logo-color};
+        --CT_homeLogoIconColor: #{$home-logo-icon-color};
+        --CT_homeSectionBorderColor: #{$home-section-border-color};
+        --CT_loginSectionBorderColor: #{$login-section-border-color};
 
         --CT_cardBg: #{$card-bg};
         --CT_cardColor: #{$card-color};
         --CT_cardBorderColor: #{$card-border-color};
         --CT_cardImgBg: #{$card-img-bg};
         --CT_cardLibraryBoxShadow: #{$card-library-box-shadow};
+        --CT_cardLibraryAuthorColor: #{$card-library-author-color};
 
-        --CT_cardLoginBg: #{$card-login-bg)};
+        --CT_cardLoginBg: #{$card-login-bg};
         --CT_cardLoginColor: #{$card-login-color};
-        --CT_cardLoginForgotBorderColor: #{$card-login-forgot-border-color};
 
         --CT_figureCaptionBg: #{$figure-caption-bg};
         --CT_figureCaptionColor: #{$figure-caption-color};
+
+        --CT_tableActiveBg: #{$table-active-bg};
+        --CT_tableBorderColor: #{$table-border-color};
+
+        --CT_tableRosterHeadColor: #{$table-roster-head-color};
 
         --CT_btnPrimaryFocusRingRGB: #{red($btn-primary-focus-ring), green($btn-primary-focus-ring), blue($btn-primary-focus-ring)};
         --CT_btnPrimaryBg: #{$btn-primary-bg};
@@ -78,6 +109,9 @@
         --CT_btnNavActiveBg: #{$btn-nav-active-bg};
         --CT_btnNavActiveColor: #{$btn-nav-active-color};
         --CT_btnNavActiveBorderColor: #{$btn-nav-active-border-color};
+        --CT_btnNavDisabledBg: #{$btn-nav-disabled-bg};
+        --CT_btnNavDisabledColor: #{$btn-nav-disabled-color};
+        --CT_btnNavDisabledBorderColor: #{$btn-nav-disabled-border-color};
         --CT_btnNavDisabledOpacity: #{$btn-nav-disabled-opacity};
 
         --CT_btnSettingFocusRingRGB: #{red($btn-setting-focus-ring), green($btn-setting-focus-ring), blue($btn-setting-focus-ring)};
@@ -117,6 +151,39 @@
         --CT_btnOptionActiveBoxShadowOpacity: #{$btn-option-active-box-shadow-opacity};
         --CT_btnOptionActiveHoverBorderColor: #{$btn-option-active-hover-border-color};
 
+        --CT_btnTtsFocusRingRGB: #{red($btn-tts-focus-ring), green($btn-tts-focus-ring), blue($btn-tts-focus-ring)};
+        --CT_btnTtsBg: #{$btn-tts-bg};
+        --CT_btnTtsColor: #{$btn-tts-color};
+        --CT_btnTtsBorderColor: #{$btn-tts-border-color};
+        --CT_btnTtsHoverBg: #{$btn-tts-hover-bg};
+        --CT_btnTtsHoverColor: #{$btn-tts-hover-color};
+        --CT_btnTtsHoverBorderColor: #{$btn-tts-hover-border-color};
+        --CT_btnTtsActiveBg: #{$btn-tts-active-bg};
+        --CT_btnTtsActiveColor: #{$btn-tts-active-color};
+        --CT_btnTtsActiveBorderColor: #{$btn-tts-active-border-color};
+
+        --CT_btnFlagFocusRingRGB: #{red($btn-flag-focus-ring), green($btn-flag-focus-ring), blue($btn-flag-focus-ring)};
+        --CT_btnFlagBg: #{$btn-flag-bg};
+        --CT_btnFlagColor: #{$btn-flag-color};
+        --CT_btnFlagBorderColor: #{$btn-flag-border-color};
+        --CT_btnFlagHoverBg: #{$btn-flag-hover-bg};
+        --CT_btnFlagHoverColor: #{$btn-flag-hover-color};
+        --CT_btnFlagHoverBorderColor: #{$btn-flag-hover-border-color};
+        --CT_btnFlagActiveBg: #{$btn-flag-active-bg};
+        --CT_btnFlagActiveColor: #{$btn-flag-active-color};
+        --CT_btnFlagActiveBorderColor: #{$btn-flag-active-border-color};
+
+        --CT_btnTagFocusRingRGB: #{red($btn-tag-focus-ring), green($btn-tag-focus-ring), blue($btn-tag-focus-ring)};
+        --CT_btnTagBg: #{$btn-tag-bg};
+        --CT_btnTagColor: #{$btn-tag-color};
+        --CT_btnTagBorderColor: #{$btn-tag-border-color};
+        --CT_btnTagHoverBg: #{$btn-tag-hover-bg};
+        --CT_btnTagHoverColor: #{$btn-tag-hover-color};
+        --CT_btnTagHoverBorderColor: #{$btn-tag-hover-border-color};
+        --CT_btnTagActiveBg: #{$btn-tag-active-bg};
+        --CT_btnTagActiveColor: #{$btn-tag-active-color};
+        --CT_btnTagActiveBorderColor: #{$btn-tag-active-border-color};
+
         --CT_errorListBg: #{$error-bg};
         --CT_errorListColor: #{$error-color};
 
@@ -126,6 +193,8 @@
         --CT_dropdownLinkColor: #{$dropdown-link-color};
         --CT_dropdownLinkHoverBg: #{$dropdown-link-hover-bg};
         --CT_dropdownLinkHoverColor: #{$dropdown-link-hover-color};
+        --CT_dropdownLinkActiveBg: #{$dropdown-link-active-bg};
+        --CT_dropdownLinkActiveColor: #{$dropdown-link-active-color};
 
         --CT_popoverBg: #{$popover-bg};
         --CT_popoverBorderColor: #{$popover-border-color};
@@ -242,6 +311,7 @@
         --CT_formRangeThumbFocusBoxShadowRGB: #{red($form-range-thumb-focus-box-shadow-color), green($form-range-thumb-focus-box-shadow-color), blue($form-range-thumb-focus-box-shadow-color)};
         --CT_formRangeThumbFocusBoxShadowOpacity: #{$form-range-thumb-focus-box-shadow-opacity};
         --CT_formRangeThumbActiveBg: #{$form-range-thumb-active-bg};
+        --CT_formRangeTipColor: #{$form-range-tip-color};
 
         --CT_formSwitchTrackBg: #{$form-switch-track-bg};
         --CT_formSwitchTrackBorderColor: #{$form-switch-track-border-color};
@@ -264,6 +334,7 @@
         --CT_wordbankColBg: #{$wordbank-col-bg};
         --CT_wordbankControlColor: #{$wordbank-control-color};
         --CT_wordbankControlHoverColor: #{$wordbank-control-hover-color};
+        --CT_wordbankTitleColor: #{$wordbank-title-color};
         --CT_wordbankCountBg: #{$wordbank-count-bg};
         --CT_wordbankCountColor: #{$wordbank-count-color};
         --CT_wordbankCountBorderColor: #{$wordbank-count-border-color};
@@ -276,6 +347,8 @@
 
         --CT_ttsBackgroundColor: #{$tts-highlight-bg};
         --CT_ttsTextColor: #{$tts-highlight-color};
+
+        --CT_sidebarTtsActiveBg: #{$sidebar-tts-active-bg};
 
         --CT_imageDescCiteColor: #{$image-desc-cite-color};
 

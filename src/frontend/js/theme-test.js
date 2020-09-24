@@ -1,3 +1,5 @@
+/* exported themeCSS */
+
 function themeControls() {
     'use strict';
 

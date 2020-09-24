@@ -1,0 +1,48 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block bodyClass %}library{% endblock %}
+{% block title %}Library | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="library" home_link=False %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=False %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Library</h1>
+
+    <div class="row">
+        <div class="col">
+            {% include "library/partial/library_view_selector.html" %}
+            {% if style == 'list' %}
+                {% include "library/partial/library_list_options.html" %}
+            {% else %}
+                {% include "library/partial/library_grid_options.html" %}
+            {% endif %}
+        </div>
+        {% if current_view == 'mine' %}
+        <div class="col-md-auto text-md-end mb-1 mb-md-0">
+            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add content</a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if object_list|length == 0 %}
+        No content found.
+    {% else %}
+        {% if style == 'list' %}
+            {% include "library/partial/library_list_content.html" %}
+        {% else %}
+            {% include "library/partial/library_grid_content.html" %}
+        {% endif %}
+    {% endif %}
+</main>
+
+{% include "shared/partial/modal_vocab_check.html" %}
+{% include "shared/partial/modal_confirm.html" %}
+{% endblock %}

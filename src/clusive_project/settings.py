@@ -27,13 +27,16 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',    
     'roster.apps.RosterConfig',
     'pages.apps.PagesConfig',
     'eventlog.apps.EventlogConfig',
-    'library.apps.LibraryConfig',
+    'library.apps.LibraryConfig',    
+    'messagequeue.apps.MessageQueueConfig',
     'glossary.apps.GlossaryConfig',
+    'authoring.apps.AuthoringConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
+    'progressbarupload',
 ]
 
 MIDDLEWARE = [
@@ -46,7 +49,16 @@ MIDDLEWARE = [
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'clusive_project.middleware.LookupClusiveUserMiddleware',
 ]
+
+FILE_UPLOAD_HANDLERS = (
+    "progressbarupload.uploadhandler.ProgressBarUploadHandler",
+    "django.core.files.uploadhandler.MemoryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
+)
+
+PROGRESSBARUPLOAD_INCLUDE_JQUERY = False
 
 ROOT_URLCONF = 'clusive_project.urls'
 

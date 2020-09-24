@@ -17,7 +17,7 @@
 <!-- jQuery and Figuration JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0-beta.5/dist/js/figuration.min.js" integrity="sha384-qxJIAaCm2yIk7HvSXNiSadX6nVf5VaAO9zw+rIsjkAl3cpu4CEnsupskg4ZvPL4i" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0/dist/js/figuration.min.js" integrity="sha384-XqIV+6/aPbInuDsESPata3SBmFPBP6fSRj8dE/LgKX9dkNoGJeLRa8/q9jUo0vW4" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="../js/theme-test.js"></script>
@@ -35,89 +35,96 @@
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-<div class="page-wrapper">
-    <div class="container-xl">
-        <header class="site-header">
+<header class="site-header">
+    <div class="site-header-navbar navbar navbar-expand-md">
+        <div class="site-header-container container-xl">
             <div class="site-header-logo">
                 <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
                 <span class="icon-logo-clusive" aria-hidden="true"></span>
                 <span class="sr-only">Clusive</span>
             </div>
-
-            <!--
-            <h1 class="page-title">Library</h1>
-
-            <div class="user-actions" role="region" aria-label="">
-                <a href="#">Word bank</a> |
-                Username
-                <a href="#">Log out</a>
-            </div>
-            -->
-        </header>
-
-        <div class="sidebars-wrapper">
-            <div class="sidebars">
-                <div class="sidebar sidebar-start">
-                </div>
-
-                <div class="sidebar sidebar-end" role="region" aria-label="Reading tools">
-                </div>
-            </div>
         </div>
+    </div>
+</header>
 
-        <div class="content">
-            <main id="content" tabindex="-1">
-                <h1>Welcome to Clusive</h1>
-                <p>This is the <a href="#">Center on Inclusive Software for Learning</a>'s flexible, adaptive, and customizable digital reader.</p>
+<div class="container-xl">
+    <div class="content">
+        <main id="content" tabindex="-1">
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h2>Curious?</h2>
-                        <p>Try out all that Clusive has to offer.</p>
-                        <a href="#" class="btn btn-secondary btn-splash">Try Clusive!</a>
+            <h1>Welcome to Clusive</h1>
+            <p>This is the <a href="#">Center on Inclusive Software for Learning</a>'s flexible, adaptive, and customizable digital learning environment.</p>
 
-                        <div class="home-create">
-                            <p>Create a free account to keep your settings.</p>
-                            <a href="#" class="btn btn-primary">Create an account</a>
+            <div class="row">
+                <div class="col-sm-6 col-md-5 col-lg-4">
+                    <div class="card card-login">
+                        <div class="card-body login-section">
+                            <p class="card-text">
+                                <a href="#" class="btn btn-secondary btn-splash">Try Clusive as a Guest!</a>
+                            </p>
+                            <p class="card-text">
+                                <a href="#">Create an account</a> to keep your settings.
+                            </p>
                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card card-login">
-                            <div class="card-body">
-                                <h2>I already have an account.</h2>
-                                <ul class="errorlist">
-                                    <li>I am some error.</li>
-                                    <li>I am another error with a longer amount of text to get some wrapping.</li>
-                                </ul>
+                        <div class="card-body login-section">
+                            <h2>Sign in</h2>
 
-                                <form>
-                                    <div class="form-group">
-                                        <label for="username" class="form-label">Username:</label>
-                                        <input id="username" type="text" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password" class="form-label">Password:</label>
-                                        <input id="password" type="password" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary">Log in</button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="card-body card-login-forgot">
-                                <a href="#">I forgot my username or password.</a>
-                            </div>
+                            <ul class="errorlist">
+                                <li>I am some error.</li>
+                                <li>I am another error with a longer amount of text to get some wrapping.</li>
+                            </ul>
+
+                            <form>
+                                <div class="form-group">
+                                    <label for="username" class="form-label">Username:</label>
+                                    <input id="username" type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="form-label">Password:</label>
+                                    <input id="password" type="password" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Log in</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-body login-section">
+                            <a href="#">I forgot my username or password.</a>
                         </div>
                     </div>
                 </div>
-            </main>
+                <div class="col-sm-6 col-md-7 col-lg-8">
+                    <h2>See a demo</h2>
+                    <div class="embed-fluid embed-fluid-16x9">
+                        <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/31Vd8zvl2GE" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
 
-            <footer>
-                <div class="site-footer">
-                    <p><a href="#">Aliquam auctor</a>, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, <a href="#">feugiat id porta nec</a>, tincidunt eget quam.</p>
+                    <div class="home-section">
+                        <h2>Interested in working with us?</h2>
+                        <p>Volunteer to help out our project as a co-designer or beta tester.</p>
+                        <p><a href="#">Contact us to sign up.</a></p>
+                    </div>
                 </div>
-            </footer>
-        </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="site-footer">
+                <div class="media">
+                    <div class="media-img">
+                        <img src="./img/logo-cisl.png" class="img-fluid" alt="CISL">
+                    </div>
+                    <div class="media-body">
+                        <a href="#">Center on Inclusive Sofrware for Learning</a>
+                    </div>
+                </div>
+                <div class="list list-divided list-horizontal">
+                    <a href="#" class="list-item">Accessibility Policy</a>
+                    <a href="#" class="list-item">Privacy Policy</a>
+                    <a href="#" class="list-item">Terms of Use</a>
+                    <span class="list-item">&copy; 2020 CAST Inc., All Rights Reserved</span>
+                </div>
+            </div>
+        </footer>
     </div>
 </div>
 

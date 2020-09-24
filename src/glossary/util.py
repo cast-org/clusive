@@ -1,4 +1,6 @@
+import json
 import logging
+import os
 
 from lemminflect import getAllLemmas, getAllInflections
 
@@ -14,20 +16,23 @@ logger = logging.getLogger(__name__)
 book_glossaries = {}
 
 
-def has_definition(document, word):
-    """Determine whether the given word exists in our dictionary.
-     We don't want to query or cue words when we don't have a defintion."""
-    return lookup(document, word) is not None
+def has_definition(book, word):
+    """Determine whether the given word exists in the book's glossary or dictionary.
+     We don't want to query or cue words when we don't have a definition."""
+    return lookup(book, word) is not None
 
 
-def lookup(document, word):
-    # First try to find in a book glossary
-    if not book_glossaries.get(document):
-        book_glossaries[document] = BookGlossary(document)
-    defs = book_glossaries[document].lookup(word)
-    if (defs):
-        defs['source'] = 'Book'
-    else:
+def lookup(book, word):
+    defs = None
+    if book:
+        # First try to find in a book glossary
+        book_id = book.id
+        if not book_glossaries.get(book_id):
+            book_glossaries[book_id] = BookGlossary(book_id)
+        defs = book_glossaries[book_id].lookup(word)
+        if (defs):
+            defs['source'] = 'Book'
+    if not defs:
         # Next try Wordnet
         defs = wordnetutil.lookup(word)
         if (defs):
@@ -63,3 +68,54 @@ def all_forms(word):
     for list in getAllInflections(wl).values():
         all_forms.update(list)
     return all_forms
+
+
+def test_glossary_file(glossfile):
+    """
+    Sanity check the given glossary JSON file.
+
+    Returns an error as a string, or None if the file looks good.
+    Should be rewritten to continue checking and return ALL errors.
+    """
+    if not os.path.exists(glossfile):
+        return 'File doesn\'t exist'
+    book_dir = os.path.dirname(glossfile)
+    with open(glossfile, 'r', encoding='utf-8') as file:
+        try:
+            glossary = json.load(file)
+        except:
+            return "JSON Decode error in %s" % (glossfile)
+        for entry in glossary:
+            if not 'headword' in entry:
+                return "In %s, missing headword in %s" % (glossfile, entry)
+            # assert entry['headword'] == base_form(entry['headword']) or entry['headword']=='install', \
+            #             "In %s, glossary word %s is not base form, should be %s" \
+            #             % (glossfile, entry['headword'], base_form(entry['headword']))
+            if entry['headword'] != base_form(entry['headword']):
+                logger.info("Non baseform in %s: %s (should be %s)",
+                            glossfile, entry['headword'], base_form(entry['headword']))
+            if not 'alternateForms' in entry:
+                return "In %s, %s missing alternateForms" % (glossfile, entry['headword'])
+            if not 'meanings' in entry:
+                return "In %s, %s missing meanings" % (glossfile, entry['headword'])
+            for m in entry['meanings']:
+                if not 'pos' in m:
+                    return "In %s word %s, missing pos in %s" % (glossfile, entry['headword'], m)
+                if not 'definition' in m:
+                    return "In %s word %s, missing definition in %s" % (glossfile, entry['headword'], m)
+                if not 'examples' in m:
+                    return "In %s word %s, missing examples in %s" % (glossfile, entry['headword'], m)
+                if 'images' in m:
+                    for i in m['images']:
+                        if not 'src' in i:
+                            return "In %s word %s, missing src for image" % (glossfile, entry['headword'])
+                        if not os.path.exists(os.path.join(book_dir, i['src'])):
+                            return "In %s word %s, image doesn't exist: %s" % (glossfile, entry['headword'], os.path.join(book_dir, i['src']))
+                        if not 'alt' in i:
+                            return "In %s word %s, missing alt for image" % (glossfile, entry['headword'])
+                        if not 'description' in i:
+                            return "In %s word %s, missing description for image" % (glossfile, entry['headword'])
+                        # optional for now
+                        # assert 'caption' in i, "In %s word %s, missing caption for image" % (glossfile, entry['headword'])
+                        # assert 'source' in i, "In %s word %s, missing source for image" % (glossfile, entry['headword'])
+    return None

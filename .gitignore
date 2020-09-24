@@ -10,6 +10,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 media
+uploads
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
@@ -140,6 +141,10 @@ dmypy.json
 .pyre/
 
 # End of https://www.gitignore.io/api/django
+
+# Mac specific
+.DS_Store
+.Trash
 
 # Editor config files
 .idea

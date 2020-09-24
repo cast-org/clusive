@@ -7,18 +7,30 @@
 #   docker build . -t clusive
 #   docker run -p 8000:8000 -e DJANGO_CONFIG=local --name clusive clusive
 #   docker exec -it clusive python manage.py createsuperuser
-#   Log in to http://localhost:8000/admin as the superuser and "Rescan Books"
+#   Log in to http://localhost:8000/admin as the superuser
 
 ###
 ### The builder image (first of two stages)
 ###
 
-FROM python:3.7-alpine as base
+FROM python:3.7-slim-buster as base
+
+RUN apt-get update && \
+  apt-get -y install --no-install-recommends libpq5 libpq-dev python3-dev gcc g++ git nodejs npm && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+# Apt installs node 10 and npm 5, which are incompatible. Upgrade npm.
+# This will output an error message when it runs.
+RUN npm install npm@6 -g
 
 COPY requirements.txt /
-RUN \
-  apk add --no-cache postgresql-libs git gcc g++ musl-dev postgresql-dev npm make && \
-  python -m pip wheel -r /requirements.txt --no-cache-dir --no-deps --wheel-dir /wheels
+RUN python -m pip wheel -r /requirements.txt --no-cache-dir --no-deps --wheel-dir /wheels
+
+# Download this in builder so that it's more likely cached; data doesn't change often.
+# Outputs a warning message when it runs.
+RUN python -m pip install nltk
+RUN python -m nltk.downloader -d /usr/local/share/nltk_data wordnet
 
 WORKDIR /app
 COPY package*.json ./
@@ -34,9 +46,12 @@ RUN rm -rf node_modules Grunt* package*
 ### Construct the slim image for deployment (second stage)
 ###
 
-FROM python:3.7-alpine
+FROM python:3.7-slim-buster
 
-RUN apk add --no-cache postgresql-libs
+RUN apt-get update && \
+  apt-get -y install --no-install-recommends libpq5 netcat-traditional wget gosu && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
 # No point caching bytecode for single run
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -47,27 +62,28 @@ ENV PYTHONUNBUFFERED 1
 COPY --from=base /wheels /wheels
 RUN pip install --no-cache /wheels/*
 
+COPY --from=base /usr/local/share/nltk_data /usr/local/share/nltk_data
+
 # Don't run as root
-RUN mkdir -p /app /home/app
-RUN addgroup -S app && adduser -S -G app app
-RUN chown -R app:app /app
-USER app
+RUN addgroup --system app && adduser --system --ingroup app app
+RUN mkdir -p /app /content
+RUN chown -R app:app /app /content
 
 WORKDIR /app
-
-RUN python -m nltk.downloader wordnet
 
 COPY --from=base /app/target /app
 COPY src/entrypoint.sh /app
 
-RUN python manage.py collectstatic --no-input
+COPY content /content
+
+RUN gosu app:app python manage.py collectstatic --no-input
 
 EXPOSE 8000
 STOPSIGNAL SIGINT
 
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-HEALTHCHECK --interval=10s --timeout=3s \
+HEALTHCHECK --interval=10s --timeout=3s --start-period=120s \
 	CMD wget --quiet --tries=1 --spider http://localhost:8000/ || exit 1
 
 # gunicorn configuration suggestions from https://pythonspeed.com/articles/gunicorn-in-docker/

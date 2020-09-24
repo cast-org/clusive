@@ -2,12 +2,11 @@
 {% load static %}
 
 {% block head_additional %}
-{% comment %} Readium reader dependencies {% endcomment %}
-
 <script>
 var exports = {};
-var pub_id = "{{ pub_id }}";
+var pub_id = "{{ pub.id }}";
 var pub_version = "{{ version }}";
+var manifest_path = "{{ manifest_path }}";
 </script>
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
 {% endblock %}
@@ -15,13 +14,20 @@ var pub_version = "{{ version }}";
 {% block title %}{{ pub.title }} | Clusive{% endblock %}
 
 {% block header %}
-{% include "shared/partial/site_header_small.html" with user_actions=True %}
+{% include "shared/partial/site_header.html" %}
 {% endblock %}
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
-{% include "shared/partial/sidebar_start.html" with index_reader=True nav=True why=True %}
+{% include "shared/partial/sidebar_start.html" with nav=True why=True %}
 {% endblock %}
+
+{% block sidebar_end %}
+<!-- Item needed to anchor the definition popover -->
+<button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
+
+{% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
+{% endblock%}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 
@@ -68,8 +74,8 @@ var pub_version = "{{ version }}";
     </div>
 
     <script>
-        var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% static "shared/pubs/" %}'
-            + pub_id + '/' + pub_version + '/manifest.json';
+        var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port +
+            '{% get_media_prefix %}' + manifest_path;
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
@@ -88,46 +94,70 @@ var pub_version = "{{ version }}";
         ];
 
         var userSettings = { textAlignment:'start' };
-        var lastReadingPosition = {{ last_position|safe }};
-        var annotations = JSON.parse('{{ annotations|safe }}');
+        var annotations = [];
+        {% for a in annotations %}
+            annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
+        {% endfor %}
         var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
+        var lastReadingPosition = {{ last_position|safe }};
 
         var selectionMenuItems = [
             {
                 id: 'lookupIcon',
                 callback: function (selection) {
-                    console.debug('looking up: ', selection);
-                    window.parent.load_definition(1, selection);
-                    window.parent.$('#glossaryButton').CFW_Popover('show');
-                    glossaryPop_focus($('#lookupIcon'));
+                    var match = selection.match('\\w+');
+                    if (match) {
+                        word = match[0];
+                    } else {
+                        console.info('Did not find any word in selection: %s', text);
+                    }
+                    console.debug('looking up: ', word);
+                    window.parent.load_definition(0, word);
+                    window.parent.$('#glossaryLocator').CFW_Popover('show');
+                    window.parent.glossaryPop_focus($('#lookupIcon'));
                 }
             }
         ];
 
         D2Reader.load({
-                url: new URL(url),
-                upLinkUrl: upLink,
-                ui: {
-                    settings: {
-                        fontFamily: true,
-                        fontSize: true,
-                        appearance: true,
-                        scroll: true,
-                        lineHeight: true
-                    },
+            url: new URL(url),
+            upLinkUrl: upLink,
+            ui: {
+                settings: {
+                    fontFamily: true,
+                    fontSize: true,
+                    appearance: true,
+                    scroll: true,
+                    lineHeight: true
                 },
-                rights: {
-                    enableBookmarks: true,
-                    enableAnnotations: true
-                },
-                material: false,
-                userSettings: userSettings,
-                initialAnnotations: {"bookmarks":[], "highlights": annotations},
-                lastReadingPosition: lastReadingPosition,
-                injectables: injectables,
+            },
+            rights: {
+                enableBookmarks: true,
+                enableAnnotations: true,
+                enableTTS: true
+            },
+            tts: {
+                enableSplitter: true,
+                highlight: "words", // lines, words
+                autoScroll: true,
+                rate: 1.2,
+                pitch: 1.0,
+                volume: 1.0,
+                voice: {
+                    usePublication: true,
+                    // name : "Daniel",
+                    // lang : "en-GB",
+                }
+            },
+            material: false,
+            userSettings: userSettings,
+            initialAnnotations: {"bookmarks":[], "highlights": annotations},
+            lastReadingPosition: lastReadingPosition,
+            injectables: injectables,
 
-                selectionMenuItems: selectionMenuItems,
-                initialAnnotationColor: "#FFDD66",
+            selectionMenuItems: selectionMenuItems,
+            //initialAnnotationColor: "#a0abfd",
+            initialAnnotationColor: "var(--CRT_highlightOverlayBg)",
 
             api: {
                 addBookmark: function (bookmark) {
@@ -160,7 +190,7 @@ var pub_version = "{{ version }}";
                     var atBottom = (elt.scrollHeight - elt.scrollTop === elt.clientHeight);
                     document.getElementById('prevResourceButton').disabled = (firstResource && atTop);
                     document.getElementById('nextResourceButton').disabled = (lastResource && atBottom);
-                    return trackReadingLocation(pub_id, locator);
+                    return trackReadingLocation(pub_id, pub_version, locator);
                 },
                 updateUserSettings: function (userSettings) {
                     return Promise.resolve();

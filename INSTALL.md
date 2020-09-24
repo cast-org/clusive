@@ -1,20 +1,22 @@
 # Installation of Clusive
 
-Clusive can be installed locally for development or for production use via Docker.
-
+Clusive can be installed in several ways, either as a standalone server
+or a Docker container. 
+To try it out quickly using Docker skip ahead to that section.
 
 ## Local Installation
 
 ### Prerequisites
 
 * [Python 3](https://www.python.org/downloads/)
-  * Version 3.7.4 or later. On Mac, Homebrew is the easiest way to install
+  * Version 3.7.4 or later. On Mac, Homebrew is the easiest way to install.
 * [virtualenv](https://virtualenv.pypa.io/en/latest/) 
-  * Highly recommended for maintaining an isolated environment and dependencies
+  * Not required, but highly recommended for maintaining an isolated environment and dependencies.
 * [Postgres](https://www.postgresql.org/) 
-  * Version 11.5 or later. Used in the deployment configuration 
+  * Version 11.5 or later. Used in the deployment configuration.
 * [Node.js](https://nodejs.org/)
-  * Used for the build system and to manage all other dependencies using:
+  * Not required to run the Clusive server, but for development it is needed 
+    since we use:
     * [npm](https://www.npmjs.com/get-npm) - Package manager
     * [Grunt](https://gruntjs.com/) - Task runner
 
@@ -27,13 +29,15 @@ Clone the Clusive repository to your local machine and check out the appropriate
  
 
 ### Create/Activitate Virtual Environment
-Always activate and use the virtual environment to maintain an isolated environment.
+Always activate and use the python virtual environment to maintain an 
+isolated environment for Clusive's dependencies.
 
-* [Create the virtual environment](https://docs.python.org/3/library/venv.html): 
+* [Create the virtual environment](https://docs.python.org/3/library/venv.html)
+  (one time setup): 
   - `python -m venv ENV` 
-  - If applicable [Intellij's support for virtualenv](https://www.jetbrains.com/help/idea/creating-virtual-environment.html)
+  - Or do this via your IDE, e.g. [Intellij's support for virtualenv](https://www.jetbrains.com/help/idea/creating-virtual-environment.html)
 
-* Activate:
+* Activate (every command-line session):
   - Windows: `.\ENV\Scripts\activate`
   - Mac/Linux: `source ENV/bin/activate`
 
@@ -43,8 +47,9 @@ Always activate and use the virtual environment to maintain an isolated environm
 Run in the Clusive directory:
 * `npm install`
 * `grunt build`
-  - Use the noclean option to preserve data on subsequent builds: `grunt build -noclean`
- 
+  - Use the noclean option to preserve data on subsequent builds: \
+  `grunt build-noclean`
+This creates the compiled, runnable server in the Clusive/target directory.
 
 #### Front-end Dependency Notes
 
@@ -56,7 +61,7 @@ Run in the Clusive directory:
 
 Run in the Clusive directory:
 * `pip install -r requirements.txt`
-* possible solutions for [psycopg2 library issues](https://stackoverflow.com/questions/26288042/error-installing-psycopg2-library-not-found-for-lssl) on Mac
+* If necessary, refer to these possible solutions for [psycopg2 library issues](https://stackoverflow.com/questions/26288042/error-installing-psycopg2-library-not-found-for-lssl) on Mac
 
 ### Download WordNet Data
 
@@ -66,38 +71,39 @@ Run in the Clusive directory:
 
 ### Initialize Local Database
 
-The local development configuration uses sqlite3, so no database setup is required.
+The local development configuration uses sqlite, so no database setup is required.
 
-Run in the /target directory:
+To initialize the schema and initial data, run in the Clusive\target directory:
 * `python manage.py migrate`
 * `python manage.py loaddata preferencesets` 
 
 ### Create a Superuser
 
-Run in the /target directory:
+Run in the Clusive\target directory:
 * `python manage.py createsuperuser`
+
+### Import public content
+There are a number of learning materials ready for import in the Clusive\content directory.
+
+For each one that you want to make available, run a command like this in 
+the Clusive\target directory:
+* `python manage.py import ..\content\cast-lexington\*`
+
+You can also import the entire `content` directory in one go:
+* `python manage.py importdir ..\content`
+
+The `import` command can be used to import a single EPUB file, 
+or multiple files which are considered to be a set of leveled versions 
+of the same content. A glossary JSON file and directory of images that
+it refers to can also be included on the command line.
+The content directory contains many examples of these.  
 
 ### Verify the Application
 
-Run in the /target directory:
-* Launch the server `python manage.py runserver` from the target directory
-* Verify Clusive Learning Environment login page `http://localhost:8000`
-* Verify Clusive Admin site with the superuser login `http://localhost:8000/admin/`
-
-### Import Default Content
-
-In the Clusive Admin site, navigate to "Books" and click "Rescan Books" to load the default content.
-
-### Import Custom Content
-
-To add additional content, each EPUB must be unpacked, a manifest generated, and the files manually 
-made part of the application's static files:
-* Clone and install [r2-shared-js](https://github.com/readium/r2-shared-js) from Github
-* Unpack EPUBs in the r2-shared-js directory
-  * `npm run cli file.epub output-dir`
-* Copy unpacked EPUB directory in output-dir to `/shared/static/shared/pubs/short-name-for-new-pub`
-* Build and restart the application
-* In the Clusive Admin site, navigate to "Books" and click "Rescan Books"
+Run in the Clusive\target directory:
+* `python manage.py runserver`
+* Verify Clusive login page: http://localhost:8000
+* Verify Clusive admin site with the superuser login: http://localhost:8000/admin/
 
 ### Local Development
 
@@ -108,6 +114,8 @@ made part of the application's static files:
 In the Clusive directory, build the Docker image:
 
 `docker build . -t clusive`
+
+Or, in the command lines below, you can use the pre-built `castudl/clusive` image from Docker Hub.
 
 Run with local development settings (creates an empty sqlite database at each run):
 
@@ -123,7 +131,6 @@ docker run -p 8000:8000 \\
   -e DJANGO_DB_USER=<user> -e DJANGO_DB_PASSWORD=<password> \\
   clusive
 ```
-Docker will run any pending database migrations. Users and books are added manually:
+Docker will run any pending database migrations and import the default books at startup, but users must be added manually:
 
 * `docker exec -it <container_id> python manage.py createsuperuser`
-* Log in as a superuser, and in the "Books" page of the admin site, click "Rescan books".

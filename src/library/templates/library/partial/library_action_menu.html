@@ -1,0 +1,15 @@
+<div class="dropdown link-above">
+    <button type="button" class="btn btn-flag" data-cfw="dropdown">
+        <span class="icon-ellipsis-vert" aria-hidden="true"></span>
+        <span class="sr-only">Publication settings</span>
+    </button>
+    <ul class="dropdown-menu dropreverse">
+        {% if pub.owner == request.clusive_user %}
+        <li><a href="{% url 'metadata_edit' pk=pub.id %}">Edit</a></li>
+        <li><button type="button" class="dropdown-item" data-clusive="confirmPubDel" data-clusive-book-id="{{ pub.id }}">Delete</button></li>
+        {% endif %}
+        {% if request.clusive_user.can_manage_periods %}
+        <li><button type="button" class="dropdown-item" data-clusive="confirmSharing" data-clusive-book-id="{{ pub.id }}">Share</button></li>
+        {% endif %}
+    </ul>
+</div>

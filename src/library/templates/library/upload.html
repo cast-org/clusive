@@ -1,0 +1,63 @@
+{% extends "shared/base.html" %}
+{% load static figuration progress_bar %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block head_additional %}
+  {% progress_bar_media %}
+{% endblock %}
+
+{% block title %}Upload | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Add New Content</h1>
+    <div class="row">
+        <div class="col-md-9 col-lg-6">
+            <div class="card card-login">
+                <div class="card-body">
+                    <h2>Step 1: Upload Content</h2>
+                    {% if request.clusive_user.can_upload %}
+                    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="module aligned">
+                            <div class="form-group">
+                                {{ form.file.errors }}
+                                <div class="form-file">
+                                    <input type="file" class="form-file-input" name="file" id="{{ form.file.id_for_label }}">
+                                    <label class="form-file-label" for="{{ form.file.id_for_label }}">
+                                        <span class="form-file-text">Choose file...</span>
+                                        <span class="form-file-button">Browse</span>
+                                    </label>
+                                </div>
+                                <div class="form-text text-small">Must be an EPUB</div>
+                            </div>
+                            <div class="form-group">
+                                {% progress_bar %}
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary" value="Upload file" />
+                                &nbsp;<a href="{% url 'library' view='mine' %}">Cancel</a>
+                            </div>
+                        </fieldset>
+                    </form>
+                    {% else %}
+                    <p>You will need to create an account before you can upload your own content.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <hr class="my-2" />
+            <h2>Finding EPUB Content</h2>
+            <p>Some information will go here.</p>
+        </div>
+    </div>
+</main>
+{% endblock %}

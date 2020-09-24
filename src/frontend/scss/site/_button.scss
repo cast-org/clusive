@@ -1,12 +1,45 @@
-.btn-nav {
-    [class^="icon-"]::before,
-    [class*=" icon-"]::before {
-        @include font-size(1.25em);
-    }
+.btn-support,
+.btn-nav,
+.btn-setting,
+.btn-tool,
+.btn-tts {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    @include font-size(1.5rem);
+    line-height: 1;
+    @include border-radius(10rem);
+}
 
+.btn-nav {
     &.disabled,
     &:disabled {
         opacity: var(--CT_btnNavDisabledOpacity);
+    }
+}
+
+.btn-setting,
+.btn-tool,
+.btn-tts {
+    @include font-size(1.75rem);
+}
+
+.btn-nav-toc {
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        @include font-size(1.25rem);
+        transform: scaleX(-1);
+    }
+}
+.btn-nav-prev,
+.btn-nav-next {
+    [class^="icon-"]::before,
+    [class*=" icon-"]::before {
+        position: relative;
+        top: .125rem;
     }
 }
 
@@ -48,9 +81,10 @@
     }
 }
 
-.btn-help {
+.btn-support-help {
     padding-right: 0;
     padding-left: 0;
+    @include font-size(1rem);
     white-space: nowrap;
 
     [class^="icon-"],
@@ -60,12 +94,43 @@
         transform: rotate(10deg);
 
         &:first-child {
-            left: .25em;
-            margin-right: -.25em;
+            left: .125em;
+            margin-right: -.125em;
         }
         &:last-child {
             left: -.125em;
-            margin-right: .125em;
+            margin-right: -.125em;
         }
     }
+}
+
+.btn-flag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    @include font-size(1.25rem);
+    line-height: 1;
+    @include border-radius(10rem);
+}
+
+.btn-check-input {
+    &:checked + .btn-flag-favorite {
+        [class^="icon-"],
+        [class*=" icon-"] {
+            &::before {
+                content: "\e825";
+            }
+        }
+    }
+}
+
+.btn-tag {
+    padding: .125em .5em;
+    margin-top: .125rem;
+    margin-bottom: .125rem;
+    @include font-size(.875rem);
+    font-weight: $font-weight-normal;
 }

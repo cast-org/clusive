@@ -15,32 +15,30 @@
     {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=False %} {% endblock %}
     <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-    <div class="page-wrapper">
-        <div class="container-xl">
-            {% block header %}
-            {% include "shared/partial/sidebar_start.html" with index_home=0 index_reader=0 nav=0 why=0 %}
-            {% endblock%}
+    {% block header %}
+    {% include "shared/partial/site_header.html" %}
+    {% endblock%}
 
-            <div class="sidebars-wrapper">
-                <div class="sidebars">
-                    <div class="sidebar sidebar-start">
-                        {% block sidebar_start %}
-                        {% include "shared/partial/sidebar_start.html" with index_home=0 index_reader=0 nav=0 why=0 %}
-                        {% endblock%}
-                    </div>
+    <div class="container-xl">
+        <div class="sidebars-wrapper">
+            <div class="sidebars is-fixed">
+                <div class="sidebar sidebar-start">
+                    {% block sidebar_start %}
+                    {% include "shared/partial/sidebar_start.html" with nav=0 why=0 %}
+                    {% endblock%}
+                </div>
 
-                    <div class="sidebar sidebar-end">
-                        {% block sidebar_end %}
-                        {% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=True %}
-                        {% endblock%}
-                    </div>
+                <div class="sidebar sidebar-end">
+                    {% block sidebar_end %}
+                    {% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=True %}
+                    {% endblock%}
                 </div>
             </div>
+        </div>
 
-            <div class="content">
-                {% block content %}
-                {% endblock %}
-            </div>
+        <div class="content">
+            {% block content %}
+            {% endblock %}
         </div>
     </div>
 

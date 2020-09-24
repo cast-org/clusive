@@ -1,0 +1,338 @@
+[
+    {
+        "headword": "intellectual",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Devoted to study, speculation, and abstract mental activity." ,
+                "examples": [ "The intellectual student was into learning and critical thinking." ],
+                "images": [
+                    {
+                        "src": "glossimages/intellectual1.jpg",
+                        "alt": "Photo of a person reading a printed page.",
+                        "description": "A person looks down at a printed page. She leans forward and is focused on the information on the page.",
+                        "caption": "Reading is one of many intellectual activities.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/a569f217-1cb9-4d6c-a1c7-2a3731e7016b",
+                            "author": "erin is a star",
+                            "author_url": "https://www.flickr.com/photos/35687101@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "renaissance",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A renewal or revival." ,
+                "examples": [ "The Harlem Renaissance was an artistic movement and a time of growth for the arts. " ]
+            }
+        ]
+    },
+    {
+        "headword": "culture",
+        "alternateForms": [ "cultures"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The language, ideas, arts, and inventions of a particular group of people.",
+                "examples": [ "Both the Incan and Egyptian cultures built pyramids." ],
+                "images": [
+                    {
+                        "src": "glossimages/culture1.jpg",
+                        "alt": "Photo of sculptures on a Singapore temple.",
+                        "description": "From the corner of a building and looking upward, parts of two sides of a building are seen. The sides of the building are covered with colorful figures including human figures and dragon shapes.",
+                        "caption": "Religion and art are important aspects of human culture.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:Sri_Mariamman_Temple_Singapore_3_amk.jpg",
+                            "title": "Sri Mariamman Temple Singapore",
+                            "author": "AngMoKio.",
+                            "author_url": "https://commons.wikimedia.org/wiki/User:AngMoKio",
+                            "license": "CC BY-SA 3.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/3.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "genius",
+        "alternateForms": ["geniuses"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An unusual ability to think or create in ways that go far beyond what most people can do." ,
+                "examples": [ "The first book he wrote shows genius at work." ]
+            }
+        ]
+    },
+    {
+        "headword": "pride",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A feeling of self-worth." ,
+                "examples": [ "The painter had great pride in his ability to create works of art, despite the people who tried to shame him into quitting." ],
+                "images": [
+                    {
+                        "src": "glossimages/pride1.jpg",
+                        "alt": "Photo of sports fans.",
+                        "description": "People attending a sports game. Many people are wearing a team shirt. Some people are standing, waving their hands. Other people are waving team flags. ",
+                        "caption": "Team pride shows in this group of fans wearing team gear and wave team flags! ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/943ca69d-6265-440f-a43f-5f1e0b5482f8",
+                            "title": "GWS GIANTS Fans",
+                            "author": "Sportinaus",
+                            "author_url": "https://www.flickr.com/photos/71937318@N04",
+                            "license": "CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "influence",
+        "alternateForms": ["influences","influenced","influencing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To act on; produce an effect or change in." ,
+                "examples": [ "Her friends influenced her decision to play soccer instead of softball." ]
+            }
+        ]
+    },
+    {
+        "headword": "appreciate",
+        "alternateForms": ["appreciates","appreciated","appreciating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To understand and accept the worth of; to value." ,
+                "examples": [ "We especially appreciate spring after a very cold winter." ],
+                "images": [
+                    {
+                        "src": "glossimages/appreciate1.jpg",
+                        "alt": "Photo of two people clapping.",
+                        "description": "Two people are standing, looking to the right. They are both clapping.",
+                        "caption": "To understand or appreciate the value of something is also a way to say that you grasp the value of that thing. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/76410c26-9fd3-48fd-9968-cdc68a4034db",
+                            "author": "gurms",
+                            "author_url": "https://www.flickr.com/photos/40011875@N00",
+                            "license": "CC BY-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "condemn",
+        "alternateForms": ["condemns","condemned","condemning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To strongly disapprove of." ,
+                "examples": [ "The school condemns cheating of any kind." ],
+                "images": [
+                    {
+                        "src": "glossimages/condemn1.jpg",
+                        "alt": "Photo of a woman pointing toward the viewer.",
+                        "description": "A woman points toward the viewer. The woman has an angry expression on her face.",
+                        "caption": "This woman's expression and pointing shows that she is angry and disapproves of something.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/96dc6ad3-057e-4368-b0ee-8bff22ee00b3",
+                            "title": "Angry Mandy!",
+                            "author": "eVo photo",
+                            "author_url": "https://www.flickr.com/photos/60414609@N00",
+                            "license": "CC BY-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "recognition",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Notice or approval." ,
+                "examples": [ "The award was the recognition from her school for her high grades." ],
+                "images": [
+                    {
+                        "src": "glossimages/recognition1.jpg",
+                        "alt": "Photo of awards ceremony for long jump",
+                        "description": "Eight women stand on a stepped podium, each at a different height. The different steps are numbered 1-8, with the highest steps numbered \"1\".",
+                        "caption": "Each person here is being recognized for their work and achievement. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/0a89b456-fdfe-45c6-8532-5dd865e7e5cb",
+                            "title": "Valedictorian skips graduation",
+                            "author": "trustypics ",
+                            "author_url": "https://www.flickr.com/photos/26668694@N05",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "audience",
+        "alternateForms": ["audiences"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A gathering of people attending an event." ,
+                "examples": [ "The audience was silent during his speech." ],
+                "images": [
+                    {
+                        "src": "glossimages/audience1.jpg",
+                        "alt": "Photo of a crowd at a music concert",
+                        "description": "Crowd of people gathered in a theater.  At the front of the theater is a stage.",
+                        "caption": "An audience of spectators gathers in a theater.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/5b4b4bb2-9a53-47fb-8c09-cf87d5f7a521",
+                            "author": "acb",
+                            "author_url": "https://www.flickr.com/photos/37912374670@N01",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "guide",
+        "alternateForms": ["guides","guided","guiding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To act on; produce an effect or change in." ,
+                "examples": [ "Her friends' opinions guided her decision to play soccer instead of softball." ]
+            }
+        ]
+    },
+    {
+        "headword": "grasp",
+        "alternateForms": ["grasps","grasped","grasping"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To understand and accept the worth of; to value." ,
+                "examples": [ "We grasp the importance of rain when we haven't had any in months." ],
+                "images": [
+                    {
+                        "src": "glossimages/appreciate1.jpg",
+                        "alt": "Photo of two people clapping.",
+                        "description": "Two people are standing, looking to the right. They are both clapping.",
+                        "caption": "To understand or appreciate the value of something is also a way to say that you grasp the value of that thing. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/76410c26-9fd3-48fd-9968-cdc68a4034db",
+                            "author": "gurms",
+                            "author_url": "https://www.flickr.com/photos/40011875@N00",
+                            "license": "CC BY-ND 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "denounce",
+        "alternateForms": ["denounces","denounced","denouncing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To strongly disapprove of." ,
+                "examples": [ "The school denounces cheating of any kind." ],
+                "images": [
+                    {
+                        "src": "glossimages/condemn1.jpg",
+                        "alt": "Photo of a woman pointing toward the viewer.",
+                        "description": "A woman points toward the viewer. The woman has an angry expression on her face.",
+                        "caption": "This woman's expression and pointing shows that she is angry and disapproves of something.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/96dc6ad3-057e-4368-b0ee-8bff22ee00b3",
+                            "title": "Angry Mandy! ",
+                            "author": "eVo photo",
+                            "author_url": "https://www.flickr.com/photos/60414609@N00",
+                            "license": "CC BY-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "acknowledgement",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Notice or approval." ,
+                "examples": [ "The award was the acknowledgment from her school for her high grades." ],
+                "images": [
+                    {
+                        "src": "glossimages/recognition1.jpg",
+                        "alt": "Photo of awards ceremony for long jump",
+                        "description": "Eight women stand on a stepped podium, each at a different height. The different steps are numbered 1-8, with the highest steps numbered \"1\".",
+                        "caption": "Each person here is receiving acknowledgment for their work and achievement. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/0a89b456-fdfe-45c6-8532-5dd865e7e5cb",
+                            "title": "Valedictorian skips graduation",
+                            "author": "trustypics ",
+                            "author_url": "https://www.flickr.com/photos/26668694@N05",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "spectators",
+        "alternateForms": ["spectator"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A gathering of people attending an event." ,
+                "examples": [ "The spectators were silent during his speech." ],
+                "images": [
+                    {
+                        "src": "glossimages/audience1.jpg",
+                        "alt": "Photo of a crowd at a music concert",
+                        "description": "Crowd of people gathered in a theater.  At the front of the theater is a stage.",
+                        "caption": "An audience of spectators gathers in a theater.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/5b4b4bb2-9a53-47fb-8c09-cf87d5f7a521",
+                            "author": "acb",
+                            "author_url": "https://www.flickr.com/photos/37912374670@N01",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

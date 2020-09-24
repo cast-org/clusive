@@ -31,7 +31,7 @@
 .goal-word {
     margin-bottom: 1rem;
     @include font-size(1.375rem);
-    font-weight: 700;
+    font-weight: $font-weight-bold;
     text-align: center;
 }
 

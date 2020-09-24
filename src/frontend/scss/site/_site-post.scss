@@ -57,7 +57,10 @@ $btn-themes: map-merge(
             "hover-border-color": var(--CT_btnNavHoverBorderColor),
             "active-bg": var(--CT_btnNavActiveBg),
             "active-color": var(--CT_btnNavActiveColor),
-            "active-border-color": var(--CT_btnNavActiveBorderColor)
+            "active-border-color": var(--CT_btnNavActiveBorderColor),
+            "disabled-bg": var(--CT_btnNavDisabledBg),
+            "disabled-color":var(--CT_btnNavDisabledColor),
+            "disabled-border":var(--CT_btnNavDisabledBorderColor)
         ),
         "setting":
         (
@@ -85,6 +88,19 @@ $btn-themes: map-merge(
             "active-color": var(--CT_btnToolActiveColor),
             "active-border-color": var(--CT_btnToolActiveBorderColor)
         ),
+        "tts":
+        (
+            "base": var(--CT_btnTtsFocusRingRGB),
+            "bg": var(--CT_btnTtsBg),
+            "color": var(--CT_btnTtsColor),
+            "border-color": var(--CT_btnTtsBorderColor),
+            "hover-bg": var(--CT_btnTtsHoverBg),
+            "hover-color": var(--CT_btnTtsHoverColor),
+            "hover-border-color": var(--CT_btnTtsHoverBorderColor),
+            "active-bg": var(--CT_btnTtsActiveBg),
+            "active-color": var(--CT_btnTtsActiveColor),
+            "active-border-color": var(--CT_btnTtsActiveBorderColor)
+        ),
         "option":
         (
             "base": var(--CT_btnOptionFocusRingRGB),
@@ -97,6 +113,32 @@ $btn-themes: map-merge(
             "active-bg": var(--CT_btnOptionActiveBg),
             "active-color": var(--CT_btnOptionActiveColor),
             "active-border-color": var(--CT_btnOptionActiveBorderColor)
+        ),
+        "flag":
+        (
+            "base": var(--CT_btnFlagFocusRingRGB),
+            "bg": var(--CT_btnFlagBg),
+            "color": var(--CT_btnFlagColor),
+            "border-color": var(--CT_btnFlagBorderColor),
+            "hover-bg": var(--CT_btnFlagHoverBg),
+            "hover-color": var(--CT_btnFlagHoverColor),
+            "hover-border-color": var(--CT_btnFlagHoverBorderColor),
+            "active-bg": var(--CT_btnFlagActiveBg),
+            "active-color": var(--CT_btnFlagActiveColor),
+            "active-border-color": var(--CT_btnFlagActiveBorderColor)
+        ),
+        "tag":
+        (
+            "base": var(--CT_btnTagFocusRingRGB),
+            "bg": var(--CT_btnTagBg),
+            "color": var(--CT_btnTagColor),
+            "border-color": var(--CT_btnTagBorderColor),
+            "hover-bg": var(--CT_btnTagHoverBg),
+            "hover-color": var(--CT_btnTagHoverColor),
+            "hover-border-color": var(--CT_btnTagHoverBorderColor),
+            "active-bg": var(--CT_btnTagActiveBg),
+            "active-color": var(--CT_btnTagActiveColor),
+            "active-border-color": var(--CT_btnTagActiveBorderColor)
         ),
         "default":
         (
@@ -158,7 +200,7 @@ $btn-sizes: (
     "splash": (
         "padding-y":     null,
         "padding-x":     null,
-        "font-size":     ($font-size-base * 1.5),
+        "font-size":     ($font-size-base * 1.125),
         "line-height":   null,
         "border-radius": $border-radius
     )

@@ -1,6 +1,37 @@
 .site-footer {
     padding-top: 1rem;
-    padding-bottom: 1rem;
-    margin-top: 2rem;
-    border-top: 3px solid rgba(#636b82, .25);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 3px solid var(--CT_footerBorderColor);
+
+    .media {
+        align-items: center;
+    }
+
+    .media-img {
+        width: 5rem;
+        margin-right: 1rem;
+    }
+
+    .list-horizontal {
+        align-items: baseline;
+        line-height: 1.25;
+
+        &.list-divided > .list-item {
+            border-color: var(--CT_footerBorderColor);
+        }
+
+
+        @include media-breakpoint-down(xs) {
+            flex-direction: column;
+            margin-bottom: 0;
+
+            .list-item {
+                padding: 0;
+                margin-bottom: .5rem;
+                border-width: 0;
+            }
+        }
+    }
 }
+

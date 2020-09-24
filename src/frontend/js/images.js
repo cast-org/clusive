@@ -58,7 +58,7 @@ function setUpImageDetails(scope) {
     'use strict';
 
     // Click event to override normal behavior of the <details> and <summary> elements.
-    var details = $(scope).find('details summary');
+    var details = $(scope).find('figure details summary');
     details.on('click', showImageDetails);
 }
 
@@ -70,5 +70,5 @@ $(function() {
     $('#image-info-modal').on('afterHide.cfw.modal', restoreFocus);
 
     // Listen for clicks on details elements in the glossary
-    $('#glossaryPop').on('click', 'details summary', showImageDetails);
+    $('#glossaryPop').on('click', 'figure details summary', showImageDetails);
 });

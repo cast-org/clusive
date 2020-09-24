@@ -7,6 +7,11 @@ to client-side Javascript
 <script>
 var DJANGO_STATIC_ROOT = "{% static '' %}";
 var DJANGO_CSRF_TOKEN = $("[name=csrfmiddlewaretoken]").val();
+{% if user.is_authenticated %}
+    var DJANGO_USERNAME = "{{ user.get_username }}"
+{% else %}
+    var DJANGO_USERNAME = null;
+{% endif %}
 // Global reference to the preferences editor for non-Infusion code
 // Initialized with the results of createClusivePrefsEditor() when that's called
 var clusivePrefs;
@@ -14,7 +19,10 @@ var clusivePrefs;
 
 <script src="{% static 'shared/js/lib/main.js' %}"></script>
 <script src="{% static 'shared/js/clusive-reader-prefs.js' %}"></script>
+<script src="{% static 'shared/js/clusive-prefs-django-store.js' %}"></script>
 <script src="{% static 'shared/js/clusive-prefs-panel.js' %}"></script>
+<script src="{% static 'shared/js/clusive-prefs-modal-settings.js' %}"></script>
+<script src="{% static 'shared/js/clusive-message-queue.js' %}"></script>
 
 <script src="{% static 'shared/js/glossary.js' %}"></script>
 <script src="{% static 'shared/js/images.js' %}"></script>
