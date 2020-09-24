@@ -75,25 +75,7 @@
 
     clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
         var logoutLinkSelector = that.options.config.logoutLinkSelector;        
-        
-        $(logoutLinkSelector).mouseenter(
-            function () {   
-                if(! that.isQueueEmpty()) {                    
-                    console.debug("mouseenter event on logout link, flushing message queue.");
-                    that.flush();        
-                }
-            }
-        );
-      
-        $(logoutLinkSelector).focusin(
-            function () {      
-                if(! that.isQueueEmpty()) {                    
-                    console.debug("focusin event on logout link, flushing message queue.");  
-                    that.flush();
-                }
-            }
-        ); 
-        
+                
         $(logoutLinkSelector).click(
             function (e) {                
                 if(! that.isQueueEmpty()) { 
