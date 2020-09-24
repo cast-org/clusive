@@ -99,7 +99,7 @@
 
     clusive.messageQueue.flushQueue = function (that, setupPromiseFunc) {
         // Don't flush if we have an empty queue
-        if(that.queue.length > 0 ) {                   
+        if(that.queue.length > 0 ) {                    
             that.sendingQueue.timestamp = new Date().toISOString();
             that.sendingQueue.messages = [].concat(that.queue);
             that.queue = [];
@@ -111,7 +111,7 @@
         }
     }
 
-    clusive.messageQueue.setupQueueFlushPromise = function (that, promise, successFunc, failureFunc) {
+    clusive.messageQueue.setupQueueFlushPromise = function (that, promise, successFunc, failureFunc) {        
         promise.then(
             function(value) {
                 successFunc(value)
