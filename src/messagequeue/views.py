@@ -26,8 +26,9 @@ def process_messages(queue_timestamp, messages, user, request):
         message_username = message["username"]
         session_username = user.username
         if(message_username != session_username):
-            logger.debug("Rejected individual message, message username %s did not match session username %s ", (message_username, session_username))
-            return
+            logger.debug("Rejected individual message, message username %s did not match session username %s ",
+                         message_username, session_username)
+            break
         message_timestamp = adjust_message_timestamp(message["timestamp"], delta)        
         message_content = message["content"]
         
@@ -56,7 +57,7 @@ class MessageQueueView(View):
     def post(self, request):        
         try:
             receivedQueue = json.loads(request.body)     
-            logger.debug("Received a message queue: %s" % receivedQueue);
+            logger.debug("Received a message queue: %s" % receivedQueue)
             queue_timestamp = receivedQueue["timestamp"]
             queue_username = receivedQueue["username"]
             messages = receivedQueue["messages"]
@@ -66,7 +67,8 @@ class MessageQueueView(View):
             if(queue_username == username):
                 process_messages(queue_timestamp, messages, clusive_user.user, request)
             else: 
-                logger.debug("Rejected message queue, queue username %s did not match session username %s ", (queue_username, username))
+                logger.debug("Rejected message queue, queue username %s did not match session username %s ",
+                             queue_username, username)
                 return JsonResponse(status=501, data={'message': 'Invalid user'})            
         except json.JSONDecodeError:
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})        

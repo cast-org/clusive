@@ -15,6 +15,9 @@
             flushInterval: 60000,
             logoutLinkSelector: "#logoutLink"
         },
+        events: {
+            logoutFlushComplete: null
+        },
         invokers: {
             flushQueueImpl: {
                 funcName: "clusive.djangoMessageQueue.flushQueueImpl"                
@@ -26,15 +29,43 @@
             isQueueEmpty: {
                 funcName: "clusive.djangoMessageQueue.isQueueEmpty",
                 args: ["{that}"]
-            }          
+            },
+            logoutFlush: {
+                funcName: "clusive.djangoMessageQueue.logoutFlush",
+                args: ["{that}"]
+            },
+            setupLogoutFlushPromise: {
+                funcName: "clusive.djangoMessageQueue.setupLogoutFlushPromise",
+                args: ["{that}", "{arguments}.0"]
+            }
         },
         listeners: {
             "onCreate.attachLogoutEvents": {
                 funcName: "clusive.djangoMessageQueue.attachLogoutEvents",
                 args: ["{that}"]
-            }
+            },
+            "logoutFlushComplete.doLogout": {
+                funcName: "clusive.djangoMessageQueue.doLogout",
+                args: ["{that}"]
+            }                        
         }
     });
+
+    clusive.djangoMessageQueue.logoutFlush = function (that) {        
+        clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);
+    }    
+
+    clusive.djangoMessageQueue.setupLogoutFlushPromise = function (that, promise) {        
+        promise.then(
+            function(value) {
+                that.events.queueFlushSuccess.fire(value);
+                that.events.logoutFlushComplete.fire();
+            },
+            function(error) {
+                that.events.queueFlushFailure.fire(error);
+                that.events.logoutFlushComplete.fire();
+            })    
+    }
 
     // Check if both the queue and the sending queue are empty 
     // (no outstanding or in-flight messages)
@@ -44,35 +75,24 @@
 
     clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
         var logoutLinkSelector = that.options.config.logoutLinkSelector;        
-        
-        $(logoutLinkSelector).mouseenter(
-            function () {   
-                if(! that.isQueueEmpty()) {
-                    console.debug("Mouse entered logout link, flushing message queue.");
-                    that.flush();        
-                }
+                
+        $(logoutLinkSelector).click(
+            function (e) {                
+                if(! that.isQueueEmpty()) { 
+                    console.log("logout link clicked while queue not empty");
+                    $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
+                    e.preventDefault();
+                    that.logoutFlush();
+                }                                
             }
-        );
-        
-        $(logoutLinkSelector).focus(
-            function () {      
-                if(! that.isQueueEmpty()) {
-                    console.debug("Keyboard focus entered logout link, flushing message queue.");  
-                    that.flush();
-                }
-            }
-        );
-
-        // window.addEventListener("beforeunload", function (e) {                 
-        //     if(! that.isQueueEmpty()) {
-        //         console.debug("queue is not empty, prompting user for unload");
-        //         that.flush();
-        //         e.preventDefault();
-        //         e.returnValue = "";        
-        //     }                        
-        // });
-
+        )
     };
+
+    clusive.djangoMessageQueue.doLogout = function (that) {        
+        var logoutLinkSelector = that.options.config.logoutLinkSelector;
+        $(logoutLinkSelector).text("Logging out").fadeIn();        
+        window.location = $(logoutLinkSelector).attr("href");
+    }
 
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue
