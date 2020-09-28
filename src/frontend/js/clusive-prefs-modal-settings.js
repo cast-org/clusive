@@ -74,6 +74,11 @@
                 args: ['{change}.value', 'preferences.cisl_prefs_readSpeed', '{that}'],
                 excludeSource: 'init'
             },
+            'modalSettings.readVoice': {
+                funcName: 'cisl.prefs.modalSettings.handleReadVoiceSetting',
+                args: ['{change}.value', '{that}'],
+                excludeSource: 'init'
+            },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
                 includeSource: 'init'
@@ -147,6 +152,25 @@
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
     };
+
+    cisl.prefs.modalSettings.handleReadVoiceSetting = function(chosenVoice, that) {
+        console.log("handleReadVoiceSetting started; chosen voice: " + chosenVoice);
+        var currentReadVoices = fluid.get(that.model.preferences, 'cisl_prefs_readVoices');
+        console.log("currentReadVoices preference:", currentReadVoices);
+        
+        // Remove the voice if it's already in the list
+        var filteredReadVoices = currentReadVoices.filter(function(voice) {
+            if(voice !== chosenVoice) return true;
+        });
+
+        // Create a new array
+
+        var newReadVoices = [chosenVoice].concat(filteredReadVoices);
+
+        console.log("new read voices: ", newReadVoices);
+        that.applier.change('preferences.cisl_prefs_readVoices', newReadVoices);
+        
+    }
 
     fluid.registerNamespace('fluid.binder.transforms');
 
