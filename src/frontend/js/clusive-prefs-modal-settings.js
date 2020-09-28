@@ -92,7 +92,8 @@
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
             readSpeed: '.cislc-modalSettings-readSpeed',
-            reset: '.cislc-modalSettings-reset'
+            reset: '.cislc-modalSettings-reset',
+            voiceButton: '.voice-button'
         },
         bindings: {
             textSize: 'modalSettings.textSize',
@@ -177,12 +178,13 @@
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
         console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
         var voiceFound = false;
+        var voiceButtons = that.locate('voiceButton');
         readVoices.forEach(function (preferredVoice) {
             if(voiceFound) {
                 return;
             }
             console.log("Checking for preferred voice: " + preferredVoice);
-            $('.voice-button').each(function(idx) {                                
+            voiceButtons.each(function(idx) {                                
                 if(voiceFound) {
                     return;
                 }
