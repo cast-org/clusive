@@ -136,7 +136,10 @@ def update_simple_metadata_item(metadata, elt_name, elt, new_val, elt_spec, attr
             print('  Mod. %s: %s -> %s' % (elt_name, old_val, new_val))
     else:
         print('  Create %s: -> %s' % (elt_name, new_val))
-        elt = ET.SubElement(metadata, elt_spec, attributes)
+        if attributes:
+            elt = ET.SubElement(metadata, elt_spec, attributes)
+        else:
+            elt = ET.SubElement(metadata, elt_spec)
     elt.text = new_val
     return True
 
