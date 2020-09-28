@@ -1,0 +1,325 @@
+[
+    {
+        "headword": "precede",
+        "alternateForms": ["precedes", "preceded", "preceding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To come before." ,
+                "examples": [ "The movie was preceded by several ads for other movies." ],
+                "images": [
+                    {
+                        "src": "glossimages/precede1.jpg",
+                        "alt": "Photo of three cubs walking in a line",
+                        "description": "Three lion cubs walk in a row, one in front of another.",
+                        "caption": "The cub in front is preceding the other two cubs. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/09f31bd4-6423-4ba4-9aab-ade0ca25ecab",
+                            "title": "Three cubs in a row",
+                            "author": "Tambako the Jaguar",
+                            "author_url": "https://www.flickr.com/photos/8070463@N03",
+                            "license": "CC BY-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "career",
+        "alternateForms": ["careers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The work a person chooses to do through life." ,
+                "examples": [ "They want to have careers as scientists." ]
+            }
+        ]
+    },
+    {
+        "headword": "civil",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Involving citizens or citizenship; polite" ,
+                "examples": [ "The Civil Rights Movement helped guarantee that all American citizens would be treated equally." ],
+                "images": [
+                    {
+                        "src": "glossimages/civil1.jpg",
+                        "alt": "Photo of two people shaking hands.",
+                        "description": "Two people shaking hands.",
+                        "caption": "Shaking hands is one way to be civil to another person.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/0f607def-75ca-42df-9560-cff5a591ae52",
+                            "title": "To put the rest aside",
+                            "author": "crysb",
+                            "author_url": "https://www.flickr.com/photos/65513358@N00",
+                            "license": "CC BY-NC-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "social",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Relating to people or society in general" ,
+                "examples": [ "Health care is a major social issue." ]
+            }
+        ]
+    },
+    {
+        "headword": "federal",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having to do with a system of government that unites several states under a central government. The states have their own governments, yet they recognize the rule of the central government as well." ,
+                "examples": [ "The founders of the United States decided on a federal system of government for this country." ]
+            }
+        ]
+    },
+    {
+        "headword": "declare",
+        "alternateForms": ["declares", "declared", "declaring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To say something in a solemn and emphatic manner." ,
+                "examples": [ "The Secretary of State declared the country's objection to the attack on the embassy." ],
+                "images": [
+                    {
+                        "src": "glossimages/declare1.jpg",
+                        "alt": "Photo of the Declaration of Independence",
+                        "description": "Photo of a printed page with the title, \"In Congress, July 4, 1776, A DECLARATION By the REPRESENTATIVES of the UNITED STATES OF AMERICA, In GENERAL CONGRESS assembled.\"",
+                        "caption": "Something important, like a new law, can be declared in person, or in print, like the Declaration of Independence.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/b7fbf0c3-5001-407a-8577-0eb3d11eafd3 ",
+                            "title": "Declaration of Independence",
+                            "author": "Andos_pics ",
+                            "author_url": "https://www.flickr.com/photos/19761391@N06",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "main",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Most important; chief; primary." ,
+                "examples": [ "The main entrance to the building is on the other side." ],
+                "images": [
+                    {
+                        "src": "glossimages/main1.jpg",
+                        "alt": "Photo of the entrance to a building",
+                        "description": "Photo shows a building with a large, decorated entrance. ",
+                        "caption": "This door is decorated to make it clear that it is the main entrance to the building.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/344fd234-a0b5-420a-80ad-b9ea1d4c6250",
+                            "title": "Purdue Memorial Union Entrance 1",
+                            "author": "David Ellis",
+                            "author_url": "https://www.flickr.com/photos/97578613@N08",
+                            "license": "CC by-nc-nd 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "realize",
+        "alternateForms": ["realizes", "realized", "realizing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To understand completely. " ,
+                "examples": [ "Do you realize how huge a redwood tree is?" ]
+            }
+        ]
+    },
+    {
+        "headword": "chant",
+        "alternateForms": ["chants"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A repeated rhythmic phrase, typically one shouted or sung in unison by a crowd." ,
+                "examples": [ "The protesters began a loud chant, which they repeated throughout the morning." ],
+                "images": [
+                    {
+                        "src": "glossimages/chant1.jpg",
+                        "alt": "Photo of two groups of people yelling at each other.",
+                        "description": "Two groups of people holding signs face each other. Two people in the foreground of the picture are leaning toward each other and are yelling.",
+                        "caption": "People often say a chant of slogans or quotes during protest marches. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/bfdaa110-7e0e-450f-b0c1-7a704081c172",
+                            "title": "Ritual",
+                            "author": "Dan Holtmeyer ",
+                            "author_url": "https://www.flickr.com/photos/58112514@N06",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "attend",
+        "alternateForms": ["attends","attended","attending"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be present at." ,
+                "examples": [ "We plan to attend college in the fall." ],
+                "images": [
+                    {
+                        "src": "glossimages/attend1.jpg",
+                        "alt": "Photo of a church filled with people.",
+                        "description": "A church room is filled with seated people. Two people walk down a center aisle toward the front of the church, where other people stand waiting. ",
+                        "caption": "Most people will attend a wedding at some time. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/9a0bd0f9-fcd6-4a45-b4d5-35eca9748d0c",
+                            "title": "Wedding Ceremony",
+                            "author": "LaurenTTeague ",
+                            "author_url": "https://www.flickr.com/photos/12317549@N02",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "proclaim",
+        "alternateForms": ["proclaims", "proclaimed", "proclaiming"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To say something in a solemn and emphatic manner." ,
+                "examples": [ "The Secretary of State proclaimed the country's objection to the attack on the embassy." ],
+                "images": [
+                    {
+                        "src": "glossimages/declare1.jpg",
+                        "alt": "Photo of the Declaration of Independence",
+                        "description": "Photo of a printed page with the title, \"In Congress, July 4, 1776, A DECLARATION By the REPRESENTATIVES of the UNITED STATES OF AMERICA, In GENERAL CONGRESS assembled.\"",
+                        "caption": "Something important, like a new law, can be proclaimed in person, or in print, like the Declaration of Independence. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/b7fbf0c3-5001-407a-8577-0eb3d11eafd3 ",
+                            "title": "Declaration of Independence",
+                            "author": "Andos_pics ",
+                            "author_url": "https://www.flickr.com/photos/19761391@N06",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "leading",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Most important; chief; primary." ,
+                "examples": [ "The leading entrance to the building is on the other side." ],
+                "images": [
+                    {
+                        "src": "glossimages/main1.jpg",
+                        "alt": "Photo of the entrance to a building",
+                        "description": "Photo shows a building with a large, decorated entrance. ",
+                        "caption": "This door is decorated to make it clear that it is the main, or leading, entrance to the building.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/344fd234-a0b5-420a-80ad-b9ea1d4c6250",
+                            "title": "Purdue Memorial Union Entrance 1",
+                            "author": "David Ellis",
+                            "author_url": "https://www.flickr.com/photos/97578613@N08",
+                            "license": "CC by-nc-nd 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/"                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "fathom",
+        "alternateForms": ["fathoms", "fathomed", "fathoming"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To understand completely. " ,
+                "examples": [ "Can you fathom how huge a redwood tree is?" ]
+            }
+        ]
+    },
+    {
+        "headword": "vocalization",
+        "alternateForms": ["vocalizations"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A repeated rhythmic phrase, typically one shouted or sung in unison by a crowd." ,
+                "examples": [ "The protesters began a loud vocalization, which they repeated throughout the morning." ],
+                "images": [
+                    {
+                        "src": "glossimages/chant1.jpg",
+                        "alt": "Photo of two groups of people yelling at each other.",
+                        "description": "Two groups of people holding signs face each other. Two people in the foreground of the picture are leaning toward each other and are yelling.",
+                        "caption": "The protesters began a loud vocalization, which they repeated throughout the morning.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/bfdaa110-7e0e-450f-b0c1-7a704081c172",
+                            "title": "Ritual",
+                            "author": "Dan Holtmeyer ",
+                            "author_url": "https://www.flickr.com/photos/58112514@N06",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "enroll",
+        "alternateForms": ["enrolls","enrolled","enrolling"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be present at." ,
+                "examples": [ "We plan to enroll in college in the fall." ],
+                "images": [
+                    {
+                        "src": "glossimages/attend1.jpg",
+                        "alt": "Photo of a church filled with people.",
+                        "description": "A church room is filled with seated people. Two people walk down a center aisle toward the front of the church, where other people stand waiting. ",
+                        "caption": "Most people will attend a wedding at some time. ",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/9a0bd0f9-fcd6-4a45-b4d5-35eca9748d0c",
+                            "title": "Wedding Ceremony",
+                            "author": "LaurenTTeague ",
+                            "author_url": "https://www.flickr.com/photos/12317549@N02",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
