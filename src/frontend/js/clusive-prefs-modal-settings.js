@@ -162,9 +162,12 @@
         console.log("currentReadVoices preference:", currentReadVoices);
         
         // Remove the voice if it's already in the list
-        var filteredReadVoices = currentReadVoices.filter(function(voice) {
-            if(voice !== chosenVoice) return true;
-        });
+        var filteredReadVoices;
+        if(Array.isArray(currentReadVoices)) {
+            filteredReadVoices = currentReadVoices.filter(function(voice) {
+                if(voice !== chosenVoice) return true;
+            });
+        } else filteredReadVoices = [];
 
         // Create a new array
 
@@ -176,6 +179,9 @@
     }
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
+        if(! readVoices || ! readVoices.forEach) {
+            return;
+        }
         console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
         var voiceFound = false;
         var voiceButtons = that.locate('voiceButton');
