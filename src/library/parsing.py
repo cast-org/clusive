@@ -112,6 +112,11 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
             if mod_date > book_version.mod_date:
                 logger.info('Replacing older content of this book version')
                 book_version.mod_date = mod_date
+                # Also update metadata that's stored on the book, in case it's changed.
+                book.author = author
+                book.description = description
+                book.cover = cover
+                book.save()
             else:
                 logger.warning('File %s not imported: already exists with same or newer date' % file)
                 # Short circuit the import and just return the existing object.
@@ -121,7 +126,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
             book_version = BookVersion(book=book, sortOrder=sort_order, mod_date=mod_date)
 
         if language:
-            book_version.language = language[:2]
+            book_version.language = language
         book_version.save()
 
         # Unpack the EPUB file
