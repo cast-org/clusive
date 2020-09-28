@@ -75,7 +75,7 @@
                 excludeSource: 'init'
             },
             'modalSettings.readVoice': {
-                funcName: 'cisl.prefs.modalSettings.handleReadVoiceSetting',
+                funcName: 'cisl.prefs.modalSettings.handleChosenVoiceSetting',
                 args: ['{change}.value', '{that}'],
                 excludeSource: 'init'
             },
@@ -151,10 +151,12 @@
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
+
+        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);
     };
 
-    cisl.prefs.modalSettings.handleReadVoiceSetting = function(chosenVoice, that) {
-        console.log("handleReadVoiceSetting started; chosen voice: " + chosenVoice);
+    cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
+        console.log("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
         var currentReadVoices = fluid.get(that.model.preferences, 'cisl_prefs_readVoices');
         console.log("currentReadVoices preference:", currentReadVoices);
         
@@ -172,6 +174,30 @@
         
     }
 
+    cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
+        console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
+        var voiceFound = false;
+        readVoices.forEach(function (preferredVoice) {
+            if(voiceFound) {
+                return;
+            }
+            console.log("Checking for preferred voice: " + preferredVoice);
+            $('.voice-button').each(function(idx) {                                
+                if(voiceFound) {
+                    return;
+                }
+                var voiceName = $(this).text();
+                console.log("Current voice button being checked: " + voiceName);
+                if(voiceName === preferredVoice) {
+                    console.log("Preferred voice available, setting to " + voiceName);
+                    voiceFound = true;
+                    $(this).click();                                                       
+                }
+            });
+        });
+
+    }
+
     fluid.registerNamespace('fluid.binder.transforms');
 
     /**
@@ -185,7 +211,7 @@
     fluid.binder.transforms.checkToBoolean = function(value) {
         return Boolean(fluid.get(value, 0));
     };
-
+ 
     fluid.binder.transforms.checkToBoolean.invert = function(transformSpec) {
         transformSpec.type = 'fluid.binder.transforms.booleanToCheck';
         return transformSpec;
