@@ -390,7 +390,7 @@ clusiveTTS.setCurrentVoice = function(name) {
     window.speechSynthesis.getVoices().forEach(function(voice) {
         if (voice.name === name) {
             clusiveTTS.currentVoice = voice;
-            if (D2Reader) {
+            if (typeof D2Reader !== 'undefined') {
                 D2Reader.applyTTSSettings({
                     voice : voice
                 });
