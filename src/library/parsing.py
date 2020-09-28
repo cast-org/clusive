@@ -67,6 +67,11 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
         description = get_metadata_item(upload, 'description') or ''
         language = get_metadata_item(upload, 'language') or ''
         mod_date = upload.meta.get('dates').get('modification') or None
+
+        # We require a TITLE.
+        if not title:
+            raise BookMalformed('Malformed EPUB, no title found')
+
         # Date, if provided should be UTC according to spec.
         if mod_date:
             mod_date = timezone.make_aware(mod_date, timezone=timezone.utc)
