@@ -42,7 +42,12 @@
             readSpeed: {
                 type: 'cisl.prefs.readSpeed',
                 panel: null
+            },
+            readVoices: {
+                type: 'cisl.prefs.readVoices',
+                panel: null
             }
+
         }
     });
 
@@ -82,6 +87,17 @@
                 maximum: 2,
                 multipleOf: 0.25
 
+            }
+        }
+    })
+
+    // Add a preferred voices preference for TTS
+    fluid.defaults('cisl.prefs.schemas.readVoices', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.readVoices': {
+            type: 'array',
+            default: []
             }
         }
     })

@@ -260,6 +260,8 @@ function setupVoiceListing() {
         $(this).addClass('active');
         // Tell ClusiveTTS to use this voice
         clusiveTTS.setCurrentVoice(name);
+        // Set on the modal's model of preferences
+        clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.readVoice', name);
     });
 }
 
