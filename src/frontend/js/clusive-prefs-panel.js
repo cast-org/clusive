@@ -100,7 +100,7 @@
             default: []
             }
         }
-    })
+    })   
 
     // Add a boolean preference for the glossary
     fluid.defaults('cisl.prefs.schemas.glossary', {
