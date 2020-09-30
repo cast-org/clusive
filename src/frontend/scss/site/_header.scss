@@ -74,10 +74,6 @@ html {
         @include font-size($logo-md-font-size);
     }
 }
-.icon-logo-clusive {
-    align-self: center;
-    color: var(--CT_headerLogoColor);
-}
 .icon-logo-clusive-toggle {
     padding-top: .5rem;
     padding-bottom: .5rem;
@@ -89,6 +85,11 @@ html {
     display: flex;
     align-self: stretch;
     justify-content: center;
+
+    .icon-logo-clusive {
+        align-self: center;
+        color: var(--CT_headerLogoColor);
+    }
 
     @include hover-focus() {
         > .icon-logo-clusive-toggle {
