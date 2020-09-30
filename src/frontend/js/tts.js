@@ -8,7 +8,8 @@ var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
     region: {},
-    currentVoice: null
+    currentVoice: null,
+    voiceRate: 1
 };
 
 // Bind controls
@@ -78,6 +79,10 @@ $(document).ready(function() {
         }
         clusiveTTS.updateUI('resume');
     });
+
+    $('.cislc-modalSettings-readSpeed').on('change', function (e) {        
+        clusiveTTS.voiceRate = parseFloat(e.target.valueAsNumber);
+    })
 });
 
 window.addEventListener('unload', function() {
@@ -394,7 +399,7 @@ clusiveTTS.setCurrentVoice = function(name) {
             clusiveTTS.currentVoice = voice;
             if (typeof D2Reader !== 'undefined') {
                 D2Reader.applyTTSSettings({
-                    voice : voice
+                    voice : voice,                    
                 });
             }
         }
@@ -408,6 +413,9 @@ clusiveTTS.readAloudSample = function() {
     var utt = new SpeechSynthesisUtterance('Testing, testing, 1 2 3');
     if (clusiveTTS.currentVoice) {
         utt.voice = clusiveTTS.currentVoice;
+    }
+    if (clusiveTTS.voiceRate) {
+        utt.rate = clusiveTTS.voiceRate;
     }
     window.speechSynthesis.speak(utt);
 };
