@@ -80,7 +80,8 @@ $(document).ready(function() {
         clusiveTTS.updateUI('resume');
     });
 
-    $('.cislc-modalSettings-readSpeed').on('change', function (e) {        
+    $('.cislc-modalSettings-readSpeed').on('change', function (e) {
+        console.log("cislc-modalSettings-readSpeed changed", e.target.valueAsNumber);
         clusiveTTS.voiceRate = parseFloat(e.target.valueAsNumber);
     })
 });
@@ -398,6 +399,7 @@ clusiveTTS.setCurrentVoice = function(name) {
         if (voice.name === name) {
             clusiveTTS.currentVoice = voice;
             if (typeof D2Reader !== 'undefined') {
+                console.log("setting D2Reader voice to ", voice)
                 D2Reader.applyTTSSettings({
                     voice : voice,                    
                 });

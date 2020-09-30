@@ -41,6 +41,9 @@
             },
             readSpeed: {
                 type: 'cisl.prefs.readSpeed',
+                enactor: {
+                    type: 'cisl.prefs.enactor.readSpeed'
+                },
                 panel: null
             },
             readVoices: {
@@ -89,7 +92,35 @@
 
             }
         }
-    })
+    });
+
+    // Enactor for TTS voice speed
+    fluid.defaults('cisl.prefs.enactor.readSpeed', {
+        gradeNames: ['fluid.prefs.enactor'],
+        preferenceMap: {
+            'cisl.prefs.readSpeed': {
+                'model.readSpeed': 'value'
+            }
+        },    
+        modelListeners: {
+            'readSpeed': {
+                listener: '{that}.enactReadSpeed',
+                args: ['{that}.model.readSpeed'],
+                namespace: 'enactReadSpeed'
+            }
+        },
+        invokers: {
+            'enactReadSpeed': {
+                funcName: "cisl.prefs.enactor.readSpeed.enactReadSpeed",
+                args: "{arguments}.0"
+            }
+        }  
+    });
+
+    cisl.prefs.enactor.readSpeed.enactReadSpeed = function (readSpeed) {
+        console.log("cisl.prefs.enactor.readSpeed.enactReadSpeed", readSpeed);
+        clusiveTTS.voiceRate = readSpeed;
+    }
 
     // Add a preferred voices preference for TTS
     fluid.defaults('cisl.prefs.schemas.readVoices', {
