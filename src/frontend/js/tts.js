@@ -387,6 +387,8 @@ clusiveTTS.getVoicesForLanguage = function(language) {
 clusiveTTS.setCurrentVoice = function(name) {
     'use strict';
 
+    // Eventually we may be able to switch voices mid-utterance, but for now have to stop speech
+    clusiveTTS.stopReading();
     window.speechSynthesis.getVoices().forEach(function(voice) {
         if (voice.name === name) {
             clusiveTTS.currentVoice = voice;
