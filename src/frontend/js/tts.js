@@ -79,11 +79,6 @@ $(document).ready(function() {
         }
         clusiveTTS.updateUI('resume');
     });
-
-    $('.cislc-modalSettings-readSpeed').on('change', function (e) {
-        console.log("cislc-modalSettings-readSpeed changed", e.target.valueAsNumber);
-        clusiveTTS.voiceRate = parseFloat(e.target.valueAsNumber);
-    })
 });
 
 window.addEventListener('unload', function() {
