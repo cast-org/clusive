@@ -49,6 +49,7 @@ $header-outer-bg:                       $body-bg;
 $header-bg:                             linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, .25) 100%);
 $header-color:                          inherit;
 $header-logo-color:                     #89775f;
+$header-logo-hover-color:               palette($header-logo-color, 700);
 $header-logo-icon-color:                $header-logo-color;
 $header-logo-icon-hover-color:          palette($header-logo-icon-color, 700);
 

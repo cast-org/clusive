@@ -5,14 +5,15 @@
             <div class="site-header-logo">
                 {% if home_link == False %}
                 <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                <span class="icon-logo-clusive" aria-hidden="true"></span>
+                <span class="sr-only">Clusive</span>
                 {% else %}
                 <a href="{% url 'reader_index' %}" class="icon-logo-clusive-link">
                     <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                    <span class="icon-logo-clusive" aria-hidden="true"></span>
                     <span class="sr-only">Back to Library</span>
                 </a>
                 {% endif %}
-                <span class="icon-logo-clusive" aria-hidden="true"></span>
-                <span class="sr-only">Clusive</span>
             </div>
 
             <button class="navbar-toggle btn btn-primary btn-small" type="button" data-cfw="collapse" data-cfw-collapse-target="#siteNav">
