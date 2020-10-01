@@ -166,6 +166,10 @@ $grid-gutter-width:                     2rem;
 
 $border-radius:                         .5rem;
 
+// The CSS variable defined here is set in `_content.scss` so that
+// body line-height is set to 1 for Infusion/Redium consitency
+$line-height-base:                      var(--CT_lineHeight);
+
 $body-bg:                               var(--CT_bodyBg);
 $body-color:                            var(--CT_bodyColor);
 $body-padding-y:                        .625rem;

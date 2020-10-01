@@ -8,6 +8,12 @@
 //     }
 // }
 
+// Use a base value of 1 here since Infusion multiplies the body line-height by the setting value.
+// This allows both Clusive and Readium to use the same line-height as set by Infusion.
+body {
+    --CT_lineHeight: 1;
+}
+
 // stylelint-disable declaration-no-important, selector-max-id
 #ff-default,
 .ff-default {

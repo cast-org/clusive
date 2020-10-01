@@ -1,6 +1,9 @@
 // Functions
 @import "../../../node_modules/figuration/scss/functions";
 
+// Clusive specific functions (some mixins too)
+@import "mixins/line-height";
+
 // Settings variables
 @import "site/site-pre";
 @import "../../../node_modules/figuration/scss/settings";
