@@ -12,14 +12,14 @@
         },
         mappedValues: {
             modalLineSpacingToPreference: {
-                default: 1.2,
-                tall: 1.6,
-                taller: 2
+                short: 1.2,
+                default: 1.6,
+                tall: 2
             },
             preferenceLineSpaceToModal: {
-                1.2: 'default',
-                1.6: 'tall',
-                2: 'taller'
+                1.2: 'short',
+                1.6: 'default',
+                2: 'tall'
             },
             modalLetterSpacingToPreference: {
                 default: 1,
