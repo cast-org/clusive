@@ -71,8 +71,9 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
         if mod_date:
             mod_date = timezone.make_aware(mod_date, timezone=timezone.utc)
         else:
-            logger.error('No mod date found in %s', file)
-            raise BookMalformed('Malformed EPUB, no modification date metadata')
+            # Many EPUBs are missing this metadata, unfortunately.
+            logger.warning('No mod date found in %s', file)
+            mod_date = timezone.now()
         if upload.cover:
             cover = adjust_href(upload, upload.cover.href)
             # For cover path, need to prefix this path with the directory holding this version of the book.
