@@ -55,7 +55,7 @@
     }
 
     .card-body {
-        line-height: 1.375;
+        @include calc-line-height(1.375);
     }
 
     .card-footer {
