@@ -245,7 +245,7 @@ var updateCSSVars = clusiveDebounce(function() {
     var lineHeight = body.style.lineHeight;
 
     body.style.setProperty('--CT_lineHeight', lineHeight);
-}, 150);
+}, 10);
 
 
 $(window).ready(function() {
