@@ -204,13 +204,14 @@ $table-bg-active:                       var(--CT_tableActiveBg);
 $table-border-color:                    var(--CT_tableBorderColor);
 $table-head-border-width:               5px;
 
-
 $btn-font-weight:                       700;
+$btn-line-height:                       1.5;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
 $btn-focus-box-shadow-alpha:            .85;
 //$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
 $btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
 
+$input-line-height:                     1.5;
 $input-bg:                              #fff;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
@@ -402,9 +403,11 @@ $ranking-label-font-size:               .875rem;
 $toc-modal-dialoag-max-width:           22rem;
 $toc-modal-header-border-width:         7px;
 
+$goal-modal-title-font-family:          $font-family-sans-serif;
 $goal-modal-title-font-size:            .875rem;
 $goal-modal-title-font-weight:          400;
 $goal-modal-title-font-style:           italic;
+$goal-modal-subtitle-font-family:       $font-family-sans-serif;
 $goal-modal-subtitle-font-size:         1rem;
 $goal-modal-subtitle-font-weight:       700;
 $goal-modal-subtitle-font-style:        null;

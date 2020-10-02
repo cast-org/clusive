@@ -15,7 +15,7 @@
 
     .list-horizontal {
         align-items: baseline;
-        line-height: 1.25;
+        @include calc-line-height(1.25);
 
         &.list-divided > .list-item {
             border-color: var(--CT_footerBorderColor);
