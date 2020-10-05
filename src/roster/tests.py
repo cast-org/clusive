@@ -223,6 +223,8 @@ class ClusiveUserTestCase(TestCase):
             self.assertEqual(default_pref_set[p_key], user.get_preference(p_key).value, "preference '%s' not at expected default value of '%s'" % (p_key, default_pref_set[p_key]))
 
     def test_preference_convert_from_string(self):
+        self.assertEqual(Preference.convert_from_string("[]"), [], "empty array as string was not converted as expected")
+        self.assertEqual(Preference.convert_from_string("['Foo', 'Bar', 'Baz']"), ['Foo', 'Bar', 'Baz'], "array of string values as string was not converted as expected")
         self.assertEqual(Preference.convert_from_string("1"), 1, "int as string was not converted as expected")
         self.assertEqual(Preference.convert_from_string("1.57"), 1.57, "float as string was not converted as expected")
         self.assertEqual(Preference.convert_from_string("False"), False, "boolean:False as string was converted as expected")
