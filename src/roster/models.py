@@ -298,7 +298,8 @@ class ClusiveUser(models.Model):
 def set_default_preferences(sender, instance, created, **kwargs):    
     if(created):
         logger.info("New user created, setting preferences to 'default' set")
-        instance.adopt_preferences_set('default')
+        instance.adopt_preferences_set('default_display')
+        instance.adopt_preferences_set('default_reading_tools')
 
 class Preference (models.Model):
     """Store a single user preference setting."""
