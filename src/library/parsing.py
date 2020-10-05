@@ -4,6 +4,7 @@ import os
 import posixpath
 import shutil
 from html.parser import HTMLParser
+from os.path import basename
 from zipfile import ZipFile
 
 import dawn
@@ -76,8 +77,9 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
         if mod_date:
             mod_date = timezone.make_aware(mod_date, timezone=timezone.utc)
         else:
-            logger.error('No mod date found in %s', file)
-            raise BookMalformed('Malformed EPUB, no modification date metadata')
+            # Many EPUBs are missing this metadata, unfortunately.
+            logger.warning('No mod date found in %s', file)
+            mod_date = timezone.now()
         if upload.cover:
             cover = adjust_href(upload, upload.cover.href)
             # For cover path, need to prefix this path with the directory holding this version of the book.
@@ -125,6 +127,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
             logger.info('Creating new BV: book=%s, sortOrder=%d' % (book, sort_order))
             book_version = BookVersion(book=book, sortOrder=sort_order, mod_date=mod_date)
 
+        book_version.filename = basename(file)
         if language:
             book_version.language = language
         book_version.save()
@@ -255,13 +258,6 @@ def scan_book(b):
         if os.path.exists(bv.manifest_file):
             with open(bv.manifest_file, 'r') as file:
                 manifest = json.load(file)
-                # I think we don't want to do this, if metadata may be editable through the web
-                # but not quite ready to delete it outright.
-                # b.title = find_title(manifest)
-                # b.description = find_description(manifest)
-                # cover_link = find_cover(manifest)
-                # b.cover = str(bv.sortOrder) + "/" + cover_link if cover_link else None
-                # b.save()
                 bv.all_word_list = find_all_words(bv.storage_dir, manifest)
                 logger.debug('%s: parsed %d words', bv, len(bv.all_word_list))
                 bv.glossary_word_list = find_glossary_words(b.storage_dir, bv.all_word_list)

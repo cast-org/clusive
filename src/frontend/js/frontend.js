@@ -248,6 +248,19 @@ var updateCSSVars = clusiveDebounce(function() {
 }, 10);
 
 
+function formUseThisLinks() {
+    'use strict';
+
+    $('body').on('click', '.usethis-link', function(e) {
+        var targ = $(this).data('target');
+        var text = $(this).prev('.usethis-source').text();
+        $('#' + targ).val(text);
+        $(this).parent('.usethis-container').slideUp();
+        e.preventDefault();
+        return false;
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -259,6 +272,7 @@ $(window).ready(function() {
     formFileText();
     confirmationPublicationDelete();
     confirmationSharing();
+    formUseThisLinks();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
