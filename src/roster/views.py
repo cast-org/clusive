@@ -63,8 +63,7 @@ class PreferenceSetView(View):
         try:
             desired_prefs = PreferenceSet.get_json(desired_prefs_name)
         except PreferenceSet.DoesNotExist:
-            return JsonResponse(
-                {'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_name})
+            return JsonResponse(status=404, data={'message': 'Preference set named %s does not exist' % desired_prefs_name})
 
         set_user_preferences(user, desired_prefs, request)
 
