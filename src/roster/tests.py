@@ -211,8 +211,10 @@ class ClusiveUserTestCase(TestCase):
             self.assertFalse(clusive_user_2.is_permissioned)
 
     def test_adopt_preferences_set(self):        
-        user = ClusiveUser.objects.get(user__username='user1')        
-        user.adopt_preferences_set("default")
+        user = ClusiveUser.objects.get(user__username='user1')  
+        user.delete_preferences()      
+        user.adopt_preferences_set("default_display")
+        user.adopt_preferences_set("default_reading_tools")
         self.check_user_has_default_preferences(user)
 
     def check_user_has_default_preferences(self, user):
