@@ -212,8 +212,7 @@
 
     clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
         console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
-        
-        // TODO: switch this over to use the messageQueue as well
+                
         if ($.isEmptyObject(model)) {
             var resetURL = directModel.resetURL;
             $.ajax(resetURL, {
