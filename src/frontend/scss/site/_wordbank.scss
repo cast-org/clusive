@@ -133,8 +133,7 @@
     flex: 1 1 auto;
     align-items: center;
     padding-left: calc(.25rem + 1px);
-    margin: .75rem 0;
-    line-height: 1;
+    margin: .5rem 0;
     white-space: nowrap;
     @include transition(margin-left .25s ease);
 

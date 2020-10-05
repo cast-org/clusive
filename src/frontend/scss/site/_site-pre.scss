@@ -30,7 +30,7 @@ $enable-btn-block:                      false;
 $enable-form-control-sizing:            false;
 $enable-form-control-static:            false;
 $enable-form-label-sizing:              false;
-$enable-form-text:                      false;
+$enable-form-text:                      true;
 $enable-form-file:                      true;
 $enable-form-color:                     false;
 $enable-form-row:                       false;
@@ -166,6 +166,10 @@ $grid-gutter-width:                     2rem;
 
 $border-radius:                         .5rem;
 
+// The CSS variable defined here is set in `_content.scss` so that
+// body line-height is set to 1 for Infusion/Redium consitency
+$line-height-base:                      var(--CT_lineHeight);
+
 $body-bg:                               var(--CT_bodyBg);
 $body-color:                            var(--CT_bodyColor);
 $body-padding-y:                        .625rem;
@@ -184,6 +188,7 @@ $font-family-sans-serif:                "Source Sans Pro", -apple-system, BlinkM
 $h1-font-size:                          ($font-size-base * 1.375);
 $h2-font-size:                          ($font-size-base * 1.125);
 $h3-font-size:                          ($font-size-base * 1);
+$headings-line-height:                  scale-line-height(1.25);
 
 $text-muted:                            var(--CT_textMuted);
 
@@ -199,13 +204,14 @@ $table-bg-active:                       var(--CT_tableActiveBg);
 $table-border-color:                    var(--CT_tableBorderColor);
 $table-head-border-width:               5px;
 
-
 $btn-font-weight:                       700;
+$btn-line-height:                       1.5;
 $btn-focus-box-shadow-size:             0 0 0 .1875rem;
 $btn-focus-box-shadow-alpha:            .85;
 //$btn-focus-box-shadow:                  $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
 $btn-default-focus-box-shadow-color:    var(--CT_focusRingRGB);
 
+$input-line-height:                     1.5;
 $input-bg:                              #fff;
 $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
@@ -397,9 +403,11 @@ $ranking-label-font-size:               .875rem;
 $toc-modal-dialoag-max-width:           22rem;
 $toc-modal-header-border-width:         7px;
 
+$goal-modal-title-font-family:          $font-family-sans-serif;
 $goal-modal-title-font-size:            .875rem;
 $goal-modal-title-font-weight:          400;
 $goal-modal-title-font-style:           italic;
+$goal-modal-subtitle-font-family:       $font-family-sans-serif;
 $goal-modal-subtitle-font-size:         1rem;
 $goal-modal-subtitle-font-weight:       700;
 $goal-modal-subtitle-font-style:        null;

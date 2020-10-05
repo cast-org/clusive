@@ -237,8 +237,24 @@ function formRangeTip(range, callback) {
     callback(range);
 }
 
+var updateCSSVars = clusiveDebounce(function() {
+    'use strict';
+
+    // var root = document.documentElement;
+    var body = document.body;
+    var lineHeight = body.style.lineHeight;
+
+    body.style.setProperty('--CT_lineHeight', lineHeight);
+}, 10);
+
+
 $(window).ready(function() {
     'use strict';
+
+    document.addEventListener('update.cisl.prefs', updateCSSVars, {
+        passive: true
+    });
+    updateCSSVars();
 
     formFileText();
     confirmationPublicationDelete();

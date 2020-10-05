@@ -23,7 +23,7 @@
 }
 
 .popover-header {
-    min-height: calc(#{$popover-header-font-size * $line-height-base} + #{$popover-header-padding-y * 2} + #{$popover-header-border-width});
+    min-height: calc((#{$popover-header-font-size} * #{$line-height-base}) + (#{$popover-header-padding-y} * 2) + #{$popover-header-border-width});
 
     &:empty {
         display: block;

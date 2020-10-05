@@ -1,11 +1,13 @@
 .goal-modal {
     .modal-title {
+        font-family: $goal-modal-title-font-family;
         @include font-size($goal-modal-title-font-size);
         font-style: $goal-modal-title-font-style;
         font-weight: $goal-modal-title-font-weight;
         color: var(--CT_goalModalTitleColor);
     }
     .modal-subtitle {
+        font-family: $goal-modal-subtitle-font-family;
         @include font-size($goal-modal-subtitle-font-size);
         font-style: $goal-modal-subtitle-font-style;
         font-weight: $goal-modal-subtitle-font-weight;
