@@ -240,7 +240,7 @@ function formRangeTip(range, callback) {
 var updateCSSVars = clusiveDebounce(function() {
     'use strict';
 
-    //var root = document.documentElement;
+    // var root = document.documentElement;
     var body = document.body;
     var lineHeight = body.style.lineHeight;
 
