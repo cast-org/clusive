@@ -240,7 +240,11 @@ class ClusiveUserTestCase(TestCase):
         user.delete_preferences()
 
         login = self.client.login(username='user1', password='password1')
-        response = self.client.post('/account/prefs/profile', {'adopt': 'default'}, content_type='application/json')
+        
+        self.client.post('/account/prefs/profile', {'adopt': 'default_reading_tools'}, content_type='application/json')
+
+        response = self.client.post('/account/prefs/profile', {'adopt': 'default_display'}, content_type='application/json')
+        
         self.assertJSONEqual(response.content, self.default_pref_set_json, 'Changing to default preferences profile did not return expected response')
 
     def test_preferences(self):
