@@ -25,6 +25,12 @@
     }
 }
 
+.card-body {
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+
 .card-library {
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
