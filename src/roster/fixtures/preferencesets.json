@@ -3,9 +3,18 @@
         "model": "roster.preferenceset",
         "pk": 1,
         "fields": {
-            "name": "default",
-            "description": "Default Clusive preference set",
-            "prefs_json": "{\"theme\":\"default\",\"textFont\":\"default\",\"textSize\":1,\"lineSpace\":1.6,\"fluid_prefs_letterSpace\":1,\"cisl_prefs_glossary\":true,\"cisl_prefs_readSpeed\":1.0,\"cisl_prefs_readVoices\":[]}"
+            "name": "default_display",
+            "description": "Default Clusive display preference set",
+            "prefs_json": "{\"theme\":\"default\",\"textFont\":\"default\",\"textSize\":1,\"lineSpace\":1.6,\"fluid_prefs_letterSpace\":1,\"cisl_prefs_glossary\":true}"
         }
-    }
+    },
+    {
+        "model": "roster.preferenceset",
+        "pk": 2,
+        "fields": {
+            "name": "default_reading_tools",
+            "description": "Default Clusive reading tools preference set",
+            "prefs_json": "{\"cisl_prefs_readSpeed\":1.0,\"cisl_prefs_readVoices\":[]}"
+        }
+    }    
 ]
