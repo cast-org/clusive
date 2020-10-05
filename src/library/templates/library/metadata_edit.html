@@ -21,7 +21,7 @@
             <div class="card card-login">
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
-                        {% include "library/partial/metadata_form.html" %}
+                        {% include "library/partial/metadata_form.html" with replace_option=True %}
                         <hr />
                         <div class="form-group">
                             <input type="submit" class="btn btn-primary" value="Save Changes" />
