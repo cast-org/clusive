@@ -62,16 +62,6 @@
                 }
             }
         );
-
-        // window.addEventListener("beforeunload", function (e) {                 
-        //     if(! that.isQueueEmpty()) {
-        //         console.debug("queue is not empty, prompting user for unload");
-        //         that.flush();
-        //         e.preventDefault();
-        //         e.returnValue = "";        
-        //     }                        
-        // });
-
     };
 
     // Concrete implementation of the queue flushing that works with 
