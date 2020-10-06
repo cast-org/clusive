@@ -67,8 +67,8 @@ class PreferenceSetView(View):
 
         set_user_preferences(user, desired_prefs, request)
 
-        # Return the newly-established preferences
-        return JsonResponse(user.get_preferences_dict())
+        # Return the preferences set
+        return JsonResponse(desired_prefs)
 
 
 # Set user preferences from a dictionary
