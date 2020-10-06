@@ -21,16 +21,20 @@
                     night: 'clusive-theme-night',
                     sepia: 'clusive-theme-sepia'
                 },
-                panel: null
+                panel: null,
+                alias: null
             },
             textFont: {
-                panel: null
+                panel: null,
+                alias: null
             },
             textSize: {
-                panel: null
+                panel: null,
+                alias: null
             },
             lineSpace: {
-                panel: null
+                panel: null,
+                alias: null
             },
             glossary: {
                 type: 'cisl.prefs.glossary',
