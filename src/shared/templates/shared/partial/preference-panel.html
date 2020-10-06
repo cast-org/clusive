@@ -106,21 +106,32 @@
                                             modalSettings: {
                                                 type: "cisl.prefs.modalSettings",
                                                 createOnEvent: "{prefsEditorLoader}.events.onReady",
-                                                container: "#modalSettings",
+                                                container: "#modalSettings",                                                
                                                 options: {
+                                                    invokers: {
+                                                        resetDisplayPrefs: {
+                                                            func: "{djangoStore}.adopt",
+                                                            args: ["default_display"]
+                                                        },
+                                                        resetReadingPrefs: {
+                                                            func: "{djangoStore}.adopt",
+                                                            args: ["default_reading_tools"]
+                                                        }
+                                                    },
                                                     model: {
                                                         "preferences": "{prefsEditorLoader}.model.preferences"
                                                     },
                                                     listeners: {
-                                                        "onCreate.bindReset": {
-                                                            "this": "{that}.dom.reset",
+                                                        "onCreate.bindResetDisplay": {
+                                                            "this": "{that}.dom.resetDisplay",
                                                             "method": "click",
-                                                            "args": "{prefsEditorLoader}.prefsEditor.reset"
+                                                            "args": "{that}.resetDisplayPrefs"
                                                         },
-                                                        "{prefsEditorLoader}.prefsEditor.events.afterReset": {
-                                                            "func": "{that}.setModalSettingsByPreferences",
-                                                            "namespace": "setModalAfterReset"
-                                                        }                                            
+                                                        "onCreate.bindResetReading": {
+                                                            "this": "{that}.dom.resetReading",
+                                                            "method": "click",
+                                                            "args": "{that}.resetReadingPrefs"
+                                                        }                                                                                                   
                                                     }    
                                                 }                                        
                                             }
