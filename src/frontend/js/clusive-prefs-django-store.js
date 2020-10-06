@@ -99,6 +99,9 @@
             // In milliseconds, helps prevent repeated calls on initial construction
             debounce: 1000
         },
+        events: {
+            onPreferencesSetAdopted: null
+        },
         members: {
             // Holds the time a request was last made
             lastRequestTime: null,
@@ -140,6 +143,10 @@
         invokers: {
             set: {
                 args: ['{that}', '{arguments}.0', '{arguments}.1', '{that}.options.storeConfig']
+            },
+            adopt: {
+                funcName: 'clusive.prefs.djangoStore.adoptPreferenceSet',
+                args: ['{arguments}.0', "{that}.messageQueue", "{that}.lastRequestTime", "{that}"]
             }
         }
     });
@@ -169,7 +176,7 @@
             });            
             
         } else {
-            // Implement debounce here
+            // Debounce implementation
             var currentTime = new Date();
             var timeDiff;
             if(lastRequestTime) {
@@ -210,30 +217,38 @@
         return djangoStorePromise;
     };
 
-    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
-        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
-                
-        if ($.isEmptyObject(model)) {
-            var resetURL = directModel.resetURL;
-            $.ajax(resetURL, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': DJANGO_CSRF_TOKEN
-                },
-                data: JSON.stringify({
-                    adopt: 'default'
-                })
+    clusive.prefs.djangoStore.adoptPreferenceSet = function(prefSetName, messageQueue, lastRequestTime, that) {
+        console.log('clusive.prefs.djangoStore.adoptPreferenceSet');
+        var adoptURL = that.options.storeConfig.resetURL;
+        $.ajax(adoptURL, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: JSON.stringify({
+                adopt: prefSetName
             })
-                .done(function(data) {                    
-                    console.debug('resetting preferences to default set', data);                    
-                    messageQueue.add({"type": "PC", "preferences": data});
-                    clusive.prefs.djangoStore.getUserPreferences(directModel, messageQueue, lastRequestTime, that);                              
-                })
-                .fail(function(jqXHR, textStatus, errorThrown) {
-                    console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
-                });
-        } else {
-            messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')})          
-        }
+        })
+            .done(function(adoptSet) {                    
+                console.debug('adopting preference from preference set', adoptSet);    
+                var prefsPromise = that.get();                
+                prefsPromise.then(function (currentPrefs) {
+                    var updatedPreferences = {};
+                    $.extend(updatedPreferences, currentPrefs.preferences, adoptSet);
+                    console.log("updatedPreferences", updatedPreferences);
+                    messageQueue.add({"type": "PC", "preferences": updatedPreferences});
+                    // this is not a good way to do this
+                    clusivePrefs.prefsEditorLoader.applier.change("preferences", updatedPreferences);
+                    that.events.onPreferencesSetAdopted.fire();
+                });                                
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('an error occured trying to adopt a preference set', jqXHR, textStatus, errorThrown);
+            });     
+    };
+
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
+        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);        
+        messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')});                  
     };
 }(fluid_3_0_0));
