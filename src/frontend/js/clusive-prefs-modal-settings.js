@@ -92,7 +92,8 @@
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
             readSpeed: '.cislc-modalSettings-readSpeed',
-            reset: '.cislc-modalSettings-reset',
+            resetDisplay: '.cislc-modalSettings-reset-display',
+            resetReading: '.cislc-modalSettings-reset-reading',
             voiceButton: '.voice-button'
         },
         bindings: {
