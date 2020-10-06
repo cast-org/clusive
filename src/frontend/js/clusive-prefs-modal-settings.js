@@ -81,7 +81,7 @@
             },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
-                includeSource: 'init'
+                excludeSource: 'applyModalSettingToPreference'                
             }
         },
         selectors: {
@@ -133,12 +133,13 @@
     };
 
     cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
-        that.applier.change(path, changedValue);
-
+        that.applier.change(path, changedValue, "ADD", "applyModalSettingToPreference");
+        
         cisl.prefs.eventUpdate();
     };
 
-    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {
+    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {        
+
         that.applier.change('modalSettings.textSize', fluid.get(preferences, 'fluid_prefs_textSize'));
 
         that.applier.change('modalSettings.font', fluid.get(preferences, 'fluid_prefs_textFont'));
