@@ -146,7 +146,7 @@
             },
             adopt: {
                 funcName: 'clusive.prefs.djangoStore.adoptPreferenceSet',
-                args: ['{arguments}.0', "{that}.messageQueue", "{that}.lastRequestTime", "{that}"]
+                args: ['{arguments}.0', "{that}.messageQueue", "{that}"]
             }
         }
     });
@@ -217,7 +217,7 @@
         return djangoStorePromise;
     };
 
-    clusive.prefs.djangoStore.adoptPreferenceSet = function(prefSetName, messageQueue, lastRequestTime, that) {
+    clusive.prefs.djangoStore.adoptPreferenceSet = function(prefSetName, messageQueue, that) {
         console.log('clusive.prefs.djangoStore.adoptPreferenceSet');
         var adoptURL = that.options.storeConfig.resetURL;
         $.ajax(adoptURL, {
