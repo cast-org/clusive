@@ -81,7 +81,13 @@
                         prefsEditor: {   
                             components: {      
                                 prefsEditorLoader: {
-                                    options: {                                      
+                                    options: {     
+                                        listeners: {
+                                            "{djangoStore}.events.onPreferencesSetAdopted": {
+                                                "func": "{that}.applier.change",
+                                                "args": ["preferences", "{arguments}.0"]                                                
+                                            }
+                                        },                              
                                         components: {   
                                             prefsEditor: {
                                                 options: {

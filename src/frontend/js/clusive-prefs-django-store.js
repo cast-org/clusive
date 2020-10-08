@@ -237,9 +237,7 @@
                     $.extend(updatedPreferences, currentPrefs.preferences, adoptSet);
                     console.log("updatedPreferences", updatedPreferences);
                     messageQueue.add({"type": "PC", "preferences": updatedPreferences});
-                    // this is not a good way to do this
-                    clusivePrefs.prefsEditorLoader.applier.change("preferences", updatedPreferences);
-                    that.events.onPreferencesSetAdopted.fire();
+                    that.events.onPreferencesSetAdopted.fire(updatedPreferences);
                 });                                
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
