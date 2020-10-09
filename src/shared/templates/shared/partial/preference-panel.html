@@ -87,6 +87,11 @@
                                                 "func": "{that}.applier.change",
                                                 "args": ["preferences", "{arguments}.0"]                                                
                                             }
+                                        },
+                                        modelListeners: {
+                                            "preferences": {
+                                                "funcName": "cisl.prefs.dispatchPreferenceUpdateEvent"
+                                            }
                                         },                              
                                         components: {   
                                             prefsEditor: {
