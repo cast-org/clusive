@@ -68,10 +68,20 @@
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_glossary', '{that}'],
                 excludeSource: 'init'
+            },     
+            'modalSettings.readSpeed': {
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',                
+                args: ['{change}.value', 'preferences.cisl_prefs_readSpeed', '{that}'],
+                excludeSource: 'init'
+            },
+            'modalSettings.readVoice': {
+                funcName: 'cisl.prefs.modalSettings.handleChosenVoiceSetting',
+                args: ['{change}.value', '{that}'],
+                excludeSource: 'init'
             },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
-                includeSource: 'init'
+                excludeSource: 'applyModalSettingToPreference'                
             }
         },
         selectors: {
@@ -81,7 +91,10 @@
             font: '.cislc-modalSettings-font',
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
-            reset: '.cislc-modalSettings-reset'
+            readSpeed: '.cislc-modalSettings-readSpeed',
+            resetDisplay: '.cislc-modalSettings-reset-display',
+            resetReading: '.cislc-modalSettings-reset-reading',
+            voiceButton: '.voice-button'
         },
         bindings: {
             textSize: 'modalSettings.textSize',
@@ -89,6 +102,7 @@
             letterSpacing: 'modalSettings.letterSpacing',
             font: 'modalSettings.font',
             color: 'modalSettings.color',
+            readSpeed: 'modalSettings.readSpeed',
             glossaryCheckbox: {
                 selector: 'glossary',
                 path: 'modalSettings.glossary',
@@ -120,12 +134,12 @@
     };
 
     cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
-        that.applier.change(path, changedValue);
-
-        cisl.prefs.eventUpdate();
+        that.applier.change(path, changedValue, "ADD", "applyModalSettingToPreference");                
+        cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
-    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {
+    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {        
+
         that.applier.change('modalSettings.textSize', fluid.get(preferences, 'fluid_prefs_textSize'));
 
         that.applier.change('modalSettings.font', fluid.get(preferences, 'fluid_prefs_textFont'));
@@ -137,7 +151,64 @@
         that.applier.change('modalSettings.color', fluid.get(preferences, 'fluid_prefs_contrast'));
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
+
+        that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
+
+        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);                
+
+        cisl.prefs.dispatchPreferenceUpdateEvent();
     };
+
+    cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
+        console.log("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
+        var currentReadVoices = fluid.get(that.model.preferences, 'cisl_prefs_readVoices');
+        console.log("currentReadVoices preference:", currentReadVoices);
+        
+        // Remove the voice if it's already in the list
+        var filteredReadVoices;
+        if(Array.isArray(currentReadVoices)) {
+            filteredReadVoices = currentReadVoices.filter(function(voice) {
+                if(voice !== chosenVoice) return true;
+            });
+        } else filteredReadVoices = [];
+
+        // Create a new array
+
+        var newReadVoices = [chosenVoice].concat(filteredReadVoices);
+
+        console.log("new read voices: ", newReadVoices);
+        that.applier.change('preferences.cisl_prefs_readVoices', newReadVoices);
+        
+    }
+
+    cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
+        if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {
+            clearVoiceListing();
+            return;
+        }
+        console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
+        var voiceFound = false;
+        var voiceButtons = that.locate('voiceButton');
+        readVoices.forEach(function (preferredVoice) {
+            if(voiceFound) {
+                return;
+            }
+            console.log("Checking for preferred voice: " + preferredVoice);
+            voiceButtons.each(function(idx) {                                
+                if(voiceFound) {
+                    return;
+                }
+                var voiceName = $(this).text();
+                console.log("Current voice button being checked: " + voiceName);
+                if(voiceName === preferredVoice) {
+                    console.log("Preferred voice available, setting to " + voiceName);
+                    voiceFound = true;
+                    $(this).click();                                                       
+                }
+            });
+        });
+
+    }
 
     fluid.registerNamespace('fluid.binder.transforms');
 
@@ -152,7 +223,7 @@
     fluid.binder.transforms.checkToBoolean = function(value) {
         return Boolean(fluid.get(value, 0));
     };
-
+ 
     fluid.binder.transforms.checkToBoolean.invert = function(transformSpec) {
         transformSpec.type = 'fluid.binder.transforms.booleanToCheck';
         return transformSpec;

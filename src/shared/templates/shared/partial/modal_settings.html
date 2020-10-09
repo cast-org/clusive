@@ -11,7 +11,7 @@
                 <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
                     <span class="icon-cancel" aria-hidden="true"></span>
                 </button>
-                <ul class="nav nav-tabs-setting d-none">
+                <ul class="nav nav-tabs-setting">
                     <li class="nav-item"><a href="#setting0" class="nav-link" data-cfw="tab">Display</a></li>
                     <li class="nav-item"><a href="#setting1" class="nav-link" data-cfw="tab">Reading Tools</a></li>
                 </ul>
@@ -186,6 +186,9 @@
                                 </fieldset>
                             </div>
                             {% endcomment %}
+                            <div class="setting setting-btn-right">
+                                <button class="btn btn-primary btn-small cislc-modalSettings-reset-display" type="reset">Reset display settings</button>
+                            </div>
                         </form>
                     </div>
                     <div id="setting1" class="tab-pane">
@@ -195,12 +198,11 @@
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
                                     <div class="option-read-voice">
-                                        <button type="button" class="link-btn" data-cfw="dropdown">Female #1 <span class="caret" aria-hidden="true"></span></button>
-                                        <ul class="dropdown-menu dropreverse">
-                                            <li><button type="button" class="dropdown-item active">Female #1</button></li>
-                                            <li><button type="button" class="dropdown-item">Female #2</button></li>
-                                            <li><button type="button" class="dropdown-item">Male #1</button></li>
-                                            <li><button type="button" class="dropdown-item">Male #2</button></li>
+                                        <button type="button" class="link-btn" data-cfw="dropdown">
+                                            <span id="currentVoice">Choose...</span>
+                                            <span class="caret" aria-hidden="true"></span>
+                                        </button>
+                                        <ul id="voiceListing" class="dropdown-menu dropreverse">
                                         </ul>
                                     </div>
                                 </fieldset>
@@ -210,26 +212,25 @@
                                     <legend class="setting-title mb-0">Speed</legend>
                                     <div class="option-read-speed">
                                         <label for="set-read-speed" class="sr-only">reading speed</label>
-                                        <input id="set-read-speed" type="range" class="form-range cislc-modalSettings-readSpeed" min="0.25" max="2" step="0.25" value="1">
+                                        <input id="set-read-speed" type="range" class="form-range cislc-modalSettings-readSpeed" min="0.5" max="2" step="0.25" value="1">
                                     </div>
                                 </fieldset>
                             </div>
                         </form>
-                        <div class="setting d-none"></div>
                         <div class="setting">
                             <legend class="setting-title">Play sample</legend>
-                            <button type="button" class="btn btn-flag" aria-label="Play sample">
+                            <button onclick="clusiveTTS.readAloudSample()" type="button" class="btn btn-flag" aria-label="Play sample">
                                 <span class="icon-play" aria-hidden="true"></span>
                             </button>
-                            <button type="button" class="btn btn-flag" aria-label="Stop sample" disabled>
+                            <button onclick="clusiveTTS.stopReading()" type="button" class="btn btn-flag" aria-label="Stop sample">
                                 <span class="icon-stop" aria-hidden="true"></span>
                             </button>
                         </div>
+                        <div class="setting setting-btn-right">
+                            <button class="btn btn-primary btn-small cislc-modalSettings-reset-reading" type="reset">Reset reading settings</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary btn-small cislc-modalSettings-reset" type="reset">Reset</button>
             </div>
         </div>
     </div>

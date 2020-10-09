@@ -105,7 +105,17 @@
                         }
                     ]
                 }
-            }
+            },
+            'readerPreferences.tts.rate': {
+                target: 'readerPreferences.tts.rate',
+                backward: {
+                    excludeSource: '*'
+                },
+                singleTransform: {
+                    type: 'fluid.transforms.value',
+                    input: '{that}.model.preferences.cisl_prefs_readSpeed'
+                }
+            },            
         },
         modelListeners: {
             'readerPreferences.fontSize': {
@@ -127,7 +137,11 @@
             'readerPreferences.appearance': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
                 args: ['appearance', '{change}.value']
-            }
+            },
+            'readerPreferences.tts.rate': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyUserTTSSetting',
+                args: ['rate', '{change}.value']
+            }            
         }
     });
 
@@ -149,4 +163,16 @@
             reader.applyUserSettings(settingsObj);
         }
     };
+
+    cisl.prefs.readerPreferencesBridge.applyUserTTSSetting = function(ttsSettingName, settingValue) {
+        console.log("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
+        var reader = cisl.prefs.readerPreferencesBridge.getReaderInstance();
+        if (reader) {
+            var settingsObj =
+            {
+                [ttsSettingName]:settingValue
+            };
+            reader.applyTTSSettings(settingsObj);
+        }        
+    }
 }(fluid_3_0_0));

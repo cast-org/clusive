@@ -298,7 +298,8 @@ class ClusiveUser(models.Model):
 def set_default_preferences(sender, instance, created, **kwargs):    
     if(created):
         logger.info("New user created, setting preferences to 'default' set")
-        instance.adopt_preferences_set('default')
+        instance.adopt_preferences_set('default_display')
+        instance.adopt_preferences_set('default_reading_tools')
 
 class Preference (models.Model):
     """Store a single user preference setting."""
@@ -320,7 +321,16 @@ class Preference (models.Model):
 
     @classmethod
     def convert_from_string(cls, val):
-        """Converts a string value to a boolean, int, float, or string depending what it looks like."""
+        """Converts a string value to array, boolean, int, float, or string depending what it looks like."""
+
+        # Empty array as string
+        if (val[0] == "[" and val[1] == "]"):
+            return []
+        # Array of strings stored as string
+        # NOTE: this probably points towards a need to have a more robust 
+        # server-side representation of preferences
+        if (val[0] == "[" and val[-1] == "]"):
+            return [x.strip()[1:-1] for x in val[1:-1].split(',')]
         if val.lower() == "true":
             return True
         if val.lower() == "false":
