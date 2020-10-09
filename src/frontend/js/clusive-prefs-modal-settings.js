@@ -182,7 +182,8 @@
     }
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
-        if(! readVoices || ! readVoices.forEach) {
+        if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {
+            clearVoiceListing();
             return;
         }
         console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);

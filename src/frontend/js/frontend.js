@@ -273,6 +273,11 @@ function setupVoiceListing() {
     });
 }
 
+function clearVoiceListing() {
+    $('.voice-button').removeClass('active');
+    $('#currentVoice').html('Choose...');
+}
+
 $(window).ready(function() {
     'use strict';
 
