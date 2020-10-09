@@ -189,7 +189,7 @@ function formRangeFontSize(range) {
     tip.innerText = Math.round(range.value * 16) + 'px';
 }
 
-function formRangeReadSpeed(range) {    
+function formRangeReadSpeed(range) {
     'use strict';
 
     var tip = range.parentNode.querySelector('.form-range-tip');
@@ -233,11 +233,13 @@ function formRangeTip(range, callback) {
     window.addEventListener('resize', function() {
         formRangeTipPosition(range);
     });
-    
-    document.addEventListener('update.cisl.prefs', function () {        
-        formRangeTipPosition(range);
-        callback(range);
-    })
+
+    document.addEventListener('update.cisl.prefs', function () {
+        window.requestAnimationFrame(function() {
+            formRangeTipPosition(range);
+            callback(range);
+        });
+    });
 
     formRangeTipPosition(range);
     callback(range);
