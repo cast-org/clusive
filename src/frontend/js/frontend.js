@@ -1,5 +1,5 @@
-/* global Masonry, clusiveTTS */
-/* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse */
+/* global Masonry, clusiveTTS, clusivePrefs */
+/* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
 
 var libraryMasonryApi = null;
 
@@ -234,7 +234,7 @@ function formRangeTip(range, callback) {
         formRangeTipPosition(range);
     });
 
-    document.addEventListener('update.cisl.prefs', function () {
+    document.addEventListener('update.cisl.prefs', function() {
         window.requestAnimationFrame(function() {
             formRangeTipPosition(range);
             callback(range);
@@ -274,8 +274,11 @@ function setupVoiceListing() {
 }
 
 function clearVoiceListing() {
+    'use strict';
+
     $('.voice-button').removeClass('active');
     $('#currentVoice').html('Choose...');
+    clusiveTTS.setCurrentVoice(null);
 }
 
 $(window).ready(function() {

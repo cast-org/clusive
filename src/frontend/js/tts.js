@@ -390,17 +390,25 @@ clusiveTTS.setCurrentVoice = function(name) {
 
     // Eventually we may be able to switch voices mid-utterance, but for now have to stop speech
     clusiveTTS.stopReading();
-    window.speechSynthesis.getVoices().forEach(function(voice) {
-        if (voice.name === name) {
-            clusiveTTS.currentVoice = voice;
-            if (typeof D2Reader !== 'undefined') {
-                console.log("setting D2Reader voice to ", voice)
-                D2Reader.applyTTSSettings({
-                    voice : voice,                    
-                });
+    if (name) {
+        window.speechSynthesis.getVoices().forEach(function(voice) {
+            if (voice.name === name) {
+                clusiveTTS.currentVoice = voice;
+                if (typeof D2Reader !== 'undefined') {
+                    console.debug('setting D2Reader voice to ', voice);
+                    D2Reader.applyTTSSettings({
+                        voice: voice
+                    });
+                }
             }
-        }
-    });
+        });
+    } else {
+        console.debug('Unsetting D2Reader voice');
+        clusiveTTS.currentVoice = null;
+        D2Reader.applyTTSSettings({
+            voice: 'none'
+        });
+    }
 };
 
 clusiveTTS.readAloudSample = function() {
