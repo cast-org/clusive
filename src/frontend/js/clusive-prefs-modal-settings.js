@@ -134,9 +134,8 @@
     };
 
     cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
-        that.applier.change(path, changedValue, "ADD", "applyModalSettingToPreference");
-        
-        cisl.prefs.eventUpdate();
+        that.applier.change(path, changedValue, "ADD", "applyModalSettingToPreference");                
+        cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
     cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {        
@@ -155,7 +154,9 @@
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
 
-        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);
+        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);                
+
+        cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {

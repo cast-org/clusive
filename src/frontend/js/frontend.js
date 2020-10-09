@@ -189,7 +189,7 @@ function formRangeFontSize(range) {
     tip.innerText = Math.round(range.value * 16) + 'px';
 }
 
-function formRangeReadSpeed(range) {
+function formRangeReadSpeed(range) {    
     'use strict';
 
     var tip = range.parentNode.querySelector('.form-range-tip');
@@ -229,9 +229,15 @@ function formRangeTip(range, callback) {
         formRangeTipPosition(range);
         callback(range);
     });
+
     window.addEventListener('resize', function() {
         formRangeTipPosition(range);
     });
+    
+    document.addEventListener('update.cisl.prefs', function () {        
+        formRangeTipPosition(range);
+        callback(range);
+    })
 
     formRangeTipPosition(range);
     callback(range);

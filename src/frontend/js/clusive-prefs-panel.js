@@ -213,8 +213,9 @@
         return that.getSettings();
     };
 
-    cisl.prefs.eventUpdate = function() {
-        // Trigger a client side event
+    // Fire a non-Infusion document event that non-Infusion
+    // code can hook into to respond to preference changes
+    cisl.prefs.dispatchPreferenceUpdateEvent = function() {        
         var event = new Event('update.cisl.prefs');
         document.dispatchEvent(event);
     };
