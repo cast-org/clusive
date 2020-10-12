@@ -403,11 +403,13 @@ clusiveTTS.setCurrentVoice = function(name) {
             }
         });
     } else {
-        console.debug('Unsetting D2Reader voice');
         clusiveTTS.currentVoice = null;
-        D2Reader.applyTTSSettings({
-            voice: 'none'
-        });
+        if (typeof D2Reader !== 'undefined') {
+            console.debug('Unsetting D2Reader voice');
+            D2Reader.applyTTSSettings({
+                voice: 'none'
+            });
+        }
     }
 };
 
