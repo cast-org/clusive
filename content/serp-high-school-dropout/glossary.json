@@ -1,0 +1,316 @@
+[
+    {
+        "headword": "convince",
+        "alternateForms": ["convinces","convinced","convincing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To persuade." ,
+                "examples": [ "Something must be done to convince teens to stay in school." ],
+                "images": [
+                    {
+                        "src": "glossimages/convince1.jpg",
+                        "alt": "Photo of bright advertising signs",
+                        "description": "Brightly lit signs advertising food, magazines, cars, and more.",
+                        "caption": "Brightly lit signs are trying to convince people to buy food, magazines, cars, and more.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/light-london-adverts-piccadilly-circus-34639/",
+                            "title": "Red Coca Cola Zero Signage",
+                            "author": "Negative Space",
+                            "author_url": "https://www.pexels.com/@negativespace",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "enormous",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Huge, very large." ,
+                "examples": [ "Many people think that the amount of students dropping out of high school is an enormous problem." ],
+                "images": [
+                    {
+                        "src": "glossimages/enormous1.jpg",
+                        "alt": "Photo of canyon and river.",
+                        "description": "Photo of canyon and river with mountains in the distance.",
+                        "caption": "The enormous size of the canyon can only be seen when you realize the greens down near the river are fully grown trees.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/mountains-2331575/",
+                            "title": "Mountains",
+                            "author": "Kelsey Johnson",
+                            "author_url": "https://www.pexels.com/@kelsey-johnson-1226441?utm_content=attributionCopyText&utm_medium=referral&utm_source=pexels",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "integrity",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Honesty; morality." ,
+                "examples": [ "Some think today’s teens lack integrity and would rather take the easy way out than put in an  honest day’s work." ],
+                "images": [
+                    {
+                        "src": "glossimages/integrity1.jpg",
+                        "alt": "Photo of two people shaking hands",
+                        "description": "Two People Shaking Hands",
+                        "caption": "You need integrity for people to believe that you will honor a commitment when you shake hands on it. ",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/two-people-shaking-hands-955388/",
+                            "title": "Two People Shaking Hands",
+                            "author": "Cytonn Photography ",
+                            "author_url": "https://www.pexels.com/@cytonn",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "persistent",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Continuing despite difficulty; relentless; continuing longer than expected." ,
+                "examples": [ "There has been a persistent problem with students dropping out of high school in this country." ]
+            }
+        ]
+    },
+    {
+        "headword": "reluctant",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Unwilling; hesitant." ,
+                "examples": [ "Once students leave school, many are reluctant to return because they think it’s too late." ]
+            }
+        ]
+    },
+    {
+        "headword": "vary",
+        "alternateForms": ["varies","varied","varying"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To change; to make different." ,
+                "examples": [ "High school drop-out rates vary, depending on how they are calculated." ],
+                "images": [
+                    {
+                        "src": "glossimages/vary1.jpg",
+                        "alt": "Photo of Red and Green Tree Leaves on a Sunny Day.",
+                        "description": "Red and Green Tree Leaves on a Sunny Day ",
+                        "caption": "The colors of the leaves change depending on the light and the type of tree.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/red-and-green-tree-leaves-on-a-sunny-day-668553/",
+                            "title": "Red and Green Tree Leaves on a Sunny Day",
+                            "author": "le vy",
+                            "author_url": "https://www.pexels.com/@le-vy-208451",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "fluctuate",
+        "alternateForms": ["fluctuates","fluctuated","fluctuating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To change; to make different." ,
+                "examples": [ "High school drop-out rates fluctuate, depending on how they are calculated." ],
+                "images": [
+                    {
+                        "src": "glossimages/vary1.jpg",
+                        "alt": "Photo of Red and Green Tree Leaves on a Sunny Day.",
+                        "description": "Red and Green Tree Leaves on a Sunny Day ",
+                        "caption": "The colors of the leaves change depending on the light and the type of tree.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/red-and-green-tree-leaves-on-a-sunny-day-668553/",
+                            "title": "Red and Green Tree Leaves on a Sunny Day",
+                            "author": "le vy",
+                            "author_url": "https://www.pexels.com/@le-vy-208451",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "calculate",
+        "alternateForms": ["calculated"],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Done or make after carefully estimating the likely result." ,
+                "examples": [ "High school drop-out rates vary, depending on how they are calculated."],
+                "images": [
+                    {
+                        "src": "glossimages/calculate1.jpg",
+                        "alt": "Photo of Black Calculator Near Ballpoint Pen on White Printed Paper",
+                        "description": " Black Calculator Near Ballpoint Pen on White Printed Paper",
+                        "caption": "A calculator is used for mathematical calculations.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-calculator-near-ballpoint-pen-on-white-printed-paper-53621/",
+                            "title": "Black Calculator Near Ballpoint Pen on White Printed Paper",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "significantly",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In an amount or to an extent that is important; considerably." ,
+                "examples": [ "Rates are also significantly higher in most urban districts—sometimes 80%." ]
+            }
+        ]
+    },
+    {
+        "headword": "drastically",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In an amount or to an extent that is important; considerably." ,
+                "examples": [ "Rates are also drastically higher in most urban districts—sometimes 80%." ]
+            }
+        ]
+    },
+    {
+        "headword": "urban",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or having to do with a city or town." ,
+                "examples": [ "Rates are also significantly higher in most urban districts—sometimes 80%." ],
+                "images": [
+                    {
+                        "src": "glossimages/urban1.jpg",
+                        "alt": "Aerial Photo of City Commercial Buildings",
+                        "description": "Aerial Photo of City Commercial Buildings ",
+                        "caption": "Aerial view of a city filled with buildings. Cars can be seen moving in the streets below.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/aerial-architectural-design-architecture-buildings-373912/",
+                            "title": "Aerial Photo of City Commercial Buildings",
+                            "author": "Burst",
+                            "author_url": "https://www.pexels.com/@burst",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "metropolitan",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or having to do with a city or town." ,
+                "examples": [ "Rates are also significantly higher in most metropolitan districts—sometimes 80%." ],
+                "images": [
+                    {
+                        "src": "glossimages/urban1.jpg",
+                        "alt": "Aerial Photo of City Commercial Buildings",
+                        "description": "Aerial Photo of City Commercial Buildings ",
+                        "caption": "Aerial view of a city filled with buildings. Cars can be seen moving in the streets below.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/aerial-architectural-design-architecture-buildings-373912/",
+                            "title": "Aerial Photo of City Commercial Buildings",
+                            "author": "Burst",
+                            "author_url": "https://www.pexels.com/@burst",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "issue ",
+        "alternateForms": ["issues"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An important topic or problem for debate or discussion." ,
+                "examples": [ "Some think dropping out is not such a big issue, but many believe it’s an enormous national problem that has persisted for many years." ],
+                "images": [
+                    {
+                        "src": "glossimages/issue1.jpg",
+                        "alt": "Photo of Protesters Holding Signs",
+                        "description": "Protesters Holding Signs",
+                        "caption": "People will protest when a problem is important to them.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/protesters-holding-signs-4561540/",
+                            "title": "Protesters Holding Signs",
+                            "author": "Shane Aldendorff",
+                            "author_url": "https://www.pexels.com/@pluyar",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "concern",
+        "alternateForms": ["concerns"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An important topic or problem for debate or discussion." ,
+                "examples": [ "Some think dropping out is not such a big concern, but many believe it’s an enormous national problem that has persisted for many years." ],
+                "images": [
+                    {
+                        "src": "glossimages/issue1.jpg",
+                        "alt": "Photo of Protesters Holding Signs",
+                        "description": "Protesters Holding Signs",
+                        "caption": "People will protest when a problem is important to them.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/protesters-holding-signs-4561540/",
+                            "title": "Protesters Holding Signs",
+                            "author": "Shane Aldendorff",
+                            "author_url": "https://www.pexels.com/@pluyar",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
