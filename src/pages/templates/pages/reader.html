@@ -93,12 +93,10 @@ var manifest_path = "{{ manifest_path }}";
             // {type:'script', url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML&latest'},
         ];
 
-        var userSettings = { textAlignment:'start' };
         var annotations = [];
         {% for a in annotations %}
             annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
         {% endfor %}
-        var upLink = { url: new URL("/", window.location.href), label: "Back", ariaLabel: "Go back" };
         var lastReadingPosition = {{ last_position|safe }};
 
         var selectionMenuItems = [
@@ -121,15 +119,9 @@ var manifest_path = "{{ manifest_path }}";
 
         D2Reader.load({
             url: new URL(url),
-            upLinkUrl: upLink,
-            ui: {
-                settings: {
-                    fontFamily: true,
-                    fontSize: true,
-                    appearance: true,
-                    scroll: true,
-                    lineHeight: true
-                },
+            userSettings: {
+                textAlignment:'start',
+                verticalScroll: 'readium-scroll-on',
             },
             rights: {
                 enableBookmarks: true,
@@ -138,15 +130,13 @@ var manifest_path = "{{ manifest_path }}";
             },
             tts: {
                 enableSplitter: true,
-                highlight: "words", // lines, words
+                highlight: "words",
                 autoScroll: true,
                 rate: 1.0,
                 pitch: 1.0,
                 volume: 1.0,
                 voice: {
-                    usePublication: false,
-                    // name : "Daniel",
-                    // lang : "en-GB",
+                    usePublication: false
                 },
                 api: {
                     started: function() {
@@ -167,13 +157,11 @@ var manifest_path = "{{ manifest_path }}";
                 }
             },
             material: false,
-            userSettings: userSettings,
             initialAnnotations: {"bookmarks":[], "highlights": annotations},
             lastReadingPosition: lastReadingPosition,
             injectables: injectables,
 
             selectionMenuItems: selectionMenuItems,
-            //initialAnnotationColor: "#a0abfd",
             initialAnnotationColor: "var(--CRT_highlightOverlayBg)",
 
             api: {
