@@ -69,10 +69,6 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
         language = get_metadata_item(upload, 'language') or ''
         mod_date = upload.meta.get('dates').get('modification') or None
 
-        # We require a TITLE.
-        if not title:
-            raise BookMalformed('Malformed EPUB, no title found')
-
         # Date, if provided should be UTC according to spec.
         if mod_date:
             mod_date = timezone.make_aware(mod_date, timezone=timezone.utc)
@@ -80,6 +76,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
             # Many EPUBs are missing this metadata, unfortunately.
             logger.warning('No mod date found in %s', file)
             mod_date = timezone.now()
+
         if upload.cover:
             cover = adjust_href(upload, upload.cover.href)
             # For cover path, need to prefix this path with the directory holding this version of the book.
@@ -95,7 +92,9 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
                 raise BookMismatch('Does not appear to be a version of the same book, titles differ.')
         else:
             if not clusive_user:
-                # For public books, a book with the same title is assumed to be the same book.
+                # For public books, we require a title, and a book with the same title is assumed to be the same book.
+                if not title:
+                    raise BookMalformed('Malformed EPUB, no title found')
                 book = Book.objects.filter(owner=None, title=title).first()
         if not book:
             # Make new Book
