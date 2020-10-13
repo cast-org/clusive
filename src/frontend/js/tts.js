@@ -196,7 +196,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     element.after(copiedElement);
     element.hide();
     // eslint-disable-next-line compat/compat
-    var utterance = new SpeechSynthesisUtterance(contentText);
+    var utterance = clusiveTTS.makeUtterance(contentText);
 
     utterance.onboundary = function(e) {
         if (e.name === 'sentence') {
@@ -222,6 +222,23 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     };
 
     synth.speak(utterance);
+};
+
+clusiveTTS.makeUtterance = function(text) {
+    'use strict';
+
+    if (typeof SpeechSynthesisUtterance === 'function') {
+        var utt = new SpeechSynthesisUtterance(text);
+        if (clusiveTTS.currentVoice) {
+            utt.voice = clusiveTTS.currentVoice;
+        }
+        if (clusiveTTS.voiceRate) {
+            utt.rate = clusiveTTS.voiceRate;
+        }
+        return utt;
+    }
+    console.warn('Speech synthesis unsupported by this browser');
+    return null;
 };
 
 clusiveTTS.readElements = function(textElements) {
@@ -417,13 +434,7 @@ clusiveTTS.readAloudSample = function() {
     'use strict';
 
     // eslint-disable-next-line compat/compat
-    var utt = new SpeechSynthesisUtterance('Testing, testing, 1 2 3');
-    if (clusiveTTS.currentVoice) {
-        utt.voice = clusiveTTS.currentVoice;
-    }
-    if (clusiveTTS.voiceRate) {
-        utt.rate = clusiveTTS.voiceRate;
-    }
+    var utt = clusiveTTS.makeUtterance('Testing, testing, 1 2 3');
     window.speechSynthesis.speak(utt);
 };
 
