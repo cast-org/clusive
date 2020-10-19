@@ -162,4 +162,5 @@
         console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
         messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')});
     };
+    
 }(fluid_3_0_0));

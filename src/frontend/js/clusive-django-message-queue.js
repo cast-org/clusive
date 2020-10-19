@@ -67,12 +67,6 @@
             })    
     }
 
-    // Check if both the queue and the sending queue are empty 
-    // (no outstanding or in-flight messages)
-    clusive.djangoMessageQueue.isQueueEmpty = function (that) {        
-        return (that.queue.length === 0 && $.isEmptyObject(that.sendingQueue));
-    };
-
     clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
         var logoutLinkSelector = that.options.config.logoutLinkSelector;        
                 
@@ -119,4 +113,11 @@
         wrappedMessage.username = DJANGO_USERNAME;
         return wrappedMessage;
     }
+
+    // Check if both the queue and the sending queue are empty 
+    // (no outstanding or in-flight messages)
+    clusive.djangoMessageQueue.isQueueEmpty = function (that) {        
+        return (that.queue.length === 0 && $.isEmptyObject(that.sendingQueue));
+    };
+
 }(fluid_3_0_0));
