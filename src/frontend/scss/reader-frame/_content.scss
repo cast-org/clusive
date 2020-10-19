@@ -19,6 +19,17 @@
     @media (max-width: 35.98em) {
         --RS__pageGutter: 0;
     }
+
+    &[style*="readium-font-on"][style*="--USER__fontFamily"] {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: inherit !important; // stylelint-disable-line declaration-no-important
+        }
+    }
 }
 
 :focus {
