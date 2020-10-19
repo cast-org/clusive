@@ -224,7 +224,16 @@ class MetadataReplaceFormView(MetadataFormView):
         self.orig_book.title = self.object.title
         self.orig_book.author = self.object.author
         self.orig_book.description = self.object.description
-        self.orig_book.cover = self.object.cover
+
+        # Check which cover to use
+        if form.cleaned_data['use_orig_cover']:
+            logger.debug('Use Orig Cover was requested, making no changes')
+        else:
+            # Remove old cover, move the new file in place, update DB
+            if self.orig_book.cover:
+                os.remove(self.orig_book.cover_storage)
+            self.orig_book.cover = self.object.cover
+            os.rename(self.object.cover_storage, self.orig_book.cover_storage)
         self.orig_book.save()
 
         orig_bv = self.orig_book.versions.get()

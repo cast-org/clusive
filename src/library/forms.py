@@ -16,6 +16,9 @@ class MetadataForm(forms.ModelForm):
     cover = forms.FileField(required=False, label='Choose new image...')
     cover.widget.attrs.update({'accept': 'image/*'})
 
+    use_orig_cover = forms.BooleanField(label='Use this', required=False, initial=False)
+    use_orig_cover.widget.attrs.update({'class': 'usethis-cover'})
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ''

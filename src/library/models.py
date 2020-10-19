@@ -41,10 +41,19 @@ class Book(models.Model):
 
     @property
     def storage_dir(self):
+        """Path to the filesystem location where this book's files are stored."""
         return default_storage.path(self.path)
 
     @property
-    def glossary_path(self):
+    def cover_storage(self):
+        """Path to the place where the cover image for this book is stored."""
+        if self.cover:
+            return os.path.join(self.storage_dir, str(self.cover))
+        else:
+            return None
+
+    @property
+    def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
     def __str__(self):
