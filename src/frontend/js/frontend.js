@@ -267,6 +267,23 @@ function formUseThisLinks() {
         e.preventDefault();
         return false;
     });
+    $('body').on('change', '.usethis-cover', function(e) {
+        var checked = $(this).prop('checked');
+        console.debug('Checkbox now ', checked);
+        if (checked) {
+            $('#new-cover').slideUp();
+            $('#cover-label').hide();
+            $('#cover-input').slideUp();
+            $(this).closest('.usethis-container').removeClass('highlight-undelete');
+        } else {
+            $('#new-cover').slideDown();
+            $('#cover-label').show();
+            $('#cover-input').slideDown();
+            $(this).closest('.usethis-container').addClass('highlight-undelete');
+        }
+        e.preventDefault();
+        return false;
+    });
 }
 
 function setupVoiceListing() {
