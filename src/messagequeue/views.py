@@ -37,7 +37,10 @@ def process_messages(queue_timestamp, messages, user, request):
         
         if(message_type == Message.AllowedTypes.PREF_CHANGE):
             logger.debug("Found a preference change message: %s" % message)                        
-            new_message = Message(message_type, message_timestamp, message_content, request)            
+            new_message = Message(message_type, message_timestamp, message_content, request)
+        elif(message_type == Message.AllowedTypes.CALIPER_EVENT):
+            logger.debug("Found a Caliper event message: %s" % message)
+            new_message = Message(message_type, message_timestamp, message_content, request)
         try:            
             new_message.send_signal()            
         except AttributeError:
