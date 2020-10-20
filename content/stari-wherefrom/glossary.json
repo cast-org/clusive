@@ -1,0 +1,94 @@
+[
+    {
+        "headword": "Japanese",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or having to do with Japan, or its people or language." ,
+                "examples": [ "Tokyo is a Japanese city." ],
+                "images": [
+                    {
+                        "src": "glossimages/japanese1.jpg",
+                        "alt": "Photo of a brightly lit street in Japan.",
+                        "description": "A street filled with brightly lit signs. Many people walk along the sidewalks on either side of the street.",
+                        "caption": "A city street in Tokyo, Japan.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/people-walking-on-street-near-buildings-2339009/",
+                            "title": "People Walking on Street Near Buildings",
+                            "author": "Aleksandar Pasaric ",
+                            "author_url": "https://www.pexels.com/@apasaric",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "explain",
+        "alternateForms": ["explains","explained","explaining"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make (an idea, situation, or problem) clear to someone by describing it in more detail or revealing relevant facts or ideas." ,
+                "examples": [ "Callie needed to explain why she was late to school." ],
+                "images": [
+                    {
+                        "src": "glossimages/explain1.jpg",
+                        "alt": "Photo of a person pointing to blackboard.",
+                        "description": "A person pointing to writing on a blackboard.",
+                        "caption": "When someone explains something, it should make it easier to understand.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/strict-female-teacher-with-book-pointing-at-scribbled-blackboard-3771074/",
+                            "title": "Strict female teacher with book pointing at scribbled blackboard",
+                            "author": "Andrea Piacquadio ",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "serve",
+        "alternateForms": ["serves","served","serving"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give food or drink to someone. " ,
+                "examples": [ "They served potato chips with lunch." ],
+                "images": [
+                    {
+                        "src": "glossimages/serve1.jpg",
+                        "alt": "Photo of person serving food.",
+                        "description": "A person holds out a plate of food toward the viewer.",
+                        "caption": "A person serves food in a restaurant.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-square-white-ceramic-plate-687824/",
+                            "title": "Person Holding Square White Ceramic Plate",
+                            "author": "Edward Eyer",
+                            "author_url": "https://www.pexels.com/@edwardeyer",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "totally",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "Completely." ,
+                "examples": [ "The building was totally destroyed by the fire." ]
+            }
+        ]
+    }
+]

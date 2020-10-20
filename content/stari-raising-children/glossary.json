@@ -1,0 +1,67 @@
+[
+    {
+        "headword": "adopt",
+        "alternateForms": ["adopts","adopted","adopting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To become a parent of (a child) by law, or to accept an animal as a pet and become responsible for it." ,
+                "examples": [ "The grandparents adopted one of their grandchildren, and now they are her parents." ],
+                "images": [
+                    {
+                        "src": "glossimages/adopt1.jpg",
+                        "alt": "Photo of grandparent with child.",
+                        "description": "A grandparent holding a tiny baby.",
+                        "caption": "Grandparents may sometimes adopt their grandchildren.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-in-yellow-knit-sweater-carrying-baby-3673120/",
+                            "title": "Woman in Yellow Knit Sweater Carrying Baby",
+                            "author": "Jake Ryan",
+                            "author_url": "https://www.pexels.com/@jake-ryan-1805068",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "respect",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A positive feeling or action shown towards someone or something considered important, or held in high regard." ,
+                "examples": [ "It may be hard to get the respect of younger siblings when you are not much older than they are." ]
+            }
+        ]
+    },
+    {
+        "headword": "struggle",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A big effort; a fight; combat." ,
+                "examples": [ "It was a struggle to do homework and take care of his little brother at the same time." ],
+                "images": [
+                    {
+                        "src": "glossimages/struggle1.jpg",
+                        "alt": "Photo of person on a computer.",
+                        "description": "A person with a frustrated expression, trying to do work on a computer.",
+                        "caption": "It can be a struggle to get homework done when also taking care of younger sisters or brothers.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-in-white-shirt-using-macbook-pro-52608/",
+                            "title": "Man in White Shirt Using Macbook Pro",
+                            "author": "Tim Gouw",
+                            "author_url": "https://www.pexels.com/@punttim",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

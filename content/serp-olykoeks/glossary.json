@@ -173,7 +173,7 @@
                     {
                         "src": "glossimages/kettle1.jpg",
                         "alt": "Photo of cooking pots over a hot flame.",
-                        "description": "Photo of large silver cooking vessles resting on grates. Two cooking pots, with covers, are nearest the viewer. A fire burns beneath the pots. In the background are people working near the pots, and others sitting at tables.",
+                        "description": "Photo of large silver cooking vessels resting on grates. Two cooking pots, with covers, are nearest the viewer. A fire burns beneath the pots. In the background are people working near the pots, and others sitting at tables.",
                         "caption": "Covered kettles heating over an open flame.",
                         "source": {
                             "url": "https://commons.wikimedia.org/wiki/File:Muisbosskerm_03.jpg",
@@ -189,19 +189,19 @@
         ]
     },
     {
-        "headword": "cooking vessle",
-        "alternateForms": ["cooking vessles" ],
+        "headword": "cooking vessel",
+        "alternateForms": ["cooking vessels" ],
         "meanings": [
             {
                 "pos": "noun",
                 "definition": "a hollow container, usually metal, especially one used to heat liquid.",
-                "examples": [ "The workers poured 40 gallons of maple sap into the large metallic cooking vessle and started to boil it down to make maple syrup." ],
+                "examples": [ "The workers poured 40 gallons of maple sap into the large metallic cooking vessel and started to boil it down to make maple syrup." ],
                 "images": [
                     {
-                        "src": "glossimages/cooking_vessle1.jpg",
+                        "src": "glossimages/cooking_vessel1.jpg",
                         "alt": "Photo of cooking pots over a hot flame.",
-                        "description": "Photo of large silver cooking vessles resting on grates. Two cooking pots, with covers, are nearest the viewer. A fire burns beneath the pots. In the background are people working near the pots, and others sitting at tables.",
-                        "caption": "Large cooking vessles heating over an open fire.",
+                        "description": "Photo of large silver cooking vessels resting on grates. Two cooking pots, with covers, are nearest the viewer. A fire burns beneath the pots. In the background are people working near the pots, and others sitting at tables.",
+                        "caption": "Large cooking vessels heating over an open fire.",
                         "source": {
                             "url": "https://commons.wikimedia.org/wiki/File:Muisbosskerm_03.jpg",
                             "title": "Muisbosskerm",

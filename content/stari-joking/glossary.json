@@ -1,0 +1,106 @@
+[
+    {
+        "headword": "support",
+        "alternateForms": ["supports","supported","supporting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give help or encouragement." ,
+                "examples": [ "The group of close friends supported each other as they went through the problems of growing up." ],
+                "images": [
+                    {
+                        "src": "glossimages/support1.jpg",
+                        "alt": "Photo of someone holding a small child's hand.",
+                        "description": "Someone helping a small child balance by holding their hand.",
+                        "caption": "Holding hands supports the small child to balance on the log.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/blue-jeans-3036405/",
+                            "title": "Blue Jeans",
+                            "author": "VisionPic .net",
+                            "author_url": "https://www.pexels.com/@freestockpro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "victim",
+        "alternateForms": ["victims"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who is hurt, injured, or killed by a person, group, or event." ,
+                "examples": [ "They were victims of unfair treatment by others." ],
+                "images": [
+                    {
+                        "src": "glossimages/victim1.jpg",
+                        "alt": "Photo of fist in the foreground and person sitting on the ground.",
+                        "description": "A person stands with a clenched fist in the foreground. A person sits with head down and hands over head in the background.",
+                        "caption": "Victims can be hurt physically, through words, or other actions.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-in-yellow-shirt-and-blue-denim-jeans-4379915/",
+                            "title": "Man in Yellow Shirt and Blue Denim Jeans",
+                            "author": "Karolina Grabowska",
+                            "author_url": "https://www.pexels.com/@karolina-grabowska",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "risk",
+        "alternateForms": ["risks"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Danger." ,
+                "examples": [ "Her life was at risk when she climbed the cliff without any ropes." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "physical",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having to do with the body." ,
+                "examples": [ "She did hard physical training to prepare for the race." ]
+            }
+        ]
+    },
+    {
+        "headword": "depressed",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "To be unhappy or in low spirits." ,
+                "examples": [ "I am depressed because of the gloomy weather." ],
+                "images": [
+                    {
+                        "src": "glossimages/depressed1.jpg",
+                        "alt": "Photo of person sitting on the floor with head down.",
+                        "description": "A person sits alone, on the floor. The person's head is down. The person's arms are crossed and are resting on the person's bent knees.",
+                        "caption": "Sometimes when you feel depressed, you feel completely alone.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/alone-man-person-sadness-236151/",
+                            "title": "Person Leaning on Wall",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

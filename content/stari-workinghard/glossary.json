@@ -1,0 +1,89 @@
+[
+    {
+        "headword": "basics",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Essential things, like food and clean water, that are needed for survival. " ,
+                "examples": [ "People are facing a shortage of basics like flour." ]
+            }
+        ]
+    },
+    {
+        "headword": "strain",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Tiring or heavy pressure on the mind." ,
+                "examples": [ "His friend's sickness is a strain on him." ],
+                "images": [
+                    {
+                        "src": "glossimages/strain1.jpg",
+                        "alt": "Man sitting on a bed with hand on head.",
+                        "description": "A man sits on the edge of a bed. He leans forward and has his hand on his forehead.",
+                        "caption": "Strain can cause headaches or stomach aches.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/young-man-in-sleepwear-suffering-from-headache-in-morning-3771115/",
+                            "title": "Young man in sleepwear suffering from headache in morning",
+                            "author": "Andrea Piacquadio ",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "span",
+        "alternateForms": ["serves","served","serving"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The length or duration of something; an amount of time." ,
+                "examples": [ "The span of a day is 24 hours." ]
+            }
+        ]
+    },
+    {
+        "headword": "slack",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The things that are left over or undone." ,
+                "examples": [ "The kids helped their parents by picking up the slack and doing the dishes when they came home from school." ],
+                "images": [
+                    {
+                        "src": "glossimages/slack1.jpg",
+                        "alt": "Photo of family working together at home.",
+                        "description": "Family members are in their home kitchen. Some people are setting the table. Other people are getting good ready.",
+                        "caption": "Each person helps to get dinner ready.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/family-setting-the-table-for-dinner-4262003/",
+                            "title": "Family Setting the Table for Dinner",
+                            "author": "August de Richelieu",
+                            "author_url": "https://www.pexels.com/@august-de-richelieu",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "responsibility",
+        "alternateForms": ["responsibilities"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Having a duty to deal with something or of having control over someone." ,
+                "examples": [ "It is the responsibility of the ship's captain to make sure the passenger and cargo are safe." ]
+            }
+        ]
+    }
+]
