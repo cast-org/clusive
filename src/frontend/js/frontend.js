@@ -335,10 +335,8 @@ $(window).ready(function() {
     confirmationSharing();
     formUseThisLinks();
 
-    $('#voiceMenu').one('beforeShow.cfw.dropdown', function() {
-        // Place behind user interaction event for Chrome/Android
-        setupVoiceListing();
-    });
+    setupVoiceListing();
+    window.speechSynthesis.onvoiceschanged = setupVoiceListing;
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
