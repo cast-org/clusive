@@ -19,6 +19,7 @@ page_viewed = Signal(providing_args=['request', 'document', 'page'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'preference'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
+control_used = Signal(providing_args=['request', 'control', 'value'])
 
 #
 # Signal handlers that log specific events
@@ -52,6 +53,17 @@ def log_vocab_lookup(sender, **kwargs):
     if event:
         event.save()
 
+@receiver(control_used)
+def log_control_used(sender, **kwargs):
+    """User interacts with a UI control"""
+    logger.debug("control interaction: %s " % (kwargs))
+    event = Event.build(type='TOOL_USE_EVENT',
+                        action='USED',
+                        control=kwargs['control'],
+                        value=kwargs['value'],
+                        session=kwargs['request'].session)
+    if event:
+        event.save()                        
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
