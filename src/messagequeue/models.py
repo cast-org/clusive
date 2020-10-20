@@ -31,5 +31,6 @@ class Message:
         client_side_prefs_change.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
 
     def send_client_side_caliper_event(self):
-        logger.debug("This is where we'd send the signal to generate a caliper event", self.timestamp, self.content, self.request)
+        logger.debug("This is where we'd send the signal to generate a caliper event")
+        logger.debug(self.timestamp, self.content)
         # client_side_caliper_event.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
