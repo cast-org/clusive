@@ -334,7 +334,11 @@ $(window).ready(function() {
     confirmationPublicationDelete();
     confirmationSharing();
     formUseThisLinks();
-    setupVoiceListing();
+
+    $('#voiceMenu').one('beforeShow.cfw.dropdown', function() {
+        // Place behind user interaction event for Chrome/Android
+        setupVoiceListing();
+    });
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
