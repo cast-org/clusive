@@ -3,7 +3,7 @@
 function themeControls() {
     'use strict';
 
-    var html = '<div style="position: fixed; bottom: .25rem; left: 50%; z-index: 2000; transform: translateX(-50%); background: #ddd; padding: 0 .5rem; border: 2px solid #666; text-align: center; font-size: .875rem;">';
+    var html = '<div id="themeTest" style="position: fixed; bottom: .25rem; left: 50%; z-index: 2000; transform: translateX(-50%); background: #ddd; color: #000; padding: 0 .5rem; border: 2px solid #666; text-align: center; font-size: .875rem;">';
     html += 'Theme: ';
     html += '<a href="#" style="color: #009 !important;" onclick="return themeCSS();">Default</a> |';
     html += '<a href="#" style="color: #009 !important;" onclick="return themeCSS(\'sepia\');">Sepia</a> |';
@@ -15,6 +15,7 @@ function themeControls() {
     html += '<a href="#" style="color: #009 !important;" onclick="return themeLH(2);">Tall</a>';
     html += '</div>';
     $(document.body).append(html);
+    $(document.body).trigger('themeControls');
 }
 
 function themeCSS(name) {

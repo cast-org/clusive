@@ -260,3 +260,17 @@ h2,
     width: 4rem;
     margin-right: 1rem;
 }
+
+.features {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: $zindex-tooltip;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+
+    .tooltip {
+        pointer-events: auto;
+    }
+}
