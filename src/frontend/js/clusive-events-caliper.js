@@ -8,25 +8,25 @@ var caliperEventTypes = {
 
 var trackedControlInteractions = [
     {
-        selector: ".btn-tool.tts-play",
+        selector: ".btn.tts-play",
         handler: "click",
         control: "tts-play",
         value: "clicked"
     },
     {
-        selector: ".btn-tool.tts-pause",
+        selector: ".btn.tts-pause",
         handler: "click",
         control: "tts-pause",
         value: "clicked"
     },
     {
-        selector: ".btn-tool.tts-resume",
+        selector: ".btn.tts-resume",
         handler: "click",
         control: "tts-resume",
         value: "clicked"
     },
     {
-        selector: ".btn-tool.tts-stop",
+        selector: ".btn.tts-stop",
         handler: "click",
         control: "tts-stop",
         value: "clicked"
@@ -41,12 +41,13 @@ var addControlInteractionToQueue = function (control, value) {
     });
 };
 
-$(document).ready(function () {
-    trackedControlInteractions.forEach(function (interactionDef, i) {        
+$(document).ready(function () {    
+    trackedControlInteractions.forEach(function (interactionDef, i) {              
         var control = $(interactionDef.selector);
+        console.debug("Event for control tracking: ", interactionDef, control)      
         var handler = interactionDef.handler;
         $(interactionDef.selector).click(function () {                    
             addControlInteractionToQueue(interactionDef.control, interactionDef.value);
         })
-    });
+    });            
 })
