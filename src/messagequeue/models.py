@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 import django.dispatch
 
 from eventlog.signals import control_used
@@ -11,8 +9,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 client_side_prefs_change = django.dispatch.Signal(providing_args=["timestamp", "content", "request"])
-
-
 
 class Message:
     class AllowedTypes:
@@ -34,9 +30,7 @@ class Message:
     def send_client_side_prefs_change(self):
         client_side_prefs_change.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
 
-    def send_client_side_caliper_event(self):
-        logger.debug("This is where we'd send the signal to generate a caliper event")
-        logger.debug(self.timestamp, self.content)        
+    def send_client_side_caliper_event(self):      
         control = self.content["caliperEvent"]["control"]
         value = self.content["caliperEvent"]["value"]
         control_used.send(sender=self.__class__, timestamp=self.timestamp, request=self.request, control=control, value=value)        

@@ -12,7 +12,25 @@ var trackedControlInteractions = [
         handler: "click",
         control: "tts-play",
         value: "clicked"
-    }
+    },
+    {
+        selector: ".btn-tool.tts-pause",
+        handler: "click",
+        control: "tts-pause",
+        value: "clicked"
+    },
+    {
+        selector: ".btn-tool.tts-resume",
+        handler: "click",
+        control: "tts-resume",
+        value: "clicked"
+    },
+    {
+        selector: ".btn-tool.tts-stop",
+        handler: "click",
+        control: "tts-stop",
+        value: "clicked"
+    }                    
 ];
 
 var addControlInteractionToQueue = function (control, value) {
