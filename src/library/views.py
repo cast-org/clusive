@@ -1,6 +1,7 @@
 import imghdr
 import logging
 import os
+import shutil
 from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,7 +19,7 @@ from django.views.generic import ListView, FormView, UpdateView
 from eventlog.signals import annotation_action, page_viewed
 from library.forms import UploadForm, MetadataForm, ShareForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
-from library.parsing import unpack_epub_file
+from library.parsing import unpack_epub_file, scan_book
 from roster.models import ClusiveUser, Period, LibraryViews
 
 logger = logging.getLogger(__name__)
@@ -89,8 +90,8 @@ class LibraryView(LoginRequiredMixin, ListView):
         return context
 
 
-class UploadView(LoginRequiredMixin, FormView):
-    template_name = 'library/upload.html'
+class UploadFormView(LoginRequiredMixin, FormView):
+    """Parent class for several pages that allow uploading of EPUBs."""
     form_class = UploadForm
 
     def form_valid(self, form):
@@ -101,7 +102,13 @@ class UploadView(LoginRequiredMixin, FormView):
                 for chunk in upload.chunks():
                     f.write(chunk)
             (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
-            if not changed:
+            if changed:
+                logger.debug('Uploaded file name = %s', upload.name)
+                self.bv.filename = upload.name
+                self.bv.save()
+                logger.debug('Updating word lists')
+                scan_book(self.bv.book)
+            else:
                 raise Exception('unpack_epub_file did not find new content.')
             return super().form_valid(form)
 
@@ -115,11 +122,37 @@ class UploadView(LoginRequiredMixin, FormView):
             logger.debug("Removing temp file %s" % (tempfile))
             os.remove(tempfile)
 
+
+class UploadCreateFormView(UploadFormView):
+    """Upload an EPUB file as a new Book."""
+    template_name = 'library/upload_create.html'
+
     def get_success_url(self):
         return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
 
 
+class UploadReplaceFormView(UploadFormView):
+    """Upload an EPUB file to replace an existing Book that you own."""
+    template_name = 'library/upload_replace.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.orig_book = get_object_or_404(Book, pk=kwargs['pk'])
+        if self.orig_book.owner != request.clusive_user:
+            return self.handle_no_permission()
+        logger.debug('Allowing new upload for owned content: %s', self.orig_book)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orig_book'] = self.orig_book
+        return context
+
+    def get_success_url(self):
+        return reverse('metadata_replace', kwargs={'orig': self.orig_book.pk, 'pk': self.bv.book.pk})
+
+
 class MetadataFormView(LoginRequiredMixin, UpdateView):
+    """Parent class for several metadata-editing pages."""
     model = Book
     form_class = MetadataForm
     success_url = '/library/mine'
@@ -129,6 +162,11 @@ class MetadataFormView(LoginRequiredMixin, UpdateView):
         if self.object.owner != request.clusive_user:
             return self.handle_no_permission()
         return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orig_filename'] = self.object.versions.first().filename
+        return context
 
     def form_valid(self, form):
         cover = self.request.FILES.get('cover')
@@ -158,11 +196,62 @@ class MetadataFormView(LoginRequiredMixin, UpdateView):
 
 
 class MetadataCreateFormView(MetadataFormView):
+    """Edit metadata for a newly-created book. Cancelling will delete it."""
     template_name = 'library/metadata_create.html'
 
 
 class MetadataEditFormView(MetadataFormView):
+    """Edit metadata for an existing book."""
     template_name = 'library/metadata_edit.html'
+
+
+class MetadataReplaceFormView(MetadataFormView):
+    """Edit/choose metadata after uploading a replacement EPUB for an existing book."""
+    template_name = 'library/metadata_replace.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.orig_book = get_object_or_404(Book, pk=kwargs['orig'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orig_book'] = self.orig_book
+        return context
+
+    def form_valid(self, form):
+        valid = super().form_valid(form)
+        # The replacement is confirmed, so orig_book gets updated from the new temp book, which is deleted.
+        self.orig_book.title = self.object.title
+        self.orig_book.author = self.object.author
+        self.orig_book.description = self.object.description
+
+        # Check which cover to use
+        if form.cleaned_data['use_orig_cover']:
+            logger.debug('Use Orig Cover was requested, making no changes')
+        else:
+            # Remove old cover, move the new file in place, update DB
+            if self.orig_book.cover:
+                os.remove(self.orig_book.cover_storage)
+            self.orig_book.cover = self.object.cover
+            os.rename(self.object.cover_storage, self.orig_book.cover_storage)
+        self.orig_book.save()
+
+        orig_bv = self.orig_book.versions.get()
+        bv = self.object.versions.get()
+        orig_bv.glossary_words = bv.glossary_words
+        orig_bv.all_words = bv.all_words
+        orig_bv.new_words = bv.new_words
+        orig_bv.mod_date = bv.mod_date
+        orig_bv.language = bv.language
+        orig_bv.filename = bv.filename
+        orig_bv.save()
+
+        shutil.rmtree(orig_bv.storage_dir)
+        shutil.move(bv.storage_dir, orig_bv.storage_dir)
+
+        self.object.delete()
+
+        return valid
 
 
 class RemoveBookView(LoginRequiredMixin, View):

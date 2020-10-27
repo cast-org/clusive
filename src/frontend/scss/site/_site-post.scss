@@ -140,6 +140,19 @@ $btn-themes: map-merge(
             "active-color": var(--CT_btnTagActiveColor),
             "active-border-color": var(--CT_btnTagActiveBorderColor)
         ),
+        "favorite":
+        (
+            "base": var(--CT_btnFavoriteFocusRingRGB),
+            "bg": var(--CT_btnFavoriteBg),
+            "color": var(--CT_btnFavoriteColor),
+            "border-color": var(--CT_btnFavoriteBorderColor),
+            "hover-bg": var(--CT_btnFavoriteHoverBg),
+            "hover-color": var(--CT_btnFavoriteHoverColor),
+            "hover-border-color": var(--CT_btnFavoriteHoverBorderColor),
+            "active-bg": var(--CT_btnFavoriteActiveBg),
+            "active-color": var(--CT_btnFavoriteActiveColor),
+            "active-border-color": var(--CT_btnFavoriteActiveBorderColor)
+        ),
         "default":
         (
             "base": #636b82,

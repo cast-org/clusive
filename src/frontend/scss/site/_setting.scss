@@ -64,6 +64,19 @@
     .modal-body {
         padding: 0;
     }
+
+    .dropdown-menu {
+        max-width: calc(100vw - 1.5rem);
+
+        @include media-breakpoint-up(sm) {
+            max-width: 17rem;
+        }
+
+    }
+    .dropdown-item,
+    .dropdown-menu a {
+        white-space: normal;
+    }
 }
 
 .nav-tabs-setting {
@@ -115,6 +128,10 @@
 .setting-btn-row {
     display: flex;
     justify-content: space-around;
+}
+
+.setting-btn-right {
+    text-align: right;
 }
 
 // Options

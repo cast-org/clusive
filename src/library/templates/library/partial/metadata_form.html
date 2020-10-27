@@ -6,35 +6,77 @@
         <div class="form-text">* = required</div>
     </div>
     <div class="form-group">
+        <div class="form-label">
+            File *<br />
+            {{ orig_filename }}
+            {% if replace_option %}
+                <a class="ms-2" href="{% url 'upload_replace' pk=object.pk %}">Replace file</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
         {{ form.title.label_tag | formlabel }} *
         {{ form.title.errors }}
         {{ form.title | formcontrol }}
+        {% if orig_book and orig_book.title %}
+            <div class="usethis-container highlight-undelete mt-0_5">
+                Previous title:
+                <span class="usethis-source">{{ orig_book.title }}</span>
+                <a href="#" class="usethis-link" data-target="{{form.title.id_for_label}}">Use&nbsp;this</a>
+            </div>
+        {% endif %}
     </div>
     <div class="form-group">
         {{ form.author.label_tag | formlabel }} *
         {{ form.author.errors }}
         {{ form.author | formcontrol }}
+        {% if orig_book and orig_book.author %}
+            <div class="usethis-container highlight-undelete mt-0_5">
+                Previous author:
+                <span class="usethis-source">{{ orig_book.author }}</span>
+                <a href="#" class="usethis-link" data-target="{{form.author.id_for_label}}">Use&nbsp;this</a>
+            </div>
+        {% endif %}
     </div>
     <div class="form-group">
         {{ form.description.label_tag | formlabel }}
         {{ form.description.errors }}
         {{ form.description | formcontrol }}
+        {% if orig_book and orig_book.description %}
+            <div class="usethis-container highlight-undelete mt-0_5">
+                Previous description:
+                <span class="usethis-source">{{ orig_book.description }}</span>
+                <a href="#" class="usethis-link" data-target="{{form.description.id_for_label}}">Use&nbsp;this</a>
+            </div>
+        {% endif %}
     </div>
 </fieldset>
 {% if object.cover_path %}
     <div class="form-group">
-        <div class="form-text">Cover image</div>
+        <div class="form-label">Cover image</div>
         <div class="row">
             <div class="col-sm-6">
-                <img class="img-fluid" src="{% get_media_prefix %}{{ object.cover_path }}">
+                <img id="new-cover" class="img-fluid" src="{% get_media_prefix %}{{ object.cover_path }}">
             </div>
         </div>
+        {% if orig_book and orig_book.cover %}
+        <div class="usethis-container highlight-undelete mt-0_5">
+            <span id="cover-label">Previous cover:</span>
+            <div class="row">
+                <div class="col-sm-6">
+                    <img class="img-fluid" src="{% get_media_prefix %}{{ orig_book.cover_path }}">
+                </div>
+            </div>
+            {{ form.use_orig_cover }}
+            {{ form.use_orig_cover.label_tag }}
+        </div>
+        {% endif %}
     </div>
 {% else %}
 <p>No cover image</p>
 {% endif %}
 {{ form.cover.errors }}
-<div class="form-file">
+<div id="cover-input" class="form-file">
     <input type="file" class="form-file-input" accept="image/*" name="{{ form.cover.name }}" id="{{ form.cover.id_for_label }}">
     <label class="form-file-label" for="{{ form.cover.id_for_label }}">
         <span class="form-file-text">{{ form.cover.label }}</span>

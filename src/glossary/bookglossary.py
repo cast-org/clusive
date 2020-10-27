@@ -21,7 +21,7 @@ class BookGlossary:
         self.data = {}
         try:
             book = Book.objects.get(id=self.book_id)
-            with open(book.glossary_path, 'r', encoding='utf-8') as file:
+            with open(book.glossary_storage, 'r', encoding='utf-8') as file:
                 logger.debug("Reading glossary %s", file.name)
                 rawdata = json.load(file)
                 self.data = {}

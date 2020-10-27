@@ -25,6 +25,12 @@
     }
 }
 
+.card-body {
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+
 .card-library {
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
@@ -55,7 +61,7 @@
     }
 
     .card-body {
-        line-height: 1.375;
+        @include calc-line-height(1.375);
     }
 
     .card-footer {
@@ -86,9 +92,12 @@
 
 .card-library-action {
     // 1. Use flex to remove whitespace between items
-    // 2. Reduce right margin to pull buttons out more
+    // 2. Reduce margin/spacing to pull buttons out more
     display: flex; // 1
-    padding-right: .25rem; // 2
+    align-items: flex-end;
+    padding-right: .5rem; // 2
+    margin-top: -.25rem; // 2
+    margin-bottom: -.25rem; // 2
     white-space: nowrap;
 
     .dropdown {

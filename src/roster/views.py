@@ -63,24 +63,19 @@ class PreferenceSetView(View):
         try:
             desired_prefs = PreferenceSet.get_json(desired_prefs_name)
         except PreferenceSet.DoesNotExist:
-            return JsonResponse(
-                {'success': 0, 'message': 'Preference set named %s does not exist' % desired_prefs_name})
+            return JsonResponse(status=404, data={'message': 'Preference set named %s does not exist' % desired_prefs_name})
 
-        # Replace all existing preferences with the new set.
-        user.delete_preferences()
         set_user_preferences(user, desired_prefs, request)
 
-        # Return the newly-established preferences
-        return JsonResponse(user.get_preferences_dict())
+        # Return the preferences set
+        return JsonResponse(desired_prefs)
 
 
 # Set user preferences from a dictionary
 def set_user_preferences(user, new_prefs, request):
-    """Sets User's preferences to match the given dictionary of preference values.
-    Any preferences NOT specified in the dictionary are set to their default values."""
+    """Sets User's preferences to match the given dictionary of preference values."""    
     old_prefs = user.get_preferences_dict()
-    prefs_to_use = PreferenceSet.get_json('default')
-    prefs_to_use.update(new_prefs)
+    prefs_to_use = new_prefs    
     for pref_key in prefs_to_use:
         old_val = old_prefs.get(pref_key)
         if old_val != prefs_to_use[pref_key]:

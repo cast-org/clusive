@@ -49,6 +49,7 @@ $header-outer-bg:                       $body-bg;
 $header-bg:                             linear-gradient(90deg, rgba(#b09f88, .375) 0%, rgba(#b09f88, .25) 100%);
 $header-color:                          inherit;
 $header-logo-color:                     #89775f;
+$header-logo-hover-color:               palette($header-logo-color, 700);
 $header-logo-icon-color:                $header-logo-color;
 $header-logo-icon-hover-color:          palette($header-logo-icon-color, 700);
 
@@ -173,11 +174,11 @@ $btn-flag-focus-ring:                   #636b82;
 $btn-flag-bg:                           transparent;
 $btn-flag-color:                        #6e6355;
 $btn-flag-border-color:                 transparent;
-$btn-flag-hover-bg:                     transparent;
-$btn-flag-hover-color:                  palette($btn-flag-color, 700);
+$btn-flag-hover-bg:                     #6268ad;
+$btn-flag-hover-color:                  #fbfbfb;
 $btn-flag-hover-border-color:           transparent;
-$btn-flag-active-bg:                    transparent;
-$btn-flag-active-color:                 $btn-flag-color;
+$btn-flag-active-bg:                    palette($btn-flag-hover-bg, 600);
+$btn-flag-active-color:                 $btn-flag-hover-color;
 $btn-flag-active-border-color:          transparent;
 
 $btn-tag-focus-ring:                    #636b82;
@@ -190,6 +191,17 @@ $btn-tag-hover-border-color:            transparent;
 $btn-tag-active-bg:                     #6e6355;
 $btn-tag-active-color:                  #f5f5f5;
 $btn-tag-active-border-color:           transparent;
+
+$btn-favorite-focus-ring:               #636b82;
+$btn-favorite-bg:                       transparent;
+$btn-favorite-color:                    #6e6355;
+$btn-favorite-border-color:             transparent;
+$btn-favorite-hover-bg:                 transparent;
+$btn-favorite-hover-color:              palette($btn-favorite-color, 700);
+$btn-favorite-hover-border-color:       transparent;
+$btn-favorite-active-bg:                transparent;
+$btn-favorite-active-color:             $btn-favorite-color;
+$btn-favorite-active-border-color:      transparent;
 
 // Error
 $error-bg:                              #d42314;

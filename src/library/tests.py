@@ -22,7 +22,7 @@ class LibraryTestCase(TestCase):
 
     def test_parse_file(self):
         te = TextExtractor()
-        zip = ZipFile('../content/serp-penguins/serp-penguins-1.epub')
+        zip = ZipFile('../content/nysed-penguins/nysed-penguins-1.epub')
         file = zip.open('OEBPS/content.xhtml')
         te.feed(file.read().decode('utf-8'))
         te.close()

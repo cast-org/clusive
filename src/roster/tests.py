@@ -211,24 +211,28 @@ class ClusiveUserTestCase(TestCase):
             self.assertFalse(clusive_user_2.is_permissioned)
 
     def test_adopt_preferences_set(self):        
-        user = ClusiveUser.objects.get(user__username='user1')        
-        user.adopt_preferences_set("default")
+        user = ClusiveUser.objects.get(user__username='user1')  
+        user.delete_preferences()      
+        user.adopt_preferences_set("default_display")
+        user.adopt_preferences_set("default_reading_tools")
         self.check_user_has_default_preferences(user)
 
     def check_user_has_default_preferences(self, user):
-        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True'}
+        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True', 'cisl_prefs_readVoices': '[]', 'cisl_prefs_readSpeed': '1.0'}
         user_prefs = user.get_preferences()
         
         for p_key in default_pref_set.keys():            
             self.assertEqual(default_pref_set[p_key], user.get_preference(p_key).value, "preference '%s' not at expected default value of '%s'" % (p_key, default_pref_set[p_key]))
 
     def test_preference_convert_from_string(self):
+        self.assertEqual(Preference.convert_from_string("[]"), [], "empty array as string was not converted as expected")
+        self.assertEqual(Preference.convert_from_string("['Foo', 'Bar', 'Baz']"), ['Foo', 'Bar', 'Baz'], "array of string values as string was not converted as expected")
         self.assertEqual(Preference.convert_from_string("1"), 1, "int as string was not converted as expected")
         self.assertEqual(Preference.convert_from_string("1.57"), 1.57, "float as string was not converted as expected")
         self.assertEqual(Preference.convert_from_string("False"), False, "boolean:False as string was converted as expected")
         self.assertEqual(Preference.convert_from_string("True"), True, "boolean:True as string was converted as expected")
 
-    default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"fluid_prefs_letterSpace":1,"cisl_prefs_glossary":true}'
+    default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"fluid_prefs_letterSpace":1,"cisl_prefs_glossary":true, "cisl_prefs_readVoices": [], "cisl_prefs_readSpeed": 1.0}'
 
     def test_preference_sets(self):
         # delete any existing preferences so we're starting with a clean set
@@ -236,7 +240,11 @@ class ClusiveUserTestCase(TestCase):
         user.delete_preferences()
 
         login = self.client.login(username='user1', password='password1')
-        response = self.client.post('/account/prefs/profile', {'adopt': 'default'}, content_type='application/json')
+        
+        self.client.post('/account/prefs/profile', {'adopt': 'default_reading_tools'}, content_type='application/json')
+
+        response = self.client.post('/account/prefs/profile', {'adopt': 'default_display'}, content_type='application/json')
+        
         self.assertJSONEqual(response.content, self.default_pref_set_json, 'Changing to default preferences profile did not return expected response')
 
     def test_preferences(self):

@@ -1,0 +1,12 @@
+// Ouput a `line-height: calc(...)` rule that will allow scalable line-heights
+// Assumes a default `line-height: 1.6` as defined by Infusion
+@mixin calc-line-height($dim) {
+    line-height: calc((#{$dim} / 1.6) * var(--CT_lineHeight));
+}
+
+// Function alternative to the mixin, only returns the `calc(...)` portion
+// Useful for settings overrides
+@function scale-line-height($dim) {
+    $output: calc((#{$dim} / 1.6) * var(--CT_lineHeight));
+    @return $output;
+}

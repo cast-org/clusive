@@ -64,7 +64,19 @@
             },
             flush: {
                 funcName: "clusive.messageQueue.flushQueue",
-                args: ["{that}"]
+                args: ["{that}", "{that}.setupQueueFlushPromise"]
+            },
+            setupQueueFlushPromise: {
+                funcName: "clusive.messageQueue.setupQueueFlushPromise",
+                args: ["{that}", "{arguments}.0", "{that}.handleQueueFlushPromiseSuccess", "{that}.handleQueueFlushPromiseFailure"]
+            },
+            handleQueueFlushPromiseSuccess: {
+                funcName: "clusive.messageQueue.handleQueueFlushPromiseSuccess",
+                args: ["{that}", "{arguments}.0"]
+            },
+            handleQueueFlushPromiseFailure: {
+                funcName: "clusive.messageQueue.handleQueueFlushPromiseFailure",
+                args: ["{that}", "{arguments}.0"]
             },
             flushQueueImpl: {
                 funcName: "fluid.notImplemented",
@@ -85,24 +97,36 @@
         },
     });    
 
-    clusive.messageQueue.flushQueue = function (that) {
+    clusive.messageQueue.flushQueue = function (that, setupPromiseFunc) {
         // Don't flush if we have an empty queue
-        if(that.queue.length > 0 ) {                   
+        if(that.queue.length > 0 ) {                    
             that.sendingQueue.timestamp = new Date().toISOString();
             that.sendingQueue.messages = [].concat(that.queue);
             that.queue = [];
             that.syncToLocalStorage();
             var promise = fluid.promise();
             that.events.queueFlushStarting.fire();     
-            promise.then(
-                function(value) {
-                    that.events.queueFlushSuccess.fire(value);
-                },
-                function(error) {
-                    that.events.queueFlushFailure.fire(error);
-                })
-            that.flushQueueImpl(promise);            
+            setupPromiseFunc(promise);
+            return that.flushQueueImpl(promise);            
         }
+    }
+
+    clusive.messageQueue.setupQueueFlushPromise = function (that, promise, successFunc, failureFunc) {        
+        promise.then(
+            function(value) {
+                successFunc(value)
+            },
+            function(error) {
+                failureFunc(error)
+            })
+    }
+
+    clusive.messageQueue.handleQueueFlushPromiseSuccess = function (that, value) {
+        that.events.queueFlushSuccess.fire(value);
+    }
+
+    clusive.messageQueue.handleQueueFlushPromiseFailure = function (that, error) {
+        that.events.queueFlushFailure.fire(error);
     }
 
     clusive.messageQueue.setFlushInterval = function (that) {

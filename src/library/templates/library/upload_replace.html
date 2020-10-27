@@ -1,0 +1,40 @@
+{% extends "shared/base.html" %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Upload | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Replace File</h1>
+    {% if request.clusive_user.can_upload %}
+    <div class="row">
+        <div class="col-md-9 col-lg-6">
+            <div class="card card-login">
+                <div class="card-body">
+                    <h2>Upload Content</h2>
+                    <div class="form-label">You are replacing "{{ orig_book.title }}".</div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% include "library/partial/upload_form.html" with replace_warning=True %}
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Upload file" />
+                            <a href="{% url 'metadata_edit' pk=orig_book.pk %}">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>You will need to create an account before you can upload your own content.</p>
+    {% endif %}
+</main>
+{% endblock %}

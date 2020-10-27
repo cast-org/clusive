@@ -15,6 +15,9 @@
             flushInterval: 60000,
             logoutLinkSelector: "#logoutLink"
         },
+        events: {
+            logoutFlushComplete: null
+        },
         invokers: {
             flushQueueImpl: {
                 funcName: "clusive.djangoMessageQueue.flushQueueImpl"                
@@ -26,15 +29,43 @@
             isQueueEmpty: {
                 funcName: "clusive.djangoMessageQueue.isQueueEmpty",
                 args: ["{that}"]
-            }          
+            },
+            logoutFlush: {
+                funcName: "clusive.djangoMessageQueue.logoutFlush",
+                args: ["{that}"]
+            },
+            setupLogoutFlushPromise: {
+                funcName: "clusive.djangoMessageQueue.setupLogoutFlushPromise",
+                args: ["{that}", "{arguments}.0"]
+            }
         },
         listeners: {
             "onCreate.attachLogoutEvents": {
                 funcName: "clusive.djangoMessageQueue.attachLogoutEvents",
                 args: ["{that}"]
-            }
+            },
+            "logoutFlushComplete.doLogout": {
+                funcName: "clusive.djangoMessageQueue.doLogout",
+                args: ["{that}"]
+            }                        
         }
     });
+
+    clusive.djangoMessageQueue.logoutFlush = function (that) {        
+        clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);
+    }    
+
+    clusive.djangoMessageQueue.setupLogoutFlushPromise = function (that, promise) {        
+        promise.then(
+            function(value) {
+                that.events.queueFlushSuccess.fire(value);
+                that.events.logoutFlushComplete.fire();
+            },
+            function(error) {
+                that.events.queueFlushFailure.fire(error);
+                that.events.logoutFlushComplete.fire();
+            })    
+    }
 
     // Check if both the queue and the sending queue are empty 
     // (no outstanding or in-flight messages)
@@ -44,35 +75,24 @@
 
     clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
         var logoutLinkSelector = that.options.config.logoutLinkSelector;        
-        
-        $(logoutLinkSelector).mouseenter(
-            function () {   
-                if(! that.isQueueEmpty()) {
-                    console.debug("Mouse entered logout link, flushing message queue.");
-                    that.flush();        
-                }
+                
+        $(logoutLinkSelector).click(
+            function (e) {                
+                if(! that.isQueueEmpty()) { 
+                    console.log("logout link clicked while queue not empty");
+                    $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
+                    e.preventDefault();
+                    that.logoutFlush();
+                }                                
             }
         );
-        
-        $(logoutLinkSelector).focus(
-            function () {      
-                if(! that.isQueueEmpty()) {
-                    console.debug("Keyboard focus entered logout link, flushing message queue.");  
-                    that.flush();
-                }
-            }
-        );
-
-        // window.addEventListener("beforeunload", function (e) {                 
-        //     if(! that.isQueueEmpty()) {
-        //         console.debug("queue is not empty, prompting user for unload");
-        //         that.flush();
-        //         e.preventDefault();
-        //         e.returnValue = "";        
-        //     }                        
-        // });
-
     };
+
+    clusive.djangoMessageQueue.doLogout = function (that) {        
+        var logoutLinkSelector = that.options.config.logoutLinkSelector;
+        $(logoutLinkSelector).text("Logging out").fadeIn();        
+        window.location = $(logoutLinkSelector).attr("href");
+    }
 
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue
@@ -108,6 +128,9 @@
             resetURL: '/account/prefs/profile',
             // In milliseconds, helps prevent repeated calls on initial construction
             debounce: 1000
+        },
+        events: {
+            onPreferencesSetAdopted: null
         },
         members: {
             // Holds the time a request was last made
@@ -150,6 +173,10 @@
         invokers: {
             set: {
                 args: ['{that}', '{arguments}.0', '{arguments}.1', '{that}.options.storeConfig']
+            },
+            adopt: {
+                funcName: 'clusive.prefs.djangoStore.adoptPreferenceSet',
+                args: ['{arguments}.0', "{that}.messageQueue", "{that}"]
             }
         }
     });
@@ -179,7 +206,7 @@
             });            
             
         } else {
-            // Implement debounce here
+            // Debounce implementation
             var currentTime = new Date();
             var timeDiff;
             if(lastRequestTime) {
@@ -220,31 +247,36 @@
         return djangoStorePromise;
     };
 
+    clusive.prefs.djangoStore.adoptPreferenceSet = function(prefSetName, messageQueue, that) {
+        console.log('clusive.prefs.djangoStore.adoptPreferenceSet');
+        var adoptURL = that.options.storeConfig.resetURL;
+        $.ajax(adoptURL, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: JSON.stringify({
+                adopt: prefSetName
+            })
+        })
+            .done(function(adoptSet) {
+                console.debug('adopting preference from preference set', adoptSet);
+                var prefsPromise = that.get();
+                prefsPromise.then(function (currentPrefs) {
+                    var updatedPreferences = {};
+                    $.extend(updatedPreferences, currentPrefs.preferences, adoptSet);
+                    console.log("updatedPreferences", updatedPreferences);
+                    messageQueue.add({"type": "PC", "preferences": updatedPreferences});
+                    that.events.onPreferencesSetAdopted.fire(updatedPreferences);
+                });
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('an error occured trying to adopt a preference set', jqXHR, textStatus, errorThrown);
+            });
+    };
+
     clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
         console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
-        
-        // TODO: switch this over to use the messageQueue as well
-        if ($.isEmptyObject(model)) {
-            var resetURL = directModel.resetURL;
-            $.ajax(resetURL, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': DJANGO_CSRF_TOKEN
-                },
-                data: JSON.stringify({
-                    adopt: 'default'
-                })
-            })
-                .done(function(data) {                    
-                    console.debug('resetting preferences to default set', data);                    
-                    messageQueue.add({"type": "PC", "preferences": data});
-                    clusive.prefs.djangoStore.getUserPreferences(directModel, messageQueue, lastRequestTime, that);                              
-                })
-                .fail(function(jqXHR, textStatus, errorThrown) {
-                    console.error('an error occured trying to reset preferences', jqXHR, textStatus, errorThrown);
-                });
-        } else {
-            messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')})          
-        }
+        messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')});
     };
 }(fluid_3_0_0));

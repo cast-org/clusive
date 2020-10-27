@@ -1,0 +1,261 @@
+[
+    {
+        "headword": "genetic",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Relating to or involving genes." ,
+                "examples": [ "Scientists developed genetic screening to help families avoid having a child with fatal genetic disorders." ]
+            }
+        ]
+    },
+    {
+        "headword": "conception",
+        "alternateForms": ["conceptions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Beginning of a pregnancy; beginning of an idea." ,
+                "examples": [ "After conception, a fetus can undergo genetic testing." ]
+            }
+        ]
+    },
+    {
+        "headword": "range",
+        "alternateForms": ["ranges"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The extent covered; variety." ,
+                "examples": [ "The classroom walls show the range of vocabulary words that we’ve learned this year." ],
+                "images": [
+                    {
+                        "src": "glossimages/range1.jpg",
+                        "alt": "Photo of an island with mountains.",
+                        "description": "Photo showing an island in an ocean. The island has a beach, a desert area, mountains, forests, all in a very small area.",
+                        "caption": "This picture shows a range of landforms, including mountains, forest, desert, and the ocean.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/aerial-view-of-an-island-3857215/",
+                            "title": "Aerial View Of An Island",
+                            "author": "Nick Wehrli",
+                            "author_url": "https://www.pexels.com/@oidonnyboy",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "circumstance",
+        "alternateForms": ["circumstances"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A condition or fact that affects a situation or event." ,
+                "examples": [ "Depending on their circumstances, parents make different choices about whether or not to proceed with genetic testing." ]
+            }
+        ]
+    },
+    {
+        "headword": "regulate",
+        "alternateForms": ["regulates","regulated","regulating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To control with rules or laws." ,
+                "examples": [ "In the United States, the government does not regulate genetic testing; only doctors and their patients make decisions about genetic screening." ],
+                "images": [
+                    {
+                        "src": "glossimages/regulate1.jpg",
+                        "alt": "Round sign with diagonal line across drawings of food.",
+                        "description": "Round sign with diagonal line across drawings of French Fries and Ice Cream. The sign means that food is not allowed where this sign is posted.",
+                        "caption": "Many businesses regulate whether people can bring in food or drinks. What other regulations do you know about?",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/red-and-white-round-signage-3993917/",
+                            "title": "Red and White Round Signage",
+                            "author": "Paolo ",
+                            "author_url": "https://www.pexels.com/@paolo-6862",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "current",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or happening in the present time." ,
+                "examples": [ "Current medical science allows them to choose the sex of their child before conception." ]
+            }
+        ]
+    },
+    {
+        "headword": "contemporary",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or happening in the present time." ,
+                "examples": [ "Contemporary medical science allows them to choose the sex of their child before conception." ]
+            }
+        ]
+    },
+    {
+        "headword": "trait",
+        "alternateForms": ["traits"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A characteristic or quality that makes a person or animal different from others." ,
+                "examples": [ "Scientists believe people will be able to screen for other traits within the next 10 to 20 years." ],
+                "images": [
+                    {
+                        "src": "glossimages/trait1.jpg",
+                        "alt": "Photo of a person with brown eyes and freckled face.",
+                        "description": "Photo of a person with light skin, brown eyes, and many freckles on her face.",
+                        "caption": "Freckles, eye color, and hair color are all genetic traits.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/brown-freckles-on-face-3763152/",
+                            "title": "Brown Freckles On Face",
+                            "author": " Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "attribute",
+        "alternateForms": ["attributes"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A characteristic or quality that makes a person or animal different from others." ,
+                "examples": [ "Scientists believe people will be able to screen for other attributes within the next 10 to 20 years." ],
+                 "images": [
+                    {
+                        "src": "glossimages/trait1.jpg",
+                        "alt": "Photo of a person with brown eyes and freckled face.",
+                        "description": "Photo of a person with light skin, brown eyes, and many freckles on her face.",
+                        "caption": "Freckles, eye color, and hair color are all genetic traits.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/brown-freckles-on-face-3763152/",
+                            "title": "Brown Freckles On Face",
+                            "author": " Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "ongoing",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Continuing from sometime in the past into the present" ,
+                "examples": [ "Science fiction authors have created worlds in which ongoing genetic testing is common." ]
+            }
+        ]
+    },
+    {
+        "headword": "continual",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Continuing from sometime in the past into the present" ,
+                "examples": [ "Science fiction authors have created worlds in which continual genetic testing is common." ]
+            }
+        ]
+    },
+    {
+        "headword": "deny",
+        "alternateForms": ["denies","denied","denying"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To say that something is not true; refuse to agree with." ,
+                "examples": [ "For example, in the movie Gattaca, people with less than-perfect genes were denied good jobs and became a lower class of citizens called 'Invalids.'" ],
+                "images": [
+                    {
+                        "src": "glossimages/deny1.jpg",
+                        "alt": "Photo of woman holding her hand up, with palm toward camera",
+                        "description": "A woman holding her hand up with palm toward the camera, doing stop gesture.",
+                        "caption": "A woman gesturing 'no' to someone taking her picture.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/ethnic-woman-doing-stop-gesture-with-palm-at-camera-3880939/",
+                            "author": " Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "reject",
+        "alternateForms": ["rejects","rejected","rejecting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To say that something is not true; refuse to agree with." ,
+                "examples": [ "For example, in the movie Gattaca, people with less than-perfect genes were rejected for good jobs and became a lower class of citizens called 'Invalids.'" ],
+                "images": [
+                    {
+                        "src": "glossimages/deny1.jpg",
+                        "alt": "Photo of woman holding her hand up, with palm toward camera",
+                        "description": "A woman holding her hand up with palm toward the camera, doing stop gesture.",
+                        "caption": "A woman gesturing 'no' to someone taking her picture.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/ethnic-woman-doing-stop-gesture-with-palm-at-camera-3880939/",
+                            "author": " Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "gap",
+        "alternateForms": ["gaps"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A space or opening made by or as if by breaking or separating." ,
+                "examples": [ "Because genetic screening is very expensive, some people worry that genetic screening will widen the gap between rich and poor." ]
+           }
+        ]
+    },
+    {
+        "headword": "disparity",
+        "alternateForms": ["disparities"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A space or opening made by or as if by breaking or separating." ,
+                "examples": [ "Because genetic screening is very expensive, some people worry that genetic screening will widen the disparity between rich and poor." ]
+            }
+        ]
+    }
+]

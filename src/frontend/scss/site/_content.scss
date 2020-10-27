@@ -8,6 +8,12 @@
 //     }
 // }
 
+// Use a base value of 1 here since Infusion multiplies the body line-height by the setting value.
+// This allows both Clusive and Readium to use the same line-height as set by Infusion.
+body {
+    --CT_lineHeight: 1;
+}
+
 // stylelint-disable declaration-no-important, selector-max-id
 #ff-default,
 .ff-default {
@@ -117,7 +123,6 @@ h2,
 
 .has-form-range-tip {
     position: relative;
-    line-height: 1.5;
 }
 .form-range-tip {
     position: absolute;
@@ -125,8 +130,8 @@ h2,
     @include font-size(.875rem);
     line-height: 1;
     color: var(--CT_formRangeTipColor);
-    transform: translateX(-50%);
     user-select: none;
+    transform: translateX(-50%);
 }
 
 .link-above {
@@ -249,11 +254,6 @@ h2,
     > li {
         margin-left: 1rem;
     }
-}
-
-// Dropdown menu
-.dropdown-menu {
-    line-height: 1.5;
 }
 
 .media-img {

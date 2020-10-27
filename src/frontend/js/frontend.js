@@ -1,5 +1,5 @@
-/* global Masonry */
-/* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse */
+/* global Masonry, clusiveTTS, clusivePrefs */
+/* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
 
 var libraryMasonryApi = null;
 
@@ -229,20 +229,114 @@ function formRangeTip(range, callback) {
         formRangeTipPosition(range);
         callback(range);
     });
+
     window.addEventListener('resize', function() {
         formRangeTipPosition(range);
+    });
+
+    document.addEventListener('update.cisl.prefs', function() {
+        window.requestAnimationFrame(function() {
+            formRangeTipPosition(range);
+            callback(range);
+        });
     });
 
     formRangeTipPosition(range);
     callback(range);
 }
 
+var updateCSSVars = clusiveDebounce(function() {
+    'use strict';
+
+    // var root = document.documentElement;
+    var body = document.body;
+    var lineHeight = body.style.lineHeight;
+
+    body.style.setProperty('--CT_lineHeight', lineHeight);
+}, 10);
+
+
+function formUseThisLinks() {
+    'use strict';
+
+    $('body').on('click', '.usethis-link', function(e) {
+        var targ = $(this).data('target');
+        var text = $(this).prev('.usethis-source').text();
+        $('#' + targ).val(text);
+        $(this).parent('.usethis-container').slideUp();
+        e.preventDefault();
+        return false;
+    });
+    $('body').on('change', '.usethis-cover', function(e) {
+        var checked = $(this).prop('checked');
+        console.debug('Checkbox now ', checked);
+        if (checked) {
+            $('#new-cover').slideUp();
+            $('#cover-label').hide();
+            $('#cover-input').slideUp();
+            $(this).closest('.usethis-container').removeClass('highlight-undelete');
+        } else {
+            $('#new-cover').slideDown();
+            $('#cover-label').show();
+            $('#cover-input').slideDown();
+            $(this).closest('.usethis-container').addClass('highlight-undelete');
+        }
+        e.preventDefault();
+        return false;
+    });
+}
+
+function setupVoiceListing() {
+    'use strict';
+
+    var container = $('#voiceListing');
+    if (container.length) {
+        var html = '';
+        clusiveTTS.getVoicesForLanguage('en').forEach(function(voice) {
+            html += '<li><button type="button" class="dropdown-item voice-button">' + voice.name + '</button></li>';
+        });
+        container.html(html);
+    } else {
+        console.debug('No voice listing element');
+    }
+    container.on('click', '.voice-button', function() {
+        var name = this.textContent;
+        console.debug('Voice choice: ', name);
+        // Show voice name as dropdown label
+        $('#currentVoice').html(name);
+        // Mark the dropdown item as active.
+        container.find('.voice-button').removeClass('active');
+        $(this).addClass('active');
+        // Tell ClusiveTTS to use this voice
+        clusiveTTS.setCurrentVoice(name);
+        // Set on the modal's model of preferences
+        clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.readVoice', name);
+    });
+}
+
+function clearVoiceListing() {
+    'use strict';
+
+    $('.voice-button').removeClass('active');
+    $('#currentVoice').html('Choose...');
+    clusiveTTS.setCurrentVoice(null);
+}
+
 $(window).ready(function() {
     'use strict';
+
+    document.addEventListener('update.cisl.prefs', updateCSSVars, {
+        passive: true
+    });
+    updateCSSVars();
 
     formFileText();
     confirmationPublicationDelete();
     confirmationSharing();
+    formUseThisLinks();
+
+    setupVoiceListing();
+    window.speechSynthesis.onvoiceschanged = setupVoiceListing;
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

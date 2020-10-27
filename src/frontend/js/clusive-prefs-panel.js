@@ -21,16 +21,20 @@
                     night: 'clusive-theme-night',
                     sepia: 'clusive-theme-sepia'
                 },
-                panel: null
+                panel: null,
+                alias: null
             },
             textFont: {
-                panel: null
+                panel: null,
+                alias: null
             },
             textSize: {
-                panel: null
+                panel: null,
+                alias: null
             },
             lineSpace: {
-                panel: null
+                panel: null,
+                alias: null
             },
             glossary: {
                 type: 'cisl.prefs.glossary',
@@ -38,7 +42,19 @@
                     type: 'cisl.prefs.enactor.glossary'
                 },
                 panel: null
+            },
+            readSpeed: {
+                type: 'cisl.prefs.readSpeed',
+                enactor: {
+                    type: 'cisl.prefs.enactor.readSpeed'
+                },
+                panel: null
+            },
+            readVoices: {
+                type: 'cisl.prefs.readVoices',
+                panel: null
             }
+
         }
     });
 
@@ -66,6 +82,60 @@
             }
         }
     });
+
+    // Add a voice speed preference for TTS
+    fluid.defaults('cisl.prefs.schemas.readSpeed', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.readSpeed': {
+                type: 'number',
+                default: 1,
+                mininum: 0.5,
+                maximum: 2,
+                multipleOf: 0.25
+
+            }
+        }
+    });
+
+    // Enactor for TTS voice speed
+    fluid.defaults('cisl.prefs.enactor.readSpeed', {
+        gradeNames: ['fluid.prefs.enactor'],
+        preferenceMap: {
+            'cisl.prefs.readSpeed': {
+                'model.readSpeed': 'value'
+            }
+        },    
+        modelListeners: {
+            'readSpeed': {
+                listener: '{that}.enactReadSpeed',
+                args: ['{that}.model.readSpeed'],
+                namespace: 'enactReadSpeed'
+            }
+        },
+        invokers: {
+            'enactReadSpeed': {
+                funcName: "cisl.prefs.enactor.readSpeed.enactReadSpeed",
+                args: "{arguments}.0"
+            }
+        }  
+    });
+
+    cisl.prefs.enactor.readSpeed.enactReadSpeed = function (readSpeed) {
+        console.log("cisl.prefs.enactor.readSpeed.enactReadSpeed", readSpeed);
+        clusiveTTS.voiceRate = readSpeed;
+    }
+
+    // Add a preferred voices preference for TTS
+    fluid.defaults('cisl.prefs.schemas.readVoices', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.readVoices': {
+            type: 'array',
+            default: []
+            }
+        }
+    })   
 
     // Add a boolean preference for the glossary
     fluid.defaults('cisl.prefs.schemas.glossary', {
@@ -143,8 +213,9 @@
         return that.getSettings();
     };
 
-    cisl.prefs.eventUpdate = function() {
-        // Trigger a client side event
+    // Fire a non-Infusion document event that non-Infusion
+    // code can hook into to respond to preference changes
+    cisl.prefs.dispatchPreferenceUpdateEvent = function() {        
         var event = new Event('update.cisl.prefs');
         document.dispatchEvent(event);
     };
