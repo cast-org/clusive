@@ -44,11 +44,9 @@ var addControlInteractionToQueue = function (control, value) {
 
 $(document).ready(function () {    
 
-    // Build additional control interaction objects here from any data-clusive-event attributes on markup
-    // data-clusive-event="[handler]|[control]|[value]"
-    // example: data-clusive-event="click|settings-sidebar|opened"
-
-    // ="click|settings-sidebar|opened"
+    // Build additional control interaction objects here from any data-clusive-event attributes on page markup
+    // synax: data-clusive-event="[handler]|[control]|[value]"
+    // example: data-clusive-event="click|settings-sidebar|opened"    
     $("*[data-clusive-event").each(function (i, control) {
         // data-clusive-event attribute 
         console.debug("data-clusive-event", control)
