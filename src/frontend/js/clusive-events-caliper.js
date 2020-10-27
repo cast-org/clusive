@@ -68,17 +68,8 @@ $(document).ready(function () {
         var control = $(interactionDef.selector);
         console.debug("Event for control tracking: ", interactionDef, control)      
         var handler = interactionDef.handler;
-        $(interactionDef.selector).click(function () {                    
+        $(interactionDef.selector)[handler](function () {                    
             addControlInteractionToQueue(interactionDef.control, interactionDef.value);
         })
     });            
-
-    // Inject into the Reader iframe window
-    var readerIframe = $('#D2Reader-Container').find('iframe');
-    var readerWindow;
-    if (readerIframe.length > 0) {
-        readerWindow = readerIframe[0].contentWindow;
-        console.debug("readerWindow found in event setup", readerWindow);
-        readerWindow.clusiveEvents = clusiveEvents;
-    }    
 })
