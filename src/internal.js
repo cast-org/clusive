@@ -1,5 +1,7 @@
 // Reference from within the iframe to the clusivePrefs global in the parent window
 var clusivePrefs = window.parent.window.clusivePrefs;
+// Reference from within the iframe to the clusiveEvents global in tghe parent window
+var clusiveEvents = window.parent.window.clusiveEvents;
 
 window.cuedWordMap = null;
 
