@@ -1,8 +1,10 @@
 'use strict'
 
 var clusiveEvents = {
-    messageQueue: clusive.djangoMessageQueue(),
-    addControlInteractionToQueue: addControlInteractionToQueue,
+    messageQueue: clusive.djangoMessageQueue(),    
+    caliperEventTypes: {
+        TOOL_USE_EVENT: "TOOL_USE_EVENT"
+    },    
     trackedControlInteractions: [
         {
             selector: ".btn.tts-play",
@@ -28,20 +30,17 @@ var clusiveEvents = {
             control: "tts-stop",
             value: "clicked"
         }         
-    ]
+    ],
+    addControlInteractionToQueue: addControlInteractionToQueue    
 }
 
 var addControlInteractionToQueue = function (control, value) {
     console.debug("Adding control interaction to queue: ", control, value)
     clusiveEvents.messageQueue.add({
         "type": "CE", 
-        "caliperEvent": {"type": caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value}
+        "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value}
     });
 };
-
-var caliperEventTypes = {
-    TOOL_USE_EVENT: "TOOL_USE_EVENT"
-}
 
 $(document).ready(function () {    
 
@@ -73,4 +72,13 @@ $(document).ready(function () {
             addControlInteractionToQueue(interactionDef.control, interactionDef.value);
         })
     });            
+
+    // Inject into the Reader iframe
+    var readerIframe = $('#D2Reader-Container').find('iframe');
+    var readerWindow;
+    if (readerIframe.length > 0) {
+        readerWindow = readerIframe[0].contentWindow;
+        console.debug("readerWindow found in event setup", readerWindow);
+        readerWindow.clusiveEvents = clusiveEvents;
+    }    
 })
