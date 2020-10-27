@@ -1,5 +1,14 @@
 'use strict'
 
+
+var addControlInteractionToQueue = function (control, value) {
+    console.debug("Adding control interaction to queue: ", control, value)
+    clusiveEvents.messageQueue.add({
+        "type": "CE", 
+        "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value}
+    });
+};
+
 var clusiveEvents = {
     messageQueue: clusive.djangoMessageQueue(),    
     caliperEventTypes: {
@@ -33,14 +42,6 @@ var clusiveEvents = {
     ],
     addControlInteractionToQueue: addControlInteractionToQueue    
 }
-
-var addControlInteractionToQueue = function (control, value) {
-    console.debug("Adding control interaction to queue: ", control, value)
-    clusiveEvents.messageQueue.add({
-        "type": "CE", 
-        "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value}
-    });
-};
 
 $(document).ready(function () {    
 
