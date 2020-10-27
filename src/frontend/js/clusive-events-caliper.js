@@ -73,7 +73,7 @@ $(document).ready(function () {
         })
     });            
 
-    // Inject into the Reader iframe
+    // Inject into the Reader iframe window
     var readerIframe = $('#D2Reader-Container').find('iframe');
     var readerWindow;
     if (readerIframe.length > 0) {
