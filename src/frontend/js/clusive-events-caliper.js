@@ -1,46 +1,47 @@
 'use strict'
 
-var caliperMessageQueue = clusive.djangoMessageQueue();
-
-var caliperEventTypes = {
-    TOOL_USE_EVENT: "TOOL_USE_EVENT"
+var clusiveEvents = {
+    messageQueue: clusive.djangoMessageQueue(),
+    addControlInteractionToQueue: addControlInteractionToQueue,
+    trackedControlInteractions: [
+        {
+            selector: ".btn.tts-play",
+            handler: "click",
+            control: "tts-play",
+            value: "clicked"
+        },
+        {
+            selector: ".btn.tts-pause",
+            handler: "click",
+            control: "tts-pause",
+            value: "clicked"
+        },
+        {
+            selector: ".btn.tts-resume",
+            handler: "click",
+            control: "tts-resume",
+            value: "clicked"
+        },
+        {
+            selector: ".btn.tts-stop",
+            handler: "click",
+            control: "tts-stop",
+            value: "clicked"
+        }         
+    ]
 }
-
-// Define explicitly tracked control interactions here
-var trackedControlInteractions = [
-    {
-        selector: ".btn.tts-play",
-        handler: "click",
-        control: "tts-play",
-        value: "clicked"
-    },
-    {
-        selector: ".btn.tts-pause",
-        handler: "click",
-        control: "tts-pause",
-        value: "clicked"
-    },
-    {
-        selector: ".btn.tts-resume",
-        handler: "click",
-        control: "tts-resume",
-        value: "clicked"
-    },
-    {
-        selector: ".btn.tts-stop",
-        handler: "click",
-        control: "tts-stop",
-        value: "clicked"
-    }                    
-];
 
 var addControlInteractionToQueue = function (control, value) {
     console.debug("Adding control interaction to queue: ", control, value)
-    caliperMessageQueue.add({
+    clusiveEvents.messageQueue.add({
         "type": "CE", 
         "caliperEvent": {"type": caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value}
     });
 };
+
+var caliperEventTypes = {
+    TOOL_USE_EVENT: "TOOL_USE_EVENT"
+}
 
 $(document).ready(function () {    
 
@@ -60,11 +61,11 @@ $(document).ready(function () {
             control: defsValsFromAttr[1],
             value: defsValsFromAttr[2]
         }
-        trackedControlInteractions.push(interactionDef);
+        clusiveEvents.trackedControlInteractions.push(interactionDef);
     });
 
     // Set up events control interactions here
-    trackedControlInteractions.forEach(function (interactionDef, i) {              
+    clusiveEvents.trackedControlInteractions.forEach(function (interactionDef, i) {              
         var control = $(interactionDef.selector);
         console.debug("Event for control tracking: ", interactionDef, control)      
         var handler = interactionDef.handler;
