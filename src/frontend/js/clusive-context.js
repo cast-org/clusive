@@ -12,5 +12,18 @@ var clusiveContext = {
             readerWindow = readerIframe[0].contentWindow;            
         }
         return readerWindow;
+    },
+    get readerInfo() {
+        return readerInfo();
+    }    
+}
+
+var readerInfo = function () {
+    var readerInfo = {};
+    if(clusiveContext.readerWindow) {        
+        readerInfo.document = {};
+        readerInfo.document.title = clusiveContext.readerWindow.document.title;
+        readerInfo.document.baseURI = clusiveContext.readerWindow.document.baseURI;
     }
+    return readerInfo;    
 }
