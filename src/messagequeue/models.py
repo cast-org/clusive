@@ -43,7 +43,11 @@ class Message:
             document = self.content["readerInfo"]["publication"]["id"]
         except KeyError:
             document = None
-        control_used.send(sender=self.__class__, timestamp=self.timestamp, request=self.request, control=control, value=value, document=document)
+        try:
+            document_version = self.content["readerInfo"]["publication"]["version"]
+        except KeyError:
+            document_version = None            
+        control_used.send(sender=self.__class__, timestamp=self.timestamp, request=self.request, control=control, value=value, document=document, document_version=document_version)
 
     def send_page_timing(self):
         event_id = self.content['eventId']
