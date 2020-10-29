@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, timedelta
 
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.dispatch import receiver, Signal
@@ -15,28 +16,42 @@ logger = logging.getLogger(__name__)
 # (we also recognize some Django standard signals - user logged in/out, timeout)
 #
 
-page_viewed = Signal(providing_args=['request', 'document', 'page'])
+page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'preference'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'control', 'value'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'value'])
 
 #
 # Signal handlers that log specific events
 #
 
-
-@receiver(page_viewed)
-def log_page_viewed(sender, **kwargs):
-    """User views a page of a book"""
-    event = Event.build(type='VIEW_EVENT',
-                        action='VIEWED',
-                        document=kwargs.get('document'),
-                        page=kwargs.get('page'),
-                        session=kwargs.get('request').session)
-    logger.info("event for %s: %s", kwargs.get('session'), event)
-    if event:
-        event.save()
+@receiver(page_timing)
+def log_page_timing(sender, **kwargs):
+    """
+    Collects and stores page timing information, which the client may send at the end of a page view.
+    The extra information will be added in to the original VIEWED event representing the page view.
+    """
+    event_id = kwargs['event_id']
+    times = kwargs['times']
+    if event_id:
+        try:
+            event = Event.objects.get(id=event_id)
+            logger.debug('Adding page timing to %s: %s', event, times)
+            loadTime = times.get('loadTime')
+            duration = times.get('duration')
+            activeDuration = times.get('activeDuration')
+            if loadTime:
+                event.loadTime = timedelta(milliseconds=loadTime)
+            if duration:
+                event.duration = timedelta(milliseconds=duration)
+            if activeDuration:
+                event.activeDuration = timedelta(milliseconds=activeDuration)
+            event.save()
+        except Event.DoesNotExist:
+            logger.error('Received page timing for a non-existent event %s', event_id)
+    else:
+        logger.error('Missing event ID in page timing message')
 
 
 @receiver(vocab_lookup)
@@ -57,13 +72,25 @@ def log_vocab_lookup(sender, **kwargs):
 def log_control_used(sender, **kwargs):
     """User interacts with a UI control"""
     logger.debug("control interaction: %s " % (kwargs))
-    event = Event.build(type='TOOL_USE_EVENT',
-                        action='USED',
-                        control=kwargs['control'],
-                        value=kwargs['value'],
-                        session=kwargs['request'].session)
-    if event:
-        event.save()                        
+    event_id = kwargs['event_id']
+    if event_id:
+        try:
+            associated_page_event = Event.objects.get(id=event_id)
+            page = associated_page_event.page 
+            document = associated_page_event.document
+            document_version = associated_page_event.document_version
+            event = Event.build(type='TOOL_USE_EVENT',
+                                action='USED',
+                                control=kwargs['control'],
+                                value=kwargs['value'],
+                                page=page,
+                                document=document,
+                                document_version=document_version,
+                                session=kwargs['request'].session)
+            if event:   
+                event.save()                                                    
+        except Event.DoesNotExist:
+            logger.error('Received control_used with a non-existent page event ID %s', event_id)
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):

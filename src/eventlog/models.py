@@ -34,14 +34,22 @@ class Event(models.Model):
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
     )
+    # Date and time the event started
     eventTime = models.DateTimeField(default=timezone.now)
-    # TODO eventEndTime
+    # (VIEW events:) time for the browser to retrieve and render the content
+    loadTime = models.DurationField(null=True)
+    # (VIEW events:) total time from when the page was loaded to when it was exited
+    duration = models.DurationField(null=True)
+    # (VIEW events:) time that this page was focused, computer was awake, and no timeout dialog was in play.
+    activeDuration = models.DurationField(null=True)
     # type of the event, based on Caliper spec
     type = models.CharField(max_length=32, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
     # action of the event, based on Caliper spec
     action = models.CharField(max_length=32, choices=[(k,v) for k, v in caliper.constants.CALIPER_ACTIONS.items()])
     # What document the user was looking at; null if none (eg, the library page)
     document = models.CharField(max_length=128, null=True)
+    # What document version the user was looking at; null if none
+    document_version = models.CharField(max_length=128, null=True)
     # If in a document, what page of the document the user was looking at; if not, the name of the application page
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
@@ -55,7 +63,7 @@ class Event(models.Model):
     @classmethod
     def build(cls, type, action,
               session=None, login_session=None, group=None,
-              document=None, page=None,
+              document=None, document_version=None, page=None,
               control=None, value=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
@@ -78,6 +86,7 @@ class Event(models.Model):
                         session=login_session,
                         group=group,
                         document=document,
+                        document_version=document_version,
                         page=page,
                         control=control,
                         value=value)

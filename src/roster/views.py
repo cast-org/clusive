@@ -14,7 +14,9 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, UpdateView
 
+from eventlog.models import Event
 from eventlog.signals import preference_changed
+from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
@@ -143,7 +145,7 @@ def upload_csv(request):
     return render(request, template, context)
 
 
-class ManageView(TemplateView, LoginRequiredMixin):
+class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
     template_name = 'roster/manage.html'
     periods = None
     current_period = None
@@ -186,8 +188,11 @@ class ManageView(TemplateView, LoginRequiredMixin):
             'info': s.user,
         } for s in students]
 
+    def configure_event(self, event: Event):
+        event.page = 'ManageClass'
 
-class ManageEditView(UpdateView, LoginRequiredMixin):
+
+class ManageEditView(LoginRequiredMixin, EventMixin, UpdateView):
     model = User
     form_class = UserForm
     template_name = 'roster/manage_edit.html'
@@ -222,3 +227,6 @@ class ManageEditView(UpdateView, LoginRequiredMixin):
             target.set_password(new_pw)
             target.save()
         return super().form_valid(form)
+
+    def configure_event(self, event: Event):
+        event.page = 'ManageStudent'

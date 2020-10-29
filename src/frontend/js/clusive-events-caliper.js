@@ -1,11 +1,12 @@
 'use strict'
 
-
-var addControlInteractionToQueue = function (control, value) {
+var addControlInteractionToQueue = function (control, value) {    
     console.debug("Adding control interaction to queue: ", control, value)
     clusiveEvents.messageQueue.add({
         "type": "CE", 
-        "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value}
+        "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value},
+        "readerInfo": clusiveContext.reader.info,
+        "eventId": PAGE_EVENT_ID
     });
 };
 
