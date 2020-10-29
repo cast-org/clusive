@@ -15,15 +15,27 @@ var clusiveContext = {
     },
     get readerInfo() {
         return readerInfo();
-    }    
+    }        
 }
 
 var readerInfo = function () {
     var readerInfo = {};
     if(clusiveContext.readerWindow) {        
+        // Include info from the HTML document
         readerInfo.document = {};
         readerInfo.document.title = clusiveContext.readerWindow.document.title;
         readerInfo.document.baseURI = clusiveContext.readerWindow.document.baseURI;
+        // Include info from variables in reader.html
+        readerInfo.publication = {};
+        if(pub_id) {
+            readerInfo.publication.id = pub_id;
+        }
+        if(pub_version) {
+            readerInfo.publication.version = pub_version;
+        }
+        if(manifest_path) {
+            readerInfo.publication.manifestPath = manifest_path;
+        }
     }
     return readerInfo;    
 }
