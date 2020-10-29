@@ -76,6 +76,7 @@ def log_control_used(sender, **kwargs):
                         action='USED',
                         control=kwargs['control'],
                         value=kwargs['value'],
+                        document=kwargs['document'],
                         session=kwargs['request'].session)
     if event:
         event.save()                        

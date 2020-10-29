@@ -39,7 +39,11 @@ class Message:
     def send_client_side_caliper_event(self):      
         control = self.content["caliperEvent"]["control"]
         value = self.content["caliperEvent"]["value"]
-        control_used.send(sender=self.__class__, timestamp=self.timestamp, request=self.request, control=control, value=value)
+        try:
+            document = self.content["readerInfo"]["publication"]["id"]
+        except KeyError:
+            document = None
+        control_used.send(sender=self.__class__, timestamp=self.timestamp, request=self.request, control=control, value=value, document=document)
 
     def send_page_timing(self):
         event_id = self.content['eventId']
