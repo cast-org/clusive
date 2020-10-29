@@ -48,6 +48,8 @@ class Event(models.Model):
     action = models.CharField(max_length=32, choices=[(k,v) for k, v in caliper.constants.CALIPER_ACTIONS.items()])
     # What document the user was looking at; null if none (eg, the library page)
     document = models.CharField(max_length=128, null=True)
+    # What document version the user was looking at; null if none
+    document_version = models.CharField(max_length=128, null=True)
     # If in a document, what page of the document the user was looking at; if not, the name of the application page
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
