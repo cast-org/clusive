@@ -20,7 +20,7 @@ page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'preference'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'control', 'value'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'value'])
 
 #
 # Signal handlers that log specific events
@@ -72,15 +72,25 @@ def log_vocab_lookup(sender, **kwargs):
 def log_control_used(sender, **kwargs):
     """User interacts with a UI control"""
     logger.debug("control interaction: %s " % (kwargs))
-    event = Event.build(type='TOOL_USE_EVENT',
-                        action='USED',
-                        control=kwargs['control'],
-                        value=kwargs['value'],
-                        document=kwargs['document'],
-                        document_version=kwargs['document_version'],
-                        session=kwargs['request'].session)
-    if event:
-        event.save()                        
+    event_id = kwargs['event_id']
+    if event_id:
+        try:
+            associated_page_event = Event.objects.get(id=event_id)
+            page = associated_page_event.page 
+            document = associated_page_event.document
+            document_version = associated_page_event.document_version
+            event = Event.build(type='TOOL_USE_EVENT',
+                                action='USED',
+                                control=kwargs['control'],
+                                value=kwargs['value'],
+                                page=page,
+                                document=document,
+                                document_version=document_version,
+                                session=kwargs['request'].session)
+            if event:   
+                event.save()                                                    
+        except Event.DoesNotExist:
+            logger.error('Received control_used with a non-existent page event ID %s', event_id)
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):

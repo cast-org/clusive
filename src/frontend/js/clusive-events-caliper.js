@@ -5,7 +5,8 @@ var addControlInteractionToQueue = function (control, value) {
     clusiveEvents.messageQueue.add({
         "type": "CE", 
         "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value},
-        "readerInfo": clusiveContext.reader.info
+        "readerInfo": clusiveContext.reader.info,
+        "eventId": PAGE_EVENT_ID
     });
 };
 

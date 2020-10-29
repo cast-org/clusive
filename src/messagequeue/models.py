@@ -36,18 +36,11 @@ class Message:
     def send_client_side_prefs_change(self):
         client_side_prefs_change.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
 
-    def send_client_side_caliper_event(self):      
+    def send_client_side_caliper_event(self):    
+        event_id = self.content['eventId']  
         control = self.content["caliperEvent"]["control"]
-        value = self.content["caliperEvent"]["value"]
-        try:
-            document = self.content["readerInfo"]["publication"]["id"]
-        except KeyError:
-            document = None
-        try:
-            document_version = self.content["readerInfo"]["publication"]["version"]
-        except KeyError:
-            document_version = None            
-        control_used.send(sender=self.__class__, timestamp=self.timestamp, request=self.request, control=control, value=value, document=document, document_version=document_version)
+        value = self.content["caliperEvent"]["value"]        
+        control_used.send(sender=self.__class__, timestamp=self.timestamp, request=self.request, event_id = event_id, control=control, value=value)
 
     def send_page_timing(self):
         event_id = self.content['eventId']

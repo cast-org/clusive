@@ -111,6 +111,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.book_id = kwargs.get('book_id')
+        self.book_version = kwargs.get('version')
         version = kwargs.get('version')
         book = Book.objects.get(pk=self.book_id)
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
@@ -134,6 +135,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
     def configure_event(self, event: Event):
         event.page = 'Reading'
         event.document = self.book_id
+        event.document_version = self.book_version
 
 
 class WordBankView(LoginRequiredMixin, EventMixin, TemplateView):
