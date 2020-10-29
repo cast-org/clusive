@@ -2,6 +2,7 @@
 
 
 var addControlInteractionToQueue = function (control, value) {
+    // Add document, page - or on message queue itself?
     console.debug("Adding control interaction to queue: ", control, value)
     clusiveEvents.messageQueue.add({
         "type": "CE", 
