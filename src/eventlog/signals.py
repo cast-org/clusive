@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 #
 
 page_viewed = Signal(providing_args=['request', 'document', 'page'])
+page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'preference'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
@@ -37,6 +38,25 @@ def log_page_viewed(sender, **kwargs):
     logger.info("event for %s: %s", kwargs.get('session'), event)
     if event:
         event.save()
+
+
+@receiver(page_timing)
+def log_page_timing(sender, **kwargs):
+    """
+    Collects and stores page timing information, which the client may send at the end of a page view.
+    The extra information will be added in to the original VIEWED event representing the page view.
+    """
+    event_id = kwargs['event_id']
+    times = kwargs['times']
+    if event_id:
+        try:
+            event = Event.objects.get(id=event_id)
+            logger.info('Adding page timing to %s: %s', event, times)
+            # TODO actually update the Event record.
+        except Event.DoesNotExist:
+            logger.error('Received page timing for a non-existent event %s', event_id)
+    else:
+        logger.error('Missing event ID in page timing message')
 
 
 @receiver(vocab_lookup)

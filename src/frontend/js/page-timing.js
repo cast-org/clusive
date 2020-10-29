@@ -4,13 +4,19 @@
  * Tracks three pieces of timing information about pages to be reported to the server:
  *   How long the page takes to load
  *   How long the page remains loaded before the user leaves the page or its window is closed.
- *   How much of that time the window was not actually focused, or had the timeout warning modal showing.
+ *   How much of that time the window was not actually focused, or had a timeout warning modal showing.
+ *
+ * Requires that a global variable "PAGE_EVENT_ID" has been set by the template.
+ * This is an arbitrary string that will be sent back to the server to let it know which page view the timing
+ * information is for.
  *
  */
-/* globals: PageTiming */
+
+/* global PAGE_EVENT_ID, clusiveEvents */
 
 var PageTiming = {};
 
+PageTiming.pageloadTime = null;
 PageTiming.startInactiveTime = null;
 PageTiming.totalInactiveTime = 0;
 PageTiming.pageBlocked = false;
@@ -44,14 +50,12 @@ PageTiming.trackPage = function(eventId) {
     // Interval timer to monitor laptop going to sleep.
     PageTiming.awakeCheckTimer = setInterval(PageTiming.checkAwakeness, PageTiming.awakeCheckInterval);
 
-    var loadTime = null;
-
     if (timingSupported) {
-        loadTime = performance.timing.responseEnd - performance.timing.navigationStart;
+        PageTiming.pageloadTime = performance.timing.responseEnd - performance.timing.navigationStart;
     }
 
     // Set up so that end time will be recorded
-    $(window).on('pagehide', function() { PageTiming.saveEndTime(eventId); });
+    $(window).on('pagehide', function() { PageTiming.reportEndTime(); });
 
     // Save current time - end time will be calculated as an offset to this.
     PageTiming.pageStartTime = currentTime;
@@ -63,11 +67,10 @@ PageTiming.checkAwakeness = function() {
     var curTime = Date.now();
     var lastAwake = PageTiming.lastSeenAwakeTime;
     PageTiming.lastSeenAwakeTime = curTime;
-    console.debug('LastAwake was ', PageTiming.fmt(lastAwake), '; setting to ', PageTiming.fmt(curTime));
-    if (lastAwake === null || curTime-lastAwake < PageTiming.awakeCheckInterval * 2) {
+    if (lastAwake === null || curTime - lastAwake < PageTiming.awakeCheckInterval * 2) {
         // Looks like we're getting regular pings, no action needed
-        console.debug('ping ... looks like we\'re still awake at ', PageTiming.fmt(curTime),
-            ' blocked? ', PageTiming.pageBlocked, '; focused? ', document.hasFocus());
+        console.debug('Browser is awake at ', PageTiming.fmt(curTime),
+            ' blocked? ', PageTiming.pageBlocked, '; blurred? ', !document.hasFocus());
     } else {
         // Last awake time was too long ago, record preceding interval as having been asleep.
         console.debug('Computer woke up from sleep that started around ' + PageTiming.fmt(lastAwake));
@@ -96,13 +99,11 @@ PageTiming.handleFocusChange = function() {
     if (!PageTiming.pageBlocked && document.hasFocus()) {
         // page is active.  If it was inactive before, record duration of inactivity.
         PageTiming.recordInactiveTime();
-    } else {
+    } else if (PageTiming.startInactiveTime === null) {
         // Page is either blocked or blurred.  Record start of inactive time if this is new.
-        if (PageTiming.startInactiveTime === null) {
-            PageTiming.startInactiveTime = Date.now();
-            console.debug('Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
-                ' with cumulative ', PageTiming.totalInactiveTime / 1000, 's');
-        }
+        PageTiming.startInactiveTime = Date.now();
+        console.debug('Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
+            ' with cumulative ', PageTiming.totalInactiveTime / 1000, 's');
     }
 };
 
@@ -111,9 +112,8 @@ PageTiming.fmt = function(unixtime) {
 
     if (unixtime) {
         return new Date(unixtime).toLocaleTimeString();
-    } else {
-        return 'null';
     }
+    return 'null';
 };
 
 PageTiming.recordInactiveTime = function() {
@@ -121,24 +121,30 @@ PageTiming.recordInactiveTime = function() {
 
     if (PageTiming.startInactiveTime !== null) {
         var now = Date.now();
-        PageTiming.totalInactiveTime += (now - PageTiming.startInactiveTime);
+        PageTiming.totalInactiveTime += now - PageTiming.startInactiveTime;
         console.debug('Window reactivated. Was inactive from ', PageTiming.fmt(PageTiming.startInactiveTime),
-            ' to ', PageTiming.fmt(now));
-        console.debug('Cumulative inactive time = ', PageTiming.totalInactiveTime / 1000, 's');
+            ' to ', PageTiming.fmt(now),
+            '; Cumulative inactive time = ', PageTiming.totalInactiveTime / 1000, 's');
         PageTiming.startInactiveTime = null;
     }
 };
 
-// Called in page's "pagehide" event:
-// saves a timestamp to local storage as the page gets unloaded
-PageTiming.saveEndTime = function(eventId) {
+// Called in page's "pagehide" event
+PageTiming.reportEndTime = function() {
     'use strict';
 
-    if (!localStorage['pageEndTime.' + eventId]) {
-        console.debug('Saving end time for page: ', PageTiming.fmt(Date.now()));
-        // TODO localStorage['pageEndTime.' + eventId] = Date.now();
+    if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
         PageTiming.recordInactiveTime();
-        // TODO localStorage['pageInactiveTime.' + eventId] = PageTiming.totalInactiveTime;
+        var duration = Date.now() - PageTiming.pageStartTime;
+        var data = {
+            type: 'PT',
+            eventId: PageTiming.eventId,
+            loadTime: PageTiming.pageloadTime,
+            duration: duration,
+            activeDuration: duration - PageTiming.totalInactiveTime
+        };
+        console.debug('Reporting page data: ', data);
+        clusiveEvents.messageQueue.add(data);
     } else {
         console.warn('Pagehide event received, but end time was already recorded');
     }
@@ -154,3 +160,5 @@ PageTiming.isTimingSupported = function() {
         return false;
     }
 };
+
+PageTiming.trackPage(PAGE_EVENT_ID);

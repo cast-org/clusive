@@ -17,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, FormView, UpdateView
 
 from eventlog.signals import annotation_action, page_viewed
+from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
 from library.parsing import unpack_epub_file, scan_book
@@ -25,13 +26,16 @@ from roster.models import ClusiveUser, Period, LibraryViews
 logger = logging.getLogger(__name__)
 
 
-class LibraryView(LoginRequiredMixin, ListView):
+class LibraryView(LoginRequiredMixin, EventMixin, ListView):
     """Library page showing a list of books"""
     template_name = 'library/library.html'
     style = None
     view = 'public'
     view_name = None  # User-visible name for the current view
     period = None
+
+    def configure_event(self, event):
+        event.page = 'Library'
 
     def get_queryset(self):
         if self.view == 'period' and self.period:
@@ -76,7 +80,7 @@ class LibraryView(LoginRequiredMixin, ListView):
         self.clusive_user.current_period = self.period
         self.clusive_user.library_style = self.style
         self.clusive_user.save()
-        page_viewed.send(self.__class__, request=request, page='library')
+        # page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
