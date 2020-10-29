@@ -1,13 +1,3 @@
-// Browser-based scroll causing extra page movement - disable for now
-// html {
-//     scroll-behavior: smooth;
-// }
-// @media (prefers-reduced-motion: reduce) {
-//     html {
-//         scroll-behavior: inherit;
-//     }
-// }
-
 // Use a base value of 1 here since Infusion multiplies the body line-height by the setting value.
 // This allows both Clusive and Readium to use the same line-height as set by Infusion.
 body {
