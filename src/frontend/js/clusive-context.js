@@ -15,6 +15,13 @@ var clusiveContext = {
     },
     get readerInfo() {
         return readerInfo();
+    },
+    get readerInstance() {
+        var readerDefined = typeof D2Reader;
+
+        if (readerDefined !== 'undefined') {
+            return D2Reader;
+        } return null;
     }        
 }
 
