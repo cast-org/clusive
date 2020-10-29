@@ -100,6 +100,16 @@ function libraryListCollapse() {
     $('.card-toggle-btn').CFW_Collapse('hide');
 }
 
+// Return focus to the menu toggle control in place of the now visually hidden
+// menu item in a dropdown when the confirmation modal is closed.
+function confirmationRefocus($trigger, $modal) {
+    $modal.one('afterHide.cfw.modal', function() {
+        if ($trigger.is(':hidden') && $trigger.closest('.dropdown-menu').length) {
+            $trigger.closest('.dropdown-menu').siblings('[data-cfw="dropdown"]').first().trigger('focus');
+        }
+    });
+}
+
 function confirmationPublicationDelete() {
     'use strict';
 
@@ -110,7 +120,6 @@ function confirmationPublicationDelete() {
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();
-            $modal.CFW_Modal('unlink');
 
             $.get('/library/remove/confirm/' + article)
                 // eslint-disable-next-line no-unused-vars
@@ -118,11 +127,12 @@ function confirmationPublicationDelete() {
                     $modal.find('.modal-content').html(data);
                 });
 
+            confirmationRefocus($trigger, $modal);
             $trigger.CFW_Modal({
                 target: '#modalConfirm',
-                unlink: true
+                unlink: true,
+                show: true
             });
-            $trigger.CFW_Modal('show');
         }
     });
 }
@@ -137,7 +147,6 @@ function confirmationSharing() {
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();
-            $modal.CFW_Modal('unlink');
 
             $.get('/library/share/' + book)
                 // eslint-disable-next-line no-unused-vars
@@ -145,11 +154,12 @@ function confirmationSharing() {
                     $modal.find('.modal-content').html(data);
                 });
 
+            confirmationRefocus($trigger, $modal);
             $trigger.CFW_Modal({
                 target: '#modalConfirm',
-                unlink: true
+                unlink: true,
+                show: true
             });
-            $trigger.CFW_Modal('show');
         }
     });
 }
