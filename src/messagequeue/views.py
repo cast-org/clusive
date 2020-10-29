@@ -55,7 +55,6 @@ class MessageQueueView(View):
             queue_username = receivedQueue["username"]
             messages = receivedQueue["messages"]
             clusive_user = request.clusive_user
-            print(clusive_user)
             username = clusive_user.user.username
             if(queue_username == username):
                 process_messages(queue_timestamp, messages, clusive_user.user, request)

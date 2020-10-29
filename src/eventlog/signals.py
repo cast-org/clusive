@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 # (we also recognize some Django standard signals - user logged in/out, timeout)
 #
 
-page_viewed = Signal(providing_args=['request', 'document', 'page'])
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'preference'])
@@ -26,20 +25,6 @@ control_used = Signal(providing_args=['request', 'control', 'value'])
 #
 # Signal handlers that log specific events
 #
-
-
-@receiver(page_viewed)
-def log_page_viewed(sender, **kwargs):
-    """User views a page of a book"""
-    event = Event.build(type='VIEW_EVENT',
-                        action='VIEWED',
-                        document=kwargs.get('document'),
-                        page=kwargs.get('page'),
-                        session=kwargs.get('request').session)
-    logger.info("event for %s: %s", kwargs.get('session'), event)
-    if event:
-        event.save()
-
 
 @receiver(page_timing)
 def log_page_timing(sender, **kwargs):

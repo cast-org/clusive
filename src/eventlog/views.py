@@ -14,18 +14,21 @@ class EventMixin(ContextMixin):
     """
     Creates a VIEW_EVENT for this view, and includes the event ID in the context for client-side use.
     Views that use this mixin must define a configure_event method to add appropriate data fields to the event.
+    They must also call the super() methods in their get(...) and get_context_data() methods.
     """
     
     def get(self, request, *args, **kwargs):
+        # Get event ID, it is needed during page construction
         event = Event.build(type='VIEW_EVENT',
                             action='VIEWED',
                             session=request.session)
+        self.event_id = event.id
+        # Super will create the page as normal
+        result = super().get(request, *args, **kwargs)
+        # Configure_event run last so it can use any info generated during page construction.
         self.configure_event(event)
-        if event:
-            logger.info('event logged: %s', event)
-            event.save()
-            self.event_id = event.id
-        return super().get(request, *args, **kwargs)
+        event.save()
+        return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
