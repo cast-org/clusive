@@ -8,7 +8,8 @@ $enable-sizing:                         true;
 $enable-shadows:                        true;
 
 // Content
-$enable-root:                           false;
+$enable-root-colors:                    false;
+$enable-root-fonts:                     false;
 $enable-grid-row-cols:                  false;
 $enable-grid-responsive-containers:     true;
 $enable-typography-lead:                false;

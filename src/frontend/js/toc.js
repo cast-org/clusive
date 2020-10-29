@@ -364,6 +364,15 @@ function goToAnnotation(event) {
     var json = JSON.parse(atob(encoded));
     markAnnotationActive(json);
     D2Reader.goTo(json);
+
+    // Check to see if we should close the TOC modal based on current browser breakpoint
+    var bpVal = window.getBreakpointByName('xs');
+    if (bpVal) {
+        var mediaQuery = window.matchMedia('(max-width: ' + bpVal.max + ')');
+        if (mediaQuery.matches) {
+            $(TOC_MODAL).CFW_Modal('hide');
+        }
+    }
 }
 
 //  Initial setup
