@@ -87,8 +87,8 @@ function resetCurrentTocItem(collapse) {
     }
 
     // Remove active and current indicators from all menu items
-    top.find('.nav-toc .active').removeClass('active');
-    top.find('.nav-toc [aria-current]').removeAttr('aria-current');
+    top.find('.active').removeClass('active');
+    top.find('[aria-current]').removeAttr('aria-current');
 
     // Collapse any open sub-menus
     if (collapse) {
@@ -384,6 +384,15 @@ $(document).ready(function() {
             markTocItemActive();
         })
         .on('afterShow.cfw.modal', function() {
+            scrollToCurrentTocItem();
+        });
+
+    $(TOC_TAB)
+        .on('beforeShow.cfw.tab', function() {
+            resetCurrentTocItem(true);
+            markTocItemActive();
+        })
+        .on('afterShow.cfw.tab', function() {
             scrollToCurrentTocItem();
         });
 });
