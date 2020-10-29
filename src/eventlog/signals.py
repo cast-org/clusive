@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, timedelta
 
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.dispatch import receiver, Signal
@@ -51,8 +52,17 @@ def log_page_timing(sender, **kwargs):
     if event_id:
         try:
             event = Event.objects.get(id=event_id)
-            logger.info('Adding page timing to %s: %s', event, times)
-            # TODO actually update the Event record.
+            logger.debug('Adding page timing to %s: %s', event, times)
+            loadTime = times.get('loadTime')
+            duration = times.get('duration')
+            activeDuration = times.get('activeDuration')
+            if loadTime:
+                event.loadTime = timedelta(milliseconds=loadTime)
+            if duration:
+                event.duration = timedelta(milliseconds=duration)
+            if activeDuration:
+                event.activeDuration = timedelta(milliseconds=activeDuration)
+            event.save()
         except Event.DoesNotExist:
             logger.error('Received page timing for a non-existent event %s', event_id)
     else:
