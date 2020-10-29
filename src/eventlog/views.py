@@ -1,10 +1,39 @@
 import csv
+import logging
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import StreamingHttpResponse
+from django.views.generic.base import ContextMixin
 
 from eventlog.models import Event
 from roster.models import ResearchPermissions
+
+logger = logging.getLogger(__name__)
+
+class EventMixin(ContextMixin):
+    """
+    Creates a VIEW_EVENT for this view, and includes the event ID in the context for client-side use.
+    Views that use this mixin must define a configure_event method to add appropriate data fields to the event.
+    """
+    
+    def get(self, request, *args, **kwargs):
+        event = Event.build(type='VIEW_EVENT',
+                            action='VIEWED',
+                            session=request.session)
+        self.configure_event(event)
+        if event:
+            logger.info('event logged: %s', event)
+            event.save()
+            self.event_id = event.id
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['event_id'] = self.event_id
+        return context
+
+    def configure_event(self, event: Event):
+        raise NotImplementedError('View must define the contribute_event_data method')
 
 
 @staff_member_required
