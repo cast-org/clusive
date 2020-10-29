@@ -16,7 +16,8 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, FormView, UpdateView
 
-from eventlog.signals import annotation_action, page_viewed
+from eventlog.models import Event
+from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
@@ -80,7 +81,6 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
         self.clusive_user.current_period = self.period
         self.clusive_user.library_style = self.style
         self.clusive_user.save()
-        # page_viewed.send(self.__class__, request=request, page='library')
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -94,7 +94,7 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
         return context
 
 
-class UploadFormView(LoginRequiredMixin, FormView):
+class UploadFormView(LoginRequiredMixin, EventMixin, FormView):
     """Parent class for several pages that allow uploading of EPUBs."""
     form_class = UploadForm
 
@@ -134,6 +134,9 @@ class UploadCreateFormView(UploadFormView):
     def get_success_url(self):
         return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
 
+    def configure_event(self, event: Event):
+        event.page = 'UploadNew'
+
 
 class UploadReplaceFormView(UploadFormView):
     """Upload an EPUB file to replace an existing Book that you own."""
@@ -154,8 +157,11 @@ class UploadReplaceFormView(UploadFormView):
     def get_success_url(self):
         return reverse('metadata_replace', kwargs={'orig': self.orig_book.pk, 'pk': self.bv.book.pk})
 
+    def configure_event(self, event: Event):
+        event.page = 'UploadReplacement'
 
-class MetadataFormView(LoginRequiredMixin, UpdateView):
+
+class MetadataFormView(LoginRequiredMixin, EventMixin, UpdateView):
     """Parent class for several metadata-editing pages."""
     model = Book
     form_class = MetadataForm
@@ -203,10 +209,16 @@ class MetadataCreateFormView(MetadataFormView):
     """Edit metadata for a newly-created book. Cancelling will delete it."""
     template_name = 'library/metadata_create.html'
 
+    def configure_event(self, event: Event):
+        event.page = 'EditMetadataNew'
+
 
 class MetadataEditFormView(MetadataFormView):
     """Edit metadata for an existing book."""
     template_name = 'library/metadata_edit.html'
+
+    def configure_event(self, event: Event):
+        event.page = 'EditMetadata'
 
 
 class MetadataReplaceFormView(MetadataFormView):
@@ -256,6 +268,9 @@ class MetadataReplaceFormView(MetadataFormView):
         self.object.delete()
 
         return valid
+
+    def configure_event(self, event: Event):
+        event.page = 'EditMetadataReplace'
 
 
 class RemoveBookView(LoginRequiredMixin, View):

@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, timedelta
 
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.dispatch import receiver, Signal
@@ -15,7 +16,6 @@ logger = logging.getLogger(__name__)
 # (we also recognize some Django standard signals - user logged in/out, timeout)
 #
 
-page_viewed = Signal(providing_args=['request', 'document', 'page'])
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'preference'])
@@ -25,20 +25,6 @@ control_used = Signal(providing_args=['request', 'control', 'value'])
 #
 # Signal handlers that log specific events
 #
-
-
-@receiver(page_viewed)
-def log_page_viewed(sender, **kwargs):
-    """User views a page of a book"""
-    event = Event.build(type='VIEW_EVENT',
-                        action='VIEWED',
-                        document=kwargs.get('document'),
-                        page=kwargs.get('page'),
-                        session=kwargs.get('request').session)
-    logger.info("event for %s: %s", kwargs.get('session'), event)
-    if event:
-        event.save()
-
 
 @receiver(page_timing)
 def log_page_timing(sender, **kwargs):
@@ -51,8 +37,17 @@ def log_page_timing(sender, **kwargs):
     if event_id:
         try:
             event = Event.objects.get(id=event_id)
-            logger.info('Adding page timing to %s: %s', event, times)
-            # TODO actually update the Event record.
+            logger.debug('Adding page timing to %s: %s', event, times)
+            loadTime = times.get('loadTime')
+            duration = times.get('duration')
+            activeDuration = times.get('activeDuration')
+            if loadTime:
+                event.loadTime = timedelta(milliseconds=loadTime)
+            if duration:
+                event.duration = timedelta(milliseconds=duration)
+            if activeDuration:
+                event.activeDuration = timedelta(milliseconds=activeDuration)
+            event.save()
         except Event.DoesNotExist:
             logger.error('Received page timing for a non-existent event %s', event_id)
     else:

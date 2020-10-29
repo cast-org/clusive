@@ -14,18 +14,21 @@ class EventMixin(ContextMixin):
     """
     Creates a VIEW_EVENT for this view, and includes the event ID in the context for client-side use.
     Views that use this mixin must define a configure_event method to add appropriate data fields to the event.
+    They must also call the super() methods in their get(...) and get_context_data() methods.
     """
     
     def get(self, request, *args, **kwargs):
+        # Get event ID, it is needed during page construction
         event = Event.build(type='VIEW_EVENT',
                             action='VIEWED',
                             session=request.session)
+        self.event_id = event.id
+        # Super will create the page as normal
+        result = super().get(request, *args, **kwargs)
+        # Configure_event run last so it can use any info generated during page construction.
         self.configure_event(event)
-        if event:
-            logger.info('event logged: %s', event)
-            event.save()
-            self.event_id = event.id
-        return super().get(request, *args, **kwargs)
+        event.save()
+        return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,15 +54,16 @@ def event_log_report(request):
 def row_generator(events):
     pseudo_buffer = Echo()
     writer = csv.writer(pseudo_buffer)
-    yield writer.writerow(['Timestamp', 'User', 'Role', 'Period', 'Site',
+    yield writer.writerow(['Start Time', 'User', 'Role', 'Period', 'Site',
                            'Type', 'Action', 'Document', 'Page', 'Control', 'Value',
-                           'Event ID', 'Session Id'])
+                           'Duration', 'Active Duration',
+                           'Event ID', 'Session ID'])
     period_site = {}
     for e in events:
         yield writer.writerow(row_for_event(e, period_site))
 
 
-def row_for_event(e, period_site):
+def row_for_event(e: Event, period_site):
     period = e.group.anon_id if e.group else None
     # period_site map caches lookups of the site anon_id for each period.
     if period:
@@ -69,9 +73,11 @@ def row_for_event(e, period_site):
             period_site[period] = site
     else:
         site = None
+    duration_s = e.duration.total_seconds() if e.duration else ''
+    active_s = e.activeDuration.total_seconds() if e.activeDuration else ''
     return [e.eventTime, e.actor.anon_id, e.membership, period, site,
             e.type, e.action, e.document, e.page, e.control, e.value,
-            e.id, e.session.id]
+            duration_s, active_s, e.id, e.session.id]
 
 
 class Echo:

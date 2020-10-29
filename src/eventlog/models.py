@@ -34,8 +34,14 @@ class Event(models.Model):
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
     )
+    # Date and time the event started
     eventTime = models.DateTimeField(default=timezone.now)
-    # TODO eventEndTime
+    # (VIEW events:) time for the browser to retrieve and render the content
+    loadTime = models.DurationField(null=True)
+    # (VIEW events:) total time from when the page was loaded to when it was exited
+    duration = models.DurationField(null=True)
+    # (VIEW events:) time that this page was focused, computer was awake, and no timeout dialog was in play.
+    activeDuration = models.DurationField(null=True)
     # type of the event, based on Caliper spec
     type = models.CharField(max_length=32, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
     # action of the event, based on Caliper spec
