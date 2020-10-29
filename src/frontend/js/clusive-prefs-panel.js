@@ -173,7 +173,7 @@
     cisl.prefs.enactor.glossary.enactGlossary = function(enableGlossary, that) {
         console.debug('enact glossary', enableGlossary, that);
         
-        var readerWindow = clusiveContext.readerWindow;        
+        var readerWindow = clusiveContext.reader.window;        
 
         if (readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
             console.debug('readerWindow');

@@ -5,33 +5,35 @@ Variables and functions for information about the current context
 */
 
 var clusiveContext = {
-    get readerWindow() {
-        var readerIframe = $('#D2Reader-Container').find('iframe');
-        var readerWindow;
-        if (readerIframe.length > 0) {
-            readerWindow = readerIframe[0].contentWindow;            
-        }
-        return readerWindow;
-    },
-    get readerInfo() {
-        return readerInfo();
-    },
-    get readerInstance() {
-        var readerDefined = typeof D2Reader;
+    reader: {
+        get window() {
+            var readerIframe = $('#D2Reader-Container').find('iframe');
+            var readerWindow;
+            if (readerIframe.length > 0) {
+                readerWindow = readerIframe[0].contentWindow;            
+            }
+            return readerWindow;
+        },
+        get info() {
+            return getReaderInfo();
+        },
+        get instance() {
+            var readerDefined = typeof D2Reader;
 
-        if (readerDefined !== 'undefined') {
-            return D2Reader;
-        } return null;
-    }        
+            if (readerDefined !== 'undefined') {
+                return D2Reader;
+            } return null;
+        }
+    }    
 }
 
-var readerInfo = function () {
+var getReaderInfo = function () {
     var readerInfo = {};
-    if(clusiveContext.readerWindow) {        
+    if(clusiveContext.reader.window) {        
         // Include info from the HTML document
         readerInfo.document = {};
-        readerInfo.document.title = clusiveContext.readerWindow.document.title;
-        readerInfo.document.baseURI = clusiveContext.readerWindow.document.baseURI;
+        readerInfo.document.title = clusiveContext.reader.window.document.title;
+        readerInfo.document.baseURI = clusiveContext.reader.window.document.baseURI;
         // Include info from variables in reader.html
         readerInfo.publication = {};
         if(pub_id) {

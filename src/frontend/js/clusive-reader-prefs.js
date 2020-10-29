@@ -146,7 +146,7 @@
     });
 
     cisl.prefs.readerPreferencesBridge.applyUserSetting = function(settingName, settingValue) {
-        var reader = clusiveContext.readerInstance;
+        var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
             {
@@ -158,7 +158,7 @@
 
     cisl.prefs.readerPreferencesBridge.applyUserTTSSetting = function(ttsSettingName, settingValue) {
         console.log("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
-        var reader = clusiveContext.readerInstance;
+        var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
             {
