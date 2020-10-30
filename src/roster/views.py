@@ -61,42 +61,42 @@ class PreferenceSetView(View):
             return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})
 
         desired_prefs_name = request_json["adopt"]
+        event_id = request_json["eventId"]
 
         try:
             desired_prefs = PreferenceSet.get_json(desired_prefs_name)
         except PreferenceSet.DoesNotExist:
             return JsonResponse(status=404, data={'message': 'Preference set named %s does not exist' % desired_prefs_name})
 
-        set_user_preferences(user, desired_prefs, request)
+        set_user_preferences(user, desired_prefs, event_id, request)
 
         # Return the preferences set
         return JsonResponse(desired_prefs)
 
 
 # Set user preferences from a dictionary
-def set_user_preferences(user, new_prefs, request):
+def set_user_preferences(user, new_prefs, event_id, request):
     """Sets User's preferences to match the given dictionary of preference values."""    
     old_prefs = user.get_preferences_dict()
     prefs_to_use = new_prefs    
     for pref_key in prefs_to_use:
         old_val = old_prefs.get(pref_key)
         if old_val != prefs_to_use[pref_key]:
-            set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], request)
+            set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], event_id, request)
             # logger.debug("Pref %s changed %s (%s) -> %s (%s)", pref_key,
             #              old_val, type(old_val),
             #              pref.typed_value, type(pref.typed_value))
 
 
-def set_user_preference_and_log_event(user, pref_key, pref_value, request):
+def set_user_preference_and_log_event(user, pref_key, pref_value, event_id, request):
     pref = user.set_preference(pref_key, pref_value)
-    preference_changed.send(sender=ClusiveUser.__class__, request=request, preference=pref)
-
+    preference_changed.send(sender=ClusiveUser.__class__, request=request, event_id=event_id, preference=pref)
 
 @receiver(client_side_prefs_change, sender=Message)
 def set_preferences_from_message(sender, timestamp, content, request, **kwargs):
     logger.info("client_side_prefs_change message received")
     user = request.clusive_user
-    set_user_preferences(user, content["preferences"], request)
+    set_user_preferences(user, content["preferences"], content["eventId"], request)
 
 
 @staff_member_required

@@ -139,7 +139,8 @@
                 'X-CSRFToken': DJANGO_CSRF_TOKEN
             },
             data: JSON.stringify({
-                adopt: prefSetName
+                adopt: prefSetName,
+                eventId: PAGE_EVENT_ID
             })
         })
             .done(function(adoptSet) {
@@ -149,7 +150,7 @@
                     var updatedPreferences = {};
                     $.extend(updatedPreferences, currentPrefs.preferences, adoptSet);
                     console.log("updatedPreferences", updatedPreferences);
-                    messageQueue.add({"type": "PC", "preferences": updatedPreferences});
+                    messageQueue.add({"type": "PC", "preferences": updatedPreferences, "eventId": PAGE_EVENT_ID});
                     that.events.onPreferencesSetAdopted.fire(updatedPreferences);
                 });
             })
@@ -160,7 +161,7 @@
 
     clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
         console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
-        messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences')});
+        messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences'), "eventId": PAGE_EVENT_ID});
     };
     
 }(fluid_3_0_0));
