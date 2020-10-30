@@ -45,7 +45,7 @@ class PreferenceView(View):
             return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})
 
         user = ClusiveUser.from_request(request)
-        set_user_preferences(user, request_prefs, request)
+        set_user_preferences(user, request_prefs, None, request)
 
         return JsonResponse({'success': 1})
 
@@ -82,7 +82,13 @@ def set_user_preferences(user, new_prefs, event_id, request):
     for pref_key in prefs_to_use:
         old_val = old_prefs.get(pref_key)
         if old_val != prefs_to_use[pref_key]:
-            set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], event_id, request)
+            # Preference changes associated with a page event (user action)
+            if(event_id):
+                set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], event_id, request)
+            # Preference changes not associated with a page event - not logged                
+            else:                 
+                user.set_preference(pref_key, prefs_to_use[pref_key])
+
             # logger.debug("Pref %s changed %s (%s) -> %s (%s)", pref_key,
             #              old_val, type(old_val),
             #              pref.typed_value, type(pref.typed_value))
