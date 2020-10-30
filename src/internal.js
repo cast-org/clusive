@@ -110,3 +110,54 @@ if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoa
         console.error('error fetching prefs', e)
     })
 }
+
+
+// Log assessment values
+$(function() {
+    var $body = $('body');
+
+    // log radio button chosen
+    $body.on('click touchstart keydown', 'input[type=radio]', function (e) {
+        console.debug('RADIO BUTTON SELECTED');
+        console.debug('RADIO QUESTION ID ' + this.name )
+        console.debug('RADIO VALUE OF ANSWER ' + this.id)
+        clusiveEvents.addControlInteractionToQueue("radio","qid=" + this.name + "; answer=" + this.id);
+    })
+
+    // log reset button pressed
+    $body.on('click touchstart keydown', 'input[type=reset]', function (e) {
+        console.debug('RESET BUTTON SELECTED', e);
+        console.debug('RESET ID' + this.id)
+        console.debug('RESET ONCLICK VALUE = ' + this.getAttributeNode('onclick').value)
+        // there is no ide for the reset button in the epub
+        if (this.id) {
+            clusiveEvents.addControlInteractionToQueue("button", "reset" + "; id=" + this.id);
+        } else {
+            clusiveEvents.addControlInteractionToQueue("button", "reset" );
+        }        
+    })
+
+    // log other buttons types
+    $body.on('click touchstart keydown', 'input[type=button]', function (e) {
+        console.debug('BUTTON SELECTED', e)
+        console.debug('BUTTON ID = ' + this.id)
+        console.debug('BUTTON ONCLICK VALUE = ' + this.getAttributeNode('onclick').value)
+        console.debug('BUTTON TYPE = ' + this.value)
+        if (this.id) {
+            clusiveEvents.addControlInteractionToQueue("button", "type=" + this.value + "; id=" + this.id);
+        } else {
+            clusiveEvents.addControlInteractionToQueue("button", "type=" + this.value);
+        }
+    })
+
+    // log a pulldown change
+    $body.on('change', 'select', function (e) {
+        console.debug('PULLDOWN SELECTION CHANGED', e);
+        console.debug('PULLDOWN QUESTION ID ' + this.name);
+        var qid = this.name;
+        console.debug('PULLDOWN VALUE SELECTED ' +  $(this).val());
+        console.debug('PULLDOWN TEXT OF VALUE SELECTED ' + $(this).find("option:selected").text());
+        clusiveEvents.addControlInteractionToQueue("pulldown", "qid=" + this.name + "; answer=" + $(this).val());
+    })
+
+});
