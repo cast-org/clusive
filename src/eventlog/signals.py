@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
-preference_changed = Signal(providing_args=['request', 'preference'])
+preference_changed = Signal(providing_args=['request', 'event_id', 'preference'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value'])
 
@@ -95,16 +95,28 @@ def log_control_used(sender, **kwargs):
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
     """User changes a preference setting"""
-    request = kwargs.get('request')
-    preference = kwargs.get('preference')
-    logger.debug("Preference change: %s" % (preference))
-    event = Event.build(type='TOOL_USE_EVENT',
-                        action='USED',
-                        control='pref:'+preference.pref,
-                        value=preference.value,
-                        session=request.session)
-    event.save()
-
+    event_id = kwargs['event_id']
+    if event_id:
+        try:
+            associated_page_event = Event.objects.get(id=event_id)
+            page = associated_page_event.page 
+            document = associated_page_event.document
+            document_version = associated_page_event.document_version        
+            request = kwargs.get('request')
+            preference = kwargs.get('preference')
+            logger.debug("Preference change: %s" % (preference))
+            event = Event.build(type='TOOL_USE_EVENT',
+                                action='USED',
+                                control='pref:'+preference.pref,
+                                value=preference.value,
+                                page=page,
+                                document=document,
+                                document_version=document_version,                            
+                                session=request.session)
+            if event:   
+                event.save()
+        except Event.DoesNotExist:
+            logger.error('Received pref_change with a non-existent page event ID %s', event_id)            
 
 @receiver(annotation_action)
 def log_annotation_action(sender, **kwargs):
