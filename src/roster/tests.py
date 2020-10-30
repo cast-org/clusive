@@ -218,7 +218,7 @@ class ClusiveUserTestCase(TestCase):
         self.check_user_has_default_preferences(user)
 
     def check_user_has_default_preferences(self, user):
-        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True', 'cisl_prefs_readVoices': '[]', 'cisl_prefs_readSpeed': '1.0'}
+        default_pref_set = {'fluid_prefs_contrast':'default', 'fluid_prefs_textFont':'default', 'fluid_prefs_textSize':'1', 'fluid_prefs_lineSpace':'1.6', 'cisl_prefs_glossary':'True', 'cisl_prefs_readVoices': '[]', 'cisl_prefs_readSpeed': '1.0'}
         user_prefs = user.get_preferences()
         
         for p_key in default_pref_set.keys():            
