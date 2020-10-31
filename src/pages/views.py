@@ -10,6 +10,7 @@ from eventlog.signals import page_viewed
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
 from roster.models import ClusiveUser
+from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
@@ -131,6 +132,12 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                 'annotations': annotationList,
             }
             page_viewed.send(self.__class__, request=request, document=book_id)
+            available = TipHistory.available_tips(clusive_user)
+            logger.debug('Available tips: %s', available)
+            if available:
+                tip = available[0]
+                logger.debug('Chose: %s', tip)
+                tip.show()
         return super().get(request, *args, **kwargs)
 
 

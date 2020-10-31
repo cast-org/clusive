@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'messagequeue.apps.MessageQueueConfig',
     'glossary.apps.GlossaryConfig',
     'authoring.apps.AuthoringConfig',
+    'tips.apps.TipsConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
 ]

@@ -1,0 +1,53 @@
+[
+  {
+    "model": "tips.tiptype",
+    "pk": 1,
+    "fields": {
+      "name": "settings",
+      "priority": 1,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 2,
+    "fields": {
+      "name": "readaloud",
+      "priority": 2,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 3,
+    "fields": {
+      "name": "selection",
+      "priority": 3,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 4,
+    "fields": {
+      "name": "docinfo",
+      "priority": 4,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 4,
+    "fields": {
+      "name": "wordbank",
+      "priority": 4,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  }
+]
+
