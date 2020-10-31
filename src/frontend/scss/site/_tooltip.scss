@@ -1,0 +1,94 @@
+.tooltip-feature {
+    @include font-size($tooltip-feature-font-size);
+
+    &.in {
+        opacity: $tooltip-feature-opacity;
+    }
+
+    // Arrow base
+    @if $enable-tooltip-arrow {
+        .tooltip-arrow {
+            position: absolute;
+            display: block;
+            width: $tooltip-feature-arrow-width;
+            height: $tooltip-feature-arrow-height;
+
+            &::before {
+                position: absolute;
+                content: "";
+                border-color: transparent;
+                border-style: solid;
+            }
+        }
+
+        /* rtl:begin:ignore */
+
+        // Directions
+        &[x-placement^="top"],
+        .cfw-tooltip-top {
+            padding-bottom: $tooltip-feature-arrow-height;
+
+            .tooltip-arrow {
+                &::before {
+                    border-width: $tooltip-feature-arrow-height ($tooltip-feature-arrow-width / 2) 0;
+                    border-top-color: $tooltip-feature-arrow-color;
+                }
+            }
+        }
+        &[x-placement^="right"],
+        .cfw-tooltip-right {
+            padding-left: $tooltip-feature-arrow-height;
+
+            .tooltip-arrow {
+                width: $tooltip-feature-arrow-height;
+                height: $tooltip-feature-arrow-width;
+
+                &::before {
+                    border-width: ($tooltip-feature-arrow-width / 2) $tooltip-feature-arrow-height ($tooltip-feature-arrow-width / 2) 0;
+                    border-right-color: $tooltip-feature-arrow-color;
+                }
+            }
+        }
+        &[x-placement^="bottom"],
+        .cfw-tooltip-bottom {
+            padding-top: $tooltip-feature-arrow-height;
+
+            .tooltip-arrow {
+                &::before {
+                    border-width: 0 ($tooltip-feature-arrow-width / 2) $tooltip-feature-arrow-height;
+                    border-bottom-color: $tooltip-feature-arrow-color;
+                }
+            }
+        }
+        &[x-placement^="left"],
+        .cfw-tooltip-left {
+            padding-right: $tooltip-feature-arrow-height;
+
+            .tooltip-arrow {
+                width: $tooltip-feature-arrow-height;
+                height: $tooltip-feature-arrow-width;
+
+                &::before {
+                    border-width: ($tooltip-feature-arrow-width / 2) 0 ($tooltip-feature-arrow-width / 2) $tooltip-feature-arrow-height;
+                    border-left-color: $tooltip-feature-arrow-color;
+                }
+            }
+        }
+
+        /* rtl:end:ignore */
+    }
+
+    .tooltip-body {
+        max-width: $tooltip-feature-max-width;
+        padding: $tooltip-feature-padding-y $tooltip-feature-padding-x;
+        color: var(--CT_tooltipFeatureColor);
+        text-align: left;
+        background-color: var(--CT_tooltipFeatureBg);
+        @include border-radius($tooltip-feature-border-radius);
+    }
+}
+
+.tooltip-action {
+    margin-top:  $paragraph-spacer-y / -2;
+    text-align: right;
+}
