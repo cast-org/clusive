@@ -75,6 +75,11 @@ h2,
     }
 }
 
+// stylelint-disable-next-line selector-max-id
+#D2Reader-Container iframe {
+    margin-bottom: 2rem;
+}
+
 .login-status {
     float: right;
     margin-top: 2em;
