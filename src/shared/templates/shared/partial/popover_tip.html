@@ -1,0 +1,15 @@
+{% load i18n %}
+<div id="tip" class="tooltip tooltip-feature">
+    <div class="tooltip-body">
+        {% if tip_name == "settings" %}
+        <p><strong>Settings:</strong> Change the font, colors, and more!</p>
+        {% elif tip_name == "readaloud" %}
+        <p><strong>Read-aloud:</strong> Hear this page read aloud.</p>
+        {% endif %}
+        <div class="tooltip-action">
+            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        </div>
+    </div>
+    <div class="tooltip-arrow"></div>
+</div>
+<div id="features" class="features" aria-live="assertive" aria-atomic="false"></div>

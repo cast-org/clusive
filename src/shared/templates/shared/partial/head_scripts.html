@@ -7,6 +7,7 @@ to client-side Javascript
 <script>
 var DJANGO_STATIC_ROOT = "{% static '' %}";
 var DJANGO_CSRF_TOKEN = $("[name=csrfmiddlewaretoken]").val();
+var TOOLTIP_NAME = '{{tip_name}}';
 {% if user.is_authenticated %}
     var DJANGO_USERNAME = "{{ user.get_username }}"
 {% else %}
