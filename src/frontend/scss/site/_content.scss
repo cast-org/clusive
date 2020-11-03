@@ -1,13 +1,3 @@
-// Browser-based scroll causing extra page movement - disable for now
-// html {
-//     scroll-behavior: smooth;
-// }
-// @media (prefers-reduced-motion: reduce) {
-//     html {
-//         scroll-behavior: inherit;
-//     }
-// }
-
 // Use a base value of 1 here since Infusion multiplies the body line-height by the setting value.
 // This allows both Clusive and Readium to use the same line-height as set by Infusion.
 body {
@@ -83,6 +73,11 @@ h2,
     @include media-breakpoint-up(md) {
         padding-top: $header-md-height + $content-offset-top;
     }
+}
+
+// stylelint-disable-next-line selector-max-id
+#D2Reader-Container iframe {
+    margin-bottom: 2rem;
 }
 
 .login-status {

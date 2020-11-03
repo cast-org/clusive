@@ -7,7 +7,7 @@
 
 .toolbox {
     position: absolute;
-    z-index: 999;
+    z-index: 1100;
     display: none;
     user-select: none;
     transform: translate(-50%, -100%) translateY($toolbox-menu-arrow-height * -1);

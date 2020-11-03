@@ -87,8 +87,8 @@ function resetCurrentTocItem(collapse) {
     }
 
     // Remove active and current indicators from all menu items
-    top.find('.nav-toc .active').removeClass('active');
-    top.find('.nav-toc [aria-current]').removeAttr('aria-current');
+    top.find('.active').removeClass('active');
+    top.find('[aria-current]').removeAttr('aria-current');
 
     // Collapse any open sub-menus
     if (collapse) {
@@ -364,6 +364,15 @@ function goToAnnotation(event) {
     var json = JSON.parse(atob(encoded));
     markAnnotationActive(json);
     D2Reader.goTo(json);
+
+    // Check to see if we should close the TOC modal based on current browser breakpoint
+    var bpVal = window.getBreakpointByName('xs');
+    if (bpVal) {
+        var mediaQuery = window.matchMedia('(max-width: ' + bpVal.max + ')');
+        if (mediaQuery.matches) {
+            $(TOC_MODAL).CFW_Modal('hide');
+        }
+    }
 }
 
 //  Initial setup
@@ -384,6 +393,15 @@ $(document).ready(function() {
             markTocItemActive();
         })
         .on('afterShow.cfw.modal', function() {
+            scrollToCurrentTocItem();
+        });
+
+    $(TOC_TAB)
+        .on('beforeShow.cfw.tab', function() {
+            resetCurrentTocItem(true);
+            markTocItemActive();
+        })
+        .on('afterShow.cfw.tab', function() {
             scrollToCurrentTocItem();
         });
 });
