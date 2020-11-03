@@ -157,7 +157,7 @@ LOGGING = {
 # Settings allowed to be exported
 SETTINGS_EXPORT = [
     'DEBUG',
-];
+]
 
 # Session settings
 SESSION_EXPIRE_SECONDS = 1800   # 30 minutes, in seconds

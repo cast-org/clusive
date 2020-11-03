@@ -326,18 +326,9 @@ function showTooltip(name) {
     'use strict';
 
     if (name) {
-        var tip_ids = {
-            settings: 'btnSettings',
-            readaloud: 'btnReadAloud'
-        };
-        var tip_id = tip_ids[name];
-        if (!tip_id) {
-            console.error('Unknown tip requested: ', name);
-            return;
-        }
         console.info('setting up tip: ', name);
         $(window).ready(function() {
-            var tip_control = $('#' + tip_id);
+            var tip_control = $('[data-clusive-tip-id="' + name + '"]');
             var tip_popover = $('#tip');
             tip_control.CFW_Tooltip({
                 target: '#tip',
