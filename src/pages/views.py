@@ -10,6 +10,7 @@ from eventlog.signals import page_viewed
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
 from roster.models import ClusiveUser
+from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
@@ -122,6 +123,15 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                 else False
             bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
                 else False
+            available = TipHistory.available_tips(clusive_user)
+            logger.debug('Available tips: %s', available)
+            if available:
+                best = available[0]
+                logger.debug('Displaying tip: %s', best)
+                best.show()
+                tip = best.type.name
+            else:
+                tip = None
             self.extra_context = {
                 'pub': book,
                 'manifest_path': bookVersion.manifest_path,
@@ -129,6 +139,7 @@ class ReaderView(LoginRequiredMixin,TemplateView):
                 'next_version': bv_next,
                 'last_position': pdata.lastLocation or "null",
                 'annotations': annotationList,
+                'tip_name': tip,
             }
             page_viewed.send(self.__class__, request=request, document=book_id)
         return super().get(request, *args, **kwargs)

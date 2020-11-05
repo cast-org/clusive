@@ -1,4 +1,4 @@
-/* global Masonry, clusiveTTS, clusivePrefs */
+/* global Masonry, clusiveTTS, clusivePrefs, TOOLTIP_NAME */
 /* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
 
 var libraryMasonryApi = null;
@@ -322,6 +322,41 @@ function clearVoiceListing() {
     clusiveTTS.setCurrentVoice(null);
 }
 
+function showTooltip(name) {
+    'use strict';
+
+    if (name) {
+        console.info('setting up tip: ', name);
+        $(window).ready(function() {
+            var tip_control = $('[data-clusive-tip-id="' + name + '"]');
+            var tip_popover = $('#tip');
+            tip_control.CFW_Tooltip({
+                target: '#tip',
+                container: '#features',
+                viewport: '#features',
+                trigger: 'manual',
+                placement: 'right auto',
+                animate: false,
+                popperConfig: {
+                    positionFixed: true
+                }
+            });
+            setTimeout(function() {
+                tip_popover.attr({
+                    'role': 'status',
+                    'aria-live': 'assertive',
+                    'aria-atomic': 'true'
+                });
+                tip_control.CFW_Tooltip('show');
+                tip_popover.trigger('focus');
+            }, 2000);
+            tip_control.one('afterHide.cfw.tooltip', function() {
+                $(this).CFW_Tooltip('dispose');
+            });
+        });
+    }
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -334,6 +369,7 @@ $(window).ready(function() {
     confirmationPublicationDelete();
     confirmationSharing();
     formUseThisLinks();
+    showTooltip(TOOLTIP_NAME);
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
