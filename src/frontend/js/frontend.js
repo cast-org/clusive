@@ -1,6 +1,7 @@
 /* global Masonry, clusiveTTS, clusivePrefs, TOOLTIP_NAME */
-/* exported libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
+/* exported getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
 
+var clusiveBreakpoints = ['xs', 'sm', 'md', 'lg', 'xl'];
 var libraryMasonryApi = null;
 
 // Returns a function, that, as long as it continues to be invoked, will not
@@ -28,6 +29,20 @@ function clusiveDebounce(func, wait, immediate) {
         if (callNow) {
             func.apply(context, args);
         }
+    };
+}
+
+function getBreakpointByName(name) {
+    'use strict';
+
+    var bpMin =  window.getComputedStyle(document.body).getPropertyValue('--breakpoint-' + name);
+    var bpIndex = clusiveBreakpoints.indexOf(name);
+    var bpNext = bpIndex < clusiveBreakpoints.length ? clusiveBreakpoints[bpIndex + 1] : null;
+    var bpMax = bpNext ? (parseInt(window.getComputedStyle(document.body).getPropertyValue('--breakpoint-' + bpNext), 10) - 0.02) + 'em' : null;
+
+    return {
+        min: bpMin,
+        max: bpMax
     };
 }
 
@@ -100,6 +115,18 @@ function libraryListCollapse() {
     $('.card-toggle-btn').CFW_Collapse('hide');
 }
 
+// Return focus to the menu toggle control in place of the now visually hidden
+// menu item in a dropdown when the confirmation modal is closed.
+function confirmationRefocus($trigger, $modal) {
+    'use strict';
+
+    $modal.one('afterHide.cfw.modal', function() {
+        if ($trigger.is(':hidden') && $trigger.closest('.dropdown-menu').length) {
+            $trigger.closest('.dropdown-menu').siblings('[data-cfw="dropdown"]').first().trigger('focus');
+        }
+    });
+}
+
 function confirmationPublicationDelete() {
     'use strict';
 
@@ -110,7 +137,6 @@ function confirmationPublicationDelete() {
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();
-            $modal.CFW_Modal('unlink');
 
             $.get('/library/remove/confirm/' + article)
                 // eslint-disable-next-line no-unused-vars
@@ -118,11 +144,12 @@ function confirmationPublicationDelete() {
                     $modal.find('.modal-content').html(data);
                 });
 
+            confirmationRefocus($trigger, $modal);
             $trigger.CFW_Modal({
                 target: '#modalConfirm',
-                unlink: true
+                unlink: true,
+                show: true
             });
-            $trigger.CFW_Modal('show');
         }
     });
 }
@@ -137,7 +164,6 @@ function confirmationSharing() {
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();
-            $modal.CFW_Modal('unlink');
 
             $.get('/library/share/' + book)
                 // eslint-disable-next-line no-unused-vars
@@ -145,11 +171,12 @@ function confirmationSharing() {
                     $modal.find('.modal-content').html(data);
                 });
 
+            confirmationRefocus($trigger, $modal);
             $trigger.CFW_Modal({
                 target: '#modalConfirm',
-                unlink: true
+                unlink: true,
+                show: true
             });
-            $trigger.CFW_Modal('show');
         }
     });
 }
