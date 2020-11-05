@@ -218,7 +218,7 @@ class ClusiveUserTestCase(TestCase):
         self.check_user_has_default_preferences(user)
 
     def check_user_has_default_preferences(self, user):
-        default_pref_set = {'theme':'default', 'textFont':'default', 'textSize':'1', 'lineSpace':'1.6', 'cisl_prefs_glossary':'True', 'cisl_prefs_readVoices': '[]', 'cisl_prefs_readSpeed': '1.0'}
+        default_pref_set = {'fluid_prefs_contrast':'default', 'fluid_prefs_textFont':'default', 'fluid_prefs_textSize':'1', 'fluid_prefs_lineSpace':'1.6', 'cisl_prefs_glossary':'True', 'cisl_prefs_readVoices': '[]', 'cisl_prefs_readSpeed': '1.0'}
         user_prefs = user.get_preferences()
         
         for p_key in default_pref_set.keys():            
@@ -232,7 +232,7 @@ class ClusiveUserTestCase(TestCase):
         self.assertEqual(Preference.convert_from_string("False"), False, "boolean:False as string was converted as expected")
         self.assertEqual(Preference.convert_from_string("True"), True, "boolean:True as string was converted as expected")
 
-    default_pref_set_json = '{"theme":"default","textFont":"default","textSize":1,"lineSpace":1.6,"fluid_prefs_letterSpace":1,"cisl_prefs_glossary":true, "cisl_prefs_readVoices": [], "cisl_prefs_readSpeed": 1.0}'
+    default_pref_set_json = '{"fluid_prefs_contrast":"default","fluid_prefs_textFont":"default","fluid_prefs_textSize":1,"fluid_prefs_lineSpace":1.6,"fluid_prefs_letterSpace":1,"cisl_prefs_glossary":true, "cisl_prefs_readVoices": [], "cisl_prefs_readSpeed": 1.0}'
 
     def test_preference_sets(self):
         # delete any existing preferences so we're starting with a clean set
@@ -241,9 +241,11 @@ class ClusiveUserTestCase(TestCase):
 
         login = self.client.login(username='user1', password='password1')
         
-        self.client.post('/account/prefs/profile', {'adopt': 'default_reading_tools'}, content_type='application/json')
+        self.client.post('/account/prefs/profile', {'adopt': 'default_reading_tools', 'eventId': None}, content_type='application/json')
 
-        response = self.client.post('/account/prefs/profile', {'adopt': 'default_display'}, content_type='application/json')
+        self.client.post('/account/prefs/profile', {'adopt': 'default_display', 'eventId': None}, content_type='application/json')
+
+        response = self.client.get('/account/prefs')
         
         self.assertJSONEqual(response.content, self.default_pref_set_json, 'Changing to default preferences profile did not return expected response')
 
@@ -271,10 +273,6 @@ class ClusiveUserTestCase(TestCase):
             response = self.client.post('/account/prefs', {'foo': 'baz'}, content_type='application/json')
             self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref to same value did not return expected response')
 
-        handler.assert_called_once()
-        handler.calls.kwargs.preference.pref='foo'
-        handler.calls.kwargs.preference.value='bar'
-
         # Setting two preferences where one already exists at the same value; handler should
         # still only get triggered once
         with catch_signal(preference_changed) as handler:        
@@ -285,10 +283,6 @@ class ClusiveUserTestCase(TestCase):
             # TODO: currently default settings are always applied, so more than this one item is returned.
             # self.assertJSONEqual(response.content, {'foo': 'bar', 'baz': 'lur'}, 'Fetching prefs did not return values that were set')
             self.assertContains(response, '"foo": "bar", "baz": "lur"')
-        self.assertEqual(handler.call_count, 2)
-        # TODO: clarify what this is doing; is it intended to test the handler?
-        handler.calls.kwargs.preference.pref='baz'
-        handler.calls.kwargs.preference.value='lur'
 
 class PageTestCases(TestCase):
 

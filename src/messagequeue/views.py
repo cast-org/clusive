@@ -28,20 +28,13 @@ def process_messages(queue_timestamp, messages, user, request):
         if(message_username != session_username):
             logger.debug("Rejected individual message, message username %s did not match session username %s ",
                          message_username, session_username)
-            break
+            continue
         message_timestamp = adjust_message_timestamp(message["timestamp"], delta)        
         message_content = message["content"]
         
         message_type = message["content"]["type"]
-        new_message = None
-        
-        if(message_type == Message.AllowedTypes.PREF_CHANGE):
-            logger.debug("Found a preference change message: %s" % message)                        
-            new_message = Message(message_type, message_timestamp, message_content, request)            
-        try:            
-            new_message.send_signal()            
-        except AttributeError:
-            logger.debug("Message type %s is not a valid type" % message_type)
+        new_message = Message(message_type, message_timestamp, message_content, request)
+        new_message.send_signal()
 
 def adjust_message_timestamp(timestamp, delta):
     message_time = dateutil_parse(timestamp)
@@ -62,7 +55,6 @@ class MessageQueueView(View):
             queue_username = receivedQueue["username"]
             messages = receivedQueue["messages"]
             clusive_user = request.clusive_user
-            print(clusive_user)
             username = clusive_user.user.username
             if(queue_username == username):
                 process_messages(queue_timestamp, messages, clusive_user.user, request)

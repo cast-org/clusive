@@ -172,11 +172,8 @@
 
     cisl.prefs.enactor.glossary.enactGlossary = function(enableGlossary, that) {
         console.debug('enact glossary', enableGlossary, that);
-        var readerIframe = $('#D2Reader-Container').find('iframe');
-        var readerWindow;
-        if (readerIframe.length > 0) {
-            readerWindow = readerIframe[0].contentWindow;
-        }
+        
+        var readerWindow = clusiveContext.reader.window;        
 
         if (readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
             console.debug('readerWindow');

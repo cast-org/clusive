@@ -6,7 +6,8 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
-from eventlog.signals import page_viewed
+from eventlog.models import Event
+from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
 from roster.models import ClusiveUser
@@ -105,49 +106,60 @@ class ReaderChooseVersionView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class ReaderView(LoginRequiredMixin,TemplateView):
+class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            context = self.get_context_data(**kwargs)
-            book_id = context.get('book_id')
-            version = int(context.get('version'))
-            book = Book.objects.get(pk=book_id)
-            clusive_user = get_object_or_404(ClusiveUser, user=request.user)
-            bookVersion = BookVersion.objects.get(book=book, sortOrder=version)
-            annotationList = Annotation.get_list(user=clusive_user, book_version=bookVersion)
-            pdata = Paradata.record_view(book, version, clusive_user)
-            bv_prev = str(version-1) if version>0 \
-                else False
-            bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
-                else False
-            available = TipHistory.available_tips(clusive_user)
-            logger.debug('Available tips: %s', available)
-            if available:
-                best = available[0]
-                logger.debug('Displaying tip: %s', best)
-                best.show()
-                tip = best.type.name
-            else:
-                tip = None
-            self.extra_context = {
-                'pub': book,
-                'manifest_path': bookVersion.manifest_path,
-                'prev_version': bv_prev,
-                'next_version': bv_next,
-                'last_position': pdata.lastLocation or "null",
-                'annotations': annotationList,
-                'tip_name': tip,
-            }
-            page_viewed.send(self.__class__, request=request, document=book_id)
+        self.book_id = kwargs.get('book_id')
+        self.book_version = kwargs.get('version')
+        version = kwargs.get('version')
+        book = Book.objects.get(pk=self.book_id)
+        clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+        bookVersion = BookVersion.objects.get(book=book, sortOrder=version)
+        annotationList = Annotation.get_list(user=clusive_user, book_version=bookVersion)
+        pdata = Paradata.record_view(book, version, clusive_user)
+        bv_prev = str(version-1) if version>0 \
+            else False
+        bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
+            else False
+
+        # See if there's a Tip that should be shown
+        available = TipHistory.available_tips(clusive_user)
+        logger.debug('Available tips: %s', available)
+        if available:
+            best = available[0]
+            logger.debug('Displaying tip: %s', best)
+            best.show()
+            tip = best.type.name
+        else:
+            tip = None
+
+        self.extra_context = {
+            'pub': book,
+            'manifest_path': bookVersion.manifest_path,
+            'prev_version': bv_prev,
+            'next_version': bv_next,
+            'last_position': pdata.lastLocation or "null",
+            'annotations': annotationList,
+            'tip_name': tip,
+        }
         return super().get(request, *args, **kwargs)
 
+    def configure_event(self, event: Event):
+        event.page = 'Reading'
+        event.document = self.book_id
+        event.document_version = self.book_version
 
-class WordBankView(LoginRequiredMixin,View):
+
+class WordBankView(LoginRequiredMixin, EventMixin, TemplateView):
+    template_name = 'pages/wordbank.html'
 
     def get(self, request, *args, **kwargs):
-        clusive_user = get_object_or_404(ClusiveUser, user=request.user)
-        context = { 'words': WordModel.objects.filter(user=clusive_user, interest__gt=0).order_by('word') }
-        return render(request, 'pages/wordbank.html', context=context)
+        self.extra_context = {
+            'words': WordModel.objects.filter(user=request.clusive_user, interest__gt=0).order_by('word')
+        }
+        return super().get(request, *args, **kwargs)
+
+    def configure_event(self, event: Event):
+        event.page = 'Wordbank'
