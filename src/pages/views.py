@@ -123,6 +123,18 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
             else False
         bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
             else False
+
+        # See if there's a Tip that should be shown
+        available = TipHistory.available_tips(clusive_user)
+        logger.debug('Available tips: %s', available)
+        if available:
+            best = available[0]
+            logger.debug('Displaying tip: %s', best)
+            best.show()
+            tip = best.type.name
+        else:
+            tip = None
+
         self.extra_context = {
             'pub': book,
             'manifest_path': bookVersion.manifest_path,
@@ -130,6 +142,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
             'next_version': bv_next,
             'last_position': pdata.lastLocation or "null",
             'annotations': annotationList,
+            'tip_name': tip,
         }
         return super().get(request, *args, **kwargs)
 
