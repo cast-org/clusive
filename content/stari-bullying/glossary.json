@@ -1,0 +1,121 @@
+[
+  {
+    "headword": "rumor",
+    "alternateForms": ["rumors"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A piece of information or a story passed from one person to another without any proof that it is true." ,
+        "examples": [ "We heard a rumor that school would close early today, but it didn't." ],
+        "images": [
+          {
+            "src": "glossimages/rumor1.jpg",
+            "alt": "Photo of one person whispering into the ear of another person.",
+            "description": "One person whispers into the ear of another person.",
+            "caption": "Rumors spread from one person to another.",
+            "source": {
+              "url": "https://www.pexels.com/photo/person-whispering-to-man-s-ear-2947922/",
+              "title": "Person Whispering To Man's Ear",
+              "author": "Tophee Marquez",
+              "author_url": "https://www.pexels.com/@topheemarquez",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "physical",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Related to the body, not the mind; involving bodily contact." ,
+        "examples": [ "He did hard physical training to prepare for the race." ],
+        "images": [
+          {
+            "src": "glossimages/physical1.jpg",
+            "alt": "Photo of young man exercising on stairs.",
+            "description": "Photo of young man getting exercise on stairs.",
+            "caption": "Stretching is a way to get into good physical shape.",
+            "source": {
+              "url": "https://www.pexels.com/photo/young-ethnic-focused-sportsman-exercising-on-stairs-in-city-3799229/",
+              "title": "Young ethnic focused sportsman exercising on stairs in city",
+              "author": "Andrea Piacquadio",
+              "author_url": "https://www.pexels.com/@olly",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "abuse",
+    "alternateForms": ["abuses", "abused", "abusing" ],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To inflict harm.",
+        "examples": [ "One in three adolescents is physically, emotionally, or verbally abused by a dating partner." ],
+        "images": [
+          {
+            "src": "glossimages/abuse1.jpg",
+            "alt": "Illustration of a person with a fist coming from his mouth.",
+            "description": "An artistic representation of verbal abuse. A fist extends out of one person's mouth and hits another person.",
+            "caption": "This representation of verbal abuse shows the damaging impact of words.",
+            "source": {
+              "url": "https://ccsearch.creativecommons.org/photos/52d49493-47e6-4efc-bdea-41b811ca0d73",
+              "title": "verbal-abuse",
+              "author": "thelampnyc ",
+              "author_url": "https://www.flickr.com/photos/27894975@N06",
+              "license": "CC BY-NC-ND 2.0",
+              "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "victim",
+    "alternateForms": ["victims"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Someone who is hurt, injured, or killed by a person, group, or event." ,
+        "examples": [ "They were victims of unfair treatment by others." ],
+        "images": [
+          {
+            "src": "glossimages/victim1.jpg",
+            "alt": "Photo of fist in the foreground and person sitting on the ground.",
+            "description": "A person stands with a clenched fist in the foreground. A person sits with head down and hands over head in the background.",
+            "caption": "Victims can be hurt physically, through words, or other actions.",
+            "source": {
+              "url": "https://www.pexels.com/photo/man-in-yellow-shirt-and-blue-denim-jeans-4379915/",
+              "title": "Man in Yellow Shirt and Blue Denim Jeans",
+              "author": "Karolina Grabowska",
+              "author_url": "https://www.pexels.com/@karolina-grabowska",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "overview",
+    "alternateForms": ["overviews"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A general review, summary, or survey, as of a subject or situation." ,
+        "examples": [ "The teacher gave an overview of the main ideas before the students read the chapter." ]
+      }
+    ]
+  }
+]

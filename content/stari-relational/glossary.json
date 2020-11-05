@@ -1,0 +1,105 @@
+[
+  {
+    "headword": "status",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A person's position or rank compared with others." ,
+        "examples": [ "His status went up when he got that fancy job." ]
+      }
+    ]
+  },
+  {
+    "headword": "emotional",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Easily moved to feel; tending to experience emotion." ,
+        "examples": [ "They were an emotional family that often cried during the sad parts of movies." ],
+        "images": [
+          {
+            "src": "glossimages/emotion1.jpg",
+            "alt": "Photos of different emotions.",
+            "description": "One person showing many different emotions.",
+            "caption": "Each person can feel many different emotions",
+            "source": {
+              "url": "https://www.pexels.com/photo/collage-photo-of-woman-3812743/",
+              "title": "Collage Photo of Woman",
+              "author": "Andrea Piacquadio ",
+              "author_url": "https://www.pexels.com/@olly",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "however",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adverb",
+        "definition": "On the other hand; by contrast." ,
+        "examples": [ "We thought he would be grateful. However, he was offended, instead."]
+      }
+    ]
+  },
+  {
+    "headword": "support",
+    "alternateForms": ["supports","supported","supporting"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To give help or encouragement." ,
+        "examples": [ "The group of close friends supported each other as they went through the problems of growing up." ],
+        "images": [
+          {
+            "src": "glossimages/support1.jpg",
+            "alt": "Photo of someone holding a small child's hand.",
+            "description": "Someone helping a small child balance by holding their hand.",
+            "caption": "Holding hands supports the small child to balance on the log.",
+            "source": {
+              "url": "https://www.pexels.com/photo/blue-jeans-3036405/",
+              "title": "Blue Jeans",
+              "author": "VisionPic .net",
+              "author_url": "https://www.pexels.com/@freestockpro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "physical",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Related to the body, not the mind; involving bodily contact." ,
+        "examples": [ "He did hard physical training to prepare for the race." ],
+        "images": [
+          {
+            "src": "glossimages/physical1.jpg",
+            "alt": "Photo of young man exercising on stairs.",
+            "description": "Photo of young man getting exercise on stairs.",
+            "caption": "Stretching is a way to get into good physical shape.",
+            "source": {
+              "url": "https://www.pexels.com/photo/young-ethnic-focused-sportsman-exercising-on-stairs-in-city-3799229/",
+              "title": "Young ethnic focused sportsman exercising on stairs in city",
+              "author": "Andrea Piacquadio",
+              "author_url": "https://www.pexels.com/@olly",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

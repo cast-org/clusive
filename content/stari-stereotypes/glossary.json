@@ -1,0 +1,105 @@
+[
+  {
+    "headword": "wearing",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Mentally or physically tiring." ,
+        "examples": [ "The constant criticism was wearing her down and making her feel exhausted." ],
+        "images": [
+          {
+            "src": "glossimages/wearing1.jpg",
+            "alt": "Photo of a person with her head on her computer keyboard.",
+            "description": "Photo of a person with her head on her computer keyboard.",
+            "caption": "Working at a computer all day can be wearing.",
+            "source": {
+              "url": "https://www.pexels.com/photo/woman-sitting-on-chair-while-leaning-on-laptop-3791136/",
+              "title": "Woman Sitting on Chair While Leaning on Laptop",
+              "author": "Andrea Piacquadio",
+              "author_url": "https://www.pexels.com/@olly",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "stereotype",
+    "alternateForms": ["stereotypes"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A widely held but fixed and oversimplified image or idea of a particular type of person or thing." ,
+        "examples": [ "There are stereotypes that assume that men are not good at some things, such as cooking. That's not true!" ]
+      }
+    ]
+  },
+  {
+    "headword": "concern",
+    "alternateForms": ["concerns" ],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Worry or anxiety.",
+        "examples": [ "She has a lot of concerns about paying all her bills right now." ],
+        "images": [
+          {
+            "src": "glossimages/concern1.jpg",
+            "alt": "Photo of a person with a worried expression talking on a telephone.",
+            "description": "Photo of a person with a worried expression talking on a telephone.",
+            "caption": "Concerns can arise for many reasons, making someone anxious.",
+            "source": {
+              "url": "https://www.pexels.com/photo/anxious-woman-having-phone-conversation-in-office-4467783/",
+              "title": "Anxious woman having phone conversation in office",
+              "author": "Karolina Grabowska ",
+              "author_url": "https://www.pexels.com/@karolina-grabowska",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "judgment",
+    "alternateForms": ["judgments" ],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "The ability to make considered decisions or come to sensible conclusions.",
+        "examples": [ "They took their time before they made their judgment about who was responsible for the accident." ]
+      }
+    ]
+  },
+  {
+    "headword": "African",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Of or having to do with Africa, or its people or languages." ,
+        "examples": [ "Ghana is an African country." ],
+        "images": [
+          {
+            "src": "glossimages/african1.jpg",
+            "alt": "Photo of a person feeding a giraffe.",
+            "description": "A person feeds a giraffe",
+            "caption": "Giraffes are African animals.",
+            "source": {
+              "url": "https://www.pexels.com/photo/person-feeding-giraffe-1670732/",
+              "title": "Person feeding giraffe",
+              "author": "Git Stephen Gitau",
+              "author_url": "https://www.pexels.com/@git-stephen-gitau-302905",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
