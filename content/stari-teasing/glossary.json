@@ -1,0 +1,87 @@
+[
+  {
+    "headword": "definite",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Known without a doubt; certain; sure." ,
+        "examples": [ "The bag in her hand is definite proof that she stole your lunch." ]
+      }
+    ]
+  },
+  {
+    "headword": "word",
+    "alternateForms": ["words"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A short remark or statement." ,
+        "examples": [ "I'd like to say a word about that." ]
+      }
+    ]
+  },
+  {
+    "headword": "embarrass",
+    "alternateForms": ["embarrasses","embarrassed","embarrassing"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make feel uncomfortable because of shame or receiving too much attention from others.",
+        "examples": [ "I was embarrassed when I realized I forgot to do today's homework. " ],
+        "images": [
+          {
+            "src": "glossimages/embarrassed1.jpg",
+            "alt": "Drawing of an 'embarrassed' emoticon.",
+            "description": "Drawing of an emoticon with wide open eyes, red cheeks, and a slightly frowning mouth.",
+            "caption": "Blushing, or having your cheeks turn red, can be a sign that you are embarrassed.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:SMirC-embarassed.svg",
+              "author": "chris",
+              "license": "CC BY-SA 3.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/3.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "comment",
+    "alternateForms": ["comments"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Remarks or observations, often critical, made across a group of people" ,
+        "examples": [ "She was upset when she heard somebody make a mean comment about her friend." ],
+        "images": [
+          {
+            "src": "glossimages/comment1.jpg",
+            "alt": "Photo of person holding a smartphone",
+            "description": "Person holding a smartphone. Text comments can be seen on the phone's screen.",
+            "caption": "Texting is one way to make comments.",
+            "source": {
+              "url": "https://www.pexels.com/photo/person-holding-white-android-smartphone-5053765/",
+              "title": "Person Holding White Android Smartphone",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "pressure",
+    "alternateForms": ["pressures","pressured","pressuring"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To force into an action by strong influence or urging." ,
+        "examples": [ "My friend pressured me to try out for the soccer team." ]
+      }
+    ]
+  }
+]

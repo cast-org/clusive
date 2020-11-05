@@ -1,0 +1,105 @@
+[
+    {
+        "headword": "ground",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The earth's solid surface; land." ,
+                "examples": [ "It was good to stand on solid ground after the long airplane flight." ],
+                "images": [
+                    {
+                        "src": "glossimages/ground1.jpg",
+                        "alt": "Photo of a dirt road.",
+                        "description": "A dirt road.",
+                        "caption": "The dirt and grass are both part of the ground.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/foggy-road-701447/",
+                            "title": "Foggy Road",
+                            "author": "Jan Tancar",
+                            "author_url": "https://www.pexels.com/@jan-tancar-217659",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "smear",
+        "alternateForms": ["smears","smeared","smearing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To dirty or mark something in a messy way." ,
+                "examples": [ "He smeared his shirt with jam when he leaned over the table." ],
+                "images": [
+                    {
+                        "src": "glossimages/smear1.jpg",
+                        "alt": "Photo of a person with a blurred section over her eyes.",
+                        "description": "Photo of a person with a blurred section over her eyes.",
+                        "caption": "The photographer smeared a section to hide a part of this person's face",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/collage-photo-of-woman-3812743/",
+                            "title": "Woman with smeared eyes in studio",
+                            "author": "Thiago Matos",
+                            "author_url": "https://www.pexels.com/@thiagomobile",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "estimate",
+        "alternateForms": ["estimates"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A careful guess as to the amount, size, or value of something." ,
+                "examples": [ "My estimate of the total was off by only a few dollars."]
+            }
+        ]
+    },
+    {
+        "headword": "ban",
+        "alternateForms": ["bans","banned","banning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To forbid or have an official rule against." ,
+                "examples": [ "The law bans smoking in the restaurant." ],
+                "images": [
+                    {
+                        "src": "glossimages/ban1.jpg",
+                        "alt": "Photo of a sign with a red circle with diagonal line across it.",
+                        "description": "Photo of a sign showing food with a red circle with diagonal line across it. The red circle with diagonal line means that something is not allowed.",
+                        "caption": "This sign shows that food is banned at this place.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/red-and-white-round-signage-3993917/",
+                            "title": "Red and White Round Signage",
+                            "author": "Paolo",
+                            "author_url": "https://www.pexels.com/@paolo-6862",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "consequence",
+        "alternateForms": ["consequences"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "That which follows; result." ,
+                "examples": [ "You shouldn't make important decisions before thinking about the consequences." ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,94 @@
+[
+    {
+        "headword": "devalue",
+        "alternateForms": ["devalues","devalued","devaluing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To lower the value or importance of something or someone." ,
+                "examples": [ "Advertising shows that having dark skin is devalued, and that's just wrong." ]
+            }
+        ]
+    },
+    {
+        "headword": "scan",
+        "alternateForms": ["scans","scanned","scanning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To read or look over quickly." ,
+                "examples": [ "I scanned the newspaper for weather reports." ],
+                "images": [
+                    {
+                        "src": "glossimages/scan1.jpg",
+                        "alt": "Photo of people reading a newspaper.",
+                        "description": "People sitting at a table looking at a newspaper.",
+                        "caption": "People sometimes scan newspapers to get a quick idea of what is happening in the world.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/concentrated-diverse-colleagues-of-different-ages-reading-newspaper-together-in-modern-workspace-3866322/",
+                            "title": "Concentrated diverse colleagues of different ages reading newspaper together in modern workspace",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "African",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or having to do with Africa, or its people or languages." ,
+                "examples": [ "Ghana is an African country." ],
+                "images": [
+                    {
+                        "src": "glossimages/african1.jpg",
+                        "alt": "Photo of a person feeding a giraffe.",
+                        "description": "A person feeds a giraffe",
+                        "caption": "Giraffes are African animals.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-feeding-giraffe-1670732/",
+                            "title": "Person feeding giraffe",
+                            "author": "Git Stephen Gitau",
+                            "author_url": "https://www.pexels.com/@git-stephen-gitau-302905",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "different",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not the same as; unlike." ,
+                "examples": [ "The twins look alike but have made different choices for what they want to do in life." ],
+                "images": [
+                    {
+                        "src": "glossimages/different1.jpg",
+                        "alt": "Photo of two people next to each other.",
+                        "description": "Two people who look alike, but who have different expressions and are wearing different clothes.",
+                        "caption": "Twins look alike, but they can have different personalities and interests, too.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-woman-beside-each-other-3935356/",
+                            "title": "Photo Of Woman Beside Each Other",
+                            "author": "Marlon Alves",
+                            "author_url": "https://www.pexels.com/@marlon-alves-2016519",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

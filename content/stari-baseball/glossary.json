@@ -1,0 +1,110 @@
+[
+  {
+    "headword": "towering",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Of special importance, ability, or influence; or, particularly tall physically.",
+        "examples": [ "She towered over the rest of the class in math." ],
+        "images": [
+          {
+            "src": "glossimages/towering1.jpg",
+            "alt": "Photo of a town with one, very high column or tower.",
+            "description": "Photo of a town with one, very high column or tower.",
+            "caption": "This tall column is towering over the rest of the city.",
+            "source": {
+              "url": "https://www.pexels.com/photo/wide-angle-shot-of-a-illuminated-tower-in-the-midst-of-a-town-on-a-cloudy-day-3400126/",
+              "title": "Shallow Focus Photo of Brown Building",
+              "author": "Emre Kuzu ",
+              "author_url": "https://www.pexels.com/@emre-kuzu-1112138",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "find",
+    "alternateForms": ["finds","found","finding"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To discover something after a search." ,
+        "examples": [ "The searchers found the missing children on the subway train." ],
+        "images": [
+          {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a person looking through binoculars.",
+            "description": "Photo of a man looking through binoculars at sunset.",
+            "caption": "Binoculars are a good tool to use when you want to find something far away.",
+            "source": {
+              "url": "https://www.pexels.com/photo/man-looking-in-binoculars-during-sunset-802412/",
+              "title": "Man Looking in Binoculars during Sunset",
+              "author": "Francis Seura ",
+              "author_url": "https://www.pexels.com/@seurafrancis99",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "locally",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adverb",
+        "definition": "In a particular place." ,
+        "examples": [ "Today, many stores sell locally grown fruits and vegetables." ],
+        "images": [
+          {
+            "src": "glossimages/locally1.jpg",
+            "alt": "Photo of a market with vegetables.",
+            "description": "A stand selling fresh vegetables.",
+            "caption": "A farmer's market selling fresh vegetables that are grown near by.",
+            "source": {
+              "url": "https://www.pexels.com/photo/fresh-vegetables-on-street-market-2448523/",
+              "title": "Fresh Vegetables On Street Market",
+              "author": "Megan Markham ",
+              "author_url": "https://www.pexels.com/@megan-markham-1282712",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "pride",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A sense of personal value that comes from what one has or can do." ,
+        "examples": [ "He takes pride in his work." ],
+        "images": [
+          {
+            "src": "glossimages/pride1.jpg",
+            "alt": "Photo of two people jumping, seen in silhouette.",
+            "description": "Two people jumping with hands extended upward, expressing excitement. They are seen in silhouette.",
+            "caption": "You may jump for joy when you are very proud of something you did.",
+            "source": {
+              "url": "https://www.pexels.com/photo/sunset-beach-people-sunrise-40815/",
+              "title": "Two Person Standing in Silhouette Photography",
+              "author": "Jill Wellington",
+              "author_url": "https://www.pexels.com/@jill-wellington-1638660",
+              "license": "CC BY-SA 2.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

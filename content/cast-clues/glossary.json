@@ -1,0 +1,186 @@
+[
+    {
+        "headword": "adjust",
+        "alternateForms": ["adjust","adjusted","adjusting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To move (something) slightly in order to achieve the desired fit." ,
+                "examples": [ "He smoothed his hair and adjusted the knot in his tie." ],
+                "images": [
+                    {
+                        "src": "glossimages/adjust1.jpg",
+                        "alt": "Photo of a man adjusting his tie.",
+                        "description": "A man wearing a suit, adjusting his tie.",
+                        "caption": "A man wearing a suit and adjusting his tie.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/men-s-plaid-suit-and-pants-936128/",
+                            "title": "Men's Plaid Suit and Pants",
+                            "author": "nappy",
+                            "author_url": "https://www.pexels.com/@nappy",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "investigate",
+        "alternateForms": ["investigates","investigated","investigating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To carefully look at." ,
+                "examples": [ "We investigated the area carefully by using binoculars and by asking others." ],
+                "images": [
+                    {
+                        "src": "glossimages/investigate1.jpg",
+                        "alt": "Photo of a person looking through binoculars.",
+                        "description": "A person using binoculars, looking between two tall stacks of books.",
+                        "caption": "Binoculars can help you see details of something that is far away.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/anonymous-person-with-binoculars-looking-through-stacked-books-3769697/",
+                            "title": "Anonymous person with binoculars looking through stacked books",
+                            "author": "Andrea Piacquadio ",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "feature",
+        "alternateForms": ["features"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A distinctive quality or trait of something." ,
+                "examples": [ "One feature of Clusive is the word lookup. What other features can you find?" ]
+            }
+        ]
+    },
+    {
+        "headword": "personalize",
+        "alternateForms": ["personalizes","personalized","personalizing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To design (something) to meet someone's individual preference." ,
+                "examples": [ "The way Clusive appears is personalized just for you." ],
+                "images": [
+                    {
+                        "src": "glossimages/personalize1.jpg",
+                        "alt": "Photo of mom putting face mask on girl.",
+                        "description": "A mom putting a face mask on her daughter. The face mask has a cat mouth, nose and whiskers printed on it.",
+                        "caption": "This mask is personalized with a cat face printed on it.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/mother-putting-a-face-mask-on-her-daughter-4261251/",
+                            "title": "Mother Putting a Face Mask on her Daughter",
+                            "author": "August de Richelieu",
+                            "author_url": "https://www.pexels.com/@august-de-richelieu",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "change",
+        "alternateForms": ["changes","changed","changing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To move or alter something. " ,
+                "examples": [ "He smoothed his hair and changed how his tie was laying on his shirt." ],
+                "images": [
+                    {
+                        "src": "glossimages/adjust1.jpg",
+                        "alt": "Photo of a man adjusting his tie.",
+                        "description": "A man wearing a suit, adjusting his tie.",
+                        "caption": "A man wearing a suit and changing the position of his tie.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/men-s-plaid-suit-and-pants-936128/",
+                            "title": "Men's Plaid Suit and Pants",
+                            "author": "nappy",
+                            "author_url": "https://www.pexels.com/@nappy",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "explore",
+        "alternateForms": ["explores","explored","exploring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To carefully look at." ,
+                "examples": [ "We explored the area carefully by using binoculars and by asking others." ],
+                "images": [
+                    {
+                        "src": "glossimages/investigate1.jpg",
+                        "alt": "Photo of a person looking through binoculars.",
+                        "description": "A person using binoculars, looking between two tall stacks of books.",
+                        "caption": "Binoculars can help you see details of something that is far away.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/anonymous-person-with-binoculars-looking-through-stacked-books-3769697/",
+                            "title": "Anonymous person with binoculars looking through stacked books",
+                            "author": "Andrea Piacquadio ",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "tool",
+        "alternateForms": ["tools"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something used to carry out a particular task." ,
+                "examples": [ "One tool in Clusive is the word lookup. What other tools can you find?" ]
+            }
+        ]
+    },
+    {
+        "headword": "customize",
+        "alternateForms": ["customizes","customized","customizing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To design (something) to meet someone's individual preference." ,
+                "examples": [ "The way Clusive appears is customized just for you." ],
+                "images": [
+                    {
+                        "src": "glossimages/personalize1.jpg",
+                        "alt": "Photo of mom putting face mask on girl.",
+                        "description": "A mom putting a face mask on her daughter. The face mask has a cat mouth, nose and whiskers printed on it.",
+                        "caption": "This mask is customized with a cat face printed on it.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/mother-putting-a-face-mask-on-her-daughter-4261251/",
+                            "title": "Mother Putting a Face Mask on her Daughter",
+                            "author": "August de Richelieu",
+                            "author_url": "https://www.pexels.com/@august-de-richelieu",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

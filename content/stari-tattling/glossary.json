@@ -1,0 +1,73 @@
+[
+  {
+    "headword": "culprit",
+    "alternateForms": ["culprits"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A person who is blamed for doing something wrong." ,
+        "examples": [ "Why am I always assumed to be the culprit whenever something goes wrong around here?" ]
+      }
+    ]
+  },
+  {
+    "headword": "critical",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Very important.." ,
+        "examples": [ "It is critical that people take action to stop bullying." ]
+      }
+    ]
+  },
+  {
+    "headword": "hesitate",
+    "alternateForms": ["hesitates","hesitated","hesitating"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To be slow to act because of not feeling very sure or willing." ,
+        "examples": [ "Why are you hesitating? Go ahead and call your friends!"]
+      }
+    ]
+  },
+  {
+    "headword": "culture",
+    "alternateForms": ["cultures"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A way of life; group of people who share a particular way of life." ,
+        "examples": [ "Our national culture reflects the great diversity of our people." ],
+        "images": [
+          {
+            "src": "glossimages/culture1.jpg",
+            "alt": "Photo of sculptures on a Singapore temple.",
+            "description": "From the corner of a building and looking upward, parts of two sides of a building are seen. The sides of the building are covered with colorful figures including human figures and dragon shapes.",
+            "caption": "Religion and art are important aspects of human culture.",
+            "source": {
+              "url": "https://commons.wikimedia.org/wiki/File:Sri_Mariamman_Temple_Singapore_3_amk.jpg",
+              "title": "Sri Mariamman Temple Singapore",
+              "author": "AngMoKio.",
+              "author_url": "https://commons.wikimedia.org/wiki/User:AngMoKio",
+              "license": "CC BY-SA 3.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/3.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "threat",
+    "alternateForms": ["threats"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A warning of trouble or harm." ,
+        "examples": [ "After the emperor was died, a threat of war hung over the country." ]
+      }
+    ]
+  }
+]

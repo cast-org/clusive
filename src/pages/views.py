@@ -11,6 +11,7 @@ from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
 from roster.models import ClusiveUser
+from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 

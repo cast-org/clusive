@@ -8,7 +8,8 @@ $enable-sizing:                         true;
 $enable-shadows:                        true;
 
 // Content
-$enable-root:                           false;
+$enable-root-colors:                    false;
+$enable-root-fonts:                     false;
 $enable-grid-row-cols:                  false;
 $enable-grid-responsive-containers:     true;
 $enable-typography-lead:                false;
@@ -283,6 +284,16 @@ $card-header-padding-y:                 $card-padding-y;
 $card-header-padding-x:                 $card-padding-x;
 $card-footer-padding-y:                 $card-padding-y;
 $card-footer-padding-x:                 $card-padding-x;
+
+$tooltip-feature-max-width:             14rem;
+$tooltip-feature-padding-y:             .5rem;
+$tooltip-feature-padding-x:             .75rem;
+$tooltip-feature-font-size:             $font-size-base;
+$tooltip-feature-border-radius:         $border-radius;
+$tooltip-feature-opacity:               1;
+$tooltip-feature-arrow-width:           1.5rem;
+$tooltip-feature-arrow-height:          .75rem;
+$tooltip-feature-arrow-color:           var(--CT_tooltipFeatureBg);
 
 $popover-bg:                            var(--CT_popoverBg);
 $popover-border-width:                  3px;
