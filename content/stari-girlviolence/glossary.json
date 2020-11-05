@@ -1,0 +1,89 @@
+[
+  {
+    "headword": "statistic",
+    "alternateForms": ["statistics"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A fact or piece of data from a study of a large quantity of numerical data." ,
+        "examples": [ "Scientists often use statistics to guide decisions about whether or not to accept a hypothesis." ]
+      }
+    ]
+  },
+  {
+    "headword": "gender",
+    "alternateForms": ["stereotypes"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "The sex of a person or animal." ,
+        "examples": [ "It doesn't matter what your gender is, many people like swimming." ],
+        "images": [
+          {
+            "src": "glossimages/gender1.jpg",
+            "alt": "Screen capture of gender choice in a questionnaire.",
+            "description": "Screen capture of gender choice in a questionnaire. Choices include Female, Male, and Transgender.",
+            "caption": "Survey with choices for identifying gender.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/6a135364-48e7-4cfb-abb4-69fce9e55d8e",
+              "title": "Transgender is a gender option! ",
+              "author": "Tricia Wang",
+              "author_url": "https://www.flickr.com/photos/53991912@N00",
+              "license": "CC BY-NC-SA 2.0",
+              "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "trend",
+    "alternateForms": ["trends" ],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A general direction or tendency.",
+        "examples": [ "The trend toward obesity continues in many modern countries." ]
+      }
+    ]
+  },
+  {
+    "headword": "incident",
+    "alternateForms": ["incidents" ],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Something that happens; a single event.",
+        "examples": [ "Several incidents of money disappearing led them to believe that someone was stealing from them." ]
+      }
+    ]
+  },
+  {
+    "headword": "victim",
+    "alternateForms": ["victims"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Someone who is hurt, injured, or killed by a person, group, or event." ,
+        "examples": [ "They were victims of unfair treatment by others." ],
+        "images": [
+          {
+            "src": "glossimages/victim1.jpg",
+            "alt": "Photo of fist in the foreground and person sitting on the ground.",
+            "description": "A person stands with a clenched fist in the foreground. A person sits with head down and hands over head in the background.",
+            "caption": "Victims can be hurt physically, through words, or other actions.",
+            "source": {
+              "url": "https://www.pexels.com/photo/man-in-yellow-shirt-and-blue-denim-jeans-4379915/",
+              "title": "Man in Yellow Shirt and Blue Denim Jeans",
+              "author": "Karolina Grabowska",
+              "author_url": "https://www.pexels.com/@karolina-grabowska",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
