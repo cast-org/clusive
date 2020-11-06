@@ -12,7 +12,7 @@
                 url: '/messagequeue/',
                 method: "POST"
             },
-            flushInterval: 180000,
+            flushInterval: 60000,
             logoutLinkSelector: "#logoutLink"
         },
         events: {
