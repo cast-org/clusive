@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
-preference_changed = Signal(providing_args=['request', 'event_id', 'preference'])
+preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value'])
 
@@ -104,10 +104,12 @@ def log_pref_change(sender, **kwargs):
             document_version = associated_page_event.document_version        
             request = kwargs.get('request')
             preference = kwargs.get('preference')
+            timestamp = kwargs.get('timestamp')
             logger.debug("Preference change: %s" % (preference))
             event = Event.build(type='TOOL_USE_EVENT',
                                 action='USED',
                                 control='pref:'+preference.pref,
+                                eventTime=timestamp,
                                 value=preference.value,
                                 page=page,
                                 document=document,

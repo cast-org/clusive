@@ -75,7 +75,7 @@ class PreferenceSetView(View):
 
 
 # Set user preferences from a dictionary
-def set_user_preferences(user, new_prefs, event_id, request):
+def set_user_preferences(user, new_prefs, event_id, timestamp, request):
     """Sets User's preferences to match the given dictionary of preference values."""    
     old_prefs = user.get_preferences_dict()
     prefs_to_use = new_prefs    
@@ -84,7 +84,7 @@ def set_user_preferences(user, new_prefs, event_id, request):
         if old_val != prefs_to_use[pref_key]:
             # Preference changes associated with a page event (user action)
             if(event_id):
-                set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], event_id, request)
+                set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], event_id, timestamp, request)
             # Preference changes not associated with a page event - not logged                
             else:                 
                 user.set_preference(pref_key, prefs_to_use[pref_key])
@@ -93,16 +93,15 @@ def set_user_preferences(user, new_prefs, event_id, request):
             #              old_val, type(old_val),
             #              pref.typed_value, type(pref.typed_value))
 
-
-def set_user_preference_and_log_event(user, pref_key, pref_value, event_id, request):
+def set_user_preference_and_log_event(user, pref_key, pref_value, event_id, timestamp, request):
     pref = user.set_preference(pref_key, pref_value)
-    preference_changed.send(sender=ClusiveUser.__class__, request=request, event_id=event_id, preference=pref)
+    preference_changed.send(sender=ClusiveUser.__class__, request=request, event_id=event_id, preference=pref, timestamp=timestamp)
 
 @receiver(client_side_prefs_change, sender=Message)
-def set_preferences_from_message(sender, timestamp, content, request, **kwargs):
+def set_preferences_from_message(sender, content, timestamp, request, **kwargs):
     logger.info("client_side_prefs_change message received")
     user = request.clusive_user
-    set_user_preferences(user, content["preferences"], content["eventId"], request)
+    set_user_preferences(user, content["preferences"], content["eventId"], timestamp, request)
 
 
 @staff_member_required
