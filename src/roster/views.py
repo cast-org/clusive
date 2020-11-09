@@ -14,6 +14,8 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, UpdateView
 
+from django.utils import timezone
+
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
@@ -45,7 +47,7 @@ class PreferenceView(View):
             return JsonResponse({'success': 0, 'message': 'Invalid JSON in request'})
 
         user = ClusiveUser.from_request(request)
-        set_user_preferences(user, request_prefs, None, request)
+        set_user_preferences(user, request_prefs, None, None, request)
 
         return JsonResponse({'success': 1})
 
@@ -62,13 +64,14 @@ class PreferenceSetView(View):
 
         desired_prefs_name = request_json["adopt"]
         event_id = request_json["eventId"]
+        timestamp = timezone.now()
 
         try:
             desired_prefs = PreferenceSet.get_json(desired_prefs_name)
         except PreferenceSet.DoesNotExist:
             return JsonResponse(status=404, data={'message': 'Preference set named %s does not exist' % desired_prefs_name})
 
-        set_user_preferences(user, desired_prefs, event_id, request)
+        set_user_preferences(user, desired_prefs, event_id, timestamp, request)
 
         # Return the preferences set
         return JsonResponse(desired_prefs)
