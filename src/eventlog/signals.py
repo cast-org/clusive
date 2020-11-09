@@ -85,6 +85,7 @@ def log_control_used(sender, **kwargs):
                                 value=kwargs['value'],
                                 page=page,
                                 document=document,
+                                eventTime=timeStamp,
                                 document_version=document_version,
                                 session=kwargs['request'].session)
             if event:   
