@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 import json
 
 from roster.tests import set_up_test_users
@@ -81,7 +82,18 @@ class MessageQueueTestCase(TestCase):
         prefs_response = self.client.get('/account/prefs')
         prefs = json.loads(prefs_response.content)
         self.assertEqual(prefs["fluid_prefs_contrast"], "sepia", "fluids_prefs_contrast value was not as expected")        
-        self.assertEqual(prefs["fluid_prefs_textFont"], "times", "fluid_prefs_textFont value was not as expected")        
+        self.assertEqual(prefs["fluid_prefs_textFont"], "times", "fluid_prefs_textFont value was not as expected")
+        self.assertEqual(prefs["fluid_prefs_textSize"], 0.9, "fluid_prefs_textSize value was not as expected")
+
+        # Test that events are created with expected values
+
+        latest_contrast_event = Event.objects.filter(control='pref:fluid_prefs_contrast').order_by('-eventTime').first()
+        latest_textFont_event = Event.objects.filter(control='pref:fluid_prefs_textFont').order_by('-eventTime').first()
+        latest_textSize_event = Event.objects.filter(control='pref:fluid_prefs_textSize').order_by('-eventTime').first()
+
+        self.assertEqual(latest_contrast_event.value, "sepia", "value recorded in contrast change event was not as expected")
+        self.assertEqual(latest_textFont_event.value, "times", "value recorded in textFont change event was not as expected")
+        self.assertEqual(latest_textSize_event.value, '0.9', "value recorded in textFont change event was not as expected")        
 
     def test_send_message_signal(self):            
 

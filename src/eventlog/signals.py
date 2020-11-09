@@ -105,7 +105,7 @@ def log_pref_change(sender, **kwargs):
             request = kwargs.get('request')
             preference = kwargs.get('preference')
             timestamp = kwargs.get('timestamp')
-            logger.debug("Preference change: %s" % (preference))
+            logger.debug("Preference change: %s at %s" % (preference, timestamp))
             event = Event.build(type='TOOL_USE_EVENT',
                                 action='USED',
                                 control='pref:'+preference.pref,
