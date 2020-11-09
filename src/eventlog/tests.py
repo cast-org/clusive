@@ -6,6 +6,8 @@ from roster.tests import set_up_test_sites, set_up_test_periods, set_up_test_use
 from roster.models import Site, Period, ClusiveUser
 from eventlog.models import LoginSession, Event
 
+from time import sleep
+
 class EventlogTestCase(TestCase):
     def setUp(self):
         set_up_test_sites()
@@ -46,7 +48,7 @@ class EventlogTestCase(TestCase):
         self.assertEquals("LOGGED_IN", event.action, "Action is wrong")
 
     def test_logout_event(self):
-        login = self.client.login(username='user1', password='password1')
+        login = self.client.login(username='user1', password='password1')        
         self.client.logout()
         event = Event.objects.all().order_by('-eventTime').first()
         self.assertIsNotNone(event.id, "Event should have an ID assigned")

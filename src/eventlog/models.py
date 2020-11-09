@@ -35,7 +35,7 @@ class Event(models.Model):
         default=Roles.GUEST
     )
     # Date and time the event started
-    eventTime = models.DateTimeField(default=timezone.now())
+    eventTime = models.DateTimeField(default=timezone.now)
     # (VIEW events:) time for the browser to retrieve and render the content
     loadTime = models.DurationField(null=True)
     # (VIEW events:) total time from when the page was loaded to when it was exited
@@ -64,7 +64,7 @@ class Event(models.Model):
     def build(cls, type, action,
               session=None, login_session=None, group=None,
               document=None, document_version=None, page=None,
-              control=None, value=None, eventTime=timezone.now()):
+              control=None, value=None, eventTime=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
             logger.error("Either a session object or a login_session must be provided")
@@ -76,6 +76,8 @@ class Event(models.Model):
             if session and not group:
                 period_id = session.get(PERIOD_KEY, None)
                 group = Period.objects.filter(id=period_id).first()
+            if eventTime == None:
+                eventTime = timezone.now()
             clusive_user = login_session.user
             if value and len(value) > 128:
                 value = value[:126] + '…'

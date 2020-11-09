@@ -162,7 +162,7 @@ def log_login(sender, **kwargs):
                             login_session=login_session,
                             group=current_period)
         event.save()
-        logger.debug("Login by user %s", clusive_user)
+        logger.debug("Login by user %s at %s" % (clusive_user, event.eventTime))
     except ClusiveUser.DoesNotExist:
         logger.warning("Login by a non-Clusive user: %s", django_user)
 
@@ -184,7 +184,7 @@ def log_logout(sender, **kwargs):
         login_session.endedAtTime = timezone.now()
         login_session.save()
         clusive_user = login_session.user
-        logger.debug("Logout user %s", clusive_user)
+        logger.debug("Logout user %s at %s" % (clusive_user, event.eventTime))
 
 
 @receiver(user_timed_out)
