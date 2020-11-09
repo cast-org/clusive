@@ -362,3 +362,35 @@ class PreferenceSet(models.Model):
     def __str__(self):
         return 'PreferenceSet:%s' % (self.name)
 
+
+class UserStats (models.Model):
+    """
+    Store some auxilliary data about ClusiveUser's behavior.
+    Exactly what will go in here is still somewhat up in the air.
+    Should be useful for dashboard display once we get there.
+    """
+
+    user = models.OneToOneField(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    reading_views = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'user stats'
+        verbose_name_plural = 'user stats'
+
+    @classmethod
+    def update_stats_for_event(cls, event):
+        logger.debug('Analyzing event: %s', event)
+        if event.type == 'VIEW_EVENT' \
+                 and event.action == 'VIEWED' \
+                 and event.page == 'Reading':
+            logger.debug('  Found stats event')
+            stats = cls.for_clusive_user(event.actor)
+            stats.reading_views += 1
+            stats.save()
+
+    @classmethod
+    def for_clusive_user(cls, clusive_user: ClusiveUser):
+        (obj, created) = cls.objects.get_or_create(user=clusive_user)
+        if created:
+            logger.debug('Created new UserStats object for %s', clusive_user)
+        return obj
