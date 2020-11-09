@@ -50,6 +50,15 @@ var clusiveEvents = {
     addControlInteractionToQueue: addControlInteractionToQueue
 };
 
+var addTipRelatedActionToQueue = function(action) {
+    'use strict';
+
+    clusiveEvents.messageQueue.add({
+        type: 'TRA',
+        action: action
+    });
+}
+
 $(document).ready(function() {
     'use strict';
 
@@ -80,5 +89,11 @@ $(document).ready(function() {
         $(interactionDef.selector)[handler](function() {
             addControlInteractionToQueue(interactionDef.control, interactionDef.value);
         });
+    });
+
+    $('body').on('click', '*[data-clusive-tip-action]', function(event) {
+        var action = $(this).attr('data-clusive-tip-action');
+        console.debug('data-clusive-tip-action', action, event);
+        addTipRelatedActionToQueue(action);
     });
 });

@@ -62,6 +62,19 @@ class TipHistory(models.Model):
                 TipHistory(user=user, type=type).save()
 
     @classmethod
+    def register_action(cls, user: ClusiveUser, action: str, timestamp):
+        try:
+            type = TipType.objects.get(name=action)
+            history = TipHistory.objects.get(user=user, type=type)
+            if not history.last_action or timestamp > history.last_action:
+                history.last_action = timestamp
+                history.save()
+        except TipType.DoesNotExist:
+            logger.error('Tip-related action received with non-existent TipType: %s', action)
+        except TipHistory.DoesNotExist:
+            logger.error('Could not find TipHistory object for user %s, type %s', user, action)
+
+    @classmethod
     def available_tips(cls, user: ClusiveUser):
         """Return all tips that are currently available to show this user."""
 
