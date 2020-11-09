@@ -20,7 +20,7 @@ page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'event_id', 'control', 'value'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp'])
 
 #
 # Signal handlers that log specific events
@@ -73,6 +73,7 @@ def log_control_used(sender, **kwargs):
     """User interacts with a UI control"""
     logger.debug("control interaction: %s " % (kwargs))
     event_id = kwargs['event_id']
+    timestamp = kwargs['timestamp']
     if event_id:
         try:
             associated_page_event = Event.objects.get(id=event_id)
@@ -85,7 +86,7 @@ def log_control_used(sender, **kwargs):
                                 value=kwargs['value'],
                                 page=page,
                                 document=document,
-                                eventTime=timeStamp,
+                                eventTime=timestamp,
                                 document_version=document_version,
                                 session=kwargs['request'].session)
             if event:   
