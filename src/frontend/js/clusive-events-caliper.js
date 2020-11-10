@@ -14,7 +14,12 @@ var clusiveEvents = {
     messageQueue: clusive.djangoMessageQueue(),    
     caliperEventTypes: {
         TOOL_USE_EVENT: "TOOL_USE_EVENT"
-    },    
+    },   
+    dataAttributes: {
+        HANDLER: "data-cle-handler",
+        CONTROL: "data-cle-control",
+        VALUE: "data-cle-value"
+    },
     trackedControlInteractions: [
         {
             selector: ".btn.tts-play",
@@ -52,9 +57,9 @@ $(document).ready(function () {
     $("*[data-cle-handler]").each(function (i, control) {
         // data-clusive-event attribute 
         var elm = $(control);
-        var eventHandler = $(control).attr("data-cle-handler");
-        var eventControl = $(control).attr("data-cle-control");        
-        var eventValue = $(control).attr("data-cle-value");        
+        var eventHandler = $(control).attr(clusiveEvents.dataAttributes.HANDLER);
+        var eventControl = $(control).attr(clusiveEvents.dataAttributes.CONTROL);        
+        var eventValue = $(control).attr(clusiveEvents.dataAttributes.VALUE);        
         console.debug("data-cle-handler attribute found", elm, eventHandler, eventControl, eventValue)
         if(eventHandler !== undefined && eventControl !== undefined && eventValue !== undefined) {
             var interactionDef = {
