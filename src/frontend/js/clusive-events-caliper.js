@@ -16,32 +16,24 @@ $(document).ready(function () {
         messageQueue: clusive.djangoMessageQueue(),    
         caliperEventTypes: {
             TOOL_USE_EVENT: "TOOL_USE_EVENT"
-        },    
+        },   
+        dataAttributes: {
+            HANDLER: "data-cle-handler",
+            CONTROL: "data-cle-control",
+            VALUE: "data-cle-value"
+        },
         trackedControlInteractions: [
-            {
-                selector: ".btn.tts-play",
-                handler: "click",
-                control: "tts-play",
-                value: "clicked"
-            },
-            {
-                selector: ".btn.tts-pause",
-                handler: "click",
-                control: "tts-pause",
-                value: "clicked"
-            },
-            {
-                selector: ".btn.tts-resume",
-                handler: "click",
-                control: "tts-resume",
-                value: "clicked"
-            },
-            {
-                selector: ".btn.tts-stop",
-                handler: "click",
-                control: "tts-stop",
-                value: "clicked"
-            }         
+            /* 
+                control interactions to track can be added centrally here if needed,
+                but in most cases using the data-cle-* attributes on the markup 
+                will be more appropriate
+            */
+            // {
+            //     selector: ".btn.tts-play",
+            //     handler: "click",
+            //     control: "tts-play",
+            //     value: "clicked"
+            // }        
         ],
         addControlInteractionToQueue: addControlInteractionToQueue    
     }
@@ -49,20 +41,25 @@ $(document).ready(function () {
     // Build additional control interaction objects here from any data-clusive-event attributes on page markup
     // synax: data-clusive-event="[handler]|[control]|[value]"
     // example: data-clusive-event="click|settings-sidebar|opened"    
-    $("*[data-clusive-event").each(function (i, control) {
+    $("*[data-cle-handler]").each(function (i, control) {
         // data-clusive-event attribute 
-        console.debug("data-clusive-event", control)
-        var defsValsFromAttr = $(control).attr("data-clusive-event").split("|");
-        if(defsValsFromAttr.length < 3) {
-            console.debug("invalid data-clusive-event attribute value on control", control);
+        var elm = $(control);
+        var eventHandler = $(control).attr(clusiveEvents.dataAttributes.HANDLER);
+        var eventControl = $(control).attr(clusiveEvents.dataAttributes.CONTROL);        
+        var eventValue = $(control).attr(clusiveEvents.dataAttributes.VALUE);        
+        console.debug("data-cle-handler attribute found", elm, eventHandler, eventControl, eventValue)
+        if(eventHandler !== undefined && eventControl !== undefined && eventValue !== undefined) {
+            var interactionDef = {
+                selector: elm,
+                handler: eventHandler,
+                control: eventControl,
+                value: eventValue
+            }
+            clusiveEvents.trackedControlInteractions.push(interactionDef);        
+        } else {
+            console.debug("tried to add event logging, but missing a needed data-cle-* attribute on the element: ", elm)
         }
-        var interactionDef = {
-            selector: control,
-            handler: defsValsFromAttr[0],
-            control: defsValsFromAttr[1],
-            value: defsValsFromAttr[2]
-        }
-        clusiveEvents.trackedControlInteractions.push(interactionDef);
+        
     });
 
     // Set up events control interactions here

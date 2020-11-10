@@ -46,7 +46,7 @@ class EventlogTestCase(TestCase):
         self.assertEquals("LOGGED_IN", event.action, "Action is wrong")
 
     def test_logout_event(self):
-        login = self.client.login(username='user1', password='password1')
+        login = self.client.login(username='user1', password='password1')        
         self.client.logout()
         event = Event.objects.all().order_by('-eventTime').first()
         self.assertIsNotNone(event.id, "Event should have an ID assigned")
