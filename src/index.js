@@ -24,9 +24,9 @@ import execFiguration from 'script-loader!figuration';
 import execGPIIBinder from "script-loader!gpii-binder/src/js/binder.js";
 
 // import execMarkJs from 'script-loader!mark.js';
+import execClusiveContext from "script-loader!../src/frontend/js/clusive-context.js";
+import execClusiveEventsCaliper from "script-loader!../src/frontend/js/clusive-events-caliper.js"
 
-// import execClusiveContext from "script-loader!../src/frontend/js/clusive-context.js";
-// import execClusiveEventsCaliper from "script-loader!../src/frontend/js/clusive-events-caliper.js"
 import execClusiveReaderPrefs from "script-loader!../src/frontend/js/clusive-reader-prefs.js";
 import execClusivePrefsPanel from "script-loader!../src/frontend/js/clusive-prefs-panel.js";
 import execClusiveMessageQueue from "script-loader!../src/frontend/js/clusive-message-queue.js"

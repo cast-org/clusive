@@ -4,11 +4,10 @@
 Variables and functions for information about the current context
 */
 
-var clusiveContext;
 
 $(document).ready(function () { 
 
-    clusiveContext = {
+    window.clusiveContext = {
         reader: {
             get window() {
                 var readerIframe = $('#D2Reader-Container').find('iframe');
