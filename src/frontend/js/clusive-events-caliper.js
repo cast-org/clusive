@@ -21,30 +21,17 @@ var clusiveEvents = {
         VALUE: "data-cle-value"
     },
     trackedControlInteractions: [
-        {
-            selector: ".btn.tts-play",
-            handler: "click",
-            control: "tts-play",
-            value: "clicked"
-        },
-        {
-            selector: ".btn.tts-pause",
-            handler: "click",
-            control: "tts-pause",
-            value: "clicked"
-        },
-        {
-            selector: ".btn.tts-resume",
-            handler: "click",
-            control: "tts-resume",
-            value: "clicked"
-        },
-        {
-            selector: ".btn.tts-stop",
-            handler: "click",
-            control: "tts-stop",
-            value: "clicked"
-        }         
+        /* 
+            control interactions to track can be added centrally here if needed,
+            but in most cases using the data-cle-* attributes on the markup 
+            will be more appropriate
+        */
+        // {
+        //     selector: ".btn.tts-play",
+        //     handler: "click",
+        //     control: "tts-play",
+        //     value: "clicked"
+        // }        
     ],
     addControlInteractionToQueue: addControlInteractionToQueue    
 }
