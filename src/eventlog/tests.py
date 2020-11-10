@@ -6,8 +6,6 @@ from roster.tests import set_up_test_sites, set_up_test_periods, set_up_test_use
 from roster.models import Site, Period, ClusiveUser
 from eventlog.models import LoginSession, Event
 
-from time import sleep
-
 class EventlogTestCase(TestCase):
     def setUp(self):
         set_up_test_sites()
