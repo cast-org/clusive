@@ -10,41 +10,43 @@ var addControlInteractionToQueue = function (control, value) {
     });
 };
 
-var clusiveEvents = {
-    messageQueue: clusive.djangoMessageQueue(),    
-    caliperEventTypes: {
-        TOOL_USE_EVENT: "TOOL_USE_EVENT"
-    },    
-    trackedControlInteractions: [
-        {
-            selector: ".btn.tts-play",
-            handler: "click",
-            control: "tts-play",
-            value: "clicked"
-        },
-        {
-            selector: ".btn.tts-pause",
-            handler: "click",
-            control: "tts-pause",
-            value: "clicked"
-        },
-        {
-            selector: ".btn.tts-resume",
-            handler: "click",
-            control: "tts-resume",
-            value: "clicked"
-        },
-        {
-            selector: ".btn.tts-stop",
-            handler: "click",
-            control: "tts-stop",
-            value: "clicked"
-        }         
-    ],
-    addControlInteractionToQueue: addControlInteractionToQueue    
-}
+var clusiveEvents;
 
 $(document).ready(function () {    
+
+    clusiveEvents = {
+        messageQueue: clusive.djangoMessageQueue(),    
+        caliperEventTypes: {
+            TOOL_USE_EVENT: "TOOL_USE_EVENT"
+        },    
+        trackedControlInteractions: [
+            {
+                selector: ".btn.tts-play",
+                handler: "click",
+                control: "tts-play",
+                value: "clicked"
+            },
+            {
+                selector: ".btn.tts-pause",
+                handler: "click",
+                control: "tts-pause",
+                value: "clicked"
+            },
+            {
+                selector: ".btn.tts-resume",
+                handler: "click",
+                control: "tts-resume",
+                value: "clicked"
+            },
+            {
+                selector: ".btn.tts-stop",
+                handler: "click",
+                control: "tts-stop",
+                value: "clicked"
+            }         
+        ],
+        addControlInteractionToQueue: addControlInteractionToQueue    
+    }
 
     // Build additional control interaction objects here from any data-clusive-event attributes on page markup
     // synax: data-clusive-event="[handler]|[control]|[value]"
