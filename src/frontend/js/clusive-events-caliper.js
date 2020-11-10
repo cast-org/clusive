@@ -49,20 +49,25 @@ $(document).ready(function () {
     // Build additional control interaction objects here from any data-clusive-event attributes on page markup
     // synax: data-clusive-event="[handler]|[control]|[value]"
     // example: data-clusive-event="click|settings-sidebar|opened"    
-    $("*[data-clusive-event").each(function (i, control) {
+    $("*[data-cle-handler]").each(function (i, control) {
         // data-clusive-event attribute 
-        console.debug("data-clusive-event", control)
-        var defsValsFromAttr = $(control).attr("data-clusive-event").split("|");
-        if(defsValsFromAttr.length < 3) {
-            console.debug("invalid data-clusive-event attribute value on control", control);
+        var elm = $(control);
+        var eventHandler = $(control).attr("data-cle-handler");
+        var eventControl = $(control).attr("data-cle-control");        
+        var eventValue = $(control).attr("data-cle-value");        
+        console.debug("data-cle-handler attribute found", elm, eventHandler, eventControl, eventValue)
+        if(eventHandler !== undefined && eventControl !== undefined && eventValue !== undefined) {
+            var interactionDef = {
+                selector: elm,
+                handler: eventHandler,
+                control: eventControl,
+                value: eventValue
+            }
+            clusiveEvents.trackedControlInteractions.push(interactionDef);        
+        } else {
+            console.debug("tried to add event logging, but missing a needed data-cle-* attribute on the element: ", elm)
         }
-        var interactionDef = {
-            selector: control,
-            handler: defsValsFromAttr[0],
-            control: defsValsFromAttr[1],
-            value: defsValsFromAttr[2]
-        }
-        clusiveEvents.trackedControlInteractions.push(interactionDef);
+        
     });
 
     // Set up events control interactions here
