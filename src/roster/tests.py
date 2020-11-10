@@ -12,8 +12,6 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
-from django.utils import timezone
-
 from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
 
 # TODO: make sure all tests have helpful messages
