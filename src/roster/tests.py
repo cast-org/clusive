@@ -261,8 +261,7 @@ class ClusiveUserTestCase(TestCase):
         self.assertJSONEqual(response.content, {'success': 1}, 'Setting pref did not return expected response')
 
         response = self.client.get('/account/prefs')
-        # TODO: currently default settings are always applied, so more than this one item is returned.
-        # self.assertJSONEqual(response.content, {'foo': 'bar'}, 'Fetching prefs did not return value that was set')
+
         self.assertContains(response, '"foo": "bar"')
 
         # Now that defaults are established, we should get accurate event logging
