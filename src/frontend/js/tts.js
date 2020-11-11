@@ -4,7 +4,7 @@
 /* eslint-disable no-use-before-define */
 /* global D2Reader */
 
-var clusiveTTS = {
+window.clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
     region: {},
@@ -474,7 +474,7 @@ clusiveTTS.readAloudSample = function() {
     window.speechSynthesis.speak(utt);
 };
 
-var clusiveSelection = {
+window.clusiveSelection = {
     directions: {
         FORWARD: 'Forward',
         BACKWARD: 'Backward',
