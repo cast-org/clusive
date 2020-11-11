@@ -66,6 +66,7 @@ class TipHistory(models.Model):
         try:
             type = TipType.objects.get(name=action)
             history = TipHistory.objects.get(user=user, type=type)
+            # FIXME this errors since timestamp seems to be a str.
             if not history.last_action or timestamp > history.last_action:
                 history.last_action = timestamp
                 history.save()
