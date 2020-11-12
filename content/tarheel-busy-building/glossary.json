@@ -1,0 +1,121 @@
+[
+    {
+        "headword": "brick",
+        "alternateForms": ["bricks"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A small rectangular block, usually made of hard red clay, that is used in building." ,
+                "examples": [ "The brick building was very strong and fire-proof" ],
+                 "images": [
+                    {
+                        "src": "glossimages/brick1.jpg",
+                        "alt": "Photo of a wall made of bricks.",
+                        "description": "Many bricks stuck together to make a wall.",
+                        "caption": "A wall made of bricks.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/brown-brick-wall-207142/",
+                            "title": "Brown Brick Wall",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "equipment",
+        "alternateForms": [],
+    "meanings": [
+        {
+                "pos": "noun",
+                "definition": "Tools used for a purpose." ,
+                "examples": [ "Wood, nails, and hammers are all important equipment in building." ],
+                 "images": [
+                    {
+                        "src": "glossimages/equipment1.jpg",
+                        "alt": "Photo of hand tools.",
+                        "description": "Photo of hand tools.",
+                        "caption": "Saws, hammers, nails, and more are pieces of equipment used by builders.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/flat-lay-photography-of-hand-tools-1029243/",
+                            "title": "Flat Lay Photography of Hand Tools",
+                            "author": "suntorn somtong",
+                            "author_url": "https://www.pexels.com/@suntorn-somtong-386224",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "vehicle",
+        "alternateForms": ["vehicles"],
+    "meanings": [
+        {
+                "pos": "noun",
+                "definition": "Something used to bring people or things from one place to another.",
+                "examples": [ "A bus is a vehicle that brings people from one place to another." ],
+                 "images": [
+                    {
+                        "src": "glossimages/vehicle1.jpg",
+                        "alt": "Photo of SUV.",
+                        "description": "Photo of a SUV.",
+                        "caption": "A car is one kind of vehicle.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/car-vehicle-automobile-range-rover-116675/",
+                            "title": "White Land Rover Range Rover Suv on Road",
+                            "author": "Mike",
+                            "author_url": "https://www.pexels.com/@mikebirdy",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "huge",
+        "alternateForms": [],
+    "meanings": [
+        {
+                "pos": "adjective",
+                "definition": "Very large." ,
+                "examples": [ "An elephant is a huge animal." ]
+            }
+        ]
+    },
+    {
+    "headword": "bridge",
+    "alternateForms": ["bridges"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A structure that carries a road over a river." ,
+        "examples": [ "Cars used the bridge to go from one side of the river to another." ],
+                "images": [
+                    {
+                        "src": "glossimages/bridge1.jpg",
+                        "alt": "Photo of Golden Gate Bridge.",
+                        "description": "Photo of Golden Gate Bridge.",
+                        "caption": "The Golden Gate Bridge is in San Francisco, California.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/golden-gate-bridge-san-francisco-california-1141853/",
+                            "title": "Golden Gate Bridge, San Francisco, California",
+                            "author": "Tae Fuller",
+                            "author_url": "https://www.pexels.com/@tae-fuller-331517",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
