@@ -1,0 +1,137 @@
+[
+    {
+         "headword": "office",
+        "alternateForms": ["offices"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A room or set of rooms used as a place for work." ,
+                "examples": [ "The doctor’s office has many rooms that are used to see sick people." ],
+                 "images": [
+                    {
+                        "src": "glossimages/office1.jpg",
+                        "alt": "Photo of a doctor checking a baby.",
+                        "description": "A baby laying on a table. On one side, a doctor in a white coat and mask looks at the baby. The doctor holds a flat wooden tongue depressor in her hand. On the other side of the table, a person puts his hands over the baby.",
+                        "caption": "The baby gets checked in the doctor's office.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/baby-lying-down-on-hospital-bed-getting-a-check-up-3993239/",
+                            "title": "Baby Lying Down on Hospital Bed Getting a Check-up",
+                            "author": "CDC",
+                            "author_url": "https://www.pexels.com/@cdc-library",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "coat",
+        "alternateForms": ["coats"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A garment worn over indoor clothing." ,
+                "examples": [ "The doctor’s coat covered the sweater and pants she was wearing." ],
+                 "images": [
+                    {
+                        "src": "glossimages/coat1.jpg",
+                        "alt": "Photo of person wearing a white lab coat.",
+                        "description": "A person wears a white lab coat.",
+                        "caption": "A person wearing a white lab coat.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/portrait-of-chemical-engineer-3861445/",
+                            "title": "Portrait of Chemical Engineer",
+                            "author": "ThisIsEngineering",
+                            "author_url": "https://www.pexels.com/@thisisengineering",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "stethoscope",
+        "alternateForms": ["stethoscopes"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A tool used for listening to someone's heart or breathing," ,
+                "examples": [ "When I had a cold, the doctor used the stethoscope to listen to my breathing." ],
+                 "images": [
+                    {
+                        "src": "glossimages/stethoscope1.jpg",
+                        "alt": "Photo of a stethoscope.",
+                        "description": "A round disk connected to yellow tubing. The tubing connects to an oval metal headset at the other end. The ends of the headset have small rubber pads.",
+                        "caption": "A stethoscope.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/medical-stethoscope-placed-on-white-background-4386464/",
+                            "title": "Medical stethoscope placed on white background",
+                            "author": "Karolina Grabowska",
+                            "author_url": "https://www.pexels.com/@karolina-grabowska",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "sick",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Feeling unwell, having an illness." ,
+                "examples": [ "I am sick with a cough and sneezing." ],
+                 "images": [
+                    {
+                        "src": "glossimages/sick1.jpg",
+                        "alt": "Photo of a person laying in bed and blowing her nose.",
+                        "description": "A person laying in bed and blowing her nose.",
+                        "caption": "This person is sick. She does not feel well.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-lying-on-bed-while-blowing-her-nose-3807629/",
+                            "title": "Woman Lying on Bed While Blowing Her Nose",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "healthy",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Feeling fit and well, without illness." ,
+                "examples": [ "She was so healthy, she could run a long race today." ],
+                 "images": [
+                    {
+                        "src": "glossimages/healthy1.jpg",
+                        "alt": "Photo of a runner.",
+                        "description": "A person running.",
+                        "caption": "Running can help you stay healthy.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/dawn-dusk-forest-grass-347134/",
+                            "title": "Woman About to Run during Golden Hour",
+                            "author": "Tirachard Kumtanom",
+                            "author_url": "https://www.pexels.com/@tirachard-kumtanom-112571",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
