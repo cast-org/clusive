@@ -29,7 +29,7 @@ def process_messages(queue_timestamp, messages, user, request):
             logger.debug("Rejected individual message, message username %s did not match session username %s ",
                          message_username, session_username)
             continue
-        message_timestamp = adjust_message_timestamp(message["timestamp"], delta)        
+        message_timestamp = adjust_message_timestamp(message["timestamp"], delta)                
         message_content = message["content"]
         
         message_type = message["content"]["type"]
@@ -40,6 +40,7 @@ def adjust_message_timestamp(timestamp, delta):
     message_time = dateutil_parse(timestamp)
     adjusted_message_time = message_time+delta
     message_timestamp = adjusted_message_time.isoformat()
+    
     return message_timestamp
 
 def get_delta_from_now(compare_time):

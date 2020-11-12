@@ -68,7 +68,7 @@ class Event(models.Model):
     def build(cls, type, action,
               session=None, login_session=None, group=None,
               document=None, document_version=None, page=None,
-              control=None, value=None):
+              control=None, value=None, eventTime=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
             logger.error("Either a session object or a login_session must be provided")
@@ -80,6 +80,8 @@ class Event(models.Model):
             if session and not group:
                 period_id = session.get(PERIOD_KEY, None)
                 group = Period.objects.filter(id=period_id).first()
+            if eventTime == None:
+                eventTime = timezone.now()
             clusive_user = login_session.user
             if value and len(value) > 128:
                 value = value[:126] + '…'
@@ -93,7 +95,8 @@ class Event(models.Model):
                         document_version=document_version,
                         page=page,
                         control=control,
-                        value=value)
+                        value=value,
+                        eventTime=eventTime)
             return event
         except ClusiveUser.DoesNotExist:
             logger.warning("Event could not be stored - no Clusive user found: %s/%s", type, action)

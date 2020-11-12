@@ -161,4 +161,7 @@ PageTiming.isTimingSupported = function() {
     }
 };
 
-PageTiming.trackPage(PAGE_EVENT_ID);
+$(document).ready(function () {
+    PageTiming.trackPage(PAGE_EVENT_ID);
+});
+

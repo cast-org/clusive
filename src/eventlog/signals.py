@@ -18,9 +18,9 @@ logger = logging.getLogger(__name__)
 
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
-preference_changed = Signal(providing_args=['request', 'event_id', 'preference'])
+preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'event_id', 'control', 'value'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp'])
 
 #
 # Signal handlers that log specific events
@@ -73,6 +73,7 @@ def log_control_used(sender, **kwargs):
     """User interacts with a UI control"""
     logger.debug("control interaction: %s " % (kwargs))
     event_id = kwargs['event_id']
+    timestamp = kwargs['timestamp']
     if event_id:
         try:
             associated_page_event = Event.objects.get(id=event_id)
@@ -85,6 +86,7 @@ def log_control_used(sender, **kwargs):
                                 value=kwargs['value'],
                                 page=page,
                                 document=document,
+                                eventTime=timestamp,
                                 document_version=document_version,
                                 session=kwargs['request'].session)
             if event:   
@@ -104,10 +106,12 @@ def log_pref_change(sender, **kwargs):
             document_version = associated_page_event.document_version        
             request = kwargs.get('request')
             preference = kwargs.get('preference')
-            logger.debug("Preference change: %s" % (preference))
+            timestamp = kwargs.get('timestamp')
+            logger.debug("Preference change: %s at %s" % (preference, timestamp))
             event = Event.build(type='TOOL_USE_EVENT',
                                 action='USED',
                                 control='pref:'+preference.pref,
+                                eventTime=timestamp,
                                 value=preference.value,
                                 page=page,
                                 document=document,
@@ -160,7 +164,7 @@ def log_login(sender, **kwargs):
                             login_session=login_session,
                             group=current_period)
         event.save()
-        logger.debug("Login by user %s", clusive_user)
+        logger.debug("Login by user %s at %s" % (clusive_user, event.eventTime))
     except ClusiveUser.DoesNotExist:
         logger.warning("Login by a non-Clusive user: %s", django_user)
 
@@ -182,7 +186,7 @@ def log_logout(sender, **kwargs):
         login_session.endedAtTime = timezone.now()
         login_session.save()
         clusive_user = login_session.user
-        logger.debug("Logout user %s", clusive_user)
+        logger.debug("Logout user %s at %s" % (clusive_user, event.eventTime))
 
 
 @receiver(user_timed_out)
