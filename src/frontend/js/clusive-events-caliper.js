@@ -1,42 +1,42 @@
 'use strict'
 
-var addControlInteractionToQueue = function (control, value) {    
-    console.debug("Adding control interaction to queue: ", control, value)
-    clusiveEvents.messageQueue.add({
-        "type": "CE", 
-        "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value},
-        "readerInfo": clusiveContext.reader.info,
-        "eventId": PAGE_EVENT_ID
-    });
-};
-
-var clusiveEvents = {
-    messageQueue: clusive.djangoMessageQueue(),    
-    caliperEventTypes: {
-        TOOL_USE_EVENT: "TOOL_USE_EVENT"
-    },   
-    dataAttributes: {
-        HANDLER: "data-cle-handler",
-        CONTROL: "data-cle-control",
-        VALUE: "data-cle-value"
-    },
-    trackedControlInteractions: [
-        /* 
-            control interactions to track can be added centrally here if needed,
-            but in most cases using the data-cle-* attributes on the markup 
-            will be more appropriate
-        */
-        // {
-        //     selector: ".btn.tts-play",
-        //     handler: "click",
-        //     control: "tts-play",
-        //     value: "clicked"
-        // }        
-    ],
-    addControlInteractionToQueue: addControlInteractionToQueue    
-}
-
 $(document).ready(function () {    
+
+    var addControlInteractionToQueue = function (control, value) {    
+        console.debug("Adding control interaction to queue: ", control, value)
+        clusiveEvents.messageQueue.add({
+            "type": "CE", 
+            "caliperEvent": {"type": clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, "control": control, "value": value},
+            "readerInfo": clusiveContext.reader.info,
+            "eventId": PAGE_EVENT_ID
+        });
+    };
+
+    window.clusiveEvents = {
+        messageQueue: clusive.djangoMessageQueue(),    
+        caliperEventTypes: {
+            TOOL_USE_EVENT: "TOOL_USE_EVENT"
+        },   
+        dataAttributes: {
+            HANDLER: "data-cle-handler",
+            CONTROL: "data-cle-control",
+            VALUE: "data-cle-value"
+        },
+        trackedControlInteractions: [
+            /* 
+                control interactions to track can be added centrally here if needed,
+                but in most cases using the data-cle-* attributes on the markup 
+                will be more appropriate
+            */
+            // {
+            //     selector: ".btn.tts-play",
+            //     handler: "click",
+            //     control: "tts-play",
+            //     value: "clicked"
+            // }        
+        ],
+        addControlInteractionToQueue: addControlInteractionToQueue    
+    }
 
     // Build additional control interaction objects here from any data-clusive-event attributes on page markup
     // synax: data-clusive-event="[handler]|[control]|[value]"
