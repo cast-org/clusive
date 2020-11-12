@@ -3,7 +3,7 @@ import logging
 from django.db import models
 from django.utils import timezone
 
-from roster.models import ClusiveUser
+from roster.models import ClusiveUser, UserStats
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,9 @@ class TipType(models.Model):
     priority = models.PositiveSmallIntegerField(unique=True)
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
+
+    def __str__(self):
+        return '<TipType %s>' % self.name
 
 
 class TipHistory(models.Model):
@@ -24,6 +27,8 @@ class TipHistory(models.Model):
 
     class Meta:
         unique_together = ('type', 'user')
+        verbose_name = 'tip history'
+        verbose_name_plural = "tip histories"
 
     def __str__(self):
         return '<TipHistory %s:%s>' % (self.type.name, self.user.user.username)
@@ -36,8 +41,9 @@ class TipHistory(models.Model):
         # Shown too recently?
         if self.last_show and (self.last_show + self.type.interval) > now:
             return False
-        # TODO: check intervals
-        # Otherwise OK
+        # Related action too recently?
+        if self.last_action and (self.last_action + self.type.interval) > now:
+            return False
         return True
 
     def show(self):
@@ -56,9 +62,30 @@ class TipHistory(models.Model):
                 TipHistory(user=user, type=type).save()
 
     @classmethod
+    def register_action(cls, user: ClusiveUser, action: str, timestamp):
+        try:
+            type = TipType.objects.get(name=action)
+            history = TipHistory.objects.get(user=user, type=type)
+            if not history.last_action or timestamp > history.last_action:
+                history.last_action = timestamp
+                history.save()
+        except TipType.DoesNotExist:
+            logger.error('Tip-related action received with non-existent TipType: %s', action)
+        except TipHistory.DoesNotExist:
+            logger.error('Could not find TipHistory object for user %s, type %s', user, action)
+
+    @classmethod
     def available_tips(cls, user: ClusiveUser):
         """Return all tips that are currently available to show this user."""
+
+        # All tips are currently disallowed on the user's FIRST reading page view
+        stats: UserStats
+        stats = UserStats.for_clusive_user(user)
+        if stats.reading_views < 1:
+            logger.debug('First reading page view. No tips')
+            return []
+
+        # Check tip history to see which are ready to be shown
         histories = TipHistory.objects.filter(user=user).order_by('type__priority')
-        logger.debug('Found histories: %s', histories)
         return [h for h in histories if h.ready_to_show()]
 

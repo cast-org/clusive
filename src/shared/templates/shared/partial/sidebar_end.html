@@ -1,5 +1,5 @@
 <div class="sidebar-tool" role="region" aria-label="User preferences">
-    <button type="button" data-clusive-tip-id="settings" class="btn btn-setting" aria-label="Settings" title="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings" data-cle-handler="click" data-cle-control="settings-sidebar" data-cle-value="opened">
+    <button type="button" data-clusive-tip-id="settings" data-clusive-tip-action="settings" class="btn btn-setting" aria-label="Settings" title="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings" data-cle-handler="click" data-cle-control="settings-sidebar" data-cle-value="opened">
         <span class="icon-settings" aria-hidden="true"></span>
         <span class="sr-only">Settings</span>
     </button>
@@ -7,7 +7,7 @@
 {% if read_aloud %}
 <div class="tts-region sidebar-tts" role="region" aria-label="Text to speech controls"{% if read_aloud == 'Readium' %} data-mode="Readium"{% endif %}>
     <div class="sidebar-tts-inactive">
-        <button type="button" data-clusive-tip-id="readaloud" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+        <button type="button" data-clusive-tip-id="readaloud" data-clusive-tip-action="readaloud" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
             <span class="icon-play" aria-hidden="true"></span>
         </button>
     </div>

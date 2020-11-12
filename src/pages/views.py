@@ -1,9 +1,8 @@
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.views import View
 from django.views.generic import TemplateView, RedirectView
 
 from eventlog.models import Event
@@ -126,14 +125,15 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
 
         # See if there's a Tip that should be shown
         available = TipHistory.available_tips(clusive_user)
-        logger.debug('Available tips: %s', available)
         if available:
-            best = available[0]
-            logger.debug('Displaying tip: %s', best)
-            best.show()
-            tip = best.type.name
+            first_available = available[0]
+            logger.debug('Displaying tip: %s', first_available)
+            first_available.show()
+            self.tip_shown = first_available.type
+            tip_name = self.tip_shown.name
         else:
-            tip = None
+            self.tip_shown = None
+            tip_name = None
 
         self.extra_context = {
             'pub': book,
@@ -142,7 +142,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
             'next_version': bv_next,
             'last_position': pdata.lastLocation or "null",
             'annotations': annotationList,
-            'tip_name': tip,
+            'tip_name': tip_name,
         }
         return super().get(request, *args, **kwargs)
 
@@ -150,6 +150,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         event.page = 'Reading'
         event.document = self.book_id
         event.document_version = self.book_version
+        event.tip_type = self.tip_shown
 
 
 class WordBankView(LoginRequiredMixin, EventMixin, TemplateView):

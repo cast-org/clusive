@@ -18,10 +18,10 @@ fi
 echo "Applying any pending migrations..."
 gosu app:app python manage.py migrate
 
-echo "Loading preference sets"
-gosu app:app python manage.py loaddata preferencesets
+echo "Loading database fixtures..."
+gosu app:app python manage.py loaddata preferencesets tiptypes
 
-echo "Loading default content"
+echo "Loading default content..."
 gosu app:app python manage.py importdir /content
 
 # The below does not actually work since createsuperuser command does not allow password to be
