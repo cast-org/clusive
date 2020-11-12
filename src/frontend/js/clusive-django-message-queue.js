@@ -91,6 +91,8 @@
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue
     clusive.djangoMessageQueue.flushQueueImpl = function (that, flushPromise) {
+        // Don't flush queue if we don't have a username
+        if(!DJANGO_USERNAME) return;        
         that.sendingQueue.username = DJANGO_USERNAME;
         $.ajax(that.options.config.target.url, {
             method: that.options.config.target.method,
