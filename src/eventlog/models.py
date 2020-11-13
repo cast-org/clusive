@@ -52,7 +52,9 @@ class Event(models.Model):
     document = models.CharField(max_length=128, null=True)
     # What document version the user was looking at; null if none
     document_version = models.CharField(max_length=128, null=True)
-    # Document progression, if relevant
+    # Document href (specific page within an ebook); null if one
+    document_href = models.CharField(max_length=512, null=True)    
+    # Document progression, if relevant; null if none
     document_progression = models.CharField(max_length=128, null=True)    
     # If in a document, what page of the document the user was looking at; if not, the name of the application page
     page = models.CharField(max_length=128, null=True)
