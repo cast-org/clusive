@@ -1,23 +1,23 @@
 [
     {
-         "headword": "light",
-        "alternateForms": [],
+         "headword": "farmer",
+        "alternateForms": ["farmers"],
         "meanings": [
             {
                 "pos": "noun",
-                "definition": "The brightness that comes from the sun, light bulbs, and other bright things." ,
-                "examples": [ "The bright light of the sun makes the room warm." ],
+                "definition": "A person who raises animals or grows crops." ,
+                "examples": [ "A dairy farmer raises cows for their milk." ],
                  "images": [
                     {
-                        "src": "glossimages/light1.jpg",
-                        "alt": "Photo of bright sun light shining through tree branches.",
-                        "description": "Bright sun light shining through tree branches.",
-                        "caption": "Light from the Sun shining through tree branches.",
+                        "src": "glossimages/farmer1.jpg",
+                        "alt": "Photo of Man Riding Red Tractor On Field.",
+                        "description": "Man Riding Red Tractor On Field.",
+                        "caption": "A farmer using a tractor.",
                         "source": {
-                            "url": "https://www.pexels.com/photo/scenic-view-of-the-forest-during-sunrise-1006121/",
-                            "title": "Scenic View of the Forest During Sunrise",
-                            "author": "Min An",
-                            "author_url": "https://www.pexels.com/@minan1398",
+                            "url": "https://www.pexels.com/photo/man-riding-red-tractor-on-field-2252618/",
+                            "title": "Man Riding Red Tractor On Field",
+                            "author": "John Lambeth",
+                            "author_url": "https://www.pexels.com/@john-lambeth-1182693",
                             "license": "Free to use",
                             "license_url": "https://www.pexels.com/license/"
                         }
@@ -27,67 +27,94 @@
         ]
     },
     {
-         "headword": "grow",
-        "alternateForms": ["grows","grew","growing"],
+         "headword": "tractor",
+        "alternateForms": ["tractors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A powerful machine with big rear wheels, used to pull or push things on a farm." ,
+                "examples": [ "The tractor pulls the wagon behind it." ],
+                 "images": [
+                    {
+                        "src": "glossimages/tractor1.jpg",
+                        "alt": "Photo of a tractor pulling a trailer of hay.",
+                        "description": "A tractor pulling a trailer filled with hay.",
+                        "caption": "A tractor pulling a trailer filled with hay.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-riding-on-riding-mower-carrying-hays-in-the-middle-of-field-2253359/",
+                            "title": "Man Riding On Riding Mower Carrying Hays In The Middle Of Field",
+                            "author": "John Lambeth",
+                            "author_url": "https://www.pexels.com/@john-lambeth-1182693",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "cornfield",
+        "alternateForms": ["cornfields"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An area of land where corn grows." ,
+                "examples": [ "After the corn ispicked, the farmer makes the cornfield into a fun maze." ],
+                 "images": [
+                    {
+                        "src": "glossimages/cornfield1.jpg",
+                        "alt": "Photo of rows of corn plants in a field.",
+                        "description": "Rows of corn plants growing in a field.",
+                        "caption": "Corn plants growing in a field.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/corn-plant-on-field-1112080/",
+                            "title": "Corn Plant on Field",
+                            "author": "Flambo",
+                            "author_url": "https://www.pexels.com/@flambo-388007",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "barn",
+        "alternateForms": ["barns"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A large farm building used to store crops or as a home to animals." ,
+                "examples": [ "The cows live in the barn." ],
+                 "images": [
+                    {
+                        "src": "glossimages/barn1.jpg",
+                        "alt": "Photo of a red barn.",
+                        "description": "A large red building with a fence around it. Large doors, for animals to move through, open into the fenced area around the barn.",
+                        "caption": "A red barn with a fence.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/agriculture-barn-clouds-corn-235725/",
+                            "title": "Red Barn",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "work",
+        "alternateForms": ["works","worked","working"],
         "meanings": [
             {
                 "pos": "verb",
-                "definition": "To increase in size." ,
-                "examples": [ "The plants grow from small seeds into large plants with tomatoes." ]
-            }
-        ]
-    },
-    {
-         "headword": "living",
-        "alternateForms": [],
-        "meanings": [
-            {
-                "pos": "adjective",
-                "definition": "Alive." ,
-                "examples": [ "Animals and plants are living things." ],
-                 "images": [
-                    {
-                        "src": "glossimages/living1.jpg",
-                        "alt": "Photo of Potted Plants on Wooden Table.",
-                        "description": "Eight plants, each growing in its own pot.",
-                        "caption": "Plants are living things.",
-                        "source": {
-                            "url": "https://www.pexels.com/photo/photo-of-potted-plants-on-wooden-table-4503273/",
-                            "title": "Photo of Potted Plants on Wooden Table",
-                            "author": "cottonbro",
-                            "author_url": "https://www.pexels.com/@cottonbro",
-                            "license": "Free to use",
-                            "license_url": "https://www.pexels.com/license/"
-                        }
-                    }
-                ]
-            }
-        ]
-    },
-    {
-         "headword": "soil",
-        "alternateForms": ["soils"],
-        "meanings": [
-            {
-                "pos": "noun",
-                "definition": "Dirt." ,
-                "examples": [ "Plants need soil and water to grow." ],
-                 "images": [
-                    {
-                        "src": "glossimages/soil1.jpg",
-                        "alt": "Photo of dirt in a small shovel.",
-                        "description": "Dirt in a small, handheld shovel.",
-                        "caption": "Plants usually grow in dirt.",
-                        "source": {
-                            "url": "https://www.pexels.com/photo/person-digging-on-soil-using-garden-shovel-1301856/",
-                            "title": "Person Digging on Soil Using Garden Shovel",
-                            "author": "Lisa Fotios",
-                            "author_url": "https://www.pexels.com/@fotios-photos",
-                            "license": "Free to use",
-                            "license_url": "https://www.pexels.com/license/"
-                        }
-                    }
-                ]
+                "definition": "To make a physical or mental effort to get to a goal." ,
+                "examples": [ "Farming can be hard and enjoyable work." ]
             }
         ]
     }
