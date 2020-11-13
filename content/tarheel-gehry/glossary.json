@@ -1,0 +1,105 @@
+[
+    {
+         "headword": "design",
+        "alternateForms": ["designs","designed","designing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To decide upon the look and functioning of something by making a detailed drawing of it." ,
+                "examples": [ "I am going to design my own costume for the party. " ]
+            }
+        ]
+    },
+    {
+         "headword": "model",
+        "alternateForms": ["models"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A three-dimensional representation of something." ,
+                "examples": [ "I used a model of the room to decide how to arrange the furniture." ]
+            }
+        ]
+    },
+    {
+         "headword": "wrinkle",
+        "alternateForms": ["wrinkles"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A slight fold or line in something." ,
+                "examples": [ "My clothes had wrinkles because I did not fold them up after they were washed." ],
+                 "images": [
+                    {
+                        "src": "glossimages/wrinkle1.jpg",
+                        "alt": "Photo of wrinkled clothes on a line.",
+                        "description": "Clothes with wrinkles hanging on a clothes line.",
+                        "caption": "Clothes with wrinkles hanging on a line.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-in-blue-shirt-near-assorted-color-apparels-2951928/",
+                            "title": "Man By An Open Window With Assorted Clothing Hanging On Clotheslines",
+                            "author": "Zuarav",
+                            "author_url": "https://www.pexels.com/@zuarav-1532020",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "curve",
+        "alternateForms": ["curves"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A gradual change from being straight." ,
+                "examples": [ "The road was so curved, we could not see very far." ],
+                 "images": [
+                    {
+                        "src": "glossimages/curve1.jpg",
+                        "alt": "Photo of a road with curves.",
+                        "description": "Photo showing a road from above. The road has curves, and some straight parts.",
+                        "caption": "A road with curves.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/aerial-view-of-road-in-the-middle-of-trees-1173777/",
+                            "title": "Aerial View of Road in the Middle of Trees",
+                            "author": "Deva Darshan",
+                            "author_url": "https://www.pexels.com/@darshan394",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "shiny",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Smooth and reflecting light." ,
+                "examples": [ "The surface of a mirror is shiny." ],
+                 "images": [
+                    {
+                        "src": "glossimages/shiny1.jpg",
+                        "alt": "Photo of a runner.",
+                        "description": "A person running.",
+                        "caption": "You can see light reflecting off the shiny car.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/action-asphalt-auto-automobile-210019/",
+                            "title": "Red Alfa Romeo C4 on Road Near Trees",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

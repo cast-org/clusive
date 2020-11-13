@@ -1,0 +1,137 @@
+[
+    {
+         "headword": "mailbox",
+        "alternateForms": ["mailboxes"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A private box into which mail is delivered." ,
+                "examples": [ "A mail carrier puts mail and small packages into your mailbox." ],
+                 "images": [
+                    {
+                        "src": "glossimages/mailbox1.jpg",
+                        "alt": "Photo of a row of mailboxes.",
+                        "description": "Two rows of mailboxes. A person is putting a letter in one of the mailboxes.",
+                        "caption": "Mail goes into mailboxes.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-white-envelope-1550334/",
+                            "title": "Person Holding White Envelope",
+                            "author": "Element5 Digital",
+                            "author_url": "https://www.pexels.com/@element5",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "sort",
+        "alternateForms": ["sorts","sorted","sorting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To organize into groups." ,
+                "examples": [ "I sort my papers into piles of things to save, and things to throw away." ],
+                 "images": [
+                    {
+                        "src": "glossimages/sort1.jpg",
+                        "alt": "Photo of pencils and magazines.",
+                        "description": "A cup with pencils next to a stack of magazines.",
+                        "caption": "Pencils and magazines sorted into two groups.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/stack-of-magazines-pencils-in-gray-cup-6440/",
+                            "title": "Stack of magazines & pencils in gray cup",
+                            "author": "Kaboompics .com",
+                            "author_url": "https://www.pexels.com/@kaboompics",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "deliver",
+        "alternateForms": ["delivers","delivered","delivering"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To bring something to the right place." ,
+                "examples": [ "Our gifts were delivered to us at home." ],
+                 "images": [
+                    {
+                        "src": "glossimages/deliver1.jpg",
+                        "alt": "Photo of one person delivering a box to another person.",
+                        "description": "One person holds a clipboard and pen. The other person holds a box.",
+                        "caption": "Boxes can be delivered to your home.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-black-pen-writing-on-white-paper-5025646/",
+                            "title": "Person Holding Black Pen Writing on White Paper",
+                            "author": "Artem Podrez",
+                            "author_url": "https://www.pexels.com/@artempodrez",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "take",
+        "alternateForms": ["takes","took","taking"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To carry or bring." ,
+                "examples": [ "Mail carriers take packages from the post office and bring them to your house." ],
+                 "images": [
+                    {
+                        "src": "glossimages/take1.jpg",
+                        "alt": "Photo of one person taking a box from another person.",
+                        "description": "One person passes a box to another person. The other person holds out money to the first person.",
+                        "caption": "A person takes a box from another person.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/young-female-customer-receiving-pizza-during-coronavirus-pandemic-quarantine-4254139/",
+                            "title": "Young female customer receiving pizza during coronavirus pandemic quarantine",
+                            "author": "Gustavo Fring",
+                            "author_url": "https://www.pexels.com/@gustavo-fring",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "alphabetically",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "In the order of the letters of the alphabet." ,
+                "examples": [ "Books titles can be sorted alphabetically to make them easier to find." ],
+                 "images": [
+                    {
+                        "src": "glossimages/alphabetically1.jpg",
+                        "alt": "Photo of letters arranged alphabetically.",
+                        "description": "Letters organized by their place in the alphabet.",
+                        "caption": "Colorful letters organized alphabetically.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/alphabet-letter-text-on-black-background-1337382/",
+                            "title": "Red Alfa Romeo C4 on Road Near Trees",
+                            "author": "Magda Ehlers",
+                            "author_url": "https://www.pexels.com/@magda-ehlers-pexels",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

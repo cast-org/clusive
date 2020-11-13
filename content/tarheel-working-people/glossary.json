@@ -1,0 +1,148 @@
+[
+    {
+        "headword": "firefighter",
+        "alternateForms": ["firefighters"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person that helps to stop fires from burning buildings or other property." ,
+                "examples": [ "Firefighters are trying to stop the wildfires in California." ],
+                 "images": [
+                    {
+                        "src": "glossimages/firefighter1.jpg",
+                        "alt": "Photo of two firefighters putting water on a fire.",
+                        "description": "Two people dressed in heavy, fireproof suits. They are holding a large hose and aiming water at a fire.",
+                        "caption": "Firefighters putting water on a fire.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/accident-action-adult-blaze-280076/",
+                            "title": "Firemen Blowing Water on Fire",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "police",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "People who stop crime and keep public order." ,
+                "examples": [ "The police officers arrested the thief." ],
+                 "images": [
+                    {
+                        "src": "glossimages/police1.jpg",
+                        "alt": "Photo of two police officers and a motorcycle.",
+                        "description": "Two police officers. One sits on a motorcycle. The other stands next to the motorcycle.",
+                        "caption": "Police officers with a motorcycle.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/standing-police-man-beside-another-man-who-seats-of-police-motorcycle-2950847/",
+                            "title": "Standing Police Man Beside Another Man Who Seats of Police Motorcycle",
+                            "author": "Ludmila Aleksandra",
+                            "author_url": "https://www.pexels.com/@ludmila-aleksandra-1196526",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "doctor",
+        "alternateForms": ["doctors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone with a medical degree who helps people become or stay healthy." ,
+                "examples": [ "The doctor gave us shots so that we would not get the flu." ],
+                 "images": [
+                    {
+                        "src": "glossimages/doctor1.jpg",
+                        "alt": "Photo of a doctor looking at x-ray pictures.",
+                        "description": "A doctor looking at x-ray pictures.",
+                        "caption": "This doctor looks at x-ray pictures to check for signs of illness.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/doctor-holding-a-x-ray-4225880/",
+                            "title": "Doctor Holding a X Ray",
+                            "author": " Anna Shvets",
+                            "author_url": "https://www.pexels.com/@shvetsa",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "nurse",
+        "alternateForms": ["nurses"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who takes care of sick people in a hospital." ,
+                "examples": [ "The nurse checked to make sure the patient was comfortable." ],
+                 "images": [
+                    {
+                        "src": "glossimages/nurse1.jpg",
+                        "alt": "Photo of a person taking blood with a needle",
+                        "description": "A person with gloves using a needle to take blood from a patient.",
+                        "caption": "A nurse, wearing gloves, uses a needle to take blood from a patient's arm.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-getting-his-blood-check-1350560/",
+                            "title": "Person Getting His Blood Check",
+                            "author": "Pranidchakan Boonrom",
+                            "author_url": "https://www.pexels.com/@pranidchakan-boonrom-101111",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "dentist",
+        "alternateForms": ["dentists"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who takes care of people’s teeth." ,
+                "examples": [ "My dentist checked to make sure all my teeth were healthy." ],
+                 "images": [
+                    {
+                        "src": "glossimages/dentist1.jpg",
+                        "alt": "Photo of a person looking into another person's mouth.",
+                        "description": "A person wearing a uniform stands. She holds instruments and places them in a seated person's mouth.",
+                        "caption": "This dentist checks the teeth of a patient.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/a-dentist-checking-on-her-patient-3881170/",
+                            "title": "A Dentist Checking On Her Patient",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "postal",
+        "alternateForms": ["postal"],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Another word for the mail." ,
+                "examples": [ "A postal worker brings mail to my house every day." ]
+            }
+        ]
+    }
+]

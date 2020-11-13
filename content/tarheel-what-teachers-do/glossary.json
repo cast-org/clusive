@@ -1,0 +1,148 @@
+[
+    {
+        "headword": "learn",
+        "alternateForms": ["learns","learned","learning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To gain knowledge or skill by study." ,
+                "examples": [ "I practiced and learned how to play music." ]
+            }
+        ]
+    },
+    {
+         "headword": "teenager",
+        "alternateForms": ["teenagers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person between 13 and 19 years old." ,
+                "examples": [ "Most people in high school are teenagers." ],
+                 "images": [
+                    {
+                        "src": "glossimages/teenager1.jpg",
+                        "alt": "Photo of a teen holding a smartphone, with another teen nearby.",
+                        "description": "Two teens look at the screen of a smartphone. They are both smiling.",
+                        "caption": "Teenagers looking at a smartphone.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-standing-near-man-while-carrying-smartphone-1186886/",
+                            "title": "Woman Standing Near Man While Carrying Smartphone",
+                            "author": "mentatdgt",
+                            "author_url": "https://www.pexels.com/@mentatdgt-330508",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "university",
+        "alternateForms": ["universities"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A school designed for advanced learning." ,
+                "examples": [ "You may go to a college or university after high school." ],
+                 "images": [
+                    {
+                        "src": "glossimages/university1.jpg",
+                        "alt": "Photo of a student at a university.",
+                        "description": "A student holding books. University buildings are in the background.",
+                        "caption": "A student at a university.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-in-yellow-jacket-holding-red-book-3762800/",
+                            "title": "Woman in Yellow Jacket Holding Red Book",
+                            "author": " Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "classroom",
+        "alternateForms": ["classrooms"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A room in a school where students are taught." ,
+                "examples": [ "My English teacher stayed in one classroom, while we moved from one classroom to another." ],
+                 "images": [
+                    {
+                        "src": "glossimages/classroom1.jpg",
+                        "alt": "Photo of a teacher and students in a classroom.",
+                        "description": "Students sitting at a table, working on computers. A teacher helps one student.",
+                        "caption": "Students in a classroom.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/people-inside-room-3184468/",
+                            "title": "People Inside Room",
+                            "author": "fauxels",
+                            "author_url": "https://www.pexels.com/@fauxels",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "pencil",
+        "alternateForms": ["pencils"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A tool for writing or drawing that is usually made of graphite surrounded by wood." ,
+                "examples": [ "I like using pencil, because I can easily erase my mistakes." ],
+                 "images": [
+                    {
+                        "src": "glossimages/pencil1.jpg",
+                        "alt": "Photo of a pencil surrounded by wood shavings.",
+                        "description": "A pencil surrounded by wood shavings.",
+                        "caption": "A sharpened pencil.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/pencil-pencils-stationary-equipment-109255/",
+                            "title": "Yellow Black Pencil Sharpened Above the White Paper in Macro Photography",
+                            "author": "Lisa Fotios",
+                            "author_url": "https://www.pexels.com/@fotios-photos",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "chalkboard",
+        "alternateForms": ["chalkboards"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A smooth surface used for writing on with chalk." ,
+                "examples": [ "Teachers write important things on the class chalkboard." ],
+                 "images": [
+                    {
+                        "src": "glossimages/chalkboard1.jpg",
+                        "alt": "Photo of a person writing on a black chalkboard.",
+                        "description": "A person writing with chalk on a wall covered with a black surface.",
+                        "caption": "You use chalk to write on a chalkboard.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-wearing-purple-top-and-pants-writing-on-chalkboard-3184646/",
+                            "title": "Man Wearing Purple Top and Pants Writing on Chalkboard",
+                            "author": "fauxels",
+                            "author_url": "https://www.pexels.com/@fauxels",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

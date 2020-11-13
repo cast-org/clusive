@@ -1,0 +1,94 @@
+[
+    {
+         "headword": "catch",
+        "alternateForms": ["catches","caught","catching"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get and hold something." ,
+                "examples": [ "She threw the ball up and he was able to catch it." ],
+                 "images": [
+                    {
+                        "src": "glossimages/catch1.jpg",
+                        "alt": "Photo of a football player catching a ball.",
+                        "description": "A football player reaching out and holding a ball in his hands.",
+                        "caption": "A player catches the ball.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/football-players-718952/",
+                            "title": "Football Players",
+                            "author": "Joe Calomeni",
+                            "author_url": "https://www.pexels.com/@joe-calomeni-211258",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "patient",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Able to wait without being unhappy." ,
+                "examples": [ "Sometimes it can be hard to be patient and wait for your turn." ]
+            }
+        ]
+    },
+    {
+         "headword": "bundle",
+        "alternateForms": ["bundles","bundled","bundling"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To group together." ,
+                "examples": [ "We bundled up all our clothes when we moved out of our apartment." ],
+                 "images": [
+                    {
+                        "src": "glossimages/bundle1.jpg",
+                        "alt": "Photo of a woman gathering strings together.",
+                        "description": "A woman standing next to long groups of strings tied together in bunches.",
+                        "caption": "A woman bundling strings together.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-standing-beside-red-strings-2132208/",
+                            "title": "Woman Standing Beside Red Strings",
+                            "author": "Quang Nguyen Vinh",
+                            "author_url": "https://www.pexels.com/@quang-nguyen-vinh-222549",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "amazing",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Causing surprise." ,
+                "examples": [ "An amazing number of people voted in the election." ],
+                 "images": [
+                    {
+                        "src": "glossimages/amazing1.jpg",
+                        "alt": "Photo of people looking at stars.",
+                        "description": "four people standing. They look at the night sky. There are millions of stars in the night sky.",
+                        "caption": "The number of stars you can see here is amazing.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/silhouette-photography-of-people-2901134/",
+                            "title": "Person Digging on Soil Using Garden Shovel",
+                            "author": "Kendall Hoopes",
+                            "author_url": "https://www.pexels.com/@ken123films",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

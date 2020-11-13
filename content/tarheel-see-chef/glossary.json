@@ -1,0 +1,110 @@
+[
+    {
+         "headword": "statue",
+        "alternateForms": ["statues"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A carved figure of a person or animal." ,
+                "examples": [ "The statue looked like a real person." ],
+                 "images": [
+                    {
+                        "src": "glossimages/statue1.jpg",
+                        "alt": "Photo of a carved person with wings.",
+                        "description": "A carving of a person with wings.",
+                        "caption": "A statue of an angel.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-and-gray-angel-statue-decor-10916/",
+                            "title": "Black and Gray Angel Statue Decor",
+                            "author": " Anastasia Zhenina",
+                            "author_url": "https://www.pexels.com/@disguise-truth",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "chop",
+        "alternateForms": ["chops","chopped","chopping"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cut something into pieces with quick, sharp blows." ,
+                "examples": [ "The chef chopped up the vegetables in seconds." ],
+                 "images": [
+                    {
+                        "src": "glossimages/chop1.jpg",
+                        "alt": "Photo of a person chopping food.",
+                        "description": "A person holding a knife. The person is cutting food into small pieces.",
+                        "caption": "Chefs often chop food into small pieces.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-chopping-vegetable-2005935/",
+                            "title": "Man Chopping Vegetable",
+                            "author": "Craig Adderley",
+                            "author_url": "https://www.pexels.com/@thatguycraig000",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "knife",
+        "alternateForms": ["knives"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A sharp blade with a handle, used for cutting." ,
+                "examples": [ "She used a knife to cut the fruit." ],
+                 "images": [
+                    {
+                        "src": "glossimages/knife1.jpg",
+                        "alt": "Photo of a knife and a lemon.",
+                        "description": "A knife laying on a surface. A lemon is near the knife.",
+                        "caption": "A knife.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photography-of-lemon-near-kitchen-knife-952366/",
+                            "title": "Photography of Lemon Near Kitchen Knife",
+                            "author": "Lukas",
+                            "author_url": "https://www.pexels.com/@goumbik",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "cook",
+        "alternateForms": ["cooks", "cooked", "cooking"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To prepare food." ,
+                "examples": [ "We cooked all day to get ready for the big Thanksgiving meal." ],
+                 "images": [
+                    {
+                        "src": "glossimages/cook1.jpg",
+                        "alt": "Photo of two people preparing food in a restaurant kitchen.",
+                        "description": "Two people preparing food in a restaurant kitchen.",
+                        "caption": "These people are cooking a large meal.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-and-woman-wearing-black-and-white-striped-aprons-2696064/",
+                            "title": "Person Digging on Soil Using Garden Shovel",
+                            "author": "Elle Hughes",
+                            "author_url": "https://www.pexels.com/@elletakesphotos",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
