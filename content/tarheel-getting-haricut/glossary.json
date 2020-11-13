@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "cape",
+        "alternateForms": ["capes"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A short, sleeveless coat." ,
+                "examples": [ "She wore a cape around his shoulders to keep warm." ],
+                 "images": [
+                    {
+                        "src": "glossimages/cape1.jpg",
+                        "alt": "Photo of a person sitting, wearing a cape over her shoulders.",
+                        "description": "A person sitting, wearing a cape over her shoulders.",
+                        "caption": "This person is in a salon and has a cape over her shoulders.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-in-black-crew-neck-shirt-3993297/",
+                            "title": "",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "brush",
+        "alternateForms": ["brushes"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A tool with bristles and a handle." ,
+                "examples": [ "I used a brush to get the tangles out of my hair." ],
+                 "images": [
+                    {
+                        "src": "glossimages/brush1.jpg",
+                        "alt": "Photo of a hairbrush.",
+                        "description": "Photo of a hairbrush.",
+                        "caption": "Two hair brushes on a table.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/brown-round-ceramic-plate-with-brown-wooden-spoon-4153143/",
+                            "title": "Brown Round Ceramic Plate With Brown Wooden Spoon",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "comb",
+        "alternateForms": ["combs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A tool with narrow metal teeth used to arrange hair." ,
+                "examples": [ "He combed his hair every morning so that he looked ready for work." ],
+                 "images": [
+                    {
+                        "src": "glossimages/comb1.jpg",
+                        "alt": "Photo of combs, clips and tools used by people who cut hair.",
+                        "description": "Combs, clips and tools used by people who cut hair.",
+                        "caption": "Combs are just one of the tools used by people who cut hair.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/stainless-steel-fork-and-bread-knife-on-brown-wooden-table-3992855/",
+                            "title": "Stainless Steel Fork and Bread Knife on Brown Wooden Table",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "clipper",
+        "alternateForms": ["clippers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A tool for cutting or trimming small pieces off things." ,
+                "examples": [ "She used the clippers to cut her friend's hair." ],
+                 "images": [
+                    {
+                        "src": "glossimages/clipper1.jpg",
+                        "alt": "Photo of a person cutting hair with clippers.",
+                        "description": "A person cutting hair with clippers.",
+                        "caption": "Hair can be cut with small scissors or clippers.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-silver-and-black-pen-3993466/",
+                            "title": "Person Holding Silver and Black Pen",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "mirror",
+        "alternateForms": ["mirrors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A shiny surface that reflects a clear image." ,
+                "examples": [ "I looked in the mirror to see if I was ready for the meeting." ],
+                 "images": [
+                    {
+                        "src": "glossimages/mirror1.jpg",
+                        "alt": "Photo of an oval shiny mirror hanging on a wall.",
+                        "description": "A shiny oval mirror hanging on a wall.",
+                        "caption": "A shiny oval mirror haning on a wall.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/oval-brown-wooden-framed-hanging-mirror-1528975/",
+                            "title": "Oval Brown Wooden Framed Hanging Mirror",
+                            "author": "Nadine Wuchenauer",
+                            "author_url": "https://www.pexels.com/@nadine-wuchenauer-695910",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

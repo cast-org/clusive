@@ -1,0 +1,89 @@
+[
+    {
+        "headword": "website",
+        "alternateForms": ["websites"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A set of connected pages on the internet." ,
+                "examples": [ "YouTube is a website where people share videos." ],
+                 "images": [
+                    {
+                        "src": "glossimages/website1.jpg",
+                        "alt": "Photo of a page on a website.",
+                        "description": "A page from a website named 'Pexels'.",
+                        "caption": "Websites usually have pictures, videos, text, and more.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/laptop-macbook-pro-internet-technology-131778/",
+                            "title": "",
+                            "author": "Markus Spiske",
+                            "author_url": "https://www.pexels.com/@markusspiske",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "boring",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not interesting." ,
+                "examples": [ "Having nothing to do can be very boring." ]
+            }
+        ]
+    },
+    {
+         "headword": "cool",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Attractive or impressive" ,
+                "examples": [ "I always wear sunglasses so that I will look cool." ],
+                 "images": [
+                    {
+                        "src": "glossimages/mall1.jpg",
+                        "alt": "Photo of a woman wearing sunglasses.",
+                        "description": "A woman lit with blue light, and wearing shiny sunglasses.",
+                        "caption": "The lighting and reflections make this person look cool.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/women-s-white-framed-sunglasses-2690323/",
+                            "title": "Women's White Framed Sunglasses",
+                            "author": "YURI MANEI",
+                            "author_url": "https://www.pexels.com/@motionshotto",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "important",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of great value or meaning." ,
+                "examples": [ "The presidential election is very important." ]
+            }
+        ]
+    },
+    {
+         "headword": "popular",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Liked, admired, or enjoyed by many." ,
+                "examples": [ "Chocolate is a very popular candy." ]
+            }
+        ]
+    }
+]

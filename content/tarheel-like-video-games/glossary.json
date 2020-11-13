@@ -1,0 +1,83 @@
+[
+    {
+        "headword": "controller",
+        "alternateForms": ["controllers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that directs something." ,
+                "examples": [ "You use a controller to decide what direction things will move in a video game." ],
+                 "images": [
+                    {
+                        "src": "glossimages/controller1.jpg",
+                        "alt": "Photo of game controllers",
+                        "description": "Game controllers for video game playing.",
+                        "caption": "Controllers are just one part of a video game system.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/white-and-black-game-controller-3945673/",
+                            "title": "White and Black Game Controller",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "system",
+        "alternateForms": ["systems"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A group of things that form a whole." ,
+                "examples": [ "We bought a new stereo system." ],
+                 "images": [
+                    {
+                        "src": "glossimages/system1.jpg",
+                        "alt": "Photo of Xbox game console and controller.",
+                        "description": "A game console and a controller.",
+                        "caption": "Each gaming system runs only the games that are made for that format.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/white-xbox-one-console-and-game-controller-5626726/",
+                            "title": "White Xbox One Console and Game Controller",
+                            "author": " Anthony",
+                            "author_url": "https://www.pexels.com/@inspiredimages",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "mall",
+        "alternateForms": ["malls"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The place where you pay for things in a store." ,
+                "examples": [ "I paid for my apples at the check-out counter." ],
+                 "images": [
+                    {
+                        "src": "glossimages/mall1.jpg",
+                        "alt": "Photo of people inside a store in a mall.",
+                        "description": "People walking inside a store at a mall.",
+                        "caption": "People shopping in a mall.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/people-inside-mall-2954405/",
+                            "title": "People inside mall",
+                            "author": "Tuur Tisseghem",
+                            "author_url": "https://www.pexels.com/@tuurt",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,121 @@
+[
+    {
+         "headword": "computer",
+        "alternateForms": ["computers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An electronic machine used for storing information." ,
+                "examples": [ "My computer helps me keep track of all my work." ],
+                 "images": [
+                    {
+                        "src": "glossimages/computer1.jpg",
+                        "alt": "Photo of a teacher and students in a classroom.",
+                        "description": "Students sitting at a table, working on computers. A teacher helps one student.",
+                        "caption": "People use computers in and out of school.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/people-inside-room-3184468/",
+                            "title": "People Inside Room",
+                            "author": "fauxels",
+                            "author_url": "https://www.pexels.com/@fauxels",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "chemistry",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A kind of science that focuses on what kinds of substances things are made of." ,
+                "examples": [ "Chemistry shows that water is made of hydrogen and oxygen." ],
+                 "images": [
+                    {
+                        "src": "glossimages/chemistry1.jpg",
+                        "alt": "Photo of person holding a flask containing a blue liquid.",
+                        "description": "A person wears a white lab coat and blue gloves. The person holds a flask. The flask has a blue liquid in it.",
+                        "caption": "Teenagers looking at a smartphone.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-laboratory-flask-2280571/",
+                            "title": "Person Holding Laboratory Flask",
+                            "author": "Chokniti Khongchum",
+                            "author_url": "https://www.pexels.com/@chokniti-khongchum-1197604",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "music",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Organized sounds made by voice or instruments." ,
+                "examples": [ "The singers practiced together and made beautiful music." ]
+            }
+        ]
+    },
+    {
+         "headword": "math",
+        "alternateForms": ["mathematics"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The study of numbers, quantity, and space." ,
+                "examples": [ "The math I learned helped me figure out how much material I needed for a project." ],
+                 "images": [
+                    {
+                        "src": "glossimages/math1.jpg",
+                        "alt": "Photo of a person writing on a whiteboard.",
+                        "description": "A person writing numbers on a white board.",
+                        "caption": "People use computers in and out of school.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-writing-on-a-whiteboard-3862130/",
+                            "title": "Woman Writing On A Whiteboard",
+                            "author": "ThisIsEngineering",
+                            "author_url": "https://www.pexels.com/@thisisengineering",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "animal",
+        "alternateForms": ["animals"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A living thing with sensory organs that can react quickly to external actions." ,
+                "examples": [ "The frightened animals gathered closely together when they heard the loud noise." ],
+                 "images": [
+                    {
+                        "src": "glossimages/animal1.jpg",
+                        "alt": "Photo of two penguins.",
+                        "description": "Two penguins standing on rocks. Rocks, snow, and ice can be seen in the distance.",
+                        "caption": "Penguins are animals that live in Antarctica.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/selective-focus-photography-of-two-penguins-689784/",
+                            "title": "Selective Focus Photography of Two Penguins",
+                            "author": "DSD",
+                            "author_url": "https://www.pexels.com/@dsd-143941",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

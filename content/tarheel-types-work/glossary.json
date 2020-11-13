@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "cashier",
+        "alternateForms": ["cashiers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person that takes payments in a store or bank." ,
+                "examples": [ "The cashier took the money for the food." ],
+                 "images": [
+                    {
+                        "src": "glossimages/cashier1.jpg",
+                        "alt": "Photo of two people on opposite sides of a counter. One person is working at a computer screen.",
+                        "description": "Two people on opposite sides of a counter. One person, the cashier, works at a computer screen.",
+                        "caption": "The cashier uses the computer to find out how much the customer owes.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/women-at-the-counter-3907315/",
+                            "title": "Women at the Counter",
+                            "author": " Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "workshop",
+        "alternateForms": ["workshops"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A place where things are made." ,
+                "examples": [ "She made furniture in her workshop." ],
+                 "images": [
+                    {
+                        "src": "glossimages/workshop1.jpg",
+                        "alt": "Photo of someone working in a room with tools.",
+                        "description": "Photo of a person wearing glasses and gloves. The person is working with a machine called a bench grinder.",
+                        "caption": "A person using a bench grinder in his workshop.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-using-bench-grinder-1659748/",
+                            "title": "Man Using Bench Grinder",
+                            "author": "Luis Quintero",
+                            "author_url": "https://www.pexels.com/@jibarofoto",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "kitchen",
+        "alternateForms": ["kitchens"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An area where food is cooked." ,
+                "examples": [ "It is usual to have an oven in a kitchen." ],
+                 "images": [
+                    {
+                        "src": "glossimages/kitchen1.jpg",
+                        "alt": "Photo of people working in a restaurant kitchen.",
+                        "description": "People making food in a restaurant kitchen.",
+                        "caption": "A restaurant kitchen can make many meals at the same time.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-and-woman-wearing-black-and-white-striped-aprons-2696064/",
+                            "title": "Man and Woman Wearing Black and White Striped Aprons",
+                            "author": "Elle Hughes",
+                            "author_url": "https://www.pexels.com/@elletakesphotos",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "artist",
+        "alternateForms": ["artists"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person that makes drawings, music, or other creative things." ,
+                "examples": [ "The artist made beautiful drawings of children." ],
+                 "images": [
+                    {
+                        "src": "glossimages/artist1.jpg",
+                        "alt": "Photo of a person painting.",
+                        "description": "An artist sitting, holding a paint brush in one hand and a paint palette in the other. She touches the paint brush to a canvas in front of her.",
+                        "caption": "An artist at work.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-sitting-on-brown-stool-374054/",
+                            "title": "Woman Sitting on Brown Stool",
+                            "author": "Burst",
+                            "author_url": "https://www.pexels.com/@burst",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "custodian",
+        "alternateForms": ["custodians"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person who takes care of things." ,
+                "examples": [ "The custodian kept all the rooms clean." ],
+                 "images": [
+                    {
+                        "src": "glossimages/custodian1.jpg",
+                        "alt": "Photo of a person with a mop and bucket.",
+                        "description": "A person holding a mop and next to a rolling bucket.",
+                        "caption": "This custodian cleans the floor.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/adult-building-business-clean-209271/",
+                            "title": "Woman Holding Mop",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
