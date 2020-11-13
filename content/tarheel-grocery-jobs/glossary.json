@@ -1,0 +1,175 @@
+[
+    {
+        "headword": "grocery",
+        "alternateForms": ["groceries"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A place to buy food and small items." ,
+                "examples": [ "We got fruit at the grocery store" ],
+                 "images": [
+                    {
+                        "src": "glossimages/grocery1.jpg",
+                        "alt": "Photo of a grocery cart in an aisle.",
+                        "description": "A grocery cart filled with items. The cart is in an aisle with things stacked on either side.",
+                        "caption": "A grocery cart filled with items.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/grocery-cart-with-item-1005638/",
+                            "title": "Grocery Cart With Item",
+                            "author": "Oleg Magni",
+                            "author_url": "https://www.pexels.com/@oleg-magni",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "stock",
+        "alternateForms": ["stocks","stocked","stocking"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To fill up, or to have a supply of things." ,
+                "examples": [ "We stocked our shelves with all the food we could fit." ],
+                 "images": [
+                    {
+                        "src": "glossimages/stock1.jpg",
+                        "alt": "Photo of vegetables and fruits in a market.",
+                        "description": "Shelves filled with many different kinds of fruits and vegetables.",
+                        "caption": "Shelves stocked with fresh fruit and vegetables.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/assorted-assortment-booth-boxes-375897/",
+                            "title": "Fruit Stand",
+                            "author": " Clem Onojeghuo",
+                            "author_url": "https://www.pexels.com/@conojeghuo",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "check-out",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The place where you pay for things in a store." ,
+                "examples": [ "I paid for my apples at the check-out counter." ],
+                 "images": [
+                    {
+                        "src": "glossimages/checkout1.jpg",
+                        "alt": "Photo of people at the check-out counter.",
+                        "description": "People at the check-out counter of a food market.",
+                        "caption": "People at the check-out counter, buying food.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/happy-couple-buying-groceries-4199523/",
+                            "title": "Happy Couple Buying Groceries",
+                            "author": " Jack Sparrow",
+                            "author_url": "https://www.pexels.com/@jack-sparrow",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "scan",
+        "alternateForms": ["scans","scanned","scanning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To have light cross a surface or object, as a part of buying something." ,
+                "examples": [ "The person scanned the package to see how much it cost." ],
+                 "images": [
+                    {
+                        "src": "glossimages/scan1.jpg",
+                        "alt": "Photo of a person scanning an item.",
+                        "description": "A person using a tool to scan the barcode on an item.",
+                        "caption": "A worker uses a tool to scan an item.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-man-using-scanner-4484151/",
+                            "title": "Photo of Man Using Scanner",
+                            "author": "Tiger Lily",
+                            "author_url": "https://www.pexels.com/@tiger-lily",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "janitor",
+        "alternateForms": ["janitors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person who takes care of a building." ,
+                "examples": [ "The janitor came around and emptied all the wastebaskets." ],
+                 "images": [
+                    {
+                        "src": "glossimages/janitor1.jpg",
+                        "alt": "Photo of a person with a mop and bucket.",
+                        "description": "A person holding a mop and next to a rolling bucket.",
+                        "caption": "This janitor is cleaning the floor.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/adult-building-business-clean-209271/",
+                            "title": "Woman Holding Mop",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "inventory",
+        "alternateForms": ["inventories"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A list of all the items in a building." ,
+                "examples": [ "The store only had a small inventory of paper towels until more were delivered." ],
+                 "images": [
+                    {
+                        "src": "glossimages/inventory1.jpg",
+                        "alt": "Photo of a person using a tool to scan things on shelves.",
+                        "description": "A person using a tool to scan and make a list of the things on the shelves.",
+                        "caption": "The worker is using a scanner to make a list of the things in the store.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/fashion-man-people-woman-4483942/",
+                            "title": "Man in Black and Gray Plaid Dress Shirt Holding Black Smartphone",
+                            "author": "Tiger Lily",
+                            "author_url": "https://www.pexels.com/@tiger-lily",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "manager",
+        "alternateForms": ["managers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who organizes the parts of a business." ,
+                "examples": [ "The manager made sure that each person knew what work they should do." ]
+            }
+        ]
+    }
+]

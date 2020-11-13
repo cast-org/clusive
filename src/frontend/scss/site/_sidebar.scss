@@ -14,7 +14,7 @@
     }
 
     @include media-breakpoint-up(xl) {
-        max-width: map-get($container-max-widths, xl);
+        max-width: map-get($container-max-widths, xl) - ($body-padding-x * 2);
     }
 }
 

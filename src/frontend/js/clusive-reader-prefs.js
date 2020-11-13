@@ -145,16 +145,8 @@
         }
     });
 
-    cisl.prefs.readerPreferencesBridge.getReaderInstance = function() {
-        var readerDefined = typeof D2Reader;
-
-        if (readerDefined !== 'undefined') {
-            return D2Reader;
-        } return null;
-    };
-
     cisl.prefs.readerPreferencesBridge.applyUserSetting = function(settingName, settingValue) {
-        var reader = cisl.prefs.readerPreferencesBridge.getReaderInstance();
+        var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
             {
@@ -166,7 +158,7 @@
 
     cisl.prefs.readerPreferencesBridge.applyUserTTSSetting = function(ttsSettingName, settingValue) {
         console.log("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
-        var reader = cisl.prefs.readerPreferencesBridge.getReaderInstance();
+        var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
             {

@@ -1,0 +1,105 @@
+[
+    {
+         "headword": "excite",
+        "alternateForms": ["excites","excited","exciting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cause strong feelings of joy." ,
+                "examples": [ "It was exciting to catch my first fish." ],
+                 "images": [
+                    {
+                        "src": "glossimages/excite1.jpg",
+                        "alt": "Photo of a person jumping in the air.",
+                        "description": "A person jumping into the air. Her arms are extended out wide.",
+                        "caption": "You can see this person is excited, because she is jumping.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/blonde-hair-blur-daylight-environment-214574/",
+                            "title": "Woman Jumping Wearing Green Backpack",
+                            "author": "Sebastian Voortman",
+                            "author_url": "https://www.pexels.com/@sebastian",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "invent",
+        "alternateForms": ["invents","invented","inventing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To create something for the first time." ,
+                "examples": [ "Thomas Edison invented the electric light bulb." ]
+            }
+        ]
+    },
+    {
+         "headword": "competitive",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Relating to wanting to win at a game or contest." ,
+                "examples": [ "I am a very competitive runner." ],
+                 "images": [
+                    {
+                        "src": "glossimages/competitive1.jpg",
+                        "alt": "Photo of a line of athletes starting a running race.",
+                        "description": "A line of people just starting a running race. The people all lean forward. They have serious expressions on their faces.",
+                        "caption": "Being competitive can help you win races.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/athletes-running-on-track-and-field-oval-in-grayscale-photography-34514/",
+                            "title": "Athletes Running on Track and Field Oval in Grayscale Photography",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "tackle",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The equipment required for a task or sport." ,
+                "examples": [ "Having the right fishing tackle makes catching fish easier." ],
+                 "images": [
+                    {
+                        "src": "glossimages/tackle1.jpg",
+                        "alt": "Photo of a box with fishing lures.",
+                        "description": "A box with sections. Hooks, weights, and shiny lures are in each section of the box.",
+                        "caption": "A box filled with fishing tackle.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-and-silver-fish-wall-decor-4822295/",
+                            "title": "Black and Silver Fish Wall Decor",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "protect",
+        "alternateForms": ["protects","protected","protecting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To keep safe from harm." ,
+                "examples": [ "She works to keep the water clean and protect other parts of the environment, too." ]
+            }
+        ]
+    }
+]

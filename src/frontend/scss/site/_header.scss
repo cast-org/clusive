@@ -48,6 +48,15 @@ html {
             display: none;
         }
     }
+
+    @include media-breakpoint-down(sm) {
+        .navbar-nav {
+            margin-bottom: .375rem;
+        }
+        .nav-item {
+            padding: .1875rem .25rem;
+        }
+    }
 }
 
 .site-header-container {

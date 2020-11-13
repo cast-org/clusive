@@ -1,0 +1,121 @@
+[
+    {
+        "headword": "headache",
+        "alternateForms": ["headaches"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A pain in the head." ,
+                "examples": [ "The hot sun gave him a headache." ],
+                 "images": [
+                    {
+                        "src": "glossimages/headache1.jpg",
+                        "alt": "Photo of a man with closed eyes, holding the sides of his head.",
+                        "description": "A man with closed eyes, holding the sides of his head.",
+                        "caption": "A headache can be a sign of sickness.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/stressed-man-touching-his-face-5543224/",
+                            "title": "Stressed Man Touching His Face",
+                            "author": " Mental Health America (MHA)",
+                            "author_url": "https://www.pexels.com/@mentalhealthamerica",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "earache",
+        "alternateForms": ["earaches"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A pain in the ear." ,
+                "examples": [ "He got an earache after getting water in his ear." ]
+            }
+        ]
+    },
+    {
+         "headword": "medicine",
+        "alternateForms": ["medicines"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something used to treat sickness." ,
+                "examples": [ "The doctor gave me medicine to help me feel better." ],
+                 "images": [
+                    {
+                        "src": "glossimages/medicine1.jpg",
+                        "alt": "Photo of small round tablets and capsules.",
+                        "description": "Medicine tablets and capsules.",
+                        "caption": "Some medicines come in the form of tablets like those here.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/bunch-of-white-oval-medication-tablets-and-white-medication-capsules-159211/",
+                            "title": "Bunch of White Oval Medication Tablets and White Medication Capsules",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "stomachache",
+        "alternateForms": ["stomachaches"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A pain in a person’s belly." ,
+                "examples": [ "She ate too much candy and got a stomachache." ],
+                 "images": [
+                    {
+                        "src": "glossimages/stomachache1.jpg",
+                        "alt": "Photo of a person holding her stomach.",
+                        "description": "A person lying on a couch, holding her stomach.",
+                        "caption": "A person with a stomachache.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-lying-on-couch-3958561/",
+                            "title": "Woman Lying on Couch",
+                            "author": "Polina Zimmerman",
+                            "author_url": "https://www.pexels.com/@polina-zimmerman",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "sneeze",
+        "alternateForms": ["sneezes","sneezed","sneezing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make a sudden involuntary expulsion of air from the nose and mouth." ,
+                "examples": [ "When you sneeze, it can sound like, 'Ahhh choo!'" ],
+                 "images": [
+                    {
+                        "src": "glossimages/sneeze1.jpg",
+                        "alt": "Photo of a person with his mouth and nose pressed into his elbow.",
+                        "description": "A person with his mouth and nose pressed into his elbow.",
+                        "caption": "A person sneezing into his elbow.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-people-woman-desk-4031627/",
+                            "title": "",
+                            "author": "Edward Jenner",
+                            "author_url": "https://www.pexels.com/@edward-jenner",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

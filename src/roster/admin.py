@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.urls import path
 
 from . import views
-from .models import Site, Period, ClusiveUser, Preference, PreferenceSet
+from .models import Site, Period, ClusiveUser, Preference, PreferenceSet, UserStats
 
 
 class ClusiveUserInline(admin.StackedInline):
@@ -52,7 +52,14 @@ class PreferenceAdmin(admin.ModelAdmin):
 class PeriodAdmin(admin.ModelAdmin):
     model = Period
 
+
 @admin.register(PreferenceSet)
 class PreferenceSetAdmin(admin.ModelAdmin):
     model = PreferenceSet
 
+
+@admin.register(UserStats)
+class UserStatsAdmin(admin.ModelAdmin):
+    model = UserStats
+    list_display = ('user', 'reading_views')
+    ordering = ('user',)

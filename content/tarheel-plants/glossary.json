@@ -1,0 +1,94 @@
+[
+    {
+         "headword": "light",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The brightness that comes from the sun, light bulbs, and other bright things." ,
+                "examples": [ "The bright light of the sun makes the room warm." ],
+                 "images": [
+                    {
+                        "src": "glossimages/light1.jpg",
+                        "alt": "Photo of bright sun light shining through tree branches.",
+                        "description": "Bright sun light shining through tree branches.",
+                        "caption": "Light from the Sun shining through tree branches.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/scenic-view-of-the-forest-during-sunrise-1006121/",
+                            "title": "Scenic View of the Forest During Sunrise",
+                            "author": "Min An",
+                            "author_url": "https://www.pexels.com/@minan1398",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "grow",
+        "alternateForms": ["grows","grew","growing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To increase in size." ,
+                "examples": [ "The plants grow from small seeds into large plants with tomatoes." ]
+            }
+        ]
+    },
+    {
+         "headword": "live",
+        "alternateForms": ["living"],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Alive." ,
+                "examples": [ "Animals and plants are living things." ],
+                 "images": [
+                    {
+                        "src": "glossimages/living1.jpg",
+                        "alt": "Photo of Potted Plants on Wooden Table.",
+                        "description": "Eight plants, each growing in its own pot.",
+                        "caption": "Plants are living things.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-potted-plants-on-wooden-table-4503273/",
+                            "title": "Photo of Potted Plants on Wooden Table",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+         "headword": "soil",
+        "alternateForms": ["soils"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Dirt." ,
+                "examples": [ "Plants need soil and water to grow." ],
+                 "images": [
+                    {
+                        "src": "glossimages/soil1.jpg",
+                        "alt": "Photo of dirt in a small shovel.",
+                        "description": "Dirt in a small, handheld shovel.",
+                        "caption": "Plants usually grow in dirt.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-digging-on-soil-using-garden-shovel-1301856/",
+                            "title": "Person Digging on Soil Using Garden Shovel",
+                            "author": "Lisa Fotios",
+                            "author_url": "https://www.pexels.com/@fotios-photos",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

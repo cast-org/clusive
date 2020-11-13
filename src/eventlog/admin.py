@@ -15,7 +15,7 @@ class SessionAdmin(admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'eventTime', 'actor', 'group', 'membership', 'type', 'action', 'session',
-                       'document', 'page', 'control', 'value')
+                       'document', 'document_version', 'page', 'control', 'value')
     list_display = ('eventTime', 'actor', 'group', 'type', 'action', 'value')
     list_filter = ('actor__permission', 'eventTime')
     ordering = ('-eventTime',)

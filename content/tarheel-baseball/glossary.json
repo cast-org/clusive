@@ -1,0 +1,121 @@
+[
+  {
+    "headword": "mad",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Very angry." ,
+        "examples": [ "I was mad when the ball hit me in the leg." ],
+        "images": [
+          {
+            "src": "glossimages/mad1.jpg",
+            "alt": "Photo of Man Wearing Brown Suit Jacket yelling into a white telephone.",
+            "description": "Man Wearing Brown Suit Jacket yelling into a white telephone.",
+            "caption": "Yelling is a sign that someone is mad.",
+            "source": {
+              "url": "https://www.pexels.com/photo/man-wearing-brown-suit-jacket-mocking-on-white-telephone-1587014/",
+              "title": "",
+              "author": "Moose Photos",
+              "author_url": "https://www.pexels.com/@moose-photos-170195",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "dive",
+    "alternateForms": ["dives","dove","diving"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To plunge head first." ,
+        "examples": [ "He made a diving catch and stopped the ball." ],
+        "images": [
+          {
+            "src": "glossimages/dive1.jpg",
+            "alt": "Photo of two people playing baseball.",
+            "description": "Photo of a person diving toward a base while another is ready to catch a ball.",
+            "caption": "One player dives toward the base while the other is ready to catch the baseball.",
+            "source": {
+              "url": "https://www.pexels.com/photo/two-man-playing-baseball-during-daytime-159741/",
+              "title": "Two Man Playing Baseball during Daytime",
+              "author": "Pixabay",
+              "author_url": "https://www.pexels.com/@pixabay",
+              "license": "Free to use (CC0)",
+              "license_url": "https://www.pexels.com/creative-commons-images/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "wait",
+    "alternateForms": ["waits","waited","waiting"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To stay until a later time.",
+        "examples": [ "The player waited until it was safe to run to homebase." ]
+      }
+    ]
+  },
+  {
+    "headword": "slide",
+    "alternateForms": ["slides","slid","sliding"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To move along a surface." ,
+        "examples": [ "Dirt went everywhere as the player was sliding to the base." ],
+        "images": [
+          {
+            "src": "glossimages/slide1.jpg",
+            "alt": "Photo of a player sliding toward a base.",
+            "description": "A player kneels, trying to block the other player. The other player slides, feet first, toward the base.",
+            "caption": "Sliding is a way to get to a base.",
+            "source": {
+              "url": "https://www.pexels.com/photo/action-american-athlete-athletes-209832/",
+              "title": "Man Kneeling Trays to Stop Man While Hes Sliding Towards Base",
+              "author": "Pixabay",
+              "author_url": "https://www.pexels.com/@pixabay",
+              "license": "Free to use (CC0)",
+              "license_url": "https://www.pexels.com/creative-commons-images/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "celebrate",
+    "alternateForms": ["celebrates","celebrated","celebrating"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To note a happy event with joy." ,
+        "examples": [ "The team celebrated winning the game." ],
+        "images": [
+          {
+            "src": "glossimages/celebrate1.jpg",
+            "alt": "Photo of sports team gathered in a group.",
+            "description": "Group of Lacrosse Players Celebrating With Coach during Daytime",
+            "caption": "This team celebrates after winning a game.",
+            "source": {
+              "url": "https://www.pexels.com/photo/group-of-lacrosse-players-celebrating-with-coach-during-daytime-159728/",
+              "title": "Group of Lacrosse Players Celebrating With Coach during Daytime",
+              "author": "Pixabay",
+              "author_url": "https://www.pexels.com/@pixabay",
+              "license": "Free to use (CC0)",
+              "license_url": "https://www.pexels.com/creative-commons-images/"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'messagequeue.apps.MessageQueueConfig',
     'glossary.apps.GlossaryConfig',
     'authoring.apps.AuthoringConfig',
+    'tips.apps.TipsConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
 ]
@@ -156,7 +157,7 @@ LOGGING = {
 # Settings allowed to be exported
 SETTINGS_EXPORT = [
     'DEBUG',
-];
+]
 
 # Session settings
 SESSION_EXPIRE_SECONDS = 1800   # 30 minutes, in seconds

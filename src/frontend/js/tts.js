@@ -4,12 +4,14 @@
 /* eslint-disable no-use-before-define */
 /* global D2Reader */
 
-var clusiveTTS = {
+window.clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
     region: {},
     currentVoice: null,
-    voiceRate: 1
+    voiceRate: 1,
+    textElement: null,
+    copiedElement: null
 };
 
 // Bind controls
@@ -50,6 +52,8 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud stop button clicked');
             clusiveTTS.stopReading();
+            // Call resetElements since some browsers do not always get the `utterance.onend` event
+            clusiveTTS.resetElements();
         }
         clusiveTTS.updateUI('stop');
     });
@@ -185,43 +189,76 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     'use strict';
 
     var synth = clusiveTTS.synth;
-    var element = $(textElement);
-    var elementText = element.text();
-    var contentText = end ? element.text().slice(offset, end) : element.text().slice(offset);
+    clusiveTTS.textElement = $(textElement);
+    var elementText = clusiveTTS.textElement.text();
+    var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
     // Preserve and hide the original element so we can handle the highlighting in an
     // element without markup
     // TODO: this needs improved implementation longer term
-    var copiedElement = element.clone(false);
-    element.after(copiedElement);
-    element.hide();
-    // eslint-disable-next-line compat/compat
+    clusiveTTS.copiedElement = clusiveTTS.textElement.clone(false);
+    clusiveTTS.textElement.after(clusiveTTS.copiedElement);
+    clusiveTTS.textElement.hide();
+
     var utterance = clusiveTTS.makeUtterance(contentText);
 
     utterance.onboundary = function(e) {
+        var preceding = '';
+        var middle = '';
+        var following = '';
+
         if (e.name === 'sentence') {
             console.debug('sentence boundary', e.charIndex, e.charLength, contentText.slice(e.charIndex, e.charIndex + e.charLength));
         }
         if (e.name === 'word') {
             console.debug('word boundary', e.charIndex, e.charLength, contentText.slice(e.charIndex, e.charIndex + e.charLength));
 
-            var preceding = elementText.substring(0, offset + e.charIndex);
-            var middle = elementText.substring(offset + e.charIndex, offset + e.charIndex + e.charLength);
-            var following = elementText.substring(offset + e.charIndex + e.charLength);
-            var newText = preceding + '<span class=\'tts-currentWord\'>' + middle + '</span>' + following;
+            // iOS/Safari does not report charLength
+            if (typeof e.charLength !== 'undefined') {
+                preceding = elementText.substring(0, offset + e.charIndex);
+                middle = elementText.substring(offset + e.charIndex, offset + e.charIndex + e.charLength);
+                following = elementText.substring(offset + e.charIndex + e.charLength);
+            } else {
+                // Find first word boundary after index
+                var subString = e.charIndex ? elementText.substring(offset + e.charIndex) : elementText;
+                var boundaryMatch = subString.match(/\s\b\S?/);
+                var boundaryIndex = boundaryMatch ? boundaryMatch.index : 0;
+                var textLength = subString.length;
 
-            copiedElement.html(newText);
+                boundaryIndex = textLength < boundaryIndex ? textLength : boundaryIndex;
+
+                preceding = elementText.substring(0, offset + e.charIndex);
+                //middle = elementText.substring(offset + e.charIndex, offset + e.charIndex + boundaryIndex);
+                following = elementText.substring(offset + e.charIndex + boundaryIndex);
+
+                if (!boundaryMatch) {
+                    middle = elementText.substring(offset + e.charIndex);
+                    following = '';
+                } else {
+                    middle = elementText.substring(offset + e.charIndex, offset + e.charIndex + boundaryIndex);
+                }
+            }
+
+            var newText = preceding + '<span class=\'tts-currentWord\'>' + middle + '</span>' + following;
+            clusiveTTS.copiedElement.html(newText);
         }
     };
 
     utterance.onend = function() {
         console.debug('utterance ended');
-        copiedElement.remove();
-        element.show();
-        clusiveTTS.readQueuedElements();
+        clusiveTTS.resetElements();
     };
 
     synth.speak(utterance);
+};
+
+clusiveTTS.resetElements = function() {
+    'use strict';
+
+    console.debug('read aloud reset elements');
+    clusiveTTS.copiedElement.remove();
+    clusiveTTS.textElement.show();
+    clusiveTTS.readQueuedElements();
 };
 
 clusiveTTS.makeUtterance = function(text) {
@@ -433,12 +470,11 @@ clusiveTTS.setCurrentVoice = function(name) {
 clusiveTTS.readAloudSample = function() {
     'use strict';
 
-    // eslint-disable-next-line compat/compat
     var utt = clusiveTTS.makeUtterance('Testing, testing, 1 2 3');
     window.speechSynthesis.speak(utt);
 };
 
-var clusiveSelection = {
+window.clusiveSelection = {
     directions: {
         FORWARD: 'Forward',
         BACKWARD: 'Backward',
