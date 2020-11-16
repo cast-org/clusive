@@ -20,7 +20,7 @@ page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp', 'reader_info'])
 
 #
 # Signal handlers that log specific events
@@ -80,6 +80,15 @@ def log_control_used(sender, **kwargs):
             page = associated_page_event.page 
             document = associated_page_event.document
             document_version = associated_page_event.document_version
+            reader_info = kwargs.get('reader_info')            
+            try:                        
+                document_href = reader_info.get('location').get('href')
+            except AttributeError:
+                document_href = None;
+            try:
+                document_progression = reader_info.get('location').get('progression')
+            except AttributeError:
+                document_progression=None                
             event = Event.build(type='TOOL_USE_EVENT',
                                 action='USED',
                                 control=kwargs['control'],
@@ -88,6 +97,8 @@ def log_control_used(sender, **kwargs):
                                 document=document,
                                 eventTime=timestamp,
                                 document_version=document_version,
+                                document_href = document_href,
+                                document_progression=document_progression,
                                 session=kwargs['request'].session)
             if event:   
                 event.save()                                                    
@@ -104,8 +115,7 @@ def log_pref_change(sender, **kwargs):
             page = associated_page_event.page 
             document = associated_page_event.document
             document_version = associated_page_event.document_version
-            reader_info = kwargs.get('reader_info')
-            logger.debug("Reader info for pref change: %s" % reader_info)
+            reader_info = kwargs.get('reader_info')            
             try:                        
                 document_href = reader_info.get('location').get('href')
             except AttributeError:
