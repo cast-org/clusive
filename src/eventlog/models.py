@@ -55,7 +55,7 @@ class Event(models.Model):
     # Document href (specific page within an ebook); null if none
     document_href = models.CharField(max_length=512, null=True)    
     # Document progression, if relevant; null if none
-    document_progression = models.CharField(max_length=128, null=True)    
+    document_progression = models.FloatField(null=True)    
     # If in a document, what page of the document the user was looking at; if not, the name of the application page
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
