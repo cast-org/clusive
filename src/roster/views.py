@@ -102,10 +102,8 @@ def set_user_preference_and_log_event(user, pref_key, pref_value, event_id, time
 
 @receiver(client_side_prefs_change, sender=Message)
 def set_preferences_from_message(sender, content, timestamp, request, **kwargs):
-    logger.info("client_side_prefs_change message received")
-    reader_info = None;
-    if(content["readerInfo"]):
-        reader_info = content["readerInfo"]
+    logger.info("client_side_prefs_change message received")    
+    reader_info = content.get("readerInfo")
     user = request.clusive_user
     set_user_preferences(user, content["preferences"], content["eventId"], timestamp, request, reader_info=reader_info)
 
