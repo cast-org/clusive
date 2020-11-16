@@ -62,27 +62,25 @@ def get_common_event_args(kwargs):
         try:
             associated_page_event = Event.objects.get(id=event_id)
             page = associated_page_event.page 
-            document = associated_page_event.document
-            document_version = associated_page_event.document_version
-            reader_info = kwargs.get('reader_info')            
+            book_version_id = associated_page_event.book_version_id
+            reader_info = kwargs.get('reader_info')
             try:                        
                 document_href = reader_info.get('location').get('href')
             except AttributeError:
-                document_href = None;
+                document_href = None
             try:
                 document_progression = reader_info.get('location').get('progression')
             except AttributeError:
                 document_progression=None        
             common_event_args = dict(page=page,
-                                document=document,
+                                book_version_id=book_version_id,
                                 eventTime=timestamp,
-                                document_version=document_version,
                                 document_href = document_href,
                                 document_progression=document_progression,
                                 session=kwargs['request'].session)  
             return common_event_args
         except Event.DoesNotExist:
-            logger.error('build_base_event_args with a non-existent page event ID %s', event_id)                
+            logger.error('get_common_event_args with a non-existent page event ID %s', event_id)
 
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
@@ -133,7 +131,7 @@ def log_annotation_action(sender, **kwargs):
     logger.debug("Annotation %s: %s" % (action, annotation))
     event = Event.build(type='ANNOTATION_EVENT',
                         action=action,
-                        document='%s:%d' % (annotation.bookVersion.book.path, annotation.bookVersion.sortOrder),
+                        book_version=annotation.bookVersion,
                         value=annotation.clean_text(),
                         session=request.session)
             # TODO: page?  Generated?

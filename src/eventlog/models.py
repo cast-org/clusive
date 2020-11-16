@@ -48,15 +48,14 @@ class Event(models.Model):
     type = models.CharField(max_length=32, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
     # action of the event, based on Caliper spec
     action = models.CharField(max_length=32, choices=[(k,v) for k, v in caliper.constants.CALIPER_ACTIONS.items()])
-    # What document the user was looking at; null if none (eg, the library page)
-    document = models.CharField(max_length=128, null=True)
-    # What document version the user was looking at; null if none
-    document_version = models.CharField(max_length=128, null=True)
+    # What BookVersion the user was looking at; null if none (eg, the library page)
+    # This is not a ForeignKey because BookVersions can be deleted, but we want to keep the info here regardless.
+    book_version_id = models.BigIntegerField(null=True)
     # Document href (specific page within an ebook); null if none
-    document_href = models.CharField(max_length=512, null=True)    
+    document_href = models.CharField(max_length=512, null=True)
     # Document progression, if relevant; null if none
-    document_progression = models.FloatField(null=True)    
-    # If in a document, what page of the document the user was looking at; if not, the name of the application page
+    document_progression = models.FloatField(null=True)
+    # The name of the application page (Library, Reading, etc)
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
     control = models.CharField(max_length=32, null=True)
@@ -71,7 +70,8 @@ class Event(models.Model):
     @classmethod
     def build(cls, type, action,
               session=None, login_session=None, group=None,
-              document=None, document_version=None, document_href=None, document_progression=None, page=None,
+              book_version=None, book_version_id=None,
+              document_href=None, document_progression=None, page=None,
               control=None, value=None, eventTime=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
@@ -89,14 +89,15 @@ class Event(models.Model):
             clusive_user = login_session.user
             if value and len(value) > 128:
                 value = value[:126] + '…'
+            if not book_version_id and book_version:
+                book_version_id = book_version.id
             event = cls(type=type,
                         action=action,
                         actor=clusive_user,
                         membership=clusive_user.role,
                         session=login_session,
                         group=group,
-                        document=document,
-                        document_version=document_version,
+                        book_version_id = book_version_id,
                         document_href=document_href,
                         document_progression=document_progression,
                         page=page,
