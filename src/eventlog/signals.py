@@ -53,7 +53,8 @@ def log_page_timing(sender, **kwargs):
     else:
         logger.error('Missing event ID in page timing message')
 
-# Handle parameters non-pageview events should have in common
+# Handle parameters non-pageview / session events should have in common
+# (typically user interactions with UI components)
 def get_common_event_args(kwargs):    
     event_id = kwargs.get('event_id')
     timestamp = kwargs.get('timestamp')
