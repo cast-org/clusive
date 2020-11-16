@@ -149,11 +149,13 @@ def glossdef(request, book_id, cued, word):
     except Book.DoesNotExist:
         book = None
     defs = lookup(book, base)
+    page_event_id = request.GET.get('eventId')
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=base,
                       cued=cued,
+                      event_id=page_event_id,
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:

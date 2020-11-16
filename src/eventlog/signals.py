@@ -90,11 +90,12 @@ def log_vocab_lookup(sender, **kwargs):
     # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one
     # TODO: differentiate lookup button from clicking a linked word to look it up.
     # TODO: indicate document and page where the event occurred
+    common_event_args = get_common_event_args(kwargs)
     event = Event.build(type='TOOL_USE_EVENT',
                         action='USED',
                         control='lookup',
                         value=kwargs['word'],
-                        session=kwargs['request'].session)
+                        **common_event_args)
     if event:
         event.save()
 
@@ -127,15 +128,15 @@ def log_pref_change(sender, **kwargs):
 @receiver(annotation_action)
 def log_annotation_action(sender, **kwargs):
     """User adds, deletes, or undeletes an annotation"""
-    request = kwargs.get('request')
+    common_event_args = get_common_event_args(kwargs)    
     action = kwargs.get('action')   # Should be HIGHLIGHTED or REMOVED
     annotation = kwargs.get('annotation')
     logger.debug("Annotation %s: %s" % (action, annotation))
     event = Event.build(type='ANNOTATION_EVENT',
-                        action=action,
-                        document='%s:%d' % (annotation.bookVersion.book.path, annotation.bookVersion.sortOrder),
+                        action=action,                        
                         value=annotation.clean_text(),
-                        session=request.session)
+                        session=request.session,
+                        **common_event_args)
             # TODO: page?  Generated?
     event.save()
 
