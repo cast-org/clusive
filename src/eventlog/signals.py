@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
-preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp'])
+preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp'])
 
@@ -103,7 +103,17 @@ def log_pref_change(sender, **kwargs):
             associated_page_event = Event.objects.get(id=event_id)
             page = associated_page_event.page 
             document = associated_page_event.document
-            document_version = associated_page_event.document_version        
+            document_version = associated_page_event.document_version
+            reader_info = kwargs.get('reader_info')
+            logger.debug("Reader info for pref change: %s" % reader_info)
+            try:                        
+                document_href = reader_info.get('location').get('href')
+            except AttributeError:
+                document_href = None;
+            try:
+                document_progression = reader_info.get('location').get('progression')
+            except AttributeError:
+                document_progression=None
             request = kwargs.get('request')
             preference = kwargs.get('preference')
             timestamp = kwargs.get('timestamp')
@@ -116,6 +126,8 @@ def log_pref_change(sender, **kwargs):
                                 page=page,
                                 document=document,
                                 document_version=document_version,                            
+                                document_href=document_href,
+                                document_progression=document_progression,
                                 session=request.session)
             if event:   
                 event.save()

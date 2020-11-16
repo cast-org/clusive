@@ -71,7 +71,7 @@ class Event(models.Model):
     @classmethod
     def build(cls, type, action,
               session=None, login_session=None, group=None,
-              document=None, document_version=None, page=None,
+              document=None, document_version=None, document_href=None, document_progression=None, page=None,
               control=None, value=None, eventTime=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
@@ -97,6 +97,8 @@ class Event(models.Model):
                         group=group,
                         document=document,
                         document_version=document_version,
+                        document_href=document_href,
+                        document_progression=document_progression,
                         page=page,
                         control=control,
                         value=value,
