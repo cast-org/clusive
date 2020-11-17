@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from glossary.util import base_form, all_forms
 from library.models import Book, BookVersion
 from roster.models import ClusiveUser
+from eventlog.models import Event
 
 logger = logging.getLogger(__name__)
 
@@ -50,14 +51,20 @@ class GlossaryTestCase(TestCase):
 
     def test_cuelist(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/cuelist/%d/0'  % self.book.pk)
+        library_page_response = self.client.get('/library/public')
+        page_view_event = Event.objects.latest('eventTime')
+        self.event_id = page_view_event.id        
+        response = self.client.get('/glossary/cuelist/%d/0?eventId=%s'  % (self.book.pk, self.event_id))
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                                  {'words': {'test': ['test', 'tested', 'testing', 'tests']}})
 
     def test_definition(self):
-        #login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/glossdef/%d/0/word' % self.book.pk)
+        login = self.client.login(username='user1', password='password1')
+        library_page_response = self.client.get('/library/public')
+        page_view_event = Event.objects.latest('eventTime')
+        self.event_id = page_view_event.id                
+        response = self.client.get('/glossary/glossdef/%d/0/word?eventId=%s' % (self.book.pk, self.event_id))
         self.assertEqual(response.status_code, 200)
         self.assertInHTML('<span class="definition-example">we had a word or two about it</span>', response.content.decode('utf8'), 1)
 
