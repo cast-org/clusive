@@ -1,0 +1,47 @@
+[
+    {
+        "headword": "born",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be brought into being." ,
+                "examples": [ "Your birthday is the same as the day you were born." ]
+            }
+        ]
+    },
+    {
+        "headword": "inventor",
+        "alternateForms": ["inventors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person who makes a particular thing." ,
+                "examples": [ "Some people say that Leonardo daVinci was the inventor of human flight, because he drew designs for flying machines hundreds of years ago." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "genius",
+        "alternateForms": ["geniuses"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person with an unusual ability to think or create in ways that go far beyond what most people can do." ,
+                "examples": [ "The first book he wrote was so good, it shows a genius at work." ]
+            }
+        ]
+    },
+    {
+        "headword": "refer",
+        "alternateForms": ["refers","referred","referring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To mention or call attention to." ,
+                "examples": [ "She referred to her good friends when she thanked everyone for their support." ]
+            }
+        ]
+    }
+]

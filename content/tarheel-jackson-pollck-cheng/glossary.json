@@ -1,0 +1,105 @@
+[
+    {
+        "headword": "born",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be brought into being." ,
+                "examples": [ "Your birthday is the same as the day you were born." ]
+            }
+        ]
+    },
+    {
+        "headword": "study",
+        "alternateForms": ["studies","studied","studying"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To spend time and energy learning a subject or skill." ,
+                "examples": [ "I studied painting in school so that I could become a better artist." ],
+                "images": [
+                    {
+                        "src": "glossimages/study1.jpg",
+                        "alt": "Photo of a woman reading a book.",
+                        "description": "A woman reading a book.",
+                        "caption": "A person studying.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-reading-book-1181672/",
+                            "title": "Woman Reading Book",
+                            "author": "Christina Morillo",
+                            "author_url": "https://www.pexels.com/@divinetechygirl",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "action",
+        "alternateForms": ["actions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The process of doing something." ,
+                "examples": [ "A protest is a way to take action against injustice." ]
+            }
+        ]
+    },
+    {
+        "headword": "drip",
+        "alternateForms": ["drips","dripped","dripping"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To let something wet freely fall." ,
+                "examples": [ "I let the water drip off of me after I came out of the water." ],
+                "images": [
+                    {
+                        "src": "glossimages/drip1.jpg",
+                        "alt": "Photo of water falling in droplets from a faucet.",
+                        "description": "Water falling in droplets from a faucet. ",
+                        "caption": "A dripping faucet.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/grayscale-photography-of-a-faucet-2383368/",
+                            "title": "Grayscale Photography of a faucet",
+                            "author": "Nabi Sohrabli",
+                            "author_url": "https://www.pexels.com/@nabi13",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "splatter",
+        "alternateForms": ["splatters","splattered","splattering"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To splash with a liquid." ,
+                "examples": [ "Each time we stepped into a puddle, mud splattered all over our boots." ],
+                "images": [
+                    {
+                        "src": "glossimages/splatter1.jpg",
+                        "alt": "Photo of lines of paint in a random pattern.",
+                        "description": "Lines and blobs of paint going in different directions on a dark background.",
+                        "caption": "Splatters of paint on a dark background.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/close-up-photo-of-paint-splashes-4630209/",
+                            "title": "Close-Up Photo Of Paint Splashes",
+                            "author": "Shelly Still",
+                            "author_url": "https://www.pexels.com/@shellystill",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
