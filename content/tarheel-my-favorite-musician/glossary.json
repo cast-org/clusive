@@ -1,0 +1,89 @@
+[
+    {
+        "headword": "copy",
+        "alternateForms": ["copies"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An exact duplicate of an original." ,
+                "examples": [ "The record has sold more than a million copies." ]
+            }
+        ]
+    },
+    {
+        "headword": "born",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be brought into being." ,
+                "examples": [ "Your birthday is the same as the day you were born." ]
+            }
+        ]
+    },
+    {
+        "headword": "record",
+        "alternateForms": ["records"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A reproduction of a song, usually on a thin plastic disk." ,
+                "examples": [ "I replaced my record collection with online audio files." ],
+                "images": [
+                    {
+                        "src": "glossimages/record1.jpg",
+                        "alt": "Photo of a holding a record.",
+                        "description": "A person holding a black plastic disk.",
+                        "caption": "A person holding a record.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-woman-holding-phonograph-record-2531130/",
+                            "title": "Photo of Woman Holding Phonograph Record",
+                            "author": "Jorge Fakhouri Filho",
+                            "author_url": "https://www.pexels.com/@jorge-fakhouri-filho-861811",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "platinum",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A precious silvery-white metal." ,
+                "examples": [ "Jewelry and other special things can be made from platinum." ]
+            }
+        ]
+    },
+    {
+        "headword": "awesome",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Very impressive." ,
+                "examples": [ "The fireworks show was so awesome, we cheered at the end!" ],
+                "images": [
+                    {
+                        "src": "glossimages/awesome1.jpg",
+                        "alt": "Photo of fireworks in the sky.",
+                        "description": "Fireworks in the dark sky.",
+                        "caption": "Beautiful fireworks fill the sky.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-fireworks-display-2526105/",
+                            "title": "Photo of Fireworks Display",
+                            "author": "Designecologist",
+                            "author_url": "https://www.pexels.com/@designecologist",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
