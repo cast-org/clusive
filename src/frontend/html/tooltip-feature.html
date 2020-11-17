@@ -20,7 +20,7 @@
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.0.0/dist/js/figuration.min.js" integrity="sha384-XqIV+6/aPbInuDsESPata3SBmFPBP6fSRj8dE/LgKX9dkNoGJeLRa8/q9jUo0vW4" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
-<script src="../js/theme-test.js"></script>
+<script src="./js/theme-test.js"></script>
 
 </head>
 <body>
@@ -275,7 +275,7 @@ $(window).ready(function() {
 $(document.body).one('themeControls', function() {
     var html = '</br>';
     html += 'Sub-theme: ';
-    html += '<a href="#" style="color: #009 !important;" onclick="return $(document.body).toggleClass(\'library\'); return false;">Toggle library</a>';
+    html += '<a href="#" style="color: #009 !important;" onclick="$(document.body).toggleClass(\'library\'); return false;">Toggle library</a>';
     html += '</br>';
     $('#themeTest').append(html);
 });
