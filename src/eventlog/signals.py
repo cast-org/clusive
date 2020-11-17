@@ -18,9 +18,9 @@ logger = logging.getLogger(__name__)
 
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
-preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp'])
+preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp', 'reader_info'])
 
 #
 # Signal handlers that log specific events
@@ -53,6 +53,34 @@ def log_page_timing(sender, **kwargs):
     else:
         logger.error('Missing event ID in page timing message')
 
+# Handle parameters non-pageview / session events should have in common
+# (typically user interactions with UI components)
+def get_common_event_args(kwargs):    
+    event_id = kwargs.get('event_id')
+    timestamp = kwargs.get('timestamp')
+    if event_id:
+        try:
+            associated_page_event = Event.objects.get(id=event_id)
+            page = associated_page_event.page 
+            book_version_id = associated_page_event.book_version_id
+            reader_info = kwargs.get('reader_info')
+            try:                        
+                document_href = reader_info.get('location').get('href')
+            except AttributeError:
+                document_href = None
+            try:
+                document_progression = reader_info.get('location').get('progression')
+            except AttributeError:
+                document_progression=None        
+            common_event_args = dict(page=page,
+                                book_version_id=book_version_id,
+                                eventTime=timestamp,
+                                document_href = document_href,
+                                document_progression=document_progression,
+                                session=kwargs['request'].session)  
+            return common_event_args
+        except Event.DoesNotExist:
+            logger.error('get_common_event_args with a non-existent page event ID %s', event_id)
 
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
@@ -71,56 +99,28 @@ def log_vocab_lookup(sender, **kwargs):
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
     """User interacts with a UI control"""
-    logger.debug("control interaction: %s " % (kwargs))
-    event_id = kwargs['event_id']
-    timestamp = kwargs['timestamp']
-    if event_id:
-        try:
-            associated_page_event = Event.objects.get(id=event_id)
-            page = associated_page_event.page 
-            document = associated_page_event.document
-            document_version = associated_page_event.document_version
-            event = Event.build(type='TOOL_USE_EVENT',
-                                action='USED',
-                                control=kwargs['control'],
-                                value=kwargs['value'],
-                                page=page,
-                                document=document,
-                                eventTime=timestamp,
-                                document_version=document_version,
-                                session=kwargs['request'].session)
-            if event:   
-                event.save()                                                    
-        except Event.DoesNotExist:
-            logger.error('Received control_used with a non-existent page event ID %s', event_id)
+    common_event_args = get_common_event_args(kwargs)                  
+    event = Event.build(type='TOOL_USE_EVENT',
+                        action='USED',
+                        control=kwargs['control'],
+                        value=kwargs['value'],
+                        **common_event_args
+                        )
+    if event:   
+        event.save()                                                    
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
     """User changes a preference setting"""
-    event_id = kwargs['event_id']
-    if event_id:
-        try:
-            associated_page_event = Event.objects.get(id=event_id)
-            page = associated_page_event.page 
-            document = associated_page_event.document
-            document_version = associated_page_event.document_version        
-            request = kwargs.get('request')
-            preference = kwargs.get('preference')
-            timestamp = kwargs.get('timestamp')
-            logger.debug("Preference change: %s at %s" % (preference, timestamp))
-            event = Event.build(type='TOOL_USE_EVENT',
-                                action='USED',
-                                control='pref:'+preference.pref,
-                                eventTime=timestamp,
-                                value=preference.value,
-                                page=page,
-                                document=document,
-                                document_version=document_version,                            
-                                session=request.session)
-            if event:   
-                event.save()
-        except Event.DoesNotExist:
-            logger.error('Received pref_change with a non-existent page event ID %s', event_id)            
+    common_event_args = get_common_event_args(kwargs)
+    preference = kwargs.get('preference')                  
+    event = Event.build(type='TOOL_USE_EVENT',
+                        action='USED',
+                        control='pref:'+preference.pref,                        
+                        value=preference.value,
+                        **common_event_args)
+    if event:   
+        event.save()
 
 @receiver(annotation_action)
 def log_annotation_action(sender, **kwargs):
@@ -131,7 +131,7 @@ def log_annotation_action(sender, **kwargs):
     logger.debug("Annotation %s: %s" % (action, annotation))
     event = Event.build(type='ANNOTATION_EVENT',
                         action=action,
-                        document='%s:%d' % (annotation.bookVersion.book.path, annotation.bookVersion.sortOrder),
+                        book_version=annotation.bookVersion,
                         value=annotation.clean_text(),
                         session=request.session)
             # TODO: page?  Generated?

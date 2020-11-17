@@ -47,6 +47,13 @@ $(document).ready(function () {
             }
             if(manifest_path) {
                 readerInfo.publication.manifestPath = manifest_path;
+            }            
+            if(window.sessionStorage.getItem(LOC_LOC_KEY)) {
+                readerInfo.location = {}
+                var locationInfoRaw = window.sessionStorage.getItem(LOC_LOC_KEY);
+                var locationInfo = JSON.parse(locationInfoRaw);
+                readerInfo.location.href = locationInfo.href;
+                readerInfo.location.progression = locationInfo.locations.progression;
             }
         }
         return readerInfo;    
