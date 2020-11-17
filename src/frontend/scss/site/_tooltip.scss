@@ -1,5 +1,6 @@
 .tooltip-feature {
     @include font-size($tooltip-feature-font-size);
+    opacity: 0;
 
     &.in {
         opacity: $tooltip-feature-opacity;
@@ -89,6 +90,6 @@
 }
 
 .tooltip-action {
-    margin-top:  $paragraph-spacer-y / -2;
+    margin-top: $paragraph-spacer-y / -2;
     text-align: right;
 }
