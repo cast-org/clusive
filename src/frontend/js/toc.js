@@ -162,7 +162,7 @@ function buildTableOfContents() {
 // If user navigates to a new page, any pending final location should also be sent to the server.
 //
 
-var LOC_UPDATE_INTERVAL = 60 * 1000; // Time between server calls - once per minute, in ms.
+var LOC_UPDATE_INTERVAL = 20 * 1000; // Time between server calls - once per minute, in ms.
 var LOC_LOC_KEY = 'trackReadingLocationLoc'; // Stores recorded location that has not yet been transmitted, if any.
 var LOC_BOOK_KEY = 'trackReadingLocationBook'; // Publication that LOC_LOC_KEY refers to.
 var LOC_VERSION_KEY = 'trackReadingLocationVersion'; // Version of publication that LOC_LOC_KEY refers to.
