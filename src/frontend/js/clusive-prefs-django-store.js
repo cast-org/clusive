@@ -28,7 +28,12 @@
                 type: 'fluid.dataSource.encoding.none'
             },            
             messageQueue: {
-                type: "clusive.djangoMessageQueue"
+                type: "clusive.djangoMessageQueue",
+                options: {
+                    config: {                        
+                        localStorageKey: "clusive.messageQueue.preferenceChanges"                        
+                    }
+                }
             }
             
         },
