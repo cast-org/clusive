@@ -134,8 +134,7 @@ def log_annotation_action(sender, **kwargs):
     logger.debug("Annotation %s: %s" % (action, annotation))
     event = Event.build(type='ANNOTATION_EVENT',
                         action=action,                        
-                        value=annotation.clean_text(),
-                        session=request.session,
+                        value=annotation.clean_text(),                        
                         **common_event_args)
             # TODO: page?  Generated?
     event.save()

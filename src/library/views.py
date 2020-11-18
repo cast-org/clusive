@@ -399,13 +399,15 @@ class AnnotationView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
         if request.POST.get('undelete'):
-            anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)
+            anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)            
+            page_event_id = request.GET.get('eventId')            
             anno.dateDeleted = None
             anno.save()
             logger.debug('Undeleting annotation %s', anno)
             annotation_action.send(sender=AnnotationView.__class__,
                                    request=request,
                                    annotation=anno,
+                                   event_id=page_event_id,
                                    action='HIGHLIGHTED')
             return JsonResponse({'success': True})
         else:
@@ -423,10 +425,12 @@ class AnnotationView(LoginRequiredMixin, View):
                 annotation.update_id()
                 annotation.save()
                 logger.debug('Created annotation %s', annotation)
+                page_event_id = request.GET.get('eventId')            
                 annotation_action.send(sender=AnnotationView.__class__,
                                        request=request,
                                        annotation=annotation,
-                                       action='HIGHLIGHTED')
+                                       action='HIGHLIGHTED',
+                                       event_id=page_event_id)
             except BookVersion.DoesNotExist:
                 raise Http404('Unknown BookVersion: %s / %d' % (book_id, version_number))
             else:
@@ -439,10 +443,12 @@ class AnnotationView(LoginRequiredMixin, View):
         logger.debug('Deleting annotation %s', anno)
         anno.dateDeleted = timezone.now()
         anno.save()
+        page_event_id = request.GET.get('eventId')            
         annotation_action.send(sender=AnnotationView.__class__,
                                request=request,
                                annotation=anno,
-                               action='REMOVED')
+                               action='REMOVED',
+                               event_id=page_event_id)
         return JsonResponse({'success': True})
 
 

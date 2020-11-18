@@ -268,7 +268,8 @@ function addNewAnnotation(annotation, pub_id, pub_version) {
         data: {
             book: pub_id,
             version: pub_version,
-            highlight: JSON.stringify(annotation)
+            highlight: JSON.stringify(annotation),
+            eventId: PAGE_EVENT_ID
         }
     })
         .then(function(result) {
@@ -304,6 +305,9 @@ function deleteAnnotation(e) {
         method: 'DELETE',
         headers: {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            eventId: PAGE_EVENT_ID
         }
     })
         .then(function() {
@@ -331,7 +335,8 @@ function undeleteAnnotation(event) {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
         },
         data: {
-            undelete: annotation.id
+            undelete: annotation.id,
+            eventId: PAGE_EVENT_ID
         }
     })
         .then(function() {
