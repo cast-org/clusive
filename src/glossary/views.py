@@ -149,7 +149,7 @@ def glossdef(request, book_id, cued, word):
     except Book.DoesNotExist:
         book = None
     defs = lookup(book, base)
-    page_event_id = request.GET.get('eventId')
+    page_event_id = request.headers.get('Clusive-Page-Event-Id')
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
