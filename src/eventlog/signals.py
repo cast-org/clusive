@@ -69,28 +69,28 @@ def get_page_event_id(kwargs):
 # Tries to get information about the current reader href
 # First priority: reader_info sent as part of the keyword argument
 # Second priority: Clusive-Document-Location-Href from request header
-def get_document_href(kwargs):
+def get_resource_href(kwargs):
     reader_info = kwargs.get('reader_info') 
-    document_href = None
+    resource_href = None
     try:                        
-        document_href = reader_info.get('location').get('href')
+        resource_href = reader_info.get('location').get('href')
     except AttributeError:
         request = kwargs.get('request')
-        document_href = request.headers.get('Clusive-Reader-Document-Href')
-    return document_href
+        resource_href = request.headers.get('Clusive-Reader-Document-Href')
+    return resource_href
 
 # Tries to get information about the current reader progression
 # First priority: reader_info sent as part of the keyword argument
 # Second priority: Clusive-Document-Location-Progression from request header
-def get_document_progression(kwargs):
+def get_resource_progression(kwargs):
     reader_info = kwargs.get('reader_info') 
-    document_progression = None
+    resource_progression = None
     try:                        
-        document_progression = reader_info.get('location').get('progression')
+        resource_progression = reader_info.get('location').get('progression')
     except AttributeError:
         request = kwargs.get('request')        
-        document_progression = request.headers.get('Clusive-Reader-Document-Progression')
-    return document_progression
+        resource_progression = request.headers.get('Clusive-Reader-Document-Progression')
+    return resource_progression
 
 # Handle parameters non-pageview / session events should have in common
 def get_common_event_args(kwargs):    
@@ -103,13 +103,13 @@ def get_common_event_args(kwargs):
             associated_page_event = Event.objects.get(id=event_id)
             page = associated_page_event.page             
             book_version_id = associated_page_event.book_version_id
-            document_href = get_document_href(kwargs)            
-            document_progression = get_document_progression(kwargs)            
+            resource_href = get_resource_href(kwargs)            
+            resource_progression = get_resource_progression(kwargs)            
             common_event_args = dict(page=page,                                
                                 eventTime=timestamp,
                                 book_version_id=book_version_id,
-                                document_href = document_href,
-                                document_progression=document_progression,
+                                resource_href = resource_href,
+                                resource_progression=resource_progression,
                                 session=kwargs['request'].session)  
             return common_event_args
         except Event.DoesNotExist:

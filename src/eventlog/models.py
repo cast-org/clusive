@@ -53,12 +53,10 @@ class Event(models.Model):
     # What BookVersion the user was looking at; null if none (eg, the library page)
     # This is not a ForeignKey because BookVersions can be deleted, but we want to keep the info here regardless.
     book_version_id = models.BigIntegerField(null=True)
-    # Document href (specific page within an ebook); null if none    
-    # TODO: rename to resource_href
-    document_href = models.CharField(max_length=512, null=True)        
-    # Document progression, if relevant; null if none
-    # TODO: rename to resource_progression
-    document_progression = models.FloatField(null=True)
+    # Resource href (specific resource within an ebook); null if none        
+    resource_href = models.CharField(max_length=512, null=True)        
+    # Resource progression, if relevant; null if none    
+    resource_progression = models.FloatField(null=True)
     # The name of the application page (Library, Reading, etc)
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
@@ -75,7 +73,7 @@ class Event(models.Model):
     def build(cls, type, action,
               session=None, login_session=None, group=None,
               book_version=None, book_version_id=None,
-              document_href=None, document_progression=None, page=None,
+              resource_href=None, resource_progression=None, page=None,
               control=None, value=None, eventTime=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
@@ -102,8 +100,8 @@ class Event(models.Model):
                         session=login_session,
                         group=group,
                         book_version_id = book_version_id,
-                        document_href=document_href,
-                        document_progression=document_progression,
+                        resource_href=resource_href,
+                        resource_progression=resource_progression,
                         page=page,
                         control=control,
                         value=value,

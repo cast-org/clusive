@@ -14,7 +14,7 @@ class SessionAdmin(admin.ModelAdmin):
 
 class EventAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'eventTime', 'actor', 'group', 'membership', 'type', 'action', 'session',
-                       'book_version_id', 'document_href', 'document_progression', 'page', 'control', 'value')
+                       'book_version_id', 'resource_href', 'resource_progression', 'page', 'control', 'value')
     list_display = ('eventTime', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
                     'book_version_id')
     list_filter = ('actor__permission', 'eventTime')
