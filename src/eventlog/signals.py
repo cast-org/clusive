@@ -125,9 +125,7 @@ def build_tool_use_event(control, value, common_event_args):
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
     """User looks up a vocabulary word"""
-    # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one
-    # TODO: differentiate lookup button from clicking a linked word to look it up.
-    # TODO: indicate document and page where the event occurred
+    # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one        
     control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
     value = value=kwargs['word']
     common_event_args = get_common_event_args(kwargs)
@@ -138,26 +136,21 @@ def log_vocab_lookup(sender, **kwargs):
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
     """User interacts with a UI control"""
+    control=kwargs['control'],
+    value=kwargs['value'],
     common_event_args = get_common_event_args(kwargs)                  
-    event = Event.build(type='TOOL_USE_EVENT',
-                        action='USED',
-                        control=kwargs['control'],
-                        value=kwargs['value'],
-                        **common_event_args
-                        )
+    event = build_tool_use_event(control, value, common_event_args)
     if event:   
         event.save()                                                    
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
-    """User changes a preference setting"""
-    common_event_args = get_common_event_args(kwargs)
+    """User changes a preference setting"""    
     preference = kwargs.get('preference')                  
-    event = Event.build(type='TOOL_USE_EVENT',
-                        action='USED',
-                        control='pref:'+preference.pref,                        
-                        value=preference.value,
-                        **common_event_args)
+    control='pref:'+preference.pref                      
+    value=preference.value
+    common_event_args = get_common_event_args(kwargs)
+    event = build_tool_use_event(control, value, common_event_args)
     if event:   
         event.save()
 
