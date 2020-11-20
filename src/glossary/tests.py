@@ -77,6 +77,7 @@ class GlossaryTestCase(TestCase):
         self.assertEqual('go', base_form('goes'))
         self.assertEqual('large', base_form('largest'))
         self.assertEqual('text', base_form('texts'))
+        self.assertEqual('install', base_form('installing')) # Not British 'instal'
         self.assertEqual('more', base_form('more')) # alphabetically before the other possibility, "much"
         self.assertEqual('ooblecks', base_form('ooblecks')) # unknown word is passed through as is
 

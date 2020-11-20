@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "quiet",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Making little or no noise." ,
+                "examples": [ "The sleeping baby was quiet." ],
+                "images": [
+                    {
+                        "src": "glossimages/quiet1.jpg",
+                        "alt": "Photo of a woman with a finger across her mouth.",
+                        "description": "A woman holding a finger up to her mouth. This means 'be quiet.'",
+                        "caption": "This woman is making a gesture to 'be quiet.'",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-woman-putting-her-finger-on-her-lips-1759406/",
+                            "title": "Photo of Woman Putting Her Finger on Her Lips",
+                            "author": "lascot studio",
+                            "author_url": "https://www.pexels.com/@lascot-studio-841927",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "loud",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Making a lot of noise." ,
+                "examples": [ "We were surprised by the loud noise." ],
+                "images": [
+                    {
+                        "src": "glossimages/loud1.jpg",
+                        "alt": "Photo of a person using a megaphone.",
+                        "description": "A person using a megaphone, a tool to make voices louder.",
+                        "caption": "This woman is using a megaphone to make her voice loud.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/cheerful-young-woman-screaming-into-megaphone-3761509/",
+                            "title": "Cheerful young woman screaming into megaphone",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "classical",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having a long-known style." ,
+                "examples": [ "Orchestras play classical music, but sometimes play jazz music, too." ],
+                "images": [
+                    {
+                        "src": "glossimages/classical1.jpg",
+                        "alt": "Photo of a person conducting an orchestra.",
+                        "description": "A person conducting an orchestra.",
+                        "caption": "A conductor and musicians play a classical piece of music.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-performing-on-stage-2102568/",
+                            "title": "Man Performing on Stage",
+                            "author": "Gabriel Santos Fotografia",
+                            "author_url": "https://www.pexels.com/@gabrielsantosfotografia",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "jazz",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "A type of music with a regular or forceful rhythm and syncopation. Jazz music was created at the beginning of the 20th century in black American communities." ,
+                "examples": [ "New Orleans has many places where you can hear jazz music." ],
+                "images": [
+                    {
+                        "src": "glossimages/jazz1.jpg",
+                        "alt": "Photo of a person playing the saxophone",
+                        "description": "A person playing a saxophone",
+                        "caption": "A person playing jazz music on a saxophone.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-playing-saxophone-1358816/",
+                            "title": "Man Playing Saxophone ",
+                            "author": "Felix Ramirez",
+                            "author_url": "https://www.pexels.com/@mufasa",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "rock",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "A type of music, started in the 1950s, that has a heavy beat and simple melodies." ,
+                "examples": [ "Rock music is easy to dance to because it has a clear, repeating beat." ],
+                "images": [
+                    {
+                        "src": "glossimages/rock1.jpg",
+                        "alt": "Photo of three people playing electric guitars.",
+                        "description": "Three people playing electric guitars. ",
+                        "caption": "Musicians playing rock music.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/group-of-men-playing-guitar-in-concert-in-grayscale-photo-164693/",
+                            "title": "Group of Men Playing Guitar in Concert in Grayscale Photo",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

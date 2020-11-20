@@ -66,8 +66,6 @@ def get_page_event_id(kwargs):
         page_event_id = request.headers.get('Clusive-Page-Event-Id')
     return page_event_id        
 
-
-
 # Handle parameters non-pageview / session events should have in common
 def get_common_event_args(kwargs):    
     event_id = get_page_event_id(kwargs)

@@ -41,13 +41,21 @@ def lookup(book, word):
 
 
 def base_form(word):
+    """
+    Return the base form of the given word.
+    In the case where the word can be seen as different parts of speech with different base forms,
+    this returns the shortest. If they are the same length, it chooses the alphabetically first one.
+    For example, "outing" is base form of noun, but also the inflected form of the verb "out", so
+    this method will return "out".
+    :param word:
+    :return: base form
+    """
     wl = word.lower()
     all_forms = set()
     for pos, lemmas in getAllLemmas(wl).items():
-        # logger.debug("%s as %s simplifies to %s", wl, pos, lemmas)
-        all_forms.update(lemmas)
-    # There may be multiple base forms for a word, eg "outing" is base form of noun, but inflected form of verb "out".
-    # We somewhat arbitrarily choose the shortest one.
+        # getAllLemmas can return multiple possible baseforms for each POS, eg british and american versions.
+        # The first listed form is supposed to be the most common so that is the only one we consider.
+        all_forms.add(lemmas[0])
     if all_forms:
         return min(all_forms, key=base_form_sort_key)
     else:
