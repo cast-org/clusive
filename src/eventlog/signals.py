@@ -93,7 +93,7 @@ def log_vocab_lookup(sender, **kwargs):
     common_event_args = get_common_event_args(kwargs)
     event = Event.build(type='TOOL_USE_EVENT',
                         action='USED',
-                        control='lookup',
+                        control='lookup:%s' % ("cued" if kwargs.get('cued') else "uncued"),
                         value=kwargs['word'],
                         **common_event_args)
     if event:
