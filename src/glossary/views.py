@@ -150,11 +150,16 @@ def glossdef(request, book_id, cued, word):
         book = None
     defs = lookup(book, base)
     page_event_id = request.headers.get('Clusive-Page-Event-Id')
+    reader_info = dict()
+    reader_info["location"] = dict()
+    reader_info["location"]["href"] = request.headers.get('Clusive-Reader-Document-Href')
+    reader_info["location"]["progression"] = request.headers.get('Clusive-Reader-Document-Progression')
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=base,
                       cued=cued,
+                      reader_info=reader_info,
                       event_id=page_event_id,
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
