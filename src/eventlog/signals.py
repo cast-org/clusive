@@ -66,6 +66,32 @@ def get_page_event_id(kwargs):
         page_event_id = request.headers.get('Clusive-Page-Event-Id')
     return page_event_id        
 
+# Tries to get information about the current reader href
+# First priority: reader_info sent as part of the keyword argument
+# Second priority: Clusive-Document-Location-Href from request header
+def get_document_href(kwargs):
+    reader_info = kwargs.get('reader_info') 
+    document_href = None
+    try:                        
+        document_href = reader_info.get('location').get('href')
+    except AttributeError:
+        request = kwargs.get('request')
+        document_href = request.headers.get('Clusive-Reader-Document-Href')
+    return document_href
+
+# Tries to get information about the current reader progression
+# First priority: reader_info sent as part of the keyword argument
+# Second priority: Clusive-Document-Location-Progression from request header
+def get_document_progression(kwargs):
+    reader_info = kwargs.get('reader_info') 
+    document_progression = None
+    try:                        
+        document_progression = reader_info.get('location').get('progression')
+    except AttributeError:
+        request = kwargs.get('request')        
+        document_progression = request.headers.get('Clusive-Reader-Document-Progression')
+    return document_progression
+
 # Handle parameters non-pageview / session events should have in common
 def get_common_event_args(kwargs):    
     event_id = get_page_event_id(kwargs)
@@ -73,22 +99,13 @@ def get_common_event_args(kwargs):
     if event_id:
         try:
             associated_page_event = Event.objects.get(id=event_id)
-            page = associated_page_event.page 
-            document = associated_page_event.document
-            document_version = associated_page_event.document_version
-            reader_info = kwargs.get('reader_info')            
-            try:                        
-                document_href = reader_info.get('location').get('href')
-            except AttributeError:
-                document_href = None;
-            try:
-                document_progression = reader_info.get('location').get('progression')
-            except AttributeError:
-                document_progression=None        
-            common_event_args = dict(page=page,
-                                document=document,
+            page = associated_page_event.page             
+            book_version_id = associated_page_event.book_version_id
+            document_href = get_document_href(kwargs)            
+            document_progression = get_document_progression(kwargs)            
+            common_event_args = dict(page=page,                                
                                 eventTime=timestamp,
-                                document_version=document_version,
+                                book_version_id=book_version_id,
                                 document_href = document_href,
                                 document_progression=document_progression,
                                 session=kwargs['request'].session)  
