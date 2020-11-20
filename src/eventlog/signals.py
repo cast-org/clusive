@@ -53,10 +53,24 @@ def log_page_timing(sender, **kwargs):
     else:
         logger.error('Missing event ID in page timing message')
 
+# Tries to get an associated page_event_id 
+# First priority: event_id sent as part of keyword argument
+# Second priority: event_id sent as part of request header
+# Returns associated page event ID if found, or None
+def get_page_event_id(kwargs):
+    page_event_id = None
+    try:
+        page_event_id = kwargs['event_id']
+    except KeyError:
+        request = kwargs.get('request')
+        page_event_id = request.headers.get('Clusive-Page-Event-Id')
+    return page_event_id        
+
+
+
 # Handle parameters non-pageview / session events should have in common
-# (typically user interactions with UI components)
 def get_common_event_args(kwargs):    
-    event_id = kwargs.get('event_id')
+    event_id = get_page_event_id(kwargs)
     timestamp = kwargs.get('timestamp')
     if event_id:
         try:
