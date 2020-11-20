@@ -113,18 +113,25 @@ def get_common_event_args(kwargs):
         except Event.DoesNotExist:
             logger.error('build_base_event_args with a non-existent page event ID %s', event_id)                
 
+def build_tool_use_event(control, value, common_event_args):
+    logger.debug("build_tool_use_event: %s / %s / %s" % (control, value, common_event_args))
+    event = Event.build(type='TOOL_USE_EVENT',
+                        action='USED',
+                        control=control,
+                        value=value,
+                        **common_event_args)
+    return event                        
+
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
     """User looks up a vocabulary word"""
     # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one
     # TODO: differentiate lookup button from clicking a linked word to look it up.
     # TODO: indicate document and page where the event occurred
+    control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
+    value = value=kwargs['word']
     common_event_args = get_common_event_args(kwargs)
-    event = Event.build(type='TOOL_USE_EVENT',
-                        action='USED',
-                        control='lookup:%s' % ("cued" if kwargs.get('cued') else "uncued"),
-                        value=kwargs['word'],
-                        **common_event_args)
+    event = build_tool_use_event(control, value, common_event_args)
     if event:
         event.save()
 
