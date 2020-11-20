@@ -48,12 +48,16 @@ class Event(models.Model):
     type = models.CharField(max_length=32, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
     # action of the event, based on Caliper spec
     action = models.CharField(max_length=32, choices=[(k,v) for k, v in caliper.constants.CALIPER_ACTIONS.items()])
+    # What Book was connected to the interaction
+    # TODO: add book_id (models.BigIntegerField(null=True))
     # What BookVersion the user was looking at; null if none (eg, the library page)
     # This is not a ForeignKey because BookVersions can be deleted, but we want to keep the info here regardless.
     book_version_id = models.BigIntegerField(null=True)
-    # Document href (specific page within an ebook); null if none
-    document_href = models.CharField(max_length=512, null=True)
+    # Document href (specific page within an ebook); null if none    
+    # TODO: rename to resource_href
+    document_href = models.CharField(max_length=512, null=True)        
     # Document progression, if relevant; null if none
+    # TODO: rename to resource_progression
     document_progression = models.FloatField(null=True)
     # The name of the application page (Library, Reading, etc)
     page = models.CharField(max_length=128, null=True)

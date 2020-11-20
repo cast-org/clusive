@@ -187,6 +187,11 @@ def set_word_rating(request, word, rating):
         wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
             wm.register_rating(rating)
+            # log event here
+            # Action: COMPLETED
+            # Type: ASSESSMENT_ITEM_EVENT
+            # Value: child:3
+            # Control: word_rating            
             return JsonResponse({'success' : 1})
         else:
             return JsonResponse({'success' : 0})

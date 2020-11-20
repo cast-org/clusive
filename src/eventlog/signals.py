@@ -115,10 +115,12 @@ def get_common_event_args(kwargs):
         except Event.DoesNotExist:
             logger.error('get_common_event_args with a non-existent page event ID %s', event_id)                
 
+# TODO: parameterize type / action 
 def build_tool_use_event(control, value, kwargs):
     common_event_args = get_common_event_args(kwargs)
     logger.debug("build_tool_use_event: %s / %s / %s" % (control, value, common_event_args))
     event = Event.build(type='TOOL_USE_EVENT',
+                        # TODO: should this be configurable for other action types?
                         action='USED',
                         control=control,
                         value=value,
@@ -136,7 +138,7 @@ def log_vocab_lookup(sender, **kwargs):
 
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
-    """User interacts with a UI control"""
+    """User interacts with a control"""
     control=kwargs['control'],
     value=kwargs['value'],    
     build_tool_use_event(control, value, kwargs)
