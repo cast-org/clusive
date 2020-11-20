@@ -94,6 +94,8 @@ def get_document_progression(kwargs):
 
 # Handle parameters non-pageview / session events should have in common
 def get_common_event_args(kwargs):    
+    # TODO: we don't currently store the related page event ID 
+    # on generated events - should we?
     event_id = get_page_event_id(kwargs)
     timestamp = kwargs.get('timestamp')
     if event_id:
@@ -111,48 +113,41 @@ def get_common_event_args(kwargs):
                                 session=kwargs['request'].session)  
             return common_event_args
         except Event.DoesNotExist:
-            logger.error('build_base_event_args with a non-existent page event ID %s', event_id)                
+            logger.error('get_common_event_args with a non-existent page event ID %s', event_id)                
 
-def build_tool_use_event(control, value, common_event_args):
+def build_tool_use_event(control, value, kwargs):
+    common_event_args = get_common_event_args(kwargs)
     logger.debug("build_tool_use_event: %s / %s / %s" % (control, value, common_event_args))
     event = Event.build(type='TOOL_USE_EVENT',
                         action='USED',
                         control=control,
                         value=value,
                         **common_event_args)
-    return event                        
+    if event:
+        event.save()
 
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
     """User looks up a vocabulary word"""
     # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one        
     control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
-    value = value=kwargs['word']
-    common_event_args = get_common_event_args(kwargs)
-    event = build_tool_use_event(control, value, common_event_args)
-    if event:
-        event.save()
+    value = value=kwargs['word']    
+    build_tool_use_event(control, value, kwargs)
 
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
     """User interacts with a UI control"""
     control=kwargs['control'],
-    value=kwargs['value'],
-    common_event_args = get_common_event_args(kwargs)                  
-    event = build_tool_use_event(control, value, common_event_args)
-    if event:   
-        event.save()                                                    
+    value=kwargs['value'],    
+    build_tool_use_event(control, value, kwargs)
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
     """User changes a preference setting"""    
     preference = kwargs.get('preference')                  
     control='pref:'+preference.pref                      
-    value=preference.value
-    common_event_args = get_common_event_args(kwargs)
-    event = build_tool_use_event(control, value, common_event_args)
-    if event:   
-        event.save()
+    value=preference.value    
+    build_tool_use_event(control, value, kwargs)
 
 @receiver(annotation_action)
 def log_annotation_action(sender, **kwargs):
