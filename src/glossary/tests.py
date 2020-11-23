@@ -63,7 +63,7 @@ class GlossaryTestCase(TestCase):
 
     def test_definition(self):
         self.login_and_generate_page_event_id()
-        response = self.client.get('/glossary/glossdef/%d/0/word?eventId=%s' % (self.book.pk, self.event_id), HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
+        response = self.client.get('/glossary/glossdef/%d/0/word' % (self.book.pk), HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertInHTML('<span class="definition-example">we had a word or two about it</span>', response.content.decode('utf8'), 1)
 
