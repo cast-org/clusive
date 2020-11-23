@@ -27,7 +27,7 @@ function load_definition(cued, word) {
     if (word) {
         glossaryCurrentWord = word;
         title = word;
-        var pub = window.pub_id || 0;
+        var pub = window.pub_id || 0;        
         $.get('/glossary/glossdef/' + pub + '/' + cued + '/' + word)
             // eslint-disable-next-line no-unused-vars
             .done(function(data, status) {

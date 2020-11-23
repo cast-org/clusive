@@ -1,3 +1,22 @@
+// Set up common headers for Ajax requests for Clusive's event logging
+
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+    options.beforeSend = function (xhr) {
+        if(PAGE_EVENT_ID) {
+            xhr.setRequestHeader('Clusive-Page-Event-Id', PAGE_EVENT_ID);
+        }
+        if(clusiveContext) {
+            if(fluid.get(clusiveContext, "reader.info.location.href")) {
+                xhr.setRequestHeader('Clusive-Reader-Document-Href', clusiveContext.reader.info.location.href);
+            }
+            if(fluid.get(clusiveContext, "reader.info.location.progression")) {
+                xhr.setRequestHeader('Clusive-Reader-Document-Progression', clusiveContext.reader.info.location.progression);    
+            }
+        }
+        
+    }
+});
+
 /* global Masonry, clusiveTTS, clusivePrefs, TOOLTIP_NAME */
 /* exported getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
 

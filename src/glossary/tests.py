@@ -7,12 +7,12 @@ from django.contrib.auth.models import User
 from glossary.util import base_form, all_forms
 from library.models import Book, BookVersion
 from roster.models import ClusiveUser
+from eventlog.models import Event
 
 logger = logging.getLogger(__name__)
 
 from django.contrib.staticfiles import finders
 from django.test import TestCase
-
 
 class GlossaryTestCase(TestCase):
 
@@ -28,11 +28,17 @@ class GlossaryTestCase(TestCase):
         book_2 = BookVersion.objects.create(book=self.book, sortOrder=1,
                                             glossary_words='["test tricky"]',
                                             all_words='["a", "tricky", "test", "the", "end"]',
-                                            new_words='["a", "tricky"]')
+                                            new_words='["a", "tricky"]')        
 
-    def test_set_and_get_rating(self):
-        login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/rating/something/2')
+    def login_and_generate_page_event_id(self):
+        login = self.client.login(username='user1', password='password1')       
+        library_page_response = self.client.get('/library/public')
+        page_view_event = Event.objects.latest('eventTime')
+        self.event_id = page_view_event.id     
+
+    def test_set_and_get_rating(self):                      
+        self.login_and_generate_page_event_id()                        
+        response = self.client.get('/glossary/rating/something/2', HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                              {'success': 1})
@@ -42,22 +48,22 @@ class GlossaryTestCase(TestCase):
                              {'rating': 2})
 
     def test_get_rating_if_none(self):
-        login = self.client.login(username='user1', password='password1')
+        self.login_and_generate_page_event_id()
         response = self.client.get('/glossary/rating/something')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                      {'word': 'something', 'rating': False})
 
     def test_cuelist(self):
-        login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/cuelist/%d/0'  % self.book.pk)
+        self.login_and_generate_page_event_id()
+        response = self.client.get('/glossary/cuelist/%d/0?eventId=%s'  % (self.book.pk, self.event_id))
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                                  {'words': {'test': ['test', 'tested', 'testing', 'tests']}})
 
     def test_definition(self):
-        #login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/glossdef/%d/0/word' % self.book.pk)
+        self.login_and_generate_page_event_id()
+        response = self.client.get('/glossary/glossdef/%d/0/word' % (self.book.pk), HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertInHTML('<span class="definition-example">we had a word or two about it</span>', response.content.decode('utf8'), 1)
 
@@ -80,7 +86,7 @@ class GlossaryTestCase(TestCase):
         self.assertEqual({'fluffy', 'fluffier', 'fluffiest'}, all_forms('fluffy'))
 
     def test_check_list(self):
-        login = self.client.login(username='user1', password='password1')
+        self.login_and_generate_page_event_id()
         response = self.client.get('/glossary/checklist/%d' % self.book.pk)
         logger.error("RESPONSE: %s", response.content)
         self.assertEqual(200, response.status_code)
