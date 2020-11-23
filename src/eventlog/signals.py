@@ -105,7 +105,8 @@ def get_common_event_args(kwargs):
             book_version_id = associated_page_event.book_version_id
             resource_href = get_resource_href(kwargs)            
             resource_progression = get_resource_progression(kwargs)            
-            common_event_args = dict(page=page,                                
+            common_event_args = dict(page=page,     
+                                parent_event_id=event_id,     
                                 eventTime=timestamp,
                                 book_version_id=book_version_id,
                                 resource_href = resource_href,

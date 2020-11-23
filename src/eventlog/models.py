@@ -73,7 +73,7 @@ class Event(models.Model):
 
     @classmethod
     def build(cls, type, action,
-              session=None, login_session=None, group=None,
+              session=None, login_session=None, group=None, parent_event_id=None,
               book_version=None, book_version_id=None,
               resource_href=None, resource_progression=None, page=None,
               control=None, value=None, eventTime=None):
@@ -101,6 +101,7 @@ class Event(models.Model):
                         membership=clusive_user.role,
                         session=login_session,
                         group=group,
+                        parent_event_id=parent_event_id,
                         book_version_id = book_version_id,
                         resource_href=resource_href,
                         resource_progression=resource_progression,
