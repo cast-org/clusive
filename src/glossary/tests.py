@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 from django.contrib.staticfiles import finders
 from django.test import TestCase
-from django.test import Client
 
 class GlossaryTestCase(TestCase):
 
