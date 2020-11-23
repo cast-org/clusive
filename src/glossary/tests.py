@@ -37,8 +37,8 @@ class GlossaryTestCase(TestCase):
         page_view_event = Event.objects.latest('eventTime')
         self.event_id = page_view_event.id     
 
-    def test_set_and_get_rating(self):
-        self.login_and_generate_page_event_id()                                      
+    def test_set_and_get_rating(self):                      
+        self.login_and_generate_page_event_id()                        
         response = self.client.get('/glossary/rating/something/2', HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
@@ -49,27 +49,21 @@ class GlossaryTestCase(TestCase):
                              {'rating': 2})
 
     def test_get_rating_if_none(self):
-        login = self.client.login(username='user1', password='password1')
+        self.login_and_generate_page_event_id()
         response = self.client.get('/glossary/rating/something')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                      {'word': 'something', 'rating': False})
 
     def test_cuelist(self):
-        login = self.client.login(username='user1', password='password1')
-        library_page_response = self.client.get('/library/public')
-        page_view_event = Event.objects.latest('eventTime')
-        self.event_id = page_view_event.id        
+        self.login_and_generate_page_event_id()
         response = self.client.get('/glossary/cuelist/%d/0?eventId=%s'  % (self.book.pk, self.event_id))
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                                  {'words': {'test': ['test', 'tested', 'testing', 'tests']}})
 
     def test_definition(self):
-        login = self.client.login(username='user1', password='password1')
-        library_page_response = self.client.get('/library/public')
-        page_view_event = Event.objects.latest('eventTime')
-        self.event_id = page_view_event.id                                                   
+        self.login_and_generate_page_event_id()
         response = self.client.get('/glossary/glossdef/%d/0/word?eventId=%s' % (self.book.pk, self.event_id), HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertInHTML('<span class="definition-example">we had a word or two about it</span>', response.content.decode('utf8'), 1)
@@ -93,7 +87,7 @@ class GlossaryTestCase(TestCase):
         self.assertEqual({'fluffy', 'fluffier', 'fluffiest'}, all_forms('fluffy'))
 
     def test_check_list(self):
-        login = self.client.login(username='user1', password='password1')
+        self.login_and_generate_page_event_id()
         response = self.client.get('/glossary/checklist/%d' % self.book.pk)
         logger.error("RESPONSE: %s", response.content)
         self.assertEqual(200, response.status_code)
