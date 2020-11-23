@@ -116,10 +116,10 @@ def get_common_event_args(kwargs):
         except Event.DoesNotExist:
             logger.error('get_common_event_args with a non-existent page event ID %s', event_id)                
 
-# TODO: parameterize type / action 
-def build_tool_use_event(control, value, kwargs):
+# General function for event creation
+def create_event(control, value, kwargs, action='USED', type='TOOL_USE_EVENT'):
     common_event_args = get_common_event_args(kwargs)
-    logger.debug("build_tool_use_event: %s / %s / %s" % (control, value, common_event_args))
+    logger.debug("create_event: %s / %s / %s" % (control, value, common_event_args))
     event = Event.build(type='TOOL_USE_EVENT',
                         # TODO: should this be configurable for other action types?
                         action='USED',
@@ -135,14 +135,14 @@ def log_vocab_lookup(sender, **kwargs):
     # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one        
     control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
     value = value=kwargs['word']    
-    build_tool_use_event(control, value, kwargs)
+    create_event(control, value, kwargs)
 
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
     """User interacts with a control"""
     control=kwargs['control'],
     value=kwargs['value'],    
-    build_tool_use_event(control, value, kwargs)
+    create_event(control, value, kwargs)
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
@@ -150,7 +150,7 @@ def log_pref_change(sender, **kwargs):
     preference = kwargs.get('preference')                  
     control='pref:'+preference.pref                      
     value=preference.value    
-    build_tool_use_event(control, value, kwargs)
+    create_event(control, value, kwargs)
 
 @receiver(annotation_action)
 def log_annotation_action(sender, **kwargs):
