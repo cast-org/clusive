@@ -36,6 +36,8 @@ class Event(models.Model):
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
     )
+    # Optional ID for a related event to this event (typically, a PageView)
+    parent_event_id = models.CharField(null=True, max_length=36)
     # Date and time the event started
     eventTime = models.DateTimeField(default=timezone.now)
     # (VIEW events:) time for the browser to retrieve and render the content
