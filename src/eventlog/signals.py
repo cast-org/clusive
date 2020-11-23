@@ -21,6 +21,7 @@ vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp', 'reader_info'])
+word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
 
 #
 # Signal handlers that log specific events
@@ -93,9 +94,7 @@ def get_resource_progression(kwargs):
     return resource_progression
 
 # Handle parameters non-pageview / session events should have in common
-def get_common_event_args(kwargs):    
-    # TODO: we don't currently store the related page event ID 
-    # on generated events - should we?
+def get_common_event_args(kwargs):        
     event_id = get_page_event_id(kwargs)
     timestamp = kwargs.get('timestamp')
     if event_id:
@@ -117,6 +116,7 @@ def get_common_event_args(kwargs):
             logger.error('get_common_event_args with a non-existent page event ID %s', event_id)                
 
 # General function for event creation
+# Defaults action and type to the most common TOOL_USE_EVENT type
 def create_event(control, value, kwargs, action='USED', type='TOOL_USE_EVENT'):
     common_event_args = get_common_event_args(kwargs)
     logger.debug("create_event: %s / %s / %s" % (control, value, common_event_args))
@@ -129,12 +129,24 @@ def create_event(control, value, kwargs, action='USED', type='TOOL_USE_EVENT'):
     if event:
         event.save()
 
+# word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
+@receiver(word_rated)
+def log_word_rated(sender, **kwargs):
+    """User rates a word"""
+    control = 'word_rating'
+    action = 'COMPLETED'
+    event_type = 'ASSESSMENT_ITEM_EVENT'
+    word = kwargs.get('word')
+    rating = kwargs.get('rating')
+    value = "%s:%s" % (word, rating)    
+    create_event(control, value, kwargs, action=action, type=event_type)
+
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
     """User looks up a vocabulary word"""
     # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one        
     control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
-    value = value=kwargs['word']    
+    value = kwargs['word']    
     create_event(control, value, kwargs)
 
 @receiver(control_used)

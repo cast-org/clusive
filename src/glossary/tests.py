@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 from django.contrib.staticfiles import finders
 from django.test import TestCase
-
+from django.test import Client
 
 class GlossaryTestCase(TestCase):
 
@@ -29,11 +29,14 @@ class GlossaryTestCase(TestCase):
         book_2 = BookVersion.objects.create(book=self.book, sortOrder=1,
                                             glossary_words='["test tricky"]',
                                             all_words='["a", "tricky", "test", "the", "end"]',
-                                            new_words='["a", "tricky"]')
+                                            new_words='["a", "tricky"]')        
 
     def test_set_and_get_rating(self):
-        login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/glossary/rating/something/2')
+        login = self.client.login(username='user1', password='password1')       
+        library_page_response = self.client.get('/library/public')
+        page_view_event = Event.objects.latest('eventTime')
+        self.event_id = page_view_event.id                                           
+        response = self.client.get('/glossary/rating/something/2', HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                              {'success': 1})
@@ -63,8 +66,8 @@ class GlossaryTestCase(TestCase):
         login = self.client.login(username='user1', password='password1')
         library_page_response = self.client.get('/library/public')
         page_view_event = Event.objects.latest('eventTime')
-        self.event_id = page_view_event.id                
-        response = self.client.get('/glossary/glossdef/%d/0/word?eventId=%s' % (self.book.pk, self.event_id))
+        self.event_id = page_view_event.id                                                   
+        response = self.client.get('/glossary/glossdef/%d/0/word?eventId=%s' % (self.book.pk, self.event_id), HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertInHTML('<span class="definition-example">we had a word or two about it</span>', response.content.decode('utf8'), 1)
 

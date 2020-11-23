@@ -5,7 +5,7 @@ import random
 from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 
-from eventlog.signals import vocab_lookup
+from eventlog.signals import vocab_lookup, word_rated
 from glossary.apps import GlossaryConfig
 from glossary.models import WordModel
 from glossary.util import base_form, all_forms, lookup, has_definition
@@ -187,11 +187,10 @@ def set_word_rating(request, word, rating):
         wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
             wm.register_rating(rating)
-            # log event here
-            # Action: COMPLETED
-            # Type: ASSESSMENT_ITEM_EVENT
-            # Value: child:3
-            # Control: word_rating            
+            word_rated.send(sender=GlossaryConfig.__class__,
+                            request=request, 
+                            word=word, 
+                            rating=rating)
             return JsonResponse({'success' : 1})
         else:
             return JsonResponse({'success' : 0})
