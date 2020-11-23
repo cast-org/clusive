@@ -117,12 +117,12 @@ def get_common_event_args(kwargs):
 
 # General function for event creation
 # Defaults action and type to the most common TOOL_USE_EVENT type
-def create_event(control, value, kwargs, action='USED', type='TOOL_USE_EVENT'):
+def create_event(control, value, kwargs, action='USED', event_type='TOOL_USE_EVENT'):
     common_event_args = get_common_event_args(kwargs)
-    logger.debug("create_event: %s / %s / %s" % (control, value, common_event_args))
-    event = Event.build(type='TOOL_USE_EVENT',
+    logger.debug("create_event: %s / %s / %s / %s / %s" % (control, value, action, type, common_event_args))
+    event = Event.build(type=event_type,
                         # TODO: should this be configurable for other action types?
-                        action='USED',
+                        action=action,
                         control=control,
                         value=value,
                         **common_event_args)
@@ -139,7 +139,7 @@ def log_word_rated(sender, **kwargs):
     word = kwargs.get('word')
     rating = kwargs.get('rating')
     value = "%s:%s" % (word, rating)    
-    create_event(control, value, kwargs, action=action, type=event_type)
+    create_event(control, value, kwargs, action=action, event_type=event_type)
 
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
