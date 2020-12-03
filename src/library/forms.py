@@ -33,8 +33,14 @@ class MetadataForm(forms.ModelForm):
         }
 
 
+class PeriodModelMultipleChoiceField(forms.ModelMultipleChoiceField):
+
+    def label_from_instance(self, period):
+        return period.name
+
+
 class ShareForm(forms.Form):
-    periods = forms.ModelMultipleChoiceField(
+    periods = PeriodModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(),
         queryset=Period.objects.all(),
         required=False)
@@ -45,5 +51,4 @@ class ShareForm(forms.Form):
         super().__init__(*args, **kwargs)
         periods = clusive_user.periods.all()
         self.fields['periods'].queryset = periods
-
 

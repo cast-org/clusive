@@ -18,7 +18,12 @@ $(document).ready(function() {
     };
 
     window.clusiveEvents = {
-        messageQueue: clusive.djangoMessageQueue(),
+        // TODO: Namespace this to separate from messages
+        messageQueue: clusive.djangoMessageQueue({
+            config: {
+                localStorageKey: "clusive.messageQueue.caliperEvents"
+            }
+        }),
         caliperEventTypes: {
             TOOL_USE_EVENT: 'TOOL_USE_EVENT'
         },

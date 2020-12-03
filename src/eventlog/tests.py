@@ -30,7 +30,7 @@ class EventlogTestCase(TestCase):
         session = LoginSession.objects.all().order_by('-startedAtTime').first()
         self.assertEquals(session.endedAtTime.date(), timezone.now().date(), "Should set reasonable session end time")
         self.assertLess(session.startedAtTime, session.endedAtTime, "Start time should be before end time")
-
+    
     def test_login_event(self):
         login = self.client.login(username='user1', password='password1')
         self.assertTrue(login)
@@ -58,3 +58,28 @@ class EventlogTestCase(TestCase):
         self.assertEquals("SESSION_EVENT", event.type, "EventType is wrong")
         self.assertEquals("LOGGED_OUT", event.action, "Action is wrong")
 
+    def login_and_get_word_bank_page_event_id(self):
+        self.client.login(username='user1', password='password1')
+        self.client.get('/wordbank')                
+        page_view_event = Event.objects.latest('eventTime')
+        self.page_view_event_id = page_view_event.id
+
+    def test_vocab_lookup_event(self):
+        self.login_and_get_word_bank_page_event_id()        
+        self.client.get('/glossary/glossdef/0/1/advance', HTTP_CLUSIVE_PAGE_EVENT_ID=self.page_view_event_id)
+        event = Event.objects.latest('eventTime')    
+        self.assertEquals("TOOL_USE_EVENT", event.type, "event.type is wrong")
+        self.assertEquals("USED", event.action, "event.action is wrong")
+        self.assertEquals("lookup:cued", event.control, "event.control is wrong")
+        self.assertEquals("advance", event.value, "event.value is wrong")
+        self.assertEquals(self.page_view_event_id, event.parent_event_id, "event.parent_event_id is wrong")  
+
+    def test_word_rated_event(self):
+        self.login_and_get_word_bank_page_event_id()                                
+        self.client.get('/glossary/rating/advance/2', HTTP_CLUSIVE_PAGE_EVENT_ID=self.page_view_event_id)
+        event = Event.objects.latest('eventTime')    
+        self.assertEquals("ASSESSMENT_ITEM_EVENT", event.type, "event.type is wrong")
+        self.assertEquals("COMPLETED", event.action, "event.action is wrong")
+        self.assertEquals("word_rating", event.control, "event.control is wrong")
+        self.assertEquals("advance:2", event.value, "event.value is wrong")
+        self.assertEquals(self.page_view_event_id, event.parent_event_id, "event.parent_event_id is wrong")  

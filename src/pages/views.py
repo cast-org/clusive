@@ -110,17 +110,16 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
     template_name = 'pages/reader.html'
 
     def get(self, request, *args, **kwargs):
-        self.book_id = kwargs.get('book_id')
-        self.book_version = kwargs.get('version')
+        book_id = kwargs.get('book_id')
         version = kwargs.get('version')
-        book = Book.objects.get(pk=self.book_id)
-        clusive_user = get_object_or_404(ClusiveUser, user=request.user)
-        bookVersion = BookVersion.objects.get(book=book, sortOrder=version)
-        annotationList = Annotation.get_list(user=clusive_user, book_version=bookVersion)
+        book = Book.objects.get(pk=book_id)
+        clusive_user = request.clusive_user
+        self.book_version = BookVersion.objects.get(book=book, sortOrder=version)
+        annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
         pdata = Paradata.record_view(book, version, clusive_user)
         bv_prev = str(version-1) if version>0 \
             else False
-        bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists()\
+        bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists() \
             else False
 
         # See if there's a Tip that should be shown
@@ -137,7 +136,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
 
         self.extra_context = {
             'pub': book,
-            'manifest_path': bookVersion.manifest_path,
+            'manifest_path': self.book_version.manifest_path,
             'prev_version': bv_prev,
             'next_version': bv_next,
             'last_position': pdata.lastLocation or "null",
@@ -148,8 +147,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
 
     def configure_event(self, event: Event):
         event.page = 'Reading'
-        event.document = self.book_id
-        event.document_version = self.book_version
+        event.book_version_id = self.book_version.id
         event.tip_type = self.tip_shown
 
 

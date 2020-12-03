@@ -6,6 +6,7 @@ from django.http import StreamingHttpResponse
 from django.views.generic.base import ContextMixin
 
 from eventlog.models import Event
+from library.models import BookVersion
 from roster.models import ResearchPermissions
 
 logger = logging.getLogger(__name__)
@@ -55,15 +56,17 @@ def row_generator(events):
     pseudo_buffer = Echo()
     writer = csv.writer(pseudo_buffer)
     yield writer.writerow(['Start Time', 'User', 'Role', 'Period', 'Site',
-                           'Type', 'Action', 'Document', 'Page', 'Control', 'Value',
+                           'Type', 'Action', 'Page', 'Control', 'Value',
+                           'Book Version ID', 'Book TItle', 'Version Number', 'Book Owner',
                            'Duration', 'Active Duration',
                            'Event ID', 'Session ID'])
     period_site = {}
+    book_info = {}
     for e in events:
-        yield writer.writerow(row_for_event(e, period_site))
+        yield writer.writerow(row_for_event(e, period_site, book_info))
 
 
-def row_for_event(e: Event, period_site):
+def row_for_event(e: Event, period_site, book_info):
     period = e.group.anon_id if e.group else None
     # period_site map caches lookups of the site anon_id for each period.
     if period:
@@ -73,10 +76,35 @@ def row_for_event(e: Event, period_site):
             period_site[period] = site
     else:
         site = None
+    if e.book_version_id:
+        info = book_info.get(e.book_version_id)
+        if not info:
+            try:
+                bv: BookVersion
+                bv = BookVersion.objects.get(id=e.book_version_id)
+                info = {
+                    'title': bv.book.title,
+                    'version': bv.sortOrder,
+                    'owner': bv.book.owner.anon_id if bv.book.owner else None
+                }
+            except BookVersion.DoesNotExist:
+                info = {
+                    'title': '[deleted]',
+                    'version': None,
+                    'owner': None
+                }
+            book_info[e.book_version_id] = info
+    else:
+        info = {
+            'title': None,
+            'version': None,
+            'owner': None
+        }
     duration_s = e.duration.total_seconds() if e.duration else ''
     active_s = e.activeDuration.total_seconds() if e.activeDuration else ''
     return [e.eventTime, e.actor.anon_id, e.membership, period, site,
-            e.type, e.action, e.document, e.page, e.control, e.value,
+            e.type, e.action, e.page, e.control, e.value,
+            e.book_version_id, info['title'], info['version'], info['owner'],
             duration_s, active_s, e.id, e.session.id]
 
 

@@ -5,7 +5,7 @@ import random
 from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 
-from eventlog.signals import vocab_lookup
+from eventlog.signals import vocab_lookup, word_rated
 from glossary.apps import GlossaryConfig
 from glossary.models import WordModel
 from glossary.util import base_form, all_forms, lookup, has_definition
@@ -148,12 +148,12 @@ def glossdef(request, book_id, cued, word):
         book = Book.objects.get(pk=book_id)
     except Book.DoesNotExist:
         book = None
-    defs = lookup(book, base)
+    defs = lookup(book, base)    
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=base,
-                      cued=cued,
+                      cued=cued,                                            
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
@@ -187,6 +187,10 @@ def set_word_rating(request, word, rating):
         wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
             wm.register_rating(rating)
+            word_rated.send(sender=GlossaryConfig.__class__,
+                            request=request, 
+                            word=word, 
+                            rating=rating)
             return JsonResponse({'success' : 1})
         else:
             return JsonResponse({'success' : 0})
