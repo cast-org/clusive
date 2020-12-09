@@ -10,10 +10,10 @@ $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                 xhr.setRequestHeader('Clusive-Reader-Document-Href', clusiveContext.reader.info.location.href);
             }
             if(fluid.get(clusiveContext, "reader.info.location.progression")) {
-                xhr.setRequestHeader('Clusive-Reader-Document-Progression', clusiveContext.reader.info.location.progression);    
+                xhr.setRequestHeader('Clusive-Reader-Document-Progression', clusiveContext.reader.info.location.progression);
             }
         }
-        
+
     }
 });
 
@@ -382,7 +382,6 @@ function showTooltip(name) {
                 viewport: '#features',
                 trigger: 'manual',
                 placement: 'right auto',
-                animate: false,
                 popperConfig: {
                     positionFixed: true
                 }
