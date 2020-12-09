@@ -398,9 +398,9 @@ class AnnotationView(LoginRequiredMixin, View):
     # Creates a new annotation or undeletes one
     def post(self, request, *args, **kwargs):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+        page_event_id = request.POST.get('eventId')
         if request.POST.get('undelete'):
             anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)            
-            page_event_id = request.GET.get('eventId')            
             anno.dateDeleted = None
             anno.save()
             logger.debug('Undeleting annotation %s', anno)
@@ -425,7 +425,6 @@ class AnnotationView(LoginRequiredMixin, View):
                 annotation.update_id()
                 annotation.save()
                 logger.debug('Created annotation %s', annotation)
-                page_event_id = request.GET.get('eventId')            
                 annotation_action.send(sender=AnnotationView.__class__,
                                        request=request,
                                        annotation=annotation,
@@ -437,7 +436,7 @@ class AnnotationView(LoginRequiredMixin, View):
                 return JsonResponse({'success': True, 'id': annotation.pk})
 
     def delete(self, request, *args, **kwargs):
-        clusive_user = get_object_or_404(ClusiveUser, user=request.user)
+        clusive_user = request.clusive_user
         id = int(kwargs.get('id'))
         anno = get_object_or_404(Annotation, id=id, user=clusive_user)
         logger.debug('Deleting annotation %s', anno)

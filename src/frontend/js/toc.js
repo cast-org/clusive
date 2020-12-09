@@ -1,4 +1,4 @@
-/* global D2Reader, Promise, DJANGO_CSRF_TOKEN */
+/* global D2Reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID */
 /* exported buildTableOfContents, trackReadingLocation,
    buildAnnotationList, addNewAnnotation, showExistingAnnotation */
 
@@ -301,13 +301,10 @@ function deleteAnnotation(e) {
     });
     $container.html('<div class="highlight-undelete">Deleted' +
         '<a href="#" class="link-undelete">Undo</a></div>');
-    $.ajax('/library/annotation/' + id, {
+    $.ajax('/library/annotation/' + id + '?eventId=' + PAGE_EVENT_ID, {
         method: 'DELETE',
         headers: {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
-        },
-        data: {
-            eventId: PAGE_EVENT_ID
         }
     })
         .then(function() {
