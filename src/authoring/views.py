@@ -8,6 +8,7 @@ from textstat import textstat
 
 from authoring.forms import TextInputForm
 from glossary.util import base_form
+from library.models import Book
 
 logger = logging.getLogger(__name__)
 
@@ -82,9 +83,17 @@ class SynonymsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         synsets = wordnet.synsets(kwargs['word'])
-        context['synonyms'] = [ describe_synset(synset) for synset in synsets ]
+        context['synonyms'] = [ self.describe_synset(synset) for synset in synsets ]
         return context
 
+    def describe_synset(synset : Synset):
+        return "(%s) %s (%s)" % (synset.pos(), ', '.join([str(lemma.name()) for lemma in synset.lemmas()]), synset.definition())
 
-def describe_synset(synset : Synset):
-    return "(%s) %s (%s)" % (synset.pos(), ', '.join([str(lemma.name()) for lemma in synset.lemmas()]), synset.definition())
+
+class BookInfoView(TemplateView):
+    template_name = 'authoring/book_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['books'] = Book.objects.filter(owner=None)
+        return context
