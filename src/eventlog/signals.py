@@ -150,15 +150,7 @@ def log_vocab_lookup(sender, **kwargs):
 
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
-    """User interacts with a control"""    
-    # control = kwargs.get('control'),
-    # value = kwargs.get('value'),    
-    # ALAN: the inadvertent and unnoticed comma after these caused them to get 
-    # cast to a tuple, which was then converted into an improperly appearing
-    # string when stored to the database, but would look normal when
-    # output using %s before that because of how the tuple was 
-    # converted to string format; a warning to others!
-    # this took far too long to figure out
+    """User interacts with a control"""        
     control = kwargs.get('control')
     value = kwargs.get('value')             
     create_event(kwargs, control=control, value=value)
