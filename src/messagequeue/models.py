@@ -43,11 +43,12 @@ class Message:
 
     def send_client_side_caliper_event(self):    
         event_id = self.content['eventId']  
-        control = self.content["caliperEvent"]["control"]
-        value = self.content["caliperEvent"]["value"]   
-        reader_info = self.content["readerInfo"]     
+        event_type = self.content['caliperEvent']['type']
+        control = self.content['caliperEvent']['control']
+        value = self.content['caliperEvent']['value']
+        reader_info = self.content['readerInfo']
         control_used.send(sender=self.__class__, timestamp=self.timestamp,
-                          request=self.request, event_id = event_id, control=control, value=value, reader_info=reader_info)
+                          request=self.request, event_id = event_id, type=event_type, control=control, value=value, reader_info=reader_info)
 
     def send_page_timing(self):
         event_id = self.content['eventId']
