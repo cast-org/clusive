@@ -189,6 +189,7 @@ vocabCheck.selected = function(value) {
 };
 
 vocabCheck.skip = function() {
+    clusiveEvents.addVocabCheckSkippedEventToQueue();
     window.location = '/reader/' + vocabCheck.pendingArticle;
     return false;
 };

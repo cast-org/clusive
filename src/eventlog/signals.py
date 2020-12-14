@@ -118,15 +118,13 @@ def get_common_event_args(kwargs):
 
 # General function for event creation
 # Defaults action and type to the most common TOOL_USE_EVENT type
-def create_event(control, value, kwargs, action='USED', event_type='TOOL_USE_EVENT'):
-    common_event_args = get_common_event_args(kwargs)
-    logger.debug("create_event: %s / %s / %s / %s / %s" % (control, value, action, type, common_event_args))
-    event = Event.build(type=event_type,
-                        # TODO: should this be configurable for other action types?
+def create_event(kwargs, control=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):    
+    common_event_args = get_common_event_args(kwargs)            
+    event = Event.build(type=event_type,                        
                         action=action,
                         control=control,
                         value=value,
-                        **common_event_args)
+                        **common_event_args)                      
     if event:
         event.save()
 
@@ -140,7 +138,7 @@ def log_word_rated(sender, **kwargs):
     word = kwargs.get('word')
     rating = kwargs.get('rating')
     value = "%s:%s" % (word, rating)    
-    create_event(control, value, kwargs, action=action, event_type=event_type)
+    create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
 
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
@@ -148,14 +146,14 @@ def log_vocab_lookup(sender, **kwargs):
     # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one        
     control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
     value = kwargs['word']    
-    create_event(control, value, kwargs)
+    create_event(kwargs, control=control, value=value)
 
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
-    """User interacts with a control"""
-    control=kwargs['control'],
-    value=kwargs['value'],    
-    create_event(control, value, kwargs)
+    """User interacts with a control"""        
+    control = kwargs.get('control')
+    value = kwargs.get('value')             
+    create_event(kwargs, control=control, value=value)
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
@@ -163,7 +161,7 @@ def log_pref_change(sender, **kwargs):
     preference = kwargs.get('preference')                  
     control='pref:'+preference.pref                      
     value=preference.value    
-    create_event(control, value, kwargs)
+    create_event(kwargs, control=control, value=value)
 
 @receiver(annotation_action)
 def log_annotation_action(sender, **kwargs):

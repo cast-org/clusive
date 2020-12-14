@@ -3,12 +3,12 @@
 $(document).ready(function() {
     'use strict';
 
-    var addControlInteractionToQueue = function(control, value) {
-        console.debug('Adding control interaction to queue: ', control, value);
+    var addCaliperEventToQueue = function(eventType, control, value) {
+        console.debug('Adding caliper event to queue: ', eventType, control, value);
         window.clusiveEvents.messageQueue.add({
             type: 'CE',
             caliperEvent: {
-                type: window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT,
+                type: eventType,
                 control: control,
                 value: value
             },
@@ -17,15 +17,26 @@ $(document).ready(function() {
         });
     };
 
-    window.clusiveEvents = {
-        // TODO: Namespace this to separate from messages
+    var addVocabCheckSkippedEventToQueue = function() {
+        window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT, 'word_rating', 'SKIPPED')
+    }
+
+    var addTipRelatedActionToQueue = function(action) {
+        window.clusiveEvents.messageQueue.add({
+            type: 'TRA',
+            action: action
+        });
+    };
+    
+    window.clusiveEvents = {        
         messageQueue: clusive.djangoMessageQueue({
             config: {
                 localStorageKey: "clusive.messageQueue.caliperEvents"
             }
         }),
         caliperEventTypes: {
-            TOOL_USE_EVENT: 'TOOL_USE_EVENT'
+            TOOL_USE_EVENT: 'TOOL_USE_EVENT',
+            ASSESSMENT_ITEM_EVENT: 'ASSESSMENT_ITEM_EVENT'
         },
         dataAttributes: {
             HANDLER: 'data-cle-handler',
@@ -45,14 +56,9 @@ $(document).ready(function() {
             //     value: "clicked"
             // }
         ],
-        addControlInteractionToQueue: addControlInteractionToQueue
-    };
-
-    var addTipRelatedActionToQueue = function(action) {
-        window.clusiveEvents.messageQueue.add({
-            type: 'TRA',
-            action: action
-        });
+        addCaliperEventToQueue: addCaliperEventToQueue,
+        addTipRelatedActionToQueue: addTipRelatedActionToQueue,
+        addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue
     };
 
     // Build additional control interaction objects here from any data-clusive-event attributes on page markup
@@ -84,7 +90,7 @@ $(document).ready(function() {
         console.debug('Event for control tracking: ', interactionDef, control);
         var handler = interactionDef.handler;
         $(interactionDef.selector)[handler](function() {
-            addControlInteractionToQueue(interactionDef.control, interactionDef.value);
+            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value);
         });
     });
 
