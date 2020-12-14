@@ -114,6 +114,7 @@ def get_common_event_args(kwargs):
             return common_event_args
         except Event.DoesNotExist:
             logger.error('get_common_event_args with a non-existent page event ID %s', event_id)                
+    return {}
 
 # General function for event creation
 # Defaults action and type to the most common TOOL_USE_EVENT type
@@ -181,7 +182,6 @@ def log_annotation_action(sender, **kwargs):
                         action=action,                        
                         value=annotation.clean_text(),                        
                         **common_event_args)
-            # TODO: page?  Generated?
     event.save()
 
 

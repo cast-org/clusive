@@ -32,9 +32,6 @@ var manifest_path = "{{ manifest_path }}";
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 
 {% block content %}
-<!-- TODO: this is required due to a bug in Reader 1.1.4, remove when fixed -->
-<div id="headerMenu"></div>
-
 <div id="D2Reader-Container" style="position: relative;">
     <main style="overflow: hidden" tabindex="-1" id="iframe-wrapper">
         <span id="content" tabindex="-1"></span>
@@ -156,7 +153,6 @@ var manifest_path = "{{ manifest_path }}";
                     }
                 }
             },
-            material: false,
             attributes: {
                 margin: 50,
             },
@@ -164,8 +160,12 @@ var manifest_path = "{{ manifest_path }}";
             lastReadingPosition: lastReadingPosition,
             injectables: injectables,
 
-            selectionMenuItems: selectionMenuItems,
-            initialAnnotationColor: "var(--CRT_highlightOverlayBg)",
+            highlighter: {
+                selectionMenuItems: selectionMenuItems,
+            },
+            annotations: {
+                initialAnnotationColor: "var(--CRT_highlightOverlayBg)",
+            },
 
             api: {
                 addBookmark: function (bookmark) {
@@ -188,7 +188,7 @@ var manifest_path = "{{ manifest_path }}";
                     console.warn('Not implemented: Delete annotation: ', annotation.id);
                     return Promise.reject();
                 },
-                updateCurrentlocation: function (locator) {
+                updateCurrentLocation: function (locator) {
                     // Grey out navigation buttons when necessary.
                     var nRes = D2Reader.currentResource();
                     var firstResource = (nRes===0);

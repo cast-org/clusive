@@ -124,15 +124,19 @@ vocabCheck.start = function(link, article) {
         .done(function(data, status) {
             vocabCheck.words = data.words;
             vocabCheck.wordCount = vocabCheck.words.length;
-            if (vocabCheck.wordCount === 0) { vocabCheck.done(); } // No words to show
-            (vocabCheck.ratings = []).length = vocabCheck.wordCount; vocabCheck.ratings.fill(null);
-            vocabCheck.wordIndex = 0;
-            vocabCheck.update();
-            $(link).CFW_Modal({
-                target: '#vocabCheckModal',
-                unlink: true
-            });
-            $(link).CFW_Modal('show');
+            if (vocabCheck.wordCount === 0) {
+                vocabCheck.done(); // No words to show
+            } else {
+                (vocabCheck.ratings = []).length = vocabCheck.wordCount;
+                vocabCheck.ratings.fill(null);
+                vocabCheck.wordIndex = 0;
+                vocabCheck.update();
+                $(link).CFW_Modal({
+                    target: '#vocabCheckModal',
+                    unlink: true
+                });
+                $(link).CFW_Modal('show');
+            }
         })
         .fail(function(err) {
             console.error(err);

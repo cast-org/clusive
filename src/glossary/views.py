@@ -9,7 +9,7 @@ from eventlog.signals import vocab_lookup, word_rated
 from glossary.apps import GlossaryConfig
 from glossary.models import WordModel
 from glossary.util import base_form, all_forms, lookup, has_definition
-from library.models import Book, BookVersion
+from library.models import Book, BookVersion, Paradata
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -18,8 +18,16 @@ logger = logging.getLogger(__name__)
 def checklist(request, book_id):
     """Return up to five words that should be presented in the vocab check dialog"""
     try:
-        user = ClusiveUser.objects.get(user=request.user)
-        versions = BookVersion.objects.filter(book__pk=book_id)
+        user = request.clusive_user
+        book = Book.objects.get(id=book_id)
+        paradata, created = Paradata.objects.get_or_create(user=user, book=book)
+
+        # We present a checklist only the first time a user goes to a new Book
+        if paradata.viewCount > 0:
+            logger.debug('Book already viewed, skipping checklist')
+            return JsonResponse({'words': []})
+
+        versions = BookVersion.objects.filter(book=book)
         to_find = 5
         min_word_length = 4
         check_words = set()
@@ -70,7 +78,22 @@ def checklist(request, book_id):
             gloss_words = [w for w in glossary_words if not any(wm.word==w and wm.rating!=None for wm in user_words)]
             logger.debug("Single version. Check words from glossary: %s", gloss_words)
             check_words = random.sample(gloss_words, k=min(to_find, len(gloss_words)))
-            # TODO: consider other challenging words from article if all glossary words already have ratings
+
+            if len(check_words) < to_find:
+                # Still not enough words - maybe there was no glossary.
+                # Choose other challenging words from article to fill up the list.
+                for w in bv.all_word_list:
+                    if len(w) < min_word_length or not has_definition(book, w):
+                        continue
+                    # It's a potential word; make sure it hasn't been rated already:
+                    user_word = WordModel.objects.filter(user=user, word=w)
+                    if len(user_word)>0 and user_word[0].rating is not None:
+                        continue
+                    # Add to list and see if we're done.
+                    check_words.append(w)
+                    if len(check_words) == to_find:
+                        break
+
         return JsonResponse({'words': sorted(check_words)})
     except ClusiveUser.DoesNotExist:
         logger.warning("Could not fetch check words, no Clusive user: %s", request.user)
