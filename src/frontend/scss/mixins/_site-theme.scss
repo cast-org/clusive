@@ -308,6 +308,10 @@
         --CT_whyIconActiveTextShadowColorRGB: #{red($why-icon-active-text-shadow-color), green($why-icon-active-text-shadow-color), blue($why-icon-active-text-shadow-color)};
         --CT_whyIconActiveTextShadowOpacity: #{$why-icon-active-text-shadow-opacity};
 
+        --CT_switchColBorderColor: #{$switch-col-border-color};
+        --CT_switchColBg: #{$switch-col-bg};
+        --CT_switchMetaNoneColor: #{$switch-meta-none-color};
+
         --CT_rankingBorderColor: #{$ranking-border-color};
 
         --CT_formCheckradioBorderColor: #{$form-checkradio-border-color};
