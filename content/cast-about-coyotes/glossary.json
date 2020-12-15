@@ -1,0 +1,152 @@
+[
+    {
+        "headword": "appreciate",
+        "alternateForms": ["appreciates","appreciated","appreciating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To think that something is valuable or important." ,
+                "examples": [ "Teachers appreciate that students want to do their best on projects." ],
+                "images": [
+                    {
+                        "src": "glossimages/glossary_appreciate.png",
+                        "alt": "Drawing of a younger man with his arm around the shoulders of an older man.",
+                        "description": "An older man leans forward. A younger man has his arm around the older man's shoulders.",
+                        "caption": "A grandfather appreciates his grandson's help."
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "approach",
+        "alternateForms": ["approaches","approached","approaching"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To move closer." ,
+                "examples": [ "He hesitated to approach the dark, spooky house." ],
+                "images": [
+                    {
+                        "src": "glossimages/glossary_approach.jpg",
+                        "alt": "Photo of an insect and a flower.",
+                        "description": "An insect is flying toward a bright flower.",
+                        "caption": "An insect approaches a bright flower."
+                    }
+                ]
+        }
+        ]
+    },
+    {
+        "headword": "retreat",
+        "alternateForms": ["retreats","retreated","retreating"],
+        "meanings": [
+                {
+                    "pos": "verb",
+                    "definition": "To back away, especially from danger." ,
+                    "examples": [ "The general ordered the army to retreat from the battle." ]
+        }
+        ]
+    },
+    {
+        "headword": "unique",
+        "alternateForms": [],
+        "meanings": [
+                {
+                    "pos": "adjective",
+                    "definition": "Being the only one of its kind." ,
+                    "examples": [ "The Earth is unique because it is the only planet known to have human life." ],
+                    "images": [
+                        {
+                            "src": "glossimages/glossary_unique.jpg",
+                            "alt": "Photo of many white balls and one red ball.",
+                            "description": "A photo of many white balls and one red ball.",
+                            "caption": "The red ball is unique because the other balls are white."
+                        }
+                    ]
+        }
+        ]
+    },
+    {
+        "headword": "vocalization",
+        "alternateForms": ["vocalizations"],
+        "meanings": [
+                {
+                    "pos": "noun",
+                    "definition": "A sound made by the voice or throat to express something." ,
+                    "examples": [ "Singing is a way humans use vocalization to tell a story." ],
+                    "images": [
+                        {
+                            "src": "glossimages/glossary_vocalization.jpg",
+                            "alt": "Photo of an animal with its head raised to the sky and mouth opened.",
+                            "description": "An animal with its head raised to the sky and mouth opened.",
+                            "caption": "A wolf vocalizing by howling."
+                        }
+                    ]
+        }
+        ]
+    },
+    {
+        "headword": "hesitant",
+        "alternateForms": [],
+        "meanings": [
+                {
+                    "pos": "adjective",
+                    "definition": "Reluctant to do or say something." ,
+                    "examples": [ "Raul was hesitant to try a food that he wasn't sure he would like." ]
+                }
+        ]
+    },
+    {
+        "headword": "predator",
+        "alternateForms": ["predators"],
+        "meanings": [
+                {
+                    "pos": "noun",
+                    "definition": "An animal that hunts, kills, and eats other animals in order to survive.",
+                    "examples": [ "Dogs, wolves and coyotes are all predators and use the animals they kill for food." ],
+                    "images": [
+                        {
+                            "src": "glossimages/glossary_predator.jpg",
+                            "alt": "Photo of a lion.",
+                            "description": "A lion with long, light brown fur around its head. Image credit: Clement Bardot on Wikimedia Commons. This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license.",
+                            "caption": "Lions and other predators hunt other animals for food."
+                        }
+                    ]
+        }
+        ]
+    },
+    {
+        "headword": "struggle",
+        "alternateForms": ["struggles","struggled","struggling"],
+        "meanings": [
+                {
+                    "pos": "verb",
+                    "definition": "To try very hard to deal with a challenge or problem.",
+                    "examples": [ "I struggled to swim across the pool because I am not a good swimmer." ]
+        }
+        ]
+    },
+    {
+        "headword": "anxious",
+        "alternateForms": [],
+        "meanings": [
+                {
+                    "pos": "adjective",
+                    "definition": "Worried about a certain matter.",
+                    "examples": [ "Before the test, Marco looked around anxiously." ]
+        }
+        ]
+    },
+    {
+        "headword": "associate",
+        "alternateForms": ["associates", "associated","associating"],
+        "meanings": [
+                {
+                    "pos": "verb",
+                    "definition": "To connect one thing with another in the mind.",
+                    "examples": [ "I associate howling with the sound a dog makes." ]
+                }
+        ]
+    }
+]
