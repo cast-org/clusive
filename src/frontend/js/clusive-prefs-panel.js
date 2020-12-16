@@ -43,6 +43,13 @@
                 },
                 panel: null
             },
+            scroll: {
+                type: 'cisl.prefs.scroll',
+                enactor: {
+                    type: 'cisl.prefs.enactor.scroll'
+                },
+                panel: null
+            },
             readSpeed: {
                 type: 'cisl.prefs.readSpeed',
                 enactor: {
@@ -135,7 +142,44 @@
             default: []
             }
         }
-    })   
+    });
+
+    // Preference for paged vs. scrolled layout
+    fluid.default('cisl.prefs.schemas.scroll', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.scroll': {
+                type: 'boolean',
+                default: true
+            }
+        }
+    });
+
+    fluid.defaults('cisl.prefs.enactor.scroll', {
+        gradeNames: ['fluid.prefs.enactor'],
+        preferenceMap: {
+            'cisl.prefs.scroll': {
+                'model.scroll': 'value'
+            }
+        },
+        modelListeners: {
+            scroll: {
+                listener: '{that}.enactScroll',
+                args: ['{that}.model.scroll'],
+                namespace: 'enactScroll'
+            }
+        },
+        invokers: {
+            enactScroll: {
+                funcName: 'cisl.prefs.enactor.scroll.enactScroll',
+                args: ['{arguments}.0', '{that}']
+            }
+        }
+    });
+
+    cisl.prefs.enactor.scroll.enactScroll = function(enableScroll, that) {
+        console.info('ENACT SCROLL');
+    };
 
     // Add a boolean preference for the glossary
     fluid.defaults('cisl.prefs.schemas.glossary', {

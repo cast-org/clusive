@@ -115,7 +115,17 @@
                     type: 'fluid.transforms.value',
                     input: '{that}.model.preferences.cisl_prefs_readSpeed'
                 }
-            },            
+            },
+            // 'readerPreferences.scroll': {
+            //     target: 'readerPrefences.scroll',
+            //     backward: {
+            //         excludeSource: '*'
+            //     },
+            //     singleTransform: {
+            //         type: 'fluid.transforms.value',
+            //         input: '{that}.model.preferences.cisl_prefs_scroll'
+            //     }
+            // }
         },
         modelListeners: {
             'readerPreferences.fontSize': {
@@ -141,11 +151,16 @@
             'readerPreferences.tts.rate': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserTTSSetting',
                 args: ['rate', '{change}.value']
-            }            
+            }
+            // 'readerPreferences.scroll': {
+            //     func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
+            //     args: ['verticalScroll', '{change}.value']
+            // }
         }
     });
 
     cisl.prefs.readerPreferencesBridge.applyUserSetting = function(settingName, settingValue) {
+        console.debug('applyUserSetting: ', settingName, settingValue);
         var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
@@ -166,5 +181,14 @@
             };
             reader.applyTTSSettings(settingsObj);
         }        
-    }
+    };
+
+    // cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(ttsSettingName, settingValue) {
+    //     console.log("cisl.prefs.readerPreferencesBridge.applyScrollSetting", ttsSettingName, settingValue)
+    //     var reader = clusiveContext.reader.instance;
+    //     if (reader) {
+    //         console.log('skipping');
+    //         // reader.scroll(T/F);
+    //     }
+    // };
 }(fluid_3_0_0));

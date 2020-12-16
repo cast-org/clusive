@@ -81,7 +81,12 @@
             },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
-                excludeSource: 'applyModalSettingToPreference'                
+                excludeSource: 'applyModalSettingToPreference'
+            },
+            'modalSettings.scroll': {
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
+                args: ['{change}.value', 'preferences.cisl_prefs_scroll', '{that}'],
+                excludeSource: 'init'
             }
         },
         selectors: {
@@ -91,6 +96,7 @@
             font: '.cislc-modalSettings-font',
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
+            scroll: '.cislc-modalSettings-scroll',
             readSpeed: '.cislc-modalSettings-readSpeed',
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
@@ -103,6 +109,7 @@
             font: 'modalSettings.font',
             color: 'modalSettings.color',
             readSpeed: 'modalSettings.readSpeed',
+            scroll: 'modalSettings.scroll',
             glossaryCheckbox: {
                 selector: 'glossary',
                 path: 'modalSettings.glossary',
@@ -151,6 +158,8 @@
         that.applier.change('modalSettings.color', fluid.get(preferences, 'fluid_prefs_contrast'));
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
+
+        that.applier.change('modalSettings.scroll', fluid.get(preferences, 'cisl_prefs_scroll'));
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
 
