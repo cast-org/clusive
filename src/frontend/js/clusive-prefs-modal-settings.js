@@ -79,14 +79,14 @@
                 args: ['{change}.value', '{that}'],
                 excludeSource: 'init'
             },
-            'preferences': {
-                func: '{that}.setModalSettingsByPreferences',
-                excludeSource: 'applyModalSettingToPreference'
-            },
             'modalSettings.scroll': {
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_scroll', '{that}'],
                 excludeSource: 'init'
+            },            
+            'preferences': {
+                func: '{that}.setModalSettingsByPreferences',
+                excludeSource: 'applyModalSettingToPreference'
             }
         },
         selectors: {

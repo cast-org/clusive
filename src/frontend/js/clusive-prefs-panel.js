@@ -145,7 +145,7 @@
     });
 
     // Preference for paged vs. scrolled layout
-    fluid.default('cisl.prefs.schemas.scroll', {
+    fluid.defaults('cisl.prefs.schemas.scroll', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
             'cisl.prefs.scroll': {
