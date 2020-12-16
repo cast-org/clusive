@@ -1,5 +1,9 @@
 /* global fluid_3_0_0, cisl, D2Reader */
 
+/*
+    Defines interactions between Clusive preferences and Readium.
+ */
+
 (function(fluid) {
     'use strict';
 

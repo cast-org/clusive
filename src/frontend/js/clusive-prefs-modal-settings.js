@@ -1,4 +1,8 @@
-/* global cisl, clusive, fluid_3_0_0, fluid, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global cisl, fluid_3_0_0 */
+
+/*
+    Defines the behavior of the preferences panel and how its markup relates to the defined Fluid preferences.
+ */
 
 (function(fluid) {
     'use strict';
@@ -30,6 +34,14 @@
                 1: 'default',
                 1.25: 'wide',
                 1.5: 'wider'
+            },
+            modalScrollToPreference: {
+                scroll: true,
+                paged: false
+            },
+            preferenceScrollToModal: {
+                true: 'scroll',
+                false: 'paged'
             }
         },
         invokers: {
@@ -81,9 +93,10 @@
             },
             'modalSettings.scroll': {
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
-                args: ['{change}.value', 'preferences.cisl_prefs_scroll', '{that}'],
+                args: ['@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalScrollToPreference)',
+                    'preferences.cisl_prefs_scroll', '{that}'],
                 excludeSource: 'init'
-            },            
+            },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
                 excludeSource: 'applyModalSettingToPreference'
@@ -159,7 +172,7 @@
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
 
-        that.applier.change('modalSettings.scroll', fluid.get(preferences, 'cisl_prefs_scroll'));
+        that.applier.change('modalSettings.scroll', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'fluid_prefs_scroll'), that.options.mappedValues.preferenceScrollToModal));
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
 
