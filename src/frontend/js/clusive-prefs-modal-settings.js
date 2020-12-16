@@ -172,7 +172,7 @@
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
 
-        that.applier.change('modalSettings.scroll', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'fluid_prefs_scroll'), that.options.mappedValues.preferenceScrollToModal));
+        that.applier.change('modalSettings.scroll', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'cisl_prefs_scroll'), that.options.mappedValues.preferenceScrollToModal));
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
 
