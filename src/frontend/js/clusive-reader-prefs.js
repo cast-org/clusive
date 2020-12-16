@@ -120,16 +120,16 @@
                     input: '{that}.model.preferences.cisl_prefs_readSpeed'
                 }
             },
-            // 'readerPreferences.scroll': {
-            //     target: 'readerPrefences.scroll',
-            //     backward: {
-            //         excludeSource: '*'
-            //     },
-            //     singleTransform: {
-            //         type: 'fluid.transforms.value',
-            //         input: '{that}.model.preferences.cisl_prefs_scroll'
-            //     }
-            // }
+            'readerPreferences.scroll': {
+                target: 'readerPreferences.scroll',
+                backward: {
+                    excludeSource: '*'
+                },
+                singleTransform: {
+                    type: 'fluid.transforms.value',
+                    input: '{that}.model.preferences.cisl_prefs_scroll'
+                }
+            }
         },
         modelListeners: {
             'readerPreferences.fontSize': {
@@ -155,11 +155,11 @@
             'readerPreferences.tts.rate': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserTTSSetting',
                 args: ['rate', '{change}.value']
+            },
+            'readerPreferences.scroll': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
+                args: ['scroll', '{change}.value']
             }
-            // 'readerPreferences.scroll': {
-            //     func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
-            //     args: ['verticalScroll', '{change}.value']
-            // }
         }
     });
 
@@ -176,7 +176,7 @@
     };
 
     cisl.prefs.readerPreferencesBridge.applyUserTTSSetting = function(ttsSettingName, settingValue) {
-        console.log("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
+        console.debug("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
         var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
@@ -187,12 +187,11 @@
         }        
     };
 
-    // cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(ttsSettingName, settingValue) {
-    //     console.log("cisl.prefs.readerPreferencesBridge.applyScrollSetting", ttsSettingName, settingValue)
-    //     var reader = clusiveContext.reader.instance;
-    //     if (reader) {
-    //         console.log('skipping');
-    //         // reader.scroll(T/F);
-    //     }
-    // };
+    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(ttsSettingName, settingValue) {
+        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", ttsSettingName, settingValue)
+        var reader = clusiveContext.reader.instance;
+        if (reader) {
+            reader.scroll(settingValue);
+        }
+    };
 }(fluid_3_0_0));
