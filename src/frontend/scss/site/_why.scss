@@ -71,8 +71,11 @@
         @include font-size($why-modal-footer-font-size);
     }
 
-    .list-bulleted {
-        .list-item {
+    ul {
+        padding-left: 0;
+        margin-left: 1.25rem;
+
+        li{
             @include calc-line-height(1.375);
         }
     }
@@ -135,11 +138,13 @@
         }
     }
 }
-.active .switch-icon-default {
-    display: none !important;
-}
-.active .switch-icon-active {
-    display: inline-block !important;
+.active {
+    .switch-icon-default {
+        display: none !important; // stylelint-disable-line declaration-no-important
+    }
+    .switch-icon-active {
+        display: inline-block !important; // stylelint-disable-line declaration-no-important
+    }
 }
 
 .switch-meta {
@@ -157,7 +162,6 @@
         line-height: 1;
         color: inherit;
         content: "\e820";
-        //transform: translateX(-50%) translateY(-50%);
     }
 
     &.none {

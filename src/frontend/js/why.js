@@ -4,7 +4,7 @@ $(window).ready(function() {
     'use strict';
 
     $('#whyButton').CFW_Modal({
-        target: '#whyModal',
+        target: '#switchModal',
         animate: true
     });
 
