@@ -3,14 +3,15 @@
 $(document).ready(function() {
     'use strict';
 
-    var addCaliperEventToQueue = function(eventType, control, value) {
+    var addCaliperEventToQueue = function(eventType, control, value, action) {
         console.debug('Adding caliper event to queue: ', eventType, control, value);
         window.clusiveEvents.messageQueue.add({
             type: 'CE',
             caliperEvent: {
                 type: eventType,
                 control: control,
-                value: value
+                value: value,
+                action: action
             },
             readerInfo: clusiveContext.reader.info,
             eventId: PAGE_EVENT_ID
@@ -18,7 +19,7 @@ $(document).ready(function() {
     };
 
     var addVocabCheckSkippedEventToQueue = function() {
-        window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT, 'word_rating', 'SKIPPED')
+        window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT, 'word_rating', null, window.clusiveEvents.caliperEventActions.ASSESSMENT_ITEM_SKIPPED)
     }
 
     var addTipRelatedActionToQueue = function(action) {
@@ -37,6 +38,11 @@ $(document).ready(function() {
         caliperEventTypes: {
             TOOL_USE_EVENT: 'TOOL_USE_EVENT',
             ASSESSMENT_ITEM_EVENT: 'ASSESSMENT_ITEM_EVENT'
+        },
+        caliperEventActions: {
+            USED: "USED",
+            ASSESSMENT_ITEM_SKIPPED: "SKIPPED",
+            ASSESSMENT_ITEM_COMPLETED: "COMPLETED",
         },
         dataAttributes: {
             HANDLER: 'data-cle-handler',
@@ -90,7 +96,7 @@ $(document).ready(function() {
         console.debug('Event for control tracking: ', interactionDef, control);
         var handler = interactionDef.handler;
         $(interactionDef.selector)[handler](function() {
-            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value);
+            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value, window.clusiveEvents.caliperEventActions.USED);
         });
     });
 
