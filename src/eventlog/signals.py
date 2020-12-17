@@ -126,6 +126,9 @@ def create_event(kwargs, control=None, value=None, action='USED', event_type='TO
                         value=value,
                         **common_event_args)                      
     if event:
+        # TODO: this doesn't validate the object by the rules like 
+        # limited choices for ACTION and TYPE based on Caliper's spec
+        # See https://docs.djangoproject.com/en/3.1/ref/models/instances/#validating-objects
         event.save()
 
 # word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
