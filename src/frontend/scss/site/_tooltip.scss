@@ -89,6 +89,11 @@
 }
 
 .tooltip-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     margin-top: $paragraph-spacer-y / -2;
-    text-align: right;
+}
+.tooltip-step {
+    margin-right: auto;
 }

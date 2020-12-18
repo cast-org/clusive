@@ -270,3 +270,19 @@ h2,
         pointer-events: auto;
     }
 }
+.feature-context {
+    position: absolute;
+    top: 33%;
+    left: 50%;
+    pointer-events: none;
+    @include sr-only();
+}
+
+.feature-list {
+    li {
+        margin-left: 1.5rem;
+    }
+    .feature-icon {
+        margin-left: -1.25rem;
+    }
+}
