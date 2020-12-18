@@ -15,14 +15,24 @@
 {% for m in defs.meanings %}
     {% for img in m.images %}
         <figure class="figure">
-            <img class="figure-img img-fluid" src="{% get_media_prefix %}{{book_path}}/{{img.src}}" alt="{{img.alt}}" />
+            <img class="figure-img img-fluid" src="{% get_media_prefix %}{{book_path}}/{{img.src}}" alt="{{img.alt}}" />            
             <div class="figure-caption">
                 {{img.caption}}
                 {% if img.description %}
-                <details>
+                <details class="definition-details">
                     <summary>details</summary>
                     <p>{{img.description}}</p>
                 </details>
+                <script>
+                    var detailsElem = $(".definition-details");
+                    var interactionDef = {
+                        selector: detailsElem,
+                        handler: "click",
+                        control: "glossary-image-description:probe",
+                        value: "opened"
+                    };                    
+                    clusiveEvents.trackControlInteraction(interactionDef);
+                </script>
                 {% endif %}
             </div>
         </figure>

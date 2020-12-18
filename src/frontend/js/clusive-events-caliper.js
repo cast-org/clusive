@@ -29,6 +29,17 @@ $(document).ready(function() {
         });
     };
     
+
+    var trackControlInteraction = function(interactionDef) {
+        console.debug('Setting up control tracking for: ', interactionDef)
+        var control = $(interactionDef.selector);
+        console.debug('Event for control tracking: ', interactionDef, control);
+        var handler = interactionDef.handler;
+        $(interactionDef.selector)[handler](function() {
+            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value, window.clusiveEvents.caliperEventActions.USED);
+        });
+    };
+
     window.clusiveEvents = {        
         messageQueue: clusive.djangoMessageQueue({
             config: {
@@ -49,7 +60,7 @@ $(document).ready(function() {
             CONTROL: 'data-cle-control',
             VALUE: 'data-cle-value'
         },
-        trackedControlInteractions: [
+        controlInteractionsToTrack: [
             /*
                 control interactions to track can be added centrally here if needed,
                 but in most cases using the data-cle-* attributes on the markup
@@ -64,7 +75,9 @@ $(document).ready(function() {
         ],
         addCaliperEventToQueue: addCaliperEventToQueue,
         addTipRelatedActionToQueue: addTipRelatedActionToQueue,
-        addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue
+        addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue,
+        trackControlInteraction: trackControlInteraction
+
     };
 
     // Build additional control interaction objects here from any data-clusive-event attributes on page markup
@@ -84,20 +97,15 @@ $(document).ready(function() {
                 control: eventControl,
                 value: eventValue
             };
-            clusiveEvents.trackedControlInteractions.push(interactionDef);
+            clusiveEvents.controlInteractionsToTrack.push(interactionDef);
         } else {
             console.debug('tried to add event logging, but missing a needed data-cle-* attribute on the element: ', elm);
         }
     });
-
+    
     // Set up events control interactions here
-    clusiveEvents.trackedControlInteractions.forEach(function(interactionDef) {
-        var control = $(interactionDef.selector);
-        console.debug('Event for control tracking: ', interactionDef, control);
-        var handler = interactionDef.handler;
-        $(interactionDef.selector)[handler](function() {
-            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value, window.clusiveEvents.caliperEventActions.USED);
-        });
+    clusiveEvents.controlInteractionsToTrack.forEach(function(interactionDef) {
+        clusiveEvents.trackControlInteraction(interactionDef);
     });
 
     $('body').on('click', '*[data-clusive-tip-action]', function(event) {
