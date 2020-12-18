@@ -28,7 +28,7 @@
                     var interactionDef = {
                         selector: detailsElem,
                         handler: "click",
-                        control: "glossary-image-description:probe",
+                        control: "glossary-image-description:{{defs.headword}}",
                         value: "opened"
                     };                    
                     clusiveEvents.trackControlInteraction(interactionDef);

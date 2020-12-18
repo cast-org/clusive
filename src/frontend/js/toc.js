@@ -138,19 +138,31 @@ function buildTableOfContents() {
                 var out = buildTocLevel(items, 0, 'toc');
                 $(TOC_CONTAINER).html(out).CFW_Init();
 
+                var navLinks = $(TOC_CONTAINER).find('.nav-link');
                 // Add click event to update menu when new page selected
-                $(TOC_CONTAINER).find('.nav-link').on('click', function() {
+                navLinks.on('click', function() {
                     // Use timeout delay until we can get a callback from reader
                     setTimeout(function() {
                         resetCurrentTocItem(false);
                         markTocItemActive();
                     }, 100);
                 });
+                // Attach tracking events after markup is built
+                navLinks.each(function (i, elem) {
+                    console.debug("adding tracking for navLink", elem)
+                    var interactionDef = {
+                        selector: elem,
+                        handler: "click",
+                        control: "reader-navigation",
+                        value: "toc-nav-link:" + $(elem).attr("href")
+                    };                    
+                    clusiveEvents.trackControlInteraction(interactionDef);
+                });
             } else {
                 // Empty TOC
                 $(TOC_CONTAINER).hide();
             }
-        });
+        });        
     }
 }
 
