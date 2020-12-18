@@ -153,7 +153,7 @@ function buildTableOfContents() {
                     var interactionDef = {
                         selector: elem,
                         handler: "click",
-                        control: "reader-navigation",
+                        control: "reader-navigation-toc",
                         value: "toc-nav-link:" + $(elem).attr("href")
                     };                    
                     clusiveEvents.trackControlInteraction(interactionDef);
@@ -262,6 +262,19 @@ function buildAnnotationList() {
     return $.get('/library/annotationlist/' + window.pub_id + '/' + window.pub_version)
         .done(function(data) {
             $annotationsContainer.html(data);
+            // Add tracking events for using annotation navigation
+            $annotationsContainer.find('.goto-highlight').each(function (i, elem) {
+                var annotationId = $(elem).parent("div").attr("data-annotation-id");
+
+                var interactionDef = {                
+                    selector: elem,
+                    handler: "click",
+                    control: "reader-navigation-annotation",
+                    value: "annotation-nav-link:" + annotationId
+                };           
+
+                clusiveEvents.trackControlInteraction(interactionDef);
+            });
         })
         .fail(function(err) {
             console.error(err);
