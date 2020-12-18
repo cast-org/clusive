@@ -87,21 +87,21 @@
     @include font-size(1rem);
     white-space: nowrap;
 
-    [class^="icon-"],
-    [class*=" icon-"] {
-        position: relative;
-        display: inline-block;
-        transform: rotate(10deg);
-
-        &:first-child {
-            left: .125em;
-            margin-right: -.125em;
-        }
-        &:last-child {
-            left: -.125em;
-            margin-right: -.125em;
-        }
-    }
+    //[class^="icon-"],
+    //[class*=" icon-"] {
+    //    position: relative;
+    //    display: inline-block;
+    //    transform: rotate(10deg);
+    //
+    //    &:first-child {
+    //        left: .125em;
+    //        margin-right: -.125em;
+    //    }
+    //    &:last-child {
+    //        left: -.125em;
+    //        margin-right: -.125em;
+    //    }
+    //}
 }
 
 .btn-flag,

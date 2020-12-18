@@ -1,0 +1,101 @@
+{% load static %}
+<div id="switchModal" class="modal switch-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">Switch?</h2>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>You have options!</strong>
+                    How do you want to travel through this text?
+                </p>
+                <div class="row switch-row">
+                    <div class="col-md-4 switch-col">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-12 switch-select">
+                                <a href="#" class="btn btn-primary link-stretch">Switch</a>
+                                <div class="switch-icon-default">
+                                    {% include "shared/partial/icons/boat.svg" with class="switch-icon" %}
+                                </div>
+                                <div class="switch-icon-active">
+                                    {% include "shared/partial/icons/boat-active.svg" with class="switch-icon" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-8 col-md-12">
+                                Words include:
+                                <ul>
+                                    <li>First word</li>
+                                    <li>Second word</li>
+                                    <li>Third word</li>
+                                </ul>
+                                <div class="switch-meta none">
+                                    No highlights
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 switch-col active">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-12 switch-select">
+                                <button type="button" class="btn btn-primary link-stretch" data-cfw-dismiss="modal">Stay Here</button>
+                                <div class="switch-icon-default">
+                                    {% include "shared/partial/icons/car.svg" with class="switch-icon" %}
+                                </div>
+                                <div class="switch-icon-active">
+                                    {% include "shared/partial/icons/car-active.svg" with class="switch-icon" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-8 col-md-12">
+                                Words include:
+                                <ul>
+                                    <li>First word</li>
+                                    <li>Second word</li>
+                                    <li>Third word</li>
+                                </ul>
+                                <div class="switch-meta">
+                                    2 highlights
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 switch-col">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-12 switch-select">
+                                <a href="#" class="btn btn-primary link-stretch">Switch</a>
+                                <div class="switch-icon-default">
+                                    {% include "shared/partial/icons/spaceship.svg" with class="switch-icon" %}
+                                </div>
+                                <div class="switch-icon-active">
+                                    {% include "shared/partial/icons/spaceship-active.svg" with class="switch-icon" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-8 col-md-12">
+                                Words include:
+                                <ul>
+                                    <li>First word</li>
+                                    <li>Second word</li>
+                                    <li>Third word</li>
+                                </ul>
+                                <div class="switch-meta">
+                                    3 highlights, 1 note
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {% comment %}
+                Clusive estimates that you know 60% of the words in this text.
+                <a href="#">Check out your data <span aria-hidden="true">&gt;</span></a>
+                {% endcomment %}
+            </div>
+        </div>
+    </div>
+</div>
