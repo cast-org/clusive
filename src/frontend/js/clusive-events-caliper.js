@@ -3,14 +3,15 @@
 $(document).ready(function() {
     'use strict';
 
-    var addCaliperEventToQueue = function(eventType, control, value) {
+    var addCaliperEventToQueue = function(eventType, control, value, action) {
         console.debug('Adding caliper event to queue: ', eventType, control, value);
         window.clusiveEvents.messageQueue.add({
             type: 'CE',
             caliperEvent: {
                 type: eventType,
                 control: control,
-                value: value
+                value: value,
+                action: action
             },
             readerInfo: clusiveContext.reader.info,
             eventId: PAGE_EVENT_ID
@@ -18,7 +19,7 @@ $(document).ready(function() {
     };
 
     var addVocabCheckSkippedEventToQueue = function() {
-        window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT, 'word_rating', 'SKIPPED')
+        window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT, 'word_rating', null, window.clusiveEvents.caliperEventActions.ASSESSMENT_ITEM_SKIPPED)
     }
 
     var addTipRelatedActionToQueue = function(action) {
@@ -28,6 +29,17 @@ $(document).ready(function() {
         });
     };
     
+
+    var trackControlInteraction = function(interactionDef) {
+        console.debug('Setting up control tracking for: ', interactionDef)
+        var control = $(interactionDef.selector);
+        console.debug('Event for control tracking: ', interactionDef, control);
+        var handler = interactionDef.handler;
+        $(interactionDef.selector)[handler](function() {
+            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value, window.clusiveEvents.caliperEventActions.USED);
+        });
+    };
+
     window.clusiveEvents = {        
         messageQueue: clusive.djangoMessageQueue({
             config: {
@@ -38,12 +50,17 @@ $(document).ready(function() {
             TOOL_USE_EVENT: 'TOOL_USE_EVENT',
             ASSESSMENT_ITEM_EVENT: 'ASSESSMENT_ITEM_EVENT'
         },
+        caliperEventActions: {
+            USED: "USED",
+            ASSESSMENT_ITEM_SKIPPED: "SKIPPED",
+            ASSESSMENT_ITEM_COMPLETED: "COMPLETED",
+        },
         dataAttributes: {
             HANDLER: 'data-cle-handler',
             CONTROL: 'data-cle-control',
             VALUE: 'data-cle-value'
         },
-        trackedControlInteractions: [
+        controlInteractionsToTrack: [
             /*
                 control interactions to track can be added centrally here if needed,
                 but in most cases using the data-cle-* attributes on the markup
@@ -58,7 +75,9 @@ $(document).ready(function() {
         ],
         addCaliperEventToQueue: addCaliperEventToQueue,
         addTipRelatedActionToQueue: addTipRelatedActionToQueue,
-        addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue
+        addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue,
+        trackControlInteraction: trackControlInteraction
+
     };
 
     // Build additional control interaction objects here from any data-clusive-event attributes on page markup
@@ -78,20 +97,15 @@ $(document).ready(function() {
                 control: eventControl,
                 value: eventValue
             };
-            clusiveEvents.trackedControlInteractions.push(interactionDef);
+            clusiveEvents.controlInteractionsToTrack.push(interactionDef);
         } else {
             console.debug('tried to add event logging, but missing a needed data-cle-* attribute on the element: ', elm);
         }
     });
-
+    
     // Set up events control interactions here
-    clusiveEvents.trackedControlInteractions.forEach(function(interactionDef) {
-        var control = $(interactionDef.selector);
-        console.debug('Event for control tracking: ', interactionDef, control);
-        var handler = interactionDef.handler;
-        $(interactionDef.selector)[handler](function() {
-            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value);
-        });
+    clusiveEvents.controlInteractionsToTrack.forEach(function(interactionDef) {
+        clusiveEvents.trackControlInteraction(interactionDef);
     });
 
     $('body').on('click', '*[data-clusive-tip-action]', function(event) {

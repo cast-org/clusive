@@ -18,7 +18,7 @@
                     {% if prev_version %}
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-walk why-icon" aria-hidden="true"></span>
-                        <a href="{{ prev_version }}" class="btn btn-primary btn-small"><span class="aria-hidden"></span> Less Challenge</a>
+                        <a href="{{ prev_version }}" class="btn btn-primary btn-small" data-cle-handler="click" data-cle-control="why-am-i-seeing-this-document-level" data-cle-value="less-challenge"><span class="aria-hidden"></span> Less Challenge</a>
                     </div>
                     {% else %}
                      <div class="col-sm-4 why-level-item disabled" title="No more levels this way">
@@ -29,12 +29,12 @@
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-hike why-icon active" aria-hidden="true"></span>
                         <span class="small">(you are here)</span>
-                        <a href="#" class="btn btn-primary btn-small" data-cfw-dismiss="modal">Stay here</a>
+                        <a href="#" class="btn btn-primary btn-small" data-cfw-dismiss="modal" data-cle-handler="click" data-cle-control="why-am-i-seeing-this-document-level" data-cle-value="stay-here">Stay here</a>
                     </div>
                     {% if next_version %}
                     <div class="col-sm-4 why-level-item">
                         <span class="icon-climb why-icon" aria-hidden="true"></span>
-                        <a href="{{ next_version }}" class="btn btn-primary btn-small">More challenge <span class="aria-hidden"></span></a>
+                        <a href="{{ next_version }}" class="btn btn-primary btn-small" data-cle-handler="click" data-cle-control="why-am-i-seeing-this-document-level" data-cle-value="more-challenge">More challenge <span class="aria-hidden"></span></a>
                     </div>
                     {% else %}
                     <div class="col-sm-4 why-level-item disabled" title="No more levels this way">

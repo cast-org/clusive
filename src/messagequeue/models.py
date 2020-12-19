@@ -46,9 +46,10 @@ class Message:
         event_type = self.content['caliperEvent']['type']
         control = self.content['caliperEvent']['control']
         value = self.content['caliperEvent']['value']
+        action = self.content['caliperEvent']['action']
         reader_info = self.content['readerInfo']
         control_used.send(sender=self.__class__, timestamp=self.timestamp,
-                          request=self.request, event_id = event_id, type=event_type, control=control, value=value, reader_info=reader_info)
+                          request=self.request, event_id = event_id, event_type=event_type, control=control, value=value, action=action, reader_info=reader_info)
 
     def send_page_timing(self):
         event_id = self.content['eventId']
