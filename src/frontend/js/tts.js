@@ -11,7 +11,9 @@ window.clusiveTTS = {
     currentVoice: null,
     voiceRate: 1,
     textElement: null,
-    copiedElement: null
+    copiedElement: null,
+    autoScroll: true,
+    userScrolled: false
 };
 
 // Bind controls
@@ -66,6 +68,7 @@ $(document).ready(function() {
             D2Reader.pauseReadAloud();
         } else {
             console.debug('read aloud pause button clicked');
+            // Don't reset `userScrolled` here, otherwise page might jump due to async reading
             clusiveTTS.synth.pause();
         }
         clusiveTTS.updateUI('pause');
@@ -79,6 +82,7 @@ $(document).ready(function() {
             D2Reader.resumeReadAloud();
         } else {
             console.debug('read aloud resume button clicked');
+            clusiveTTS.userScrolled = false;
             clusiveTTS.synth.resume();
         }
         clusiveTTS.updateUI('resume');
@@ -164,12 +168,46 @@ clusiveTTS.updateUI = function(mode) {
 };
 
 // Stop an in-process reading
-clusiveTTS.stopReading = function() {
+clusiveTTS.stopReading = function(reset) {
     'use strict';
 
+    if (typeof reset === 'undefined') { reset = true; }
     clusiveTTS.elementsToRead = [];
+    if (reset) {
+        clusiveTTS.scrollWatchStop();
+    }
     clusiveTTS.synth.cancel();
     clusiveTTS.updateUI();
+};
+
+clusiveTTS.scrollWatch = function(event) {
+    'use strict';
+
+    if (event instanceof KeyboardEvent) {
+        switch(event.key) {
+            case "ArrowUp":
+            case "ArrowDown": {
+                clusiveTTS.userScrolled = true;
+                break;
+            }
+        }
+    } else {
+        clusiveTTS.userScrolled = true;
+    }
+};
+
+clusiveTTS.scrollWatchStart = function() {
+    'use strict';
+
+    clusiveTTS.userScrolled = false;
+    $(document).on('wheel keydown', clusiveTTS.scrollWatch);
+};
+
+clusiveTTS.scrollWatchStop = function() {
+    'use strict';
+
+    clusiveTTS.userScrolled = false;
+    $(document).off('wheel keydown', clusiveTTS.scrollWatch);
 };
 
 clusiveTTS.readQueuedElements = function() {
@@ -238,10 +276,22 @@ clusiveTTS.readElement = function(textElement, offset, end) {
                     middle = elementText.substring(offset + e.charIndex, offset + e.charIndex + boundaryIndex);
                 }
             }
-
-            var newText = preceding + '<span class=\'tts-currentWord\'>' + middle + '</span>' + following;
-            clusiveTTS.copiedElement.html(newText);
         }
+
+        var newText = preceding + '<span class=\'tts-currentWord\'>' + middle + '</span>' + following;
+        clusiveTTS.copiedElement.html(newText);
+
+        // Keep current word being read in view
+        if (clusiveTTS.autoScroll && !clusiveTTS.userScrolled) {
+            // TODO: Investigate why can't hook into copiedElement
+            //var wordCurr = clusiveTTS.copiedElement.querySelector('.tts-currentWord');
+            var wordCurr = document.querySelector('.tts-currentWord');
+            wordCurr.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
     };
 
     utterance.onend = function() {
@@ -282,7 +332,7 @@ clusiveTTS.readElements = function(textElements) {
     'use strict';
 
     // Cancel any active reading
-    clusiveTTS.stopReading();
+    clusiveTTS.stopReading(false);
 
     $.each(textElements, function(i, e) {
         clusiveTTS.elementsToRead.push(e);
@@ -343,6 +393,7 @@ clusiveTTS.read = function() {
 
     isSelection = clusiveTTS.isSelection(selection);
 
+    clusiveTTS.scrollWatchStart();
     if (isSelection) {
         clusiveTTS.readSelection(elementsToRead, selection);
     } else {
