@@ -184,12 +184,14 @@ clusiveTTS.scrollWatch = function(event) {
     'use strict';
 
     if (event instanceof KeyboardEvent) {
-        switch(event.key) {
-            case "ArrowUp":
-            case "ArrowDown": {
+        switch (event.key) {
+            case 'ArrowUp':
+            case 'ArrowDown': {
                 clusiveTTS.userScrolled = true;
                 break;
             }
+            default:
+                break;
         }
     } else {
         clusiveTTS.userScrolled = true;
@@ -266,7 +268,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
                 boundaryIndex = textLength < boundaryIndex ? textLength : boundaryIndex;
 
                 preceding = elementText.substring(0, offset + e.charIndex);
-                //middle = elementText.substring(offset + e.charIndex, offset + e.charIndex + boundaryIndex);
+                // middle = elementText.substring(offset + e.charIndex, offset + e.charIndex + boundaryIndex);
                 following = elementText.substring(offset + e.charIndex + boundaryIndex);
 
                 if (!boundaryMatch) {
@@ -284,14 +286,13 @@ clusiveTTS.readElement = function(textElement, offset, end) {
         // Keep current word being read in view
         if (clusiveTTS.autoScroll && !clusiveTTS.userScrolled) {
             // TODO: Investigate why can't hook into copiedElement
-            //var wordCurr = clusiveTTS.copiedElement.querySelector('.tts-currentWord');
+            // var wordCurr = clusiveTTS.copiedElement.querySelector('.tts-currentWord');
             var wordCurr = document.querySelector('.tts-currentWord');
             wordCurr.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center'
             });
         }
-
     };
 
     utterance.onend = function() {
