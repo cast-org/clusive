@@ -113,14 +113,19 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         book_id = kwargs.get('book_id')
         version = kwargs.get('version')
         book = Book.objects.get(pk=book_id)
+        versions = book.versions.all()
         clusive_user = request.clusive_user
-        self.book_version = BookVersion.objects.get(book=book, sortOrder=version)
+        self.book_version = versions[version]
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
         pdata = Paradata.record_view(book, version, clusive_user)
-        bv_prev = str(version-1) if version>0 \
-            else False
-        bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists() \
-            else False
+
+        # Choose some example words to show in the "switch" dialog and count annotations
+        for v in versions:
+            v.annotation_count = Annotation.objects.filter(bookVersion=v, user=clusive_user).count()
+            if v.sortOrder == 0:
+                v.example_words = v.all_word_list[:3]
+            else:
+                v.example_words = v.new_word_list[:3]
 
         # See if there's a Tip that should be shown
         available = TipHistory.available_tips(clusive_user)
@@ -137,8 +142,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         self.extra_context = {
             'pub': book,
             'manifest_path': self.book_version.manifest_path,
-            'prev_version': bv_prev,
-            'next_version': bv_next,
+            'versions': versions,
+            'bv': self.book_version,
             'last_position': pdata.lastLocation or "null",
             'annotations': annotationList,
             'tip_name': tip_name,
