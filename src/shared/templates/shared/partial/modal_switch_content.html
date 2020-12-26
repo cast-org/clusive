@@ -1,0 +1,66 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-header-block">
+            <h2 class="modal-title">Switch?</h2>
+        </div>
+        <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+            <span class="icon-cancel-circled2" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>
+            <strong>You have options!</strong>
+            How do you want to travel through this text?
+        </p>
+        <div class="row switch-row">
+            {% for v in versions %}
+            <div class="col-md-4 switch-col{% if v == bv %} active{% endif %}">
+                <div class="row">
+                    <div class="col-sm-4 col-md-12 switch-select">
+                        {% if v == bv %}
+                        <button type="button" class="btn btn-primary link-stretch" data-cfw-dismiss="modal">Stay Here</button>
+                        {% else %}
+                        <a href="{{ v.sortOrder }}" class="btn btn-primary link-stretch">Switch</a>
+                        {% endif %}
+                        <div class="switch-icon-default">
+                            {% if forloop.revcounter == 1 %}
+                            {% include "shared/partial/icons/spaceship.svg" with class="switch-icon" %}
+                            {% elif forloop.revcounter == 2 %}
+                            {% include "shared/partial/icons/car.svg" with class="switch-icon" %}
+                            {% else %}
+                            {% include "shared/partial/icons/boat.svg" with class="switch-icon" %}
+                            {% endif %}
+                        </div>
+                        <div class="switch-icon-active">
+                            {% if forloop.revcounter == 1 %}
+                            {% include "shared/partial/icons/spaceship-active.svg" with class="switch-icon" %}
+                            {% elif forloop.revcounter == 2 %}
+                            {% include "shared/partial/icons/car-active.svg" with class="switch-icon" %}
+                            {% else %}
+                            {% include "shared/partial/icons/boat-active.svg" with class="switch-icon" %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-md-12">
+                        Words include:
+                        <ul>
+                            {% for word in v.example_words %}
+                            <li>{{ word }}</li>
+                            {% endfor %}
+                        </ul>
+                        <div class="switch-meta none">
+                            {% firstof v.annotation_count 'No' %} highlight{{ v.annotation_count | pluralize }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="modal-footer">
+        {% comment %}
+        Clusive estimates that you know 60% of the words in this text.
+        <a href="#">Check out your data <span aria-hidden="true">&gt;</span></a>
+        {% endcomment %}
+    </div>
+</div>

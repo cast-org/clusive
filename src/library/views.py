@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, FormView, UpdateView
+from django.views.generic import ListView, FormView, UpdateView, TemplateView
 
 from eventlog.models import Event
 from eventlog.signals import annotation_action
@@ -459,3 +459,26 @@ class AnnotationListView(LoginRequiredMixin, ListView):
         clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
         bookVersion = BookVersion.lookup(self.kwargs['book'], self.kwargs['version'])
         return Annotation.objects.filter(bookVersion=bookVersion, user=clusive_user, dateDeleted=None)
+
+
+class SwitchModalContentView(LoginRequiredMixin, TemplateView):
+    """Render content of the 'switch' modal with information about versions of a book."""
+    template_name = 'shared/partial/modal_switch_content.html'
+
+    def get(self, request, *args, **kwargs):
+        book_id = kwargs.get('book_id')
+        version = kwargs.get('version')
+        book = Book.objects.get(pk=book_id)
+        versions = book.versions.all()
+        # Count annotations and choose some example words to show
+        for v in versions:
+            v.annotation_count = Annotation.objects.filter(bookVersion=v, user=request.clusive_user).count()
+            if v.sortOrder == 0:
+                v.example_words = v.all_word_list[:3]
+            else:
+                v.example_words = v.new_word_list[:3]
+        self.extra_context = {
+            'versions': versions,
+            'bv': versions[version],
+        }
+        return super().get(request, *args, **kwargs)
