@@ -202,14 +202,14 @@ clusiveTTS.scrollWatchStart = function() {
     'use strict';
 
     clusiveTTS.userScrolled = false;
-    $(document).on('wheel keydown', clusiveTTS.scrollWatch);
+    $(document).on('wheel keydown touchmove', clusiveTTS.scrollWatch);
 };
 
 clusiveTTS.scrollWatchStop = function() {
     'use strict';
 
     clusiveTTS.userScrolled = false;
-    $(document).off('wheel keydown', clusiveTTS.scrollWatch);
+    $(document).off('wheel keydown touchmove', clusiveTTS.scrollWatch);
 };
 
 clusiveTTS.readQueuedElements = function() {
