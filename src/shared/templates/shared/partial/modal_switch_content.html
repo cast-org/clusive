@@ -18,9 +18,9 @@
                 <div class="row">
                     <div class="col-sm-4 col-md-12 switch-select">
                         {% if v == bv %}
-                        <button type="button" class="btn btn-primary link-stretch" data-cfw-dismiss="modal">Stay Here</button>
+                        <button type="button" class="btn btn-primary link-stretch" data-cfw-dismiss="modal" data-cle-handler="click" data-cle-control="switch-choose" data-cle-value="stay">Stay Here</button>
                         {% else %}
-                        <a href="{{ v.sortOrder }}" class="btn btn-primary link-stretch">Switch</a>
+                        <a href="{{ v.sortOrder }}" class="btn btn-primary link-stretch" data-cle-handler="click" data-cle-control="switch-choose" data-cle-value="{{ v.sortOrder }}">Switch</a>
                         {% endif %}
                         <div class="switch-icon-default">
                             {% if forloop.revcounter == 1 %}
