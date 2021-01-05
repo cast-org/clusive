@@ -1,19 +1,22 @@
-// Set up common headers for Ajax requests for Clusive's event logging
+/* global clusiveContext, PAGE_EVENT_ID */
 
-$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+// Set up common headers for Ajax requests for Clusive's event logging
+$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+    'use strict';
+
     options.beforeSend = function (xhr) {
         if(PAGE_EVENT_ID) {
             xhr.setRequestHeader('Clusive-Page-Event-Id', PAGE_EVENT_ID);
         }
-        if(clusiveContext) {
+        if (typeof clusiveContext !== 'undefined') {
             if(fluid.get(clusiveContext, "reader.info.location.href")) {
                 xhr.setRequestHeader('Clusive-Reader-Document-Href', clusiveContext.reader.info.location.href);
             }
             if(fluid.get(clusiveContext, "reader.info.location.progression")) {
-                xhr.setRequestHeader('Clusive-Reader-Document-Progression', clusiveContext.reader.info.location.progression);    
+                xhr.setRequestHeader('Clusive-Reader-Document-Progression', clusiveContext.reader.info.location.progression);
             }
         }
-        
+
     }
 });
 
@@ -382,7 +385,6 @@ function showTooltip(name) {
                 viewport: '#features',
                 trigger: 'manual',
                 placement: 'right auto',
-                animate: false,
                 popperConfig: {
                     positionFixed: true
                 }

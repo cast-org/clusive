@@ -1,4 +1,4 @@
-/* global D2Reader, Promise, DJANGO_CSRF_TOKEN */
+/* global D2Reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID */
 /* exported buildTableOfContents, trackReadingLocation,
    buildAnnotationList, addNewAnnotation, showExistingAnnotation */
 
@@ -138,19 +138,31 @@ function buildTableOfContents() {
                 var out = buildTocLevel(items, 0, 'toc');
                 $(TOC_CONTAINER).html(out).CFW_Init();
 
+                var navLinks = $(TOC_CONTAINER).find('.nav-link');
                 // Add click event to update menu when new page selected
-                $(TOC_CONTAINER).find('.nav-link').on('click', function() {
+                navLinks.on('click', function() {
                     // Use timeout delay until we can get a callback from reader
                     setTimeout(function() {
                         resetCurrentTocItem(false);
                         markTocItemActive();
                     }, 100);
                 });
+                // Attach tracking events after markup is built
+                navLinks.each(function (i, elem) {
+                    console.debug("adding tracking for navLink", elem)
+                    var interactionDef = {
+                        selector: elem,
+                        handler: "click",
+                        control: "reader-navigation-toc",
+                        value: "toc-nav-link:" + $(elem).attr("href")
+                    };                    
+                    clusiveEvents.trackControlInteraction(interactionDef);
+                });
             } else {
                 // Empty TOC
                 $(TOC_CONTAINER).hide();
             }
-        });
+        });        
     }
 }
 
@@ -250,6 +262,19 @@ function buildAnnotationList() {
     return $.get('/library/annotationlist/' + window.pub_id + '/' + window.pub_version)
         .done(function(data) {
             $annotationsContainer.html(data);
+            // Add tracking events for using annotation navigation
+            $annotationsContainer.find('.goto-highlight').each(function (i, elem) {
+                var annotationId = $(elem).parent("div").attr("data-annotation-id");
+
+                var interactionDef = {                
+                    selector: elem,
+                    handler: "click",
+                    control: "reader-navigation-annotation",
+                    value: "annotation-nav-link:" + annotationId
+                };           
+
+                clusiveEvents.trackControlInteraction(interactionDef);
+            });
         })
         .fail(function(err) {
             console.error(err);
@@ -301,13 +326,10 @@ function deleteAnnotation(e) {
     });
     $container.html('<div class="highlight-undelete">Deleted' +
         '<a href="#" class="link-undelete">Undo</a></div>');
-    $.ajax('/library/annotation/' + id, {
+    $.ajax('/library/annotation/' + id + '?eventId=' + PAGE_EVENT_ID, {
         method: 'DELETE',
         headers: {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
-        },
-        data: {
-            eventId: PAGE_EVENT_ID
         }
     })
         .then(function() {

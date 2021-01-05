@@ -1,13 +1,7 @@
 .tooltip-feature {
-    display: none;
     @include font-size($tooltip-feature-font-size);
 
-    &.fade:not(.in) {
-        opacity: 0;
-    }
-
     &.in {
-        display: block;
         opacity: $tooltip-feature-opacity;
     }
 

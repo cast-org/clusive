@@ -8,10 +8,9 @@ from os.path import basename
 from zipfile import ZipFile
 
 import dawn
+import wordfreq as wf
 from dawn.epub import Epub
-from django.core.files.storage import default_storage
 from django.utils import timezone
-from django.utils.timezone import is_aware, make_aware
 from nltk import RegexpTokenizer
 
 from glossary.util import base_form
@@ -267,7 +266,9 @@ def scan_book(b):
     if len(versions) > 1:
         for bv in versions:
             if bv.sortOrder > 0:
-                bv.new_word_list = list(set(bv.all_word_list) - set(versions[bv.sortOrder - 1].all_word_list))
+                words = bv.all_word_list
+                prev_words = versions[bv.sortOrder - 1].all_word_list
+                bv.new_word_list = [w for w in words if not w in prev_words]
                 bv.save()
 
 
@@ -308,13 +309,14 @@ def find_all_words(version_dir, manifest):
     te = TextExtractor()
     for file_info in manifest['readingOrder']:
         te.feed_file(os.path.join(version_dir, file_info['href']))
-    return sorted(te.get_word_set())
+    return te.get_word_list()
 
 
 class TextExtractor(HTMLParser):
     element_stack = []
     text = ''
     file = None
+    lang = 'en' # FIXME should really be language of book passed in.
 
     ignored_elements = {'head', 'script'}
     delimiter = ' '
@@ -326,13 +328,26 @@ class TextExtractor(HTMLParser):
                 self.feed(line)
         self.file = None
 
-    def get_word_set(self):
+    def get_word_list(self):
         self.close()
         token_list = RegexpTokenizer(r'\w+').tokenize(self.text)
         token_set = set([base for base in
                          (base_form(w) for w in token_list if w.isalpha())
                          if base is not None])
-        return token_set
+        list = [[w, self.sort_key(w)] for w in token_set]
+        # Sort by frequency
+        list.sort(key=lambda p: p[1])
+        return [p[0] for p in list]
+
+    # We sort the hardest (low-frequency) words to the front of our list.
+    # However, words that return '0' for frequency (aka non-words) should go to the end of the list,
+    # so give them a large sort key.
+    def sort_key(self, word):
+        freq = wf.word_frequency(word, self.lang)
+        if freq > 0:
+            return freq
+        else:
+            return 1
 
     def extract(self, html):
         self.feed(html)

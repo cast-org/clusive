@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static figuration %}
+    <title>Authoring Proof of Concept</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% include "shared/partial/head.html" %}
+</head>
+<body>
+<table class="table table-ruled">
+    <tr>
+        <th>Title</th>
+        <th>Version</th>
+        <th>5 Rarest (new) words</th>
+    </tr>
+    {% for b in books %}
+    {% for bv in b.versions.all %}
+    <tr>
+        {% ifchanged %}
+          <td rowspan="{{ b.versions.all|length }}">{{ b.title }}</td>
+        {% endifchanged %}
+        <td>{{ bv.sortOrder | add:'1' }}</td>
+        {% if bv.sortOrder == 0 %}
+        <td>{{ bv.all_word_list | slice:':5' | join:', ' }}</td>
+        {% else %}
+        <td>{{ bv.new_word_list | slice:':5' | join:', ' }}</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    {% endfor %}
+</table>
+
+</body>
+</html>
