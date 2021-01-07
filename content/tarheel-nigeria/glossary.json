@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "sculpture",
+        "alternateForms": ["sculptures"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A statue or other object made by carving, chiseling, or molding." ,
+                "examples": [ "She carves sculptures out of blocks of marble." ],
+                 "images": [
+                    {
+                        "src": "glossimages/sculpture1.jpg",
+                        "alt": "Photo of a person carving a sculpture.",
+                        "description": "A person carving a sculpture.",
+                        "caption": "A sculpture created by an artist.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-people-art-festival-5867749/",
+                            "title": "Man in Black Crew Neck T-shirt Sitting Beside Man in Black T-shirt",
+                            "author": "Mushtaq Hussain",
+                            "author_url": "https://www.pexels.com/@mushtaq-hussain-3653697",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "doll",
+        "alternateForms": ["dolls"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A toy made to look like a baby, child, or other person." ,
+                "examples": [ "My children like to play with Star Wars dolls." ],
+                 "images": [
+                    {
+                        "src": "glossimages/doll1.jpg",
+                        "alt": "Photo of dolls in a store.",
+                        "description": "A display of dolls. The dolls have different colors of hair, clothes, and eyes.",
+                        "caption": "A display of dolls in a store.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/eyes-colors-toy-doll-65451/",
+                            "title": "Brown Purple Red Knitted Doll",
+                            "author": "David López",
+                            "author_url": "https://www.pexels.com/@viddaam",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "drum",
+        "alternateForms": ["drums"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Aan instrument for playing music that has a hollow round shape and a tight covering over an open end. You play a drum by hitting its surface with your hands or sticks." ,
+                "examples": [ "As we walked toward the parade, we could hear the beat of the drums." ],
+                 "images": [
+                    {
+                        "src": "glossimages/drum1.jpg",
+                        "alt": "Photo of a person playing a drum.",
+                        "description": "A person playing a drum.",
+                        "caption": "A person playing a drum.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-drum-2769838/",
+                            "title": "Person holding drum ",
+                            "author":  "Thiago Miranda",
+                            "author_url": "https://www.pexels.com/@thfotodesign",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "seafood",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "Fish and other sea animals that people eat." ,
+                "examples": [ "Some kinds of seafood are clams and shrimp." ],
+                 "images": [
+                    {
+                        "src": "glossimages/seafood1.jpg",
+                        "alt": "Photo of a display of different kinds of seafood.",
+                        "description": "A display of seafood. Shown are lobsers, shrimp, and other shellfish.",
+                        "caption": "Lobsters and shrimp are types of seafood.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/assorted-seafood-in-a-market-2031994/",
+                            "title": "Assorted Seafood in a Market",
+                            "author": "Chait Goli",
+                            "author_url": "https://www.pexels.com/@chaitaastic",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "vegetable",
+        "alternateForms": ["vegetables"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A plant or part of a plant that is used for food." ,
+                "examples": [ "Potato, broccoli, and onion are all examples of vegetables." ],
+                 "images": [
+                    {
+                        "src": "glossimages/vegetables1.jpg",
+                        "alt": "Photo of different kinds of vegetables.",
+                        "description": "Different kinds of vegetables.",
+                        "caption": "Different kinds of vegetables.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/flat-lay-photography-of-variety-of-vegetables-1435904/",
+                            "title": "Flat-lay Photography of Variety of Vegetables",
+                            "author": "Engin Akyurt",
+                            "author_url": "https://www.pexels.com/@enginakyurt",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

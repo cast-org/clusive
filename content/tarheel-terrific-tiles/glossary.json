@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "element",
+        "alternateForms": ["elements"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A basic part of any whole." ,
+                "examples": [ "One element of this recipe is missing." ],
+                 "images": [
+                    {
+                        "src": "glossimages/element1.jpg",
+                        "alt": "Photo of a candle in a holder on a flat surface.",
+                        "description": "A candle in a holder on a flat surface.",
+                        "caption": "The candle stick is one element in this picture. The candle, the wall, and the table are other elements.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/candle-placed-on-white-table-5987224/",
+                            "title": "Candle placed on white table",
+                            "author": "Jill Burrow",
+                            "author_url": "https://www.pexels.com/@jill-burrow",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "design",
+        "alternateForms": ["designs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A drawing that uses a pattern." ,
+                "examples": [ "She drew some new designs for winter coats." ],
+                 "images": [
+                    {
+                        "src": "glossimages/design1.jpg",
+                        "alt": "A design made of six-sided gray, black and white shapes.",
+                        "description": "A design made of six-sided gray, black and white shapes.",
+                        "caption": "The design of these six-sided shapes look like flowers to some people.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/gray-and-black-hive-printed-textile-691710/",
+                            "title": "Gray and Black Hive Printed Textile",
+                            "author": "Iva Muškić",
+                            "author_url": "https://www.pexels.com/@ivaoo",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "complicat",
+        "alternateForms": ["complicated"],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not simple; having many parts that are connected in various ways." ,
+                "examples": [ "Some designs are very complicated." ],
+                 "images": [
+                    {
+                        "src": "glossimages/complicated1.jpg",
+                        "alt": "Photo of a building with a lot of decoration.",
+                        "description": "The interior of a building with a lot of decoration. There are gold scrolls, vines, animals, statues of people, birds, and more.",
+                        "caption": "This building has complicated and beautiful decorations.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/interior-design-of-a-building-3697742/",
+                            "title": "Interior Design Of A Building ",
+                            "author":  "Ena Marinkovic",
+                            "author_url": "https://www.pexels.com/@ena-marinkovic-1814213",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "decorate",
+        "alternateForms": ["decorates","decorated","decorating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make more attractive by adding things." ,
+                "examples": [ "We decorated the room with balloons for the party." ],
+                 "images": [
+                    {
+                        "src": "glossimages/decorate1.jpg",
+                        "alt": "Photo of a child painting a pumpkin.",
+                        "description": "A child using paint to decorate a pumpkin.",
+                        "caption": "A child uses paint and a hat to decorate a pumpkin.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/concentrated-kids-painting-with-brushes-5859189/",
+                            "title": "Concentrated kids painting with brushes",
+                            "author": "Charles Parker",
+                            "author_url": "https://www.pexels.com/@charles-parker",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "interlace",
+        "alternateForms": ["interlaces","interlaced","interlacing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cross over and under as if laced together; intertwine; interweave." ,
+                "examples": [ "We interlaced the strips of pie dough to form a lattice pie crust." ],
+                 "images": [
+                    {
+                        "src": "glossimages/interlace1.jpg",
+                        "alt": "Photo of a pie with a stips crossed over the top to form a crust.",
+                        "description": "A pie with a stips crossed over the top to form a crust.",
+                        "caption": "The strips of pastry are interlaced to form the top crust of this pie.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/baked-pie-989704/",
+                            "title": "Baked Pie",
+                            "author": "Oleg Magni",
+                            "author_url": "https://www.pexels.com/@oleg-magni",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

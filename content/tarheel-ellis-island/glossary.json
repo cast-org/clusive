@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "ship",
+        "alternateForms": ["ships"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A large boat that carries people or things through deep water." ,
+                "examples": [ "My grandparents traveled over the Atlantic Ocean when they moved to America." ],
+                 "images": [
+                    {
+                        "src": "glossimages/ship1.jpg",
+                        "alt": "Photo of a large, tall boat in water.",
+                        "description": "A large, tall boat in water.",
+                        "caption": "A ship carries passengers over water.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/white-cruise-ship-813011/",
+                            "title": "White Cruise Ship",
+                            "author": " Matthew Barra",
+                            "author_url": "https://www.pexels.com/@matthew-barra-178916",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "hall",
+        "alternateForms": ["halls"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A large room or public building for meetings or social events." ,
+                "examples": [ "The city council meets at City Hall." ],
+                 "images": [
+                    {
+                        "src": "glossimages/hall1.jpg",
+                        "alt": "Photo of a large room.",
+                        "description": "A large room with windows and doors at one end.",
+                        "caption": "This hall can be used for many kinds of gatherings.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/arches-architecture-art-baroque-316080/",
+                            "title": "Interior of Building",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "inspector",
+        "alternateForms": ["inspectors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who looks at something carefully in order to find any problems." ,
+                "examples": [ "The inspector looked at the machines to make sure they were safe." ],
+                 "images": [
+                    {
+                        "src": "glossimages/inspector1.jpg",
+                        "alt": "Photo of a person holding a clipboard.",
+                        "description": "A person holding a clipboard.",
+                        "caption": "This inspector looks at a checklist.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-holding-clipboard-inside-room-1543924/",
+                            "title": "Man Holding Clipboard Inside Room",
+                            "author":  "Craig Adderley",
+                            "author_url": "https://www.pexels.com/@thatguycraig000",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "reunion",
+        "alternateForms": ["reunions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A meeting of friends, family, or other people who have not been together for a long time." ,
+                "examples": [ "At my family reunion, I saw many cousins whom I had not seen in years." ],
+                 "images": [
+                    {
+                        "src": "glossimages/reunion1.jpg",
+                        "alt": "Photo of family members gathering together.",
+                        "description": "Generations of family gathering together.",
+                        "caption": "Parents, grandparents, and children gathering together at a reunion.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/family-gathering-for-a-group-hug-4262424/",
+                            "title": "Family Gathering for a Group Hug",
+                            "author": "August de Richelieu",
+                            "author_url": "https://www.pexels.com/@august-de-richelieu",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "dance",
+        "alternateForms": ["dances", "danced", "dancing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To move the feet and body to music." ,
+                "examples": [ "Everyone danced when the band started playing." ],
+                 "images": [
+                    {
+                        "src": "glossimages/dance1.jpg",
+                        "alt": "Photo of a person with arms extended out and one leg in the air.",
+                        "description": "A person with arms extended out and one leg in the air.",
+                        "caption": "A person dancing.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-doing-yoga-1701207/",
+                            "title": "Man Doing Yoga",
+                            "author": "Yogendra Singh",
+                            "author_url": "https://www.pexels.com/@yogendras31",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

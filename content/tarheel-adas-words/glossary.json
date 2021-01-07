@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "soil",
+        "alternateForms": ["soils"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The top layer of the earth's surface; dirt." ,
+                "examples": [ "I dug a small hole in the soil and planted the seeds." ],
+                 "images": [
+                    {
+                        "src": "glossimages/soil1.jpg",
+                        "alt": "Close up photo of field of with dirt.",
+                        "description": "The ground, made up of dirt with a few blades of grass and dried plant stalks.",
+                        "caption": "Soil like this is needed for plants to grow.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/eye-level-photo-of-cultivated-land-1000057/",
+                            "title": "Eye-level Photo Of Cultivated Land",
+                            "author": "Jan Kroon",
+                            "author_url": "https://www.pexels.com/@jan-kroon-357445",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "bottle",
+        "alternateForms": ["bottles"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A container with a narrow neck used to hold or pour liquids. " ,
+                "examples": [ "A bottle is usually made of glass or plastic." ],
+                 "images": [
+                    {
+                        "src": "glossimages/bottle1.jpg",
+                        "alt": "A bottle with a piece of paper inside.",
+                        "description": "A bottle on a beach. There is a piece of paper inside the bottle. Water and sand surrounds the bottle.",
+                        "caption": "This bottle holds a message inside it, and is sealed to keep liquids out.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/beach-bottle-cold-daylight-292426/",
+                            "title": "Message Bottle on Sand",
+                            "author": "Snapwire",
+                            "author_url": "https://www.pexels.com/@snapwire",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "print",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The text appearing in a book, newspaper, or other printed publication." ,
+                "examples": [ "The print on the page of the book was small and hard to read." ],
+                 "images": [
+                    {
+                        "src": "glossimages/print1.jpg",
+                        "alt": "A person looking at a newspaper.",
+                        "description": "A person holds a newspaper and looks at the print.",
+                        "caption": "A person reads the print on this newspaper.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-holding-the-new-york-times-newspaper-1524146/",
+                            "title": "Eye-level Photo Of Cultivated Land",
+                            "author": "Lina Kivaka",
+                            "author_url": "https://www.pexels.com/@lina",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "forest",
+        "alternateForms": ["forests"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A large area of land covered with many trees and other plants." ,
+                "examples": [ "Many animals live in the forest." ],
+                 "images": [
+                    {
+                        "src": "glossimages/forest1.jpg",
+                        "alt": "A path going through trees and bushes.",
+                        "description": "A path going through tall trees and bushes.",
+                        "caption": "The forest can be a nice place to walk or hike.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/bright-countryside-dawn-daylight-302804/",
+                            "title": "Green Leafed Trees",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "garden",
+        "alternateForms": ["gardens"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An area of land used for growing flowers or vegetables." ,
+                "examples": [ "I grow lettuce, tomatoes, and beans in my garden." ],
+                 "images": [
+                    {
+                        "src": "glossimages/garden1.jpg",
+                        "alt": "A person reaching down into plants.",
+                        "description": "A person knealing in a garden, reaching down into plants.",
+                        "caption": "This person is picking greens from the garden.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-woman-planting-1023236/",
+                            "title": "Photo of Woman Planting",
+                            "author": "Andrea Piacquadio",
+                            "author_url": "https://www.pexels.com/@olly",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

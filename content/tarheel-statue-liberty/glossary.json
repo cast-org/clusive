@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "immigrant",
+        "alternateForms": ["immigrants"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person who moves from the country where he or she was born to another country." ,
+                "examples": [ "My parents are immigrants from Guatemala." ],
+                 "images": [
+                    {
+                        "src": "glossimages/immigrant1.jpg",
+                        "alt": "Photo of a group of people sitting in rows in front of American flags.",
+                        "description": "Group of people sitting in rows in front of American flags.",
+                        "caption": "Young immigrants to the U.S.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/aa43c39b-8c03-4ef8-b614-6fd919dd930a",
+                            "title": "Young immigrants line up to apply for deportation reprieve 5",
+                            "author": "chicagopublicmedia",
+                            "author_url": "https://www.flickr.com/photos/33876038@N00",
+                            "license": " CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "sculptor",
+        "alternateForms": ["sculptors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An artist who makes sculptures, statues or other objects by carving, chiseling, or molding. " ,
+                "examples": [ "She is a sculptor that makes carvings out of blocks of marble." ],
+                 "images": [
+                    {
+                        "src": "glossimages/sculptor1.jpg",
+                        "alt": "Photo of a person creating a sculpture of a woman.",
+                        "description": "A person creating a sculpture of a woman.",
+                        "caption": "A sculptor shaping clay to create a piece of art.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-people-art-festival-5867749/",
+                            "title": "Man in Black Crew Neck T-shirt Sitting Beside Man in Black T-shirt",
+                            "author": "Mushtaq Hussain",
+                            "author_url": "https://www.pexels.com/@mushtaq-hussain-3653697",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "stair",
+        "alternateForms": ["stairs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "One of the steps that make up a staircase, or the entire set of steps as a whole." ,
+                "examples": [ "Be careful on that loose stair." ],
+                 "images": [
+                    {
+                        "src": "glossimages/stair1.jpg",
+                        "alt": "Photo of many stairs.",
+                        "description": "A staircase made of many individual stairs.",
+                        "caption": "A staircase made of many individual stairs.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/dark-figure-in-building-with-red-carpet-5473225/",
+                            "title": "Dark figure in building with red carpet",
+                            "author":  "Ryutaro Tsukata",
+                            "author_url": "https://www.pexels.com/@ryutaro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "tablet",
+        "alternateForms": ["tablets"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A flat surface used to write words. In ancient times, tablets were made of stone, clay, or wax." ,
+                "examples": [ "The tablet has the date July 4, 1776 written on it." ],
+                 "images": [
+                    {
+                        "src": "glossimages/tablet1.jpg",
+                        "alt": "Photo of a flat stone surface with letters carved into it.",
+                        "description": "A flat stone surface with letters carved into it.",
+                        "caption": "A tablet with letters carved on it.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/ddf09db6-93c8-433b-8f6a-56a6838f4fa7",
+                            "title": "Slab (? Memorial Tablet)",
+                            "author": "Brooklyn Museum",
+                            "author_url": "https://www.brooklynmuseum.org/opencollection/objects/10122",
+                            "license": "CC BY 3.0",
+                            "license_url": "https://creativecommons.org/licenses/by/3.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "torch",
+        "alternateForms": ["torches"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A stick or rod with a burning material on one end that is lit and carried for light." ,
+                "examples": [ "The Statue of Liberty holds a torch high in the air." ],
+                 "images": [
+                    {
+                        "src": "glossimages/torch1.jpg",
+                        "alt": "Photo of a flame on the end of a stick.",
+                        "description": "A flame on the end of a stick.",
+                        "caption": "The torch burns brightly in the night.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/selective-focus-photography-of-lighted-lawn-torch-1666607/",
+                            "title": "Selective Focus Photography of Lighted Lawn Torch",
+                            "author": "Batuhan Alper Bilginer",
+                            "author_url": "https://www.pexels.com/@batuhanbilginer",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
