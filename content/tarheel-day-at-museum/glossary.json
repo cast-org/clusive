@@ -1,0 +1,138 @@
+
+[
+    {
+        "headword": "drawing",
+        "alternateForms": ["drawings"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A picture or design made with a pen, pencil, or other writing tool. " ,
+                "examples": [ "It helps me to remember ideas when I make a drawing of them." ],
+                 "images": [
+                    {
+                        "src": "glossimages/drawing1.jpg",
+                        "alt": "Photo of a person using a pencil to create a design on paper.",
+                        "description": "A person using a pencil to create a design on paper.",
+                        "caption": "A person drawing a design on paper.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-doodling-on-a-booklet-2324808/",
+                            "title": "Person Doodling on a Booklet",
+                            "author": "MESSALA CIULLA",
+                            "author_url": "https://www.pexels.com/@messalaciulla",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "sculpture",
+        "alternateForms": ["sculptures"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A statue or other object made by carving, chiseling, or molding." ,
+                "examples": [ "She carves sculptures out of blocks of marble." ],
+                 "images": [
+                    {
+                        "src": "glossimages/sculpture1.jpg",
+                        "alt": "Photo of a person carving a sculpture.",
+                        "description": "A person carving a sculpture.",
+                        "caption": "A sculpture created by an artist.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-people-art-festival-5867749/",
+                            "title": "Man in Black Crew Neck T-shirt Sitting Beside Man in Black T-shirt",
+                            "author": "Mushtaq Hussain",
+                            "author_url": "https://www.pexels.com/@mushtaq-hussain-3653697",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "museum",
+        "alternateForms": ["museums"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A building where objects that are important to history, art, or science are kept and shown to the public." ,
+                "examples": [ "They enjoyed seeing the paintings and statues in the art museum." ],
+                 "images": [
+                    {
+                        "src": "glossimages/museum1.jpg",
+                        "alt": "Photo of a glass pyramid and with a stone building in the background.",
+                        "description": "A glass pyramid and with a stone building in the background.",
+                        "caption": "An art museum in Paris, France.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/france-landmark-lights-night-2363/",
+                            "title": "Clear Glass Museum during Golden Hour",
+                            "author":  "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "painting",
+        "alternateForms": ["paintings"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A picture made with paint and used as decoration." ,
+                "examples": [ "We saw many beautiful paintings and sculptures at the art museum." ],
+                 "images": [
+                    {
+                        "src": "glossimages/painting1.jpg",
+                        "alt": "Photo of a person looking at paintings in a museum.",
+                        "description": "A person sitting, facing three paintings on a wall in a museum.",
+                        "caption": "Three paintings on a wall in a museum.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/red-art-relaxation-girl-20967/",
+                            "title": "Woman Sitting on Ottoman in Front of Three Paintings",
+                            "author": "Una Laurencic",
+                            "author_url": "https://www.pexels.com/@unalaurencic",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "art",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Things that are made by humans and that people think have beauty or deep meaning." ,
+                "examples": [ "Music, films, written works, and paintings are examples of art." ],
+                 "images": [
+                    {
+                        "src": "glossimages/art1.jpg",
+                        "alt": "Photo of a hall in a museum.",
+                        "description": "A hall in a museum. Paintings are on the walls.",
+                        "caption": "An art exhibit hall.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/exhibit-painting-display-69903/",
+                            "title": "Exhibit Painting Display",
+                            "author": "Riccardo Bresciani",
+                            "author_url": "https://www.pexels.com/@riciardus",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

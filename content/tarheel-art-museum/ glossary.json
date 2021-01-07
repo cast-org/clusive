@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "starry",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Lighted by stars, or including many stars." ,
+                "examples": [ "The starry sky was so bright, it lit up the streets of the town." ],
+                 "images": [
+                    {
+                        "src": "glossimages/starry1.jpg",
+                        "alt": "A night sky with bright shining stars.",
+                        "description": "A night sky with bright shining stars.",
+                        "caption": "The starry night sky is filled with light.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/astronomy-beautiful-clouds-constellation-355465/",
+                            "title": "Black Mountains Under the Stars at Nighttime",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "dancer",
+        "alternateForms": ["dancers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who is dances." ,
+                "examples": [ "The dancers leapt across the stage." ],
+                 "images": [
+                    {
+                        "src": "glossimages/dancer1.jpg",
+                        "alt": "A person jumping while raising his arms.",
+                        "description": "A person jumping and raising his arms.",
+                        "caption": "This person jumps as he dances.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-jumping-while-raising-his-both-arms-1701200/",
+                            "title": "Man Jumping While Raising His Both Arms",
+                            "author": "Yogendra Singh",
+                            "author_url": "https://www.pexels.com/@yogendras31",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "mirror",
+        "alternateForms": ["mirrors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A smooth surface that shows an image of whatever is in front of it." ,
+                "examples": [ "Many bathrooms have a mirror above the sink." ],
+                 "images": [
+                    {
+                        "src": "glossimages/mirror1.jpg",
+                        "alt": "A framed mirror hanging on a wall.",
+                        "description": "A mirror on a wall. The reflection of a curtain can be seen in the mirror.",
+                        "caption": "The mirror reflects a wall and curtain.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/round-brown-framed-mirror-with-reflection-of-curtain-1587597/",
+                            "title": "Eye-level Photo Of Cultivated Land",
+                            "author":  "Erin Profaci",
+                            "author_url": "https://www.pexels.com/@errfaci",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "night",
+        "alternateForms": ["nights"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The period between the time when the sun sets in the evening and when it rises in the morning." ,
+                "examples": [ "You can see the stars at night." ],
+                 "images": [
+                    {
+                        "src": "glossimages/night1.jpg",
+                        "alt": "Photo of a street at night.",
+                        "description": "A street on a winter night. The sky and street are dark. Snow is on the ground.",
+                        "caption": "A dark, snowy night.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/cold-night-1853542/",
+                            "title": "Cold Night ",
+                            "author": "Artem Saranin",
+                            "author_url": "https://www.pexels.com/@arts",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "school",
+        "alternateForms": ["schools"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A place for teaching and learning." ,
+                "examples": [ "Students and teachers gather together at school to learn new things." ],
+                 "images": [
+                    {
+                        "src": "glossimages/school1.jpg",
+                        "alt": "Photo of students and teacher working in school.",
+                        "description": "Students and teacher working on computers in a school.",
+                        "caption": "Students working on computers in school.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/people-inside-room-3184468/",
+                            "title": "People Inside Room",
+                            "author": "fauxels",
+                            "author_url": "https://www.pexels.com/@fauxels",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,137 @@
+[
+    {
+        "headword": "pesticide",
+        "alternateForms": ["pesticides"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A chemical substance used to kill insects that harm plants and crops. " ,
+                "examples": [ "Some farmers use pesticides to stop insects from damaging crops." ],
+                 "images": [
+                    {
+                        "src": "glossimages/pesticide1.jpg",
+                        "alt": "Photo of a tractor spraying crops with pesticide.",
+                        "description": "A tractor spraying crops with pesticide.",
+                        "caption": "A tractor spraying crops with pesticide.",
+                        "source": {
+                            "url": "https://www.flickr.com/photos/14326475@N08/19184643354",
+                            "title": "Crop Spraying by tractor ",
+                            "author": "Richard Corfield (M0RJC) ",
+                            "author_url": "https://www.flickr.com/photos/14326475@N08",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "picker",
+        "alternateForms": ["pickers"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person or thing that picks fruits, vegetables, or other crops." ,
+                "examples": [ "The pickers worked hard all day gathering strawberries in the hot sun." ],
+                 "images": [
+                    {
+                        "src": "glossimages/picker1.jpg",
+                        "alt": "Photo of a person picking crops.",
+                        "description": "A person picking crops.",
+                        "caption": "This picker collects crops from the plants.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-in-red-and-white-plaid-shirt-and-brown-hat-holding-green-woven-basket-5849174/",
+                            "title": "Person in Red and White Plaid Shirt and Brown Hat Holding Green Woven Basket",
+                            "author": "Raiza Azkaril",
+                            "author_url": "https://www.pexels.com/@raiza-azkaril-3921484",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "labor",
+        "alternateForms": ["labors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Manual workers considered as a social class or political force." ,
+                "examples": [ "Workers created their own labor movement." ],
+                 "images": [
+                    {
+                        "src": "glossimages/labor1.jpg",
+                        "alt": "Photo of people working with cement.",
+                        "description": "People using tools to smooth cement.",
+                        "caption": "People doing labor by smoothing cement.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/selective-focus-photography-cement-2219024/",
+                            "title": "Selective Focus Photography Cement",
+                            "author":  "Rodolfo Quirós",
+                            "author_url": "https://www.pexels.com/@rquiros",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "improve",
+        "alternateForms": ["improves","improved","improving"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make better." ,
+                "examples": [ "Shaking hands and saying 'sorry' can improve relationships." ],
+                 "images": [
+                    {
+                        "src": "glossimages/improve1.jpg",
+                        "alt": "Photo of two people shaking hands.",
+                        "description": "Two people shaking hands.",
+                        "caption": "Two people shaking hands.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/people-making-handshake-as-a-sign-of-success-3951881/",
+                            "title": "People Making Handshake As A Sign Of Success",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "pest",
+        "alternateForms": ["pests"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone or something that annoys or bothers." ,
+                "examples": [ "Mosquitoes are pests to people, but food for birds!" ],
+                 "images": [
+                    {
+                        "src": "glossimages/pest1.jpg",
+                        "alt": "Photo of an insect.",
+                        "description": "A mosquito, an insect.",
+                        "caption": "Some think that mosquitos are pests.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/animal-antenna-biology-bite-169357/",
+                            "title": "Exhibit Painting Display",
+                            "author": "icon0.com",
+                            "author_url": "https://www.pexels.com/@freeimages9",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
