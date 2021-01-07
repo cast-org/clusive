@@ -1,0 +1,23 @@
+.clusive-icon {
+    // placeholder
+}
+
+.ci-primary {
+    //opacity: var(--CT_ciPrimaryOpacity, 1);
+    fill: var(--CT_ciPrimaryColor, #636b82);
+}
+.ci-toggle {
+    //opacity: var(--CT_ciToggleOpacity, 1);
+    fill: var(--CT_ciToggleColor, #ff554d);
+}
+.ci-toggle-eye {
+    //opacity: var(--CT_ciToggleEyeOpacity, 1);
+    fill: var(--CT_ciToggleEyeColor, #fbfbfb);
+}
+
+//.disabled,
+//:disabled {
+//    .ci-primary {
+//        fill: var(--CT_ciDisabledPrimaryColor, #636b82);
+//    }
+//}

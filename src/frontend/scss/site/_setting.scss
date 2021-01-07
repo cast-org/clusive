@@ -197,6 +197,16 @@
     }
 }
 
+.option-page-view {
+    flex-direction: column;
+    align-items: center;
+}
+.option-page-view-label {
+    margin-top: .25rem;
+    margin-bottom: -.25rem;
+    @include font-size(.875rem);
+}
+
 .theme-sample {
     display: inline-block;
     padding: .5rem 1.25rem;

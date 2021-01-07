@@ -13,9 +13,8 @@
 {% endif %}
 {% if why %}
 <div class="sidebar-support" role="region" aria-label="Support">
-    <button id="whyButton" type="button" class="btn btn-nav btn-icon btn-support-help" aria-label="Why am I seeing this version of the text?!" title="Why am I seeing this version of the text?!" data-cle-handler="click" data-cle-control="why-am-i-seeing-this-modal" data-cle-value="opened">
-        <span class="icon-help" aria-hidden="true"></span>
-        <span class="icon-attention" aria-hidden="true"></span>
+    <button id="switchButton" {% if version_count == 1 %}disabled{% endif %} type="button" class="btn btn-nav btn-icon btn-switch-level" aria-label="Switch your reading level" title="Switch your reading level" data-cle-handler="click" data-cle-control="switch" data-cle-value="opened">
+        <span class="icon-ci-car" aria-hidden="true"></span>
     </button>
 </div>
 {% endif %}

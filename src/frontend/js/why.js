@@ -3,14 +3,19 @@
 $(window).ready(function() {
     'use strict';
 
-    $('#whyButton').CFW_Modal({
-        target: '#whyModal',
+    $('#switchButton').CFW_Modal({
+        target: '#switchModal',
         animate: true
     });
 
-    $('#whyWhyLink').on('click', function(e) {
-        // eslint-disable-next-line no-alert
-        alert('Not yet implemented');
-        e.preventDefault();
-    });
+    $('#switchModal')
+        .on('beforeShow.cfw.modal', function() {
+            $.get('/library/switch/' + window.pub_id + '/' + window.pub_version)
+                .done(function(data) {
+                    $('#switchModal .modal-dialog').html(data);
+                })
+                .fail(function(err) {
+                    console.error(err);
+                });
+        });
 });
