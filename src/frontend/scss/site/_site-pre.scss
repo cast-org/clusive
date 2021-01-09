@@ -56,7 +56,7 @@ $enable-card-group:                     false;
 $enable-card-columns:                   false;
 $enable-input-group:                    false;
 $enable-jumbotron:                      false;
-$enable-list-bulleted:                  false;
+$enable-list-bulleted:                  true;
 $enable-list-ordered:                   false;
 $enable-list-group:                     false;
 $enable-list-item-colors:               false;
@@ -203,6 +203,7 @@ $figure-caption-font-size:              .875rem;
 
 $list-item-active-bg:                   unset;
 $list-item-active-color:                unset;
+$list-bulleted-content:                 "\00a0\2022";
 
 $table-bg-active:                       var(--CT_tableActiveBg);
 $table-border-color:                    var(--CT_tableBorderColor);

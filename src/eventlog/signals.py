@@ -20,7 +20,7 @@ page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'timestamp', 'reader_info'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
 word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
 
 #
@@ -118,14 +118,17 @@ def get_common_event_args(kwargs):
 
 # General function for event creation
 # Defaults action and type to the most common TOOL_USE_EVENT type
-def create_event(kwargs, control=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):    
-    common_event_args = get_common_event_args(kwargs)            
+def create_event(kwargs, control=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):
+    common_event_args = get_common_event_args(kwargs)
     event = Event.build(type=event_type,                        
                         action=action,
                         control=control,
                         value=value,
                         **common_event_args)                      
     if event:
+        # TODO: this doesn't validate the object by the rules like 
+        # limited choices for ACTION and TYPE based on Caliper's spec
+        # See https://docs.djangoproject.com/en/3.1/ref/models/instances/#validating-objects
         event.save()
 
 # word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
@@ -152,8 +155,10 @@ def log_vocab_lookup(sender, **kwargs):
 def log_control_used(sender, **kwargs):
     """User interacts with a control"""        
     control = kwargs.get('control')
-    value = kwargs.get('value')             
-    create_event(kwargs, control=control, value=value)
+    value = kwargs.get('value')
+    event_type = kwargs.get('event_type') 
+    action = kwargs.get('action')
+    create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
