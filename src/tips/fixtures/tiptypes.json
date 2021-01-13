@@ -21,6 +21,16 @@
   },
   {
     "model": "tips.tiptype",
+    "pk": 3,
+    "fields": {
+      "name": "context",
+      "priority": 3,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
     "pk": 5,
     "fields": {
       "name": "wordbank",
