@@ -593,6 +593,12 @@
       "search": [
         "view-scroll"
       ]
+    },
+    {
+      "uid": "f0eac0958921fe45b85d01b79d76e86b",
+      "css": "switch",
+      "code": 59441,
+      "src": "entypo"
     }
   ]
 }
