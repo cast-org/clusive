@@ -116,8 +116,8 @@
     }
 
     &.active {
-        background-color: var(--CT_switchColBg);
         font-weight: $font-weight-bold;
+        background-color: var(--CT_switchColBg);
     }
 }
 

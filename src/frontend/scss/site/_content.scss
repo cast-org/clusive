@@ -266,16 +266,30 @@ h2,
     height: 100vh;
     pointer-events: none;
 
+    .content {
+        position: relative;
+        height: 100vh;
+    }
+
     .tooltip {
         pointer-events: auto;
     }
 }
 .feature-context {
     position: absolute;
+    //top: 33%;
+    //left: 50%;
     top: 66%;
-    left: 50%;
+    left: $sidebar-width;
+    margin-right: ($grid-gutter-width / -2);
+    margin-left: ($grid-gutter-width / -2);
+    outline: 0;
     pointer-events: none;
     @include sr-only();
+
+    @include media-breakpoint-up(sm) {
+        left: $sidebar-sm-width;
+    }
 }
 
 .feature-list {
