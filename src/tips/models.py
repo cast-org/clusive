@@ -14,6 +14,14 @@ class TipType(models.Model):
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
 
+    def can_show(self, page: str, version_count: int):
+        """Test whether this tip can be shown on a particular page"""
+        if self.name == 'switch':
+            return page == 'Reading' and version_count > 1
+        if self.name in ['context', 'settings', 'readaloud', 'wordbank']:
+            return page == 'Reading'
+        return False
+
     def __str__(self):
         return '<TipType %s>' % self.name
 
@@ -75,17 +83,20 @@ class TipHistory(models.Model):
             logger.error('Could not find TipHistory object for user %s, type %s', user, action)
 
     @classmethod
-    def available_tips(cls, user: ClusiveUser):
+    def available_tips(cls, user: ClusiveUser, page: str, version_count: int):
         """Return all tips that are currently available to show this user."""
 
         # All tips are currently disallowed on the user's FIRST reading page view
-        stats: UserStats
-        stats = UserStats.for_clusive_user(user)
-        if stats.reading_views < 1:
-            logger.debug('First reading page view. No tips')
-            return []
+        if page == 'Reading':
+            stats: UserStats
+            stats = UserStats.for_clusive_user(user)
+            if stats.reading_views < 1:
+                logger.debug('First reading page view. No tips')
+                return []
 
         # Check tip history to see which are ready to be shown
         histories = TipHistory.objects.filter(user=user).order_by('type__priority')
-        return [h for h in histories if h.ready_to_show()]
+        return [h for h in histories
+                if h.type.can_show(page, version_count)
+                and h.ready_to_show()]
 

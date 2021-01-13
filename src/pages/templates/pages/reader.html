@@ -162,6 +162,11 @@ var manifest_path = "{{ manifest_path }}";
 
             highlighter: {
                 selectionMenuItems: selectionMenuItems,
+                api: {
+                    selectionMenuOpen: function() {
+                        window.parent.clusiveEvents.addTipRelatedActionToQueue('context');
+                    }
+                }
             },
             annotations: {
                 initialAnnotationColor: "var(--CRT_highlightOverlayBg)",
@@ -202,7 +207,7 @@ var manifest_path = "{{ manifest_path }}";
                 },
                 updateUserSettings: function (userSettings) {
                     return Promise.resolve();
-                },
+                }
             }
         }).then(instance => {
                 console.debug("D2Reader loaded ", instance);

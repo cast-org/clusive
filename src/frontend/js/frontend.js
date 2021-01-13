@@ -375,11 +375,12 @@ function showTooltip(name) {
     'use strict';
 
     if (name) {
-        console.info('setting up tip: ', name);
+        console.debug('setting up tip: ', name);
         $(window).ready(function() {
             var tip_control = $('[data-clusive-tip-id="' + name + '"]');
             var tip_popover = $('#tip');
             var tip_placement = tip_control.attr('data-cfw-tooltip-placement');
+            tip_control.CFW_Tooltip('dispose');
             tip_control.CFW_Tooltip({
                 target: '#tip',
                 container: '#features',
@@ -401,7 +402,7 @@ function showTooltip(name) {
             }, 2000);
             tip_control.one('afterHide.cfw.tooltip', function() {
                 $(this).CFW_Tooltip('dispose');
-                if ($(this).hasClass('feature-novis'))  {
+                if ($(this).hasClass('feature-novis')) {
                     $('#content').trigger('focus');
                 }
             });
