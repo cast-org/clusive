@@ -22,8 +22,9 @@
     </span>
     {% else %}
     <button id="switchButton" type="button" class="btn btn-nav btn-icon btn-switch-level"
-            title="Switch version (currently {{ version|add:1 }} of {{ version_count }})"
+            title="Switch version?"
             data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="forward"
+            data-clusive-tip-id="switch" data-clusive-tip-action="switch"
             data-cle-handler="click" data-cle-control="switch" data-cle-value="opened">
         {% if version == version_count|add:-1 %}
             <span class="icon-ci-spaceship" aria-hidden="true"></span>
