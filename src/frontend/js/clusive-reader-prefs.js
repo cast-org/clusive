@@ -1,5 +1,9 @@
 /* global fluid_3_0_0, cisl, D2Reader */
 
+/*
+    Defines interactions between Clusive preferences and Readium.
+ */
+
 (function(fluid) {
     'use strict';
 
@@ -115,7 +119,17 @@
                     type: 'fluid.transforms.value',
                     input: '{that}.model.preferences.cisl_prefs_readSpeed'
                 }
-            },            
+            },
+            'readerPreferences.scroll': {
+                target: 'readerPreferences.scroll',
+                backward: {
+                    excludeSource: '*'
+                },
+                singleTransform: {
+                    type: 'fluid.transforms.value',
+                    input: '{that}.model.preferences.cisl_prefs_scroll'
+                }
+            }
         },
         modelListeners: {
             'readerPreferences.fontSize': {
@@ -141,11 +155,16 @@
             'readerPreferences.tts.rate': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserTTSSetting',
                 args: ['rate', '{change}.value']
-            }            
+            },
+            'readerPreferences.scroll': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
+                args: ['scroll', '{change}.value']
+            }
         }
     });
 
     cisl.prefs.readerPreferencesBridge.applyUserSetting = function(settingName, settingValue) {
+        console.debug('applyUserSetting: ', settingName, settingValue);
         var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
@@ -157,7 +176,7 @@
     };
 
     cisl.prefs.readerPreferencesBridge.applyUserTTSSetting = function(ttsSettingName, settingValue) {
-        console.log("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
+        console.debug("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
         var reader = clusiveContext.reader.instance;
         if (reader) {
             var settingsObj =
@@ -166,5 +185,13 @@
             };
             reader.applyTTSSettings(settingsObj);
         }        
-    }
+    };
+
+    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(ttsSettingName, settingValue) {
+        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", ttsSettingName, settingValue)
+        var reader = clusiveContext.reader.instance;
+        if (reader) {
+            reader.scroll(settingValue);
+        }
+    };
 }(fluid_3_0_0));

@@ -1,4 +1,9 @@
-/* global cisl, clusive, fluid_3_0_0, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT */
+
+/*
+    This code defines canonical representations of the various preference settings,
+    how they are stored, and enactors for preferences that are not done through Readium.
+ */
 
 (function(fluid) {
     'use strict';
@@ -41,6 +46,10 @@
                 enactor: {
                     type: 'cisl.prefs.enactor.glossary'
                 },
+                panel: null
+            },
+            scroll: {
+                type: 'cisl.prefs.scroll',
                 panel: null
             },
             readSpeed: {
@@ -105,7 +114,7 @@
             'cisl.prefs.readSpeed': {
                 'model.readSpeed': 'value'
             }
-        },    
+        },
         modelListeners: {
             'readSpeed': {
                 listener: '{that}.enactReadSpeed',
@@ -118,7 +127,7 @@
                 funcName: "cisl.prefs.enactor.readSpeed.enactReadSpeed",
                 args: "{arguments}.0"
             }
-        }  
+        }
     });
 
     cisl.prefs.enactor.readSpeed.enactReadSpeed = function (readSpeed) {
@@ -135,7 +144,18 @@
             default: []
             }
         }
-    })   
+    });
+
+    // Preference for paged vs. scrolled layout
+    fluid.defaults('cisl.prefs.schemas.scroll', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.scroll': {
+                type: 'boolean',
+                default: true
+            }
+        }
+    });
 
     // Add a boolean preference for the glossary
     fluid.defaults('cisl.prefs.schemas.glossary', {
@@ -172,8 +192,8 @@
 
     cisl.prefs.enactor.glossary.enactGlossary = function(enableGlossary, that) {
         console.debug('enact glossary', enableGlossary, that);
-        
-        var readerWindow = clusiveContext.reader.window;        
+
+        var readerWindow = clusiveContext.reader.window;
 
         if (readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
             console.debug('readerWindow');
@@ -212,7 +232,7 @@
 
     // Fire a non-Infusion document event that non-Infusion
     // code can hook into to respond to preference changes
-    cisl.prefs.dispatchPreferenceUpdateEvent = function() {        
+    cisl.prefs.dispatchPreferenceUpdateEvent = function() {
         var event = new Event('update.cisl.prefs');
         document.dispatchEvent(event);
     };
