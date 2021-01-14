@@ -43,10 +43,6 @@ var manifest_path = "{{ manifest_path }}";
             <span class="book-title"></span>
         </div>
         <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
-        <div id="reader-info-bottom" class="info bottom">
-            <span class="chapter-position"></span>
-            <span class="chapter-title"></span>
-        </div>
     </main>
 
     {% include "shared/partial/toolbox_menu.html" %}
@@ -196,13 +192,23 @@ var manifest_path = "{{ manifest_path }}";
                 updateCurrentLocation: function (locator) {
                     // Grey out navigation buttons when necessary.
                     var nRes = D2Reader.currentResource();
+                    // console.info('atStart: ', D2Reader.atStart(), ' atEnd: ', D2Reader.atEnd());
                     var firstResource = (nRes===0);
                     var lastResource = (nRes===D2Reader.totalResources()-1);
-                    var elt = document.scrollingElement;
-                    var atTop = (elt.scrollTop===0);
-                    var atBottom = (elt.scrollHeight - elt.scrollTop === elt.clientHeight);
-                    document.getElementById('prevResourceButton').disabled = (firstResource && atTop);
-                    document.getElementById('nextResourceButton').disabled = (lastResource && atBottom);
+                    if (firstResource) {
+                        D2Reader.atStart().then((edge)=>{
+                            document.getElementById('prevResourceButton').disabled = edge;
+                        });
+                    } else {
+                        document.getElementById('prevResourceButton').disabled = false;
+                    }
+                    if (lastResource) {
+                        D2Reader.atEnd().then((edge)=>{
+                            document.getElementById('nextResourceButton').disabled = edge;
+                        });
+                    } else {
+                        document.getElementById('nextResourceButton').disabled = false;
+                    }
                     return trackReadingLocation(pub_id, pub_version, locator);
                 },
                 updateUserSettings: function (userSettings) {
