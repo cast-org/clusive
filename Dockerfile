@@ -16,7 +16,7 @@
 FROM python:3.7-slim-buster as base
 
 RUN apt-get update && \
-  apt-get -y install --no-install-recommends libpq5 libpq-dev python3-dev gcc g++ git nodejs npm ssh-client && \
+  apt-get -y install --no-install-recommends libpq5 libpq-dev python3-dev gcc g++ git nodejs npm && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
