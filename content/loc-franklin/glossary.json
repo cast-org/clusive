@@ -1,0 +1,344 @@
+[
+  {
+    "headword": "revolution",
+    "alternateForms": ["revolutions"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "The overthrow of a political system or government by force, and the setting up of a new government in its place." ,
+        "examples": [ "The colonists fought the British government during the American Revolution." ],
+        "images": [
+          {
+            "src": "glossimages/revolution1.jpg",
+            "alt": "Photo of people dressed in colonial style clothing, aiming muskets.",
+            "description": "A group of about four people are shown from the side. They are facing toward the left and hold long muskets pointed to the left. The people are dressed in clothing that is similar to what people wore in the late 1700s.",
+            "caption": "Some Americans decided to fight against British rule during the American Revolution.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/ca788954-7109-4006-824c-8d4b14d1aa7a",
+              "title": "The Ambush",
+              "author": "Gunnshots",
+              "author_url": "https://www.flickr.com/photos/35011577@N08",
+              "license": "CC BY-ND 2.0 ",
+              "license_url": "https://creativecommons.org/licenses/by-nd/2.0/?ref=ccsearch&atype=rich"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "controversial",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Causing much discussion, disagreement, or argument." ,
+        "examples": [ "Cutting down old trees to make the road wider was a controversial decision." ],
+        "images": [
+          {
+            "src": "glossimages/controversial1.jpg",
+            "alt": "Photo of a large area of trees cut down.",
+            "description": "A large area of trees have been cut down. The edge of a forest can be seen in the distance.",
+            "caption": "Cutting down old-growth trees can be a controversial decision.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/32a8cba4-6500-4869-afd7-ec2c9590487f",
+              "title": "Clear felled area of Thetford Forest",
+              "author": "David Pashley",
+              "author_url": "https://geograph.org.uk/profile/127274",
+              "license": "CC BY-SA 2.0 ",
+              "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch&atype=rich"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "mock",
+    "alternateForms": ["mocks","mocked","mocking"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make fun of in a mean way." ,
+        "examples": [ "The other kids mocked him when he fell off his scooter." ]
+      }
+    ]
+  },
+  {
+    "headword": "currency",
+    "alternateForms": ["currencies"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "The money that is used in a country." ,
+        "examples": [ "The dollar is the basic unit of U.S. currency." ],
+        "images": [
+          {
+            "src": "glossimages/currency1.jpg",
+            "alt": "Photo of money from Spain.",
+            "description": "Photo shows coins and paper money from Spain. ",
+            "caption": "Countries around the world use different currencies.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/3198fcd7-2459-4f3b-8651-76ac1e56dcc8",
+              "title": "money",
+              "author": "tamaki",
+              "author_url": "https://www.flickr.com/photos/44124420092@N01",
+              "license": "CC BY-NC-ND 2.0 ",
+              "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=ccsearch&atype=rich"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "character",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A person in a story, play, or movie." ,
+        "examples": [ "Many actors have played the characters in Shakespeare's plays." ]
+      }
+    ]
+  },
+  {
+    "headword": "establish",
+    "alternateForms": ["establishes","established","establishing"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To bring into being." ,
+        "examples": [ "Benjamin Franklin established the first national post office in the United States." ]
+      }
+    ]
+  },
+  {
+    "headword": "almanac",
+    "alternateForms": ["almanacs"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A book published every year that predicts the weather for each day and gives facts about the tides, the time the sun will rise and set, and other useful information." ,
+        "examples": [ "Poor Richard's Almanac had stories and wise sayings, in addition to other useful information about sunrises, tides, and phases of the moon." ],
+        "images": [
+          {
+            "src": "glossimages/almanac1.jpg",
+            "alt": "Photo of the cover of a booklet.",
+            "description": "Photo of a cover of a booklet titled, 'Farmers' Almanac for the year 2018.' Pictured on the cover is a farmhouse, with city buildings in the distance. Also printed on the cover are the words, 'Tips you need for a happier, healthier year!' 'Shorts or shovels? Get your Forecast inside'",
+            "caption": "An almanac gives useful information about weather and other topics.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/5cc15c46-2e51-4b5b-8044-e645daf28ac0",
+              "title": "",
+              "author": "Farmers' Almanac",
+              "author_url": "https://commons.wikimedia.org/w/index.php?title=User:FarmersAlmanac&action=edit&redlink=1",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0?ref=ccsearch&atype=rich"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "document",
+    "alternateForms": ["documents"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A written or printed paper that gives information or proof of something. " ,
+        "examples": [ "Licenses and passports are kinds of documents." ],
+      "images": [
+          {
+            "src": "glossimages/document1.jpg",
+            "alt": "Photo of two pieces of paper with text and graphs.",
+            "description": "Two pieces of paper with information on them, including text and graphs.",
+            "caption": "Documents containing information.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/5cc15c46-2e51-4b5b-8044-e645daf28ac0",
+              "title": "Graph and Line Chart Printed Paper",
+              "author": "Lukas",
+              "author_url": "https://www.pexels.com/@goumbik",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "situation",
+    "alternateForms": ["situations"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "State of affairs; circumstances." ,
+        "examples": [ "Benjamin guessed that James would not want to reveal the secret apprenticeship agreement and so he took advantage of the situation." ]
+      }
+    ]
+  },
+  {
+    "headword": "serious",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Marked by careful thinking or consideration." ,
+        "examples": [ "Sometimes he was humorous, and other times serious, but he always followed his own rule for writing: make it 'smooth, clear and short.'" ],
+        "images": [
+          {
+            "src": "glossimages/serious1.jpg",
+            "alt": "Photo of a woman with her hand to her face.",
+            "description": "A woman looks at the viewer. She is not smiling. She has her hand up at the side of her cheek.",
+            "caption": "This person looks like she is thinking carefully about something serious.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/24c2d78f-cea2-4b4d-be78-a9b4e54cd920",
+              "title": "Mom ",
+              "author": "birdvoyeur",
+              "author_url": "https://www.flickr.com/photos/13787814@N07",
+              "license": "CC BY-NC 2.0",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "immediate",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Happening right away; instant." ,
+        "examples": [ "When she asked them to explain why they were late, they gave her an immediate answer." ]
+      }
+    ]
+  },
+    {
+        "headword": "particular",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Being the only one of its type; sole; single.",
+                "examples": [ "Each person’s fingerprints are particular to them." ],
+                "images": [
+                    {
+                        "src": "glossimages/particular1.jpg",
+                        "alt": "Photo of iPhone with fingerprint",
+                        "description": "An iPhone with fingerprint image on the screen. ",
+                        "caption": "A fingerprint is unique and particular to every individual.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/723b61cb-7456-4acd-88eb-8af59c5fa074",
+                            "title": "iPhone 5s/5c Launch",
+                            "author": "hawaii",
+                            "author_url": "https://www.flickr.com/photos/35034363370@N01",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+  {
+    "headword": "practical",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Having to do with real life and experience rather than theory." ,
+        "examples": [ "What could be practical about lightning?" ]
+      }
+    ]
+  },
+  {
+    "headword": "circumstance",
+    "alternateForms": ["circumstances"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "State of affairs; situation." ,
+        "examples": [ "Benjamin guessed that James would not want to reveal the secret apprenticeship agreement and so he took advantage of the circumstances. " ]
+      }
+    ]
+  },
+  {
+    "headword": "deadpan",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Marked by a blank expression that might mean careful thinking or consideration is taking place." ,
+        "examples": [ "Sometimes he was humorous, and other times deadpan, but he always followed his own rule for writing: make it \"smooth, clear and short.\"" ],
+        "images": [
+          {
+            "src": "glossimages/serious1.jpg",
+            "alt": "Photo of a woman with her hand to her face.",
+            "description": "A woman looks at the viewer. She is not smiling. She has her hand up at the side of her cheek.",
+            "caption": "This person looks like she is thinking carefully about something serious.",
+            "source": {
+              "url": "https://search.creativecommons.org/photos/24c2d78f-cea2-4b4d-be78-a9b4e54cd920",
+              "title": "Mom ",
+              "author": "birdvoyeur",
+              "author_url": "https://www.flickr.com/photos/13787814@N07",
+              "license": "CC BY-NC 2.0",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "instant",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Happening right away; immediate." ,
+        "examples": [ "When she asked them to explain why they were late, they gave her an instant answer." ]
+      }
+    ]
+  },
+    {
+        "headword": "distinctive",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Being the only one of its type; sole; single.",
+                "examples": [ "Each person’s fingerprints are distinctive to them." ],
+                "images": [
+                    {
+                        "src": "glossimages/particular1.jpg",
+                        "alt": "Photo of iPhone with fingerprint",
+                        "description": "An iPhone with fingerprint image on the screen. ",
+                        "caption": "A fingerprint is unique and distinctive to every individual.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/723b61cb-7456-4acd-88eb-8af59c5fa074",
+                            "title": "iPhone 5s/5c Launch",
+                            "author": "hawaii",
+                            "author_url": "https://www.flickr.com/photos/35034363370@N01",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+  {
+    "headword": "pragmatic",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Having to do with real life and experience rather than theory." ,
+        "examples": [ "What could be pragmatic about lightning?" ]
+      }
+    ]
+  }
+]
