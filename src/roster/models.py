@@ -323,24 +323,31 @@ class Preference (models.Model):
     def convert_from_string(cls, val):
         """Converts a string value to array, boolean, int, float, or string depending what it looks like."""
 
+        if val is None:
+            return None
+
         # Empty array as string
-        if (val[0] == "[" and val[1] == "]"):
+        if len(val)>1 and val[0] == "[" and val[1] == "]":
             return []
+
         # Array of strings stored as string
-        # NOTE: this probably points towards a need to have a more robust 
-        # server-side representation of preferences
-        if (val[0] == "[" and val[-1] == "]"):
+        if val[0] == "[" and val[-1] == "]":
             return [x.strip()[1:-1] for x in val[1:-1].split(',')]
+
+        # Booleans
         if val.lower() == "true":
             return True
         if val.lower() == "false":
             return False
+
+        # Numbers and Strings
         try:
             return int(val)
         except ValueError:
             try:
                 return float(val)
             except ValueError:
+                # Otherwise string type.
                 return val
 
     def __str__(self):
