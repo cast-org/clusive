@@ -108,22 +108,20 @@ class ReaderChooseVersionView(RedirectView):
 class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
+    page_name = 'Reading'
 
     def get(self, request, *args, **kwargs):
         book_id = kwargs.get('book_id')
         version = kwargs.get('version')
         book = Book.objects.get(pk=book_id)
+        versions = book.versions.all()
         clusive_user = request.clusive_user
-        self.book_version = BookVersion.objects.get(book=book, sortOrder=version)
+        self.book_version = versions[version]
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
         pdata = Paradata.record_view(book, version, clusive_user)
-        bv_prev = str(version-1) if version>0 \
-            else False
-        bv_next = str(version+1) if BookVersion.objects.filter(book=book, sortOrder=version+1).exists() \
-            else False
 
         # See if there's a Tip that should be shown
-        available = TipHistory.available_tips(clusive_user)
+        available = TipHistory.available_tips(clusive_user, page=self.page_name, version_count=len(versions))
         if available:
             first_available = available[0]
             logger.debug('Displaying tip: %s', first_available)
@@ -136,9 +134,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
 
         self.extra_context = {
             'pub': book,
+            'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
-            'prev_version': bv_prev,
-            'next_version': bv_next,
             'last_position': pdata.lastLocation or "null",
             'annotations': annotationList,
             'tip_name': tip_name,
@@ -146,7 +143,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         return super().get(request, *args, **kwargs)
 
     def configure_event(self, event: Event):
-        event.page = 'Reading'
+        event.page = self.page_name
         event.book_version_id = self.book_version.id
         event.tip_type = self.tip_shown
 

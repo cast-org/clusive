@@ -17,11 +17,10 @@
   },
   "homepage": "https://github.com/cast-org/clusive#readme",
   "dependencies": {
-    "@d-i-t-a/reader": "^1.6.3",
+    "@d-i-t-a/reader": "^1.6.7",
     "expose-loader": "0.7.5",
     "figuration": "^4.1.0",
-    "fluid-binder": "git+https://github.com/fluid-project/fluid-binder.git#3283b44cd915f8c8c6a432fa60ccc0983ff547b7",
-    "gpii-binder": "git+https://github.com/fluid-project/fluid-binder#3283b44cd915f8c8c6a432fa60ccc0983ff547b7",
+    "fluid-binder": "fluid-project/fluid-binder.git#3283b44cd915f8c8c6a432fa60ccc0983ff547b7",
     "infusion": "3.0.0-dev.20200326T173810Z.24ddb2718.FLUID-6482",
     "jquery": "^3.5.1",
     "jquery-ui": "1.12.1",
@@ -29,7 +28,7 @@
     "masonry-layout": "^4.2.2",
     "open-dyslexic": "^1.0.3",
     "popper.js": "1.16.1",
-    "readium-css": "git+https://github.com/readium/readium-css.git#bd6462780d1ed724181df4fce3d3a22b2f15ab45",
+    "readium-css": "readium/readium-css.git#bd6462780d1ed724181df4fce3d3a22b2f15ab45",
     "script-loader": "0.7.2"
   },
   "devDependencies": {

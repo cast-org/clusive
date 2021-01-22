@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     var addVocabCheckSkippedEventToQueue = function() {
         window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT, 'word_rating', null, window.clusiveEvents.caliperEventActions.ASSESSMENT_ITEM_SKIPPED)
-    }
+    };
 
     var addTipRelatedActionToQueue = function(action) {
         window.clusiveEvents.messageQueue.add({
@@ -28,7 +28,6 @@ $(document).ready(function() {
             action: action
         });
     };
-    
 
     var trackControlInteraction = function(interactionDef) {
         console.debug('Setting up control tracking for: ', interactionDef)

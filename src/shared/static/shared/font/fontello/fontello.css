@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('./fontello.eot?36944759');
-  src: url('./fontello.eot?36944759#iefix') format('embedded-opentype'),
-       url('./fontello.woff2?36944759') format('woff2'),
-       url('./fontello.woff?36944759') format('woff'),
-       url('./fontello.ttf?36944759') format('truetype'),
-       url('./fontello.svg?36944759#fontello') format('svg');
+  src: url('./fontello.eot?65056277');
+  src: url('./fontello.eot?65056277#iefix') format('embedded-opentype'),
+       url('./fontello.woff2?65056277') format('woff2'),
+       url('./fontello.woff?65056277') format('woff'),
+       url('./fontello.ttf?65056277') format('truetype'),
+       url('./fontello.svg?65056277#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('./fontello.svg?36944759#fontello') format('svg');
+    src: url('./fontello.svg?65056277#fontello') format('svg');
   }
 }
 */
@@ -28,7 +28,7 @@
 
   display: inline-block;
   text-decoration: inherit;
-  min-width: 1em;
+  min width: 1em;
   /* margin-right: .2em; */
   text-align: center;
   /* opacity: .8; */
@@ -96,6 +96,15 @@
 .icon-star-empty:before { content: '\e826'; } /* '' */
 .icon-bookmark:before { content: '\e827'; } /* '' */
 .icon-bricks:before { content: '\e828'; } /* '' */
+.icon-ci-boat:before { content: '\e829'; } /* '' */
+.icon-ci-boat-active:before { content: '\e82a'; } /* '' */
+.icon-ci-car:before { content: '\e82b'; } /* '' */
+.icon-ci-car-active:before { content: '\e82c'; } /* '' */
+.icon-ci-spaceship:before { content: '\e82d'; } /* '' */
+.icon-ci-spaceship-active:before { content: '\e82e'; } /* '' */
+.icon-view-paged:before { content: '\e82f'; } /* '' */
+.icon-view-scroll:before { content: '\e830'; } /* '' */
+.icon-switch:before { content: '\e831'; } /* '' */
 .icon-crown:before { content: '\e844'; } /* '' */
 .icon-move:before { content: '\f047'; } /* '' */
 .icon-bookmark-empty:before { content: '\f097'; } /* '' */

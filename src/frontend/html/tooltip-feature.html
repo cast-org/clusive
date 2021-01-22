@@ -89,7 +89,7 @@
                     </button>
                 </nav>
                 <div class="sidebar-support" role="region" aria-label="Support">
-                    <button id="btnWhy" type="button" class="btn btn-nav btn-icon btn-support-help" aria-label="Help/Information">
+                    <button data-clusive-tip-id="why" id="btnWhy" type="button" class="btn btn-nav btn-icon btn-support-help" aria-label="Help/Information" data-cfw-tooltip-target="#tooltip_1">
                         <span class="icon-help" aria-hidden="true"></span>
                         <span class="icon-attention" aria-hidden="true"></span>
                     </button>
@@ -98,7 +98,7 @@
 
             <div class="sidebar sidebar-end">
                 <div class="sidebar-tool" role="region" aria-label="User preferences">
-                    <button id="btnSettings" type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
+                    <button data-clusive-tip-id="settings" id="btnSettings" type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings" data-cfw-tooltip-target="#tooltip_0">
                         <span class="icon-settings" aria-hidden="true"></span>
                     </button>
                     <!--
@@ -178,7 +178,7 @@
 
 <div id="tooltip_0" class="tooltip tooltip-feature">
     <div class="tooltip-body">
-        <p>Settings: Something about settings here.</p>
+        <p><strong>Settings:</strong> Something about settings here.</p>
 
         <div class="tooltip-action">
             <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
@@ -186,10 +186,10 @@
     </div>
     <div class="tooltip-arrow"></div>
 </div>
-<!--
+
 <div id="tooltip_1" class="tooltip tooltip-feature">
     <div class="tooltip-body">
-        <p>Why am i seeing this: Something about why here.</p>
+        <p><strong>Why am i seeing this:</strong> Something about why here.</p>
 
         <div class="tooltip-action">
             <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
@@ -197,18 +197,35 @@
     </div>
     <div class="tooltip-arrow"></div>
 </div>
--->
+
+<div id="tooltip_2" class="tooltip tooltip-feature">
+    <div class="tooltip-body">
+        <div data-cfw="accordion">
+            <div id="contextFeature0" class="collapse">
+                <p>Select some text to access the context menu. (Click and drag, or double-click a word.)</p>
+                <div class="tooltip-action">
+                    <div class="tooltip-step">1/2</div>
+                    <button type="button" class="btn btn-primary" data-cfw="collapse" data-cfw-collapse-target="#contextFeature1" data-cfw-collapse-animate="false">Next</button>
+                </div>
+            </div>
+            <div id="contextFeature1" class="collapse">
+                <ul class="list feature-list">
+                    <li><span class="feature-icon icon-edit" aria-hidden="true"></span> Highlight the passage</li>
+                    <li><span class="feature-icon icon-book" aria-hidden="true"></span> Look up a definition</li>
+                    <li><span class="feature-icon icon-play-circled2" aria-hidden="true"></span> Hear the words read aloud</li>
+                </ul>
+                <div class="tooltip-action">
+                    <div class="tooltip-step">2/2</div>
+                    <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+                </div>
+                <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#contextFeature0" data-cfw-collapse-animate="false">Previous</span>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="tooltip-arrow"></div> -->
+</div>
 
 <script>
-/*
-$('#feature-settings').CFW_Tooltip({
-    target: '#tooltip_0',
-    trigger: 'manual',
-    placement: 'auto',
-    show: true
-});
-*/
-
 /*
 Mostly working prototype with screen-reader announcement.
 
@@ -224,52 +241,47 @@ Notes:
 
 */
 
-$(window).ready(function() {
-    $('#btnSettings').CFW_Tooltip({
-        target: '#tooltip_0',
-        container: '#features',
-        viewport: '#features',
-        trigger: 'manual',
-        placement: 'right auto',
-        //animate: false,
-        popperConfig: {
-            positionFixed: true
-        }
-    });
-    setTimeout(function() {
-        $('#tooltip_0').attr({
-            'role': 'status',
-            'aria-live': 'assertive',
-            'aria-atomic': 'true',
-        });
-        $('#btnSettings').CFW_Tooltip('show');
-        $('#tooltip_0').trigger('focus')
-    }, 2000);
-    $('#btnSettings').one('afterHide.cfw.tooltip', function() {
-        $(this).CFW_Tooltip('dispose');
-    });
+function showSampleTooltip(name) {
+    'use strict';
 
-    /*
-    $('#btnWhy').CFW_Tooltip({
-        target: '#tooltip_1',
-        container: '#features',
-        viewport: '#features',
-        trigger: 'manual',
-        placement: 'left auto',
-        //animate: false,
-        popperConfig: {
-            positionFixed: true
-        }
-    });
-    setTimeout(function() {
-        $('#tooltip_1').attr({
-            'aria-live': 'assertive',
-            'aria-atomic': 'true',
+    if (name) {
+        $(window).ready(function() {
+            var tip_control = $('[data-clusive-tip-id="' + name + '"]');
+            var tip_popover = $(tip_control.attr('data-cfw-tooltip-target'));
+            var tip_placement = tip_control.attr('data-cfw-tooltip-placement');
+            tip_control.CFW_Tooltip({
+                container: '#features',
+                viewport: '#features',
+                trigger: 'manual',
+                placement: tip_placement ? tip_placement : 'right auto',
+                popperConfig: {
+                    positionFixed: true
+                }
+            });
+            setTimeout(function() {
+                tip_popover.attr({
+                    'role': 'status',
+                    'aria-live': 'assertive',
+                    'aria-atomic': 'true'
+                });
+                tip_control.CFW_Tooltip('show');
+                tip_popover.trigger('focus');
+            }, 2000);
+            tip_control.one('afterHide.cfw.tooltip', function() {
+                $(this).CFW_Tooltip('dispose');
+                if ($(this).hasClass('feature-novis'))  {
+                    $('#content').trigger('focus');
+                }
+            });
         });
-        $('#btnWhy').CFW_Tooltip('show');
-        $('#tooltip_1').trigger('focus')
-    }, 5000);
-    */
+    }
+}
+
+
+$(window).ready(function() {
+    showSampleTooltip('settings');
+    //showSampleTooltip('why');
+    showSampleTooltip('context');
 });
 
 $(document.body).one('themeControls', function() {
@@ -281,9 +293,13 @@ $(document.body).one('themeControls', function() {
 });
 </script>
 
-
-
-<div id="features" class="features" aria-live="assertive" aria-atomic="false"></div>
+<div id="features" class="features" aria-live="assertive" aria-atomic="false">
+    <div class="container-xl">
+        <div class="content">
+            <span data-clusive-tip-id="context" data-cfw-tooltip-target="#tooltip_2" data-cfw-tooltip-placement="right auto" class="feature-context feature-novis"></span>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

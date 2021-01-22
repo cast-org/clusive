@@ -3,13 +3,56 @@
     <div class="tooltip-body">
         {% if tip_name == "settings" %}
         <p><strong>Settings:</strong> Change the font, colors, and more!</p>
-        {% elif tip_name == "readaloud" %}
-        <p><strong>Read-aloud:</strong> Hear this page read aloud.</p>
-        {% endif %}
         <div class="tooltip-action">
             <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
         </div>
+        {% elif tip_name == "readaloud" %}
+        <p><strong>Read-aloud:</strong> Hear this page read aloud.</p>
+        <div class="tooltip-action">
+            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        </div>
+        {% elif tip_name == "wordbank" %}
+        <p><strong>Word bank:</strong> Track words you&apos;re learning.</p>
+        <div class="tooltip-action">
+            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        </div>
+        {% elif tip_name == "switch" %}
+        <p>Switch the challenge level of this text.</p>
+        <div class="tooltip-action">
+            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        </div>
+        {% elif tip_name == "context" %}
+        <div data-cfw="accordion">
+            <div id="contextFeature0" class="collapse">
+                <p>Select some text to see things you can do with it.</p>
+                <div class="tooltip-action">
+                    <div class="tooltip-step">1/2</div>
+                    <button type="button" class="btn btn-primary" data-cfw="collapse" data-cfw-collapse-target="#contextFeature1" data-cfw-collapse-animate="false">Next</button>
+                </div>
+            </div>
+            <div id="contextFeature1" class="collapse">
+                <ul class="list feature-list">
+                    <li><span class="feature-icon icon-edit" aria-hidden="true"></span> Highlight the passage</li>
+                    <li><span class="feature-icon icon-book" aria-hidden="true"></span> Look up a definition</li>
+                    <li><span class="feature-icon icon-play-circled2" aria-hidden="true"></span> Hear the words read aloud</li>
+                </ul>
+                <div class="tooltip-action">
+                    <div class="tooltip-step">2/2</div>
+                    <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+                </div>
+                <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#contextFeature0" data-cfw-collapse-animate="false">Previous</span>
+            </div>
+        </div>
+        {% endif %}
     </div>
+    {% if tip_name != "context" %}
     <div class="tooltip-arrow"></div>
+    {% endif %}
 </div>
-<div id="features" class="features" aria-live="assertive" aria-atomic="false"></div>
+<div id="features" class="features" aria-live="assertive" aria-atomic="false">
+    <div class="container-xl">
+        <div class="content">
+            <span data-clusive-tip-id="context" data-cfw-tooltip-placement="right auto" class="feature-context feature-novis"></span>
+        </div>
+    </div>
+</div>

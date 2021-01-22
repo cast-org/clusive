@@ -21,7 +21,7 @@ var Popper = require('script-loader!popper.js').default;
 var Masonry = require('script-loader!masonry-layout');
 import execFiguration from 'script-loader!figuration';
 
-import execGPIIBinder from "script-loader!gpii-binder/src/js/binder.js";
+import execGPIIBinder from "script-loader!fluid-binder/src/js/binder.js";
 
 // import execMarkJs from 'script-loader!mark.js';
 import execClusiveContext from "script-loader!../src/frontend/js/clusive-context.js";

@@ -13,9 +13,27 @@
 {% endif %}
 {% if why %}
 <div class="sidebar-support" role="region" aria-label="Support">
-    <button id="whyButton" type="button" class="btn btn-nav btn-icon btn-support-help" aria-label="Why am I seeing this version of the text?!" title="Why am I seeing this version of the text?!" data-cle-handler="click" data-cle-control="why-am-i-seeing-this-modal" data-cle-value="opened">
-        <span class="icon-help" aria-hidden="true"></span>
-        <span class="icon-attention" aria-hidden="true"></span>
+    {% if version_count == 1 %}
+    <span class="d-inline-block" title="Can't switch: there is only one version of this content."
+          data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="forward">
+        <button id="noSwitchButton" type="button" disabled class="btn btn-nav btn-icon btn-switch-level">
+            <span class="icon-ci-car" aria-hidden="true"></span>
+        </button>
+    </span>
+    {% else %}
+    <button id="switchButton" type="button" class="btn btn-nav btn-icon btn-switch-level"
+            title="Switch version?"
+            data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="forward"
+            data-clusive-tip-id="switch" data-clusive-tip-action="switch"
+            data-cle-handler="click" data-cle-control="switch" data-cle-value="opened">
+        {% if version == version_count|add:-1 %}
+            <span class="icon-ci-spaceship" aria-hidden="true"></span>
+        {% elif version == version_count|add:-2 %}
+            <span class="icon-ci-car" aria-hidden="true"></span>
+        {% else %}
+            <span class="icon-ci-boat" aria-hidden="true"></span>
+        {% endif %}
     </button>
+    {% endif %}
 </div>
 {% endif %}

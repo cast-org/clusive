@@ -1,4 +1,8 @@
-/* global cisl, clusive, fluid_3_0_0, fluid, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global cisl, fluid_3_0_0 */
+
+/*
+    Defines the behavior of the preferences panel and how its markup relates to the defined Fluid preferences.
+ */
 
 (function(fluid) {
     'use strict';
@@ -30,6 +34,14 @@
                 1: 'default',
                 1.25: 'wide',
                 1.5: 'wider'
+            },
+            modalScrollToPreference: {
+                scroll: true,
+                paged: false
+            },
+            preferenceScrollToModal: {
+                true: 'scroll',
+                false: 'paged'
             }
         },
         invokers: {
@@ -79,9 +91,15 @@
                 args: ['{change}.value', '{that}'],
                 excludeSource: 'init'
             },
+            'modalSettings.scroll': {
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
+                args: ['@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalScrollToPreference)',
+                    'preferences.cisl_prefs_scroll', '{that}'],
+                excludeSource: 'init'
+            },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
-                excludeSource: 'applyModalSettingToPreference'                
+                excludeSource: 'applyModalSettingToPreference'
             }
         },
         selectors: {
@@ -91,6 +109,7 @@
             font: '.cislc-modalSettings-font',
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
+            scroll: '.cislc-modalSettings-scroll',
             readSpeed: '.cislc-modalSettings-readSpeed',
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
@@ -103,6 +122,7 @@
             font: 'modalSettings.font',
             color: 'modalSettings.color',
             readSpeed: 'modalSettings.readSpeed',
+            scroll: 'modalSettings.scroll',
             glossaryCheckbox: {
                 selector: 'glossary',
                 path: 'modalSettings.glossary',
@@ -151,6 +171,8 @@
         that.applier.change('modalSettings.color', fluid.get(preferences, 'fluid_prefs_contrast'));
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
+
+        that.applier.change('modalSettings.scroll', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'cisl_prefs_scroll'), that.options.mappedValues.preferenceScrollToModal));
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
 
