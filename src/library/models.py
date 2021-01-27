@@ -68,8 +68,9 @@ class BookVersion(models.Model):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='versions')
     sortOrder = models.SmallIntegerField()
     glossary_words = models.TextField(default="[]")  # Words in the glossary that occur in this version
-    all_words = models.TextField(default="[]")  # All words that occur in this version
-    new_words = models.TextField(default="[]")  # Words that occur in this version but not the previous one.
+    all_words = models.TextField(default="[]")  # All dictionary words that occur in this version
+    new_words = models.TextField(default="[]")  # Dictionary words that occur in this version but not the previous one.
+    non_dict_words = models.TextField(default="[]") # "Words" not in dictionary
     mod_date = models.DateTimeField(default=timezone.now)
     language = models.TextField(max_length=5, default="en-US")
     filename = models.TextField(null=True) # The filename of the EPUB that was uploaded.
@@ -117,6 +118,18 @@ class BookVersion(models.Model):
     def all_word_list(self, val):
         self._all_word_list = val
         self.all_words = json.dumps(val)
+
+    @property
+    def non_dict_word_list(self):
+        """Decode JSON format and return non_dict_words as a list."""
+        if not hasattr(self, '_non_dict_word_list'):
+            self._non_dict_word_list = json.loads(self.non_dict_words)
+        return self._non_dict_word_list
+
+    @non_dict_word_list.setter
+    def non_dict_word_list(self, val):
+        self._non_dict_word_list = val
+        self.non_dict_words = json.dumps(val)
 
     @property
     def new_word_list(self):

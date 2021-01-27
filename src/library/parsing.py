@@ -250,18 +250,10 @@ def scan_all_books():
 
 def scan_book(b):
     """Looks through book manifest and text files and sets or updates database metadata."""
+    glossary_words = find_glossary_words(b.storage_dir)
     versions = b.versions.all()
     for bv in versions:
-        # Read the book manifest
-        if os.path.exists(bv.manifest_file):
-            with open(bv.manifest_file, 'r') as file:
-                manifest = json.load(file)
-                bv.all_word_list = find_all_words(bv.storage_dir, manifest)
-                logger.debug('%s: parsed %d words', bv, len(bv.all_word_list))
-                bv.glossary_word_list = find_glossary_words(b.storage_dir, bv.all_word_list)
-                bv.save()
-        else:
-            logger.error("Book directory had no manifest: %s", bv.manifest_file)
+        find_all_words(bv, glossary_words)
     # After all versions are read, determine new words added in each version.
     if len(versions) > 1:
         for bv in versions:
@@ -290,26 +282,37 @@ def find_cover(manifest):
     return None
 
 
-def find_glossary_words(book_dir, all_words):
+def find_glossary_words(book_dir):
     glossaryfile = os.path.join(book_dir, 'glossary.json')
     if os.path.exists(glossaryfile):
         with open(glossaryfile, 'r', encoding='utf-8') as file:
             glossary = json.load(file)
             words = [base_form(e['headword']) for e in glossary]
-            this_version_words = sorted(set(words).intersection(all_words))
-            return this_version_words
+            return words
     else:
         return []
 
 
-def find_all_words(version_dir, manifest):
-    # Look up content files in manifest
-    # For each one, gather words
-    # Format word set as JSON and return it for storage in database
-    te = TextExtractor()
-    for file_info in manifest['readingOrder']:
-        te.feed_file(os.path.join(version_dir, file_info['href']))
-    return te.get_word_list()
+def find_all_words(bv, glossary_words):
+    # Read the book manifest
+    if os.path.exists(bv.manifest_file):
+        with open(bv.manifest_file, 'r') as file:
+            te = TextExtractor()
+            manifest = json.load(file)
+            # Look up content files in manifest
+            for file_info in manifest['readingOrder']:
+                # For each one, gather words
+                te.feed_file(os.path.join(bv.storage_dir, file_info['href']))
+            found = te.get_word_lists(glossary_words)
+            bv.all_word_list = found['all_words']
+            bv.non_dict_word_list = found['non_dict_words']
+            bv.glossary_word_list = found['glossary_words']
+            logger.debug('%s: parsed %d glossary words; %d dictionary words; %d non-dict words',
+                         bv,
+                         len(bv.glossary_word_list), len(bv.all_word_list), len(bv.non_dict_word_list))
+            bv.save()
+    else:
+        logger.error("Book directory had no manifest: %s", bv.manifest_file)
 
 
 class TextExtractor(HTMLParser):
@@ -328,16 +331,43 @@ class TextExtractor(HTMLParser):
                 self.feed(line)
         self.file = None
 
-    def get_word_list(self):
+    def get_word_lists(self, glossary_words):
         self.close()
-        token_list = RegexpTokenizer(r'\w+').tokenize(self.text)
-        token_set = set([base for base in
-                         (base_form(w) for w in token_list if w.isalpha())
-                         if base is not None])
-        list = [[w, self.sort_key(w)] for w in token_set]
-        # Sort by frequency
-        list.sort(key=lambda p: p[1])
-        return [p[0] for p in list]
+        token_set = set(RegexpTokenizer(r'\w+').tokenize(self.text))
+        glossary_set = set()
+        word_set = set()
+        non_word_set = set()
+        for t in token_set:
+            if t.isalpha():
+                if t.lower() in glossary_words:
+                    # Found in glossary
+                    glossary_set.add(t.lower())
+                    word_set.add(t.lower())
+                else:
+                    base = base_form(t, return_word_if_not_found=False)
+                    if base:
+                        # Found in dictionary
+                        if base in glossary_words:
+                            # Base form also found in glossary
+                            glossary_set.add(base)
+                        word_set.add(base)
+                    else:
+                        # Neither in glossary, nor in dictionary
+                        non_word_set.add(t.lower())
+        # Append frequency of each word, sort by it, then remove the frequencies from return value
+        word_list = [[w, self.sort_key(w)] for w in word_set]
+        word_list.sort(key=lambda p: p[1])
+        word_list = [p[0] for p in word_list]
+        # Glossary and non-dictionary words are just sorted alphabetically.
+        glossary_list = list(glossary_set)
+        glossary_list.sort()
+        non_word_list = list(non_word_set)
+        non_word_list.sort()
+        return {
+            'glossary_words': glossary_list,
+            'all_words': word_list,
+            'non_dict_words': non_word_list,
+        }
 
     # We sort the hardest (low-frequency) words to the front of our list.
     # However, words that return '0' for frequency (aka non-words) should go to the end of the list,
