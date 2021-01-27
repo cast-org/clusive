@@ -256,6 +256,7 @@ class MetadataReplaceFormView(MetadataFormView):
         bv = self.object.versions.get()
         orig_bv.glossary_words = bv.glossary_words
         orig_bv.all_words = bv.all_words
+        orig_bv.non_dict_words = bv.non_dict_words
         orig_bv.new_words = bv.new_words
         orig_bv.mod_date = bv.mod_date
         orig_bv.language = bv.language
