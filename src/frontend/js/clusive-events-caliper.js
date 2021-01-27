@@ -25,7 +25,9 @@ $(document).ready(function() {
     var addTipRelatedActionToQueue = function(action) {
         window.clusiveEvents.messageQueue.add({
             type: 'TRA',
-            action: action
+            action: action,
+            readerInfo: clusiveContext.reader.info,
+            eventId: PAGE_EVENT_ID
         });
     };
 
