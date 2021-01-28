@@ -29,6 +29,7 @@
 <tbody>
 <tr>
     <th id="th-event_id">Event Id</th>
+    <th id="th-user_id">User Id</th>
     <th id="th_type">Type</th>
     <th id="th_content">Content</th>
 </tr>
@@ -87,12 +88,14 @@
         });
         newMessages.forEach(function (message) {
             var eventId = message.content.eventId;
+            var username = message.username;
             var type = message.content.type;
             var typeHumanReadable = eventTypes[type];
             var displayedContent = getDisplayedMessageContent(message.content);
             // var content = JSON.stringify(message.content);
             $("#debug-table").find("tr:last").after(`<tr>
                 <td title="${eventId}">${eventId.substring(0,8)}...</td>
+                <td>${username}</td>
                 <td title="${type}">${typeHumanReadable}</td>
                 <td>${displayedContent}</td></tr>`);
         })            
