@@ -2,21 +2,53 @@
 
 {% block title %}Debug Page{% endblock %}
 
+{% block head_additional %}
+<style>
+
+#debug-table {
+    width: 100%;
+}
+
+#debug-table th, #debug-table td {
+    border: 1px solid black;
+    padding: 0.5em;
+    font-size: 10px !important!;
+    font-family: monospace !important;
+}
+
+</style>
+{% endblock %}
+
 {% block header %}
-<h1>Debug</h1>
 {% endblock %}
 
 {% block content %}
-Welcome to debug!
+<h1>Event Debug Page</h1>
+<button id="clear-log">Clear Log</button>
 <table id="debug-table">
 <tbody>
 <tr>
-    <th id="th-event_id">Page Event Id</th>
+    <th id="th-event_id">Event Id</th>
     <th id="th_type">Type</th>
+    <th id="th_content">Content</th>
 </tr>
 </tbody>
 </table>
 <script>
+
+        PREF_CHANGE = 'PC'
+        CALIPER_EVENT = 'CE'
+        PAGE_TIMING = 'PT'
+        TIP_RELATED_ACTION = 'TRA'
+
+    var eventTypes = {
+        "PC": "Preference Change",
+        "CE": "Caliper Event",
+        "PT": "Page Timing",
+        "TRA": "Tip-Related Action"
+
+    }
+
     var lastQueues = {
         "clusive.messageQueue.caliperEvents":[],
         "clusive.messageQueue.preferenceChanges":[],
@@ -28,6 +60,15 @@ Welcome to debug!
         handleStorageEvent("clusive.messageQueue.caliperEvents");
         handleStorageEvent("clusive.messageQueue.preferenceChanges");
     })
+
+    $("#clear-log").click(function (e) {
+        clearLog();
+        e.preventDefault();
+    })
+
+    function clearLog() {
+        $("#debug-table").find("tr:not(:first)").remove();
+    }
 
     function handleStorageEvent(localStorageKey) {
         var currentQueue = JSON.parse(window.localStorage.getItem(localStorageKey));
@@ -47,12 +88,40 @@ Welcome to debug!
         newMessages.forEach(function (message) {
             var eventId = message.content.eventId;
             var type = message.content.type;
+            var typeHumanReadable = eventTypes[type];
+            var displayedContent = getDisplayedMessageContent(message.content);
             // var content = JSON.stringify(message.content);
-            $("#debug-table").find("tr:last").after(`<tr><td>${eventId}</td><td>${type}</td></tr>`);
-        })
-        
+            $("#debug-table").find("tr:last").after(`<tr>
+                <td title="${eventId}">${eventId.substring(0,8)}...</td>
+                <td title="${type}">${typeHumanReadable}</td>
+                <td>${displayedContent}</td></tr>`);
+        })            
         lastQueues[localStorageKey] = currentQueue;
     }
+
+    function getDisplayedMessageContent(messageContent) {
+            var displayedContent = "[content]";
+            if(messageContent.type === "CE") {
+                displayedContent = `
+                    Type: ${messageContent.caliperEvent.type}<br/>
+                    Action: ${messageContent.caliperEvent.action}<br/>
+                    Control: ${messageContent.caliperEvent.control}<br/>                    
+                    Value: ${messageContent.caliperEvent.value}<br/>`                
+            }
+            if(messageContent.type === "PT") {
+                displayedContent = `
+                    Active Duration: ${messageContent.activeDuration}<br />
+                    Duration: ${messageContent.duration}<br />
+                    Load Time: ${messageContent.loadTime}<br />
+                `
+            }
+            if(messageContent.type === "TRA") {
+                displayedContent = `
+                    Action: ${messageContent.action}
+                `
+            }            
+            return displayedContent;
+        }    
 
 </script>
 {% endblock %}
