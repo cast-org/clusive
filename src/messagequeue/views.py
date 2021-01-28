@@ -34,7 +34,10 @@ def process_messages(queue_timestamp, messages, user, request):
         
         message_type = message["content"]["type"]
         new_message = Message(message_type, message_timestamp, message_content, request)
-        new_message.send_signal()
+        try:
+            new_message.send_signal()
+        except Exception as e:
+            logger.warning('Failed to process item from message queue. Exception: %s; item: %s' % (e, new_message))
 
 def adjust_message_timestamp(timestamp, delta):
     message_time = dateutil_parse(timestamp)

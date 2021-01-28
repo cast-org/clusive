@@ -62,7 +62,7 @@ class Event(models.Model):
     # The name of the application page (Library, Reading, etc)
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
-    control = models.CharField(max_length=32, null=True)
+    control = models.CharField(max_length=64, null=True)
     # For events that operate on text (lookup, highlight), the actual text looked up or highlighted
     # For preferences, the new value chosen for the preference
     value = models.CharField(max_length=128, null=True)
