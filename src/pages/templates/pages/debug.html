@@ -16,10 +16,20 @@
     font-family: monospace !important;
 }
 
-#queue-flush-return-message, #queue-flush-timestamp {
+#queue-flush-return-message, #queue-flush-timestamp, #clear-log {
     font-size: 1em !important;
     font-family: monospace !important;
     font-weight: bold;
+}
+
+#debug-page-heading {
+    font-weight: bold;
+    font-size: 1.4em !important;
+}
+
+#debug-flush-heading, #debug-queue-heading {
+    font-weight: bold;
+    font-size: 1.2em !important;
 }
 
 </style>
@@ -29,8 +39,9 @@
 {% endblock %}
 
 {% block content %}
-<h1>Client-Side Message Queue Debug Page</h1>
-<h2>Flush Debugging</h2>
+<h1 id="debug-page-heading">Client-Side Message Queue Debug Page</h1>
+<hr />
+<h2 id="debug-flush-heading">Flush Debugging</h2>
 <label for="flush-override">Queue Flush Interval Override (milliseconds)</label> <input type="number" id="flush-override" step="1000" />
 
 <table id="flush-debug-table" class="debug-table">
@@ -49,8 +60,8 @@
         </td>
     </tr>
 </table>
-
-<h2>Message Queue Log</h2>
+<hr />
+<h2 id="debug-queue-heading">Message Queue Log</h2>
 <button id="clear-log">Clear Queue Log</button><br/>
 <table id="queue-debug-table" class="debug-table">
 <tbody>
@@ -177,7 +188,14 @@
                 displayedContent = `
                     Action: ${messageContent.action}
                 `
-            }            
+            }    
+
+            if(messageContent.type === "PC") {
+                displayedContent = `
+                    Preferences: ${JSON.stringify(messageContent.preferences, null, 1)}
+                `
+            }                
+
             return displayedContent;
         }    
 
