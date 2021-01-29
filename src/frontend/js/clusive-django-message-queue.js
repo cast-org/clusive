@@ -12,7 +12,8 @@
                 url: '/messagequeue/',
                 method: "POST"
             },
-            flushInterval: 20000,
+            flushInterval: "@expand:{that}.getFlushInterval(20000)",
+            flushIntervalOverrideKey: "clusive.messageQueue.config.flushInterval",
             logoutLinkSelector: "#logoutLink"
         },
         events: {
@@ -26,6 +27,10 @@
                 funcName: "clusive.djangoMessageQueue.wrapMessage",
                 args: ["{arguments}.0"]
             },
+            getFlushInterval: {
+                funcName: "clusive.djangoMessageQueue.getFlushInterval",
+                args: ["{arguments}.0", "{that}.options.config.flushIntervalOverrideKey"]
+            },            
             isQueueEmpty: {
                 funcName: "clusive.djangoMessageQueue.isQueueEmpty",
                 args: ["{that}"]
@@ -50,6 +55,16 @@
             }                        
         }
     });
+
+    clusive.djangoMessageQueue.getFlushInterval = function (defaultInterval, flushIntervalOverrideKey) {        
+        var flushIntervalOverrideValue = window.localStorage.getItem(flushIntervalOverrideKey);        
+        if(flushIntervalOverrideValue) {
+            console.log("flushIntervalOverrideValue found", flushIntervalOverrideValue);
+            return flushIntervalOverrideValue;
+        } else {
+            return defaultInterval;
+        }        
+    }            
 
     clusive.djangoMessageQueue.logoutFlush = function (that) {        
         clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);

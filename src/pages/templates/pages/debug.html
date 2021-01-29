@@ -23,12 +23,13 @@
 {% endblock %}
 
 {% block content %}
-<h1>Event Debug Page</h1>
-<button id="clear-log">Clear Log</button>
+<h1>Client-Side Message Queue Debug Page</h1>
+<button id="clear-log">Clear Log</button><br/>
+<label for="flush-override">Queue Flush Interval Override (milliseconds)</label> <input type="number" id="flush-override" />
 <table id="debug-table">
 <tbody>
 <tr>
-    <th id="th-event_id">Event Id</th>
+    <th id="th-event_id">Page Event Id</th>
     <th id="th-user_id">User Id</th>
     <th id="th_type">Type</th>
     <th id="th_content">Content</th>
@@ -66,6 +67,16 @@
         clearLog();
         e.preventDefault();
     })
+
+    $("#flush-override").change(function () {
+        var overrideValue = $("#flush-override").val();
+        setFlushIntervalOverride(parseInt(overrideValue));
+    });
+
+    function setFlushIntervalOverride(overrideValue) {
+        console.log("Setting flush interval to: ", overrideValue)
+        window.localStorage.setItem("clusive.messageQueue.config.flushInterval", overrideValue);
+    };
 
     function clearLog() {
         $("#debug-table").find("tr:not(:first)").remove();
