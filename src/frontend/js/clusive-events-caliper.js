@@ -44,7 +44,8 @@ $(document).ready(function() {
     window.clusiveEvents = {        
         messageQueue: clusive.djangoMessageQueue({
             config: {
-                localStorageKey: "clusive.messageQueue.caliperEvents"
+                localStorageKey: "clusive.messageQueue.caliperEvents",
+                lastQueueFlushInfoKey: "clusive.messageQueue.caliperEvents.log.lastQueueFlushInfo"
             }
         }),
         caliperEventTypes: {

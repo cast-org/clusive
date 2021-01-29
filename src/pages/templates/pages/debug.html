@@ -5,11 +5,11 @@
 {% block head_additional %}
 <style>
 
-#debug-table {
+.debug-table {
     width: 100%;
 }
 
-#debug-table th, #debug-table td {
+.debug-table th, .debug-table td {
     border: 1px solid black;
     padding: 0.5em;
     font-size: 10px !important!;
@@ -24,9 +24,28 @@
 
 {% block content %}
 <h1>Client-Side Message Queue Debug Page</h1>
-<button id="clear-log">Clear Log</button><br/>
 <label for="flush-override">Queue Flush Interval Override (milliseconds)</label> <input type="number" id="flush-override" step="1000" />
-<table id="debug-table">
+
+<table id="flush-debug-table" class="debug-table">
+    <tr>
+        <th>caliperEvents queue status</th>
+        <th>preferenceChanges queue status</th>
+    </tr>
+    <tr>
+        <td id="queue-flush-status-clusive-messageQueue-caliperEvents">                    
+        Last flush attempt at: <span id="queue-flush-timestamp"></span><br/>
+        Last return message: <span id="queue-flush-return-message"></span>
+        </td>
+        <td id="queue-flush-status-clusive-messageQueue-preferenceChanges"> 
+        Last flush attempt at: <span id="queue-flush-timestamp"></span><br/>       
+        Last return message: <span id="queue-flush-return-message"></
+        </td>
+    </tr>
+</table>
+
+
+<button id="clear-log">Clear Queue Log</button><br/>
+<table id="queue-debug-table" class="debug-table">
 <tbody>
 <tr>
     <th id="th-event_id">Page Event Id</th>
@@ -51,9 +70,9 @@
 
     }
 
-    var lastQueues = {
+    var lastValues = {
         "clusive.messageQueue.caliperEvents":[],
-        "clusive.messageQueue.preferenceChanges":[],
+        "clusive.messageQueue.preferenceChanges":[]        
     }
     var lastCaliperEventsQueue;
     var lastPreferenceChangesQueue;
@@ -61,10 +80,12 @@
     window.addEventListener('storage', () => {        
         handleStorageEvent("clusive.messageQueue.caliperEvents");
         handleStorageEvent("clusive.messageQueue.preferenceChanges");
+        handleQueueLogEvent("clusive.messageQueue.caliperEvents.log.lastQueueFlushInfo");
+        handleQueueLogEvent("clusive.messageQueue.preferenceChanges.log.lastQueueFlushInfo");
     })
 
     $("#clear-log").click(function (e) {
-        clearLog();
+        clearMessageLog();
         e.preventDefault();
     })
 
@@ -82,18 +103,18 @@
         window.localStorage.setItem("clusive.messageQueue.config.flushInterval", overrideValue);
     };
 
-    function clearLog() {
-        $("#debug-table").find("tr:not(:first)").remove();
+    function clearMessageLog() {
+        $("#queue-debug-table").find("tr:not(:first)").remove();
     }
 
     function handleStorageEvent(localStorageKey) {
         var currentQueue = JSON.parse(window.localStorage.getItem(localStorageKey));
-        console.log('Storage Event / Current Queue: ', currentQueue);
-        console.log('Last Queue:', lastQueues[localStorageKey]); 
-        
+        console.log(localStorageKey + ' Storage Event / Current Queue: ', currentQueue);
+        console.log('Last Queue:', lastValues[localStorageKey]); 
+
         var newMessages = currentQueue.filter(function (message) {
-            var duplicate = false;
-            lastQueues[localStorageKey].forEach(function (m) {
+            var duplicate = false;            
+            lastValues[localStorageKey].forEach(function (m) {
                 console.log(message.timestamp, m.timestamp)
                 if(message.timestamp === m.timestamp) {
                     duplicate = true;
@@ -108,13 +129,25 @@
             var typeHumanReadable = eventTypes[type];
             var displayedContent = getDisplayedMessageContent(message.content);
             // var content = JSON.stringify(message.content);
-            $("#debug-table").find("tr:last").after(`<tr>
+            $("#queue-debug-table").find("tr:last").after(`<tr>
                 <td title="${eventId}">${eventId.substring(0,8)}...</td>
                 <td>${username}</td>
                 <td title="${type}">${typeHumanReadable}</td>
                 <td>${displayedContent}</td></tr>`);
         })            
-        lastQueues[localStorageKey] = currentQueue;
+        lastValues[localStorageKey] = currentQueue;
+    }
+
+    function handleQueueLogEvent(localStorageKey) {
+        var currentLogValue = JSON.parse(window.localStorage.getItem(localStorageKey));
+        var returnValue = JSON.stringify(currentLogValue.returnMessage);
+        var timestamp = JSON.stringify(currentLogValue.timestamp);
+        console.log("Log event: ", currentLogValue, localStorageKey);
+        var selectorSuffix = localStorageKey.split(".").slice(0,3).join("-");
+        console.log("selectorSuffix", selectorSuffix);
+        var selector = "#queue-flush-status-" + selectorSuffix;
+        $(selector).find("#queue-flush-return-message").text(returnValue);
+        $(selector).find("#queue-flush-timestamp").text(timestamp);
     }
 
     function getDisplayedMessageContent(messageContent) {
