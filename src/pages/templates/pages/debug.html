@@ -25,7 +25,7 @@
 {% block content %}
 <h1>Client-Side Message Queue Debug Page</h1>
 <button id="clear-log">Clear Log</button><br/>
-<label for="flush-override">Queue Flush Interval Override (milliseconds)</label> <input type="number" id="flush-override" />
+<label for="flush-override">Queue Flush Interval Override (milliseconds)</label> <input type="number" id="flush-override" step="1000" />
 <table id="debug-table">
 <tbody>
 <tr>
@@ -67,6 +67,10 @@
         clearLog();
         e.preventDefault();
     })
+
+    $("#flush-override").val(function () {
+        return window.localStorage.getItem("clusive.messageQueue.config.flushInterval")
+    });
 
     $("#flush-override").change(function () {
         var overrideValue = $("#flush-override").val();
