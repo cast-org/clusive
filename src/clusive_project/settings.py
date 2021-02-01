@@ -38,7 +38,52 @@ INSTALLED_APPS = [
     'tips.apps.TipsConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
+    # added for django-allauth:
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # including only Google provider for now, see:
+    # https://django-allauth.readthedocs.io/en/latest/installation.html#django
+    'allauth.socialaccount.providers.google'
 ]
+
+SITE_ID = 1 # django-allauth
+
+# django-allauth provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+             # values from Google dashboard setup
+             # - uri would be 'http://accounts.google.com/o/oauth2/auth?...
+             # need to look into how to set these for the real Goolge OAuth2
+             # provider; it likely depends on a "registration-with-google" step.
+            'client_id': '554291169960-repqllu9q9h5loog0hpadr6854fb2oq0.apps.googleusercontent.com',
+            'secret': 'HF9GhAcyvHj0l-uEET99GLbx',
+            'key': ''
+        }
+    }
+}
+
+# The `allauth` redirect URI from OAuth2 server back to Clusive after a
+# successful authorization is set to '/accounts/profile/', passing back the
+# access token*.  But, according to the FAQ, that will result in a 404 because
+# `allauth` does not implement anything here -- it's up to individual users of
+# the `allauth` library to handle the "callback".  Specifically, Clusive needs
+# to implement the details of what to do with a successful confirmation from the
+# OAuth2 server.  A suggestion from `allauth` is to set the LOGIN_REDIRECT_URL
+# to where the app would go after a local successful login:
+# https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
+# A possible value for Clusive is '/reader', but that doesn't work out of the
+# box; it's likely missing session or some other info.  Setting it to '/reader'
+# for experimenting.
+# * - need to examine the details of the payload sent with the redirect URI to
+# see how the access token is transmitted.  It's likely different depending on
+# the OAuth2 provider, e.g., Google vs. Github
+LOGIN_REDIRECT_URL = '/reader'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -107,6 +152,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+# AUTHENTICATION_BACKENDS needed by `django-allauth` solution
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # Internationalization
