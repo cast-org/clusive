@@ -127,45 +127,49 @@
 
     function handleStorageEvent(localStorageKey) {
         var currentQueue = JSON.parse(window.localStorage.getItem(localStorageKey));
-        console.log(localStorageKey + ' Storage Event / Current Queue: ', currentQueue);
-        console.log('Last Queue:', lastValues[localStorageKey]); 
+        if(currentQueue) {
+            console.log(localStorageKey + ' Storage Event / Current Queue: ', currentQueue);
+            console.log('Last Queue:', lastValues[localStorageKey]); 
 
-        var newMessages = currentQueue.filter(function (message) {
-            var duplicate = false;            
-            lastValues[localStorageKey].forEach(function (m) {
-                console.log(message.timestamp, m.timestamp)
-                if(message.timestamp === m.timestamp) {
-                    duplicate = true;
-                }          
-            }) 
-            return !duplicate;
-        });
-        newMessages.forEach(function (message) {
-            var eventId = message.content.eventId;
-            var username = message.username;
-            var type = message.content.type;
-            var typeHumanReadable = eventTypes[type];
-            var displayedContent = getDisplayedMessageContent(message.content);
-            // var content = JSON.stringify(message.content);
-            $("#queue-debug-table").find("tr:last").after(`<tr>
-                <td title="${eventId}">${eventId.substring(0,8)}...</td>
-                <td>${username}</td>
-                <td title="${type}">${typeHumanReadable}</td>
-                <td>${displayedContent}</td></tr>`);
-        })            
-        lastValues[localStorageKey] = currentQueue;
+            var newMessages = currentQueue.filter(function (message) {
+                var duplicate = false;            
+                lastValues[localStorageKey].forEach(function (m) {
+                    console.log(message.timestamp, m.timestamp)
+                    if(message.timestamp === m.timestamp) {
+                        duplicate = true;
+                    }          
+                }) 
+                return !duplicate;
+            });
+            newMessages.forEach(function (message) {
+                var eventId = message.content.eventId;
+                var username = message.username;
+                var type = message.content.type;
+                var typeHumanReadable = eventTypes[type];
+                var displayedContent = getDisplayedMessageContent(message.content);
+                // var content = JSON.stringify(message.content);
+                $("#queue-debug-table").find("tr:last").after(`<tr>
+                    <td title="${eventId}">${eventId.substring(0,8)}...</td>
+                    <td>${username}</td>
+                    <td title="${type}">${typeHumanReadable}</td>
+                    <td>${displayedContent}</td></tr>`);
+            })            
+            lastValues[localStorageKey] = currentQueue;
+        }
     }
 
     function handleQueueLogEvent(localStorageKey) {
         var currentLogValue = JSON.parse(window.localStorage.getItem(localStorageKey));
-        var returnValue = JSON.stringify(currentLogValue.returnMessage);
-        var timestamp = JSON.stringify(currentLogValue.timestamp);
-        console.log("Log event: ", currentLogValue, localStorageKey);
-        var selectorSuffix = localStorageKey.split(".").slice(0,3).join("-");
-        console.log("selectorSuffix", selectorSuffix);
-        var selector = "#queue-flush-status-" + selectorSuffix;
-        $(selector).find("#queue-flush-return-message").text(returnValue);
-        $(selector).find("#queue-flush-timestamp").text(timestamp);
+        if(currentLogValue) {
+            var returnValue = JSON.stringify(currentLogValue.returnMessage);
+            var timestamp = JSON.stringify(currentLogValue.timestamp);
+            console.log("Log event: ", currentLogValue, localStorageKey);
+            var selectorSuffix = localStorageKey.split(".").slice(0,3).join("-");
+            console.log("selectorSuffix", selectorSuffix);
+            var selector = "#queue-flush-status-" + selectorSuffix;
+            $(selector).find("#queue-flush-return-message").text(returnValue);
+            $(selector).find("#queue-flush-timestamp").text(timestamp);
+        }        
     }
 
     function getDisplayedMessageContent(messageContent) {
