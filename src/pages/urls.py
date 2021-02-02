@@ -9,4 +9,5 @@ urlpatterns = [
     path('reader/<int:book_id>/<int:version>', views.ReaderView.as_view(), name='reader'),
     path('reader/<int:book_id>', views.ReaderChooseVersionView.as_view(pattern_name='reader'), name='reader-default'),
     path('wordbank', views.WordBankView.as_view(), name='word_bank'),
+    path('debug', views.DebugView.as_view(), name='debug'),
 ]

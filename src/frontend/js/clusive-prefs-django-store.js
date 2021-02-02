@@ -31,7 +31,8 @@
                 type: "clusive.djangoMessageQueue",
                 options: {
                     config: {                        
-                        localStorageKey: "clusive.messageQueue.preferenceChanges"                        
+                        localStorageKey: "clusive.messageQueue.preferenceChanges",
+                        lastQueueFlushInfoKey: "clusive.messageQueue.preferenceChanges.log.lastQueueFlushInfo"
                     }
                 }
             }
