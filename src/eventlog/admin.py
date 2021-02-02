@@ -17,7 +17,7 @@ class EventAdmin(admin.ModelAdmin):
                        'book_version_id', 'resource_href', 'resource_progression', 'page', 'control', 'value')
     list_display = ('eventTime', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
                     'book_version_id')
-    list_filter = ('actor__permission', 'eventTime')
+    list_filter = ('actor__permission', 'eventTime', 'actor')
     ordering = ('-eventTime',)
     change_list_template = 'eventlog/event_changelist.html'
 
