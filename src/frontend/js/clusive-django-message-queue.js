@@ -3,16 +3,16 @@
 (function(fluid) {
     'use strict';
 
-    fluid.defaults("clusive.logoutFlushRecorder", {
+    fluid.defaults("clusive.logoutFlushManager", {
         gradeNames: ["fluid.component", "fluid.resolveRootSingle"],
-        singleRootType: "clusive.logoutFlushRecorder",
+        singleRootType: "clusive.logoutFlushManager",
         members: {
             numberOfQueues: 0,
             completedFlushes: 0
         }
     });
 
-    var logoutFlushRecorder = clusive.logoutFlushRecorder();
+    var logoutFlushManager = clusive.logoutFlushManager();
 
     // Message queue implementation to work with the Django store
     fluid.defaults("clusive.djangoMessageQueue", {
@@ -29,7 +29,7 @@
             logoutLinkSelector: "#logoutLink"
         },
         components: {
-            logoutFlushRecorder: "{logoutFlushRecorder}"
+            logoutFlushManager: "{logoutFlushManager}"
         },
         events: {
             logoutFlushComplete: null
@@ -68,9 +68,9 @@
                 funcName: "clusive.djangoMessageQueue.attachLogoutEvents",
                 args: ["{that}"]
             },
-            "onCreate.registerWithLogoutFlushRecorder": {
-                funcName: "clusive.djangoMessageQueue.registerWithLogoutFlushRecorder",
-                args: ["{logoutFlushRecorder}"]
+            "onCreate.registerWithlogoutFlushManager": {
+                funcName: "clusive.djangoMessageQueue.registerWithlogoutFlushManager",
+                args: ["{logoutFlushManager}"]
             },
             "logoutFlushComplete.doLogout": {
                 funcName: "clusive.djangoMessageQueue.doLogout",
@@ -79,8 +79,8 @@
         }
     });
 
-    clusive.djangoMessageQueue.registerWithLogoutFlushRecorder = function (logoutFlushRecorder) {
-        logoutFlushRecorder.numberOfQueues = logoutFlushRecorder.numberOfQueues+1;
+    clusive.djangoMessageQueue.registerWithlogoutFlushManager = function (logoutFlushManager) {
+        logoutFlushManager.numberOfQueues = logoutFlushManager.numberOfQueues+1;
     };
 
     clusive.djangoMessageQueue.getFlushInterval = function (defaultInterval, flushIntervalOverrideKey) {        
@@ -109,13 +109,13 @@
         promise.then(
             function(value) {                
                 that.events.queueFlushSuccess.fire(value);
-                that.logoutFlushRecorder.completedFlushes = that.logoutFlushRecorder.completedFlushes+1;
-                that.events.logoutFlushComplete.fire(that.logoutFlushRecorder.numberOfQueues, that.logoutFlushRecorder.completedFlushes);                
+                that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+                that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
             },
             function(error) {                
                 that.events.queueFlushFailure.fire(error);
-                that.logoutFlushRecorder.completedFlushes = that.logoutFlushRecorder.completedFlushes+1;
-                that.events.logoutFlushComplete.fire(that.logoutFlushRecorder.numberOfQueues, that.logoutFlushRecorder.completedFlushes);                
+                that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+                that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
             })    
     }
 
