@@ -240,6 +240,15 @@ h2,
     color: var(--CT_definitionSpeechColor);
 }
 
+.translate-source {
+    font-weight: $font-weight-bold;
+    color: var(--CT_translateSourceColor);
+}
+.translate-ouput {
+    font-weight: $font-weight-normal;
+    color: var(--CT_translateOutputColor);
+}
+
 // Django error list
 .errorlist {
     padding: .25rem 1rem;
@@ -283,8 +292,8 @@ h2,
     left: $sidebar-width;
     margin-right: ($grid-gutter-width / -2);
     margin-left: ($grid-gutter-width / -2);
-    outline: 0;
     pointer-events: none;
+    outline: 0;
     @include sr-only();
 
     @include media-breakpoint-up(sm) {

@@ -22,6 +22,16 @@
 <script src="../js/frontend.js"></script>
 <script src="./js/theme-test.js"></script>
 
+<style>
+.popover {
+    position: relative;
+    display: block;
+    flex: 1 1 auto;
+}
+.popover-scrollable > [role="document"] {
+    height: 100%;
+</style>
+
 </head>
 <body class="library">
 
@@ -33,59 +43,86 @@
         <div class="col content">
             <main id="content" tabindex="-1">
 
-<div class="popover popover-glossary popover-scrollable" style="position: relative; display: block; flex: 1 1 auto;">
-    <div role="document" style="height: 100%;">
-        <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
-        <div class="popover-header">
-            <strong id="glossaryTitle">
-                renewable
-            </strong>
-        </div>
-        <div class="popover-body">
-            <div id="glossaryBody">
-                <p>
-                    <span class="definition-speech">(adjective)</span> <span class="definition-meaning">Able to be replaced.</span><br>
-                    <span class="definition-example">Renewable resources include air, plants, water, and animals, and other things that are replaceable within a person's lifetime.</span>
-                </p>
-                <figure class="figure">
-                    <img class="figure-img img-fluid" src="./img/sample-4.jpg" alt="Photo of solar panels in a field.">
-                    <div class="figure-caption">
-                        Solar power and wind power are renewable resources.
-                    </div>
-                </figure>
-                <div class="popover-section">
-                    <fieldset>
-                        <legend class="ranking-legend">How well do you know this word?</legend>
-                        <div class="ranking">
-                            <div class="form-check form-checkradio">
-                                <input class="form-check-input" type="radio" id="ranking0-0" name="ranking0" aria-label="Never heard it">
-                                <label class="form-check-label" for="ranking0-0"></label>
-                                <label class="ranking-label" for="ranking0-0" aria-hidden="true">Never heard it</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input class="form-check-input" type="radio" id="ranking0-1" name="ranking0" aria-label="Heard it">
-                                <label class="form-check-label" for="ranking0-1"></label>
-                                <label class="ranking-label" for="ranking0-1" aria-hidden="true">Heard it</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input class="form-check-input" type="radio" id="ranking0-2" name="ranking0" aria-label="Know it">
-                                <label class="form-check-label" for="ranking0-2"></label>
-                                <label class="ranking-label" for="ranking0-2"  aria-hidden="true">Know it</label>
-                            </div>
-                            <div class="form-check form-checkradio">
-                                <input class="form-check-input" type="radio" id="ranking0-3" name="ranking0" aria-label="Use it">
-                                <label class="form-check-label" for="ranking0-3"></label>
-                                <label class="ranking-label" for="ranking0-3" aria-hidden="true">Use it</label>
-                            </div>
-                        </div>
-                    </fieldset>
+<div class="row">
+<div class="col">
+
+<div class="popover popover-glossary popover-scrollable">
+    <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <div class="popover-header">
+        <strong id="glossaryTitle">
+            renewable
+        </strong>
+    </div>
+    <div class="popover-body">
+        <div id="glossaryBody">
+            <p>
+                <span class="definition-speech">(adjective)</span> <span class="definition-meaning">Able to be replaced.</span><br>
+                <span class="definition-example">Renewable resources include air, plants, water, and animals, and other things that are replaceable within a person's lifetime.</span>
+            </p>
+            <figure class="figure">
+                <img class="figure-img img-fluid" src="./img/sample-4.jpg" alt="Photo of solar panels in a field.">
+                <div class="figure-caption">
+                    Solar power and wind power are renewable resources.
                 </div>
+            </figure>
+            <div class="popover-section">
+                <fieldset>
+                    <legend class="ranking-legend">How well do you know this word?</legend>
+                    <div class="ranking">
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-0" name="ranking0" aria-label="Never heard it">
+                            <label class="form-check-label" for="ranking0-0"></label>
+                            <label class="ranking-label" for="ranking0-0" aria-hidden="true">Never heard it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-1" name="ranking0" aria-label="Heard it">
+                            <label class="form-check-label" for="ranking0-1"></label>
+                            <label class="ranking-label" for="ranking0-1" aria-hidden="true">Heard it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-2" name="ranking0" aria-label="Know it">
+                            <label class="form-check-label" for="ranking0-2"></label>
+                            <label class="ranking-label" for="ranking0-2"  aria-hidden="true">Know it</label>
+                        </div>
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="radio" id="ranking0-3" name="ranking0" aria-label="Use it">
+                            <label class="form-check-label" for="ranking0-3"></label>
+                            <label class="ranking-label" for="ranking0-3" aria-hidden="true">Use it</label>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
         </div>
-        <div id="glossaryFooter" class="popover-footer">
-            Added to <a href="{% url 'word_bank' %}">word bank</a>
+    </div>
+    <div id="glossaryFooter" class="popover-footer">
+        Added to <a href="{% url 'word_bank' %}">word bank</a>
+    </div>
+</div>
+
+</div>
+<div class="col">
+
+<div class="popover popover-translate popover-scrollable" id="translatePop">
+    <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
+    <div class="popover-header">
+        <strong>Translator</strong>
+    </div>
+    <div class="popover-body">
+        <div id="translateource" class="translate-source">
+            <p>source content&hellip;</p>
+            <p>Tenderloin bresaola bacon meatloaf beef ribs, pancetta ribeye burgdoggen pork loin jerky doner spare ribs alcatra biltong ground round. Short loin fatback meatloaf beef ribs leberkas corned beef jerky salami.</p>
+        </div>
+        <div id="translateOutput" class="translate-output popover-section">
+            <p>translated content&hellip;</p>
+            <p>Meatball fatback ground round sausage chicken venison jerky, beef short ribs hamburger turkey pancetta pork. Turducken cupim chislic bacon strip steak,  filet mignon tri-tip sausage rump ribeye.</p>
         </div>
     </div>
+    <div class="popover-footer">
+    </div>
+</div>
+
+</div>
 </div>
             </main>
         </div>
