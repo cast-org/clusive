@@ -147,7 +147,7 @@
                 var type = message.content.type;
                 var typeHumanReadable = eventTypes[type];
                 var displayedContent = getDisplayedMessageContent(message.content);
-                // var content = JSON.stringify(message.content);
+                
                 $("#queue-debug-table").find("tr:last").after(`<tr>
                     <td title="${eventId}">${eventId.substring(0,8)}...</td>
                     <td>${username}</td>
@@ -161,8 +161,8 @@
     function handleQueueLogEvent(localStorageKey) {
         var currentLogValue = JSON.parse(window.localStorage.getItem(localStorageKey));
         if(currentLogValue) {
-            var returnValue = JSON.stringify(currentLogValue.returnMessage);
-            var timestamp = JSON.stringify(currentLogValue.timestamp);
+            var returnValue = JSON.stringify(currentLogValue.returnMessage, null, 1);
+            var timestamp = JSON.stringify(currentLogValue.timestamp, null, 1);
             console.log("Log event: ", currentLogValue, localStorageKey);
             var selectorSuffix = localStorageKey.split(".").slice(0,3).join("-");
             console.log("selectorSuffix", selectorSuffix);
