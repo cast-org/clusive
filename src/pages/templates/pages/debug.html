@@ -59,6 +59,10 @@
         Last return message: <span id="queue-flush-return-message"></
         </td>
     </tr>
+    <tr>
+        <td>Items in queue: <span id="caliperEvents-length"></span></td>
+        <td>Items in queue: <span id="preferenceChanges-length"></span></td>
+    </tr>
 </table>
 <hr />
 <h2 id="debug-queue-heading">Message Queue Log</h2>
@@ -131,6 +135,8 @@
             console.log(localStorageKey + ' Storage Event / Current Queue: ', currentQueue);
             console.log('Last Queue:', lastValues[localStorageKey]); 
 
+            $('#' + localStorageKey.split('.')[2] + '-length').html(currentQueue.length);
+
             var newMessages = currentQueue.filter(function (message) {
                 var duplicate = false;            
                 lastValues[localStorageKey].forEach(function (m) {
@@ -155,6 +161,8 @@
                     <td>${displayedContent}</td></tr>`);
             })            
             lastValues[localStorageKey] = currentQueue;
+        } else {
+            $('#' + localStorageKey.split('.')[2] + '-length').html('null');
         }
     }
 
