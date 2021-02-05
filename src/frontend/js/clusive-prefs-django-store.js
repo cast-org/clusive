@@ -109,16 +109,17 @@
             
             // Use cached result if within debounce time
             if(timeDiff < debounce && that.lastResponse) {
-                console.debug('Get user preferences from cache of last result');
+                console.debug('Getting user preferences from cache of last result');
                 djangoStorePromise.resolve({
                     preferences: that.lastResponse
                 });
-            } else if(that.requestIsInFlight) {
-                djangoStorePromise.reject('Won\'t get user preferences from server, another GET request is currently in flight')                
+            } else if(that.requestIsInFlight && that.requestInFlightPromise) {
+                console.debug("Returning Promise from existing in-flight request");
+                return that.requestInFlightPromise;
             } else {
                 that.requestIsInFlight = true;
+                that.requestInFlightPromise = djangoStorePromise;
                 $.get(getURL, function(data) {
-                    that.requestIsInFlight = false;
                     console.debug('Get user preferences from the server ', getURL);
                     console.debug('Received preferences: ', data);
                     that.lastResponse = data;
@@ -127,8 +128,12 @@
                     djangoStorePromise.resolve({
                         preferences: data
                     });
+
+                    that.requestIsInFlight = false;
+                    that.requestInFlightPromise = null;
                 }).fail(function(error) {
                     that.requestIsInFlight = false;
+                    that.requestInFlightPromise = null;
                     console.error('Error getting preferences:', error);
                     djangoStorePromise.reject('error');
                 });
