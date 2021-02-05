@@ -76,8 +76,6 @@
     fluid.makeGradeLinkage('clusive.prefs.djangoStore.linkage', ['fluid.dataSource.writable', 'clusive.prefs.djangoStore'], 'clusive.prefs.djangoStore.writable');
 
     clusive.prefs.djangoStore.getUserPreferences = function(directModel, messageQueue, lastRequestTime, that) {
-        console.debug('clusive.prefs.djangoStore.getUserPreferences', directModel, messageQueue);
-
         var djangoStorePromise = fluid.promise();
 
         var preferenceChangeMessages = [].concat(messageQueue.queue).filter(function (item) {
@@ -168,11 +166,9 @@
             });
     };
 
-    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, initialModel) {        
-        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue, initialModel);
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, initialModel) {                
         // Merge non-default preferences (the ones relayed from the editor) with defaults for storage
-        var prefsToSave = $.extend({}, fluid.get(initialModel, "preferences"), fluid.get(model, "preferences"));        
-        console.debug("prefsToSave would be: ", prefsToSave);
+        var prefsToSave = $.extend({}, fluid.get(initialModel, "preferences"), fluid.get(model, "preferences"));                
         messageQueue.add({"type": "PC", "preferences": prefsToSave, "readerInfo": clusiveContext.reader.info, "eventId": PAGE_EVENT_ID});
     };
     
