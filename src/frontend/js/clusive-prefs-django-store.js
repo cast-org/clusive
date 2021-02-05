@@ -16,6 +16,9 @@
             onPreferencesSetAdopted: null
         },
         members: {
+            // Holds the initial model (defaults) from the prefs editor
+            initialModel: {                
+            },
             // Holds the time a request was last made
             lastRequestTime: null,
             // Holds the last response for reuse if within the debounce time
@@ -56,7 +59,7 @@
         listeners: {
             'onWrite.impl': {
                 listener: 'clusive.prefs.djangoStore.setUserPreferences',
-                args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue", "{that}.lastRequestTime", "{that}"]
+                args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue", "{that}.initialModel"]
             }
         },
         invokers: {
@@ -165,9 +168,12 @@
             });
     };
 
-    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
-        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
-        messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences'), "readerInfo": clusiveContext.reader.info, "eventId": PAGE_EVENT_ID});
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, initialModel) {        
+        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue, initialModel);
+        // Merge non-default preferences (the ones relayed from the editor) with defaults for storage
+        var prefsToSave = $.extend({}, fluid.get(initialModel, "preferences"), fluid.get(model, "preferences"));        
+        console.debug("prefsToSave would be: ", prefsToSave);
+        messageQueue.add({"type": "PC", "preferences": prefsToSave, "readerInfo": clusiveContext.reader.info, "eventId": PAGE_EVENT_ID});
     };
     
 }(fluid_3_0_0));
