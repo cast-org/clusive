@@ -68,8 +68,8 @@
                 funcName: "clusive.djangoMessageQueue.attachLogoutEvents",
                 args: ["{that}"]
             },
-            "onCreate.registerWithlogoutFlushManager": {
-                funcName: "clusive.djangoMessageQueue.registerWithlogoutFlushManager",
+            "onCreate.registerWithLogoutFlushManager": {
+                funcName: "clusive.djangoMessageQueue.registerWithLogoutFlushManager",
                 args: ["{logoutFlushManager}"]
             },
             "logoutFlushComplete.doLogout": {
@@ -79,7 +79,7 @@
         }
     });
 
-    clusive.djangoMessageQueue.registerWithlogoutFlushManager = function (logoutFlushManager) {
+    clusive.djangoMessageQueue.registerWithLogoutFlushManager = function (logoutFlushManager) {
         logoutFlushManager.numberOfQueues = logoutFlushManager.numberOfQueues+1;
     };
 
@@ -101,8 +101,13 @@
         window.localStorage.setItem(lastQueueFlushInfoKey, JSON.stringify(flushInfo));
     }
 
-    clusive.djangoMessageQueue.logoutFlush = function (that) {        
-        clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);
+    clusive.djangoMessageQueue.logoutFlush = function (that) {           
+        if(that.isQueueEmpty()) {
+            // Mark flush complete on the logoutFlushManger
+            that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+        } else {
+            clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);
+        }
     }    
 
     clusive.djangoMessageQueue.setupLogoutFlushPromise = function (that, promise) {        
@@ -123,13 +128,10 @@
         var logoutLinkSelector = that.options.config.logoutLinkSelector;        
                 
         $(logoutLinkSelector).click(
-            function (e) {                
-                if(! that.isQueueEmpty()) { 
-                    console.log("logout link clicked while queue not empty");
-                    $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
-                    e.preventDefault();
-                    that.logoutFlush();
-                }                                
+            function (e) {                                                    
+                $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
+                e.preventDefault();
+                that.logoutFlush();                   
             }
         );
     };
@@ -137,6 +139,7 @@
     clusive.djangoMessageQueue.doLogout = function (that, numberOfQueues, completedFlushes) {        
         console.log("doLogout", that, numberOfQueues, completedFlushes);
         if(completedFlushes >= numberOfQueues) {
+            PageTiming.reportEndTime(); 
             var logoutLinkSelector = that.options.config.logoutLinkSelector;
             $(logoutLinkSelector).text("Logging out").fadeIn();        
             window.location = $(logoutLinkSelector).attr("href");
