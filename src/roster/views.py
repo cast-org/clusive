@@ -4,17 +4,16 @@ import logging
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import login, password_validation
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse, reverse_lazy
-from django.views import View
-from django.views.generic import TemplateView, UpdateView
-
+from django.urls import reverse
 from django.utils import timezone
+from django.views import View
+from django.views.generic import TemplateView, UpdateView, CreateView
 
 from eventlog.models import Event
 from eventlog.signals import preference_changed
@@ -22,7 +21,7 @@ from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import UserForm
+from roster.forms import UserForm, PeriodForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles
 
 logger = logging.getLogger(__name__)
@@ -188,6 +187,7 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         context['periods'] = self.periods
         context['current_period'] = self.current_period
         context['students'] = self.make_student_info_list()
+        context['period_name_form'] = PeriodForm(instance=self.current_period)
         logger.debug('Students: %s', context['students'])
         return context
 
@@ -239,3 +239,52 @@ class ManageEditView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def configure_event(self, event: Event):
         event.page = 'ManageStudent'
+
+
+class ManageEditPeriodView(LoginRequiredMixin, EventMixin, UpdateView):
+    model = Period
+    form_class = PeriodForm
+    template_name = 'roster/manage_edit_period.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        cu = request.clusive_user
+        if not cu.can_manage_periods or not self.get_object().users.filter(id=cu.id).exists():
+            self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('manage', kwargs={'period_id': self.object.id})
+
+    def configure_event(self, event: Event):
+        event.page = 'ManageEditPeriod'
+
+
+class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, CreateView):
+    model = Period
+    form_class = PeriodForm
+    template_name = 'roster/manage_create_period.html'
+
+    def get_form(self, form_class=None):
+        instance=Period(site=self.clusive_user.get_site())
+        kwargs = self.get_form_kwargs()
+        kwargs['instance'] = instance
+        return PeriodForm(**kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        cu = request.clusive_user
+        if not cu.can_manage_periods:
+            self.handle_no_permission()
+        self.clusive_user = cu
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('manage', kwargs={'period_id': self.object.id})
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        # Add current user to the new Period
+        self.object.users.add(self.clusive_user)
+        return result
+
+    def configure_event(self, event: Event):
+        event.page = 'ManageCreatePeriod'

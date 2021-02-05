@@ -31,10 +31,11 @@ class Site(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
 
+
 class Period(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    anon_id = models.CharField(max_length=30, unique=True, null=True)
+    name = models.CharField(max_length=100, verbose_name='Class name')
+    anon_id = models.CharField(max_length=30, unique=True, null=True, verbose_name='Anonymous identifier')
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
@@ -136,6 +137,17 @@ class ClusiveUser(models.Model):
     # What layout to use for the library cards. This choice is persistent.
     library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
                                      choices=LibraryStyles.CHOICES)
+
+    # Site that this user is connected to. Although users can have multiple Periods,
+    # these are generally assumed to be all part of one Site.
+    # If this assumption is changed, then the Manage pages will need updates
+    # to allow users to manage their different Sites.
+    def get_site(self):
+        period = self.current_period or self.periods.first()
+        if period:
+            return period.site
+        return None
+
 
     @property 
     def is_permissioned(self):

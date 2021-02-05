@@ -37,5 +37,6 @@ urlpatterns = [
     path('manage', views.ManageView.as_view(), name='manage'),
 
     path('manage_edit/<int:period_id>/<int:pk>', views.ManageEditView.as_view(), name='manage_edit'),
-
+    path('manage_edit_period/<int:pk>', views.ManageEditPeriodView.as_view(), name='manage_edit_period'),
+    path('manage_create_period/', views.ManageCreatePeriodView.as_view(), name='manage_create_period'),
 ]

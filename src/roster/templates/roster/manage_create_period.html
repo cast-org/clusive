@@ -1,0 +1,31 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block title %}Add Class{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="manage" %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <main id="content" tabindex="-1">
+        <div class="row">
+            <div class="col">
+                <h1>Add Class</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.name.label_tag | formlabel }}
+                        {{ form.name.errors }}
+                        {{ form.name }}
+                    </div>
+                    <input type="submit" class="btn btn-secondary" value="Save and continue"/>
+                    <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+

@@ -33,7 +33,10 @@ class EventMixin(ContextMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['event_id'] = self.event_id
+        try:
+            context['event_id'] = self.event_id
+        except AttributeError:
+            logger.warning('event_id missing from page view.')
         return context
 
     def configure_event(self, event: Event):

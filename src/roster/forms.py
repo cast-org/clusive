@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
 
+from roster.models import Period
+
+
 class UserForm(ModelForm):
     password_change = forms.CharField(required=False, label='Password',
                                widget=forms.PasswordInput(attrs={
@@ -37,4 +40,17 @@ class UserForm(ModelForm):
             'last_name': forms.TextInput(attrs={'aria-label': 'Last name', 'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'aria-label': 'Email', 'class': 'form-control'}),
             'username': forms.TextInput(attrs={'aria-label': 'Username', 'class': 'form-control'})
+        }
+
+
+class PeriodForm(ModelForm):
+
+    class Meta:
+        model = Period
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'aria-label': 'Class name',
+                'class': 'form-control',
+            })
         }
