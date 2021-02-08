@@ -101,10 +101,12 @@
         window.localStorage.setItem(lastQueueFlushInfoKey, JSON.stringify(flushInfo));
     }
 
-    clusive.djangoMessageQueue.logoutFlush = function (that) {           
+    clusive.djangoMessageQueue.logoutFlush = function (that) {                   
         if(that.isQueueEmpty()) {
-            // Mark flush complete on the logoutFlushManger
+            // Mark flush for this queue complete on the logoutFlushManger
             that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+            // Fire that the logout flush for this queue is complete
+            that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
         } else {
             clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);
         }
