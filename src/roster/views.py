@@ -229,7 +229,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
         target : User
         target = form.instance
         # Set password
-        new_pw = form.cleaned_data['password_change']
+        new_pw = form.cleaned_data['password']
         if new_pw:
             target.set_password(new_pw)
             target.save()
@@ -275,7 +275,7 @@ class ManageEditUserView(LoginRequiredMixin, EventMixin, UpdateView):
         form.save()
         target : User
         target = form.instance
-        new_pw = form.cleaned_data['password_change']
+        new_pw = form.cleaned_data['password']
         if new_pw:
             target.set_password(new_pw)
             target.save()
