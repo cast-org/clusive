@@ -21,8 +21,8 @@ from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import UserForm, PeriodForm
-from roster.models import ClusiveUser, Period, PreferenceSet, Roles
+from roster.forms import UserForm, PeriodForm, UserCreateForm, UserEditForm
+from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
 
 logger = logging.getLogger(__name__)
 
@@ -201,10 +201,54 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         event.page = 'ManageClass'
 
 
-class ManageEditView(LoginRequiredMixin, EventMixin, UpdateView):
+class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
     model = User
-    form_class = UserForm
-    template_name = 'roster/manage_edit.html'
+    form_class = UserCreateForm
+    template_name = 'roster/manage_create_user.html'
+    period = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.period = get_object_or_404(Period, id=kwargs['period_id'])
+        # Sanity check requested period
+        cu = request.clusive_user
+        if not cu.can_manage_periods or not self.period.users.filter(id=cu.id).exists():
+            self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('manage', kwargs={'period_id': self.period.id})
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['period_id'] = self.period.id
+        return data
+
+    def form_valid(self, form):
+        # Create User
+        form.save()
+        target : User
+        target = form.instance
+        # Set password
+        new_pw = form.cleaned_data['password_change']
+        if new_pw:
+            target.set_password(new_pw)
+            target.save()
+        # Create ClusiveUser
+        cu = ClusiveUser.objects.create(user=target,
+                                   role=Roles.STUDENT,
+                                   permission=ResearchPermissions.GUEST)
+        # Add user to the Period
+        self.period.users.add(cu)
+        return super().form_valid(form)
+
+    def configure_event(self, event: Event):
+        event.page = 'ManageCreateStudent'
+
+
+class ManageEditUserView(LoginRequiredMixin, EventMixin, UpdateView):
+    model = User
+    form_class = UserEditForm
+    template_name = 'roster/manage_edit_user.html'
     period = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -238,7 +282,7 @@ class ManageEditView(LoginRequiredMixin, EventMixin, UpdateView):
         return super().form_valid(form)
 
     def configure_event(self, event: Event):
-        event.page = 'ManageStudent'
+        event.page = 'ManageEditStudent'
 
 
 class ManageEditPeriodView(LoginRequiredMixin, EventMixin, UpdateView):

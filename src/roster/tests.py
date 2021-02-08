@@ -28,10 +28,15 @@ def set_up_test_periods():
 def set_up_test_users():
     user_1 = User.objects.create_user(username="user1", password="password1")
     user_1.save()
+    ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
+
     user_2 = User.objects.create_user(username="user2", password="password2")
     user_2.save()
-    ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
     ClusiveUser.objects.create(anon_id="Student2", user=user_2, role='ST').save()
+
+    user_3 = User.objects.create_user(username="t1", password="teacher1")
+    user_3.save()
+    ClusiveUser.objects.create(anon_id="Teacher1", user=user_3, role='TE').save()
 
 class SiteTestCase(TestCase):
     def setUp(self):
@@ -142,7 +147,7 @@ class PeriodTestCase(TestCase):
             udl_201.full_clean()
             self.fail("Validation should have failed due to same anon_id")
         except ValidationError as e:                    
-            self.assertEqual(e.message_dict["anon_id"][0], "Period with this Anon id already exists.")                
+            self.assertEqual(e.message_dict["anon_id"][0], "Period with this Anonymous identifier already exists.")
 
 class ClusiveUserTestCase(TestCase):
     maxDiff = None
@@ -330,21 +335,17 @@ class PageTestCases(TestCase):
             self.assertEqual(403, response.status_code, 'Manage page should be denied to students')
 
         def test_manage_page_denied_if_not_my_period(self):
-            user = ClusiveUser.objects.get(user__username='user1')
-            user.role = 'TE'
+            user = ClusiveUser.objects.get(anon_id='Teacher1')
             user.periods.add(Period.objects.get(anon_id='p1'))
-            user.save()
             login = self.client.login(username='user1', password='password1')
             response = self.client.get(reverse('manage',
                                                kwargs={'period_id': Period.objects.get(anon_id='p2').id }))
             self.assertEqual(403, response.status_code, 'Managing periods you are not in should be denied')
 
         def test_manage_page_renders(self):
-            user = ClusiveUser.objects.get(user__username='user1')
-            user.role = 'TE'
+            user = ClusiveUser.objects.get(anon_id='Teacher1')
             user.periods.add(Period.objects.get(anon_id='p1'))
-            user.save()
-            login = self.client.login(username='user1', password='password1')
+            login = self.client.login(username=user.user.username, password='teacher1')
             response = self.client.get(reverse('manage'))
             self.assertContains(response, 'Universal Design For Learning 101', status_code=200)
 
@@ -357,11 +358,9 @@ class PageTestCases(TestCase):
 
         def test_manage_edit_page_denied_if_not_my_period(self):
             # Make teacher part of p1, but try to edit p2 student
-            user = ClusiveUser.objects.get(user__username='user1')
-            user.role = 'TE'
+            user = ClusiveUser.objects.get(anon_id='Teacher1')
             user.periods.add(Period.objects.get(anon_id='p1'))
-            user.save()
-            login = self.client.login(username='user1', password='password1')
+            login = self.client.login(username=user.user.username, password='teacher1')
             response = self.client.get(reverse('manage_edit',
                                                kwargs={'period_id': Period.objects.get(anon_id='p2').id,
                                                        'pk' : ClusiveUser.objects.get(anon_id='Student2').id}))
@@ -371,16 +370,14 @@ class PageTestCases(TestCase):
             p1 = Period.objects.get(anon_id='p1')
             p2 = Period.objects.get(anon_id='p2')
             # Teacher is in p1
-            teacher = ClusiveUser.objects.get(anon_id='Student1')
-            teacher.role = 'TE'
+            teacher = ClusiveUser.objects.get(anon_id='Teacher1')
             teacher.periods.add(p1)
-            teacher.save()
             # Student is in p2
             student = ClusiveUser.objects.get(anon_id='Student2')
             student.periods.add(p2)
             student.save()
             # Call edit page with p1 but student is in p2
-            login = self.client.login(username='user1', password='password1')
+            login = self.client.login(username=teacher.user.username, password='teacher1')
             response = self.client.get(reverse('manage_edit',
                                                kwargs={'period_id': p1.id,
                                                        'pk' : student.id}))
@@ -389,22 +386,83 @@ class PageTestCases(TestCase):
         def test_manage_edit_page_renders(self):
             p1 = Period.objects.get(anon_id='p1')
             # Teacher in p1
-            teacher = ClusiveUser.objects.get(anon_id='Student1')
-            teacher.role = 'TE'
+            teacher = ClusiveUser.objects.get(anon_id='Teacher1')
             teacher.periods.add(p1)
-            teacher.save()
             # Student also in p1
             student = ClusiveUser.objects.get(anon_id='Student2')
             student.periods.add(p1)
-            student.save()
             # Make call correctly
-            login = self.client.login(username='user1', password='password1')
+            login = self.client.login(username=teacher.user.username, password='teacher1')
             response = self.client.get(reverse('manage_edit',
                                                kwargs={'period_id': p1.id,
                                                        'pk' : student.id}))
             self.assertContains(response, 'user2', status_code=200)
             # Should not show anonymous ID on the page
             self.assertNotContains(response, 'Student2')
+
+        def test_manage_edit_period_page_renders(self):
+            p1 = Period.objects.get(anon_id='p1')
+            # Teacher in p1
+            teacher = ClusiveUser.objects.get(anon_id='Teacher1')
+            teacher.periods.add(p1)
+            # Make call correctly
+            login = self.client.login(username=teacher.user.username, password='teacher1')
+            response = self.client.get(reverse('manage_edit_period',
+                                               kwargs={'pk': p1.id}))
+            # Shows name of period
+            self.assertContains(response, 'Universal Design For Learning 101', status_code=200)
+            # Should not show anonymous ID on the page
+            self.assertNotContains(response, 'p1')
+
+        def test_manage_edit_period_page_denied_to_students(self):
+            login = self.client.login(username='user1', password='password1')
+            response = self.client.get(reverse('manage_edit_period',
+                                               kwargs={'pk': Period.objects.get(anon_id='p1').id}))
+            self.assertEqual(403, response.status_code, 'Manage_edit_period page should be denied to students')
+
+        def test_manage_edit_period_page_denied_to_teacher_not_in_period(self):
+            teacher = ClusiveUser.objects.get(anon_id='Teacher1')
+            login = self.client.login(username=teacher.user.username, password='teacher1')
+            response = self.client.get(reverse('manage_edit_period',
+                                               kwargs={'pk': Period.objects.get(anon_id='p1').id}))
+            self.assertEqual(403, response.status_code, 'Manage_edit_period page should be denied to students')
+
+        def test_manage_create_period_page_renders(self):
+            p1 = Period.objects.get(anon_id='p1')
+            # Teacher in p1
+            teacher = ClusiveUser.objects.get(anon_id='Teacher1')
+            teacher.periods.add(p1)
+            # Make call correctly
+            login = self.client.login(username=teacher.user.username, password='teacher1')
+            response = self.client.get(reverse('manage_create_period'))
+            self.assertTemplateUsed(response, 'roster/manage_create_period.html')
+
+        def test_manage_create_period_page_denied_to_students(self):
+            p1 = Period.objects.get(anon_id='p1')
+            student = ClusiveUser.objects.get(anon_id='Student1')
+            student.periods.add(p1)
+            login = self.client.login(username=student.user.username, password='password1')
+            response = self.client.get(reverse('manage_create_period'))
+            self.assertEqual(403, response.status_code, 'Manage_create_period page should be denied to students')
+
+        def test_manage_create_user_page_renders(self):
+            p1 = Period.objects.get(anon_id='p1')
+            teacher = ClusiveUser.objects.get(anon_id='Teacher1')
+            teacher.periods.add(p1)
+            login = self.client.login(username=teacher.user.username, password='teacher1')
+            response = self.client.get(reverse('manage_create_user',
+                                               kwargs={'period_id': Period.objects.get(anon_id='p1').id}))
+            self.assertTemplateUsed(response, 'roster/manage_create_user.html')
+            self.assertTemplateUsed(response, 'roster/partial/user_form.html')
+
+        def test_manage_create_user_page_denied_to_students(self):
+            p1 = Period.objects.get(anon_id='p1')
+            student = ClusiveUser.objects.get(anon_id='Student1')
+            student.periods.add(p1)
+            login = self.client.login(username=student.user.username, password='password1')
+            response = self.client.get(reverse('manage_create_user',
+                                               kwargs={'period_id': Period.objects.get(anon_id='p1').id}))
+            self.assertEqual(403, response.status_code, 'Manage_create_user page should be denied to students')
 
 
 @contextmanager

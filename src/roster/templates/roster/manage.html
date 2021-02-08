@@ -64,6 +64,11 @@
                 </tbody>
             </table>
         </div>
+        <p>
+            <a href="{% url 'manage_create_user' period_id=current_period.pk %}" class="btn btn-primary">
+                + Add Student
+            </a>
+        </p>
     </main>
 
 {% endblock %}
