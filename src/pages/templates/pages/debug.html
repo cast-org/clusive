@@ -59,6 +59,10 @@
         Last return message: <span id="queue-flush-return-message"></
         </td>
     </tr>
+    <tr>
+        <td>Items in queue: <span id="caliperEvents-length"></span></td>
+        <td>Items in queue: <span id="preferenceChanges-length"></span></td>
+    </tr>
 </table>
 <hr />
 <h2 id="debug-queue-heading">Message Queue Log</h2>
@@ -131,6 +135,8 @@
             console.log(localStorageKey + ' Storage Event / Current Queue: ', currentQueue);
             console.log('Last Queue:', lastValues[localStorageKey]); 
 
+            $('#' + localStorageKey.split('.')[2] + '-length').html(currentQueue.length);
+
             var newMessages = currentQueue.filter(function (message) {
                 var duplicate = false;            
                 lastValues[localStorageKey].forEach(function (m) {
@@ -147,7 +153,7 @@
                 var type = message.content.type;
                 var typeHumanReadable = eventTypes[type];
                 var displayedContent = getDisplayedMessageContent(message.content);
-                // var content = JSON.stringify(message.content);
+                
                 $("#queue-debug-table").find("tr:last").after(`<tr>
                     <td title="${eventId}">${eventId.substring(0,8)}...</td>
                     <td>${username}</td>
@@ -155,14 +161,16 @@
                     <td>${displayedContent}</td></tr>`);
             })            
             lastValues[localStorageKey] = currentQueue;
+        } else {
+            $('#' + localStorageKey.split('.')[2] + '-length').html('null');
         }
     }
 
     function handleQueueLogEvent(localStorageKey) {
         var currentLogValue = JSON.parse(window.localStorage.getItem(localStorageKey));
         if(currentLogValue) {
-            var returnValue = JSON.stringify(currentLogValue.returnMessage);
-            var timestamp = JSON.stringify(currentLogValue.timestamp);
+            var returnValue = JSON.stringify(currentLogValue.returnMessage, null, 1);
+            var timestamp = JSON.stringify(currentLogValue.timestamp, null, 1);
             console.log("Log event: ", currentLogValue, localStorageKey);
             var selectorSuffix = localStorageKey.split(".").slice(0,3).join("-");
             console.log("selectorSuffix", selectorSuffix);

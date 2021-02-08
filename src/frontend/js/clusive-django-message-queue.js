@@ -3,6 +3,17 @@
 (function(fluid) {
     'use strict';
 
+    fluid.defaults("clusive.logoutFlushManager", {
+        gradeNames: ["fluid.component", "fluid.resolveRootSingle"],
+        singleRootType: "clusive.logoutFlushManager",
+        members: {
+            numberOfQueues: 0,
+            completedFlushes: 0
+        }
+    });
+
+    var logoutFlushManager = clusive.logoutFlushManager();
+
     // Message queue implementation to work with the Django store
     fluid.defaults("clusive.djangoMessageQueue", {
         gradeNames: ["clusive.messageQueue"],
@@ -16,6 +27,9 @@
             flushIntervalOverrideKey: "clusive.messageQueue.config.flushInterval",
             lastQueueFlushInfoKey: "clusive.messageQueue.log.lastQueueFlushInfo",
             logoutLinkSelector: "#logoutLink"
+        },
+        components: {
+            logoutFlushManager: "{logoutFlushManager}"
         },
         events: {
             logoutFlushComplete: null
@@ -54,12 +68,20 @@
                 funcName: "clusive.djangoMessageQueue.attachLogoutEvents",
                 args: ["{that}"]
             },
+            "onCreate.registerWithLogoutFlushManager": {
+                funcName: "clusive.djangoMessageQueue.registerWithLogoutFlushManager",
+                args: ["{logoutFlushManager}"]
+            },
             "logoutFlushComplete.doLogout": {
                 funcName: "clusive.djangoMessageQueue.doLogout",
-                args: ["{that}"]
+                args: ["{that}", "{arguments}.0", "{arguments}.1"]
             }                        
         }
     });
+
+    clusive.djangoMessageQueue.registerWithLogoutFlushManager = function (logoutFlushManager) {
+        logoutFlushManager.numberOfQueues = logoutFlushManager.numberOfQueues+1;
+    };
 
     clusive.djangoMessageQueue.getFlushInterval = function (defaultInterval, flushIntervalOverrideKey) {        
         var flushIntervalOverrideValue = window.localStorage.getItem(flushIntervalOverrideKey);        
@@ -71,8 +93,7 @@
         }        
     }            
 
-    clusive.djangoMessageQueue.setlastQueueFlushInfo = function(returnMessage, lastQueueFlushInfoKey) {
-        console.log("clusive.djangoMessageQueue.setlastQueueFlushInfo", returnMessage, lastQueueFlushInfoKey);
+    clusive.djangoMessageQueue.setlastQueueFlushInfo = function(returnMessage, lastQueueFlushInfoKey) {        
         var flushInfo = {
             returnMessage: returnMessage,
             timestamp: new Date().toISOString()
@@ -80,19 +101,26 @@
         window.localStorage.setItem(lastQueueFlushInfoKey, JSON.stringify(flushInfo));
     }
 
-    clusive.djangoMessageQueue.logoutFlush = function (that) {        
-        clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);
+    clusive.djangoMessageQueue.logoutFlush = function (that) {           
+        if(that.isQueueEmpty()) {
+            // Mark flush complete on the logoutFlushManger
+            that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+        } else {
+            clusive.messageQueue.flushQueue(that, that.setupLogoutFlushPromise);
+        }
     }    
 
     clusive.djangoMessageQueue.setupLogoutFlushPromise = function (that, promise) {        
         promise.then(
             function(value) {                
                 that.events.queueFlushSuccess.fire(value);
-                that.events.logoutFlushComplete.fire();                
+                that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+                that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
             },
             function(error) {                
                 that.events.queueFlushFailure.fire(error);
-                that.events.logoutFlushComplete.fire();                
+                that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+                that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
             })    
     }
 
@@ -100,21 +128,22 @@
         var logoutLinkSelector = that.options.config.logoutLinkSelector;        
                 
         $(logoutLinkSelector).click(
-            function (e) {                
-                if(! that.isQueueEmpty()) { 
-                    console.log("logout link clicked while queue not empty");
-                    $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
-                    e.preventDefault();
-                    that.logoutFlush();
-                }                                
+            function (e) {                                                    
+                $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
+                e.preventDefault();
+                that.logoutFlush();                   
             }
         );
     };
 
-    clusive.djangoMessageQueue.doLogout = function (that) {        
-        var logoutLinkSelector = that.options.config.logoutLinkSelector;
-        $(logoutLinkSelector).text("Logging out").fadeIn();        
-        window.location = $(logoutLinkSelector).attr("href");
+    clusive.djangoMessageQueue.doLogout = function (that, numberOfQueues, completedFlushes) {        
+        console.log("doLogout", that, numberOfQueues, completedFlushes);
+        if(completedFlushes >= numberOfQueues) {
+            PageTiming.reportEndTime(); 
+            var logoutLinkSelector = that.options.config.logoutLinkSelector;
+            $(logoutLinkSelector).text("Logging out").fadeIn();        
+            window.location = $(logoutLinkSelector).attr("href");
+        }
     }
 
     // Concrete implementation of the queue flushing that works with 
