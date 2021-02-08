@@ -79,7 +79,20 @@
                             },
                         },
                         prefsEditor: {   
-                            components: {      
+                            components: {     
+                                store: {
+                                    options: {
+                                        components: {
+                                            settingsStore: {
+                                                options: {
+                                                    members: {
+                                                        initialModel: "{prefsEditorLoader}.initialModel"
+                                                    }
+                                                }                                                
+                                            }
+                                        }
+                                    },
+                                },                                 
                                 prefsEditorLoader: {
                                     options: {     
                                         listeners: {
@@ -88,7 +101,7 @@
                                                 "args": ["preferences", "{arguments}.0"]                                                
                                             }
                                         },                   
-                                        components: {   
+                                        components: {
                                             prefsEditor: {
                                                 options: {
                                                     listeners: {
