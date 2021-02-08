@@ -1,0 +1,34 @@
+{% load static figuration %}
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.first_name.label_tag | formlabel }}
+        {{ form.first_name.errors }}
+        {{ form.first_name }}
+    </div>
+    <div class="form-group">
+        {{ form.last_name.label_tag | formlabel }}
+        {{ form.last_name.errors}}
+        {{ form.last_name }}
+    </div>
+    <div class="form-group">
+        {{ form.email.label_tag | formlabel }}
+        {{ form.email.errors}}
+        {{ form.email }}
+    </div>
+    <div class="form-group">
+        {{ form.username.label_tag | formlabel }}
+        {{ form.username.errors}}
+        {{ form.username }}
+    </div>
+    <div class="form-group">
+        {{ form.password.label_tag | formlabel }}
+        {{ form.password.errors}}
+        {{ form.password }}
+        <div class="form-text small">Choose something hard to guess, at least 6 characters, and not just numbers.</div>
+        {{ form.non_field_errors }}
+    </div>
+    <input type="submit" class="btn btn-secondary" value="Save"/>
+    <a href="{% url 'manage' period_id=period_id %}" class="btn btn-link">Cancel</a>
+</form>
