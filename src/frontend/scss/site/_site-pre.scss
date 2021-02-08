@@ -35,7 +35,7 @@ $enable-form-text:                      true;
 $enable-form-file:                      true;
 $enable-form-color:                     false;
 $enable-form-row:                       false;
-$enable-form-inline:                    false;
+$enable-form-inline:                    true;
 $enable-form-validation-tooltip:        false;
 $enable-form-validation-icon:           false;
 
@@ -97,7 +97,7 @@ $enable-utility-position:               false;
 $enable-utility-shadow:                 false;
 $enable-utility-sizing:                 false;
 $enable-utility-spacing-gap:            false;
-$enable-utility-spacing-padding:        false;
+$enable-utility-spacing-padding:        true;
 $enable-utility-spacing-margin:         true;
 $enable-utility-spacing-margin-auto:    false;
 $enable-utility-spacing-margin-negative:    false;
