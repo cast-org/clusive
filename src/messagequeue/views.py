@@ -51,21 +51,27 @@ def get_delta_from_now(compare_time):
     return relativedelta(now, compare_time)
 
 class MessageQueueView(View):
-    def post(self, request):        
+    def post(self, request):
         try:
-            receivedQueue = json.loads(request.body)     
-            logger.debug("Received a message queue: %s" % receivedQueue)
-            queue_timestamp = receivedQueue["timestamp"]
-            queue_username = receivedQueue["username"]
-            messages = receivedQueue["messages"]
-            clusive_user = request.clusive_user
-            username = clusive_user.user.username
-            if(queue_username == username):
-                process_messages(queue_timestamp, messages, clusive_user.user, request)
-            else: 
-                logger.debug("Rejected message queue, queue username %s did not match session username %s ",
-                             queue_username, username)
-                return JsonResponse(status=501, data={'message': 'Invalid user'})            
+            receivedQueue = json.loads(request.body)
         except json.JSONDecodeError:
-            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})        
+            logger.warning('Received malformed message queue: %s' % request.body)
+            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
+        logger.debug("Received a message queue: %s" % receivedQueue)
+
+        clusive_user = request.clusive_user
+        if clusive_user is None:
+            logger.warning('Rejected message queue, no current session')
+            return JsonResponse(status=501, data={'message': 'No current session'})
+
+        queue_timestamp = receivedQueue["timestamp"]
+        queue_username = receivedQueue["username"]
+        messages = receivedQueue["messages"]
+        username = clusive_user.user.username
+        if queue_username == username:
+            process_messages(queue_timestamp, messages, clusive_user.user, request)
+        else:
+            logger.debug("Rejected message queue, queue username %s did not match session username %s ",
+                         queue_username, username)
+            return JsonResponse(status=501, data={'message': 'Invalid user'})
         return JsonResponse({'success': 1})
