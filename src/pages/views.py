@@ -159,3 +159,8 @@ class WordBankView(LoginRequiredMixin, EventMixin, TemplateView):
 
     def configure_event(self, event: Event):
         event.page = 'Wordbank'
+
+class DebugView(TemplateView):
+    template_name = 'pages/debug.html'
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

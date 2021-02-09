@@ -25,7 +25,9 @@ $(document).ready(function() {
     var addTipRelatedActionToQueue = function(action) {
         window.clusiveEvents.messageQueue.add({
             type: 'TRA',
-            action: action
+            action: action,
+            readerInfo: clusiveContext.reader.info,
+            eventId: PAGE_EVENT_ID
         });
     };
 
@@ -42,7 +44,8 @@ $(document).ready(function() {
     window.clusiveEvents = {        
         messageQueue: clusive.djangoMessageQueue({
             config: {
-                localStorageKey: "clusive.messageQueue.caliperEvents"
+                localStorageKey: "clusive.messageQueue.caliperEvents",
+                lastQueueFlushInfoKey: "clusive.messageQueue.caliperEvents.log.lastQueueFlushInfo"
             }
         }),
         caliperEventTypes: {

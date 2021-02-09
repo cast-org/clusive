@@ -108,8 +108,8 @@ def cuelist(request, book_id, version):
     try:
         user = ClusiveUser.objects.get(user=request.user)
         bv = BookVersion.lookup(book_id=book_id, version_number=version)
-        all_glossary_words = json.loads(bv.glossary_words)
-        all_book_words = json.loads(bv.all_words)
+        all_glossary_words = bv.glossary_word_list
+        all_book_words = bv.all_word_list
 
         # Get all a user's words
         all_user_words = list(WordModel.objects.filter(user=user))

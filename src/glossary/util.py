@@ -40,13 +40,16 @@ def lookup(book, word):
     return defs
 
 
-def base_form(word):
+def base_form(word, return_word_if_not_found=True):
     """
     Return the base form of the given word.
     In the case where the word can be seen as different parts of speech with different base forms,
     this returns the shortest. If they are the same length, it chooses the alphabetically first one.
     For example, "outing" is base form of noun, but also the inflected form of the verb "out", so
     this method will return "out".
+
+    If word is not found in Wordnet, will normally return the given word unchanged.
+    But if return_word_if_not_found is set to False, returns None instead.
     :param word:
     :return: base form
     """
@@ -59,7 +62,9 @@ def base_form(word):
     if all_forms:
         return min(all_forms, key=base_form_sort_key)
     else:
-        return wl
+        if return_word_if_not_found:
+            return wl
+        return None
 
 
 def base_form_sort_key(word):
