@@ -24,7 +24,6 @@
     "infusion": "3.0.0-dev.20200326T173810Z.24ddb2718.FLUID-6482",
     "jquery": "^3.5.1",
     "jquery-ui": "1.12.1",
-    "mark.js": "8.11.1",
     "masonry-layout": "^4.2.2",
     "open-dyslexic": "^1.0.3",
     "popper.js": "1.16.1",
