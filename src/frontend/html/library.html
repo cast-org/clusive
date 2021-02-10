@@ -21,6 +21,7 @@
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
+<script src="../js/stt.js"></script>
 <script src="./js/theme-test.js"></script>
 
 </head>
@@ -77,12 +78,6 @@
     <div class="sidebars-wrapper">
         <div class="sidebars">
             <div class="sidebar sidebar-start">
-                <div class="sidebar-support" role="region" aria-label="Support">
-                    <button type="button" class="btn btn-nav btn-icon btn-support-help" aria-label="Help/Information">
-                        <span class="icon-help" aria-hidden="true"></span>
-                        <span class="icon-attention" aria-hidden="true"></span>
-                    </button>
-                </div>
             </div>
 
             <div class="sidebar sidebar-end">
@@ -121,7 +116,25 @@
     <div class="content">
         <main id="content" tabindex="-1">
 
-            <h1>Library</h1>
+           <div class="row mt-1">
+                <div class="col">
+                    <h1>Library</h1>
+                </div>
+                <div class="col-md-auto">
+                    <div class="input-group library-search">
+                        <div class="stt-wrapper">
+                            <input id="librarySearch" class="form-control library-search-input" type="search" placeholder="Search library&hellip;" aria-label="Search library&hellip;">
+                            <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#librarySearch"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Showing results 1-10 of 37 for <strong>test.</strong>
+                <a href="#" class="ms-0_5">View all books</a>
+            </p>
 
             <div class="row">
                 <div class="col">
@@ -403,6 +416,24 @@
                     </div>
                 </div>
             </div>
+
+            <nav aria-label="page">
+                <div class="pagination library-pagination">
+                    <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                        <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                        Previous
+                    </a>
+                    <a href="#" class="page-link active" aria-current="page">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <span class="page-text">&hellip;</span>
+                    <a href="#" class="page-link">9</a>
+                    <a href="#" class="page-link">
+                        Next
+                        <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                    </a>
+                </div>
+            </nav>
 
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim. Curabitur sit amet ante odio. In eleifend lacinia ipsum, eu eleifend diam tempor et. Nullam iaculis lobortis sollicitudin. Maecenas interdum libero sit amet quam cursus, et dapibus enim facilisis. Donec non leo dapibus, elementum velit non, laoreet nisl. Sed in lacinia tortor. Suspendisse eget accumsan erat. Phasellus vel est eu ligula hendrerit condimentum sed quis nulla. Nam dignissim dolor in ipsum dapibus sagittis.</p>
             <p>Aliquam auctor, felis at egestas pellentesque, leo nibh facilisis nulla, ut egestas erat metus id justo. Vivamus egestas dolor sapien, a rhoncus tellus porta ut. Sed ac accumsan velit. Nunc aliquam id urna vel dignissim. Donec consequat augue sapien, a volutpat tellus tincidunt vel. Praesent consequat lacinia scelerisque. Praesent euismod et justo et cursus. Cras nulla quam, feugiat id porta nec, tincidunt eget quam.</p>

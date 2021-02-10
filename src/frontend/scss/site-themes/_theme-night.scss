@@ -1,4 +1,15 @@
+// Functions
+@import "../../../../node_modules/figuration/scss/functions";
+
+// Settings variables
+@import "../site/site-pre";
+@import "../../../../node_modules/figuration/scss/settings";
+@import "../site/site-post";
+
 // Default theme
+@import "theme-default";
+
+// Night theme
 $theme-name:                            ".clusive-theme-night";
 $theme-name-readium:                    "night";
 
@@ -19,71 +30,6 @@ $bg-image-override:                     none;
 // https://stackoverflow.com/a/22751702
 $selection-bg:                          rgba(#acfdf0, .99);
 $selection-color:                       #333;
-
-$skiplink-bg:                           #6268ad;
-$skiplink-color:                        #fbfbfb;
-$skiplink-border-color:                 #6268ad;
-
-$library-bg:                            #121212;
-$library-header-outer-bg:               $library-bg;
-$library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
-$library-logo-color:                    #eceff5;
-$library-logo-icon-color:               #d7ddee;
-
-$library-filter-bg:                     rgba(#636b82, .3);
-$library-filter-color:                  $body-color;
-$library-filter-active-icon-color:      #ff554d;
-$library-filter-active-icon-text-shadow: .0625em .0625em 0 rgba(#fbfbfb, .75);
-
-
-$home-bg:                               #353841;
-$home-header-outer-bg:                  $home-bg;
-$home-header-bg:                        linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, 0) 75%);
-$home-logo-color:                       #eceff5;
-$home-logo-icon-color:                  #d7ddee;
-$home-section-border-color:             #636b82;
-$login-section-border-color:            #d3cfc9;
-
-$footer-border-color:                   #636b82;
-
-$header-outer-bg:                       $body-bg;
-$header-bg:                             linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
-$header-color:                          inherit;
-$header-logo-color:                     #eceff5;
-$header-logo-hover-color:               palette($header-logo-color, 700);
-$header-logo-icon-color:                $header-logo-color;
-$header-logo-icon-hover-color:          palette($header-logo-icon-color, 700);
-
-$action-bg:                             transparent;
-$action-color:                          $link-color;
-$action-hover-bg:                       #6268ad;
-$action-hover-color:                    #fbfbfb;
-$action-current-bg:                     rgba(#636b82, .35);
-$action-current-color:                  $body-color;
-
-$page-title-border-color:               #ff554d;
-
-$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .225) 0%, rgba(#636b82, .325) 100%);
-$sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .3) 0%, rgba(#636b82, .45) 100%);
-
-// Figure
-$figure-caption-bg:                     #363740;
-$figure-caption-color:                  #eceff5;
-
-// Cards
-$card-bg:                               #272727;
-$card-color:                            inherit;
-$card-border-color:                     #272727;
-$card-img-bg:                           rgba(#636b82, .2);
-$card-library-box-shadow:               -.125rem -.5rem 0 .125rem #636b82, -.125rem -.125rem 0 .125rem #636b82;
-$card-library-author-color:             #eceff5;
-$card-login-bg:                         rgba(#636b82, .3);
-$card-login-color:                      $body-color;
-
-// Tables
-$table-active-bg:                       #272727;
-$table-border-color:                    #363740;
-$table-roster-head-color:               #eceff5;
 
 // Buttons
 $btn-primary-focus-ring:                #a0abfd;
@@ -203,6 +149,98 @@ $btn-favorite-hover-border-color:       transparent;
 $btn-favorite-active-bg:                transparent;
 $btn-favorite-active-color:             $btn-favorite-color;
 $btn-favorite-active-border-color:      transparent;
+
+// Skiplink
+$skiplink-bg:                           #6268ad;
+$skiplink-color:                        #fbfbfb;
+$skiplink-border-color:                 #6268ad;
+
+// Library
+$library-bg:                            #121212;
+$library-header-outer-bg:               $library-bg;
+$library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
+$library-logo-color:                    #eceff5;
+$library-logo-icon-color:               #d7ddee;
+
+$library-search-input-bg:               #2b2d34;
+$library-search-input-color:            #fbfbfb;
+$library-search-input-border-color:     #2b2d34;
+$library-search-input-box-shadow:       none;
+$library-search-input-placeholder-color:    #bbb;
+$library-search-input-focus-bg:         #2b2d34;
+$library-search-input-focus-color:      #fbfbfb;
+$library-search-input-focus-border-color:   #2b2d34;
+$library-search-input-focus-box-shadow: $input-focus-box-shadow;
+$library-search-input-disabled-bg:      palette($library-search-input-bg, 675);
+$library-search-input-disabled-color:   palette($library-search-input-color, 700);
+$library-search-input-disabled-border-color:   palette($library-search-input-border-color, 675);
+
+$library-filter-bg:                     #2b2d34;
+$library-filter-color:                  $body-color;
+$library-filter-active-icon-color:      #ff554d;
+$library-filter-active-icon-text-shadow: .0625em .0625em 0 rgba(#fbfbfb, .75);
+
+$library-pagination-bg:                 transparent;
+$library-pagination-color:              $link-color;
+$library-pagination-border-color:       transparent;
+$library-pagination-hover-bg:           $btn-primary-bg;
+$library-pagination-hover-color:        $btn-primary-color;
+$library-pagination-hover-border-color: $library-pagination-hover-bg;
+$library-pagination-active-bg:          $btn-primary-hover-bg;
+$library-pagination-active-color:       $btn-primary-hover-color;
+$library-pagination-active-border-color:    $library-pagination-active-bg;
+$library-pagination-disabled-bg:        transparent;
+$library-pagination-disabled-color:     $text-muted;
+
+// Home
+$home-bg:                               #353841;
+$home-header-outer-bg:                  $home-bg;
+$home-header-bg:                        linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, 0) 75%);
+$home-logo-color:                       #eceff5;
+$home-logo-icon-color:                  #d7ddee;
+$home-section-border-color:             #636b82;
+$login-section-border-color:            #d3cfc9;
+
+$footer-border-color:                   #636b82;
+
+$header-outer-bg:                       $body-bg;
+$header-bg:                             linear-gradient(90deg, rgba(#636b82, .4) 0%, rgba(#636b82, .325) 100%);
+$header-color:                          inherit;
+$header-logo-color:                     #eceff5;
+$header-logo-hover-color:               palette($header-logo-color, 700);
+$header-logo-icon-color:                $header-logo-color;
+$header-logo-icon-hover-color:          palette($header-logo-icon-color, 700);
+
+$action-bg:                             transparent;
+$action-color:                          $link-color;
+$action-hover-bg:                       #6268ad;
+$action-hover-color:                    #fbfbfb;
+$action-current-bg:                     rgba(#636b82, .35);
+$action-current-color:                  $body-color;
+
+$page-title-border-color:               #ff554d;
+
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .225) 0%, rgba(#636b82, .325) 100%);
+$sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .3) 0%, rgba(#636b82, .45) 100%);
+
+// Figure
+$figure-caption-bg:                     #363740;
+$figure-caption-color:                  #eceff5;
+
+// Cards
+$card-bg:                               #272727;
+$card-color:                            inherit;
+$card-border-color:                     #272727;
+$card-img-bg:                           rgba(#636b82, .2);
+$card-library-box-shadow:               -.125rem -.5rem 0 .125rem #636b82, -.125rem -.125rem 0 .125rem #636b82;
+$card-library-author-color:             #eceff5;
+$card-login-bg:                         #2b2d34; //rgba(#636b82, .3);
+$card-login-color:                      $body-color;
+
+// Tables
+$table-active-bg:                       #272727;
+$table-border-color:                    #363740;
+$table-roster-head-color:               #eceff5;
 
 // Error
 $error-bg:                              #d42314;

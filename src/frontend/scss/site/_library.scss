@@ -202,3 +202,80 @@
         display: none;
     }
 }
+
+.library-search {
+    margin-bottom: 1rem;
+
+    .stt-wrapper {
+        position: relative;
+        z-index: 3;
+    }
+}
+.library-search-input {
+    color: var(--CT_librarySearchInputColor);
+    background-color: var(--CT_librarySearchInputBg);
+    border-color: var(--CT_librarySearchInputBorderColor);
+    @include border-end-radius(0);
+    box-shadow: var(--CT_librarySearchInputBoxShadow);
+
+    &::placeholder {
+        color: var(--CT_librarySearchInputPlaceholderColor);
+        opacity: 1;
+    }
+
+    &:focus {
+        color: var(--CT_librarySearchInputFocusColor);
+        background-color: var(--CT_librarySearchInputFocusBg);
+        border-color: var(--CT_librarySearchInputFocusBorderColor);
+        @include border-end-radius(0);
+        box-shadow: var(--CT_librarySearchInputFocusBoxShadow);
+    }
+
+    &:disabled,
+    &[readonly] {
+        color: var(--CT_librarySearchInputDisabledColor);
+        background-color: var(--CT_librarySearchInputDisabledBg);
+        border-color: var(--CT_librarySearchInputDisabledBorderColor);
+    }
+
+}
+
+.library-pagination {
+    justify-content: center;
+
+    .page-text,
+    .page-link {
+        border-color: var(--CT_libraryPaginationBorderColor);
+    }
+
+    .page-link {
+        color: var(--CT_libraryPaginationColor);
+        background-color: var(--CT_libraryPaginationBg);
+
+        &:hover,
+        &:focus {
+            color: var(--CT_libraryPaginationHoverColor);
+            background-color: var(--CT_libraryPaginationHoverBg);
+            border-color: var(--CT_libraryPaginationHoverBorderColor);
+            outline: 0;
+        }
+
+        &.active {
+            color: var(--CT_libraryPaginationActiveColor);
+            background-color: var(--CT_libraryPaginationActiveBg);
+            border-color: var(--CT_libraryPaginationActiveBorderColor);
+        }
+
+        &.disabled {
+            color: var(--CT_libraryPaginationDisabledColor);
+            background-color: var(--CT_libraryPaginationDisabledBg);
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        .page-link.disabled,
+        .page-link:not(:nth-child(-n+3)):not(:nth-last-child(-n+3)) {
+            display: none;
+        }
+    }
+}
