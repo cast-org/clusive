@@ -53,14 +53,23 @@ SITE_ID = 1 # django-allauth
 # django-allauth provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'openid',
+            'https://www.googleapis.com/auth/classroom.rosters.readonly',
+        ],
         # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
+        # (``socialaccount`` app) containing the required client credentials
+        # to the database, or list them here.  Note that it is more secure to
+        # create ``SocialAPp`` in the database so that the `client_secret`
+        # does not show up in github.
         'APP': {
              # values from Google dashboard setup
              # - uri would be 'http://accounts.google.com/o/oauth2/auth?...
-             # need to look into how to set these for the real Goolge OAuth2
-             # provider; it likely depends on a "registration-with-google" step.
+             # - the 'client_id` and `secret` values are created by Google
+             # when registering Clusive as a OAuth2 Client, see:
+             # https://console.developers.google.com/apis/credentials/
             'client_id': '554291169960-repqllu9q9h5loog0hpadr6854fb2oq0.apps.googleusercontent.com',
             'secret': 'HF9GhAcyvHj0l-uEET99GLbx',
             'key': ''
@@ -83,7 +92,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # * - need to examine the details of the payload sent with the redirect URI to
 # see how the access token is transmitted.  It's likely different depending on
 # the OAuth2 provider, e.g., Google vs. Github
-LOGIN_REDIRECT_URL = '/reader'
+LOGIN_REDIRECT_URL = '/account/profile'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
