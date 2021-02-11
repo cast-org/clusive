@@ -240,8 +240,14 @@
 
 }
 
-.library-pagination {
+.library-pagination-wrapper {
+    display: flex;
     justify-content: center;
+}
+.library-pagination {
+    padding: .25rem .75rem;
+    background-color: var(--CT_libraryPaginationOuterBg);
+    @include border-radius($border-radius);
 
     .page-text,
     .page-link {
