@@ -41,7 +41,7 @@ anything more is needed, e.g., Google classroom access, then the entire `SCOPE`
 specification is required.
 
 Once Google registration and Clusive configuration are set as above, then, when
-the user click the "Login with Google" link on Clusive's login page,
+the user clicks the "Login with Google" link on Clusive's login page,
 
 1. users are taken to a standard Google login page,
 2. upon successful login, they are presented a Google consent screen, where
@@ -126,5 +126,5 @@ test users for SSO (100 maximum).  When Clusive is production ready, however, it
 needs to be verified and published.  Note that the verification process may be
 simple here since Clusive is not doing anything that requires full access to the
 Google user's access during the Google login sequence.  The issue is what
-happens when the "PUBLISH APP" button is pressed during Google's registration
-process?
+are the consequences when the "PUBLISH APP" button is pressed during Google's
+registration process?
