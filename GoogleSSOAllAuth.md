@@ -71,6 +71,7 @@ disabled -- users cannot uncheck them:
 ## Questions
 
 ### Where is the access token?
+
 The usual dialogue between an OAuth2 server (Google) and consumer (Clusive) is
 as follows.  Note that many of these requests have no UI associated with them
 and users see none of these transactions.  The requests are a behind-the-scenes
@@ -88,9 +89,19 @@ exchange of information between Google and Clusive.
   Where is the access token?  It looks like it is fetched and stored in the
   User record password field.
 - After going through the process as a user, using my (Josph's) Google login,
-  I am logged into Clusive, however, 
+  I am logged into Clusive, but none of its URLs work properly.
+
+A suggestion regarding access tokens is found int the django-allauth documentation
+for the [Google provider](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration).
+It suggests setting the `AUTH_PARAMS['access_type']` to `offline`.  Removing all
+of the User and Social Account records associated with the Google SSO user, and
+starting from scratch did reveal the requests between Clusive and Google
+regarding the access token, but, still no access token appeared in the data
+base, and the new User and Social Account records were appropriately created.
+Perhaps the access token is carried in the session?
   
 ### How to fetch Clusive's `client_id` and `secret` from its database.
+
 There are two ways to handle the `client_id` and `secret` created by Google
 during registration.  The first, and what is used for development, is to add
 the information to `settings.py`.  See, for example, the [`settings.py`](https://github.com/klown/clusive/blob/feature/CSL-691-django-allauth/src/clusive_project/settings.py#L67)
@@ -108,8 +119,9 @@ scenario.  The model needs to be defined and integrated with the rest of
 Clusive's code to implement this more secure scenario.
 
 ### How to publish Clusive and/or register it as "Internal"?
-For development and testing, Clusive's status with respect to Google is
-"Testing" and is registered as "External".  As such, Google allows only a set of
+
+For development, Clusive's status with respect to Google registration is
+"Testing" and is designated as "External".  As such, Google allows only a set of
 test users for SSO (100 maximum).  When Clusive is production ready, however, it
 needs to be verified and published.  Note that the verification process may be
 simple here since Clusive is not doing anything that requires full access to the

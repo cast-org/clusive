@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google'
 ]
 
-SITE_ID = 1 # django-allauth
+SITE_ID = 1 # django-allauth, id of the django_site record
 
 # django-allauth provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
@@ -59,10 +59,13 @@ SOCIALACCOUNT_PROVIDERS = {
             'openid',
             'https://www.googleapis.com/auth/classroom.rosters.readonly',
         ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline'
+        },
         # For each OAuth based provider, either add a ``SocialApp``
         # (``socialaccount`` app) containing the required client credentials
         # to the database, or list them here.  Note that it is more secure to
-        # create ``SocialAPp`` in the database so that the `client_secret`
+        # create ``SocialApp``s in the database so that the `client_secret`
         # does not show up in github.
         'APP': {
              # values from Google dashboard setup
