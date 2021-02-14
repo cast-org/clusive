@@ -1,4 +1,4 @@
-/* global PAGE_EVENT_ID, clusive */
+/* global PAGE_EVENT_ID, clusive, clusiveContext, clusiveEvents */
 
 $(document).ready(function() {
     'use strict';
@@ -19,7 +19,8 @@ $(document).ready(function() {
     };
 
     var addVocabCheckSkippedEventToQueue = function() {
-        window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT, 'word_rating', null, window.clusiveEvents.caliperEventActions.ASSESSMENT_ITEM_SKIPPED)
+        window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT,
+            'word_rating', null, window.clusiveEvents.caliperEventActions.ASSESSMENT_ITEM_SKIPPED);
     };
 
     var addTipRelatedActionToQueue = function(action) {
@@ -32,20 +33,21 @@ $(document).ready(function() {
     };
 
     var trackControlInteraction = function(interactionDef) {
-        console.debug('Setting up control tracking for: ', interactionDef)
+        console.debug('Setting up control tracking for: ', interactionDef);
         var control = $(interactionDef.selector);
         console.debug('Event for control tracking: ', interactionDef, control);
         var handler = interactionDef.handler;
         $(interactionDef.selector)[handler](function() {
-            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT, interactionDef.control, interactionDef.value, window.clusiveEvents.caliperEventActions.USED);
+            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT,
+                interactionDef.control, interactionDef.value, window.clusiveEvents.caliperEventActions.USED);
         });
     };
 
-    window.clusiveEvents = {        
+    window.clusiveEvents = {
         messageQueue: clusive.djangoMessageQueue({
             config: {
-                localStorageKey: "clusive.messageQueue.caliperEvents",
-                lastQueueFlushInfoKey: "clusive.messageQueue.caliperEvents.log.lastQueueFlushInfo"
+                localStorageKey: 'clusive.messageQueue.caliperEvents',
+                lastQueueFlushInfoKey: 'clusive.messageQueue.caliperEvents.log.lastQueueFlushInfo'
             }
         }),
         caliperEventTypes: {
@@ -53,9 +55,9 @@ $(document).ready(function() {
             ASSESSMENT_ITEM_EVENT: 'ASSESSMENT_ITEM_EVENT'
         },
         caliperEventActions: {
-            USED: "USED",
-            ASSESSMENT_ITEM_SKIPPED: "SKIPPED",
-            ASSESSMENT_ITEM_COMPLETED: "COMPLETED",
+            USED: 'USED',
+            ASSESSMENT_ITEM_SKIPPED: 'SKIPPED',
+            ASSESSMENT_ITEM_COMPLETED: 'COMPLETED'
         },
         dataAttributes: {
             HANDLER: 'data-cle-handler',
@@ -92,7 +94,9 @@ $(document).ready(function() {
         var eventControl = $(control).attr(clusiveEvents.dataAttributes.CONTROL);
         var eventValue = $(control).attr(clusiveEvents.dataAttributes.VALUE);
         console.debug('data-cle-handler attribute found', elm, eventHandler, eventControl, eventValue);
-        if (eventHandler !== undefined && eventControl !== undefined && eventValue !== undefined) {
+        if (typeof eventHandler !== 'undefined'
+            && typeof eventControl !== 'undefined'
+            && typeof eventValue !== 'undefined') {
             var interactionDef = {
                 selector: elm,
                 handler: eventHandler,
@@ -101,10 +105,10 @@ $(document).ready(function() {
             };
             clusiveEvents.controlInteractionsToTrack.push(interactionDef);
         } else {
-            console.debug('tried to add event logging, but missing a needed data-cle-* attribute on the element: ', elm);
+            console.warn('tried to add event logging, but missing a needed data-cle-* attribute on the element: ', elm);
         }
     });
-    
+
     // Set up events control interactions here
     clusiveEvents.controlInteractionsToTrack.forEach(function(interactionDef) {
         clusiveEvents.trackControlInteraction(interactionDef);
