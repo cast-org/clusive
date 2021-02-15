@@ -32,17 +32,6 @@ $(document).ready(function() {
         });
     };
 
-    var trackControlInteraction = function(interactionDef) {
-        console.debug('Setting up control tracking for: ', interactionDef);
-        var control = $(interactionDef.selector);
-        console.debug('Event for control tracking: ', interactionDef, control);
-        var handler = interactionDef.handler;
-        $(interactionDef.selector)[handler](function() {
-            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT,
-                interactionDef.control, interactionDef.value, window.clusiveEvents.caliperEventActions.USED);
-        });
-    };
-
     window.clusiveEvents = {
         messageQueue: clusive.djangoMessageQueue({
             config: {
@@ -64,57 +53,29 @@ $(document).ready(function() {
             CONTROL: 'data-cle-control',
             VALUE: 'data-cle-value'
         },
-        controlInteractionsToTrack: [
-            /*
-                control interactions to track can be added centrally here if needed,
-                but in most cases using the data-cle-* attributes on the markup
-                will be more appropriate
-            */
-            // {
-            //     selector: ".btn.tts-play",
-            //     handler: "click",
-            //     control: "tts-play",
-            //     value: "clicked"
-            // }
-        ],
+
         addCaliperEventToQueue: addCaliperEventToQueue,
         addTipRelatedActionToQueue: addTipRelatedActionToQueue,
-        addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue,
-        trackControlInteraction: trackControlInteraction
+        addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue
 
     };
 
-    // Build additional control interaction objects here from any data-clusive-event attributes on page markup
-    // synax: data-clusive-event="[handler]|[control]|[value]"
-    // example: data-clusive-event="click|settings-sidebar|opened"
-    $('*[data-cle-handler]').each(function(i, control) {
-        // data-clusive-event attribute
-        var elm = $(control);
-        var eventHandler = $(control).attr(clusiveEvents.dataAttributes.HANDLER);
-        var eventControl = $(control).attr(clusiveEvents.dataAttributes.CONTROL);
-        var eventValue = $(control).attr(clusiveEvents.dataAttributes.VALUE);
-        console.debug('data-cle-handler attribute found', elm, eventHandler, eventControl, eventValue);
-        if (typeof eventHandler !== 'undefined'
-            && typeof eventControl !== 'undefined'
+    // Listen for 'click' events on elements with the data-cle attributes.
+    var $body = $('body');
+    $body.on('click', '*[' + clusiveEvents.dataAttributes.HANDLER + '=\'click\']', function() {
+        var eventControl = $(this).attr(clusiveEvents.dataAttributes.CONTROL);
+        var eventValue = $(this).attr(clusiveEvents.dataAttributes.VALUE);
+        console.debug('Event click:', eventControl, eventValue);
+        if (typeof typeof eventControl !== 'undefined'
             && typeof eventValue !== 'undefined') {
-            var interactionDef = {
-                selector: elm,
-                handler: eventHandler,
-                control: eventControl,
-                value: eventValue
-            };
-            clusiveEvents.controlInteractionsToTrack.push(interactionDef);
+            addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT,
+                eventControl, eventValue, window.clusiveEvents.caliperEventActions.USED);
         } else {
-            console.warn('tried to add event logging, but missing a needed data-cle-* attribute on the element: ', elm);
+            console.warn('  Event clicked object was missing required attribute.');
         }
     });
 
-    // Set up events control interactions here
-    clusiveEvents.controlInteractionsToTrack.forEach(function(interactionDef) {
-        clusiveEvents.trackControlInteraction(interactionDef);
-    });
-
-    $('body').on('click', '*[data-clusive-tip-action]', function(event) {
+    $body.on('click', '*[data-clusive-tip-action]', function(event) {
         var action = $(this).attr('data-clusive-tip-action');
         console.debug('data-clusive-tip-action', action, event);
         addTipRelatedActionToQueue(action);

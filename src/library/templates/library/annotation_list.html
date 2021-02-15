@@ -3,7 +3,9 @@
     <ul id="annotationsContainer" class="list list-divided list-highlight">
         {% for a in annotations %}
         <div id="annotation{{a.id}}" data-annotation-id="{{a.id}}" data-annotation="{{a.highlight_base64}}" class="list-item annotation-container">
-            <a href="#" class="goto-highlight highlight">{{ a.clean_text_limited }}</a>
+            <a href="#"
+               data-cle-handler="click" data-cle-control="reader-navigation-annotation" data-cle-value="annotation-nav-link:{{a.id}}"
+               class="goto-highlight highlight">{{ a.clean_text_limited }}</a>
             <ul class="list list-divided list-horizontal list-highlight-action">
                 <!-- <li class="list-item"><a href="#" role="button">Add a note</a></li> -->
                 <li class="list-item"><a href="#" role="button" class="delete-highlight">Delete highlight</a></li>
