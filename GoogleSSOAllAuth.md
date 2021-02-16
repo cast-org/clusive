@@ -88,10 +88,10 @@ exchange of information between Google and Clusive.
 - Have not seen 3. or 4, nor a filled-in `Social application token` record.
   Where is the access token?  It looks like it is fetched and stored in the
   User record password field.
-- After going through the process as a user, using my (Josph's) Google login,
+- After going through the process as a user, using my (Joseph's) Google login,
   I am logged into Clusive, but none of its URLs work properly.
 
-A suggestion regarding access tokens is found int the django-allauth documentation
+A suggestion regarding access tokens is found in the django-allauth documentation
 for the [Google provider](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration).
 It suggests setting the `AUTH_PARAMS['access_type']` to `offline`.  Removing all
 of the User and Social Account records associated with the Google SSO user, and
@@ -111,7 +111,7 @@ This technique is not secure since the secret is publicy visible.  In fact, the
 Git Guardian bot sent an email warning of this faux pas, calling it an
 "Exposed [`Generic High Entropy Secret`](https://github.com/klown/clusive/commit/eaf604e3cf8d82745472b435d7827efe7c242309#diff-e4a4649d300e50c8be8173ce308974ec7dc9db60bca23233eb017c3840920e53R65)".
 
-The more secure techniqueis to store the information in a `Social Application`
+The more secure technique is to store the information in a `Social Application`
 record in Clusive's database.  However, the current issue is an error where
 django knows it needs to get the record from the database, but doesn't know how
 and gives a missing model error.  That is, `django-allauth` does not handle this
