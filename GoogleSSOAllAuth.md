@@ -100,7 +100,7 @@ regarding the access token, but, still no access token appeared in the data
 base, and the new User and Social Account records were appropriately created.
 Perhaps the access token is carried in the session?
   
-### How to fetch Clusive's `client_id` and `secret` from its database.
+### How to fetch Clusive's `client_id` and `secret` from its database [SOLVED]
 
 There are two ways to handle the `client_id` and `secret` created by Google
 during registration.  The first, and what is used for development, is to add
@@ -112,11 +112,23 @@ Git Guardian bot sent an email warning of this faux pas, calling it an
 "Exposed [`Generic High Entropy Secret`](https://github.com/klown/clusive/commit/eaf604e3cf8d82745472b435d7827efe7c242309#diff-e4a4649d300e50c8be8173ce308974ec7dc9db60bca23233eb017c3840920e53R65)".
 
 The more secure technique is to store the information in a `Social Application`
-record in Clusive's database.  However, the current issue is an error where
-django knows it needs to get the record from the database, but doesn't know how
-and gives a missing model error.  That is, `django-allauth` does not handle this
-scenario.  The model needs to be defined and integrated with the rest of
-Clusive's code to implement this more secure scenario.
+(`socialaccount_socialapp`) record for Google in Clusive's database.  Also,
+using the adminstration user interface, add the Clusive host (domain?) to the
+"Chosen Sites" list.  When running in development on localhost, the value is
+`127.0.0.1`.  Note that this matches a `Sites` (`django_site`) record in terms
+of that `Site`'s `domain` field.  The `Site` record, in turn, is identifed in
+Clusive's `setting.py` using the `SITE_ID` environment variable.  In summary:
+- `Social Application` record:
+ - has a list of sites listed in `Chosen sites` (via Admin UI)
+- `Site` table:
+ - has a record whose `domain` matches an item in the `Social Application`'s
+   `Chosen sites` list,
+- `settings.py`
+ - the `SITE_ID` variable is set to the `id` of the `Site` record described
+   in the previous bullet item.
+
+With Clusive's database and `settings.py` set up as described, the `client_id`
+and `secret` can be left out of `settings.py` for the SSO process.
 
 ### How to publish Clusive and/or register it as "Internal"?
 

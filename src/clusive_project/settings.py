@@ -61,21 +61,6 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'offline'
-        },
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client credentials
-        # to the database, or list them here.  Note that it is more secure to
-        # create ``SocialApp``s in the database so that the `client_secret`
-        # does not show up in github.
-        'APP': {
-             # values from Google dashboard setup
-             # - uri would be 'http://accounts.google.com/o/oauth2/auth?...
-             # - the 'client_id` and `secret` values are created by Google
-             # when registering Clusive as a OAuth2 Client, see:
-             # https://console.developers.google.com/apis/credentials/
-            'client_id': '554291169960-repqllu9q9h5loog0hpadr6854fb2oq0.apps.googleusercontent.com',
-            'secret': 'HF9GhAcyvHj0l-uEET99GLbx',
-            'key': ''
         }
     }
 }
