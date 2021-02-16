@@ -39,4 +39,5 @@ import execPageTiming from "script-loader!../src/frontend/js/page-timing.js"
 
 import execToC from "script-loader!../src/frontend/js/toc.js";
 import execTTS from "script-loader!../src/frontend/js/tts.js";
+import execSTT from "script-loader!../src/frontend/js/stt.js";
 import execWhy from "script-loader!../src/frontend/js/why.js";
