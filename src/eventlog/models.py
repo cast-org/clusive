@@ -98,7 +98,7 @@ class Event(models.Model):
             if not book_version_id and book_version:
                 book_version_id = book_version.id
             # If we don't have a book_id but we do have book_version / book_version_id, 
-            # look up the related book            
+            # try to look up the related book            
             if not book_id and book_version:                
                 book_id = book_version.book.id                
             if not book_id and book_version_id:
