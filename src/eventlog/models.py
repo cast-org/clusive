@@ -4,6 +4,7 @@ from django.db import models
 from uuid import uuid4
 from roster.models import Period, ClusiveUser, Roles
 from django.utils import timezone
+from library.models import BookVersion
 import caliper
 
 from tips.models import TipType
@@ -96,6 +97,16 @@ class Event(models.Model):
                 value = value[:126] + '…'
             if not book_version_id and book_version:
                 book_version_id = book_version.id
+            # If we don't have a book_id but we do have book_version / book_version_id, 
+            # look up the related book            
+            if not book_id and book_version:                
+                book_id = book_version.book.id                
+            if not book_id and book_version_id:
+                try: 
+                    bv = BookVersion.objects.get(pk=book_version_id)                
+                    book_id = bv.book.id                                
+                except BookVersion.DoesNotExist:
+                    logger.warn("Tried to look up book_id for book_version_id %s, but BookVersion does not exist", book_version_id)
             event = cls(type=type,
                         action=action,
                         actor=clusive_user,
