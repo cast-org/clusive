@@ -19,20 +19,11 @@
             <div class="figure-caption">
                 {{img.caption}}
                 {% if img.description %}
-                <details class="definition-details">
+                <details class="definition-details"
+                         data-cle-handler="click" data-cle-control="glossary-image-description:{{defs.headword}}" data-cle-value="opened">
                     <summary>details</summary>
                     <p>{{img.description}}</p>
                 </details>
-                <script>
-                    var detailsElem = $(".definition-details");
-                    var interactionDef = {
-                        selector: detailsElem,
-                        handler: "click",
-                        control: "glossary-image-description:{{defs.headword}}",
-                        value: "opened"
-                    };                    
-                    clusiveEvents.trackControlInteraction(interactionDef);
-                </script>
                 {% endif %}
             </div>
         </figure>

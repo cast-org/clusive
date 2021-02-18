@@ -20,70 +20,6 @@ $bg-image-override:                     null;
 $selection-bg:                          rgba(#acfdf0, .99);
 $selection-color:                       #333;
 
-$skiplink-bg:                           #6268ad;
-$skiplink-color:                        #fbfbfb;
-$skiplink-border-color:                 #6268ad;
-
-$library-bg:                            #72c0b2;
-$library-header-outer-bg:               $library-bg;
-$library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, .15) 100%);
-$library-logo-color:                    #333;
-$library-logo-icon-color:               #fbfbfb;
-
-$library-filter-bg:                     rgba(#acfdf0, .3);
-$library-filter-color:                  $body-color;
-$library-filter-active-icon-color:      #ff554d;
-$library-filter-active-icon-text-shadow: .0625em .0625em 0 rgba(#636b82, .75);
-
-$home-bg:                               #72c0b2;
-$home-header-outer-bg:                  $home-bg;
-$home-header-bg:                        linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, 0) 75%);
-$home-logo-color:                       #333;
-$home-logo-icon-color:                  #fbfbfb;
-$home-section-border-color:             #636b82;
-$login-section-border-color:            #d3cfc9;
-
-$footer-border-color:                   #636b82;
-
-$header-outer-bg:                       $body-bg;
-$header-bg:                             linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, .15) 100%);
-$header-color:                          inherit;
-$header-logo-color:                     #636b82;
-$header-logo-hover-color:               palette($header-logo-color, 700);
-$header-logo-icon-color:                $header-logo-color;
-$header-logo-icon-hover-color:          palette($header-logo-icon-color, 700);
-
-$action-bg:                             transparent;
-$action-color:                          $link-color;
-$action-hover-bg:                       #6268ad;
-$action-hover-color:                    #fbfbfb;
-$action-current-bg:                     rgba(#636b82, .2);
-$action-current-color:                  $body-color;
-
-$page-title-border-color:               #acfdf0;
-
-$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .15) 0%, rgba(#636b82, .3) 100%);
-$sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .6) 0%, rgba(#636b82, .8) 100%);
-
-// Figure
-$figure-caption-bg:                     #ebe9e4;
-$figure-caption-color:                  #666;
-
-// Cards
-$card-bg:                               #ebe9e4;
-$card-color:                            inherit;
-$card-border-color:                     #ebe9e4;
-$card-img-bg:                           rgba(#72c0b2, .3);
-$card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
-$card-library-author-color:             #666;
-$card-login-bg:                         rgba(#acfdf0, .3);
-$card-login-color:                      inherit;
-
-// Tables
-$table-active-bg:                       #f6f4f0;
-$table-border-color:                    #d3cfc9;
-$table-roster-head-color:               #333;
-
 // Buttons
 $btn-primary-focus-ring:                #636b82;
 $btn-primary-bg:                        #acfdf0;
@@ -202,6 +138,99 @@ $btn-favorite-hover-border-color:       transparent;
 $btn-favorite-active-bg:                transparent;
 $btn-favorite-active-color:             $btn-favorite-color;
 $btn-favorite-active-border-color:      transparent;
+
+// Skiplink
+$skiplink-bg:                           #6268ad;
+$skiplink-color:                        #fbfbfb;
+$skiplink-border-color:                 #6268ad;
+
+// Library
+$library-bg:                            #72c0b2;
+$library-header-outer-bg:               $library-bg;
+$library-header-bg:                     linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, .15) 100%);
+$library-logo-color:                    #333;
+$library-logo-icon-color:               #fbfbfb;
+
+$library-search-input-bg:               #84d2c4;
+$library-search-input-color:            $input-color;
+$library-search-input-border-color:     #84d2c4;
+$library-search-input-box-shadow:       none;
+$library-search-input-placeholder-color:    #777;
+$library-search-input-focus-bg:         #84d2c4;
+$library-search-input-focus-color:      $input-focus-color;
+$library-search-input-focus-border-color:   #84d2c4;
+$library-search-input-focus-box-shadow: $input-focus-box-shadow;
+$library-search-input-disabled-bg:      palette($library-search-input-bg, 400);
+$library-search-input-disabled-color:   palette($library-search-input-color, 400);
+$library-search-input-disabled-border-color:   palette($library-search-input-border-color, 400);
+
+$library-filter-bg:                     #84d2c4;
+$library-filter-color:                  $body-color;
+$library-filter-active-icon-color:      #ff554d;
+$library-filter-active-icon-text-shadow: .0625em .0625em 0 rgba(#636b82, .75);
+
+$library-pagination-outer-bg:           $library-filter-bg;
+$library-pagination-bg:                 transparent;
+$library-pagination-color:              $link-color;
+$library-pagination-border-color:       transparent;
+$library-pagination-hover-bg:           $btn-primary-bg;
+$library-pagination-hover-color:        $btn-primary-color;
+$library-pagination-hover-border-color: $library-pagination-hover-bg;
+$library-pagination-active-bg:          $btn-primary-hover-bg;
+$library-pagination-active-color:       $btn-primary-hover-color;
+$library-pagination-active-border-color:    $library-pagination-active-bg;
+$library-pagination-disabled-bg:        transparent;
+$library-pagination-disabled-color:     $text-muted;
+
+// Home
+$home-bg:                               #72c0b2;
+$home-header-outer-bg:                  $home-bg;
+$home-header-bg:                        linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, 0) 75%);
+$home-logo-color:                       #333;
+$home-logo-icon-color:                  #fbfbfb;
+$home-section-border-color:             #636b82;
+$login-section-border-color:            #d3cfc9;
+
+$footer-border-color:                   #636b82;
+
+$header-outer-bg:                       $body-bg;
+$header-bg:                             linear-gradient(90deg, rgba(#636b82, .3) 0%, rgba(#636b82, .15) 100%);
+$header-color:                          inherit;
+$header-logo-color:                     #636b82;
+$header-logo-hover-color:               palette($header-logo-color, 700);
+$header-logo-icon-color:                $header-logo-color;
+$header-logo-icon-hover-color:          palette($header-logo-icon-color, 700);
+
+$action-bg:                             transparent;
+$action-color:                          $link-color;
+$action-hover-bg:                       #6268ad;
+$action-hover-color:                    #fbfbfb;
+$action-current-bg:                     rgba(#636b82, .2);
+$action-current-color:                  $body-color;
+
+$page-title-border-color:               #acfdf0;
+
+$sidebar-start-bg:                      linear-gradient(180deg, rgba(#636b82, .15) 0%, rgba(#636b82, .3) 100%);
+$sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .6) 0%, rgba(#636b82, .8) 100%);
+
+// Figure
+$figure-caption-bg:                     #ebe9e4;
+$figure-caption-color:                  #666;
+
+// Cards
+$card-bg:                               #ebe9e4;
+$card-color:                            inherit;
+$card-border-color:                     #ebe9e4;
+$card-img-bg:                           rgba(#72c0b2, .3);
+$card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
+$card-library-author-color:             #666;
+$card-login-bg:                         #84d2c4; //rgba(#acfdf0, .3);
+$card-login-color:                      inherit;
+
+// Tables
+$table-active-bg:                       #f6f4f0;
+$table-border-color:                    #d3cfc9;
+$table-roster-head-color:               #333;
 
 // Error
 $error-bg:                              #d42314;

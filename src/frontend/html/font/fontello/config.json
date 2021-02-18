@@ -599,6 +599,12 @@
       "css": "switch",
       "code": 59441,
       "src": "entypo"
+    },
+    {
+      "uid": "19c50c52858a81de58f9db488aba77bc",
+      "css": "mic",
+      "code": 61744,
+      "src": "fontawesome"
     }
   ]
 }

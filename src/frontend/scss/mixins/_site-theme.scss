@@ -47,10 +47,36 @@
         --CT_libraryLogoColor: #{$library-logo-color};
         --CT_libraryLogoIconColor: #{$library-logo-icon-color};
 
+        --CT_librarySearchInputBg: #{$library-search-input-bg};
+        --CT_librarySearchInputColor: #{$library-search-input-color};
+        --CT_librarySearchInputBorderColor: #{$library-search-input-border-color};
+        --CT_librarySearchInputBoxShadow: #{$library-search-input-box-shadow};
+        --CT_librarySearchInputPlaceholderColor: #{$library-search-input-placeholder-color};
+        --CT_librarySearchInputFocusBg: #{$library-search-input-focus-bg};
+        --CT_librarySearchInputFocusColor: #{$library-search-input-focus-color};
+        --CT_librarySearchInputFocusBorderColor: #{$library-search-input-focus-border-color};
+        --CT_librarySearchInputFocusBoxShadow: #{$library-search-input-focus-box-shadow};
+        --CT_librarySearchInputDisabledBg: #{$library-search-input-disabled-bg};
+        --CT_librarySearchInputDisabledColor: #{$library-search-input-disabled-color};
+        --CT_librarySearchInputDisabledBorderColor: #{$library-search-input-disabled-border-color};
+
         --CT_libraryFilterBg: #{$library-filter-bg};
         --CT_libraryFilterColor: #{$library-filter-color};
         --CT_libraryFilterActiveIconColor: #{$library-filter-active-icon-color};
         --CT_libraryFilterActiveIconTextShadow: #{$library-filter-active-icon-text-shadow};
+
+        --CT_libraryPaginationOuterBg: #{$library-pagination-outer-bg};
+        --CT_libraryPaginationBg: #{$library-pagination-bg};
+        --CT_libraryPaginationColor: #{$library-pagination-color};
+        --CT_libraryPaginationBorderColor: #{$library-pagination-border-color};
+        --CT_libraryPaginationHoverBg: #{$library-pagination-hover-bg};
+        --CT_libraryPaginationHoverColor: #{$library-pagination-hover-color};
+        --CT_libraryPaginationHoverBorderColor: #{$library-pagination-hover-border-color};
+        --CT_libraryPaginationActiveBg: #{$library-pagination-active-bg};
+        --CT_libraryPaginationActiveColor: #{$library-pagination-active-color};
+        --CT_libraryPaginationActiveBorderColor: #{$library-pagination-active-border-color};
+        --CT_libraryPaginationDisabledBg: #{$library-pagination-disabled-bg};
+        --CT_libraryPaginationDisabledColor: #{$library-pagination-disabled-color};
 
         --CT_homeBodyBg: #{$home-bg};
         --CT_homeHeaderOuterBg: #{$home-header-outer-bg};
