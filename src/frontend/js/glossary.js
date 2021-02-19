@@ -244,7 +244,8 @@ $(function() {
     // When ranking in the check-in modal is selected, notify server
     $('#vocabCheckModal').on('change', 'input[type="radio"]', function() {
         var value = $(this).val();
-        $.get('/glossary/rating/' + vocabCheck.words[vocabCheck.wordIndex] + '/' + value);
+        var bookId = vocabCheck.pendingArticle;
+        $.get('/glossary/rating/' + vocabCheck.words[vocabCheck.wordIndex] + '/' + value + "?bookId=" + bookId);
         vocabCheck.selected(value);
     });
 

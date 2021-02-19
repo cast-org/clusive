@@ -21,7 +21,7 @@ vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
-word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
+word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating', 'book_id'])
 
 #
 # Signal handlers that log specific events
@@ -100,13 +100,24 @@ def get_common_event_args(kwargs):
     if event_id:
         try:
             associated_page_event = Event.objects.get(id=event_id)
-            page = associated_page_event.page             
-            book_version_id = associated_page_event.book_version_id
+            page = associated_page_event.page     
+
+            # book_id and book_version id can be supplied by events;
+            # if not supplied, try to fill them in from the associated
+            # page event
+            book_id = kwargs.get('book_id')       
+            if not book_id:
+                book_id = associated_page_event.book_id
+            book_version_id = kwargs.get('book_version_id')
+            if not book_version_id:
+                book_version_id = associated_page_event.book_version_id            
+
             resource_href = get_resource_href(kwargs)            
             resource_progression = get_resource_progression(kwargs)            
             common_event_args = dict(page=page,     
                                 parent_event_id=event_id,     
                                 eventTime=timestamp,
+                                book_id=book_id,
                                 book_version_id=book_version_id,
                                 resource_href = resource_href,
                                 resource_progression=resource_progression,
@@ -140,6 +151,7 @@ def log_word_rated(sender, **kwargs):
     event_type = 'ASSESSMENT_ITEM_EVENT'
     word = kwargs.get('word')
     rating = kwargs.get('rating')
+    book_id = kwargs.get('book_id')
     value = "%s:%s" % (word, rating)    
     create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
 
