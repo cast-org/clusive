@@ -74,7 +74,7 @@ disabled -- users cannot uncheck them:
 
 The usual dialogue between an OAuth2 server (Google) and consumer (Clusive) is
 as follows.  Note that many of these requests have no UI associated with them
-and users see none of these transactions.  The requests are a behind-the-scenes
+and users do not see these transactions.  The requests are a behind-the-scenes
 exchange of information between Google and Clusive.
 
 1. Clusive sends the user to Google to log into their Google account,
@@ -104,28 +104,34 @@ Perhaps the access token is carried in the session?
 
 There are two ways to handle the `client_id` and `secret` created by Google
 during registration.  The first, and what is used for development, is to add
-the information to `settings.py`.  See, for example, the [`settings.py`](https://github.com/klown/clusive/blob/feature/CSL-691-django-allauth/src/clusive_project/settings.py#L67)
+the information to `settings.py`.  See, for example, this version of
+[`settings.py`](https://github.com/klown/clusive/blob/cb48ea1a811c44eb394fdbd0c1c9fe5cd4dae32b/src/clusive_project/settings.py#L67)
 on the `CSL-691-django-allauth` branch.
 
 This technique is not secure since the secret is publicy visible.  In fact, the
-Git Guardian bot sent an email warning of this faux pas, calling it an
+Git Guardian bot sent an email warning about the security error, calling it an
 "Exposed [`Generic High Entropy Secret`](https://github.com/klown/clusive/commit/eaf604e3cf8d82745472b435d7827efe7c242309#diff-e4a4649d300e50c8be8173ce308974ec7dc9db60bca23233eb017c3840920e53R65)".
 
 The more secure technique is to store the information in a `Social Application`
-(`socialaccount_socialapp`) record for Google in Clusive's database.  Also,
-using the adminstration user interface, add the Clusive host (domain?) to the
-"Chosen Sites" list.  When running in development on localhost, the value is
-`127.0.0.1`.  Note that this matches a `Sites` (`django_site`) record in terms
-of that `Site`'s `domain` field.  The `Site` record, in turn, is identifed in
-Clusive's `setting.py` using the `SITE_ID` environment variable.  In summary:
-- `Social Application` record:
- - has a list of sites listed in `Chosen sites` (via Admin UI)
-- `Site` table:
- - has a record whose `domain` matches an item in the `Social Application`'s
-   `Chosen sites` list,
+(`socialaccount_socialapp`) record for Google in Clusive's database.  At the
+same time the Clusive host (domain?) is required and can be added to the
+"Chosen Sites" list using the `/admin` interface.  When running in development
+on localhost, the Clusive host value is `127.0.0.1`.  Note that this matches a
+`Sites` (`django_site`) record in terms of that `Site`'s `domain` field.  The
+`Site` record, in turn, is identifed in Clusive's `setting.py` using the 
+`SITE_ID` environment variable.  In summary:
+- `Social Application` (`socialaccount_socialapp`) record:
+ - has a list of sites listed in `Chosen sites`; add site via Admin UI
+ - for development, add `127.0.0.1` to the `Chosen sites` list.
+- `Site` (`django_site`) table:
+ - has a record whose `Domain name` (`domain`) matches an item in the
+   `Social Application`'s `Chosen sites` list -- see previous bullet.
 - `settings.py`
  - the `SITE_ID` variable is set to the `id` of the `Site` record described
    in the previous bullet item.
+ - for development, the `id` of the `Site` record is `1`, but can be manually
+   reset as needed as long as the `SITE_ID` environment variable matches the
+   actual `id` of the `SITE` record. 
 
 With Clusive's database and `settings.py` set up as described, the `client_id`
 and `secret` can be left out of `settings.py` for the SSO process.
@@ -133,10 +139,10 @@ and `secret` can be left out of `settings.py` for the SSO process.
 ### How to publish Clusive and/or register it as "Internal"?
 
 For development, Clusive's status with respect to Google registration is
-"Testing" and is designated as "External".  As such, Google allows only a set of
-test users for SSO (100 maximum).  When Clusive is production ready, however, it
-needs to be verified and published.  Note that the verification process may be
-simple here since Clusive is not doing anything that requires full access to the
-Google user's access during the Google login sequence.  The issue is what
-are the consequences when the "PUBLISH APP" button is pressed during Google's
-registration process?
+"Testing" and is designated as "External".  Google allows only a set of 100
+test users for SSO, maximum for External apps.  When Clusive is production
+ready, however, it needs to be verified and published.  Note that the
+[verification process](https://support.google.com/cloud/answer/9110914) may be
+simple here since Clusive is not requesting access to sensitive nor restricted
+scopes.  Still, the issue is what are the consequences when the "PUBLISH APP"
+button is pressed during Google's registration process?
