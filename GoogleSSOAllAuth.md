@@ -70,12 +70,33 @@ disabled -- users cannot uncheck them:
 
 ## Questions
 
-### Where is the access token?
+### Where is the access token? [SOLVED]
 
-The usual dialogue between an OAuth2 server (Google) and consumer (Clusive) is
-as follows.  Note that many of these requests have no UI associated with them
-and users do not see these transactions.  The requests are a behind-the-scenes
-exchange of information between Google and Clusive.
+It appears that [hiding the `client_id` and `secret`](./GoogleSSOAllAuth.md#how-to-fetch-clusives-client_id-and-secret-from-its-database-solved)
+helps to fix the problem.  Other factors might include flushing all records from
+Clusive's database of the user and their Google crendentials, and removing
+Clusive from the user's Google account -- in short, starting from a state where
+the user has never signed into Clusive using Google SSO.  When all of the above
+are done, and the user signs into Clusive using their Google account
+for the first time, a `Social application token` (`socialaccount_socialtoken`)
+is created, for example:
+```
+id: 5
+token: random characters
+token_secret: random characters
+expires_at: 2021-02-23 22:52:22.551781
+account_id: 7
+app_id = 1
+```
+The `account_id` cross references a newly created `Social account` (`socialaccount_socialaccount`)
+whose `id` is `7`.  That record cross references the newly created `User` (`auth_user`)
+record.  The `app_id` cross references the `id` of the `Social App`
+(`socialaccount_socialapp`) whose SSO is being used, here Google.
+
+Background:  The usual dialogue between an OAuth2 server (Google) and consumer
+(Clusive) is as follows.  Note that many of these requests have no UI associated
+with them and users do not see these transactions.  The requests are a
+behind-the-scenes exchange of information between Google and Clusive.
 
 1. Clusive sends the user to Google to log into their Google account,
 2. After signing in and confirming what they wish to share with Clusive, Google
@@ -84,23 +105,8 @@ exchange of information between Google and Clusive.
 4. Google sends back an access token and possibly a refresh token,
 5. Clusive stores the access token somewhere in its database, and uses it going
    forward as credentials for future requests.
-
-- Have not seen 3. or 4, nor a filled-in `Social application token` record.
-  Where is the access token?  It looks like it is fetched and stored in the
-  User record password field.
-- After going through the process as a user, using my (Joseph's) Google login,
-  I am logged into Clusive, but none of its URLs work properly.
-
-A suggestion regarding access tokens is found in the django-allauth documentation
-for the [Google provider](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration).
-It suggests setting the `AUTH_PARAMS['access_type']` to `offline`.  Removing all
-of the User and Social Account records associated with the Google SSO user, and
-starting from scratch did reveal the requests between Clusive and Google
-regarding the access token, but, still no access token appeared in the data
-base, and the new User and Social Account records were appropriately created.
-Perhaps the access token is carried in the session?
   
-### How to fetch Clusive's `client_id` and `secret` from its database [SOLVED]
+### Storing Clusive's `client_id` and `secret` in its database [SOLVED]
 
 There are two ways to handle the `client_id` and `secret` created by Google
 during registration.  The first, and what is used for development, is to add
