@@ -44,7 +44,7 @@
     }
     &:focus {
         outline: 0;
-        box-shadow: $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha) ;
+        box-shadow: $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
     }
     &.active {
         display: block;

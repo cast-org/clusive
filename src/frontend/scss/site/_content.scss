@@ -300,3 +300,50 @@ h2,
         margin-left: -1.25rem;
     }
 }
+
+.content-text {
+    max-width: 70ch;
+    margin: 0 auto;
+    line-height: 1.5;
+
+    h1, .h1,
+    h2, .h1,
+    h3, .h3,
+    h4, .h4,
+    h5, .h5,
+    h6, .h6 {
+        font-family: "Arial Black", Arial, sans-serif;
+        font-weight: 900;
+    }
+    h1, .h1 {
+      @include font-size(2rem);
+    }
+
+    h2, .h2 {
+      @include font-size(1.75rem);
+    }
+
+    h3, .h3 {
+      @include font-size(1.5rem);
+    }
+
+    h4, .h4 {
+      @include font-size(1.25rem);
+    }
+
+    h5, .h5 {
+      @include font-size(1.125rem);
+    }
+
+    h6, .h6 {
+      @include font-size(1rem);
+    }
+
+    dt {
+        margin-bottom: -.25rem;
+    }
+
+    address {
+        line-height: 1.25;
+    }
+}
