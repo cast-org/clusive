@@ -1,0 +1,19 @@
+{% load static %}
+<footer>
+    <div class="site-footer">
+        <div class="media">
+            <div class="media-img">
+                <img src="{% static 'shared/images/logo-cisl.png' %}" class="img-fluid" alt="CISL">
+            </div>
+            <div class="media-body">
+                <a href="http://cisl.cast.org/?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer">Center on Inclusive Software for Learning</a>
+            </div>
+        </div>
+        <div class="list list-divided list-horizontal">
+            <a href="{% url 'privacy' %}" class="list-item">Privacy Policy</a>
+            <a href="http://www.cast.org/site/terms-of-use?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Terms of Use</a>
+            <a href="http://www.cast.org/site/accessibility?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Accessibility Policy</a>
+            <span class="list-item">&copy; {% now "Y" %} CAST Inc., All Rights Reserved</span>
+        </div>
+    </div>
+</footer>
