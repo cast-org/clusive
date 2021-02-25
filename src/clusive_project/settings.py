@@ -60,6 +60,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'https://www.googleapis.com/auth/classroom.rosters.readonly',
         ],
         'AUTH_PARAMS': {
+            # for automatically refresh access token, see:
+            # https://django-allauth.readthedocs.io/en/latest/providers.html?highlight=refresh%20token#django-configuration
             'access_type': 'offline'
         }
     }
