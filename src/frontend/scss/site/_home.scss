@@ -36,6 +36,7 @@
     .sidebar {
         background-color: transparent;
         background-image: none;
+        pointer-events: none;
 
         &::before,
         &::after {
