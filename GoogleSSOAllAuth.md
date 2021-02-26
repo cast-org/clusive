@@ -93,7 +93,7 @@ whose `id` is `7`.  That record cross references the newly created `User` (`auth
 record.  The `app_id` cross references the `id` of the `Social App`
 (`socialaccount_socialapp`) whose SSO is being used, here Google.
 
-Background:  The usual dialogue between an OAuth2 server (Google) and consumer
+Background:  The usual exchange between an OAuth2 server (Google) and consumer
 (Clusive) is as follows.  Note that many of these requests have no UI associated
 with them and users do not see these transactions.  The requests are a
 behind-the-scenes exchange of information between Google and Clusive.
@@ -103,7 +103,8 @@ behind-the-scenes exchange of information between Google and Clusive.
    sends a message back to Clusive that the user is authentic,
 3. Clusive sends back to Google, "okay", and asks for an access token,
 4. Google sends back an access token and possibly a refresh token,
-5. Clusive stores the access token somewhere in its database, and uses it going
+5. Clusive stores the access token int a `Social application token`
+   (`socialaccount_socialtoken`) in its database, and uses it going
    forward as credentials for future requests.
   
 ### Storing Clusive's `client_id` and `secret` in its database [SOLVED]
@@ -124,7 +125,7 @@ same time the Clusive host (domain?) is required and can be added to the
 "Chosen Sites" list using the `/admin` interface.  When running in development
 on localhost, the Clusive host value is `127.0.0.1`.  Note that this matches a
 `Sites` (`django_site`) record in terms of that `Site`'s `domain` field.  The
-`Site` record, in turn, is identifed in Clusive's `setting.py` using the 
+`Site` record, in turn, is identifed in Clusive's `settings.py` using the 
 `SITE_ID` environment variable.  In summary:
 - `Social Application` (`socialaccount_socialapp`) record:
  - has a list of sites listed in `Chosen sites`; add site via Admin UI
