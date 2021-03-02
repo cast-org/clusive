@@ -82,7 +82,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # * - need to examine the details of the payload sent with the redirect URI to
 # see how the access token is transmitted.  It's likely different depending on
 # the OAuth2 provider, e.g., Google vs. Github
-LOGIN_REDIRECT_URL = '/account/profile'
+LOGIN_REDIRECT_URL = '/reader'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
