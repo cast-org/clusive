@@ -29,7 +29,8 @@ logger = logging.getLogger(__name__)
 
 def guest_login(request):
     clusive_user = ClusiveUser.make_guest()
-    login(request, clusive_user.user)
+    # Need to specify backend so as to not use django-allauth in the case of guests
+    login(request, clusive_user.user, 'django.contrib.auth.backends.ModelBackend')
     return redirect('reader_index')
 
 
