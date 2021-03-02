@@ -8,9 +8,9 @@ var SessionExpireWarning = {
 
     dialog: '#modalTimeout',               // Warning dialog locator
     dialogTrigger: '#modalTimeoutTrigger', // Trigger element to show/hide the warning dialog
+    logoutLink: '#logoutLink',             // Element to "click" to log out
     statusUrl: '/sessions/status',         // URL to get information about session age
     reawakenUrl: '/sessions/keepalive',    // URL on the server to re-establish awakeness.
-    logoutUrl: '/account/logout',          // URL to logout
     tickPeriod: 10000,                     // how often to wake up and check the time (in ms)
     lastStatus: 'ACTIVE',                  // status as of previous check.
     timer: null,                           // Timer for periodic checks
@@ -37,9 +37,10 @@ var SessionExpireWarning = {
 
         var check = window.localStorage.getItem('SEW-check-in-progress');
         if (check) {
-            var lockAge = (new Date().getTime() - parseInt(check, 10));
+            var lockAge = new Date().getTime() - parseInt(check, 10);
             if (lockAge > SessionExpireWarning.tickPeriod) {
-                // Server round-trip should not take this long. May be a stray indication from browser crash etc.
+                // Server round-trip should not take a full tick cycle.
+                // May be a left over due to browser or network problems.
                 console.warn('SEW clearing old in-progress indication');
                 window.localStorage.setItem('SEW-check-in-progress', '');
             } else {
@@ -144,7 +145,9 @@ var SessionExpireWarning = {
         'use strict';
 
         console.info('SEW TODO session TIMEOUT');
-        window.location = SessionExpireWarning.logoutUrl;
+        SessionExpireWarning.cleanup();
+        // window.location = SessionExpireWarning.logoutUrl;
+        $(SessionExpireWarning.logoutLink).click();
     },
 
     // Called when user closes the "Are you there" dialog, confirming their presence.
@@ -160,6 +163,15 @@ var SessionExpireWarning = {
         var val = window.localStorage.getItem('SEW-next-check');
         if (val) { return parseInt(val, 10); }
         return null;
+    },
+
+    cleanup: function() {
+        'use strict';
+
+        console.debug('SEW cleaning up');
+        window.localStorage.removeItem('SEW-status');
+        window.localStorage.removeItem('SEW-next-check');
+        window.localStorage.removeItem('SEW-check-in-progress');
     }
 
 };
