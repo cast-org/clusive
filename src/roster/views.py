@@ -32,6 +32,33 @@ def guest_login(request):
     login(request, clusive_user.user)
     return redirect('reader_index')
 
+class WelcomeView(TemplateView):
+    template_name='roster/welcome.html'
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)    
+
+class SignUpView(CreateView):
+    template_name='roster/sign_up.html'
+    model = User
+    form_class = UserEditForm
+    def get_success_url(self):
+        return reverse('welcome')
+    def form_valid(self, form):
+        # Create User
+        form.save()
+        target : User
+        target = form.instance
+        # Set password        
+        new_pw = form.cleaned_data['password']        
+        if new_pw:
+            target.set_password(new_pw)
+            target.save()
+        # Create ClusiveUser
+        cu = ClusiveUser.objects.create(user=target,
+                                   role=Roles.STUDENT,
+                                   permission=ResearchPermissions.GUEST)                                                                
+        return super().form_valid(form)
+            
 
 class PreferenceView(View):
 

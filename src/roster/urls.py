@@ -30,6 +30,9 @@ urlpatterns = [
 
     path('guest_login', views.guest_login, name='guest_login'),
 
+    path('sign_up', views.SignUpView.as_view(), name='sign_up'),
+    path('welcome', views.WelcomeView.as_view(), name='welcome'),
+
     path('prefs', views.PreferenceView.as_view(), name='prefs'),        
     path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile'),
 
