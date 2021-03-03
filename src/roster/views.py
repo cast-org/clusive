@@ -40,7 +40,7 @@ class WelcomeView(TemplateView):
 class SignUpView(CreateView):
     template_name='roster/sign_up.html'
     model = User
-    form_class = UserEditForm
+    form_class = UserCreateForm
     def get_success_url(self):
         return reverse('welcome')
     def form_valid(self, form):
