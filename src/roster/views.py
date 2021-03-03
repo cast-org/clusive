@@ -32,16 +32,21 @@ def guest_login(request):
     login(request, clusive_user.user)
     return redirect('reader_index')
 
-class WelcomeView(TemplateView):
-    template_name='roster/welcome.html'
-    def get(self, request, *args, **kwargs):
+class WelcomeNewUserView(TemplateView, LoginRequiredMixin, EventMixin):
+    template_name='roster/welcome.html'    
+    user_id = None
+    def get(self, request, *args, **kwargs):        
         return super().get(request, *args, **kwargs)    
+    def configure_event(self, event: Event):
+        event.page = 'WelcomeNewUser'        
 
 class SignUpView(CreateView):
     template_name='roster/sign_up.html'
     model = User
     form_class = UserCreateForm
-    def get_success_url(self):
+    def get_success_url(self):  
+        # Log new user in before sending them to the welcome page      
+        login(self.request, self.object)
         return reverse('welcome')
     def form_valid(self, form):
         # Create User
@@ -56,10 +61,10 @@ class SignUpView(CreateView):
         # Create ClusiveUser
         cu = ClusiveUser.objects.create(user=target,
                                    role=Roles.STUDENT,
-                                   permission=ResearchPermissions.GUEST)                                                                
+                                   permission=ResearchPermissions.GUEST)      
+        # Log the new user in                                                          
         return super().form_valid(form)
             
-
 class PreferenceView(View):
 
     def get(self, request):
