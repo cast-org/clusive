@@ -3,31 +3,40 @@
 <form method="post">
     {% csrf_token %}
     <div class="form-group">
-        {{ form.first_name.label_tag | formlabel }}
-        {{ form.first_name.errors }}
-        {{ form.first_name }}
-    </div>
-    <div class="form-group">
-        {{ form.last_name.label_tag | formlabel }}
-        {{ form.last_name.errors}}
-        {{ form.last_name }}
-    </div>
-    <div class="form-group">
-        {{ form.email.label_tag | formlabel }}
-        {{ form.email.errors}}
-        {{ form.email }}
-    </div>
-    <div class="form-group">
         {{ form.username.label_tag | formlabel }}
         {{ form.username.errors}}
         {{ form.username }}
     </div>
     <div class="form-group">
-        {{ form.password.label_tag | formlabel }}
-        {{ form.password.errors}}
-        {{ form.password }}
+        {{ form.password1.label_tag | formlabel }}
+        {{ form.password1.errors}}
+        {{ form.password1 }}
         <div class="form-text small">Choose something hard to guess, at least 6 characters, and not just numbers.</div>
         {{ form.non_field_errors }}
     </div>
-    <input type="submit" class="btn btn-secondary" value="Sign Up"/>    
+    <div class="form-group">
+        {{ form.password2.label_tag | formlabel }}
+        {{ form.password2.errors}}
+        {{ form.password2 }}
+        <div class="form-text small">Enter the same password again, for verification.</div>
+        {{ form.non_field_errors }}
+    </div>
+    <div class="form-group">
+        {{ form.email.label_tag | formlabel }}
+        {{ form.email.errors}}
+        {{ form.email }}
+        <div class="form-text small">We will not share your email with anyone.</div>
+    </div>
+    <div class="form-group my-1">
+        {{ form.terms.errors }}
+        <div class="form-check">
+            {{ form.terms }}
+            <label class="form-check-label" for="{{ form.terms.id_for_label }}">
+                I have read and accept Clusive's
+                <a target="_blank" href="/privacy">Privacy Policy</a> and
+                <a target="_blank" href="http://www.cast.org/site/terms-of-use?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer">Terms of use</a>.
+            </label>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-secondary" value="Sign Up"/>
 </form>

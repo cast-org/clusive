@@ -1,43 +1,17 @@
-{% extends "shared/base.html" %}
+{% extends "roster/password_base.html" %}
 {% load static %}
 
-{% block bodyClass %}home{% endblock %}
-{% block title %}Welcome to Clusive{% endblock %}
+{% block title %}Clusive: Account signup{% endblock %}
 
-{% block preference_panel %} {% endblock %}
-
-{% block header %}
-{% include "shared/partial/site_header_home.html" %}
+{% block h1 %}
+<h1 class="mb-1">Create new account</h1>
 {% endblock %}
 
-{% block sidebar_start %}
+{% block instructions %}
 {% endblock %}
 
-{% block sidebar_end %}
-{% endblock %}
-
-{% block content %}
-<main id="content" tabindex="-1">
-<h1>Sign Up</h1>
+{% block form %}
+<h2>My Info</h2>
+<p>* = required</p>
 {% include 'roster/partial/sign_up_form.html' %}
-</main>
-
-<footer>
-    <div class="site-footer">
-        <div class="media">
-            <div class="media-img">
-                <img src="{% static 'shared/images/logo-cisl.png' %}" class="img-fluid" alt="CISL">
-            </div>
-            <div class="media-body">
-                <a href="http://cisl.cast.org/?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer">Center on Inclusive Software for Learning</a>
-            </div>
-        </div>
-        <div class="list list-divided list-horizontal">
-            <a href="http://www.cast.org/site/accessibility?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Accessibility Policy</a>
-            <a href="http://www.cast.org/site/privacy-policy?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Privacy Policy</a>
-            <a href="http://www.cast.org/site/terms-of-use?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Terms of Use</a>
-            <span class="list-item">&copy; {% now "Y" %} CAST Inc., All Rights Reserved</span>
-        </div>
-    </div>
-</footer>
 {% endblock %}

@@ -21,7 +21,7 @@ from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import UserForm, PeriodForm, UserCreateForm, UserEditForm
+from roster.forms import UserForm, PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
 
 logger = logging.getLogger(__name__)
@@ -35,36 +35,37 @@ def guest_login(request):
 class WelcomeNewUserView(TemplateView, LoginRequiredMixin, EventMixin):
     template_name='roster/welcome.html'    
     user_id = None
+
     def get(self, request, *args, **kwargs):        
         return super().get(request, *args, **kwargs)    
+
     def configure_event(self, event: Event):
         event.page = 'WelcomeNewUser'        
+
 
 class SignUpView(CreateView):
     template_name='roster/sign_up.html'
     model = User
-    form_class = UserCreateForm
-    def get_success_url(self):  
-        # Log new user in before sending them to the welcome page      
-        login(self.request, self.object)
+    form_class = UserRegistrationForm
+
+    def get_success_url(self):
         return reverse('welcome')
+
     def form_valid(self, form):
-        # Create User
-        form.save()
+        response = super().form_valid(form)
+
         target : User
         target = form.instance
-        # Set password        
-        new_pw = form.cleaned_data['password']        
-        if new_pw:
-            target.set_password(new_pw)
-            target.save()
         # Create ClusiveUser
         cu = ClusiveUser.objects.create(user=target,
                                    role=Roles.STUDENT,
-                                   permission=ResearchPermissions.GUEST)      
-        # Log the new user in                                                          
-        return super().form_valid(form)
-            
+                                   permission=ResearchPermissions.GUEST)
+
+        # Log new user in before sending them to the welcome page
+        login(self.request, self.object)
+        return response
+
+
 class PreferenceView(View):
 
     def get(self, request):
@@ -235,7 +236,7 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
 
 class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
     model = User
-    form_class = UserCreateForm
+    form_class = SimpleUserCreateForm
     template_name = 'roster/manage_create_user.html'
     period = None
 
