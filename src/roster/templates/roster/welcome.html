@@ -17,8 +17,11 @@
 {% endblock %}
 
 {% block content %}
-<h1>Welcome to Clusive{% if not user.is_anonymous %}, {{ user.first_name }}{% endif %}</h1>
-<a href="{% url 'reader_index' %}">Browse Available Publications</a>
+<h1>Welcome to Clusive{% if not user.is_anonymous %}, {{ user.username }}{% endif %}</h1>
+
+<p>Welcome page, or dashboard page would go here.</p>
+
+<a href="{% url 'reader_index' %}">Browse the Clusive Library</a>
 
 <footer>
     <div class="site-footer">
