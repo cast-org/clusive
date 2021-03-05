@@ -20,7 +20,11 @@ def formcontrol(value):
         typematch  = re.search(r'type="(.*?)"', input)
         type = typematch.group(1) if typematch else 'text'
         classmatch = re.search(r'class="', input)
-        addclass = 'form-check-input' if type=='checkbox' else 'form-control'
+        if type=='checkbox' or type=='radio':
+            addclass = 'form-check-input'
+        else:
+            addclass = 'form-control'
+
         if classmatch:
             newinput = '%sclass="%s %s' % (input[:classmatch.start()], addclass, input[classmatch.end():])
         else:

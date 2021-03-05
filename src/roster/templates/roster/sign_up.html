@@ -1,0 +1,17 @@
+{% extends "roster/password_base.html" %}
+{% load static %}
+
+{% block title %}Clusive: Account signup{% endblock %}
+
+{% block h1 %}
+<h1 class="mb-1">Create new account</h1>
+{% endblock %}
+
+{% block instructions %}
+{% endblock %}
+
+{% block form %}
+<h2>My Info</h2>
+<p>(All fields required)</p>
+{% include 'roster/partial/sign_up_form.html' %}
+{% endblock %}

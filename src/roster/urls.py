@@ -30,6 +30,12 @@ urlpatterns = [
 
     path('guest_login', views.guest_login, name='guest_login'),
 
+    path('sign_up_role', views.SignUpRoleView.as_view(), name='sign_up_role'),
+    path('sign_up_age', views.SignUpAgeCheckView.as_view(), name='sign_up_age_check'),
+    path('sign_up_ask_parent', views.SignUpAskParentView.as_view(), name='sign_up_ask_parent'),
+    path('sign_up/<role>', views.SignUpView.as_view(), name='sign_up'),
+    path('welcome', views.WelcomeNewUserView.as_view(user_id=None), name='welcome'),
+
     path('prefs', views.PreferenceView.as_view(), name='prefs'),        
     path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile'),
 
