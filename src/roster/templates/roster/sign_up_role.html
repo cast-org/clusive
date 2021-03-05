@@ -18,10 +18,9 @@
     {% csrf_token %}
     <div class="form-group">
         {% for radio in form.role %}
-        <div class="custom-control custom-radio">
+        <div class="form-check form-checkradio mb-1">
             {{ radio.tag | formcontrol }}
-            <label class="custom-control-indicator" for="{{ radio.id_for_label }}"></label>
-            <label class="custom-control-label" for="{{ radio.id_for_label }}">
+            <label class="form-check-label" for="{{ radio.id_for_label }}">
                 <strong>{{ radio.choice_label }}.</strong>
                 I want to use Clusive
                 {% cycle 'with my students.' 'with my child(ren).' 'myself.' %}
@@ -30,6 +29,7 @@
         {% endfor %}
     </div>
     <input type="submit" class="btn btn-secondary" value="Continue"/>
+    <a class="btn btn-link" href="/">Cancel</a>
 </form>
 {% endblock %}
 

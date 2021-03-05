@@ -20,10 +20,8 @@ def formcontrol(value):
         typematch  = re.search(r'type="(.*?)"', input)
         type = typematch.group(1) if typematch else 'text'
         classmatch = re.search(r'class="', input)
-        if type=='checkbox':
+        if type=='checkbox' or type=='radio':
             addclass = 'form-check-input'
-        elif type=='radio':
-            addclass = 'custom-control-input'
         else:
             addclass = 'form-control'
 

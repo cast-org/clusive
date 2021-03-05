@@ -21,10 +21,9 @@
     {% csrf_token %}
     <div class="form-group">
         {% for radio in form.of_age %}
-        <div class="custom-control custom-radio">
+        <div class="form-check form-checkradio mb-1">
             {{ radio.tag | formcontrol }}
-            <label class="custom-control-indicator" for="{{ radio.id_for_label }}"></label>
-            <label class="custom-control-label" for="{{ radio.id_for_label }}">
+            <label class="form-check-label" for="{{ radio.id_for_label }}">
                 <strong>{{ radio.choice_label }}.</strong>
                 {% cycle '' 'An adult can create an account for you. We\'ll tell you how on the next page!' %}
             </label>
