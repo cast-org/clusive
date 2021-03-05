@@ -1,0 +1,37 @@
+{% extends "roster/password_base.html" %}
+{% load static %}
+{% load static figuration %}
+
+{% block title %}Clusive: Account signup{% endblock %}
+
+{% block h1 %}
+<h1 class="mb-1">Create new account</h1>
+{% endblock %}
+
+{% block instructions %}
+{% endblock %}
+
+{% block form %}
+<h2>How old are you?</h2>
+<p>
+    You must be at least 18 years old to sign up for Clusive.
+    <strong>Are you 18 or older?</strong>
+</p>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {% for radio in form.of_age %}
+        <div class="custom-control custom-radio">
+            {{ radio.tag | formcontrol }}
+            <label class="custom-control-indicator" for="{{ radio.id_for_label }}"></label>
+            <label class="custom-control-label" for="{{ radio.id_for_label }}">
+                <strong>{{ radio.choice_label }}.</strong>
+                {% cycle '' 'An adult can create an account for you. We\'ll tell you how on the next page!' %}
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+    <input type="submit" class="btn btn-secondary" value="Continue"/>
+</form>
+{% endblock %}
+

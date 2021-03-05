@@ -1,10 +1,10 @@
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 from django import forms
 
-from roster.models import Period
+from roster.models import Period, Roles
 
 
 class UserForm(ModelForm):
@@ -90,6 +90,23 @@ class UserRegistrationForm(UserCreationForm):
             'email': forms.EmailInput(attrs={'aria-label': 'Email', 'class': 'form-control'}),
             'username': forms.TextInput(attrs={'aria-label': 'Username', 'class': 'form-control'}),
         }
+
+
+class AccountRoleForm(Form):
+    role = forms.ChoiceField(
+        choices=[(Roles.TEACHER, "I'm a teacher"),
+                 (Roles.PARENT, "I'm a parent"),
+                 (Roles.STUDENT, "I'm a learner")],
+        required=True,
+        widget=forms.RadioSelect)
+
+
+class AgeCheckForm(Form):
+    of_age = forms.ChoiceField(
+        choices=[(True, 'Yes'),
+                 (False, 'No')],
+        required=True,
+        widget=forms.RadioSelect)
 
 
 class PeriodForm(ModelForm):
