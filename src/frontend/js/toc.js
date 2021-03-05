@@ -136,7 +136,11 @@ function buildTableOfContents() {
 
     if (typeof D2Reader === 'object') {
         D2Reader.tableOfContents().then(function(items) {
-            if (items.length > 1) {
+            var has_structure = items.length > 1;
+            if (items.length === 1 && items[0].children.length > 1) {
+                has_structure = true;
+            }
+            if (has_structure) {
                 $(TOC_EMPTY).hide();
                 var out = buildTocLevel(items, 0, 'toc');
                 $(TOC_CONTAINER).html(out).CFW_Init();

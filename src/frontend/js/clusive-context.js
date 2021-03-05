@@ -45,6 +45,9 @@ $(document).ready(function () {
             if(pub_version) {
                 readerInfo.publication.version = pub_version;
             }
+            if(pub_version_id) {
+                readerInfo.publication.version_id = pub_version_id;
+            }
             if(manifest_path) {
                 readerInfo.publication.manifestPath = manifest_path;
             }            

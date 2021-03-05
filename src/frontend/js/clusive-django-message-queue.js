@@ -1,4 +1,4 @@
-/* global cisl, clusive, fluid_3_0_0, gpii, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global clusive, fluid_3_0_0, DJANGO_CSRF_TOKEN, PageTiming */
 
 (function(fluid) {
     'use strict';
@@ -26,7 +26,7 @@
             flushInterval: "@expand:{that}.getFlushInterval(20000)",
             flushIntervalOverrideKey: "clusive.messageQueue.config.flushInterval",
             lastQueueFlushInfoKey: "clusive.messageQueue.log.lastQueueFlushInfo",
-            logoutLinkSelector: "#logoutLink"
+            logoutLinkSelector: ".link-logout"
         },
         components: {
             logoutFlushManager: "{logoutFlushManager}"
@@ -126,27 +126,26 @@
             })    
     }
 
-    clusive.djangoMessageQueue.attachLogoutEvents = function (that) {
-        var logoutLinkSelector = that.options.config.logoutLinkSelector;        
-                
+    clusive.djangoMessageQueue.attachLogoutEvents = function(that) {
+        var logoutLinkSelector = that.options.config.logoutLinkSelector;
+
         $(logoutLinkSelector).click(
-            function (e) {                                                    
-                $(logoutLinkSelector).text("Saving changes...").fadeIn();                    
+            function(e) {
+                $(logoutLinkSelector).text('Saving changes...').fadeIn();
                 e.preventDefault();
-                that.logoutFlush();                   
+                PageTiming.reportEndTime();
+                that.logoutFlush();
             }
         );
     };
 
-    clusive.djangoMessageQueue.doLogout = function (that, numberOfQueues, completedFlushes) {        
-        console.log("doLogout", that, numberOfQueues, completedFlushes);
-        if(completedFlushes >= numberOfQueues) {
-            PageTiming.reportEndTime(); 
+    clusive.djangoMessageQueue.doLogout = function (that, numberOfQueues, completedFlushes) {
+        if (completedFlushes >= numberOfQueues) {
             var logoutLinkSelector = that.options.config.logoutLinkSelector;
-            $(logoutLinkSelector).text("Logging out").fadeIn();        
-            window.location = $(logoutLinkSelector).attr("href");
+            $(logoutLinkSelector).text('Logging out').fadeIn();
+            window.location = $(logoutLinkSelector).attr('href');
         }
-    }
+    };
 
     // Concrete implementation of the queue flushing that works with 
     // the server-side message queue

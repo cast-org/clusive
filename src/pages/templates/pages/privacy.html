@@ -1,0 +1,144 @@
+{% extends "shared/base.html" %}
+{% load i18n static figuration %}
+
+{% block bodyClass %}home{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header_home.html" with home_link=True %}
+{% endblock %}
+
+{% block sidebar_start %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <div class="content-text">
+        <h1>Clusive Privacy Policy</h1>
+        <p>We are committed to safeguarding and preserving the privacy of Clusive users.
+            This Privacy Policy explains what happens to data that is provided to us or that we collect from you
+            while you use our application.</p>
+
+        <h2>Data Collected for Research Purposes</h2>
+        <p>Clusive was initially developed as part of a project funded by the
+            Office of Special Education Programs in the U.S. Department of Education (grant #H327A170002).
+            As part of CAST&rsquo;s ongoing research into how Clusive is used by students and teachers,
+            certain data is collected about your use of the tool.</p>
+        <p>Below is the list of data that is collected about your use of Clusive and the reason each data type
+            is collected:</p>
+        <dl>
+            <dt>IP address:</dt>
+            <dd>To understand where Clusive is being used in the world</dd>
+            <dt>Browser, operating system, and device type:</dt>
+            <dd>To understand how people are accessing Clusive so we can provide better support for those systems
+            </dd>
+            <dt>Pages visited:</dt>
+            <dd>To understand what the most popular aspects of Clusive are</dd>
+            <dt>How long a user is on a page:</dt>
+            <dd>To understand how much time people spend using Clusive</dd>
+            <dt>Use of features such as read aloud, dictionary, or highlighting:</dt>
+            <dd>To understand how these are being used and what supports are most popular</dd>
+        </dl>
+        <p>These data are collected to support ongoing research activities about how Clusive is used. Additionally, researchers may view data input by Clusive users to further aid research activities. This involves viewing responses by a de-identified user into the comprehension and engagement checks that appear in some articles.</p>
+        <p>CAST may share (but not sell) de-identified usage data and Clusive data inputs with its research partners,
+            such as OCAD University and SRI International, a non-profit scientific research organization.
+            Other research partners may be added in the future.
+            Please contact us at <a href="mailto:cisl@cast.org">cisl@cast.org</a>
+            for a current list of research partners.
+            De-identified, aggregated data may be used in research articles, conference presentations,
+            grant applications, or marketing materials on behalf of CAST.</p>
+
+        <h2>Third-party services</h2>
+        <p>If you log in using a third-party service such as by clicking &ldquo;Sign in with Google&rdquo; or signing in using a school&rsquo;s Clever Portal, that service will send us certain information about your account, which may include the name on your account, email address, and school affiliation. We use this information to connect your account with your class. We do not share any information with these services other than the fact that you logged in.
+        </p>
+
+        <h2>Students and Personally Identifiable Information</h2>
+        <p>The only personally identifiable information (PII) about students that we store is the students&rsquo; email and IP address. A name can be attached but we encourage the use of only students&rsquo; first names or nicknames. The email address is optional and is used only for notifications and to help you reset your password. IP address is used to give us a general idea of the parts of the world where Clusive is being used, and to help prevent hacking attempts.
+        </p>
+
+        <h2>Your Data Rights</h2>
+        <p>You may request that we provide you with a copy of any personally identifiable information (PII) about you in our possession; that we correct any errors in that data; and that we delete any PII that you no longer wish us to retain
+            (see contact information below).</p>
+
+        <h2>Rights of European Economic Area Residents</h2>
+        <p>If you are a natural person residing within the European Economic Area,
+            the following additional rights under the General Data Protection Regulations (&ldquo;GDPR&rdquo;)
+            are applicable to you:</p>
+        <ol>
+            <li>Basis for Processing Data:&nbsp;CAST generally relies on your consent to process PII. You must be at least the age of 16 to consent to the processing of your PII. If you are under the age of 16, you must obtain your parent&rsquo;s or legal guardian&rsquo;s permission to consent to the processing.</li>
+            <li>Object, Restrict, or Withdraw Consent:&nbsp;You may withdraw the consent you provide to CAST or otherwise object to or restrict our processing of your PII by contacting our Data Protection Officer as described below. Please note that Clusive will become inaccessible if you withdraw your consent or otherwise object to the processing of your PII.</li>
+            <li>International Transfers:&nbsp;CAST is located in the USA and that is where we process and store information. The European Commission has not recognized the USA as providing adequate protection under the Commission&rsquo;s adequacy decisions. &nbsp;We do not transfer your PII to third parties. &nbsp;Given our policy of not transferring your PII to any third party, we are not aware of any additional risks associated with allowing us to store your PII in the USA.</li>
+            <li>Supervisory Authority:&nbsp;If you wish to raise a concern about our use of your information (and without prejudice to any other rights you may have), you have the right to do so with your local supervisory authority.</li>
+        </ol>
+
+        <h2>Required Permissions</h2>
+        <p>Applications that integrate with a Google account must declare their intent by requesting permissions.
+            These permissions are only needed if you access Clusive by signing in with your Google account.
+            Below is a list of these permissions and why they are required.
+            At no time will CAST request or have access to your Google account password.</p>
+
+        <h3>Permissions Required:</h3>
+        <dl>
+            <dt>Basic profile information:</dt>
+            <dd>This allows Clusive to identify your account so you can log in.</dd>
+            <dt>View Google Classroom rosters:</dt>
+            <dd>This allows Clusve to connect teacher and student accounts so that teachers can set up class
+                pages and view their students&rsquo; work.</dd>
+        </dl>
+
+        <h2>Data Privacy</h2>
+        <p>CAST employees will only access data and user content for research purposes.
+            CAST employees will have access to personally identifying information listed above,
+            but will never use this data for any purpose.
+            CAST employees and CAST research partners, such as SRI International and OCAD University,
+            will only access de-identified data as described in the &ldquo;Data Collected for Research Purposes&rdquo;
+            section above.
+        </p>
+
+        <h3>Disclosing your Information</h3>
+        <p>We will not disclose your personal information to any other party other than in accordance
+            with this Privacy Policy and where we are legally required by law to disclose your personal information.</p>
+
+        <h3>We don&rsquo;t share your personal data with other companies.</h3>
+        <p>We do not share any personal data (such as your name or email) with other companies for any reason.</p>
+
+        <h3>No ad companies collect data through our service.</h3>
+        <p>We do not display advertising, and no data is collected through our software for ad targeting.
+            We do not operate any referral program and do not display any sponsored links.</p>
+
+        <h3>We take steps to protect personal information.</h3>
+        <p>We take reasonable steps to secure your personally identifiable information against unauthorized
+            access or disclosure.
+            We encrypt transmission of all data.
+            However, no security or encryption method can be guaranteed to protect information from
+            hackers or human error.</p>
+
+        <h2>Enforcement</h2>
+        <p>We regularly review our compliance with our Privacy Policy.
+            If we receive a formal written complaint, we will follow up and contact the person who made the complaint.</p>
+
+        <h2>Changes</h2>
+        <p>We do update this Policy from time to time, so please review this Policy regularly.</p>
+
+        <h2>Contact Information</h2>
+        <p>For user account related inquiries, please contact our customer support team by email at
+            <a href="mailto:cisl@cast.org">cisl@cast.org</a>.
+            For all other inquiries relating to this Privacy Policy,
+            please contact the Privacy Compliance Officer by email at
+            <a href="mailto:compliance@cast.org">compliance@cast.org</a> or by postal mail at:</p>
+        <address>
+            Privacy Compliance Officer<br>
+            CAST Inc.<br>
+            178 Albion St., Suite 210<br>
+            Wakefield, MA 01880<br>
+        </address>
+        <p>If you live within the European Economic Area,
+            please contact our Data Protection Officer in confidence at
+            <a href="mailto:compliance@cast.org">compliance@cast.org</a>.
+        </p>
+    </div>
+</main>
+{% include 'shared/partial/site_footer_home.html' %}
+{% endblock %}

@@ -117,6 +117,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         versions = book.versions.all()
         clusive_user = request.clusive_user
         self.book_version = versions[version]
+        self.book = book
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
         pdata = Paradata.record_view(book, version, clusive_user)
 
@@ -134,6 +135,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
 
         self.extra_context = {
             'pub': book,
+            'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
             'last_position': pdata.lastLocation or "null",
@@ -145,6 +147,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
     def configure_event(self, event: Event):
         event.page = self.page_name
         event.book_version_id = self.book_version.id
+        event.book_id = self.book.id
         event.tip_type = self.tip_shown
 
 
@@ -160,7 +163,12 @@ class WordBankView(LoginRequiredMixin, EventMixin, TemplateView):
     def configure_event(self, event: Event):
         event.page = 'Wordbank'
 
+
 class DebugView(TemplateView):
     template_name = 'pages/debug.html'
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class PrivacyView(TemplateView):
+    template_name = 'pages/privacy.html'

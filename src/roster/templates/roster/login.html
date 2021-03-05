@@ -83,36 +83,5 @@
     </div>
 </main>
 
-<footer>
-    <div class="site-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="media">
-                        <div class="media-img">
-                            <img src="{% static 'shared/images/logo-cisl.png' %}" class="img-fluid" alt="CISL">
-                        </div>
-                        <div class="media-body">
-                            <a href="http://cisl.cast.org/?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer">Center on Inclusive Software for Learning</a>
-                        </div>
-                    </div>
-                    <div class="list list-divided list-horizontal">
-                        <a href="http://www.cast.org/site/accessibility?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Accessibility Policy</a>
-                        <a href="http://www.cast.org/site/privacy-policy?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Privacy Policy</a>
-                        <a href="http://www.cast.org/site/terms-of-use?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=footer" class="list-item">Terms of Use</a>
-                        <span class="list-item">&copy; {% now "Y" %} CAST Inc., All Rights Reserved</span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h2 class="h3">Contact us:</h2>
-                    <ul class="list-unstyled">
-                        <li><strong>Email:</strong> cisl@cast.org</li>
-                        <li><strong>Address:</strong> 178 Albion Street Wakefield, MA</li>
-                        <li><strong>Phone:</strong> 781-245-2212 - prompt #6</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+{% include 'shared/partial/site_footer_home.html' %}
 {% endblock %}

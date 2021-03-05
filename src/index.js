@@ -36,7 +36,7 @@ import execFrontEnd from "script-loader!../src/frontend/js/frontend.js"
 import execGlossary from "script-loader!../src/frontend/js/glossary.js"
 import execImages from "script-loader!../src/frontend/js/images.js"
 import execPageTiming from "script-loader!../src/frontend/js/page-timing.js"
-
+import execSessionExpireWarning from "script-loader!../src/frontend/js/session-expire-warning.js"
 import execToC from "script-loader!../src/frontend/js/toc.js";
 import execTTS from "script-loader!../src/frontend/js/tts.js";
 import execSTT from "script-loader!../src/frontend/js/stt.js";
