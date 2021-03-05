@@ -118,7 +118,7 @@ $enable-utility-text-colors:            false;
 $enable-utility-text-palette:           false;
 $enable-utility-text-special:           false;
 $enable-utility-text-reset:             false;
-$enable-utility-text-height:            false;
+$enable-utility-text-height:            true;
 $enable-utility-text-size:              false;
 $enable-utility-valign:                 false;
 $enable-utility-visibility:             false;
@@ -175,6 +175,15 @@ $border-radius:                         .5rem;
 // The CSS variable defined here is set in `_content.scss` so that
 // body line-height is set to 1 for Infusion/Redium consitency
 $line-height-base:                      var(--CT_lineHeight);
+
+// Line height utility classes
+$line-heights: (
+    "1":        1,
+    "1_125":    1.125,
+    "1_25":     1.25,
+    "base":     $line-height-base,
+    "1_5":      1.5
+);
 
 $body-bg:                               var(--CT_bodyBg);
 $body-color:                            var(--CT_bodyColor);

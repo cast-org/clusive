@@ -34,9 +34,9 @@
     }
 
     .sidebar {
+        pointer-events: none;
         background-color: transparent;
         background-image: none;
-        pointer-events: none;
 
         &::before,
         &::after {
@@ -64,6 +64,7 @@
     padding-top: 1rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    line-height: 1.25;
     border-top: 3px solid var(--CT_homeSectionBorderColor);
 
     & + & {
