@@ -317,8 +317,8 @@ def set_default_preferences(sender, instance, created, **kwargs):
 
 # The signal is sent from django-allauth, and indicates the first time that a
 # user has connected a social account to their local account using another
-# another app's single-sign-on (e.g, Google), but before they are fully logged
-# in.  Check to see if the associated User has an associated ClusiveUser; and,
+# app's single-sign-on (e.g, Google), but before they are fully logged in.
+# Check to see if the associated User has an associated ClusiveUser; and,
 # if not, create one.
 @receiver(user_signed_up)
 def add_clusive_user_for_sociallogin(sender, **kwargs):
