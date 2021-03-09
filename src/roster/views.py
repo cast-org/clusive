@@ -10,10 +10,10 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import TemplateView, UpdateView, CreateView
+from django.views.generic import TemplateView, UpdateView, CreateView, FormView
 
 from eventlog.models import Event
 from eventlog.signals import preference_changed
@@ -21,7 +21,8 @@ from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import UserForm, PeriodForm, UserCreateForm, UserEditForm
+from roster.forms import UserForm, PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
+    AccountRoleForm, AgeCheckForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,73 @@ def guest_login(request):
     # Need to specify backend so as to not use django-allauth in the case of guests
     login(request, clusive_user.user, 'django.contrib.auth.backends.ModelBackend')
     return redirect('reader_index')
+
+class WelcomeNewUserView(TemplateView, LoginRequiredMixin, EventMixin):
+    template_name='roster/welcome.html'    
+    user_id = None
+
+    def get(self, request, *args, **kwargs):        
+        return super().get(request, *args, **kwargs)    
+
+    def configure_event(self, event: Event):
+        event.page = 'WelcomeNewUser'        
+
+
+class SignUpView(CreateView):
+    template_name='roster/sign_up.html'
+    model = User
+    form_class = UserRegistrationForm
+
+    def get_success_url(self):
+        return reverse('welcome')
+
+    def post(self, request, *args, **kwargs):
+        self.role = kwargs['role']
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        target : User
+        target = form.instance
+        if self.role in ['TE', 'PA', 'ST']:
+            ClusiveUser.objects.create(user=target,
+                                       role=self.role,
+                                       permission=ResearchPermissions.GUEST)
+            # Log new user in before sending them to the welcome page
+            login(self.request, self.object)
+            return response
+        else:
+            raise PermissionError('Invalid role')
+
+
+class SignUpRoleView(FormView):
+    form_class = AccountRoleForm
+    template_name = 'roster/sign_up_role.html'
+
+    def form_valid(self, form):
+        role = form.cleaned_data['role']
+        if role == 'ST':
+            self.success_url = reverse('sign_up_age_check')
+        else:
+            self.success_url = reverse('sign_up', kwargs={'role': role})
+        return super().form_valid(form)
+
+
+class SignUpAgeCheckView(FormView):
+    form_class = AgeCheckForm
+    template_name = 'roster/sign_up_age_check.html'
+
+    def form_valid(self, form):
+        logger.debug("of age: %s", repr(form.cleaned_data['of_age']))
+        if form.cleaned_data['of_age'] == 'True':
+            self.success_url = reverse('sign_up', kwargs={'role': 'ST'})
+        else:
+            self.success_url = reverse('sign_up_ask_parent')
+        return super().form_valid(form)
+
+
+class SignUpAskParentView(TemplateView):
+    template_name = 'roster/sign_up_ask_parent.html'
 
 
 class PreferenceView(View):
@@ -204,7 +272,7 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
 
 class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
     model = User
-    form_class = UserCreateForm
+    form_class = SimpleUserCreateForm
     template_name = 'roster/manage_create_user.html'
     period = None
 
