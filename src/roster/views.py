@@ -66,7 +66,7 @@ class SignUpView(CreateView):
                                        role=self.role,
                                        permission=ResearchPermissions.GUEST)
             # Log new user in before sending them to the welcome page
-            login(self.request, self.object)
+            login(self.request, self.object, 'django.contrib.auth.backends.ModelBackend')
             return response
         else:
             raise PermissionError('Invalid role')
