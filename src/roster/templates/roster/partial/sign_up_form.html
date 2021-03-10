@@ -3,9 +3,16 @@
 <form method="post">
     {% csrf_token %}
     <div class="form-group">
+        {{ form.first_name.label_tag | formlabel }}
+        {{ form.first_name.errors}}
+        {{ form.first_name }}
+        <div class="small">The name you want Clusive to use for you. Just a first name or nickname is fine.</div>
+    </div>
+    <div class="form-group">
         {{ form.username.label_tag | formlabel }}
         {{ form.username.errors}}
         {{ form.username }}
+        <div class="small">This is how you will log in to Clusive.</div>
     </div>
     <div class="form-group">
         {{ form.password1.label_tag | formlabel }}

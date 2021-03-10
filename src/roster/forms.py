@@ -13,7 +13,6 @@ class UserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].required = True
-        self.fields['last_name'].required = True
         self.fields['username'].required = True
 
     def _post_clean(self):
@@ -28,10 +27,9 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'username']
+        fields = ['first_name', 'email', 'username']
         widgets = {
-            'first_name': forms.TextInput(attrs={'aria-label': 'First name', 'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'aria-label': 'Last name', 'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'aria-label': 'Display name/nickname', 'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'aria-label': 'Email', 'class': 'form-control'}),
             'username': forms.TextInput(attrs={'aria-label': 'Username', 'class': 'form-control'})
         }
@@ -79,14 +77,20 @@ class UserRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['first_name'].label = 'Display name'
         self.fields['email'].required = True
         self.fields['username'].required = True
 
+    def _post_clean(self):
+        if not self.cleaned_data.get('first_name'):
+            self.cleaned_data['first_name'] = self.cleaned_data.get('username')
+        super()._post_clean()
+
     class Meta:
         model = User
-        fields = ['password1', 'password2', 'email', 'username']
+        fields = ['first_name', 'password1', 'password2', 'email', 'username']
         widgets = {
-            'first_name': forms.TextInput(attrs={'aria-label': 'First name', 'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'aria-label': 'Display name', 'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'aria-label': 'Email', 'class': 'form-control'}),
             'username': forms.TextInput(attrs={'aria-label': 'Username', 'class': 'form-control'}),
         }

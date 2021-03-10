@@ -260,7 +260,7 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         return context
 
     def make_student_info_list(self):
-        students = self.current_period.users.filter(role=Roles.STUDENT)
+        students = self.current_period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
         return [{
             'info': s.user,
         } for s in students]

@@ -6,21 +6,13 @@
         {{ form.first_name.label_tag | formlabel }}
         {{ form.first_name.errors }}
         {{ form.first_name }}
-    </div>
-    <div class="form-group">
-        {{ form.last_name.label_tag | formlabel }}
-        {{ form.last_name.errors}}
-        {{ form.last_name }}
-    </div>
-    <div class="form-group">
-        {{ form.email.label_tag | formlabel }}
-        {{ form.email.errors}}
-        {{ form.email }}
+        <div class="form-text small">This is how they are shown in the class list.</div>
     </div>
     <div class="form-group">
         {{ form.username.label_tag | formlabel }}
         {{ form.username.errors}}
         {{ form.username }}
+        <div class="form-text small">This is what they use to log in to the site.</div>
     </div>
     <div class="form-group">
         {{ form.password.label_tag | formlabel }}
@@ -28,6 +20,12 @@
         {{ form.password }}
         <div class="form-text small">Choose something hard to guess, at least 6 characters, and not just numbers.</div>
         {{ form.non_field_errors }}
+    </div>
+    <div class="form-group">
+        {{ form.email.label_tag | formlabel }}
+        {{ form.email.errors}}
+        {{ form.email }}
+        <div class="form-text small">Optional; allows student to reset their password.</div>
     </div>
     <input type="submit" class="btn btn-secondary" value="Save"/>
     <a href="{% url 'manage' period_id=period_id %}" class="btn btn-link">Cancel</a>
