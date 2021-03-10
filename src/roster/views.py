@@ -242,10 +242,10 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
                 self.current_period = user.current_period
             elif self.periods:
                 self.current_period = self.periods[0]
-            else:
-                # No periods.  If this case actually happens, should have a better error message.
-                self.handle_no_permission()
-        if self.current_period != user.current_period:
+            # else:
+            #     # No periods.  If this case actually happens, should have a better error message.
+            #     self.handle_no_permission()
+        if self.current_period != user.current_period and self.current_period != None:
             user.current_period = self.current_period
             user.save()
         return super().get(request, *args, **kwargs)
@@ -254,9 +254,10 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['periods'] = self.periods
         context['current_period'] = self.current_period
-        context['students'] = self.make_student_info_list()
-        context['period_name_form'] = PeriodForm(instance=self.current_period)
-        logger.debug('Students: %s', context['students'])
+        if self.current_period != None:
+            context['students'] = self.make_student_info_list()
+            context['period_name_form'] = PeriodForm(instance=self.current_period)
+            logger.debug('Students: %s', context['students'])
         return context
 
     def make_student_info_list(self):
