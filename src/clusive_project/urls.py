@@ -28,4 +28,5 @@ urlpatterns = [
     path('library/', include('library.urls')),
     path('messagequeue/', include('messagequeue.urls')),
     path('progressbarupload/', include('progressbarupload.urls')),
+    path('accounts/', include('allauth.urls')),     # django-allauth
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

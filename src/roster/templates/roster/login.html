@@ -68,7 +68,28 @@
                 <div class="card-body login-section">
                     <a href="{% url 'password_reset' %}">I forgot my username or password.</a>
                 </div>
+                <div class="socialaccount_ballot card-body login-section">
+                {% load socialaccount %}
+                {% get_providers as socialaccount_providers %}
+                {% for provider in socialaccount_providers %}
+                    <!-- TODO: Not supporting `openid` providers yet so this
+                         inner for-loop over `provider.get_brands` is a no-op.
+                         It's here for future support.  Remove?
+                    -->
+                    {% if provider.id == "openid" %}
+                        {% for brand in provider.get_brands %}
+                            <form method="get" action="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
+                                <button type="submit" class="socialaccount_provider {{provider.id}} {{brand.id}}>Sign in with {{brand.name}} SSO</button>
+                            </form>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                        <button type="submit" class="socialaccount_provider btn btn-primary">Sign in with {{provider.name}}</button>
+                    </form>
+                {% endfor %}
+                </div>
             </div>
+
         </div>
         <div class="col-sm-6 col-md-7 col-lg-8">
             <h2>See a demo</h2>

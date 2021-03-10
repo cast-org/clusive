@@ -38,7 +38,46 @@ INSTALLED_APPS = [
     'tips.apps.TipsConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
+    # added for django-allauth:
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # including only Google provider for now, see:
+    # https://django-allauth.readthedocs.io/en/latest/installation.html#django
+    'allauth.socialaccount.providers.google'
 ]
+
+SITE_ID = 1 # django-allauth, id of the django_site record
+
+# django-allauth provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'openid',
+            'https://www.googleapis.com/auth/classroom.rosters.readonly',
+        ],
+        'AUTH_PARAMS': {
+            # for automatically refresh access token, see:
+            # https://django-allauth.readthedocs.io/en/latest/providers.html?highlight=refresh%20token#django-configuration
+            'access_type': 'offline'
+        }
+    }
+}
+
+# The `allauth` redirect URI from OAuth2 server back to Clusive after a
+# successful authorization is set to '/accounts/profile/', passing back the
+# access token.  But, according to the FAQ, that will result in a 404 because
+# `allauth` does not implement anything here -- it's up to individual users of
+# the `allauth` library to handle the "callback".  Specifically, Clusive needs
+# to implement the details of what to do with a successful confirmation from the
+# OAuth2 server.  A suggestion from `allauth` is to set the LOGIN_REDIRECT_URL
+# to where the app would go after a local successful login:
+# https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
+# A possible value for Clusive is '/reader'
+LOGIN_REDIRECT_URL = '/reader'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -107,6 +146,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+# AUTHENTICATION_BACKENDS needed by `django-allauth` solution
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # Internationalization
