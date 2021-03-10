@@ -146,7 +146,7 @@ class ClusiveUser(models.Model):
         period = self.current_period or self.periods.first()
         if period:
             return period.site
-        # If the user can mage periods (Parent or Teacher) 
+        # If the user can manage periods (Parent or Teacher) 
         # and doesn't currently have a Site, we create
         # a personal one for them at this point
         if self.can_manage_periods:
