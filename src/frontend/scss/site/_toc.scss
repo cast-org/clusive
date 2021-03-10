@@ -13,6 +13,7 @@
         border-color: var(--CT_tocModalContentBorderColor);
     }
     .modal-header {
+        flex-wrap: wrap;
         color: var(--CT_tocModalHeaderColor);
         background-color: var(--CT_tocModalHeaderBg);
         border-bottom: $toc-modal-header-border-width solid var(--CT_tocModalHeaderBorderColor);
@@ -24,6 +25,8 @@
 }
 
 .nav-tabs-toc {
+    flex-basis: 100%;
+    order: 1;
     margin: .5rem 0 .25rem -.5rem;
 
     .nav-link {
@@ -267,4 +270,16 @@
 .toc-empty-text {
     font-style: italic;
     color: var(--CT_textMuted);
+}
+
+.toc-action {
+    flex-basis: 100%;
+    order: 1;
+    margin-top: .5rem;
+    text-align: center;
+}
+.highlight-action {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    text-align: center;
 }
