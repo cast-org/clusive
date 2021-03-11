@@ -19,6 +19,11 @@
             <div class="modal-body">
                 <div class="tab-content">
                     <div id="setting0" class="tab-pane">
+                        {% if not request.clusive_user.is_registered %}
+                        <div class="highlight-action">
+                            <a href="{% url 'sign_up_role' %}" class="btn btn-primary btn-small">Create an account to save your settings</a>
+                        </div>
+                        {% endif %}
                         <form>
                             <div class="setting">
                                 <fieldset>
@@ -184,6 +189,11 @@
                     </div>
                     <div id="setting1" class="tab-pane">
                         <!-- Reading Tools pane -->
+                        {% if not request.clusive_user.is_registered %}
+                        <div class="highlight-action">
+                            <a href="{% url 'sign_up_role' %}" class="btn btn-primary btn-small">Create an account to save your settings</a>
+                        </div>
+                        {% endif %}
                         <form>
                             <div class="setting">
                                 <fieldset>

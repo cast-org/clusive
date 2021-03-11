@@ -118,6 +118,13 @@
     }
 }
 
+.setting-action {
+    flex-basis: 100%;
+    order: 1;
+    margin-top: .5rem;
+    text-align: center;
+}
+
 .setting-title {
     margin-bottom: $setting-title-margin-bottom;
     @include font-size($setting-title-font-size);

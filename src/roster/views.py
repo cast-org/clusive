@@ -8,7 +8,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.dispatch import receiver
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -54,21 +54,41 @@ class SignUpView(CreateView):
 
     def post(self, request, *args, **kwargs):
         self.role = kwargs['role']
+        self.current_clusive_user = request.clusive_user
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        # Don't call super since that would save the target model, which we might not want.
         target : User
         target = form.instance
-        if self.role in ['TE', 'PA', 'ST']:
+        if not self.role in ['TE', 'PA', 'ST']:
+            raise PermissionError('Invalid role')
+        if self.current_clusive_user:
+            # There is a logged-in (presumably Guest) user.
+            # Update the ClusiveUser and User objects based on the form target.
+            clusive_user: ClusiveUser
+            clusive_user = self.current_clusive_user
+            logger.debug('Upgrading %s from guest to %s', clusive_user, self.role)
+            clusive_user.role = self.role
+            clusive_user.permission = ResearchPermissions.PERMISSIONED
+            clusive_user.save()
+            user: User
+            user = clusive_user.user
+            user.username = target.username
+            user.first_name = target.first_name
+            user.set_password(form.cleaned_data["password1"])
+            user.email = target.email
+            user.save()
+            login(self.request, user) # Need to login again since User object has changed.
+        else:
+            # There is no logged-in user.  Save the form target User object, and create a ClusiveUser.
+            target.save()
             ClusiveUser.objects.create(user=target,
                                        role=self.role,
-                                       permission=ResearchPermissions.GUEST)
-            # Log new user in before sending them to the welcome page
+                                       permission=ResearchPermissions.PERMISSIONED,
+                                       anon_id=ClusiveUser.next_anon_id())
             login(self.request, self.object)
-            return response
-        else:
-            raise PermissionError('Invalid role')
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class SignUpRoleView(FormView):
