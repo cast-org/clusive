@@ -47,8 +47,7 @@ sample_periods = {
 sample_users = {
     'theresa_teacher': {
         'django_user': {
-            'first_name': 'Theresa',
-            'last_name': 'Teacher',
+            'first_name': 'Theresa Teacher',
             'username': 'theresateacher',
             'password': 'theresateacher_pass'
         },
@@ -63,8 +62,7 @@ sample_users = {
     },
     'sam_student': {
         'django_user': {
-            'first_name': 'Samuel',
-            'last_name': 'Student',
+            'first_name': 'Samuel Student',
             'username': 'samstudent',
             'password': 'samstudent_pass'
         },
@@ -79,8 +77,7 @@ sample_users = {
     },
     'sarah_student': {
         'django_user': {
-            'first_name': 'Sarah',
-            'last_name': 'Student',
+            'first_name': 'Sarah Student',
             'username': 'sarahstudent',
             'password': 'sarahstudent_pass'
         },
