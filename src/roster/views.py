@@ -64,10 +64,13 @@ class SignUpView(CreateView):
         if not self.role in ['TE', 'PA', 'ST']:
             raise PermissionError('Invalid role')
         if self.current_clusive_user:
+            # There is a logged-in (presumably Guest) user.
+            # Update the ClusiveUser and User objects based on the form target.
             clusive_user: ClusiveUser
             clusive_user = self.current_clusive_user
             logger.debug('Upgrading %s from guest to %s', clusive_user, self.role)
             clusive_user.role = self.role
+            clusive_user.permission = ResearchPermissions.PERMISSIONED
             clusive_user.save()
             user: User
             user = clusive_user.user
@@ -76,12 +79,14 @@ class SignUpView(CreateView):
             user.set_password(form.cleaned_data["password1"])
             user.email = target.email
             user.save()
-            login(self.request, self.user) # Need to login again since User object has changed.
+            login(self.request, user) # Need to login again since User object has changed.
         else:
+            # There is no logged-in user.  Save the form target User object, and create a ClusiveUser.
             target.save()
             ClusiveUser.objects.create(user=target,
                                        role=self.role,
-                                       permission=ResearchPermissions.GUEST)
+                                       permission=ResearchPermissions.PERMISSIONED,
+                                       anon_id=ClusiveUser.next_anon_id())
             login(self.request, self.object)
         return HttpResponseRedirect(self.get_success_url())
 
