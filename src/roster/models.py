@@ -145,8 +145,16 @@ class ClusiveUser(models.Model):
         period = self.current_period or self.periods.first()
         if period:
             return period.site
-        return None
-
+        # If the user can manage periods (Parent or Teacher) 
+        # and doesn't currently have a Site, we create
+        # a personal one for them at this point
+        if self.can_manage_periods:
+            personal_site_name = "user-" + str(self.user.id) + "-personal-site"
+            personal_site = Site(name=personal_site_name)
+            personal_site.save()
+            return personal_site
+        else: 
+            return None
 
     @property 
     def is_permissioned(self):
