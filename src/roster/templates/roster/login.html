@@ -79,7 +79,7 @@
                     {% if provider.id == "openid" %}
                         {% for brand in provider.get_brands %}
                             <form method="get" action="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
-                                <button type="submit" class="socialaccount_provider {{provider.id}} {{brand.id}}>Sign in with {{brand.name}} SSO</button>
+                                <button type="submit" class="socialaccount_provider {{provider.id}} {{brand.id}}">Sign in with {{brand.name}} SSO</button>
                             </form>
                         {% endfor %}
                     {% endif %}
