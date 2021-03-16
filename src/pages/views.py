@@ -15,7 +15,7 @@ from tips.models import TipHistory
 logger = logging.getLogger(__name__)
 
 
-class DashboardView(TemplateView, LoginRequiredMixin, EventMixin):
+class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
     template_name='pages/dashboard.html'
 
     def get(self, request, *args, **kwargs):

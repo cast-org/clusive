@@ -35,7 +35,11 @@
                 <h2>Last reads</h2>
                 <ul>
                     {% for para in last_reads %}
-                    <li><a href="{% url 'reader_default' book_id=para.book.pk %}">{{para.book.title}}</a> ({{para.last_view}})</li>
+                    <li>
+                        <a href="{% url 'reader_default' book_id=para.book.pk %}">
+                            {{para.book.title}}
+                        </a>
+                        (total {{ para.total_time }}, most recent {{para.last_view}} GMT)</li>
                     {% endfor %}
                 </ul>
             </div>
