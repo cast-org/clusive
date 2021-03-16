@@ -87,7 +87,7 @@ class SignUpView(CreateView):
                                        role=self.role,
                                        permission=ResearchPermissions.PERMISSIONED,
                                        anon_id=ClusiveUser.next_anon_id())
-            login(self.request, self.object)
+            login(self.request, target)
         return HttpResponseRedirect(self.get_success_url())
 
 
