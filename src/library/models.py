@@ -179,22 +179,22 @@ class Paradata(models.Model):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
 
-    viewCount = models.SmallIntegerField(default=0, verbose_name='View count')
-    last_view = models.DateTimeField(null=True)
-    lastVersion = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
-                                    verbose_name='Last version viewed')
-    lastLocation = models.TextField(null=True, verbose_name='Last reading location')
+    view_count = models.SmallIntegerField(default=0, verbose_name='View count')
+    last_view = models.DateTimeField(null=True, verbose_name='Last view time')
+    last_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
+                                     verbose_name='Last version viewed')
+    last_location = models.TextField(null=True, verbose_name='Last reading location')
 
     @classmethod
     def record_view(cls, book, version_number, clusive_user):
         bv = BookVersion.objects.get(book=book, sortOrder=version_number)
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
-        para.viewCount += 1
+        para.view_count += 1
         para.last_view = timezone.now()
-        if para.lastVersion != bv:
+        if para.last_version != bv:
             # If we're switching to a different version, clear out last reading location
-            para.lastLocation = None
-            para.lastVersion = bv
+            para.last_location = None
+            para.last_version = bv
         para.save()
         return para
 
@@ -202,14 +202,14 @@ class Paradata(models.Model):
     def record_last_location(cls, book_id, version, user, locator):
         b = Book.objects.get(pk=book_id)
         para, created = cls.objects.get_or_create(book=b, user=user)
-        if para.lastVersion.sortOrder == version:
-            para.lastLocation = locator
+        if para.last_version.sortOrder == version:
+            para.last_location = locator
             para.last_view = timezone.now()
             para.save()
             logger.debug('Set last reading location for %s', para)
         else:
             logger.debug('Book version has changed since this location was recorded, ignoring. %d but we have %d',
-                         version, para.lastVersion.sortOrder)
+                         version, para.last_version.sortOrder)
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)

@@ -73,7 +73,7 @@ class ReaderChooseVersionView(RedirectView):
             try:
                 paradata = Paradata.objects.get(book__pk=book_id, user=clusive_user)
                 # Return to the last version this user viewed.
-                v = paradata.lastVersion.sortOrder
+                v = paradata.last_version.sortOrder
                 logger.debug('Returning to last version viewed (%d)', v)
             except:
                 # No previous view - determine where to send the user based on vocabulary.
@@ -155,7 +155,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
             'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
-            'last_position': pdata.lastLocation or "null",
+            'last_position': pdata.last_location or "null",
             'annotations': annotationList,
             'tip_name': tip_name,
         }
