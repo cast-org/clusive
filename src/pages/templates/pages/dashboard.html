@@ -32,8 +32,12 @@
     <div class="col-md-8">
         <div class="card card-login">
             <div class="card-body">
-                <h2>Dashboard block two</h2>
-                <p>Would be recent books or recommended books.</p>
+                <h2>Last reads</h2>
+                <ul>
+                    {% for para in last_reads %}
+                    <li><a href="{% url 'reader_default' book_id=para.book.pk %}">{{para.book.title}}</a> ({{para.last_view}})</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

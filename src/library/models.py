@@ -180,6 +180,7 @@ class Paradata(models.Model):
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
 
     viewCount = models.SmallIntegerField(default=0, verbose_name='View count')
+    last_view = models.DateTimeField(null=True)
     lastVersion = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
                                     verbose_name='Last version viewed')
     lastLocation = models.TextField(null=True, verbose_name='Last reading location')
@@ -189,6 +190,7 @@ class Paradata(models.Model):
         bv = BookVersion.objects.get(book=book, sortOrder=version_number)
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
         para.viewCount += 1
+        para.last_view = timezone.now()
         if para.lastVersion != bv:
             # If we're switching to a different version, clear out last reading location
             para.lastLocation = None
@@ -202,6 +204,7 @@ class Paradata(models.Model):
         para, created = cls.objects.get_or_create(book=b, user=user)
         if para.lastVersion.sortOrder == version:
             para.lastLocation = locator
+            para.last_view = timezone.now()
             para.save()
             logger.debug('Set last reading location for %s', para)
         else:
@@ -210,6 +213,11 @@ class Paradata(models.Model):
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
+
+    @classmethod
+    def latest_for_user(cls, user: ClusiveUser, max=10):
+        """Return a QuerySet for Paradatas for a user with most recent last_view time"""
+        return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     class Meta:
         constraints = [

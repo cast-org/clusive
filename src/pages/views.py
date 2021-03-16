@@ -19,7 +19,13 @@ class DashboardView(TemplateView, LoginRequiredMixin, EventMixin):
     template_name='pages/dashboard.html'
 
     def get(self, request, *args, **kwargs):
+        self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
         return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['last_reads'] = self.last_reads
+        return data
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
