@@ -14,6 +14,17 @@ from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
+
+class DashboardView(TemplateView, LoginRequiredMixin, EventMixin):
+    template_name='pages/dashboard.html'
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def configure_event(self, event: Event):
+        event.page = 'Dashboard'
+
+
 class ReaderIndexView(LoginRequiredMixin,RedirectView):
     """This is the 'home page', currently just redirects to the user's default library view."""
     permanent = False

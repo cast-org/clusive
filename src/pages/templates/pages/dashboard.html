@@ -1,0 +1,41 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block bodyClass %}library{% endblock %}
+{% block title %}Dashboard{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="dashboard" home_link=False %}
+{% endblock %}
+
+{% block sidebar_start %}
+{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-login">
+            <div class="card-body">
+                <h2>Welcome!</h2>
+                <p>New to Clusive?</p>
+                <ul>
+                    <li>Check out Clues to Clusive to get an overview of features you can use!</li>
+                    <li>Or, dive into the
+                        <a href="{% url 'reader_index' %}">Library</a>,
+                        to find something to read.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card card-login">
+            <div class="card-body">
+                <h2>Dashboard block two</h2>
+                <p>Would be recent books or recommended books.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
