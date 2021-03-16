@@ -3,6 +3,7 @@ import logging
 import os
 import textwrap
 from base64 import b64encode
+from datetime import timedelta
 from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
@@ -184,6 +185,7 @@ class Paradata(models.Model):
     last_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
                                      verbose_name='Last version viewed')
     last_location = models.TextField(null=True, verbose_name='Last reading location')
+    total_time = models.DurationField(null=True, verbose_name='Total time spent in book')
 
     @classmethod
     def record_view(cls, book, version_number, clusive_user):
@@ -210,6 +212,15 @@ class Paradata(models.Model):
         else:
             logger.debug('Book version has changed since this location was recorded, ignoring. %d but we have %d',
                          version, para.last_version.sortOrder)
+
+    @classmethod
+    def record_additional_time(cls, book_id, user, time):
+        b = Book.objects.get(pk=book_id)
+        para, created = cls.objects.get_or_create(book=b, user=user)
+        if para.total_time is None:
+            para.total_time = timedelta()
+        para.total_time += time
+        para.save()
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)

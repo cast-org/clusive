@@ -7,6 +7,7 @@ from django.utils import timezone
 from django_session_timeout.signals import user_timed_out
 
 from eventlog.models import LoginSession, Event, SESSION_ID_KEY, PERIOD_KEY
+from library.models import Paradata
 from roster.models import Period, ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -38,17 +39,25 @@ def log_page_timing(sender, **kwargs):
     if event_id:
         try:
             event = Event.objects.get(id=event_id)
-            logger.debug('Adding page timing to %s: %s', event, times)
-            loadTime = times.get('loadTime')
-            duration = times.get('duration')
-            activeDuration = times.get('activeDuration')
-            if loadTime:
-                event.loadTime = timedelta(milliseconds=loadTime)
-            if duration:
-                event.duration = timedelta(milliseconds=duration)
-            if activeDuration:
-                event.activeDuration = timedelta(milliseconds=activeDuration)
-            event.save()
+            if event.loadTime is not None \
+                or event.duration is not None \
+                or event.activeDuration is not None:
+                logger.warning('Not overwriting existing page timing info on event %s', event)
+            else:
+                logger.debug('Adding page timing to %s: %s', event, times)
+                loadTime = times.get('loadTime')
+                duration = times.get('duration')
+                activeDuration = times.get('activeDuration')
+                if loadTime:
+                    event.loadTime = timedelta(milliseconds=loadTime)
+                if duration:
+                    event.duration = timedelta(milliseconds=duration)
+                if activeDuration:
+                    event.activeDuration = timedelta(milliseconds=activeDuration)
+                    # For book page views, increment time spent in Book
+                    if event.type == 'VIEW_EVENT' and event.action == 'VIEWED' and event.book_id is not None:
+                        Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=event.activeDuration)
+                event.save()
         except Event.DoesNotExist:
             logger.error('Received page timing for a non-existent event %s', event_id)
     else:
