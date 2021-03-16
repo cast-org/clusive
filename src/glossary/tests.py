@@ -33,7 +33,7 @@ class GlossaryTestCase(TestCase):
     def login_and_generate_page_event_id(self):
         login = self.client.login(username='user1', password='password1')       
         library_page_response = self.client.get('/library/public')
-        page_view_event = Event.objects.latest('eventTime')
+        page_view_event = Event.objects.latest('event_time')
         self.event_id = page_view_event.id     
 
     def test_set_and_get_rating(self):                      

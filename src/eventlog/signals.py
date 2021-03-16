@@ -39,24 +39,24 @@ def log_page_timing(sender, **kwargs):
     if event_id:
         try:
             event = Event.objects.get(id=event_id)
-            if event.loadTime is not None \
+            if event.load_time is not None \
                 or event.duration is not None \
-                or event.activeDuration is not None:
+                or event.active_duration is not None:
                 logger.warning('Not overwriting existing page timing info on event %s', event)
             else:
                 logger.debug('Adding page timing to %s: %s', event, times)
-                loadTime = times.get('loadTime')
+                load_time = times.get('loadTime')
                 duration = times.get('duration')
-                activeDuration = times.get('activeDuration')
-                if loadTime:
-                    event.loadTime = timedelta(milliseconds=loadTime)
+                active_duration = times.get('activeDuration')
+                if load_time:
+                    event.load_time = timedelta(milliseconds=load_time)
                 if duration:
                     event.duration = timedelta(milliseconds=duration)
-                if activeDuration:
-                    event.activeDuration = timedelta(milliseconds=activeDuration)
+                if active_duration:
+                    event.active_duration = timedelta(milliseconds=active_duration)
                     # For book page views, increment time spent in Book
                     if event.type == 'VIEW_EVENT' and event.action == 'VIEWED' and event.book_id is not None:
-                        Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=event.activeDuration)
+                        Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=event.active_duration)
                 event.save()
         except Event.DoesNotExist:
             logger.error('Received page timing for a non-existent event %s', event_id)
@@ -125,7 +125,7 @@ def get_common_event_args(kwargs):
             resource_progression = get_resource_progression(kwargs)            
             common_event_args = dict(page=page,     
                                 parent_event_id=event_id,     
-                                eventTime=timestamp,
+                                event_time=timestamp,
                                 book_id=book_id,
                                 book_version_id=book_version_id,
                                 resource_href = resource_href,
@@ -229,7 +229,7 @@ def log_login(sender, **kwargs):
                             login_session=login_session,
                             group=current_period)
         event.save()
-        logger.debug("Login by user %s at %s" % (clusive_user, event.eventTime))
+        logger.debug("Login by user %s at %s" % (clusive_user, event.event_time))
     except ClusiveUser.DoesNotExist:
         logger.warning("Login by a non-Clusive user: %s", django_user)
 
@@ -251,7 +251,7 @@ def log_logout(sender, **kwargs):
         login_session.endedAtTime = timezone.now()
         login_session.save()
         clusive_user = login_session.user
-        logger.debug("Logout user %s at %s" % (clusive_user, event.eventTime))
+        logger.debug("Logout user %s at %s" % (clusive_user, event.event_time))
 
 
 @receiver(user_timed_out)
