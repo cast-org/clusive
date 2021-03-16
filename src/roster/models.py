@@ -114,10 +114,11 @@ class LibraryStyles:
 
 
 class ClusiveUser(models.Model):
-    
+    guest_serial_number = 0
+    anon_id_serial_number = 0
+
     # Django standard user class contains the following fields already
     # - first_name
-    # - last_name
     # - username
     # - password
     # - email
@@ -148,8 +149,16 @@ class ClusiveUser(models.Model):
         period = self.current_period or self.periods.first()
         if period:
             return period.site
-        return None
-
+        # If the user can manage periods (Parent or Teacher) 
+        # and doesn't currently have a Site, we create
+        # a personal one for them at this point
+        if self.can_manage_periods:
+            personal_site_name = "user-" + str(self.user.id) + "-personal-site"
+            personal_site = Site(name=personal_site_name)
+            personal_site.save()
+            return personal_site
+        else: 
+            return None
 
     @property 
     def is_permissioned(self):
@@ -166,6 +175,14 @@ class ClusiveUser(models.Model):
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
     )
+
+    @property
+    def is_permissioned(self):
+        return self.permission == ResearchPermissions.PERMISSIONED
+
+    @property
+    def is_registered(self):
+        return self.role and self.role != Roles.GUEST
 
     @property
     def can_set_password(self):
@@ -222,8 +239,6 @@ class ClusiveUser(models.Model):
         except PreferenceSet.DoesNotExist:
             logger.error("preference set named %s not found", prefset_name)       
 
-    guest_serial_number = 0
-
     @classmethod
     def from_request(cls, request):
         try:
@@ -233,20 +248,32 @@ class ClusiveUser(models.Model):
 
     @classmethod
     def next_guest_username(cls):
-        cls.guest_serial_number += 1
-        return 'guest%d' % (cls.guest_serial_number)
+        # Loop until we find an unused username. (should only require looping the first time)
+        while True:
+            cls.guest_serial_number += 1
+            uname = 'guest%d' % (cls.guest_serial_number)
+            if not User.objects.filter(username=uname).exists():
+                return uname
+
+    @classmethod
+    def next_anon_id(cls):
+        # Loop until we find an unused ID. (should only require looping the first time)
+        while True:
+            cls.anon_id_serial_number += 1
+            anon_id = 's%d' % cls.anon_id_serial_number
+            if not ClusiveUser.objects.filter(anon_id=anon_id).exists():
+                return anon_id
 
     @classmethod
     def add_defaults(cls, properties):
         """Add default values to a partially-specified ClusiveUser properties dict.
-
         """
         if not properties.get('role'):
             properties['role'] = Roles.STUDENT
         if not properties.get('password'):
             properties['password'] = User.objects.make_random_password()
         if not properties.get('anon_id'):
-            properties['anon_id'] = properties['username']
+            properties['anon_id'] = cls.next_anon_id()
         if not properties.get('permission'):
             properties['permission'] = ResearchPermissions.TEST_ACCOUNT
         return properties
@@ -274,7 +301,6 @@ class ClusiveUser(models.Model):
         period = Period.objects.get(site__name=props.get('site'), name=props.get('period'))
         django_user = User.objects.create_user(username=props.get('username'),
                                                first_name=props.get('first_name'),
-                                               last_name=props.get('last_name'),
                                                password=props.get('password'),
                                                email=props.get('email'))
         clusive_user = ClusiveUser.objects.create(user=django_user,
@@ -289,17 +315,14 @@ class ClusiveUser(models.Model):
 
     @classmethod
     def make_guest(cls):
-        username = cls.next_guest_username()
-        while User.objects.filter(username=username).exists():
-            username = cls.next_guest_username()
-        logger.info("Creating guest user: %s", username)
-        django_user = User.objects.create_user(username=username,
-                                               first_name='Guest',
-                                               last_name=str(cls.guest_serial_number))
+        uname = cls.next_guest_username()
+        logger.info("Creating guest user: %s", uname)
+        django_user = User.objects.create_user(username=uname,
+                                               first_name='Guest ' + str(cls.guest_serial_number))
         clusive_user = ClusiveUser.objects.create(user=django_user,
                                                   role=Roles.GUEST,
                                                   permission=ResearchPermissions.GUEST,
-                                                  anon_id=username)
+                                                  anon_id=cls.next_anon_id())
         return clusive_user
 
     def __str__(self):

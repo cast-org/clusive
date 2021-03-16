@@ -8,7 +8,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.dispatch import receiver
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -55,21 +55,41 @@ class SignUpView(CreateView):
 
     def post(self, request, *args, **kwargs):
         self.role = kwargs['role']
+        self.current_clusive_user = request.clusive_user
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        # Don't call super since that would save the target model, which we might not want.
         target : User
         target = form.instance
-        if self.role in ['TE', 'PA', 'ST']:
+        if not self.role in ['TE', 'PA', 'ST']:
+            raise PermissionError('Invalid role')
+        if self.current_clusive_user:
+            # There is a logged-in (presumably Guest) user.
+            # Update the ClusiveUser and User objects based on the form target.
+            clusive_user: ClusiveUser
+            clusive_user = self.current_clusive_user
+            logger.debug('Upgrading %s from guest to %s', clusive_user, self.role)
+            clusive_user.role = self.role
+            clusive_user.permission = ResearchPermissions.PERMISSIONED
+            clusive_user.save()
+            user: User
+            user = clusive_user.user
+            user.username = target.username
+            user.first_name = target.first_name
+            user.set_password(form.cleaned_data["password1"])
+            user.email = target.email
+            user.save()
+            login(self.request, user) # Need to login again since User object has changed.
+        else:
+            # There is no logged-in user.  Save the form target User object, and create a ClusiveUser.
+            target.save()
             ClusiveUser.objects.create(user=target,
                                        role=self.role,
-                                       permission=ResearchPermissions.GUEST)
-            # Log new user in before sending them to the welcome page
-            login(self.request, self.object, 'django.contrib.auth.backends.ModelBackend')
-            return response
-        else:
-            raise PermissionError('Invalid role')
+                                       permission=ResearchPermissions.PERMISSIONED,
+                                       anon_id=ClusiveUser.next_anon_id())
+            login(self.request, target)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class SignUpRoleView(FormView):
@@ -243,10 +263,10 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
                 self.current_period = user.current_period
             elif self.periods:
                 self.current_period = self.periods[0]
-            else:
-                # No periods.  If this case actually happens, should have a better error message.
-                self.handle_no_permission()
-        if self.current_period != user.current_period:
+            # else:
+            #     # No periods.  If this case actually happens, should have a better error message.
+            #     self.handle_no_permission()
+        if self.current_period != user.current_period and self.current_period != None:
             user.current_period = self.current_period
             user.save()
         return super().get(request, *args, **kwargs)
@@ -255,9 +275,10 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['periods'] = self.periods
         context['current_period'] = self.current_period
-        context['students'] = self.make_student_info_list()
-        context['period_name_form'] = PeriodForm(instance=self.current_period)
-        logger.debug('Students: %s', context['students'])
+        if self.current_period != None:
+            context['students'] = self.make_student_info_list()
+            context['period_name_form'] = PeriodForm(instance=self.current_period)
+            logger.debug('Students: %s', context['students'])
         return context
 
     def make_student_info_list(self):
