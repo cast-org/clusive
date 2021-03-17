@@ -3,6 +3,7 @@ import logging
 import os
 import textwrap
 from base64 import b64encode
+from datetime import timedelta
 from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
@@ -58,6 +59,12 @@ class Book(models.Model):
 
     def __str__(self):
         return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
+
+    @classmethod
+    def get_featured_books(cls):
+        """Return books to suggest to users who have not visited any book yet.
+        This is really just a stub so far; returns "Clues to Clusive" if it exists."""
+        return Book.objects.filter(title__contains='Clusive')
 
     class Meta:
         ordering = ['title']
@@ -179,20 +186,23 @@ class Paradata(models.Model):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
 
-    viewCount = models.SmallIntegerField(default=0, verbose_name='View count')
-    lastVersion = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
-                                    verbose_name='Last version viewed')
-    lastLocation = models.TextField(null=True, verbose_name='Last reading location')
+    view_count = models.SmallIntegerField(default=0, verbose_name='View count')
+    last_view = models.DateTimeField(null=True, verbose_name='Last view time')
+    last_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
+                                     verbose_name='Last version viewed')
+    last_location = models.TextField(null=True, verbose_name='Last reading location')
+    total_time = models.DurationField(null=True, verbose_name='Total time spent in book')
 
     @classmethod
     def record_view(cls, book, version_number, clusive_user):
         bv = BookVersion.objects.get(book=book, sortOrder=version_number)
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
-        para.viewCount += 1
-        if para.lastVersion != bv:
+        para.view_count += 1
+        para.last_view = timezone.now()
+        if para.last_version != bv:
             # If we're switching to a different version, clear out last reading location
-            para.lastLocation = None
-            para.lastVersion = bv
+            para.last_location = None
+            para.last_version = bv
         para.save()
         return para
 
@@ -200,16 +210,31 @@ class Paradata(models.Model):
     def record_last_location(cls, book_id, version, user, locator):
         b = Book.objects.get(pk=book_id)
         para, created = cls.objects.get_or_create(book=b, user=user)
-        if para.lastVersion.sortOrder == version:
-            para.lastLocation = locator
+        if para.last_version.sortOrder == version:
+            para.last_location = locator
+            para.last_view = timezone.now()
             para.save()
             logger.debug('Set last reading location for %s', para)
         else:
             logger.debug('Book version has changed since this location was recorded, ignoring. %d but we have %d',
-                         version, para.lastVersion.sortOrder)
+                         version, para.last_version.sortOrder)
+
+    @classmethod
+    def record_additional_time(cls, book_id, user, time):
+        b = Book.objects.get(pk=book_id)
+        para, created = cls.objects.get_or_create(book=b, user=user)
+        if para.total_time is None:
+            para.total_time = timedelta()
+        para.total_time += time
+        para.save()
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
+
+    @classmethod
+    def latest_for_user(cls, user: ClusiveUser, max=10):
+        """Return a QuerySet for Paradatas for a user with most recent last_view time"""
+        return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     class Meta:
         constraints = [

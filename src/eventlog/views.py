@@ -60,7 +60,7 @@ def row_generator(events):
     writer = csv.writer(pseudo_buffer)
     yield writer.writerow(['Start Time', 'User', 'Role', 'Period', 'Site',
                            'Type', 'Action', 'Page', 'Control', 'Value',
-                           'Book Version ID', 'Book TItle', 'Version Number', 'Book Owner',
+                           'Book Version ID', 'Book Title', 'Version Number', 'Book Owner',
                            'Duration', 'Active Duration',
                            'Event ID', 'Session ID'])
     period_site = {}
@@ -104,8 +104,8 @@ def row_for_event(e: Event, period_site, book_info):
             'owner': None
         }
     duration_s = e.duration.total_seconds() if e.duration else ''
-    active_s = e.activeDuration.total_seconds() if e.activeDuration else ''
-    return [e.eventTime, e.actor.anon_id, e.membership, period, site,
+    active_s = e.active_duration.total_seconds() if e.active_duration else ''
+    return [e.event_time, e.actor.anon_id, e.membership, period, site,
             e.type, e.action, e.page, e.control, e.value,
             e.book_version_id, info['title'], info['version'], info['owner'],
             duration_s, active_s, e.id, e.session.id]

@@ -40,7 +40,7 @@ class MessageQueueTestCase(TestCase):
         set_up_test_users()
         login = self.client.login(username='user1', password='password1')
         library_page_response = self.client.get('/library/public')
-        page_view_event = Event.objects.latest('eventTime')
+        page_view_event = Event.objects.latest('event_time')
         self.event_id = page_view_event.id
 
     def test_catch_invalid_message_type(self):
@@ -87,9 +87,9 @@ class MessageQueueTestCase(TestCase):
 
         # Test that events are created with expected values
 
-        latest_contrast_event = Event.objects.filter(control='pref:fluid_prefs_contrast').order_by('-eventTime').first()
-        latest_textFont_event = Event.objects.filter(control='pref:fluid_prefs_textFont').order_by('-eventTime').first()
-        latest_textSize_event = Event.objects.filter(control='pref:fluid_prefs_textSize').order_by('-eventTime').first()
+        latest_contrast_event = Event.objects.filter(control='pref:fluid_prefs_contrast').order_by('-event_time').first()
+        latest_textFont_event = Event.objects.filter(control='pref:fluid_prefs_textFont').order_by('-event_time').first()
+        latest_textSize_event = Event.objects.filter(control='pref:fluid_prefs_textSize').order_by('-event_time').first()
 
         self.assertEqual(latest_contrast_event.value, "sepia", "value recorded in contrast change event was not as expected")
         self.assertEqual(latest_textFont_event.value, "times", "value recorded in textFont change event was not as expected")

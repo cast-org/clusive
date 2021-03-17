@@ -40,13 +40,13 @@ class Event(models.Model):
     # Optional ID for a related event to this event (typically, a PageView)
     parent_event_id = models.CharField(null=True, max_length=36)
     # Date and time the event started
-    eventTime = models.DateTimeField(default=timezone.now)
+    event_time = models.DateTimeField(default=timezone.now)
     # (VIEW events:) time for the browser to retrieve and render the content
-    loadTime = models.DurationField(null=True)
+    load_time = models.DurationField(null=True)
     # (VIEW events:) total time from when the page was loaded to when it was exited
     duration = models.DurationField(null=True)
     # (VIEW events:) time that this page was focused, computer was awake, and no timeout dialog was in play.
-    activeDuration = models.DurationField(null=True)
+    active_duration = models.DurationField(null=True)
     # type of the event, based on Caliper spec
     type = models.CharField(max_length=32, choices=[(k,v) for k,v in caliper.constants.EVENT_TYPES.items()])
     # action of the event, based on Caliper spec
@@ -78,7 +78,7 @@ class Event(models.Model):
               session=None, login_session=None, group=None, parent_event_id=None,
               book_version=None, book_id=None, book_version_id=None,
               resource_href=None, resource_progression=None, page=None,
-              control=None, value=None, eventTime=None):
+              control=None, value=None, event_time=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
             logger.error("Either a session object or a login_session must be provided")
@@ -90,8 +90,8 @@ class Event(models.Model):
             if session and not group:
                 period_id = session.get(PERIOD_KEY, None)
                 group = Period.objects.filter(id=period_id).first()
-            if eventTime == None:
-                eventTime = timezone.now()
+            if event_time == None:
+                event_time = timezone.now()
             clusive_user = login_session.user
             if value and len(value) > 128:
                 value = value[:126] + '…'
@@ -121,7 +121,7 @@ class Event(models.Model):
                         page=page,
                         control=control,
                         value=value,
-                        eventTime=eventTime)
+                        event_time=event_time)
             return event
         except ClusiveUser.DoesNotExist:
             logger.warning("Event could not be stored - no Clusive user found: %s/%s", type, action)
