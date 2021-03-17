@@ -60,6 +60,12 @@ class Book(models.Model):
     def __str__(self):
         return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
 
+    @classmethod
+    def get_featured_books(cls):
+        """Return books to suggest to users who have not visited any book yet.
+        This is really just a stub so far; returns "Clues to Clusive" if it exists."""
+        return Book.objects.filter(title__contains='Clusive')
+
     class Meta:
         ordering = ['title']
 

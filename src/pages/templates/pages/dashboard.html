@@ -42,6 +42,18 @@
                         (total {{ para.total_time }}, most recent {{para.last_view}} GMT)</li>
                     {% endfor %}
                 </ul>
+                {% if not last_reads %}
+                <p>Looks like you haven't read anything yet. Check out Clues to Clusive to get an overview of features you can use!</p>
+                <ul>
+                    {% for book in featured %}
+                    <li>
+                        <a href="{% url 'reader_default' book_id=book.pk %}">
+                            {{book.title}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
         </div>
     </div>
