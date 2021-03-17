@@ -25,6 +25,20 @@ class Book(models.Model):
     cover = models.CharField(max_length=256, null=True)
 
     @property
+    def is_public(self):
+        return self.owner is None
+
+    def is_visible_to(self, user : ClusiveUser):
+        if self.is_public:
+            return True
+        if self.owner == user:
+            return True
+        periods = user.periods.all()
+        if BookAssignment.objects.filter(book=self, period__in=periods).exists():
+            return True
+        return False
+
+    @property
     def path(self):
         """URL-style path to the book's location."""
         if self.owner:
@@ -64,7 +78,7 @@ class Book(models.Model):
     def get_featured_books(cls):
         """Return books to suggest to users who have not visited any book yet.
         This is really just a stub so far; returns "Clues to Clusive" if it exists."""
-        return Book.objects.filter(title__contains='Clusive')
+        return Book.objects.filter(owner=None, title__contains='Clusive')
 
     class Meta:
         ordering = ['title']

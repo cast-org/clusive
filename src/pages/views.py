@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import TemplateView, RedirectView
@@ -137,6 +138,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         book_id = kwargs.get('book_id')
         version = kwargs.get('version')
         book = Book.objects.get(pk=book_id)
+        if not book.is_visible_to(request.clusive_user):
+            raise PermissionDenied()
         versions = book.versions.all()
         clusive_user = request.clusive_user
         self.book_version = versions[version]
