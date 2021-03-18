@@ -27,7 +27,6 @@ from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPer
 
 logger = logging.getLogger(__name__)
 
-
 def guest_login(request):
     clusive_user = ClusiveUser.make_guest()
     # Need to specify backend so as to not use django-allauth in the case of guests
@@ -80,7 +79,8 @@ class SignUpView(CreateView):
             user.set_password(form.cleaned_data["password1"])
             user.email = target.email
             user.save()
-            login(self.request, user) # Need to login again since User object has changed.
+            # Need to login again since User object has changed.
+            login(self.request, user, 'django.contrib.auth.backends.ModelBackend')
         else:
             # There is no logged-in user.  Save the form target User object, and create a ClusiveUser.
             target.save()
@@ -88,7 +88,7 @@ class SignUpView(CreateView):
                                        role=self.role,
                                        permission=ResearchPermissions.PERMISSIONED,
                                        anon_id=ClusiveUser.next_anon_id())
-            login(self.request, target)
+            login(self.request, target, 'django.contrib.auth.backends.ModelBackend')
         return HttpResponseRedirect(self.get_success_url())
 
 
