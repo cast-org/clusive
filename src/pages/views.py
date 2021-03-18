@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import TemplateView, RedirectView
@@ -13,6 +14,29 @@ from roster.models import ClusiveUser
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
+
+
+class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
+    template_name='pages/dashboard.html'
+
+    def get(self, request, *args, **kwargs):
+        self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
+        if not self.last_reads:
+            self.featured = Book.get_featured_books()[:3]
+            logger.debug('No recent books, using featured: %s', self.featured)
+        else:
+            self.featured = []
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['last_reads'] = self.last_reads
+        data['featured'] = self.featured
+        return data
+
+    def configure_event(self, event: Event):
+        event.page = 'Dashboard'
+
 
 class ReaderIndexView(LoginRequiredMixin,RedirectView):
     """This is the 'home page', currently just redirects to the user's default library view."""
@@ -56,7 +80,7 @@ class ReaderChooseVersionView(RedirectView):
             try:
                 paradata = Paradata.objects.get(book__pk=book_id, user=clusive_user)
                 # Return to the last version this user viewed.
-                v = paradata.lastVersion.sortOrder
+                v = paradata.last_version.sortOrder
                 logger.debug('Returning to last version viewed (%d)', v)
             except:
                 # No previous view - determine where to send the user based on vocabulary.
@@ -114,6 +138,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         book_id = kwargs.get('book_id')
         version = kwargs.get('version')
         book = Book.objects.get(pk=book_id)
+        if not book.is_visible_to(request.clusive_user):
+            raise PermissionDenied()
         versions = book.versions.all()
         clusive_user = request.clusive_user
         self.book_version = versions[version]
@@ -138,7 +164,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
             'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
-            'last_position': pdata.lastLocation or "null",
+            'last_position': pdata.last_location or "null",
             'annotations': annotationList,
             'tip_name': tip_name,
         }

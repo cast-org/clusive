@@ -13,16 +13,16 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 class EventAdmin(admin.ModelAdmin):
-    readonly_fields = ('id', 'eventTime', 'loadTime', 'duration', 'activeDuration',
+    readonly_fields = ('id', 'event_time', 'load_time', 'duration', 'active_duration',
                        'type', 'action',
                        'actor', 'group', 'membership',
                        'book_id', 'book_version_id', 'resource_href', 'resource_progression', 'tip_type',
                        'page', 'control', 'value',
                        'parent_event_id', 'session', )
-    list_display = ('eventTime', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
+    list_display = ('event_time', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
                     'book_id', 'book_version_id')
-    list_filter = ('actor__permission', 'eventTime', 'actor')
-    ordering = ('-eventTime',)
+    list_filter = ('actor__permission', 'event_time', 'actor')
+    ordering = ('-event_time',)
     change_list_template = 'eventlog/event_changelist.html'
 
     def group_anon_id(self,obj):

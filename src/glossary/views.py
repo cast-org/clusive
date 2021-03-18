@@ -23,7 +23,7 @@ def checklist(request, book_id):
         paradata, created = Paradata.objects.get_or_create(user=user, book=book)
 
         # We present a checklist only the first time a user goes to a new Book
-        if paradata.viewCount > 0:
+        if paradata.view_count > 0:
             logger.debug('Book already viewed, skipping checklist')
             return JsonResponse({'words': []})
 

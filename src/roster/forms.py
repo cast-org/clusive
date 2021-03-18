@@ -81,6 +81,12 @@ class UserRegistrationForm(UserCreationForm):
         self.fields['email'].required = True
         self.fields['username'].required = True
 
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            self.add_error('email', 'There is already a user with that email address.')
+        return super().clean()
+
     def _post_clean(self):
         if not self.cleaned_data.get('first_name'):
             self.cleaned_data['first_name'] = self.cleaned_data.get('username')

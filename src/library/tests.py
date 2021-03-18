@@ -57,7 +57,7 @@ class LibraryApiTestCase(TestCase):
         self.book.save()
         bv = BookVersion.objects.create(book=self.book, sortOrder=0)
         bv.save()
-        para = Paradata.objects.create(book=self.book, user=cuser, lastVersion = bv)
+        para = Paradata.objects.create(book=self.book, user=cuser, last_version = bv)
         para.save()
 
     def test_setlocation_error_for_get(self):
@@ -75,7 +75,7 @@ class LibraryApiTestCase(TestCase):
         response = self.client.post(reverse('setlocation'), { 'book' : self.book.pk, 'version': '0', 'locator' : 'testtest'})
         self.assertEqual(response.status_code, 200)
         pd = Paradata.objects.get(book=self.book)
-        self.assertEqual('testtest', pd.lastLocation)
+        self.assertEqual('testtest', pd.last_location)
 
 
 class ShareFormTestCase(TestCase):

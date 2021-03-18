@@ -29,19 +29,8 @@ logger = logging.getLogger(__name__)
 
 def guest_login(request):
     clusive_user = ClusiveUser.make_guest()
-    # Need to specify backend so as to not use django-allauth in the case of guests
     login(request, clusive_user.user, 'django.contrib.auth.backends.ModelBackend')
-    return redirect('reader_index')
-
-class WelcomeNewUserView(TemplateView, LoginRequiredMixin, EventMixin):
-    template_name='roster/welcome.html'    
-    user_id = None
-
-    def get(self, request, *args, **kwargs):        
-        return super().get(request, *args, **kwargs)    
-
-    def configure_event(self, event: Event):
-        event.page = 'WelcomeNewUser'        
+    return redirect('dashboard')
 
 
 class SignUpView(CreateView):
@@ -50,7 +39,7 @@ class SignUpView(CreateView):
     form_class = UserRegistrationForm
 
     def get_success_url(self):
-        return reverse('welcome')
+        return reverse('dashboard')
 
     def post(self, request, *args, **kwargs):
         self.role = kwargs['role']
