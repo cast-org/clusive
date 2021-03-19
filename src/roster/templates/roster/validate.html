@@ -1,0 +1,35 @@
+{% extends "roster/password_base.html" %}
+{% load i18n figuration %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Clusive email validated{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=True %}
+{% endblock %}
+
+{% block instructions %}
+{% endblock %}
+
+{% block form %}
+{% if status == 'activated' %}
+<h1>Success!</h1>
+<p>Thank you for validating your email address!</p>
+<p><a href="/" class="btn btn-primary">Login</a></p>
+{% elif status == 'unneeded' %}
+<h1>Success!</h1>
+<p>Your email address was already validated!</p>
+<p><a href="/" class="btn btn-primary">Login</a></p>
+{% else %}
+<h1>Error</h1>
+<p>There was a problem with validating your email address.</p>
+<p>Please try again, or contact us for assistance.</p>
+<p><a href="{% url 'validate_resend' user_id=user_id %}" class="btn btn-primary">Resend email</a></p>
+{% endif %}
+
+{% endblock %}

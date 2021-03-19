@@ -43,7 +43,12 @@
                 <div class="card-body login-section">
                     <h2>Sign in</h2>
 
-                    {% if form.errors %}
+                    {% if email_validate %}
+                    <div class="errorlist">
+                        You need to validate your email address before you can log in.
+                        Please check your email for the link.
+                    </div>
+                    {% elif form.errors %}
                     <div class="errorlist">
                         Your username and password didn't match. Please try again.
                     </div>

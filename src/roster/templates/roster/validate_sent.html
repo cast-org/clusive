@@ -1,0 +1,27 @@
+{% extends "roster/password_base.html" %}
+{% load i18n figuration %}
+
+{% block title %}Clusive email validation{% endblock %}
+
+{% block instructions %}
+{% endblock %}
+
+{% block form %}
+<h1>Email sent!</h1>
+{% if status == 'sent' %}
+    <p>We sent an email to {{ email }}.</p>
+    <p>When you get the email, please click the link to validate your account.</p>
+    <p>If you do not see it in a few minutes, please check your spam folder.</p>
+    <p><a href="{% url 'validate_resend' user_id=user_id %}" class="btn btn-primary">Resend email</a></p>
+{% elif status == 'resent' %}
+    <p>We sent a <strong>new</strong> email to {{ email }}.</p>
+    <p>When you get the email, please click the link to validate your account.</p>
+    <p>If you do not see it in a few minutes, please check your spam folder.</p>
+{% elif status == 'unneeded' %}
+    <p>Your email was already validated.</p>
+    <p>You should just be able to <a href="/" class="btn btn-primary">Log in</a></p>
+{% else %}
+    <p>Something went wrong - status {{ status }} is not handled.</p>
+    <p><a href="{% url 'validate_resend' user_id=user_id %}" class="btn btn-primary">Resend email</a></p>
+{% endif %}
+{% endblock %}

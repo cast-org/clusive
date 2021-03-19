@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}
+
+We're glad you've signed up for a Clusive account!
+
+Just one more step, you need to verify that this is your email address by clicking this link:
+
+    {{ protocol }}://{{ domain }}{% url 'validate' user_id=uid token=token %}
+
+{% trans "Thanks for using Clusive!" %}
+
+{% blocktrans %}The CISL team{% endblocktrans %}
+
+{% endautoescape %}

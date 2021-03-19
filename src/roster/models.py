@@ -125,6 +125,9 @@ class ClusiveUser(models.Model):
     # Anonymous ID for privacy protection when logging activities for research
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
+    # If True, user cannot log in until they have confirmed their email.
+    unconfirmed_email = models.BooleanField(default=False)
+
     # List of all class periods the user is part of
     periods = models.ManyToManyField(Period, blank=True, related_name='users')
 
