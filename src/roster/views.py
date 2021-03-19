@@ -107,8 +107,9 @@ class ValidateSentView(View):
     def get(self, request, *args, **kwargs):
         user = User.objects.get(pk=kwargs.get('user_id'))
         context = {
-            'status': 'sent',
+            'user_id': user.id,
             'email': user.email,
+            'status': 'sent',
         }
         return render(request, self.template_name, context)
 
@@ -126,6 +127,7 @@ class ValidateResendView(TemplateView):
             logger.warning('Skipping email sending; already activated user %s', clusive_user)
             status = 'unneeded'
         context = {
+            'user_id': user.id,
             'email': user.email,
             'status': status,
         }
