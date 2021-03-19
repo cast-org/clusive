@@ -1,7 +1,7 @@
 {% extends "shared/base.html" %}
 {% load static %}
 
-{% block bodyClass %}library{% endblock %}
+{% block bodyClass %}library sidebar-no-start{% endblock %}
 {% block title %}Dashboard{% endblock %}
 
 {% block header %}
@@ -15,46 +15,42 @@
 <h1>Dashboard</h1>
 <div class="row">
     <div class="col-md-4">
-        <div class="card card-login">
-            <div class="card-body">
-                <h2>Welcome!</h2>
-                <p>New to Clusive?</p>
-                <ul>
-                    <li>Check out Clues to Clusive to get an overview of features you can use!</li>
-                    <li>Or, dive into the
-                        <a href="{% url 'reader_index' %}">Library</a>,
-                        to find something to read.</li>
-                </ul>
-            </div>
+        <div class="box">
+            <h2>Welcome!</h2>
+            <p>New to Clusive?</p>
+            <ul>
+                <li>Check out Clues to Clusive to get an overview of features you can use!</li>
+                <li>Or, dive into the
+                    <a href="{% url 'reader_index' %}">Library</a>,
+                    to find something to read.</li>
+            </ul>
         </div>
     </div>
 
     <div class="col-md-8">
-        <div class="card card-login">
-            <div class="card-body">
-                <h2>Last reads</h2>
-                <ul>
-                    {% for para in last_reads %}
-                    <li>
-                        <a href="{% url 'reader_default' book_id=para.book.pk %}">
-                            {{para.book.title}}
-                        </a>
-                        (total {{ para.total_time }}, most recent {{para.last_view}} GMT)</li>
-                    {% endfor %}
-                </ul>
-                {% if not last_reads %}
-                <p>Looks like you haven't read anything yet. Check out Clues to Clusive to get an overview of features you can use!</p>
-                <ul>
-                    {% for book in featured %}
-                    <li>
-                        <a href="{% url 'reader_default' book_id=book.pk %}">
-                            {{book.title}}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
+        <div class="box">
+            <h2>Last reads</h2>
+            <ul>
+                {% for para in last_reads %}
+                <li>
+                    <a href="{% url 'reader_default' book_id=para.book.pk %}">
+                        {{para.book.title}}
+                    </a>
+                    (total {{ para.total_time }}, most recent {{para.last_view}} GMT)</li>
+                {% endfor %}
+            </ul>
+            {% if not last_reads %}
+            <p>Looks like you haven't read anything yet. Check out Clues to Clusive to get an overview of features you can use!</p>
+            <ul>
+                {% for book in featured %}
+                <li>
+                    <a href="{% url 'reader_default' book_id=book.pk %}">
+                        {{book.title}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
     </div>
 </div>

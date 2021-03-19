@@ -1,0 +1,8 @@
+.box {
+    padding: $box-padding-y $box-padding-x;
+    margin-bottom: $box-margin-bottom;
+    line-height: $box-line-height;
+    color: var(--CT_boxColor);
+    background: var(--CT_boxBg);
+    @include border-radius($box-border-radius);
+}

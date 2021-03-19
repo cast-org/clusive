@@ -233,6 +233,8 @@ $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
 $input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
 
+$form-text-color:                       var(--CT_formTextColor);
+
 $form-group-margin-bottom:              .5rem;
 
 $form-checkradio-border-width:          1px;
@@ -388,6 +390,12 @@ $sidebar-sm-gutter:                     2rem;
 $sidebar-xl-width:                      calc((100vw - #{map-get($container-max-widths, xl)} + ((#{$sidebar-sm-width} - #{$body-padding-x}) * 2)) / 2);
 
 $library-grid-gutter:                   2rem;
+
+$box-padding-y:                         .75rem;
+$box-padding-x:                         1rem;
+$box-margin-bottom:                     1rem;
+$box-line-height:                       scale-line-height(1.5);
+$box-border-radius:                     $border-radius;
 
 $setting-padding:                       .75rem 1rem 1rem;
 $setting-border-width:                  3px;

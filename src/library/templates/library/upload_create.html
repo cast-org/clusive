@@ -17,21 +17,19 @@
     <h1>Add New Content</h1>
     <div class="row">
         <div class="col-md-9 col-lg-6">
-            <div class="card card-login">
-                <div class="card-body">
-                    <h2>Step 1: Upload Content</h2>
-                    {% if request.clusive_user.can_upload %}
-                    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
-                        {% include "library/partial/upload_form.html" %}
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="Upload file" />
-                            <a href="{% url 'library' view='mine' %}">Cancel</a>
-                        </div>
-                    </form>
-                    {% else %}
-                    <p>You will need to create an account before you can upload your own content.</p>
-                    {% endif %}
-                </div>
+            <div class="box">
+                <h2>Step 1: Upload Content</h2>
+                {% if request.clusive_user.can_upload %}
+                <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+                    {% include "library/partial/upload_form.html" %}
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Upload file" />
+                        <a href="{% url 'library' view='mine' %}">Cancel</a>
+                    </div>
+                </form>
+                {% else %}
+                <p>You will need to create an account before you can upload your own content.</p>
+                {% endif %}
             </div>
             <hr class="my-2" />
         </div>
