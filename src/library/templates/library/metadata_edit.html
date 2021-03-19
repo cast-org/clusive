@@ -18,17 +18,15 @@
     <h1>Edit Content Details</h1>
     <div class="row">
         <div class="col-md-9 col-lg-6">
-            <div class="card card-login">
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% include "library/partial/metadata_form.html" with replace_option=True %}
-                        <hr />
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="Save Changes" />
-                            &nbsp;<a href="{% url 'library' view='mine' %}">Cancel</a>
-                        </div>
-                    </form>
-                </div>
+            <div class="box">
+                <form method="post" enctype="multipart/form-data">
+                    {% include "library/partial/metadata_form.html" with replace_option=True %}
+                    <hr />
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Save Changes" />
+                        &nbsp;<a href="{% url 'library' view='mine' %}">Cancel</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

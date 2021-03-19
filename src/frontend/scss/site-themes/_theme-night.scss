@@ -228,6 +228,10 @@ $sidebar-end-bg:                        linear-gradient(180deg, rgba(#636b82, .3
 $figure-caption-bg:                     #363740;
 $figure-caption-color:                  #eceff5;
 
+// Boxes
+$box-bg:                                #2b2d34;
+$box-color:                             $body-color;
+
 // Cards
 $card-bg:                               #272727;
 $card-color:                            inherit;
@@ -368,6 +372,9 @@ $toc-nav-caret-color-d2:                $link-color;
 
 // Word rank
 $ranking-border-color:                  #363740;
+
+// Form text
+$form-text-color:                       #eceff5;
 
 // Form check input
 $form-checkradio-border-color:          #636b82;

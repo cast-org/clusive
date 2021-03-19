@@ -18,18 +18,16 @@
     {% if request.clusive_user.can_upload %}
     <div class="row">
         <div class="col-md-9 col-lg-6">
-            <div class="card card-login">
-                <div class="card-body">
-                    <h2>Upload Content</h2>
-                    <div class="form-label">You are replacing "{{ orig_book.title }}".</div>
-                    <form method="post" enctype="multipart/form-data">
-                        {% include "library/partial/upload_form.html" with replace_warning=True %}
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="Upload file" />
-                            <a href="{% url 'metadata_edit' pk=orig_book.pk %}">Cancel</a>
-                        </div>
-                    </form>
-                </div>
+            <div class="box">
+                <h2>Upload Content</h2>
+                <div class="form-label">You are replacing "{{ orig_book.title }}".</div>
+                <form method="post" enctype="multipart/form-data">
+                    {% include "library/partial/upload_form.html" with replace_warning=True %}
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Upload file" />
+                        <a href="{% url 'metadata_edit' pk=orig_book.pk %}">Cancel</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

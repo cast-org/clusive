@@ -6,33 +6,33 @@
         {{ form.first_name.label_tag | formlabel }}
         {{ form.first_name.errors}}
         {{ form.first_name }}
-        <div class="small">The name you want Clusive to use for you. Just a first name or nickname is fine.</div>
+        <div class="form-text">The name you want Clusive to use for you. Just a first name or nickname is fine.</div>
     </div>
     <div class="form-group">
         {{ form.username.label_tag | formlabel }}
         {{ form.username.errors}}
         {{ form.username }}
-        <div class="small">This is how you will log in to Clusive.</div>
+        <div class="form-text">This is how you will log in to Clusive.</div>
     </div>
     <div class="form-group">
         {{ form.password1.label_tag | formlabel }}
         {{ form.password1.errors}}
         {{ form.password1 }}
-        <div class="small">Choose something hard to guess, at least 6 characters, and not just numbers.</div>
+        <div class="form-text">Choose something hard to guess, at least 6 characters, and not just numbers.</div>
         {{ form.non_field_errors }}
     </div>
     <div class="form-group">
         {{ form.password2.label_tag | formlabel }}
         {{ form.password2.errors}}
         {{ form.password2 }}
-        <div class="small">Enter the same password again, for verification.</div>
+        <div class="form-text">Enter the same password again, for verification.</div>
         {{ form.non_field_errors }}
     </div>
     <div class="form-group">
         {{ form.email.label_tag | formlabel }}
         {{ form.email.errors}}
         {{ form.email }}
-        <div class="small">We will not share your email with anyone.</div>
+        <div class="form-text">We will not share your email with anyone.</div>
     </div>
     <div class="form-group my-1">
         {{ form.terms.errors }}
