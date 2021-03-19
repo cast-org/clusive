@@ -3,6 +3,7 @@
     background-color: $modal-header-bg;
 }
 .modal-footer {
+    flex-grow: 1; // Fix footer not full width when inside a form
     color: $modal-footer-color;
     background-color: $modal-footer-bg;
 }

@@ -25,7 +25,7 @@
                     {% include "library/partial/upload_form.html" with replace_warning=True %}
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary" value="Upload file" />
-                        <a href="{% url 'metadata_edit' pk=orig_book.pk %}">Cancel</a>
+                        <a href="{% url 'metadata_edit' pk=orig_book.pk %}" class="btn btn-link">Cancel</a>
                     </div>
                 </form>
             </div>

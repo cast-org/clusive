@@ -24,7 +24,7 @@
                     {% include "library/partial/upload_form.html" %}
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary" value="Upload file" />
-                        <a href="{% url 'library' view='mine' %}">Cancel</a>
+                        <a href="{% url 'library' view='mine' %}" class="btn btn-link">Cancel</a>
                     </div>
                 </form>
                 {% else %}
