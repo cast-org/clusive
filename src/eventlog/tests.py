@@ -17,19 +17,19 @@ class EventlogTestCase(TestCase):
     def test_session_created(self):
         login = self.client.login(username='user1', password='password1')
         self.assertTrue(login)
-        session = LoginSession.objects.all().order_by('-startedAtTime').first()
+        session = LoginSession.objects.all().order_by('-started_at_time').first()
         self.assertEquals(len(session.id), 36, "Session should get uuid assigned")
         self.assertEquals(session.user, ClusiveUser.objects.all()[0], "Session should connect to the user")
-        self.assertEquals(session.startedAtTime.date(), timezone.now().date(), "Should set reasonable session start time")
-        self.assertIsNotNone(session.userAgent)
+        self.assertEquals(session.started_at_time.date(), timezone.now().date(), "Should set reasonable session start time")
+        self.assertIsNotNone(session.user_agent)
 
     def test_session_closed(self):
         login = self.client.login(username='user1', password='password1')
         self.assertTrue(login)
         self.client.logout()
-        session = LoginSession.objects.all().order_by('-startedAtTime').first()
-        self.assertEquals(session.endedAtTime.date(), timezone.now().date(), "Should set reasonable session end time")
-        self.assertLess(session.startedAtTime, session.endedAtTime, "Start time should be before end time")
+        session = LoginSession.objects.all().order_by('-started_at_time').first()
+        self.assertEquals(session.ended_at_time.date(), timezone.now().date(), "Should set reasonable session end time")
+        self.assertLess(session.started_at_time, session.ended_at_time, "Start time should be before end time")
     
     def test_login_event(self):
         login = self.client.login(username='user1', password='password1')

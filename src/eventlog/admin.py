@@ -6,10 +6,10 @@ from eventlog.models import LoginSession, Event
 
 
 class SessionAdmin(admin.ModelAdmin):
-    readonly_fields = ('id', 'user', 'startedAtTime', 'endedAtTime', 'userAgent')
-    list_filter= ('user', 'startedAtTime')
-    list_display = ('id', 'user', 'startedAtTime', 'endedAtTime')
-    ordering = ('-startedAtTime',)
+    readonly_fields = ('id', 'user', 'started_at_time', 'ended_at_time', 'active_duration', 'user_agent')
+    list_filter= ('user', 'started_at_time')
+    list_display = ('id', 'user', 'started_at_time', 'ended_at_time', 'active_duration')
+    ordering = ('-started_at_time',)
 
 
 class EventAdmin(admin.ModelAdmin):
