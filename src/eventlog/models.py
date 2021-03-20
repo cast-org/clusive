@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 
 from django.db import models
 from uuid import uuid4
@@ -19,13 +20,21 @@ SESSION_ID_KEY = 'db_session_id'
 class LoginSession(models.Model):
     id = models.CharField(primary_key=True, default=uuid4, max_length=36)
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
-    startedAtTime = models.DateTimeField(auto_now_add=True)
-    endedAtTime = models.DateTimeField(null=True)  # time stamp when session ended (logout or timeout)
+    started_at_time = models.DateTimeField(auto_now_add=True)
+    ended_at_time = models.DateTimeField(null=True)  # time stamp when session ended (logout or timeout)
     # TODO appVersion: the current version of the Clusive application that the user is interacting with
-    userAgent = models.CharField(max_length=256)
+    user_agent = models.CharField(max_length=256)
+    active_duration = models.DurationField(null=True) # Total of active_duration of all events in this session
+
+    def add_active_time(self, duration):
+        if self.active_duration is None:
+            self.active_duration = timedelta()
+        self.active_duration += duration
+        self.save()
 
     def __str__(self):
-        return '%s [%s - %s] (%s)' % (self.user.anon_id, self.startedAtTime, self.endedAtTime, self.id)
+        return '%s [%s - %s] (%s)' % (self.user.anon_id, self.started_at_time, self.ended_at_time, self.id)
+
 
 class Event(models.Model):
     id = models.CharField(primary_key=True, default=uuid4, max_length=36)
