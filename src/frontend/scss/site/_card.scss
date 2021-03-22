@@ -105,6 +105,19 @@
     }
 }
 
+.card-special {
+    color: var(--CT_cardSpecialColor);
+    background-color: var(--CT_cardSpecialBg);
+    border-color: transparent;
+    box-shadow: none;
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
 .card-author {
     @include font-size(.875rem);
     color: var(--CT_cardLibraryAuthorColor);
