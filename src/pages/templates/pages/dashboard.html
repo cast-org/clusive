@@ -15,7 +15,7 @@
 <h1>Dashboard</h1>
 <div class="row">
     <div class="col-md-4">
-        <div class="box">
+        <div class="box box-mascot-offset">
             <h2>Welcome!</h2>
             <p>Clusive is a personalized reading environment that adapts to every learner.</p>
             {% if request.clusive_user.role == 'GU' %}
@@ -40,8 +40,8 @@
         </div>
     </div>
 
-    <div class="col-md-8">
-        <div class="box">
+    <div class="col-md-8 pt-1 mt-1 pt-md-0 mt-md-0">
+        <div class="box box-mascot">
             {% if last_reads %}
             <h2>Last reads</h2>
             <div class="library-grid">
@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 {% endfor %}
-                <div class="card card-library">
+                <div class="card card-special">
                     <div class="card-body">
                         <p>Dive into the Library to find something to read.</p>
                         <a href="{% url 'reader_index' %}" class="btn btn-primary">Go to the library</a>
