@@ -17,39 +17,78 @@
     <div class="col-md-4">
         <div class="box">
             <h2>Welcome!</h2>
-            <p>New to Clusive?</p>
-            <ul>
-                <li>Check out Clues to Clusive to get an overview of features you can use!</li>
-                <li>Or, dive into the
-                    <a href="{% url 'reader_index' %}">Library</a>,
-                    to find something to read.</li>
-            </ul>
+            <p>Clusive is a personalized reading environment that adapts to every learner.</p>
+            {% if request.clusive_user.role == 'GU' %}
+                <p>Check out <em>Clues to Clusive</em> to get an overview of features you can use,
+                    or dive into the Library to find something to read!</p>
+                <p>Note that as a guest, you won't be able to save your settings or highlights,
+                or explore the parent and teacher features of Clusive. To explore further,
+                <a href="{% url 'sign_up_role' %}">create your own account</a>.</p>
+            {% endif %}
+            {% if request.clusive_user.role == 'ST' %}
+                <p>Check out <em>Clues to Clusive</em> to get an overview of features you can use,
+                or dive into the Library to find something to read!</p>
+            {% endif %}
+            {% if request.clusive_user.role == 'PA' %}
+                <p>You can create accounts for your child(ren)
+                    by clicking the "Manage" link in the navigation bar.</p>
+            {% endif %}
+            {% if request.clusive_user.role == 'TE' %}
+                <p>You can create your classes and student accounts
+                    by clicking the "Manage" link in the navigation bar.</p>
+            {% endif %}
         </div>
     </div>
 
     <div class="col-md-8">
         <div class="box">
+            {% if last_reads %}
             <h2>Last reads</h2>
-            <ul>
+            <div class="library-grid">
                 {% for para in last_reads %}
-                <li>
-                    <a href="{% url 'reader_default' book_id=para.book.pk %}">
-                        {{para.book.title}}
-                    </a>
-                    (total {{ para.total_time }}, most recent {{para.last_view}} GMT)</li>
+                <div class="card card-library">
+                    <div class="card-header">
+                        <a href="{% url 'reader_default' book_id=para.book.pk %}" class="link-stretch" onclick="vocabCheck.start(this, '{{ para.book.id }}'); return false;"><h2 class="card-title">{{ para.book.title }}</h2></a>
+                        {% if para.book.author %}<div class="card-author">{{ para.book.author }}</div>{% endif %}
+                    </div>
+                    {% if para.book.cover %}
+                    <div class="card-img">
+                        <img src="{% get_media_prefix %}{{ para.book.cover_path }}" alt="Cover image for {{ para.book.title }}" class="img-fluid" />
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        {% if para.book.description %}<p>{{ para.book.description }}</p>{% endif %}
+                        <em>Last viewed: {{para.last_view|date:"F d"}}</em>
+                    </div>
+                </div>
                 {% endfor %}
-            </ul>
-            {% if not last_reads %}
-            <p>Looks like you haven't read anything yet. Check out Clues to Clusive to get an overview of features you can use!</p>
-            <ul>
+            </div>
+            {% else %}
+            <h2>Getting started</h2>
+            <div class="library-grid">
                 {% for book in featured %}
-                <li>
-                    <a href="{% url 'reader_default' book_id=book.pk %}">
-                        {{book.title}}
-                    </a>
-                </li>
+                <div class="card card-library">
+                    <div class="card-header">
+                        <a href="{% url 'reader_default' book_id=book.pk %}" class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title }}</h2></a>
+                        {% if book.author %}<div class="card-author">{{ book.author }}</div>{% endif %}
+                    </div>
+                    {% if book.cover %}
+                    <div class="card-img">
+                        <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        {% if book.description %}<p>{{ book.description }}</p>{% endif %}
+                    </div>
+                </div>
                 {% endfor %}
-            </ul>
+                <div class="card card-library">
+                    <div class="card-body">
+                        <p>Dive into the Library to find something to read.</p>
+                        <a href="{% url 'reader_index' %}" class="btn btn-primary">Go to the library</a>
+                    </div>
+                </div>
+            </div>
             {% endif %}
         </div>
     </div>
