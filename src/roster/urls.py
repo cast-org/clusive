@@ -45,4 +45,5 @@ urlpatterns = [
     path('manage_create_user/<int:period_id>/', views.ManageCreateUserView.as_view(), name='manage_create_user'),
     path('manage_edit_period/<int:pk>', views.ManageEditPeriodView.as_view(), name='manage_edit_period'),
     path('manage_create_period/', views.ManageCreatePeriodView.as_view(), name='manage_create_period'),
+    path('sso_login', views.sso_login, name='sso_login'),
 ]

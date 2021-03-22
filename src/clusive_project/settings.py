@@ -77,7 +77,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # to where the app would go after a local successful login:
 # https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
 # A possible value for Clusive is '/reader'
-LOGIN_REDIRECT_URL = '/reader'
+LOGIN_REDIRECT_URL = '/account/sso_login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

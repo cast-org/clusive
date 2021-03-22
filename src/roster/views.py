@@ -52,15 +52,11 @@ class SignUpView(CreateView):
         target = form.instance
         if not self.role in ['TE', 'PA', 'ST']:
             raise PermissionError('Invalid role')
+
         if self.current_clusive_user:
             # There is a logged-in (presumably Guest) user.
             # Update the ClusiveUser and User objects based on the form target.
-            clusive_user: ClusiveUser
-            clusive_user = self.current_clusive_user
-            logger.debug('Upgrading %s from guest to %s', clusive_user, self.role)
-            clusive_user.role = self.role
-            clusive_user.permission = ResearchPermissions.PERMISSIONED
-            clusive_user.save()
+            update_clusive_user(self.current_clusive_user, self.role)
             user: User
             user = clusive_user.user
             user.username = target.username
@@ -87,10 +83,15 @@ class SignUpRoleView(FormView):
 
     def form_valid(self, form):
         role = form.cleaned_data['role']
+        from_sso = self.request.session.get('from_sso', False)
         if role == 'ST':
             self.success_url = reverse('sign_up_age_check')
         else:
-            self.success_url = reverse('sign_up', kwargs={'role': role})
+            if from_sso:
+                update_clusive_user(self.request.clusive_user, role)
+                self.success_url = reverse('dashboard')
+            else:
+                self.success_url = reverse('sign_up', kwargs={'role': role})
         return super().form_valid(form)
 
 
@@ -99,9 +100,14 @@ class SignUpAgeCheckView(FormView):
     template_name = 'roster/sign_up_age_check.html'
 
     def form_valid(self, form):
+        from_sso = self.request.session.get('from_sso', False)
         logger.debug("of age: %s", repr(form.cleaned_data['of_age']))
         if form.cleaned_data['of_age'] == 'True':
-            self.success_url = reverse('sign_up', kwargs={'role': 'ST'})
+            if from_sso:
+                update_clusive_user(self.request.clusive_user, 'ST')
+                self.success_url = reverse('dashboard')
+            else:
+                self.success_url = reverse('sign_up', kwargs={'role': 'ST'})
         else:
             self.success_url = reverse('sign_up_ask_parent')
         return super().form_valid(form)
@@ -411,3 +417,21 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, CreateView):
 
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
+
+
+def sso_login(request):
+    logger.debug("checking SSO account for non-guest")
+    user = ClusiveUser.from_request(request)
+    if user.role == Roles.GUEST:
+        request.session['from_sso'] = True
+        return HttpResponseRedirect(reverse('sign_up_role'))
+    else:
+        return HttpResponseRedirect(reverse('reader_index'))
+
+def update_clusive_user(current_clusive_user, role):
+    clusive_user: ClusiveUser
+    clusive_user = current_clusive_user
+    logger.debug('Upgrading %s from guest to %s', clusive_user, role)
+    clusive_user.role = role
+    clusive_user.permission = ResearchPermissions.PERMISSIONED
+    clusive_user.save()
