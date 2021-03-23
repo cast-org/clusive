@@ -137,7 +137,7 @@ function buildTableOfContents() {
     if (typeof D2Reader === 'object') {
         D2Reader.tableOfContents().then(function(items) {
             var has_structure = items.length > 1;
-            if (items.length === 1 && items[0].children.length > 1) {
+            if (items.length === 1 && items[0].children && items[0].children.length > 1) {
                 has_structure = true;
             }
             if (has_structure) {
