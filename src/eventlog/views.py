@@ -19,16 +19,20 @@ class EventMixin(ContextMixin):
     """
     
     def get(self, request, *args, **kwargs):
-        # Get event ID, it is needed during page construction
+        # Create Event first since Event ID is used during page construction
+        # Note, if no user is logged in this will return None.
         event = Event.build(type='VIEW_EVENT',
                             action='VIEWED',
                             session=request.session)
-        self.event_id = event.id
+        if event:
+            self.event_id = event.id
         # Super will create the page as normal
         result = super().get(request, *args, **kwargs)
-        # Configure_event run last so it can use any info generated during page construction.
-        self.configure_event(event)
-        event.save()
+        if event:
+            self.event_id = event.id
+            # Configure_event is run last so it can use any info generated during page construction.
+            self.configure_event(event)
+            event.save()
         return result
 
     def get_context_data(self, **kwargs):

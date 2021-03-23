@@ -1,11 +1,11 @@
 import csv
 import json
 import logging
-from typing import Any
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
@@ -15,7 +15,7 @@ from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView
@@ -26,10 +26,9 @@ from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import UserForm, PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
+from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
-from django.contrib.auth import views as auth_views
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +52,7 @@ class LoginView(auth_views.LoginView):
         return context
 
 
-class SignUpView(CreateView):
+class SignUpView(EventMixin, CreateView):
     template_name='roster/sign_up.html'
     model = User
     form_class = UserRegistrationForm
@@ -99,6 +98,9 @@ class SignUpView(CreateView):
                                        anon_id=ClusiveUser.next_anon_id())
             send_validation_email(self.current_site, clusive_user)
         return HttpResponseRedirect(reverse('validate_sent', kwargs={'user_id' : user.id}))
+
+    def configure_event(self, event: Event):
+        event.page = 'Register'
 
 
 class ValidateSentView(View):
@@ -167,7 +169,7 @@ class ValidateEmailView(View):
         return render(request, self.template, context)
 
 
-class SignUpRoleView(FormView):
+class SignUpRoleView(EventMixin, FormView):
     form_class = AccountRoleForm
     template_name = 'roster/sign_up_role.html'
 
@@ -179,8 +181,11 @@ class SignUpRoleView(FormView):
             self.success_url = reverse('sign_up', kwargs={'role': role})
         return super().form_valid(form)
 
+    def configure_event(self, event: Event):
+        event.page = 'RegisterRole'
 
-class SignUpAgeCheckView(FormView):
+
+class SignUpAgeCheckView(EventMixin, FormView):
     form_class = AgeCheckForm
     template_name = 'roster/sign_up_age_check.html'
 
@@ -192,9 +197,15 @@ class SignUpAgeCheckView(FormView):
             self.success_url = reverse('sign_up_ask_parent')
         return super().form_valid(form)
 
+    def configure_event(self, event: Event):
+        event.page = 'RegisterAge'
 
-class SignUpAskParentView(TemplateView):
+
+class SignUpAskParentView(EventMixin, TemplateView):
     template_name = 'roster/sign_up_ask_parent.html'
+
+    def configure_event(self, event: Event):
+        event.page = 'RegisterAskParent'
 
 
 class PreferenceView(View):
@@ -363,7 +374,7 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         } for s in students]
 
     def configure_event(self, event: Event):
-        event.page = 'ManageClass'
+        event.page = 'Manage'
 
 
 class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
