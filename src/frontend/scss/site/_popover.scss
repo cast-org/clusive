@@ -1,4 +1,6 @@
 .popover {
+    min-width: $popover-max-width;
+
     .close,
     .drag {
         position: relative;
@@ -113,9 +115,17 @@
 }
 
 .popover-glossary {
-    min-width: $popover-max-width;
+    @include media-breakpoint-down(sm) {
+        max-width: calc(100vw - 7.625rem);
+    }
+}
 
-    @include media-breakpoint-down (sm) {
+.popover-comp {
+    @include media-breakpoint-up(md) {
+        width: $popover-comp-md-width;
+        max-width: $popover-comp-md-width;
+    }
+    @include media-breakpoint-down(sm) {
         max-width: calc(100vw - 7.625rem);
     }
 }
