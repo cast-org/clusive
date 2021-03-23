@@ -605,6 +605,18 @@
       "css": "mic",
       "code": 61744,
       "src": "fontawesome"
+    },
+    {
+      "uid": "d4385b9337eeaa7feb48465b50649042",
+      "css": "universal-access",
+      "code": 59442,
+      "src": "elusive"
+    },
+    {
+      "uid": "abf08be829659c02d1f9a711daefa8ce",
+      "css": "hand-paper-o",
+      "code": 62038,
+      "src": "fontawesome"
     }
   ]
 }

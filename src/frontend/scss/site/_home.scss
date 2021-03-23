@@ -16,7 +16,7 @@
         min-height: auto;
         padding-top: 1.375rem;
         padding-bottom: 1.375rem;
-        background-color: var(--CT_homeHeaderBg);
+        background: var(--CT_homeHeaderBg);
         @include border-start-radius($border-radius);
     }
 
@@ -90,5 +90,75 @@
 
     & + & {
         margin-top: -1rem;
+    }
+}
+
+.card-login {
+    .media {
+        align-items: center;
+
+        .media-img {
+            width: 1.75rem;
+            margin-right: 1rem;
+            @include font-size(1.75rem);
+        }
+        .media-body {
+            font-weight: $font-weight-bold;
+        }
+
+        .icon-hand-paper-o {
+            color: var(--CT_errorListBg);
+        }
+        .icon-universal-access {
+            color: var(--CT_textMuted);
+        }
+        .icon-settings {
+            color: var(--CT_btnSettingColor);
+            text-shadow: var(--CT_btnSettingTextShadow);
+        }
+    }
+}
+
+.login-btn {
+    display: inline-block;
+    width: 191px;
+    height: 46px;
+
+    &::before {
+        display: block;
+        width: 191px;
+        height: 46px;
+        content: "";
+        background-size: cover;
+    }
+
+    &:focus {
+        outline: 0;
+        box-shadow: $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
+    }
+}
+.login-google {
+    &::before {
+        background-image: url("../images/login-google.png");
+    }
+    &:active {
+        box-shadow: none;
+
+        &::before {
+            background-image: url("../images/login-google-active.png");
+        }
+    }
+}
+
+.login-clever {
+    &::before {
+        background-image: url("../images/login-clever.png");
+    }
+    &:active {
+        box-shadow: none;
+
+        &::before {
+            background-image: url("../images/login-clever-active.png");
+        }
     }
 }
