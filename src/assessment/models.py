@@ -3,7 +3,7 @@ import logging
 from django.db import models
 
 from roster.models import ClusiveUser
-from library.models import BookVersion
+from library.models import Book
 
 logger = logging.getLogger(__name__)
 
@@ -25,11 +25,11 @@ class ComprehensionCheck:
 # Generic comprehension check responses
 class ComprehensionCheckResponse(models.Model):    
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
-    book_version = models.ForeignKey(to=BookVersion, on_delete=models.PROTECT)       
+    book = models.ForeignKey(to=Book, on_delete=models.PROTECT)       
     comprehension_scale_response = models.IntegerField(        
         choices=ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES,
-        default=ComprehensionCheck.ComprehensionScale.NOTHING
+        null=True
     )    
-    comprehension_free_response = models.TextField(default="")
+    comprehension_free_response = models.TextField(null=True)
      
 

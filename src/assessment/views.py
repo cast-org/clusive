@@ -5,7 +5,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from roster.models import ClusiveUser
-from library.models import BookVersion
+from library.models import Book
 
 from .models import ComprehensionCheckResponse
 
@@ -24,11 +24,11 @@ class ComprehensionCheckView(LoginRequiredMixin, View):
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
         
         clusive_user = ClusiveUser.objects.get(user=self.request.user)
-        book_version = BookVersion.objects.get(id=comprehension_check_data.get("bookVersionId"))
+        book = Book.objects.get(id=comprehension_check_data.get("bookId"))
 
         comprehension_check_response = ComprehensionCheckResponse(
             user = clusive_user,
-            book_version = book_version,
+            book = book,
             comprehension_scale_response = comprehension_check_data.get("scaleResponse"),
             comprehension_free_response = comprehension_check_data.get("freeResponse")
         )
