@@ -17,25 +17,23 @@
     <div class="col-md-4">
         <div class="box box-mascot-offset">
             <h2>Welcome!</h2>
-            <p>Clusive is a personalized reading environment that adapts to every learner.</p>
+            <p>Clusive&mdash;a personalized reading environment that adapts to every learner.</p>
             {% if request.clusive_user.role == 'GU' %}
-                <p>Check out <em>Clues to Clusive</em> to get an overview of features you can use,
-                    or dive into the Library to find something to read!</p>
-                <p>Note that as a guest, you won't be able to save your settings or highlights,
-                or explore the parent and teacher features of Clusive. To explore further,
+                <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
+                    Or dive into the Library and see what you discover!</p>
+                <p>Tip: As a guest, you cannot save settings or highlights, get recommendations,
+                    or explore the parent and teacher features of Clusive. To get more out of Clusive,
                 <a href="{% url 'sign_up_role' %}">create your own account</a>.</p>
             {% endif %}
             {% if request.clusive_user.role == 'ST' %}
-                <p>Check out <em>Clues to Clusive</em> to get an overview of features you can use,
-                or dive into the Library to find something to read!</p>
+                <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
+                    Or dive into the Library and see what you discover!</p>
             {% endif %}
             {% if request.clusive_user.role == 'PA' %}
-                <p>You can create accounts for your child(ren)
-                    by clicking the "Manage" link in the navigation bar.</p>
+                <p>Create accounts for your child(ren) by clicking the "Manage" link in the navigation bar.</p>
             {% endif %}
             {% if request.clusive_user.role == 'TE' %}
-                <p>You can create your classes and student accounts
-                    by clicking the "Manage" link in the navigation bar.</p>
+                <p>Create your classes and student accounts by clicking the "Manage" link in the navigation bar.</p>
             {% endif %}
         </div>
     </div>
