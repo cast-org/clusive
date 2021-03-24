@@ -2,8 +2,6 @@ import logging
 
 from django.db import models
 
-from uuid import uuid4
-
 from roster.models import ClusiveUser
 from library.models import BookVersion
 
@@ -25,8 +23,7 @@ class ComprehensionCheck:
         ]
 
 # Generic comprehension check responses
-class ComprehensionCheckResponse(models.Model):
-    id = models.CharField(primary_key=True, default=uuid4, max_length=36)    
+class ComprehensionCheckResponse(models.Model):    
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
     book_version = models.ForeignKey(to=BookVersion, on_delete=models.PROTECT)       
     comprehension_scale_response = models.IntegerField(        
