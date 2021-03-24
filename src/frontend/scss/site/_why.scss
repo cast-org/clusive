@@ -72,7 +72,7 @@
             bottom: -$modal-header-padding-y;
             display: block;
             width: 2.25rem;
-            height: 2.25rem * .95614;
+            height: 2.25rem * $img-ratio-mascot;
             content: "";
             background-image: var(--CT_imgMascot);
             background-repeat: no-repeat;

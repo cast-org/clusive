@@ -9,23 +9,23 @@
 
 .box-mascot {
     position: relative;
-    margin-top: calc(var(--CT_boxMascotSize) * .375);
+    margin-top: calc(var(--CT_boxMascotSize) * .25);
 
     &::before{
         position: absolute;
-        top: calc(var(--CT_boxMascotSize) * -.875);
+        top: calc(var(--CT_boxMascotSize) * -.75);
         left: 1rem;
         display: block;
         width: var(--CT_boxMascotSize);
-        height: calc(var(--CT_boxMascotSize) * .95614);
+        height: calc(var(--CT_boxMascotSize) * #{$img-ratio-mascot-tipped});
         content: "";
-        background-image: var(--CT_imgMascot);
+        background-image: var(--CT_imgMascotTipped);
         background-repeat: no-repeat;
         background-size: contain;
     }
 }
 .box-mascot-offset {
-    margin-top: calc(var(--CT_boxMascotSize) * .375);
+    margin-top: calc(var(--CT_boxMascotSize) * .25);
 }
 
 .box .library-grid > .card {
