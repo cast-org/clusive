@@ -23,6 +23,7 @@ preference_changed = Signal(providing_args=['request', 'event_id', 'preference',
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
 word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating', 'book_id'])
+comprehension_check_completed = Signal(providing_args=['request', 'event_id', 'value', 'book_id', 'comprehension_check_response_id'])
 
 #
 # Signal handlers that log specific events
@@ -156,7 +157,17 @@ def create_event(kwargs, control=None, value=None, action='USED', event_type='TO
         # See https://docs.djangoproject.com/en/3.1/ref/models/instances/#validating-objects
         event.save()
 
-# word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
+
+@receiver(comprehension_check_completed)
+def log_comprehension_check_completed(sender, **kwargs):
+    """User completes a comprehension check"""
+    control = 'comprehension_check'
+    action = 'COMPLETED'
+    event_type = 'ASSESSMENT_ITEM_EVENT'
+    book_id = kwargs.get('book_id')    
+    value = kwargs.get('value')
+    create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
+
 @receiver(word_rated)
 def log_word_rated(sender, **kwargs):
     """User rates a word"""
