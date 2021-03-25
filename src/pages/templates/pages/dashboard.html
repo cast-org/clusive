@@ -15,7 +15,7 @@
 <h1>Dashboard</h1>
 <div class="row">
     <div class="col-md-4">
-        <div class="box box-mascot-offset">
+        <div class="box box-mascot-tipped-offset">
             <h2>Welcome!</h2>
             <p>Clusive&mdash;a personalized reading environment that adapts to every learner.</p>
             {% if request.clusive_user.role == 'GU' %}
@@ -39,7 +39,7 @@
     </div>
 
     <div class="col-md-8 pt-1 mt-1 pt-md-0 mt-md-0">
-        <div class="box box-mascot">
+        <div class="box box-mascot-tipped">
             {% if last_reads %}
             <h2>Recent reads</h2>
             <p>Revisit something you've read, or head to the <a href="{% url 'reader_index' %}">Library</a> for something new.</p>

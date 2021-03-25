@@ -7,7 +7,29 @@
     @include border-radius($box-border-radius);
 }
 
+.box .library-grid > .card {
+    margin: 1rem;
+}
+
 .box-mascot {
+    position: relative;
+    margin-top: calc(var(--CT_boxMascotSize) * .375);
+
+    &::before{
+        position: absolute;
+        top: calc(var(--CT_boxMascotSize) * -.875);
+        left: 1rem;
+        display: block;
+        width: var(--CT_boxMascotSize);
+        height: calc(var(--CT_boxMascotSize) * #{$img-ratio-mascot});
+        content: "";
+        background-image: var(--CT_imgMascot);
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+}
+
+.box-mascot-tipped {
     position: relative;
     margin-top: calc(var(--CT_boxMascotSize) * .25);
 
@@ -24,10 +46,10 @@
         background-size: contain;
     }
 }
-.box-mascot-offset {
-    margin-top: calc(var(--CT_boxMascotSize) * .25);
-}
 
-.box .library-grid > .card {
-    margin: 1rem;
+.box-mascot-offset {
+    margin-top: calc(var(--CT_boxMascotSize) * .375);
+}
+.box-mascot-tipped-offset {
+    margin-top: calc(var(--CT_boxMascotSize) * .25);
 }
