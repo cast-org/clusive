@@ -9,7 +9,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -296,7 +296,7 @@ class RemoveBookConfirmView(LoginRequiredMixin, View):
 class ShareDialogView(LoginRequiredMixin, FormView):
     form_class = ShareForm
     template_name = 'library/partial/book_share.html'
-    success_url = '/'
+    success_url = reverse_lazy('reader_index')
     clusive_user = None
     book = None
 
