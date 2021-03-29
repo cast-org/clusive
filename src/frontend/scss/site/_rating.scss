@@ -1,0 +1,196 @@
+@mixin star-disabled() {
+    &::before {
+        color: var(--CT_starsIconDisabledColor);
+    }
+    &::after {
+        color: var(--CT_starsIconDisabledColorAfter);
+    }
+}
+
+@mixin star-default() {
+    &::before {
+        color: var(--CT_starsIconActiveColor);
+        text-shadow: var(--CT_starsIconActiveTextShadow);
+    }
+    &::after {
+        display: none;
+    }
+}
+
+@mixin star-inactive() {
+    &::before {
+        color: var(--CT_starsIconColor);
+        text-shadow: none;
+    }
+    &::after {
+        display: block;
+        color: var(--CT_starsIconColorAfter);
+        content: "\e826";
+    }
+}
+
+@mixin star-active() {
+    &::before {
+        color: var(--CT_starsIconActiveColor);
+        text-shadow: var(--CT_starsIconActiveTextShadow);
+    }
+
+    &::after {
+        display: none;
+    }
+}
+
+.stars {
+    margin-bottom: 1rem;
+}
+
+.stars-inner {
+    --starSize: #{$star-size};
+
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    padding: .25rem 0;
+    line-height: 1;
+    border-top: 3px solid var(--CT_starsBorderColor);
+    border-bottom: 3px solid var(--CT_starsBorderColor);
+
+    > input {
+        position: absolute;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    > label {
+        position: relative;
+        box-sizing: content-box;
+        display: inline-block;
+        flex-grow: 1;
+        width: var(--starSize);
+        height: var(--starSize);
+        padding: #{$star-spacing-x / 2};
+        margin: 0;
+        line-height: 1;
+        cursor: pointer;
+
+        &::before,
+        &::after {
+            position: absolute;
+            left: 50%;
+            display: block;
+            width: 1em;
+            height: 1em;
+            // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+            font-family: fontello;
+            @include font-size( var(--starSize));
+            line-height: 1;
+            text-align: center;
+            //pointer-events: none;
+            content: "\e825";
+            //opacity: 0;
+            transform: translateX(-50%);
+        }
+
+        @include star-default();
+    }
+
+    > input:checked ~ label,
+    > input:focus ~ label {
+        @include star-inactive();
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > input:checked[disabled] ~ label,
+    > input:checked:disabled ~ label {
+        @include star-disabled();
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > input:checked[disabled] + label,
+    > input:checked:disabled + label,
+    > input:checked + label,
+    > input:focus + label {
+        @include star-active();
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > input[disabled] + label,
+    > input:disabled + label {
+        cursor: default;
+    }
+
+    &:hover > input:not([disabled]):not(:disabled) + label {
+        @include star-active();
+    }
+
+    > input:not([disabled]):not(:disabled):hover ~ label {
+        @include star-inactive();
+    }
+
+    > input:not([disabled]):not(:disabled):hover + label {
+        @include star-active();
+    }
+
+    > input:focus + label {
+        &::before {
+            @include border-radius(50%);
+            @include box-shadow($star-focus-box-shadow);
+        }
+    }
+}
+
+.stars-focus-indicator {
+    display: none;
+}
+
+.stars-no-rate {
+    &:focus {
+        ~ .stars-focus-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: block;
+            content: "";
+            @include box-shadow($star-focus-box-shadow);
+        }
+    }
+}
+
+.stars-text {
+    text-align: center;
+}
+
+.stars-chart {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid var(--CT_starsBorderColor);
+
+    // Switch to vertical orientation
+    .progress {
+        flex-direction: column-reverse;
+        width: $progress-height;
+        height: 5rem;
+
+        .progress-bar {
+            height: calc((var(--progressSize) / var(--progressMax)) * 100%);
+            @include border-radius($progress-border-radius);
+        }
+    }
+}
+.stars-chart-item {
+    position: relative;
+    display: inline-flex;
+    flex-flow: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-end;
+}
+.stars-chart-result {
+    position: absolute;
+    bottom: -1.5rem;
+}

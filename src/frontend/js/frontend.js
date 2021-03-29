@@ -231,6 +231,34 @@ function formFileText() {
     });
 }
 
+function starsSelectedTextUpdate(node) {
+    'use strict';
+
+    var output = node.querySelector('.stars-text-result');
+    var active = node.querySelector('input[type="radio"]:checked');
+    var label = active.nextElementSibling;
+
+    if (label.nodeName.toLowerCase() === 'label') {
+        output.innerText = label.innerText;
+    } else {
+        output.innerHTML = '<span class="sr-only">Unrated</span>';
+    }
+}
+
+function starsSelectedText() {
+    'use strict';
+
+    $(document.body).on('click', '.stars input', function(e) {
+        if ($(e.target).not('.disabled, :disabled')) {
+            starsSelectedTextUpdate(e.target.closest('.stars'));
+        }
+    });
+    $('.stars').each(function() {
+        starsSelectedTextUpdate(this);
+    });
+}
+
+
 function formRangeFontSize(range) {
     'use strict';
 
@@ -419,6 +447,7 @@ $(window).ready(function() {
     updateCSSVars();
 
     formFileText();
+    starsSelectedText();
     confirmationPublicationDelete();
     confirmationSharing();
     formUseThisLinks();
