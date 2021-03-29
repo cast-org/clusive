@@ -44,16 +44,19 @@
     margin-bottom: 1rem;
 }
 
+.stars-outer {
+    padding: .25rem 0;
+    border-top: 3px solid var(--CT_starsBorderColor);
+    border-bottom: 3px solid var(--CT_starsBorderColor);
+}
+
 .stars-inner {
     --starSize: #{$star-size};
 
     position: relative;
     display: flex;
     flex-wrap: nowrap;
-    padding: .25rem 0;
     line-height: 1;
-    border-top: 3px solid var(--CT_starsBorderColor);
-    border-bottom: 3px solid var(--CT_starsBorderColor);
 
     > input {
         position: absolute;
