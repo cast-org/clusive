@@ -8,7 +8,7 @@ from django_session_timeout.signals import user_timed_out
 
 from eventlog.models import LoginSession, Event, SESSION_ID_KEY, PERIOD_KEY
 from library.models import Paradata
-from roster.models import Period, ClusiveUser
+from roster.models import Period, ClusiveUser, UserStats
 
 logger = logging.getLogger(__name__)
 
@@ -54,9 +54,14 @@ def log_page_timing(sender, **kwargs):
                     event.duration = timedelta(milliseconds=duration)
                 if active_duration:
                     event.active_duration = timedelta(milliseconds=active_duration)
-                    # For book page views, increment time spent in Book
-                    if event.type == 'VIEW_EVENT' and event.action == 'VIEWED' and event.book_id is not None:
-                        Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=event.active_duration)
+                    # Page view events are used to calculate various totals.
+                    if event.type == 'VIEW_EVENT' and event.action == 'VIEWED':
+                        UserStats.add_active_time(event.actor, event.active_duration)
+                        if event.session is not None:
+                            event.session.add_active_time(event.active_duration)
+                        # For book page views, increment time spent in Book
+                        if event.book_id is not None:
+                            Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=event.active_duration)
                 event.save()
         except Event.DoesNotExist:
             logger.error('Received page timing for a non-existent event %s', event_id)
@@ -210,7 +215,7 @@ def log_login(sender, **kwargs):
     try:
         clusive_user = ClusiveUser.objects.get(user=django_user)
         user_agent = kwargs['request'].META.get('HTTP_USER_AGENT', '')
-        login_session = LoginSession(user=clusive_user, userAgent=user_agent)
+        login_session = LoginSession(user=clusive_user, user_agent=user_agent)
         login_session.save()
         # Put the ID of the database object into the HTTP session so that we know which one to close later.
         django_session = kwargs['request'].session
@@ -248,7 +253,7 @@ def log_logout(sender, **kwargs):
         if event:
             event.save()
         # Close out session
-        login_session.endedAtTime = timezone.now()
+        login_session.ended_at_time = timezone.now()
         login_session.save()
         clusive_user = login_session.user
         logger.debug("Logout user %s at %s" % (clusive_user, event.event_time))
@@ -272,7 +277,7 @@ def log_timeout(sender, **kwargs):
                                 group=period)
             event.save()
             # Close out session
-            login_session.endedAtTime = timezone.now()
+            login_session.ended_at_time = timezone.now()
             login_session.save()
             logger.debug("Timeout user %s", clusive_user)
         except ClusiveUser.DoesNotExist:

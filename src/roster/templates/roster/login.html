@@ -19,31 +19,20 @@
 {% block content %}
 <main id="content" tabindex="-1">
 
-    <div class="login-welcome"">
-        <h1>Welcome to Clusive</h1>
-        <p>This is the <a href="http://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>'s flexible, adaptive, and customizable digital learning environment.</p>
-    </div>
+    <h1>Welcome to Clusive</h1>
+    <p>Clusive is a flexible, customizable learning environment that adapts to you. Clusive is part of the <a href="https://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>.</p>
 
     <div class="row">
-        <div class="col-sm-6 col-md-5 col-lg-4">
+        <div class="col-sm-6 col-lg-4">
             <div class="card card-login">
                 <div class="card-body login-section">
-                    <p class="card-text">
-                        <a href="{% url 'guest_login' %}" class="btn btn-secondary btn-splash">Try Clusive as a Guest!</a>
-                    </p>
-                    <p class="card-text">
-                        <a href="{% url 'sign_up_role' %}">Create an account</a> to keep your settings.
-                    </p>
-                    <!--
-                    <p class="card-text">
-                        <a href="#">Create an account</a> to keep your settings.
-                    </p>
-                    -->
-                </div>
-                <div class="card-body login-section">
-                    <h2>Sign in</h2>
-
-                    {% if form.errors %}
+                    <h2 class="mb-1">Log in to Clusive</h2>
+                    {% if email_validate %}
+                    <div class="errorlist">
+                        You need to validate your email address before you can log in.
+                        Please check your email for the link.
+                    </div>
+                    {% elif form.errors %}
                     <div class="errorlist">
                         Your username and password didn't match. Please try again.
                     </div>
@@ -64,9 +53,42 @@
                             <button type="submit" class="btn btn-primary">Log in</button>
                         </div>
                     </form>
+
+                    <ul class="list-unstyled pt-0_5 mt-1">
+                        <li class="mb-0_5">
+                            <a href="{% url 'password_reset' %}">I forgot my username or password</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'sign_up_role' %}">Create a free account</a>
+                        </li>
+                    </ul>
                 </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-4 order-sm-first">
+            <div class="card card-login">
                 <div class="card-body login-section">
-                    <a href="{% url 'password_reset' %}">I forgot my username or password.</a>
+                    <h2 class="mb-1">Try Clusive as a Guest</h2>
+                    <p class="card-text">
+                        <a href="{% url 'guest_login' %}" class="btn btn-secondary btn-splash">Try Clusive</a>
+                    </p>
+                </div>
+                <div class="card-body login-section d-xs-down-none">
+                    <ul class="list-unstyled">
+                        <li class="media">
+                            <div class="media-img"><span class="icon-hand-paper-o" aria-hidden="true"></span></div>
+                            <div class="media-body">Adaptive learning environment</div>
+                        </li>
+                        <li class="media">
+                            <div class="media-img text-muted"><span class="icon-universal-access" aria-hidden="true"></span></div>
+                            <div class="media-body">High-quality accessible content</div>
+                        </li>
+                        <li class="media">
+                            <div class="media-img"><span class="icon-settings" aria-hidden="true"></span></div>
+                            <div class="media-body">Customizable reader preferences</div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="socialaccount_ballot card-body login-section">
                 {% load socialaccount %}
@@ -91,19 +113,21 @@
             </div>
 
         </div>
-        <div class="col-sm-6 col-md-7 col-lg-8">
-            <h2>See a demo</h2>
+
+        <div class="col-lg-4">
+            <h2 class="mb-1">See a demo</h2>
             <div class="embed-fluid embed-fluid-16x9">
                 <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/31Vd8zvl2GE" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
-            <div class="home-section">
-                <h2>Interested in working with us?</h2>
-                <p>Volunteer to help out our project as a co-designer or beta tester.</p>
-                <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSe6o77PFqgzBZTxxIG2ZIvuWHaqOodltQ2i3dcU64LtEJaBAQ/viewform">Contact us to sign up.</a></p>
-            </div>
+            <h2 class="mb-1 pt-1 mt-1">Learn more</h2>
+            <p>Volunteer as a co-designer or beta tester.
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSe6o77PFqgzBZTxxIG2ZIvuWHaqOodltQ2i3dcU64LtEJaBAQ/viewform">Contact us to sign up.</a></p>
+            <p>Interested in learning more about CISL? <a href="https://cisl.cast.org/about/events?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">See project updates.</a></p>
+            <p><a href="https://docs.google.com/document/d/1ACE8Qsk_v73vdZyyKPvOg5njWnAwN4ZNCE3UyHJKSZA/edit?usp=sharing">Clusive FAQs</a></p>
         </div>
     </div>
+
 </main>
 
 {% include 'shared/partial/site_footer_home.html' %}

@@ -1,10 +1,25 @@
+from django import forms
 from django.contrib.auth import password_validation
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm, Form
-from django import forms
 
-from roster.models import Period, Roles
+from roster.models import Period, Roles, ClusiveUser
+
+
+class ClusiveLoginForm(AuthenticationForm):
+
+    def confirm_login_allowed(self, user: User):
+        super().confirm_login_allowed(user)
+        if user.is_staff:
+            return
+        try:
+            clusive_user = ClusiveUser.objects.get(user=user)
+            if clusive_user.unconfirmed_email:
+                raise forms.ValidationError('You need to validate your email address before you can log in',
+                                            code='email_validate')
+        except ClusiveUser.DoesNotExist:
+            raise forms.ValidationError("Not a ClusiveUser", code='invalid')
 
 
 class UserForm(ModelForm):

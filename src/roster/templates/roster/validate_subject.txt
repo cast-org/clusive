@@ -1,0 +1,3 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}Email validation for Clusive{% endblocktrans %}
+{% endautoescape %}

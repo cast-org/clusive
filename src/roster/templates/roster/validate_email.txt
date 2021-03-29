@@ -1,0 +1,17 @@
+{% load i18n %}{% autoescape off %}
+
+We're glad you've signed up for a Clusive account!
+
+As one last step, you need to verify that this is your email address by clicking this link:
+
+    {{ protocol }}://{{ domain }}{% url 'validate' user_id=uid token=token %}
+
+{% trans "This link will expire in 3 days" %}
+
+{% trans "Need help? Email us cisl@cast.org." %}
+
+{% trans "Thanks for using Clusive!" %}
+
+{% blocktrans %}The CISL Team{% endblocktrans %}
+
+{% endautoescape %}

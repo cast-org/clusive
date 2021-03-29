@@ -86,6 +86,11 @@
         --CT_homeSectionBorderColor: #{$home-section-border-color};
         --CT_loginSectionBorderColor: #{$login-section-border-color};
 
+        --CT_boxBg: #{$box-bg};
+        --CT_boxColor: #{$box-color};
+        --CT_boxMascotSize: #{$box-mascot-size};
+        //--CT_boxMascotTippedSize: #{$box-mascot-tipped-size};
+
         --CT_cardBg: #{$card-bg};
         --CT_cardColor: #{$card-color};
         --CT_cardBorderColor: #{$card-border-color};
@@ -95,6 +100,9 @@
 
         --CT_cardLoginBg: #{$card-login-bg};
         --CT_cardLoginColor: #{$card-login-color};
+
+        --CT_cardSpecialBg: #{$card-special-bg};
+        --CT_cardSpecialColor: #{$card-special-color};
 
         --CT_figureCaptionBg: #{$figure-caption-bg};
         --CT_figureCaptionColor: #{$figure-caption-color};
@@ -340,6 +348,7 @@
 
         --CT_rankingBorderColor: #{$ranking-border-color};
 
+        --CT_formTextColor: #{$form-text-color};
         --CT_formCheckradioBorderColor: #{$form-checkradio-border-color};
         --CT_formCheckradioCheckedBg: #{$form-checkradio-checked-bg};
         --CT_formCheckradioCheckedBorderColor: #{$form-checkradio-checked-border-color};
@@ -419,5 +428,6 @@
         --CT_ciToggleEyeColor: #{$ci-toggle-eye-color};
 
         --CT_imgMascot: #{$img-mascot};
+        --CT_imgMascotTipped: #{$img-mascot-tipped};
     }
 }

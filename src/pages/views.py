@@ -21,9 +21,8 @@ class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
-        if not self.last_reads:
+        if not self.last_reads or len(self.last_reads) < 3:
             self.featured = Book.get_featured_books()[:3]
-            logger.debug('No recent books, using featured: %s', self.featured)
         else:
             self.featured = []
         return super().get(request, *args, **kwargs)

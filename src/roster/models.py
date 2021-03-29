@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -126,6 +127,9 @@ class ClusiveUser(models.Model):
 
     # Anonymous ID for privacy protection when logging activities for research
     anon_id = models.CharField(max_length=30, unique=True, null=True)
+
+    # If True, user cannot log in until they have confirmed their email.
+    unconfirmed_email = models.BooleanField(default=False)
 
     # List of all class periods the user is part of
     periods = models.ManyToManyField(Period, blank=True, related_name='users')
@@ -434,6 +438,7 @@ class UserStats (models.Model):
 
     user = models.OneToOneField(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     reading_views = models.PositiveIntegerField(default=0)
+    active_duration = models.DurationField(null=True)
 
     class Meta:
         verbose_name = 'user stats'
@@ -456,3 +461,11 @@ class UserStats (models.Model):
         if created:
             logger.debug('Created new UserStats object for %s', clusive_user)
         return obj
+
+    @classmethod
+    def add_active_time(cls, clusive_user: ClusiveUser, duration):
+        stats = cls.for_clusive_user(clusive_user)
+        if stats.active_duration is None:
+            stats.active_duration = timedelta()
+        stats.active_duration += duration
+        stats.save()

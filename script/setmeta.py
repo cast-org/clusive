@@ -22,7 +22,6 @@ def init_argparse() -> argparse.ArgumentParser:
     parser.add_argument("-st", "--sorttitle", action='store')
     parser.add_argument("-a", "--author", action='store')
     parser.add_argument("-sa", "--sortauthor", action='store')
-    parser.add_argument("-s", "--series", action='store')
     parser.add_argument("-l", "--language", action='store')
     parser.add_argument("-d", "--moddate", action='store_true')
 

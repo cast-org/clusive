@@ -4,13 +4,18 @@ import logging
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import login
+from django.contrib.auth import login, get_user_model
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.template import loader
+from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView
@@ -21,8 +26,8 @@ from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import UserForm, PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
-    AccountRoleForm, AgeCheckForm
+from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
+    AccountRoleForm, AgeCheckForm, ClusiveLoginForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
 
 logger = logging.getLogger(__name__)
@@ -33,17 +38,28 @@ def guest_login(request):
     return redirect('dashboard')
 
 
-class SignUpView(CreateView):
+class LoginView(auth_views.LoginView):
+    template_name='roster/login.html'
+    form_class = ClusiveLoginForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if context.get('form').errors:
+            for err in context.get('form').errors.as_data().get('__all__'):
+                if err.code == 'email_validate':
+                    context['email_validate'] = True
+        return context
+
+
+class SignUpView(EventMixin, CreateView):
     template_name='roster/sign_up.html'
     model = User
     form_class = UserRegistrationForm
 
-    def get_success_url(self):
-        return reverse('dashboard')
-
     def post(self, request, *args, **kwargs):
         self.role = kwargs['role']
         self.current_clusive_user = request.clusive_user
+        self.current_site = get_current_site(request)
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -52,32 +68,104 @@ class SignUpView(CreateView):
         target = form.instance
         if not self.role in ['TE', 'PA', 'ST']:
             raise PermissionError('Invalid role')
-
+        user: User
         if self.current_clusive_user:
             # There is a logged-in (presumably Guest) user.
             # Update the ClusiveUser and User objects based on the form target.
-            update_clusive_user(self.current_clusive_user, self.role)
-            user: User
+            clusive_user: ClusiveUser
+            clusive_user = self.current_clusive_user
+            update_clusive_user(clusive_user, self.role)
             user = clusive_user.user
             user.username = target.username
             user.first_name = target.first_name
             user.set_password(form.cleaned_data["password1"])
             user.email = target.email
             user.save()
-            # Need to login again since User object has changed.
             login(self.request, user, 'django.contrib.auth.backends.ModelBackend')
+            send_validation_email(self.current_site, clusive_user)
         else:
-            # There is no logged-in user.  Save the form target User object, and create a ClusiveUser.
-            target.save()
-            ClusiveUser.objects.create(user=target,
+            # This is a new user.  Save the form target User object, and create a ClusiveUser.
+            user = target
+            user.set_password(form.cleaned_data["password1"])
+            user.save()
+            clusive_user = ClusiveUser.objects.create(user=user,
                                        role=self.role,
                                        permission=ResearchPermissions.PERMISSIONED,
                                        anon_id=ClusiveUser.next_anon_id())
-            login(self.request, target, 'django.contrib.auth.backends.ModelBackend')
-        return HttpResponseRedirect(self.get_success_url())
+            send_validation_email(self.current_site, clusive_user)
+        return HttpResponseRedirect(reverse('validate_sent', kwargs={'user_id' : user.id}))
+
+    def configure_event(self, event: Event):
+        event.page = 'Register'
 
 
-class SignUpRoleView(FormView):
+class ValidateSentView(View):
+    template_name = 'roster/validate_sent.html'
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk=kwargs.get('user_id'))
+        context = {
+            'user_id': user.id,
+            'email': user.email,
+            'status': 'sent',
+        }
+        return render(request, self.template_name, context)
+
+
+class ValidateResendView(TemplateView):
+    template_name = 'roster/validate_sent.html'
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(pk=kwargs.get('user_id'))
+        clusive_user = ClusiveUser.objects.get(user=user)
+        if clusive_user.unconfirmed_email:
+            send_validation_email(get_current_site(request), clusive_user)
+            status = 'resent'
+        else:
+            logger.warning('Skipping email sending; already activated user %s', clusive_user)
+            status = 'unneeded'
+        context = {
+            'user_id': user.id,
+            'email': user.email,
+            'status': status,
+        }
+        return render(request, self.template_name, context)
+
+
+class ValidateEmailView(View):
+    template = 'roster/validate.html'
+
+    def get(self, request, *args, **kwargs):
+        uid = kwargs.get('user_id')
+        token = kwargs.get('token')
+        user_model = get_user_model()
+        try:
+            user = user_model.objects.get(pk=uid)
+            clusive_user = ClusiveUser.objects.get(user=user)
+            if clusive_user.unconfirmed_email:
+                check_token = default_token_generator.check_token(user, token)
+                if check_token:
+                    logger.info('Activating user %s', user)
+                    clusive_user.unconfirmed_email = False
+                    clusive_user.save()
+                    result = 'activated'
+                else:
+                    logger.warning('Email validation check failed. User=%s; token=%s; result=%s',
+                                user, token, check_token)
+                    result = 'error'
+            else:
+                logger.warning('Skipping activation of already activated user %s', user)
+                result = 'unneeded'
+        except:
+            result = 'error'
+        context = {
+            'status': result,
+            'user_id': uid
+        }
+        return render(request, self.template, context)
+
+
+class SignUpRoleView(EventMixin, FormView):
     form_class = AccountRoleForm
     template_name = 'roster/sign_up_role.html'
 
@@ -94,8 +182,11 @@ class SignUpRoleView(FormView):
                 self.success_url = reverse('sign_up', kwargs={'role': role})
         return super().form_valid(form)
 
+    def configure_event(self, event: Event):
+        event.page = 'RegisterRole'
 
-class SignUpAgeCheckView(FormView):
+
+class SignUpAgeCheckView(EventMixin, FormView):
     form_class = AgeCheckForm
     template_name = 'roster/sign_up_age_check.html'
 
@@ -112,9 +203,15 @@ class SignUpAgeCheckView(FormView):
             self.success_url = reverse('sign_up_ask_parent')
         return super().form_valid(form)
 
+    def configure_event(self, event: Event):
+        event.page = 'RegisterAge'
 
-class SignUpAskParentView(TemplateView):
+
+class SignUpAskParentView(EventMixin, TemplateView):
     template_name = 'roster/sign_up_ask_parent.html'
+
+    def configure_event(self, event: Event):
+        event.page = 'RegisterAskParent'
 
 
 class PreferenceView(View):
@@ -283,7 +380,7 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         } for s in students]
 
     def configure_event(self, event: Event):
-        event.page = 'ManageClass'
+        event.page = 'Manage'
 
 
 class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
@@ -428,6 +525,7 @@ def sso_login(request):
     else:
         return HttpResponseRedirect(reverse('reader_index'))
 
+
 def update_clusive_user(current_clusive_user, role):
     clusive_user: ClusiveUser
     clusive_user = current_clusive_user
@@ -435,3 +533,32 @@ def update_clusive_user(current_clusive_user, role):
     clusive_user.role = role
     clusive_user.permission = ResearchPermissions.PERMISSIONED
     clusive_user.save()
+
+
+def send_validation_email(site, clusive_user : ClusiveUser):
+    clusive_user.unconfirmed_email = True
+    clusive_user.save()
+    user = clusive_user.user
+    token = default_token_generator.make_token(user)
+    logger.info('Generated validation token for user: %s %s', user, token)
+    context = {
+        'site_name': site.name,
+        'domain': site.domain,
+        'protocol': 'https', # Note, this will send incorrect URLs in local development without https.
+        'email': user.email,
+        'uid': user.pk,
+        'user': user,
+        'token': token,
+    }
+    subject = loader.render_to_string('roster/validate_subject.txt', context)
+    # Email subject *must not* contain newlines
+    subject = ''.join(subject.splitlines())
+    body = loader.render_to_string('roster/validate_email.txt', context)
+    from_email = None  # Uses default specified in settings
+    email_message = EmailMultiAlternatives(subject, body, from_email, [user.email])
+    # TODO add if we create HTML email
+    # if html_email_template_name is not None:
+    #     html_email = loader.render_to_string(html_email_template_name, context)
+    #     email_message.attach_alternative(html_email, 'text/html')
+    email_message.send()
+

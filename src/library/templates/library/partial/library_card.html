@@ -1,0 +1,28 @@
+{% load static %}
+<div class="card card-library">
+    <div class="card-header">
+        <a class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title }}</h2></a>
+        {% if book.author %}<div class="card-author">{{ book.author }}</div>{% endif %}
+    </div>
+    {% if book.cover %}
+    <div class="card-img">
+        <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+    </div>
+    {% endif %}
+    <div class="card-body">
+        {% if book.description %}<p>{{ book.description }}</p>{% endif %}
+    </div>
+    {% if menu %}
+        {% if pub.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
+        <div class="card-footer">
+            <div class="row">
+                <div class="col card-library-tag">
+                </div>
+                <div class="col-auto card-library-action">
+                    {% include "library/partial/library_action_menu.html" %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
+</div>

@@ -310,7 +310,7 @@ class PageTestCases(TestCase):
             response = self.client.get(url, follow=True)
             html = response.content.decode('utf8')
             self.assertIn('user1', html)
-            self.assertIn('Library | Clusive', html)
+            self.assertIn('Dashboard', html)
 
         def test_logout_url(self):                              
             login = self.client.login(username='user1', password='password1')                          

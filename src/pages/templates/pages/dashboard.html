@@ -1,7 +1,7 @@
 {% extends "shared/base.html" %}
 {% load static %}
 
-{% block bodyClass %}library{% endblock %}
+{% block bodyClass %}library sidebar-no-start{% endblock %}
 {% block title %}Dashboard{% endblock %}
 
 {% block header %}
@@ -15,47 +15,58 @@
 <h1>Dashboard</h1>
 <div class="row">
     <div class="col-md-4">
-        <div class="card card-login">
-            <div class="card-body">
-                <h2>Welcome!</h2>
-                <p>New to Clusive?</p>
-                <ul>
-                    <li>Check out Clues to Clusive to get an overview of features you can use!</li>
-                    <li>Or, dive into the
-                        <a href="{% url 'reader_index' %}">Library</a>,
-                        to find something to read.</li>
-                </ul>
-            </div>
+        <div class="box box-mascot-tipped-offset">
+            <h2>Welcome!</h2>
+            <p>Clusive&mdash;a personalized reading environment that adapts to every learner.</p>
+            {% if request.clusive_user.role == 'GU' %}
+                <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
+                    Or dive into the Library and see what you discover!</p>
+                <p>Tip: As a guest, you cannot save settings or highlights, get recommendations,
+                    or explore the parent and teacher features of Clusive. To get more out of Clusive,
+                <a href="{% url 'sign_up_role' %}">create your own account</a>.</p>
+            {% endif %}
+            {% if request.clusive_user.role == 'ST' %}
+                <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
+                    Or dive into the Library and see what you discover!</p>
+            {% endif %}
+            {% if request.clusive_user.role == 'PA' %}
+                <p>Create accounts for your child(ren) by clicking the "Manage" link in the navigation bar.</p>
+            {% endif %}
+            {% if request.clusive_user.role == 'TE' %}
+                <p>Create your classes and student accounts by clicking the "Manage" link in the navigation bar.</p>
+            {% endif %}
         </div>
     </div>
 
-    <div class="col-md-8">
-        <div class="card card-login">
-            <div class="card-body">
-                <h2>Last reads</h2>
-                <ul>
-                    {% for para in last_reads %}
-                    <li>
-                        <a href="{% url 'reader_default' book_id=para.book.pk %}">
-                            {{para.book.title}}
-                        </a>
-                        (total {{ para.total_time }}, most recent {{para.last_view}} GMT)</li>
-                    {% endfor %}
-                </ul>
-                {% if not last_reads %}
-                <p>Looks like you haven't read anything yet. Check out Clues to Clusive to get an overview of features you can use!</p>
-                <ul>
-                    {% for book in featured %}
-                    <li>
-                        <a href="{% url 'reader_default' book_id=book.pk %}">
-                            {{book.title}}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+    <div class="col-md-8 pt-1 mt-1 pt-md-0 mt-md-0">
+        <div class="box box-mascot-tipped">
+            {% if last_reads %}
+            <h2>Recent reads</h2>
+            <p>Revisit something you've read, or head to the <a href="{% url 'reader_index' %}">Library</a> for something new.</p>
+            <div class="library-grid">
+                {% for para in last_reads %}
+                    {% include "library/partial/library_card.html" with book=para.book %}
+                {% endfor %}
+                {% for book in featured %}
+                    {% include "library/partial/library_card.html" with book=book %}
+                {% endfor %}
             </div>
+            {% else %}
+            <h2>Getting started</h2>
+            <div class="library-grid">
+                {% for book in featured %}
+                    {% include "library/partial/library_card.html" with book=book %}
+                {% endfor %}
+                <div class="card card-special">
+                    <div class="card-body">
+                        <p>Dive into the Library to find something to read.</p>
+                        <a href="{% url 'reader_index' %}" class="btn btn-primary">Go to the library</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
+{% include "shared/partial/modal_vocab_check.html" %}
 {% endblock %}
