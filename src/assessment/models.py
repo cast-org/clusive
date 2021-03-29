@@ -7,6 +7,7 @@ from library.models import Book
 
 logger = logging.getLogger(__name__)
 
+
 class ComprehensionCheck:
     scale_title = "How much did you learn from this reading?"
     free_response_title = "What's one thing you learned?"    
@@ -22,6 +23,7 @@ class ComprehensionCheck:
             (LOT, 'A lot')
         ]
 
+
 # Generic comprehension check responses
 class ComprehensionCheckResponse(models.Model):    
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
@@ -31,5 +33,8 @@ class ComprehensionCheckResponse(models.Model):
         null=True
     )    
     comprehension_free_response = models.TextField(null=True)
-     
+
+    def __str__(self):
+        return '<CCResp %s/%d>' % (self.user.anon_id, self.book.id)
+
 
