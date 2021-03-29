@@ -238,10 +238,12 @@ function starsSelectedTextUpdate(node) {
     var active = node.querySelector('input[type="radio"]:checked');
     var label = active.nextElementSibling;
 
-    if (label.nodeName.toLowerCase() === 'label') {
-        output.innerText = label.innerText;
-    } else {
-        output.innerHTML = '<span class="sr-only">Unrated</span>';
+    if (output !== null) {
+        if (label.nodeName.toLowerCase() === 'label') {
+            output.innerText = label.innerText;
+        } else {
+            output.innerHTML = '<span class="sr-only">Unrated</span>';
+        }
     }
 }
 
