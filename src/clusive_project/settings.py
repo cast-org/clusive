@@ -76,7 +76,9 @@ SOCIALACCOUNT_PROVIDERS = {
 # OAuth2 server.  A suggestion from `allauth` is to set the LOGIN_REDIRECT_URL
 # to where the app would go after a local successful login:
 # https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
-# A possible value for Clusive is '/reader'
+# It's set to an invisible 'sso_login' to note that this is an instance of SSO
+# and to either proceed to the role/age workflow to set the role of the SSO
+# user or, if already set, go to 'reader_index'
 LOGIN_REDIRECT_URL = '/account/sso_login'
 
 MIDDLEWARE = [
