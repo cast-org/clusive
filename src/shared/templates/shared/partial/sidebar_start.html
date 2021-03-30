@@ -13,11 +13,12 @@
 {% endif %}
 {% if why %}
 <div class="sidebar-support" role="region" aria-label="Support">
-    <button type="button" class="btn btn-nav btn-icon" data-cfw="popover"
+    <button type="button" class="btn btn-nav btn-icon btn-thought" data-cfw="popover"
         data-cfw-popover-target="#compPop" data-cfw-popover-viewport="viewport"
-        data-cfw-popover-container="body" data-cfw-popover-placement="top">
-            <span class="icon-help" aria-hidden="true"></span>
-            <span class="sr-only">Your Thoughts<span>
+        data-cfw-popover-container="body" data-cfw-popover-placement="top"
+        arial-label="Your thoughts" title="Your thoughts">
+            <span class="icon-thought" aria-hidden="true"></span>
+            <span class="sr-only">Your thoughts<span>
     </button>
 
     {% if version_count == 1 %}
