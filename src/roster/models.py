@@ -65,6 +65,9 @@ class ResearchPermissions:
     PENDING = 'PD'
     DECLINED = 'DC'
     WITHDREW = 'WD'
+    SELF_CREATED = 'SC'
+    PARENT_CREATED = 'PC'
+    TEACHER_CREATED = 'TC'
     TEST_ACCOUNT = 'TA'
     GUEST = 'GU'
 
@@ -73,9 +76,18 @@ class ResearchPermissions:
         (PENDING, 'Pending'),
         (DECLINED, 'Declined'),
         (WITHDREW, 'Withdrew'),
-        (TEST_ACCOUNT, 'Test Account'),
-        (GUEST, 'Guest Account')
+        (SELF_CREATED, 'Self-created account'),
+        (PARENT_CREATED, 'Parent-created account'),
+        (TEACHER_CREATED, 'Teacher-created account'),
+        (TEST_ACCOUNT, 'Test account'),
+        (GUEST, 'Guest account')
     ]
+
+    RESEARCHABLE = [
+        PERMISSIONED,
+        SELF_CREATED,
+        TEACHER_CREATED,
+        PARENT_CREATED]
 
 
 class LibraryViews:
@@ -162,10 +174,6 @@ class ClusiveUser(models.Model):
         else: 
             return None
 
-    @property 
-    def is_permissioned(self):
-        return self.permission == ResearchPermissions.PERMISSIONED
-
     permission = models.CharField(
         max_length=2,
         choices=ResearchPermissions.CHOICES,
@@ -180,7 +188,7 @@ class ClusiveUser(models.Model):
 
     @property
     def is_permissioned(self):
-        return self.permission == ResearchPermissions.PERMISSIONED
+        return self.permission in ResearchPermissions.RESEARCHABLE
 
     @property
     def is_registered(self):
