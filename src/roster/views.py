@@ -57,11 +57,19 @@ class SignUpView(EventMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.role = kwargs['role']
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
         self.current_clusive_user = request.clusive_user
         self.current_site = get_current_site(request)
         return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['role'] = self.role
+        return context
 
     def form_valid(self, form):
         # Don't call super since that would save the target model, which we might not want.
@@ -77,7 +85,8 @@ class SignUpView(EventMixin, CreateView):
             clusive_user = self.current_clusive_user
             logger.debug('Upgrading %s from guest to %s', clusive_user, self.role)
             clusive_user.role = self.role
-            clusive_user.permission = ResearchPermissions.PERMISSIONED
+            clusive_user.permission = ResearchPermissions.SELF_CREATED
+            clusive_user.education_levels = form.cleaned_data['education_levels']
             clusive_user.save()
             user = clusive_user.user
             user.username = target.username
@@ -93,9 +102,11 @@ class SignUpView(EventMixin, CreateView):
             user.set_password(form.cleaned_data["password1"])
             user.save()
             clusive_user = ClusiveUser.objects.create(user=user,
-                                       role=self.role,
-                                       permission=ResearchPermissions.PERMISSIONED,
-                                       anon_id=ClusiveUser.next_anon_id())
+                                                      role=self.role,
+                                                      permission=ResearchPermissions.SELF_CREATED,
+                                                      anon_id=ClusiveUser.next_anon_id(),
+                                                      education_levels = form.cleaned_data['education_levels'],
+                                                      )
             send_validation_email(self.current_site, clusive_user)
         return HttpResponseRedirect(reverse('validate_sent', kwargs={'user_id' : user.id}))
 
@@ -389,6 +400,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
         cu = request.clusive_user
         if not cu.can_manage_periods or not self.period.users.filter(id=cu.id).exists():
             self.handle_no_permission()
+        self.creating_user_role = cu.role
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -410,9 +422,15 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
             target.set_password(new_pw)
             target.save()
         # Create ClusiveUser
+        if self.creating_user_role == Roles.TEACHER:
+            perm = ResearchPermissions.TEACHER_CREATED
+        elif self.creating_user_role == Roles.PARENT:
+            perm = ResearchPermissions.PARENT_CREATED
+        else:
+            self.handle_no_permission()
         cu = ClusiveUser.objects.create(user=target,
-                                   role=Roles.STUDENT,
-                                   permission=ResearchPermissions.GUEST)
+                                        role=Roles.STUDENT,
+                                        permission=perm)
         # Add user to the Period
         self.period.users.add(cu)
         return super().form_valid(form)

@@ -34,6 +34,18 @@
         {{ form.email }}
         <div class="form-text">We will not share your email with anyone.</div>
     </div>
+    {% if role != 'ST' %}
+    <div class="form-group">
+        {{ form.education_levels.label_tag | formlabel }}
+        {{ form.education_levels.errors }}
+        {% for value, text in form.education_levels.field.choices %}
+        <div class="form-check">
+            <input id="id_education_levels_{{ forloop.counter0 }}" name="{{ form.education_levels.name }}" type="checkbox" value="{{ value }}"{% if value in checked_education_levels %} checked="checked"{% endif %}>
+            <label class="form-check-label" for="id_education_levels_{{ forloop.counter0 }}">{{ text }}</label>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="form-group my-1">
         {{ form.terms.errors }}
         <div class="form-check form-checkradio">
