@@ -48,6 +48,6 @@ def formlabel(value):
     if classmatch:
         newinput = input[:classmatch.start()] + 'class="form-label ' + input[classmatch.end():]
     else:
-        newinput = input[:-1] + 'class="form-label">'
+        newinput = input[:-1] + ' class="form-label">'
 
     return value[:match.start()] + newinput + value[match.end():]

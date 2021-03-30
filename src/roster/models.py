@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from multiselectfield import MultiSelectField
 from pytz import country_timezones
 
 logger = logging.getLogger(__name__)
@@ -90,6 +91,20 @@ class ResearchPermissions:
         PARENT_CREATED]
 
 
+class EducationLevels:
+    LOWER_ELEMENTARY = 'LE'
+    UPPER_ELEMENTARY = 'UE'
+    MIDDLE_SCHOOL = 'MS'
+    HIGH_SCHOOL = 'HS'
+
+    CHOICES = [
+        (LOWER_ELEMENTARY, 'Lower Elementary'),
+        (UPPER_ELEMENTARY, 'Upper Elementary'),
+        (MIDDLE_SCHOOL, 'Middle School'),
+        (HIGH_SCHOOL, 'High School'),
+    ]
+
+
 class LibraryViews:
     ALL = 'all'
     PUBLIC = 'public'
@@ -154,6 +169,10 @@ class ClusiveUser(models.Model):
     # What layout to use for the library cards. This choice is persistent.
     library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
                                      choices=LibraryStyles.CHOICES)
+
+    education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
+                                        verbose_name='Education levels',
+                                        default=[])
 
     # Site that this user is connected to. Although users can have multiple Periods,
     # these are generally assumed to be all part of one Site.

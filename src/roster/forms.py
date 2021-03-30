@@ -3,8 +3,9 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm, Form
+from multiselectfield import MultiSelectFormField
 
-from roster.models import Period, Roles, ClusiveUser
+from roster.models import Period, Roles, ClusiveUser, EducationLevels
 
 
 class ClusiveLoginForm(AuthenticationForm):
@@ -90,6 +91,12 @@ class UserRegistrationForm(UserCreationForm):
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
 
+    education_levels = MultiSelectFormField(
+        choices=EducationLevels.CHOICES,
+        label='Education level of student(s) (select all that apply)',
+        required=False,
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].label = 'Display name'
@@ -109,7 +116,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'password1', 'password2', 'email', 'username']
+        fields = ['first_name', 'password1', 'password2', 'email', 'username', 'education_levels']
         widgets = {
             'first_name': forms.TextInput(attrs={'aria-label': 'Display name', 'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'aria-label': 'Email', 'class': 'form-control'}),

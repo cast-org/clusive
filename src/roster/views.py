@@ -57,11 +57,19 @@ class SignUpView(EventMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.role = kwargs['role']
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
         self.current_clusive_user = request.clusive_user
         self.current_site = get_current_site(request)
         return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['role'] = self.role
+        return context
 
     def form_valid(self, form):
         # Don't call super since that would save the target model, which we might not want.
@@ -78,6 +86,7 @@ class SignUpView(EventMixin, CreateView):
             logger.debug('Upgrading %s from guest to %s', clusive_user, self.role)
             clusive_user.role = self.role
             clusive_user.permission = ResearchPermissions.SELF_CREATED
+            clusive_user.education_levels = form.cleaned_data['education_levels']
             clusive_user.save()
             user = clusive_user.user
             user.username = target.username
@@ -93,9 +102,11 @@ class SignUpView(EventMixin, CreateView):
             user.set_password(form.cleaned_data["password1"])
             user.save()
             clusive_user = ClusiveUser.objects.create(user=user,
-                                       role=self.role,
-                                       permission=ResearchPermissions.SELF_CREATED,
-                                       anon_id=ClusiveUser.next_anon_id())
+                                                      role=self.role,
+                                                      permission=ResearchPermissions.SELF_CREATED,
+                                                      anon_id=ClusiveUser.next_anon_id(),
+                                                      education_levels = form.cleaned_data['education_levels'],
+                                                      )
             send_validation_email(self.current_site, clusive_user)
         return HttpResponseRedirect(reverse('validate_sent', kwargs={'user_id' : user.id}))
 
