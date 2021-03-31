@@ -1,7 +1,7 @@
 {% load static %}
 <div class="card card-library">
     <div class="card-header">
-        <a class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title }}</h2></a>
+        <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title }}</h2></a>
         {% if book.author %}<div class="card-author">{{ book.author }}</div>{% endif %}
     </div>
     {% if book.cover %}
