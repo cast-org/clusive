@@ -157,7 +157,7 @@ def create_event(kwargs, control=None, value=None, action='USED', event_type='TO
         # See https://docs.djangoproject.com/en/3.1/ref/models/instances/#validating-objects
         event.save()
 
-
+# TODO: this should generate two events, one for each value
 @receiver(comprehension_check_completed)
 def log_comprehension_check_completed(sender, **kwargs):
     """User completes a comprehension check"""
@@ -166,7 +166,9 @@ def log_comprehension_check_completed(sender, **kwargs):
     event_type = 'ASSESSMENT_ITEM_EVENT'
     book_id = kwargs.get('book_id')    
     value = kwargs.get('value')
-    create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
+    for key, val in value.items():
+        v = "%s:%s" % (key, val)
+        create_event(kwargs, control=control, value=v, action=action, event_type=event_type)
 
 @receiver(word_rated)
 def log_word_rated(sender, **kwargs):

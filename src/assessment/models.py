@@ -9,8 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class ComprehensionCheck:
-    scale_title = "How much did you learn from this reading?"
+    scale_response_title = "How much did you learn from this reading?"
+    scale_response_key = "scale_response"
     free_response_title = "What's one thing you learned?"    
+    free_response_key = "free_response"
 
     class ComprehensionScale:
         NOTHING = 0

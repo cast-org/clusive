@@ -34,8 +34,8 @@ class ComprehensionCheckView(LoginRequiredMixin, View):
         ccr.save()
 
         # Build event values from comprehension check
-        event_value = {ComprehensionCheck.scale_title: ccr.comprehension_scale_response,
-                       ComprehensionCheck.free_response_title: ccr.comprehension_free_response}
+        event_value = {ComprehensionCheck.scale_response_key: ccr.comprehension_scale_response,
+                       ComprehensionCheck.free_response_key: ccr.comprehension_free_response}
 
         # Fire event creation signal
         page_event_id = id=comprehension_check_data.get("eventId")        
