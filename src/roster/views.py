@@ -170,13 +170,15 @@ class SignUpRoleView(EventMixin, FormView):
     template_name = 'roster/sign_up_role.html'
 
     def form_valid(self, form):
+        clusive_user = self.request.clusive_user
         role = form.cleaned_data['role']
-        from_sso = self.request.session.get('from_sso', False)
         if role == 'ST':
             self.success_url = reverse('sign_up_age_check')
         else:
-            if from_sso:
-                update_clusive_user(self.request.clusive_user, role)
+            # Logging in via SSO for the first time entails that there is a
+            # clusive_user and its role is UNKNOWN
+            if clusive_user and clusive_user.role == Roles.UNKNOWN:
+                update_clusive_user(clusive_user, role)
                 self.success_url = reverse('dashboard')
             else:
                 self.success_url = reverse('sign_up', kwargs={'role': role})
@@ -191,10 +193,12 @@ class SignUpAgeCheckView(EventMixin, FormView):
     template_name = 'roster/sign_up_age_check.html'
 
     def form_valid(self, form):
-        from_sso = self.request.session.get('from_sso', False)
+        clusive_user = self.request.clusive_user
         logger.debug("of age: %s", repr(form.cleaned_data['of_age']))
         if form.cleaned_data['of_age'] == 'True':
-            if from_sso:
+            # Logging in via SSO for the first time entails that there is a
+            # clusive_user and its role is UNKNOWN
+            if clusive_user and clusive_user.role == Roles.UNKNOWN:
                 update_clusive_user(self.request.clusive_user, 'ST')
                 self.success_url = reverse('dashboard')
             else:
@@ -515,21 +519,19 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, CreateView):
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
 
-
-def sso_login(request):
-    logger.debug("checking SSO account for non-guest")
-    user = ClusiveUser.from_request(request)
-    if user.role == Roles.GUEST:
-        request.session['from_sso'] = True
+def finish_login(request):
+    logger.debug("checking SSO account for UNKNOWN role")
+    clusive_user = ClusiveUser.from_request(request)
+    if clusive_user.role == Roles.UNKNOWN:
         return HttpResponseRedirect(reverse('sign_up_role'))
     else:
-        return HttpResponseRedirect(reverse('reader_index'))
+        return HttpResponseRedirect(reverse('dashboard'))
 
 
 def update_clusive_user(current_clusive_user, role):
     clusive_user: ClusiveUser
     clusive_user = current_clusive_user
-    logger.debug('Upgrading %s from guest to %s', clusive_user, role)
+    logger.debug('Upgrading %s from %s to %s', clusive_user, clusive_user.role, role)
     clusive_user.role = role
     clusive_user.permission = ResearchPermissions.PERMISSIONED
     clusive_user.save()
@@ -561,4 +563,3 @@ def send_validation_email(site, clusive_user : ClusiveUser):
     #     html_email = loader.render_to_string(html_email_template_name, context)
     #     email_message.attach_alternative(html_email, 'text/html')
     email_message.send()
-

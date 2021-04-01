@@ -51,6 +51,7 @@ class Roles:
     TEACHER = 'TE'
     RESEARCHER = 'RE'
     ADMIN = 'AD'
+    UNKNOWN = 'UN'
 
     ROLE_CHOICES = [
         (GUEST, 'Guest'),
@@ -58,7 +59,8 @@ class Roles:
         (PARENT, 'Parent'),
         (TEACHER, 'Teacher'),
         (RESEARCHER, 'Researcher'),
-        (ADMIN, 'Admin')
+        (ADMIN, 'Admin'),
+        (UNKNOWN, 'Unknown')
     ]
 
 
@@ -355,7 +357,7 @@ def add_clusive_user_for_sociallogin(sender, **kwargs):
     except ClusiveUser.DoesNotExist:
         logger.info("New social user, attaching new ClusiveUser")
         clusive_user = ClusiveUser.objects.create(user=django_user,
-                                                  role=Roles.GUEST,
+                                                  role=Roles.UNKNOWN,
                                                   permission=ResearchPermissions.GUEST,
                                                   anon_id=django_user.get_username())
 
