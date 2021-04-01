@@ -74,19 +74,19 @@ class SimpleUserCreateForm(UserForm):
 # For registration we use the standard Django behavior with double password inputs
 class UserRegistrationForm(UserCreationForm):
     password1 = forms.CharField(
-        label = 'Password',
+        label = '*Password',
         strip=False,
         widget=forms.PasswordInput(attrs={'aria-label': 'Password', 'autocomplete': 'new-password', 'class': 'form-control'})
     )
 
     password2 = forms.CharField(
-        label='Password confirmation',
+        label='*Password confirmation',
         strip=False,
         widget=forms.PasswordInput(attrs={'aria-label': 'Password', 'autocomplete': 'new-password', 'class': 'form-control'})
     )
 
     terms = forms.BooleanField(
-        label='Accept terms of use and privacy policy',
+        label='*Accept terms of use and privacy policy',
         required=True,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
@@ -99,8 +99,10 @@ class UserRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['first_name'].label = 'Display name'
+        self.fields['first_name'].label = '*Display name'
+        self.fields['email'].label = '*Email'
         self.fields['email'].required = True
+        self.fields['username'].label = '*Username'
         self.fields['username'].required = True
 
     def clean(self):
