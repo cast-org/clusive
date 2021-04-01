@@ -56,11 +56,19 @@ class SignUpView(EventMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.role = kwargs['role']
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
         self.current_clusive_user = request.clusive_user
         self.current_site = get_current_site(request)
         return super().post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['role'] = self.role
+        return context
 
     def form_valid(self, form):
         # Don't call super since that would save the target model, which we might not want.
@@ -74,7 +82,7 @@ class SignUpView(EventMixin, CreateView):
             # Update the ClusiveUser and User objects based on the form target.
             clusive_user: ClusiveUser
             clusive_user = self.current_clusive_user
-            update_clusive_user(clusive_user, self.role)
+            update_clusive_user(clusive_user, self.role, form.cleaned_data['education_levels'])
             user = clusive_user.user
             user.username = target.username
             user.first_name = target.first_name
@@ -89,9 +97,11 @@ class SignUpView(EventMixin, CreateView):
             user.set_password(form.cleaned_data["password1"])
             user.save()
             clusive_user = ClusiveUser.objects.create(user=user,
-                                       role=self.role,
-                                       permission=ResearchPermissions.PERMISSIONED,
-                                       anon_id=ClusiveUser.next_anon_id())
+                                                      role=self.role,
+                                                      permission=ResearchPermissions.SELF_CREATED,
+                                                      anon_id=ClusiveUser.next_anon_id(),
+                                                      education_levels = form.cleaned_data['education_levels'],
+                                                      )
             send_validation_email(self.current_site, clusive_user)
         return HttpResponseRedirect(reverse('validate_sent', kwargs={'user_id' : user.id}))
 
@@ -199,10 +209,10 @@ class SignUpAgeCheckView(EventMixin, FormView):
             # Logging in via SSO for the first time entails that there is a
             # clusive_user and its role is UNKNOWN
             if clusive_user and clusive_user.role == Roles.UNKNOWN:
-                update_clusive_user(self.request.clusive_user, 'ST')
+                update_clusive_user(self.request.clusive_user, Roles.STUDENT)
                 self.success_url = reverse('dashboard')
             else:
-                self.success_url = reverse('sign_up', kwargs={'role': 'ST'})
+                self.success_url = reverse('sign_up', kwargs={'role': Roles.STUDENT})
         else:
             self.success_url = reverse('sign_up_ask_parent')
         return super().form_valid(form)
@@ -399,6 +409,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
         cu = request.clusive_user
         if not cu.can_manage_periods or not self.period.users.filter(id=cu.id).exists():
             self.handle_no_permission()
+        self.creating_user_role = cu.role
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -420,9 +431,15 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
             target.set_password(new_pw)
             target.save()
         # Create ClusiveUser
+        if self.creating_user_role == Roles.TEACHER:
+            perm = ResearchPermissions.TEACHER_CREATED
+        elif self.creating_user_role == Roles.PARENT:
+            perm = ResearchPermissions.PARENT_CREATED
+        else:
+            self.handle_no_permission()
         cu = ClusiveUser.objects.create(user=target,
-                                   role=Roles.STUDENT,
-                                   permission=ResearchPermissions.GUEST)
+                                        role=Roles.STUDENT,
+                                        permission=perm)
         # Add user to the Period
         self.period.users.add(cu)
         return super().form_valid(form)
@@ -528,12 +545,14 @@ def finish_login(request):
         return HttpResponseRedirect(reverse('dashboard'))
 
 
-def update_clusive_user(current_clusive_user, role):
+def update_clusive_user(current_clusive_user, role, edu_levels=None):
     clusive_user: ClusiveUser
     clusive_user = current_clusive_user
     logger.debug('Upgrading %s from %s to %s', clusive_user, clusive_user.role, role)
     clusive_user.role = role
     clusive_user.permission = ResearchPermissions.PERMISSIONED
+    if edu_levels:
+        clusive_user.education_levels = edu_levels
     clusive_user.save()
 
 

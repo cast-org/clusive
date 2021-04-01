@@ -51,7 +51,7 @@ class EventMixin(ContextMixin):
 def event_log_report(request):
     # TODO: get actor in same query
     events = Event.objects \
-        .filter(actor__permission=ResearchPermissions.PERMISSIONED) \
+        .filter(actor__permission__in=ResearchPermissions.RESEARCHABLE) \
         .select_related('actor', 'session', 'group')
 
     response = StreamingHttpResponse(row_generator(events), content_type="text/csv")
@@ -62,11 +62,11 @@ def event_log_report(request):
 def row_generator(events):
     pseudo_buffer = Echo()
     writer = csv.writer(pseudo_buffer)
-    yield writer.writerow(['Start Time', 'User', 'Role', 'Period', 'Site',
+    yield writer.writerow(['Start Time', 'User', 'Role', 'Permission', 'Period', 'Site',
                            'Type', 'Action', 'Page', 'Control', 'Value',
-                           'Book Version ID', 'Book Title', 'Version Number', 'Book Owner',
+                           'Book Title', 'Book Version', 'Book Owner',
                            'Duration', 'Active Duration',
-                           'Event ID', 'Session ID'])
+                           'Event ID', 'Session ID', 'Book ID', 'Book Version ID'])
     period_site = {}
     book_info = {}
     for e in events:
@@ -109,10 +109,10 @@ def row_for_event(e: Event, period_site, book_info):
         }
     duration_s = e.duration.total_seconds() if e.duration else ''
     active_s = e.active_duration.total_seconds() if e.active_duration else ''
-    return [e.event_time, e.actor.anon_id, e.membership, period, site,
+    return [e.event_time, e.actor.anon_id, e.membership, e.actor.permission, period, site,
             e.type, e.action, e.page, e.control, e.value,
-            e.book_version_id, info['title'], info['version'], info['owner'],
-            duration_s, active_s, e.id, e.session.id]
+            info['title'], info['version'], info['owner'],
+            duration_s, active_s, e.id, e.session.id, e.book_id, e.book_version_id]
 
 
 class Echo:

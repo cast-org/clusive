@@ -3,8 +3,9 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm, Form
+from multiselectfield import MultiSelectFormField
 
-from roster.models import Period, Roles, ClusiveUser
+from roster.models import Period, Roles, ClusiveUser, EducationLevels
 
 
 class ClusiveLoginForm(AuthenticationForm):
@@ -73,27 +74,35 @@ class SimpleUserCreateForm(UserForm):
 # For registration we use the standard Django behavior with double password inputs
 class UserRegistrationForm(UserCreationForm):
     password1 = forms.CharField(
-        label = 'Password',
+        label = '*Password',
         strip=False,
         widget=forms.PasswordInput(attrs={'aria-label': 'Password', 'autocomplete': 'new-password', 'class': 'form-control'})
     )
 
     password2 = forms.CharField(
-        label='Password confirmation',
+        label='*Password confirmation',
         strip=False,
         widget=forms.PasswordInput(attrs={'aria-label': 'Password', 'autocomplete': 'new-password', 'class': 'form-control'})
     )
 
     terms = forms.BooleanField(
-        label='Accept terms of use and privacy policy',
+        label='*Accept terms of use and privacy policy',
         required=True,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
 
+    education_levels = MultiSelectFormField(
+        choices=EducationLevels.CHOICES,
+        label='Education level of student(s) (select all that apply)',
+        required=False,
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['first_name'].label = 'Display name'
+        self.fields['first_name'].label = '*Display name'
+        self.fields['email'].label = '*Email'
         self.fields['email'].required = True
+        self.fields['username'].label = '*Username'
         self.fields['username'].required = True
 
     def clean(self):
@@ -109,7 +118,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'password1', 'password2', 'email', 'username']
+        fields = ['first_name', 'password1', 'password2', 'email', 'username', 'education_levels']
         widgets = {
             'first_name': forms.TextInput(attrs={'aria-label': 'Display name', 'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'aria-label': 'Email', 'class': 'form-control'}),
