@@ -160,15 +160,14 @@ def create_event(kwargs, control=None, value=None, action='USED', event_type='TO
 # TODO: this should generate two events, one for each value
 @receiver(comprehension_check_completed)
 def log_comprehension_check_completed(sender, **kwargs):
-    """User completes a comprehension check"""
-    control = 'comprehension_check'
+    """User completes a comprehension check"""    
     action = 'COMPLETED'
     event_type = 'ASSESSMENT_ITEM_EVENT'
     book_id = kwargs.get('book_id')    
     value = kwargs.get('value')
     for key, val in value.items():
-        v = "%s:%s" % (key, val)
-        create_event(kwargs, control=control, value=v, action=action, event_type=event_type)
+        control = 'comprehension_check_%s' % key        
+        create_event(kwargs, control=control, value=val, action=action, event_type=event_type)
 
 @receiver(word_rated)
 def log_word_rated(sender, **kwargs):
