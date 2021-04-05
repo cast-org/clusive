@@ -66,6 +66,9 @@ function setUpCompCheck() {
 $(function() {
     'use strict';
     $(document).ready(function () {
-        setUpCompCheck();
+        // Don't set up a comp check unless on a book page
+        if(fluid.get(clusiveContext, "reader.info.publication.id")) {
+            setUpCompCheck();
+        }
     });    
 });
