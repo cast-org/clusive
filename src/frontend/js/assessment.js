@@ -4,6 +4,20 @@
 function setUpCompCheck() {
     'use strict';
 
+    var bookId = clusiveContext.reader.info.publication.id;
+
+    // Retrieve existing comprehension check values and set them
+    $.get('/assessment/comprehension_check/' + bookId, function (data) {
+        console.debug("got comprehension check", data);
+        var scaleResponse = data.scale_response;
+        var freeResponse = data.free_response;
+        $('textarea[name="comprehension-free"]').val(freeResponse);
+        $('input[name="comprehension-scale"]').val([scaleResponse]);
+        $('input[name="comprehension-scale"]').change();
+    }).fail(function (error) {
+        console.debug("failed to get comprehension check, status code: ", error.status)
+    });
+
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
         function() {
@@ -51,6 +65,7 @@ function setUpCompCheck() {
 
 $(function() {
     'use strict';
-
-    setUpCompCheck();
+    $(document).ready(function () {
+        setUpCompCheck();
+    });    
 });
