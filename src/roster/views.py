@@ -78,11 +78,14 @@ class SignUpView(EventMixin, CreateView):
             raise PermissionError('Invalid role')
         user: User
         if self.current_clusive_user:
-            # There is a logged-in (presumably Guest) user.
+            # There is a logged-in (presumably Guest or SSO) user.
             # Update the ClusiveUser and User objects based on the form target.
             clusive_user: ClusiveUser
             clusive_user = self.current_clusive_user
-            update_clusive_user(clusive_user, self.role, form.cleaned_data['education_levels'])
+            update_clusive_user(clusive_user,
+                                self.role,
+                                ResearchPermissions.SELF_CREATED,
+                                form.cleaned_data['education_levels'])
             user = clusive_user.user
             user.username = target.username
             user.first_name = target.first_name
@@ -182,13 +185,13 @@ class SignUpRoleView(EventMixin, FormView):
     def form_valid(self, form):
         clusive_user = self.request.clusive_user
         role = form.cleaned_data['role']
-        if role == 'ST':
+        if role == Roles.STUDENT:
             self.success_url = reverse('sign_up_age_check')
         else:
             # Logging in via SSO for the first time entails that there is a
             # clusive_user and its role is UNKNOWN
             if clusive_user and clusive_user.role == Roles.UNKNOWN:
-                update_clusive_user(clusive_user, role)
+                update_clusive_user(clusive_user, role, ResearchPermissions.SELF_CREATED)
                 self.success_url = reverse('dashboard')
             else:
                 self.success_url = reverse('sign_up', kwargs={'role': role})
@@ -209,7 +212,9 @@ class SignUpAgeCheckView(EventMixin, FormView):
             # Logging in via SSO for the first time entails that there is a
             # clusive_user and its role is UNKNOWN
             if clusive_user and clusive_user.role == Roles.UNKNOWN:
-                update_clusive_user(self.request.clusive_user, Roles.STUDENT)
+                update_clusive_user(self.request.clusive_user,
+                                    Roles.STUDENT,
+                                    ResearchPermissions.SELF_CREATED)
                 self.success_url = reverse('dashboard')
             else:
                 self.success_url = reverse('sign_up', kwargs={'role': Roles.STUDENT})
@@ -439,6 +444,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
             self.handle_no_permission()
         cu = ClusiveUser.objects.create(user=target,
                                         role=Roles.STUDENT,
+                                        anon_id=ClusiveUser.next_anon_id(),
                                         permission=perm)
         # Add user to the Period
         self.period.users.add(cu)
@@ -545,12 +551,12 @@ def finish_login(request):
         return HttpResponseRedirect(reverse('dashboard'))
 
 
-def update_clusive_user(current_clusive_user, role, edu_levels=None):
+def update_clusive_user(current_clusive_user, role, permissions, edu_levels=None):
     clusive_user: ClusiveUser
     clusive_user = current_clusive_user
     logger.debug('Upgrading %s from %s to %s', clusive_user, clusive_user.role, role)
     clusive_user.role = role
-    clusive_user.permission = ResearchPermissions.PERMISSIONED
+    clusive_user.permission = permissions
     if edu_levels:
         clusive_user.education_levels = edu_levels
     clusive_user.save()
