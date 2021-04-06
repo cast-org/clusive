@@ -1,6 +1,14 @@
 /* Code for comprehension and affect assessments */
 /* global clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN */
 
+var clusiveAssessment = {
+    showCompCheck: showCompCheck
+};
+
+function showCompCheck() {
+    $("#compPop").CFW_Popover('show');
+};
+
 function setUpCompCheck() {
     'use strict';
 

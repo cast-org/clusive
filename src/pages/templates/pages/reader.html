@@ -206,6 +206,10 @@ var manifest_path = "{{ manifest_path }}";
                     if (lastResource) {
                         D2Reader.atEnd().then((edge)=>{
                             document.getElementById('nextResourceButton').disabled = edge;
+                            if(edge) {                                
+                                console.debug("D2Reader is at end of resource");
+                                clusiveAssessment.showCompCheck();
+                            }
                         });
                     } else {
                         document.getElementById('nextResourceButton').disabled = false;
