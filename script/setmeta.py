@@ -22,6 +22,11 @@ def init_argparse() -> argparse.ArgumentParser:
     parser.add_argument("-st", "--sorttitle", action='store')
     parser.add_argument("-a", "--author", action='store')
     parser.add_argument("-sa", "--sortauthor", action='store')
+    parser.add_argument("-su1", "--subject1", action='store')
+    parser.add_argument("-su2", "--subject2", action='store')
+    parser.add_argument("-su3", "--subject3", action='store')
+    parser.add_argument("-su4", "--subject4", action='store')
+    parser.add_argument("-su5", "--subject5", action='store')
     parser.add_argument("-l", "--language", action='store')
     parser.add_argument("-d", "--moddate", action='store_true')
 
@@ -89,6 +94,23 @@ def update_metadata(xmlstr: str, args) -> str:
             if update_simple_metadata_item(metadata, 'author', author, args.author,
                                            '{http://purl.org/dc/elements/1.1/}creator', {'id': 'author'}):
                 modified = True
+        if args.sorttitle:
+            if args.sorttitle is not None:
+                title_id = title.attrib.get('id')
+                if title_id:
+                    # <meta property="file-as" refines="#title">
+                    xpath = "./opf:meta[@property='file-as'][@refines='#%s']" % title_id
+                    sorttitle = metadata.find(xpath, namesp)
+                    if sorttitle is not None:
+                        print('  Mod. sorttitle: %s -> %s' % ("".join(sorttitle.itertext()), args.sorttitle))
+                        sorttitle.text = args.sorttitle
+                    else:
+                        print('  Create sorttitle: -> %s' % args.sorttitle)
+                        sorttitle = ET.SubElement(metadata, '{http://www.idpf.org/2007/opf}meta',
+                                                   {'property': 'file-as', 'refines': '#' + title_id})
+                        sorttitle.text = args.sorttitle
+                else:
+                    print('  Title has no id')
         if args.sortauthor:
             if author is not None:
                 auth_id = author.attrib.get('id')
@@ -106,6 +128,28 @@ def update_metadata(xmlstr: str, args) -> str:
                         sortauthor.text = args.sortauthor
                 else:
                     print('  Author has no id')
+        if args.subject1:
+            # example <dc:subject id="clusive-1">Adventure</dc:subject>
+            # these subjects will be added new and not modifying current subjects
+            if update_simple_metadata_item(metadata, 'subject', None, args.subject1,
+                                           '{http://purl.org/dc/elements/1.1/}subject', {'id': 'clusive-1'}):
+                modified = True
+        if args.subject2:
+            if update_simple_metadata_item(metadata, 'subject', None, args.subject2,
+                                           '{http://purl.org/dc/elements/1.1/}subject', {'id': 'clusive-2'}):
+                modified = True
+        if args.subject3:
+            if update_simple_metadata_item(metadata, 'subject', None, args.subject3,
+                                           '{http://purl.org/dc/elements/1.1/}subject', {'id': 'clusive-3'}):
+                modified = True
+        if args.subject4:
+            if update_simple_metadata_item(metadata, 'subject', None, args.subject4,
+                                           '{http://purl.org/dc/elements/1.1/}subject', {'id': 'clusive-4'}):
+                modified = True
+        if args.subject5:
+            if update_simple_metadata_item(metadata, 'subject', None, args.subject5,
+                                           '{http://purl.org/dc/elements/1.1/}subject', {'id': 'clusive-5'}):
+                modified = True
         if modified or args.moddate:
             ## <meta property="dcterms:modified">2020-09-10T13:17:01Z</meta>
             mod_date = metadata.find('opf:meta[@property="dcterms:modified"]', namesp)
