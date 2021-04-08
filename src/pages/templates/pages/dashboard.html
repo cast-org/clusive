@@ -44,7 +44,11 @@
                 {% if last_reads %}
                 <h2>Recent reads</h2>
                 <p>Revisit something you've read, or head to the <a href="{% url 'reader_index' %}">Library</a> for something new.</p>
+                {% if last_reads|length <= 1 and featured|length <= 1 %}
+                <div class="library-grid library-grid-col-2">
+                {% else %}
                 <div class="library-grid">
+                {% endif %}
                     {% for para in last_reads %}
                         {% include "library/partial/library_card.html" with book=para.book %}
                     {% endfor %}
@@ -54,7 +58,11 @@
                 </div>
                 {% else %}
                 <h2>Getting started</h2>
+                {% if featured|length <= 1 %}
+                <div class="library-grid library-grid-col-2">
+                {% else %}
                 <div class="library-grid">
+                {% endif %}
                     {% for book in featured %}
                         {% include "library/partial/library_card.html" with book=book %}
                     {% endfor %}
