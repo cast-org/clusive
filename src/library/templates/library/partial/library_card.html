@@ -11,6 +11,7 @@
     {% endif %}
     <div class="card-body">
         {% if book.description %}<p>{{ book.description }}</p>{% endif %}
+        {{ book.word_count }} words.
     </div>
     {% if menu %}
         {% if pub.owner == request.clusive_user or request.clusive_user.can_manage_periods %}

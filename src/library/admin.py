@@ -20,8 +20,8 @@ class VersionsInline(admin.StackedInline):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'owner', 'title', 'author')
-    sortable_by = ('id', 'owner', 'title', 'author')
+    list_display = ('id', 'owner', 'title', 'author', 'word_count')
+    sortable_by = ('id', 'owner', 'title', 'author', 'word_count')
     inlines = [VersionsInline]
 
     change_list_template = 'library/book_changelist.html'
