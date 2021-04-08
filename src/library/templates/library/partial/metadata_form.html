@@ -27,6 +27,18 @@
         {% endif %}
     </div>
     <div class="form-group">
+        {{ form.sort_title.label_tag | formlabel }} *
+        {{ form.sort_title.errors }}
+        {{ form.sort_title | formcontrol }}
+        {% if orig_book and orig_book.sort_title %}
+        <div class="usethis-container highlight-undelete mt-0_5">
+            Previous Sort Title:
+            <span class="usethis-source">{{ orig_book.sort_title }}</span>
+            <a href="#" class="usethis-link" data-target="{{form.sort_title.id_for_label}}">Use&nbsp;this</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="form-group">
         {{ form.author.label_tag | formlabel }} *
         {{ form.author.errors }}
         {{ form.author | formcontrol }}
@@ -36,6 +48,18 @@
                 <span class="usethis-source">{{ orig_book.author }}</span>
                 <a href="#" class="usethis-link" data-target="{{form.author.id_for_label}}">Use&nbsp;this</a>
             </div>
+        {% endif %}
+    </div>
+    <div class="form-group">
+        {{ form.sort_author.label_tag | formlabel }} *
+        {{ form.sort_author.errors }}
+        {{ form.sort_author | formcontrol }}
+        {% if orig_book and orig_book.sort_author %}
+        <div class="usethis-container highlight-undelete mt-0_5">
+            Previous Sort author:
+            <span class="usethis-source">{{ orig_book.sort_author }}</span>
+            <a href="#" class="usethis-link" data-target="{{form.sort_author.id_for_label}}">Use&nbsp;this</a>
+        </div>
         {% endif %}
     </div>
     <div class="form-group">

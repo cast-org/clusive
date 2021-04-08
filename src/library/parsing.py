@@ -14,7 +14,7 @@ from django.utils import timezone
 from nltk import RegexpTokenizer
 
 from glossary.util import base_form
-from library.models import Book, BookVersion
+from library.models import Book, BookVersion, Subject
 
 logger = logging.getLogger(__name__)
 
@@ -257,6 +257,7 @@ def scan_book(b):
     # After all versions are read, gather global metadata
     # Book word_count is the average of version word_counts.
     set_sort_fields(b)
+    set_subjects(b)
     b.word_count = sum([v.word_count for v in versions])/len(versions)
     b.picture_count = sum([v.picture_count for v in versions])/len(versions)
     b.save()
@@ -292,6 +293,27 @@ def set_sort_fields(book):
                     # TODO: maybe should make some default assumptions, First Last -> Last first
                     sort_author = author
                 book.sort_author = sort_author
+
+def set_subjects(book):
+    # Read the subject array out of the first version.
+    bv = book.versions.all()[0]
+    if os.path.exists(bv.manifest_file):
+        with open(bv.manifest_file, 'r') as file:
+            manifest = json.load(file)
+            subject_list = manifest['metadata'].get('subject')
+            logger.debug('These are the subjects: %s', subject_list)
+            # Loop through the subjects array
+            # check each of the subject entries against what is in the Subject table
+            for s in subject_list:
+                if Subject.objects.filter(subject=s).exists():
+                    logger.debug('Adding subject relationship for: %s', s)
+                    subject_object = Subject.objects.filter(subject=s).first()
+                    subject_object.books.add(book)
+                else:
+                    logger.debug('Subject is not in the subject table: %s', s)
+    else:
+        logger.error("Book directory had no manifest: %s", bv.manifest_file)
+
 
 
 def find_glossary_words(book_dir):

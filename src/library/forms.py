@@ -25,10 +25,12 @@ class MetadataForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ['title', 'author', 'description']
+        fields = ['title', 'sort_title', 'author', 'sort_author', 'description']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Content title'}),
+            'sort_title': forms.TextInput(attrs={'placeholder': 'Content title used for sorting'}),
             'author': forms.TextInput(attrs={'placeholder': 'Author of the content'}),
+            'sort_author': forms.TextInput(attrs={'placeholder': 'Content author used for sorting'}),
             'description': forms.Textarea(attrs={'placeholder': 'Provide a brief description to show on the Library page.'}),
         }
 

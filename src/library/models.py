@@ -328,3 +328,12 @@ class Annotation(models.Model):
     class Meta:
         ordering = ['progression']
 
+class Subject(models.Model):
+    subject = models.CharField(max_length=256)
+    books = models.ManyToManyField(Book, blank=True)
+
+    class Meta:
+        ordering = ['subject']
+
+    def __str__(self):
+        return self.subject
