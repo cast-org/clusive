@@ -132,6 +132,14 @@
     }
 }
 
+.library-grid-col-2 {
+    > .card {
+        @include media-breakpoint-up(sm) {
+            width: calc(#{percentage(1 / 2)} - #{$library-grid-gutter});
+        }
+    }
+}
+
 .library-grid-options {
     @include media-breakpoint-down(xs) {
         display: none;
