@@ -4,7 +4,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -233,7 +233,7 @@ class SignUpAskParentView(EventMixin, TemplateView):
         # Create and log the event as usual, but then delete any SSO underage
         # student records.
         result = super().get(request, *args, **kwargs)
-        logout_sso(request.clusive_user, request.user, 'student')
+        logout_sso(request, 'student')
         return result
 
     def configure_event(self, event: Event):
@@ -597,17 +597,20 @@ def send_validation_email(site, clusive_user : ClusiveUser):
 
 def cancel_registration(request):
     logger.debug("Cancelling registration")
-    logout_sso(request.clusive_user, request.user)
+    logout_sso(request)
     return HttpResponseRedirect('/')
 
-def logout_sso(clusive_user, django_user, student=''):
+def logout_sso(request, student=''):
     """This is used in the cases where (1) an SSO user has cancelled the
     registration process or (2) a student signed up using SSO, but is not of
     age.  Remove associated User, ClusiveUser, SocialAccount, and AccessToken
     records, effectively logging out.  If not an SSO situation, this does
     nothing."""
+    clusive_user = request.clusive_user
     if clusive_user and clusive_user.role == Roles.UNKNOWN:
         logger.debug("SSO logout, and removing records for %s %s", student, clusive_user)
+        django_user = request.user
+        logout(request)
         django_user.delete()
     else:
         logger.debug("Unregistered user, nothing to delete")
