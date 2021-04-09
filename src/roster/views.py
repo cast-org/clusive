@@ -229,9 +229,15 @@ class SignUpAgeCheckView(EventMixin, FormView):
 class SignUpAskParentView(EventMixin, TemplateView):
     template_name = 'roster/sign_up_ask_parent.html'
 
+    def get(self, request, *args, **kwargs):
+        # Create and log the event as usual, but then delete any SSO underage
+        # student records.
+        result = super().get(request, *args, **kwargs)
+        logout_sso(request.clusive_user, request.user, 'student')
+        return result
+
     def configure_event(self, event: Event):
         event.page = 'RegisterAskParent'
-
 
 class PreferenceView(View):
 
@@ -588,3 +594,20 @@ def send_validation_email(site, clusive_user : ClusiveUser):
     #     html_email = loader.render_to_string(html_email_template_name, context)
     #     email_message.attach_alternative(html_email, 'text/html')
     email_message.send()
+
+def cancel_registration(request):
+    logger.debug("Cancelling registration")
+    logout_sso(request.clusive_user, request.user)
+    return HttpResponseRedirect('/')
+
+def logout_sso(clusive_user, django_user, student=''):
+    """This is used in the cases where (1) an SSO user has cancelled the
+    registration process or (2) a student signed up using SSO, but is not of
+    age.  Remove associated User, ClusiveUser, SocialAccount, and AccessToken
+    records, effectively logging out.  If not an SSO situation, this does
+    nothing."""
+    if clusive_user and clusive_user.role == Roles.UNKNOWN:
+        logger.debug("SSO logout, and removing records for %s %s", student, clusive_user)
+        django_user.delete()
+    else:
+        logger.debug("Unregistered user, nothing to delete")

@@ -385,7 +385,7 @@ def add_clusive_user_for_sociallogin(sender, **kwargs):
         clusive_user = ClusiveUser.objects.create(user=django_user,
                                                   role=Roles.UNKNOWN,
                                                   permission=ResearchPermissions.GUEST,
-                                                  anon_id=django_user.get_username())
+                                                  anon_id=ClusiveUser.next_anon_id())
 
 
 class Preference (models.Model):

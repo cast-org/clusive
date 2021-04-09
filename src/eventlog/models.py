@@ -19,7 +19,7 @@ SESSION_ID_KEY = 'db_session_id'
 # A user session
 class LoginSession(models.Model):
     id = models.CharField(primary_key=True, default=uuid4, max_length=36)
-    user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
+    user = models.ForeignKey(to=ClusiveUser, on_delete=models.SET_NULL, null=True)
     started_at_time = models.DateTimeField(auto_now_add=True)
     ended_at_time = models.DateTimeField(null=True)  # time stamp when session ended (logout or timeout)
     # TODO appVersion: the current version of the Clusive application that the user is interacting with
@@ -33,13 +33,14 @@ class LoginSession(models.Model):
         self.save()
 
     def __str__(self):
-        return '%s [%s - %s] (%s)' % (self.user.anon_id, self.started_at_time, self.ended_at_time, self.id)
+        anon_id = "nouser" if not self.user else self.user.anon_id
+        return '%s [%s - %s] (%s)' % (anon_id, self.started_at_time, self.ended_at_time, self.id)
 
 
 class Event(models.Model):
     id = models.CharField(primary_key=True, default=uuid4, max_length=36)
     session = models.ForeignKey(to=LoginSession, on_delete=models.PROTECT)
-    actor = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
+    actor = models.ForeignKey(to=ClusiveUser, on_delete=models.SET_NULL, null=True)
     group = models.ForeignKey(to=Period, null=True, on_delete=models.PROTECT)
     membership = models.CharField(
         max_length=2,
@@ -142,4 +143,5 @@ class Event(models.Model):
 
 
     def __str__(self):
-        return '%s:%s (%s)' % (self.actor.anon_id, self.action, self.id)
+        anon_id = "noactor" if not self.actor else self.actor.anon_id
+        return '%s:%s (%s)' % (anon_id, self.action, self.id)

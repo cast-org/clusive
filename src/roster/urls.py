@@ -50,4 +50,5 @@ urlpatterns = [
     path('manage_edit_period/<int:pk>', views.ManageEditPeriodView.as_view(), name='manage_edit_period'),
     path('manage_create_period/', views.ManageCreatePeriodView.as_view(), name='manage_create_period'),
     path('finish_login', views.finish_login, name='finish_login'),
+    path('cancel_registration', views.cancel_registration, name='cancel_registration'),
 ]
