@@ -47,6 +47,18 @@ body {
     background-color: var(--CT_selectionBg);
 }
 
+
+*:not(.open) {
+    > .not-open {
+        display: none;
+    }
+}
+.open {
+    > .is-open {
+        display: none;
+    }
+}
+
 h1,
 .h1,
 h2,

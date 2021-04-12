@@ -94,7 +94,16 @@ $enable-utility-display-down-none:      true;
 $enable-utility-display-print:          false;
 $enable-utility-user-select:            false;
 $enable-utility-pointer-events:         false;
-$enable-utility-flex:                   false;
+$enable-utility-flex-order:             true;
+$enable-utility-flex-direction:         false;
+$enable-utility-flex-wrap:              false;
+$enable-utility-flex-justify:           false;
+$enable-utility-flex-items:             false;
+$enable-utility-flex-content:           false;
+$enable-utility-flex-self:              false;
+$enable-utility-flex-sizing:            false;
+
+
 $enable-utility-float:                  false;
 $enable-utility-overflow:               false;
 $enable-utility-position:               false;

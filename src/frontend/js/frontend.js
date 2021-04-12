@@ -99,30 +99,6 @@ function libraryMasonryEnable() {
             libraryMasonryLayout();
         });
     });
-
-    if (document.querySelector('.library-masonry-on') !== null) {
-        document.querySelector('.library-masonry-on').setAttribute('disabled', '');
-        document.querySelector('.library-masonry-off').removeAttribute('disabled');
-    }
-}
-
-function libraryMasonryDisable() {
-    'use strict';
-
-    var elem = document.querySelector('.library-grid');
-    elem.classList.remove('has-masonry');
-
-    document.removeEventListener('update.cisl.prefs', libraryMasonryLayout);
-
-    if (libraryMasonryApi !== null) {
-        libraryMasonryApi.destroy();
-        libraryMasonryApi = null;
-    }
-
-    if (document.querySelector('.library-masonry-on') !== null) {
-        document.querySelector('.library-masonry-on').removeAttribute('disabled');
-        document.querySelector('.library-masonry-off').setAttribute('disabled', '');
-    }
 }
 
 function libraryListExpand() {
@@ -465,6 +441,25 @@ function showTooltip(name) {
     }
 }
 
+function filterAllUpdate() {
+    'use strict';
+
+    $(document.body).on('click', '[data-clusive="filterAllUpdate"] input', function(e) {
+        var $elm = $(e.currentTarget);
+        var $par = $elm.closest('[data-clusive="filterAllUpdate"]');
+        var $all = $par.find('[data-clusive="filterAll"]');
+
+        if (!$par.length || !$all.length) { return; }
+
+        if ($elm[0] === $all[0]) {
+            $par.find('input').prop('checked', false);
+            $all.prop('checked', true);
+        } else {
+            $all.prop('checked', false);
+        }
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -479,6 +474,7 @@ $(window).ready(function() {
     confirmationSharing();
     formUseThisLinks();
     showTooltip(TOOLTIP_NAME);
+    filterAllUpdate();
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
