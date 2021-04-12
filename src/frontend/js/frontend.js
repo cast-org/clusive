@@ -448,11 +448,14 @@ function filterAllUpdate() {
         var $elm = $(e.currentTarget);
         var $par = $elm.closest('[data-clusive="filterAllUpdate"]');
         var $all = $par.find('[data-clusive="filterAll"]');
+        var $checked = $par.find('input:checked');
 
         if (!$par.length || !$all.length) { return; }
 
         if ($elm[0] === $all[0]) {
             $par.find('input').prop('checked', false);
+            $all.prop('checked', true);
+        } else if (!$checked.length) {
             $all.prop('checked', true);
         } else {
             $all.prop('checked', false);
