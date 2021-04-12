@@ -34,6 +34,8 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
     view = 'public'
     view_name = None  # User-visible name for the current view
     period = None
+    paginate_by = 21
+    paginate_orphans = 3
 
     def configure_event(self, event):
         event.page = 'Library'
