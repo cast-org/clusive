@@ -7,6 +7,17 @@
     @include border-radius($box-border-radius);
 }
 
+.box-divider {
+    padding-top: calc(3px + #{$box-padding-y});
+    margin: 0 #{-$box-padding-x};
+    line-height: 1;
+    border-top: 3px solid var(--CT_boxDivderColor);
+
+    & + & {
+        margin-top: -1rem;
+    }
+}
+
 .box .library-grid > .card {
     margin: 1rem;
 }

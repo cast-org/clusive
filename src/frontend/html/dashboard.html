@@ -166,6 +166,144 @@
                     </div>
                 </div>
             </div>
+
+            <h2>Dashboard components</h2>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="box">
+                        <form>
+                            <fieldset>
+                                <legend class="form-label"><strong>How would you rate your experience with Clusive so far?</strong></legend>
+                                <div class="stars">
+                                    <div class="stars-outer">
+                                        <div class="stars-inner">
+                                            <input type="radio" id="stars1-0" class="stars-no-rate" name="stars1" value="0" checked aria-label="Unrated" />
+                                            <span class="stars-focus-indicator"></span>
+                                            <input type="radio" id="stars1-1" name="stars1" value="1" />
+                                            <label for="stars1-1"><span class="sr-only">Really don't like it</span></label>
+                                            <input type="radio" id="stars1-2" name="stars1" value="2" />
+                                            <label for="stars1-2"><span class="sr-only">Don't like it</span></label>
+                                            <input type="radio" id="stars1-3" name="stars1" value="3" />
+                                            <label for="stars1-3"><span class="sr-only">Liked it</span></label>
+                                            <input type="radio" id="stars1-4" name="stars1" value="4" />
+                                            <label for="stars1-4"><span class="sr-only">Really liked it</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="stars-text">
+                                        <span class="sr-only">Selected rating:</span>
+                                        <span class="stars-text-result"></span>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <button type="button" class="btn btn-primary">Save</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="box">
+                        <fieldset disabled>
+                            <legend class="form-label"><strong>How would you rate your experience with Clusive so far?</strong></legend>
+                            <div class="stars">
+                                <div class="stars-outer">
+                                    <div class="stars-inner">
+                                        <input type="radio" id="stars2-0" class="stars-no-rate" name="stars2" value="0" aria-label="Unrated" />
+                                        <span class="stars-focus-indicator"></span>
+                                        <input type="radio" id="stars2-1" name="stars2" value="1" />
+                                        <label for="stars2-1"><span class="sr-only">Really don't like it</span></label>
+                                        <input type="radio" id="stars2-2" name="stars2" value="2" />
+                                        <label for="stars2-2"><span class="sr-only">Don't like it</span></label>
+                                        <input type="radio" id="stars2-3" name="stars2" value="3" checked />
+                                        <label for="stars2-3"><span class="sr-only">Liked it</span></label>
+                                        <input type="radio" id="stars2-4" name="stars2" value="4" />
+                                        <label for="stars2-4"><span class="sr-only">Really liked it</span></label>
+                                    </div>
+                                </div>
+                                <div class="stars-text">
+                                    <span class="sr-only">Selected rating:</span>
+                                    <span class="stars-text-result"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="box-divider"></div>
+                        <p><strong>Thanks! Here's how others rated their experience:</strong></p>
+                        <!--
+                        Progress bar: Per design - visually show largest column as '100%' height
+                            - Use inline style with CSS vars to apply sizing:
+                                - `--progressSize` = percentage value (without %) of actual value
+                                - `--progressMax` = percentage value (without %) of maximum value in set
+                        -->
+                        <div class="stars-chart">
+                            <div class="stars-chart-item">
+                                <div class="progress" aria-hidden="true">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="--progressSize: 5; --progressMax: 55;"></div>
+                                </div>
+                                <div class="stars-chart-result">
+                                    <div class="sr-only">Really didn't like it</div>
+                                    5%
+                                </div>
+                            </div>
+                            <div class="stars-chart-item">
+                                <div class="progress" aria-hidden="true">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="--progressSize: 25; --progressMax: 55;"></div>
+                                </div>
+                                <div class="stars-chart-result">
+                                    <div class="sr-only">Didn't like it</div>
+                                    25%
+                                </div>
+                            </div>
+                            <div class="stars-chart-item">
+                                <div class="progress" aria-hidden="true">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="--progressSize: 55; --progressMax: 55;"></div>
+                                </div>
+                                <div class="stars-chart-result">
+                                    <div class="sr-only">Liked it</div>
+                                    55%
+                                </div>
+                            </div>
+                            <div class="stars-chart-item"><div class="stars-chart-result">
+                                <div class="progress" aria-hidden="true">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="--progressSize: 15; --progressMax: 55;"></div>
+                                </div>
+                                <div class="sr-only">Really liked it</div>
+                                    15%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="box">
+                        <form>
+                            <fieldset>
+                                <legend class="form-label"><strong>5 star rating (no optional result text)</strong></legend>
+                                <div class="stars">
+                                    <div class="stars-outer">
+                                        <div class="stars-inner">
+                                            <input type="radio" id="stars0-0" class="stars-no-rate" name="stars0" value="0" checked aria-label="Unrated" />
+                                            <span class="stars-focus-indicator"></span>
+                                            <input type="radio" id="stars0-1" name="stars0" value="1" />
+                                            <label for="stars0-1"><span class="sr-only">1 star</span></label>
+                                            <input type="radio" id="stars0-2" name="stars0" value="2" />
+                                            <label for="stars0-2"><span class="sr-only">2 stars</span></label>
+                                            <input type="radio" id="stars0-3" name="stars0" value="3" />
+                                            <label for="stars0-3"><span class="sr-only">3 stars</span></label>
+                                            <input type="radio" id="stars0-4" name="stars0" value="4" />
+                                            <label for="stars0-4"><span class="sr-only">4 stars</span></label>
+                                            <input type="radio" id="stars0-5" name="stars0" value="5" />
+                                            <label for="stars0-5"><span class="sr-only">5 stars</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <button type="button" class="btn btn-primary">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer>

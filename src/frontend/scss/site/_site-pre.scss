@@ -76,7 +76,9 @@ $enable-nav-fill:                       false;
 $enable-nav-justify:                    false;
 $enable-tab-content:                    true;
 $enable-pagination:                     true;
-$enable-progress:                       false;
+$enable-progress:                       true;
+$enable-progress-striped:               false;
+$enable-progress-animated:              false;
 
 // Widgets
 $enable-modal-fullscreen:               false;
@@ -277,6 +279,12 @@ $form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
 $form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
 $form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
 
+$progress-height:                           1.5rem;
+$progress-bg:                               transparent;
+$progress-border-radius:                    .25rem;
+$progress-bar-color:                        $body-color;
+$progress-bar-bg:                           var(--CT_progressBarBg);
+
 $dropdown-bg:                               var(--CT_dropdownBg);
 $dropdown-color:                            var(--CT_dropdownColor);
 $dropdown-border-width:                     3px;
@@ -470,3 +478,7 @@ $toobox-btn-font-size:                  1.25rem;
 
 $img-ratio-mascot:                      .95614;
 $img-ratio-mascot-tipped:               .7807;
+
+$star-size:                             2em;
+$star-spacing-x:                        .75em;
+$star-focus-box-shadow:                 $input-focus-box-shadow;

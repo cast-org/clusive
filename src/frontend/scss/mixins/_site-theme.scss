@@ -88,6 +88,7 @@
 
         --CT_boxBg: #{$box-bg};
         --CT_boxColor: #{$box-color};
+        --CT_boxDivderColor: #{$box-divider-color};
         --CT_boxMascotSize: #{$box-mascot-size};
         //--CT_boxMascotTippedSize: #{$box-mascot-tipped-size};
 
@@ -384,6 +385,8 @@
         --CT_formSwitchThumbCheckedBoxShadowRGB: #{red($form-switch-thumb-checked-box-shadow-color), green($form-switch-thumb-checked-box-shadow-color), blue($form-switch-thumb-checked-box-shadow-color)};
         --CT_formSwitchThumbCheckedBoxShadowOpacity: #{$form-switch-thumb-checked-box-shadow-opacity};
 
+        --CT_progressBarBg: #{$progress-bar-bg};
+
         --CT_wordbankBorderColor: #{$wordbank-border-color};
         --CT_wordbankColBg: #{$wordbank-col-bg};
         --CT_wordbankControlColor: #{$wordbank-control-color};
@@ -429,5 +432,14 @@
 
         --CT_imgMascot: #{$img-mascot};
         --CT_imgMascotTipped: #{$img-mascot-tipped};
+
+        --CT_starsBorderColor: #{$stars-border-color};
+        --CT_starsIconColor: #{$stars-icon-color};
+        --CT_starsIconColorAfter: #{$stars-icon-color-after};
+        --CT_starsIconActiveColor: #{$stars-icon-active-color};
+        --CT_starsIconActiveTextShadow: #{$stars-icon-active-text-shadow};
+        --CT_starsIconDisabledColor: #{$stars-icon-disabled-color};
+        --CT_starsIconDisabledColorAfter: #{$stars-icon-disabled-color-after};
+
     }
 }

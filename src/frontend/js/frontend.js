@@ -231,6 +231,61 @@ function formFileText() {
     });
 }
 
+function starsSelectedTextUpdate(node) {
+    'use strict';
+
+    var input = node.querySelector('input[type="radio"]:checked');
+    var output = node.querySelector('.stars-text-result');
+    var label = input.nextElementSibling;
+
+    if (output !== null) {
+        if (label.nodeName.toLowerCase() === 'label') {
+            output.innerText = label.innerText;
+        } else {
+            output.innerHTML = '<span class="sr-only">Unrated</span>';
+        }
+    }
+}
+
+function starsHoverTextUpdate(node) {
+    'use strict';
+
+    var input = node.previousElementSibling;
+
+    if (input.nodeName.toLowerCase() !== 'input' || $(input).is('.disabled, :disabled')) {
+        return;
+    }
+
+    var output = node.closest('.stars').querySelector('.stars-text-result');
+    var label = input.nextElementSibling;
+
+    if (output !== null) {
+        if (label.nodeName.toLowerCase() === 'label') {
+            output.innerText = label.innerText;
+        }
+    }
+}
+
+function starsSelectedText() {
+    'use strict';
+
+    $(document.body).on('click', '.stars input', function(e) {
+        if ($(e.target).not('.disabled, :disabled')) {
+            starsSelectedTextUpdate(e.target.closest('.stars'));
+        }
+    });
+    $(document.body).on('mouseenter', '.stars label', function(e) {
+        starsHoverTextUpdate(e.target);
+    });
+    $(document.body).on('mouseleave', '.stars label', function(e) {
+        starsSelectedTextUpdate(e.target.closest('.stars'));
+    });
+    $('.stars').each(function() {
+        starsSelectedTextUpdate(this);
+    });
+}
+
+
 function formRangeFontSize(range) {
     'use strict';
 
@@ -419,6 +474,7 @@ $(window).ready(function() {
     updateCSSVars();
 
     formFileText();
+    starsSelectedText();
     confirmationPublicationDelete();
     confirmationSharing();
     formUseThisLinks();
