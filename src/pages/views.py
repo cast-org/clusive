@@ -37,6 +37,7 @@ class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
         data = super().get_context_data(**kwargs)
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
+        data['query'] = None
         return data
 
     def configure_event(self, event: Event):

@@ -14,7 +14,22 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
-    <h1>Library</h1>
+    <div class="row mt-0_5">
+        <div class="col">
+            <h1>Library</h1>
+        </div>
+        <div class="col-md-auto">
+            <form method="get">
+                <div class="input-group library-search">
+                    <div class="stt-wrapper">
+                        {{ search_form.query }}
+                        <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#librarySearch"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col">
@@ -45,7 +60,7 @@
             <div class="library-pagination-wrapper">
                 <div class="pagination library-pagination">
                     {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="page-link">
+                    <a href="?query={{query}}&page={{ page_obj.previous_page_number }}" class="page-link">
                         <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                         Previous
                     </a>
@@ -59,11 +74,11 @@
                         {% if pg == page_obj.number %}
                             <a href="#" class="page-link active" aria-current="page">{{pg}}</a>
                         {% else %}
-                            <a href="?page={{pg}}" class="page-link">{{pg}}</a>
+                            <a href="?query={{query}}&page={{pg}}" class="page-link">{{pg}}</a>
                         {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="page-link">
+                    <a href="?query={{query}}&page={{ page_obj.next_page_number }}" class="page-link">
                         Next
                         <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                     </a>
