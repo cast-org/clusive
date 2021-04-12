@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 class SearchForm(forms.Form):
     query = forms.fields.CharField(
+        required=False,
         widget=forms.TextInput(attrs={
             'type': 'search',
             'placeholder': 'Search library',
