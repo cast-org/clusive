@@ -19,7 +19,7 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
 from library.parsing import unpack_epub_file, scan_book
 from roster.models import ClusiveUser, Period, LibraryViews
@@ -42,22 +42,32 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
 
     def get_queryset(self):
         if self.view == 'period' and self.period:
-            return Book.objects.filter(assignments__period=self.period)
+            q = Book.objects.filter(assignments__period=self.period)
         elif self.view == 'mine':
-            return Book.objects.filter(owner=self.clusive_user)
+            q = Book.objects.filter(owner=self.clusive_user)
         elif self.view == 'public':
-            return Book.objects.filter(owner=None)
+            q = Book.objects.filter(owner=None)
         elif self.view == 'all':
             # ALL = assigned in one of my periods, or public, or owned by me.
-            return Book.objects.filter(
+            q = Book.objects.filter(
                 Q(assignments__period__in=self.clusive_user.periods.all())
                 | Q(owner=None)
                 | Q(owner=self.clusive_user)).distinct()
         else:
             raise Http404('Unknown view type')
+        if self.query:
+            q = q.filter(Q(title__icontains=self.query) |
+                         Q(author__icontains=self.query) |
+                         Q(description__icontains=self.query))
+        return q
+
+    def dispatch(self, request, *args, **kwargs):
+        self.search_form = SearchForm(request.GET)
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+        self.query = request.GET.get('query')
         self.view = kwargs.get('view')
         if kwargs.get('style'):
             self.style = kwargs.get('style')
@@ -88,6 +98,8 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['clusive_user'] = self.clusive_user
+        context['search_form'] = self.search_form
+        context['query'] = self.query
         context['period'] = self.period
         context['style'] = self.style
         context['current_view'] = self.view
