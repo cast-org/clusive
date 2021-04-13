@@ -17,6 +17,7 @@ import json
 
 logger = logging.getLogger(__name__)
 
+
 class ComprehensionCheckView(LoginRequiredMixin, View):
     def post(self, request):            
         try:
@@ -45,8 +46,9 @@ class ComprehensionCheckView(LoginRequiredMixin, View):
                                            comprehension_check_response_id = ccr.id,
                                            value = event_value)
 
-        return JsonResponse({"success": "1"})        
-    def get(self, request, book_id):        
+        return JsonResponse({"success": "1"})
+
+    def get(self, request, book_id):
         user = request.clusive_user
         book = Book.objects.get(id=book_id)        
         ccr = get_object_or_404(ComprehensionCheckResponse, user=user, book=book)            

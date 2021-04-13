@@ -1,29 +1,34 @@
 /* Code for comprehension and affect assessments */
-/* global clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN */
+/* global clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN, fluid */
+/* exported clusiveAssessment */
 
-var clusiveAssessment = {
-    showCompCheck: showCompCheck
+var clusiveAssessment = { };
+
+clusiveAssessment.showCompCheck = function() {
+    'use strict';
+
+    $('#compPop').CFW_Popover('show');
 };
 
-function showCompCheck() {
-    $("#compPop").CFW_Popover('show');
-};
-
-function setUpCompCheck() {
+clusiveAssessment.setUpCompCheck = function() {
     'use strict';
 
     var bookId = clusiveContext.reader.info.publication.id;
 
     // Retrieve existing comprehension check values and set them
-    $.get('/assessment/comprehension_check/' + bookId, function (data) {
-        console.debug("got comprehension check", data);
+    $.get('/assessment/comprehension_check/' + bookId, function(data) {
+        console.debug('got comprehension check', data);
         var scaleResponse = data.scale_response;
         var freeResponse = data.free_response;
         $('textarea[name="comprehension-free"]').val(freeResponse);
         $('input[name="comprehension-scale"]').val([scaleResponse]);
         $('input[name="comprehension-scale"]').change();
-    }).fail(function (error) {
-        console.debug("failed to get comprehension check, status code: ", error.status)
+    }).fail(function(error) {
+        if (error.status === 404) {
+            console.debug('No pre-existing comp check response');
+        } else {
+            console.warn('failed to get comprehension check, status code: ', error.status);
+        }
     });
 
     // When a radio button is selected, show the appropriate free-response prompt.
@@ -69,14 +74,15 @@ function setUpCompCheck() {
                 });
             $(this).closest('.popover').CFW_Popover('hide');
         });
-}
+};
 
 $(function() {
     'use strict';
-    $(document).ready(function () {
+
+    $(document).ready(function() {
         // Don't set up a comp check unless on a book page
-        if(fluid.get(clusiveContext, "reader.info.publication.id")) {
-            setUpCompCheck();
+        if (fluid.get(clusiveContext, 'reader.info.publication.id')) {
+            clusiveAssessment.setUpCompCheck();
         }
-    });    
+    });
 });
