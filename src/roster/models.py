@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from multiselectfield import MultiSelectField
 from pytz import country_timezones
 from allauth.account.signals import user_signed_up
+from allauth.socialaccount.models import SocialAccount
 
 logger = logging.getLogger(__name__)
 
@@ -219,7 +220,8 @@ class ClusiveUser(models.Model):
     @property
     def can_set_password(self):
         """True if this user can change their own password."""
-        return self.role and self.role != Roles.GUEST
+        social_account = SocialAccount.objects.filter(user=self.user).exists()
+        return self.role and self.role != Roles.GUEST and not social_account
 
     @property
     def can_upload(self):
