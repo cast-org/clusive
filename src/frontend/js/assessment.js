@@ -2,12 +2,24 @@
 /* global clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN, fluid */
 /* exported clusiveAssessment */
 
-var clusiveAssessment = { };
+var clusiveAssessment = {
+    compCheckDone: false
+};
 
 clusiveAssessment.showCompCheck = function() {
     'use strict';
 
-    $('#compPop').CFW_Popover('show');
+    clusiveAssessment.enableButton();
+    if (!clusiveAssessment.compCheckDone) {
+        $('#compPop').CFW_Popover('show');
+    }
+};
+
+clusiveAssessment.enableButton = function() {
+    'use strict';
+
+    $('#noCompButton').hide();
+    $('#compButton').show();
 };
 
 clusiveAssessment.setUpCompCheck = function() {
@@ -17,7 +29,8 @@ clusiveAssessment.setUpCompCheck = function() {
 
     // Retrieve existing comprehension check values and set them
     $.get('/assessment/comprehension_check/' + bookId, function(data) {
-        console.debug('got comprehension check', data);
+        clusiveAssessment.enableButton();
+        clusiveAssessment.compCheckDone = true;
         var scaleResponse = data.scale_response;
         var freeResponse = data.free_response;
         $('textarea[name="comprehension-free"]').val(freeResponse);
@@ -34,14 +47,16 @@ clusiveAssessment.setUpCompCheck = function() {
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
         function() {
-            if ($(this).val() === '0') {
-                $('#compTextPromptYes').hide();
-                $('#compTextPromptNo').show();
-            } else {
-                $('#compTextPromptYes').show();
-                $('#compTextPromptNo').hide();
+            if ($(this).is(':checked')) {
+                if ($(this).val() === '0') {
+                    $('#compTextPromptYes').hide();
+                    $('#compTextPromptNo').show();
+                } else {
+                    $('#compTextPromptYes').show();
+                    $('#compTextPromptNo').hide();
+                }
+                $('#comprehensionFreeResponseArea').show();
             }
-            $('#comprehensionFreeResponseArea').show();
         }
     );
 
@@ -68,6 +83,7 @@ clusiveAssessment.setUpCompCheck = function() {
             })
                 .done(function(data) {
                     console.debug('Comp check save complete', data);
+                    clusiveAssessment.compCheckDone = true;
                 })
                 .fail(function(err) {
                     console.error('Comp check save failed!', err);

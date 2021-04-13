@@ -191,7 +191,6 @@ var manifest_path = "{{ manifest_path }}";
                     return Promise.reject();
                 },
                 resourceAtEnd: function() {
-                    console.debug('comp check: resourceAtEnd');
                     var currentResource = D2Reader.currentResource();
                     var lastResource = (currentResource===D2Reader.totalResources()-1);
                     if (lastResource) {
