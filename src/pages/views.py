@@ -21,9 +21,14 @@ class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
-        if not self.last_reads:
-            self.featured = Book.get_featured_books()[:3]
-            logger.debug('No recent books, using featured: %s', self.featured)
+        if not self.last_reads or len(self.last_reads) < 3:
+            # Add featured books to the list
+            features = list(Book.get_featured_books()[:3])
+            # Remove any featured books that are in the user's last-read list.
+            for para in self.last_reads:
+                if para.book in features:
+                    features.remove(para.book)
+            self.featured = features
         else:
             self.featured = []
         return super().get(request, *args, **kwargs)
@@ -32,6 +37,7 @@ class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
         data = super().get_context_data(**kwargs)
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
+        data['query'] = None
         return data
 
     def configure_event(self, event: Event):

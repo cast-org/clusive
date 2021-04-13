@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from multiselectfield import MultiSelectField
 from pytz import country_timezones
 
 logger = logging.getLogger(__name__)
@@ -65,6 +66,9 @@ class ResearchPermissions:
     PENDING = 'PD'
     DECLINED = 'DC'
     WITHDREW = 'WD'
+    SELF_CREATED = 'SC'
+    PARENT_CREATED = 'PC'
+    TEACHER_CREATED = 'TC'
     TEST_ACCOUNT = 'TA'
     GUEST = 'GU'
 
@@ -73,8 +77,31 @@ class ResearchPermissions:
         (PENDING, 'Pending'),
         (DECLINED, 'Declined'),
         (WITHDREW, 'Withdrew'),
-        (TEST_ACCOUNT, 'Test Account'),
-        (GUEST, 'Guest Account')
+        (SELF_CREATED, 'Self-created account'),
+        (PARENT_CREATED, 'Parent-created account'),
+        (TEACHER_CREATED, 'Teacher-created account'),
+        (TEST_ACCOUNT, 'Test account'),
+        (GUEST, 'Guest account')
+    ]
+
+    RESEARCHABLE = [
+        PERMISSIONED,
+        SELF_CREATED,
+        TEACHER_CREATED,
+        PARENT_CREATED]
+
+
+class EducationLevels:
+    LOWER_ELEMENTARY = 'LE'
+    UPPER_ELEMENTARY = 'UE'
+    MIDDLE_SCHOOL = 'MS'
+    HIGH_SCHOOL = 'HS'
+
+    CHOICES = [
+        (LOWER_ELEMENTARY, 'Lower Elementary'),
+        (UPPER_ELEMENTARY, 'Upper Elementary'),
+        (MIDDLE_SCHOOL, 'Middle School'),
+        (HIGH_SCHOOL, 'High School'),
     ]
 
 
@@ -143,6 +170,10 @@ class ClusiveUser(models.Model):
     library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
                                      choices=LibraryStyles.CHOICES)
 
+    education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
+                                        verbose_name='Education levels',
+                                        default=[])
+
     # Site that this user is connected to. Although users can have multiple Periods,
     # these are generally assumed to be all part of one Site.
     # If this assumption is changed, then the Manage pages will need updates
@@ -162,10 +193,6 @@ class ClusiveUser(models.Model):
         else: 
             return None
 
-    @property 
-    def is_permissioned(self):
-        return self.permission == ResearchPermissions.PERMISSIONED
-
     permission = models.CharField(
         max_length=2,
         choices=ResearchPermissions.CHOICES,
@@ -180,7 +207,7 @@ class ClusiveUser(models.Model):
 
     @property
     def is_permissioned(self):
-        return self.permission == ResearchPermissions.PERMISSIONED
+        return self.permission in ResearchPermissions.RESEARCHABLE
 
     @property
     def is_registered(self):

@@ -89,6 +89,7 @@
         --CT_boxBg: #{$box-bg};
         --CT_boxColor: #{$box-color};
         --CT_boxMascotSize: #{$box-mascot-size};
+        //--CT_boxMascotTippedSize: #{$box-mascot-tipped-size};
 
         --CT_cardBg: #{$card-bg};
         --CT_cardColor: #{$card-color};
@@ -427,5 +428,6 @@
         --CT_ciToggleEyeColor: #{$ci-toggle-eye-color};
 
         --CT_imgMascot: #{$img-mascot};
+        --CT_imgMascotTipped: #{$img-mascot-tipped};
     }
 }

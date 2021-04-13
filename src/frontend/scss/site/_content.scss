@@ -305,6 +305,26 @@ h2,
     }
 }
 
+.rule-text {
+    display: flex;
+    flex-direction: row;
+    padding: .5rem 0;
+
+    &::before,
+    &::after {
+        flex: 1 1;
+        margin: auto;
+        content: "";
+        border-bottom: 1px solid;
+    }
+    &::before {
+        margin-right: .5rem;
+    }
+    &::after {
+        margin-left: .5rem;
+    }
+}
+
 .content-text {
     max-width: 70ch;
     margin: 0 auto;
@@ -362,5 +382,11 @@ h2,
 
     address {
         line-height: 1.25;
+    }
+}
+
+@media (min-width: 36em) {
+    .order-sm-first {
+        order: -1;
     }
 }

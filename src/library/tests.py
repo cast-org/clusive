@@ -99,13 +99,13 @@ class ShareFormTestCase(TestCase):
     def test_adds_assignments(self):
         # Add an assignment
         response = self.client.post(reverse('share', kwargs={'pk': self.book.pk}), { 'periods': self.period.pk})
-        self.assertRedirects(response, '/', fetch_redirect_response=False)
+        self.assertRedirects(response, '/reader', fetch_redirect_response=False)
         assignments = BookAssignment.objects.all()
         self.assertEqual(1, len(assignments))
 
         # And remove it again
         response = self.client.post(reverse('share', kwargs={'pk': self.book.pk}), { })
-        self.assertRedirects(response, '/', fetch_redirect_response=False)
+        self.assertRedirects(response, '/reader', fetch_redirect_response=False)
         assignments = BookAssignment.objects.all()
         self.assertEqual(0, len(assignments))
 

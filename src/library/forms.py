@@ -8,6 +8,17 @@ from roster.models import Period, ClusiveUser
 logger = logging.getLogger(__name__)
 
 
+class SearchForm(forms.Form):
+    query = forms.fields.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'type': 'search',
+            'placeholder': 'Search library',
+            'aria-label': 'Search library',
+            'class': 'form-control library-search-input',
+        }))
+
+
 class UploadForm(forms.Form):
     file = forms.FileField(label='File')
 

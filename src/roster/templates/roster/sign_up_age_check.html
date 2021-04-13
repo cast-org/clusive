@@ -25,7 +25,7 @@
             {{ radio.tag | formcontrol }}
             <label class="form-check-label" for="{{ radio.id_for_label }}">
                 <strong>{{ radio.choice_label }}.</strong>
-                {% cycle '' 'An adult can create an account for you. We\'ll tell you how on the next page!' %}
+                {% cycle '' 'An adult can create an account for you.' %}
             </label>
         </div>
         {% endfor %}

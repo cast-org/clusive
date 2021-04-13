@@ -1,11 +1,20 @@
 @font-face {
   font-family: 'fontello';
+<<<<<<< HEAD
   src: url('./fontello.eot?2741306');
   src: url('./fontello.eot?2741306#iefix') format('embedded-opentype'),
        url('./fontello.woff2?2741306') format('woff2'),
        url('./fontello.woff?2741306') format('woff'),
        url('./fontello.ttf?2741306') format('truetype'),
        url('./fontello.svg?2741306#fontello') format('svg');
+=======
+  src: url('./fontello.eot?59693804');
+  src: url('./fontello.eot?59693804#iefix') format('embedded-opentype'),
+       url('./fontello.woff2?59693804') format('woff2'),
+       url('./fontello.woff?59693804') format('woff'),
+       url('./fontello.ttf?59693804') format('truetype'),
+       url('./fontello.svg?59693804#fontello') format('svg');
+>>>>>>> development
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +24,11 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
+<<<<<<< HEAD
     src: url('./fontello.svg?2741306#fontello') format('svg');
+=======
+    src: url('./fontello.svg?59693804#fontello') format('svg');
+>>>>>>> development
   }
 }
 */
@@ -71,7 +84,7 @@
 .icon-volume-down:before { content: '\e80d'; } /* '' */
 .icon-climb:before { content: '\e80e'; } /* '' */
 .icon-hike:before { content: '\e80f'; } /* '' */
-.icon-logo-clusive:before { content: '\e810'; } /* '' */
+.icon-logo-clusive-orig:before { content: '\e810'; } /* '' */
 .icon-logo-clusive-toggle:before { content: '\e811'; } /* '' */
 .icon-a:before { content: '\e812'; } /* '' */
 .icon-walk:before { content: '\e813'; } /* '' */
@@ -107,6 +120,10 @@
 .icon-switch:before { content: '\e831'; } /* '' */
 .icon-universal-access:before { content: '\e832'; } /* '' */
 .icon-thought:before { content: '\e833'; } /* '' */
+<<<<<<< HEAD
+=======
+.icon-logo-clusive:before { content: '\e834'; } /* '' */
+>>>>>>> development
 .icon-crown:before { content: '\e844'; } /* '' */
 .icon-move:before { content: '\f047'; } /* '' */
 .icon-bookmark-empty:before { content: '\f097'; } /* '' */

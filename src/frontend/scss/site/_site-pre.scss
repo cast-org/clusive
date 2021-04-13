@@ -88,7 +88,7 @@ $enable-tooltip:                        true;
 $enable-utility-bg:                     false;
 $enable-utility-border:                 false;
 $enable-utility-clearfix:               false;
-$enable-utility-display-down-none:      false;
+$enable-utility-display-down-none:      true;
 $enable-utility-display-print:          false;
 $enable-utility-user-select:            false;
 $enable-utility-pointer-events:         false;
@@ -398,6 +398,7 @@ $box-margin-bottom:                     1rem;
 $box-line-height:                       scale-line-height(1.5);
 $box-border-radius:                     $border-radius;
 $box-mascot-size:                       3.5rem;
+$box-mascot-tipped-size:                4.2865rem;  // align to same vertical size
 
 $setting-padding:                       .75rem 1rem 1rem;
 $setting-border-width:                  3px;
@@ -467,3 +468,6 @@ $toolbox-menu-arrow-width:              1.5rem;
 $toolbox-menu-arrow-height:             1rem;
 $toolbox-btn-padding:                   .125rem .375rem;
 $toobox-btn-font-size:                  1.25rem;
+
+$img-ratio-mascot:                      .95614;
+$img-ratio-mascot-tipped:               .7807;
