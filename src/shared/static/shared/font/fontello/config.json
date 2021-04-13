@@ -645,6 +645,18 @@
       "search": [
         "logo-clusive"
       ]
+    },
+    {
+      "uid": "f4f0e849b805be1f6d76b65581cb3b8b",
+      "css": "align-left",
+      "code": 59445,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "381da2c2f7fd51f8de877c044d7f439d",
+      "css": "picture",
+      "code": 59446,
+      "src": "fontawesome"
     }
   ]
 }

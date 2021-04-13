@@ -41,7 +41,9 @@ $enable-form-validation-icon:           false;
 
 // Components
 $enable-alert:                          false;
-$enable-badge:                          false;
+$enable-badge:                          true;
+$enable-badge-close:                    false;
+$enable-badge-group:                    false;
 $enable-breadcrumb:                     false;
 $enable-btn-group:                      false;
 $enable-card-subtitle:                  false;
@@ -491,3 +493,10 @@ $img-ratio-mascot-tipped:               .7807;
 $star-size:                             2em;
 $star-spacing-x:                        .75em;
 $star-focus-box-shadow:                 $input-focus-box-shadow;
+
+$tag-padding-y:                         .125em;
+$tag-padding-x:                         .5em;
+$tag-margin-y:                          .125rem;
+$tag-margin-right:                      .125rem;
+$tag-font-size:                         .875rem;
+$tag-font-weight:                       400;
