@@ -49,12 +49,12 @@ body {
 
 
 *:not(.open) {
-    > .not-open {
+    > .is-open {
         display: none;
     }
 }
 .open {
-    > .is-open {
+    > .not-open {
         display: none;
     }
 }
