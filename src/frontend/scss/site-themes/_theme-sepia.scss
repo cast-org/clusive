@@ -150,6 +150,17 @@ $btn-favorite-active-bg:                transparent;
 $btn-favorite-active-color:             $btn-favorite-color;
 $btn-favorite-active-border-color:      transparent;
 
+$btn-react-focus-ring:                  #a0abfd;
+$btn-react-bg:                          #fff;
+$btn-react-color:                       #636b82;
+$btn-react-border-color:                #636b82;
+$btn-react-hover-bg:                    #eee;
+$btn-react-hover-color:                 #636b82;
+$btn-react-hover-border-color:          #636b82;
+$btn-react-active-bg:                   #636b82;
+$btn-react-active-color:                #fff;
+$btn-react-active-border-color:         #636b82;
+
 // SKiplink
 $skiplink-bg:                           #6268ad;
 $skiplink-color:                        #fbfbfb;
@@ -494,3 +505,19 @@ $stars-icon-active-color:               #ff554d;
 $stars-icon-active-text-shadow:         .0625em .0625em 0 rgba(#636b82, .75);
 $stars-icon-disabled-color:             #fafafa;
 $stars-icon-disabled-color-after:       #d4c8b7;
+
+// Reaction chart
+$react-line:                            #999;
+$react-icon:                            #aaa;
+$react-wedge-0:                         #dc0492;
+$react-wedge-1:                         #733cf1;
+$react-wedge-2:                         #004eff;
+$react-wedge-3:                         #347fdc;
+$react-wedge-4:                         #72a2de;
+$react-wedge-5:                         #a0b3ae;
+$react-wedge-6:                         #c1c797;
+$react-wedge-7:                         #dfdb8f;
+$react-wedge-8:                         #e6ba9e;
+$react-wedge-9:                         #ef9977;
+$react-wedge-10:                        #f55423;
+$react-wedge-11:                        #ff3500;

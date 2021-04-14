@@ -657,6 +657,18 @@
       "css": "picture",
       "code": 59446,
       "src": "fontawesome"
+    },
+    {
+      "uid": "3212f42c65d41ed91cb435d0490e29ed",
+      "css": "flash",
+      "code": 59448,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "2c413e78faf1d6631fd7b094d14c2253",
+      "css": "cloud",
+      "code": 59447,
+      "src": "fontawesome"
     }
   ]
 }
