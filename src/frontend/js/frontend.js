@@ -1,23 +1,22 @@
-/* global clusiveContext, PAGE_EVENT_ID */
+/* global clusiveContext, PAGE_EVENT_ID, fluid */
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
     'use strict';
 
-    options.beforeSend = function (xhr) {
-        if(PAGE_EVENT_ID) {
+    options.beforeSend = function(xhr) {
+        if (PAGE_EVENT_ID) {
             xhr.setRequestHeader('Clusive-Page-Event-Id', PAGE_EVENT_ID);
         }
         if (typeof clusiveContext !== 'undefined') {
-            if(fluid.get(clusiveContext, "reader.info.location.href")) {
+            if (fluid.get(clusiveContext, 'reader.info.location.href')) {
                 xhr.setRequestHeader('Clusive-Reader-Document-Href', clusiveContext.reader.info.location.href);
             }
-            if(fluid.get(clusiveContext, "reader.info.location.progression")) {
+            if (fluid.get(clusiveContext, 'reader.info.location.progression')) {
                 xhr.setRequestHeader('Clusive-Reader-Document-Progression', clusiveContext.reader.info.location.progression);
             }
         }
-
-    }
+    };
 });
 
 /* global Masonry, clusiveTTS, clusivePrefs, TOOLTIP_NAME */
@@ -52,6 +51,23 @@ function clusiveDebounce(func, wait, immediate) {
             func.apply(context, args);
         }
     };
+}
+
+
+/*
+  Easing functions
+  https://spicyyoghurt.com/tools/easing-functions
+
+  t = time
+  b = beginning value
+  c = change in value
+  d = duration
+*/
+function easeInOutQuad(t, b, c, d) {
+    'use strict';
+
+    if ((t /= d / 2) < 1) { return c / 2 * t * t + b; }
+    return -c / 2 * ((--t) * (t - 2) - 1) + b;
 }
 
 function getBreakpointByName(name) {
@@ -99,30 +115,6 @@ function libraryMasonryEnable() {
             libraryMasonryLayout();
         });
     });
-
-    if (document.querySelector('.library-masonry-on') !== null) {
-        document.querySelector('.library-masonry-on').setAttribute('disabled', '');
-        document.querySelector('.library-masonry-off').removeAttribute('disabled');
-    }
-}
-
-function libraryMasonryDisable() {
-    'use strict';
-
-    var elem = document.querySelector('.library-grid');
-    elem.classList.remove('has-masonry');
-
-    document.removeEventListener('update.cisl.prefs', libraryMasonryLayout);
-
-    if (libraryMasonryApi !== null) {
-        libraryMasonryApi.destroy();
-        libraryMasonryApi = null;
-    }
-
-    if (document.querySelector('.library-masonry-on') !== null) {
-        document.querySelector('.library-masonry-on').removeAttribute('disabled');
-        document.querySelector('.library-masonry-off').setAttribute('disabled', '');
-    }
 }
 
 function libraryListExpand() {
@@ -228,6 +220,114 @@ function formFileText() {
     });
     $('.form-file-input').each(function() {
         formFileInputUpdate(this);
+    });
+}
+
+function starsSelectedTextUpdate(node) {
+    'use strict';
+
+    var input = node.querySelector('input[type="radio"]:checked');
+    var output = node.querySelector('.stars-text-result');
+    var label = input.nextElementSibling;
+
+    if (output !== null) {
+        if (label.nodeName.toLowerCase() === 'label') {
+            output.innerText = label.innerText;
+        } else {
+            output.innerHTML = '<span class="sr-only">Unrated</span>';
+        }
+    }
+}
+
+function starsHoverTextUpdate(node) {
+    'use strict';
+
+    var input = node.previousElementSibling;
+
+    if (input.nodeName.toLowerCase() !== 'input' || $(input).is('.disabled, :disabled')) {
+        return;
+    }
+
+    var output = node.closest('.stars').querySelector('.stars-text-result');
+    var label = input.nextElementSibling;
+
+    if (output !== null) {
+        if (label.nodeName.toLowerCase() === 'label') {
+            output.innerText = label.innerText;
+        }
+    }
+}
+
+function starsSelectedText() {
+    'use strict';
+
+    $(document.body).on('click', '.stars input', function(e) {
+        if ($(e.target).not('.disabled, :disabled')) {
+            starsSelectedTextUpdate(e.target.closest('.stars'));
+        }
+    });
+    $(document.body).on('mouseenter', '.stars label', function(e) {
+        starsHoverTextUpdate(e.target);
+    });
+    $(document.body).on('mouseleave', '.stars label', function(e) {
+        starsSelectedTextUpdate(e.target.closest('.stars'));
+    });
+    $('.stars').each(function() {
+        starsSelectedTextUpdate(this);
+    });
+}
+
+function reactDimAnimate(element, newVal) {
+    'use strict';
+
+    var start;
+    var duration = 200;
+    var old = parseInt(getComputedStyle(element).getPropertyValue('--dim'), 10);
+    var delta = newVal - old;
+    var isAnimating = false;
+
+    function step(timestamp) {
+        isAnimating = true;
+        if (typeof start === 'undefined') {
+            start = timestamp;
+        }
+        var elapsed = timestamp - start;
+        var elapsedRatio  = elapsed / duration;
+        var update = Math.round(easeInOutQuad(elapsedRatio, old, delta, 1));
+
+        elapsedRatio = elapsedRatio > 1 ? 1 : elapsedRatio;
+        if (update < Math.min(old, newVal)) {
+            update = Math.min(old, newVal);
+        } else if (update > Math.max(old, newVal)) {
+            update = Math.max(old, newVal);
+        }
+
+        element.style.setProperty('--dim', update + '%');
+
+        if (elapsed <= duration || (update > Math.min(old, newVal) && update < Math.max(old, newVal))) {
+            window.requestAnimationFrame(step);
+        } else {
+            isAnimating = false;
+        }
+    }
+
+    if (!isAnimating) {
+        window.requestAnimationFrame(step);
+    }
+}
+
+function reactChartHooks() {
+    'use strict';
+
+    $(document.body).on('click', '[data-react-index]', function(e) {
+        var idx = e.currentTarget.dataset.reactIndex;
+        var wedge = document.querySelector('.react-wedge-' + idx);
+
+        if (e.currentTarget.checked) {
+            reactDimAnimate(wedge, 100);
+        } else {
+            reactDimAnimate(wedge, 0);
+        }
     });
 }
 
@@ -410,6 +510,28 @@ function showTooltip(name) {
     }
 }
 
+function filterAllUpdate() {
+    'use strict';
+
+    $(document.body).on('click', '[data-clusive="filterAllUpdate"] input', function(e) {
+        var $elm = $(e.currentTarget);
+        var $par = $elm.closest('[data-clusive="filterAllUpdate"]');
+        var $all = $par.find('[data-clusive="filterAll"]');
+        var $checked = $par.find('input:checked');
+
+        if (!$par.length || !$all.length) { return; }
+
+        if ($elm[0] === $all[0]) {
+            $par.find('input').prop('checked', false);
+            $all.prop('checked', true);
+        } else if (!$checked.length) {
+            $all.prop('checked', true);
+        } else {
+            $all.prop('checked', false);
+        }
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -419,10 +541,13 @@ $(window).ready(function() {
     updateCSSVars();
 
     formFileText();
+    starsSelectedText();
+    reactChartHooks();
     confirmationPublicationDelete();
     confirmationSharing();
     formUseThisLinks();
     showTooltip(TOOLTIP_NAME);
+    filterAllUpdate();
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
