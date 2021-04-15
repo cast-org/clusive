@@ -1,23 +1,22 @@
-/* global clusiveContext, PAGE_EVENT_ID */
+/* global clusiveContext, PAGE_EVENT_ID, fluid */
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
     'use strict';
 
-    options.beforeSend = function (xhr) {
-        if(PAGE_EVENT_ID) {
+    options.beforeSend = function(xhr) {
+        if (PAGE_EVENT_ID) {
             xhr.setRequestHeader('Clusive-Page-Event-Id', PAGE_EVENT_ID);
         }
         if (typeof clusiveContext !== 'undefined') {
-            if(fluid.get(clusiveContext, "reader.info.location.href")) {
+            if (fluid.get(clusiveContext, 'reader.info.location.href')) {
                 xhr.setRequestHeader('Clusive-Reader-Document-Href', clusiveContext.reader.info.location.href);
             }
-            if(fluid.get(clusiveContext, "reader.info.location.progression")) {
+            if (fluid.get(clusiveContext, 'reader.info.location.progression')) {
                 xhr.setRequestHeader('Clusive-Reader-Document-Progression', clusiveContext.reader.info.location.progression);
             }
         }
-
-    }
+    };
 });
 
 /* global Masonry, clusiveTTS, clusivePrefs, TOOLTIP_NAME */
@@ -52,6 +51,23 @@ function clusiveDebounce(func, wait, immediate) {
             func.apply(context, args);
         }
     };
+}
+
+
+/*
+  Easing functions
+  https://spicyyoghurt.com/tools/easing-functions
+
+  t = time
+  b = beginning value
+  c = change in value
+  d = duration
+*/
+function easeInOutQuad(t, b, c, d) {
+    'use strict';
+
+    if ((t /= d / 2) < 1) { return c / 2 * t * t + b; }
+    return -c / 2 * ((--t) * (t - 2) - 1) + b;
 }
 
 function getBreakpointByName(name) {
@@ -261,6 +277,59 @@ function starsSelectedText() {
     });
 }
 
+function reactDimAnimate(element, newVal) {
+    'use strict';
+
+    var start;
+    var duration = 200;
+    var old = parseInt(getComputedStyle(element).getPropertyValue('--dim'), 10);
+    var delta = newVal - old;
+    var isAnimating = false;
+
+    function step(timestamp) {
+        isAnimating = true;
+        if (typeof start === 'undefined') {
+            start = timestamp;
+        }
+        var elapsed = timestamp - start;
+        var elapsedRatio  = elapsed / duration;
+        var update = Math.round(easeInOutQuad(elapsedRatio, old, delta, 1));
+
+        elapsedRatio = elapsedRatio > 1 ? 1 : elapsedRatio;
+        if (update < Math.min(old, newVal)) {
+            update = Math.min(old, newVal);
+        } else if (update > Math.max(old, newVal)) {
+            update = Math.max(old, newVal);
+        }
+
+        element.style.setProperty('--dim', update + '%');
+
+        if (elapsed <= duration || (update > Math.min(old, newVal) && update < Math.max(old, newVal))) {
+            window.requestAnimationFrame(step);
+        } else {
+            isAnimating = false;
+        }
+    }
+
+    if (!isAnimating) {
+        window.requestAnimationFrame(step);
+    }
+}
+
+function reactChartHooks() {
+    'use strict';
+
+    $(document.body).on('click', '[data-react-index]', function(e) {
+        var idx = e.currentTarget.dataset.reactIndex;
+        var wedge = document.querySelector('.react-wedge-' + idx);
+
+        if (e.currentTarget.checked) {
+            reactDimAnimate(wedge, 100);
+        } else {
+            reactDimAnimate(wedge, 0);
+        }
+    });
+}
 
 function formRangeFontSize(range) {
     'use strict';
@@ -473,6 +542,7 @@ $(window).ready(function() {
 
     formFileText();
     starsSelectedText();
+    reactChartHooks();
     confirmationPublicationDelete();
     confirmationSharing();
     formUseThisLinks();

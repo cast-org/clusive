@@ -201,25 +201,25 @@
 // Reaction/Assessment chart
 .react {
     --reactPad: 1rem;
-    --reactLine: #999;
-    --reactIcon: #aaa;
-    --reactW0: #dc0492;
-    --reactW1: #733cf1;
-    --reactW2: #004eff;
-    --reactW3: #347fdc;
-    --reactW4: #72a2de;
-    --reactW5: #a0b3ae;
-    --reactW6: #c1c797;
-    --reactW7: #dfdb8f;
-    --reactW8: #e6ba9e;
-    --reactW9: #ef9977;
-    --reactW10: #f55423;
-    --reactW11: #ff3500;
+    --reactLine: var(--CT_reactLine);
+    --reactIcon: var(--CT_reactIcon);
+    --reactW0: var(--CT_reactW0);
+    --reactW1: var(--CT_reactW1);
+    --reactW2: var(--CT_reactW2);
+    --reactW3: var(--CT_reactW3);
+    --reactW4: var(--CT_reactW4);
+    --reactW5: var(--CT_reactW5);
+    --reactW6: var(--CT_reactW6);
+    --reactW7: var(--CT_reactW7);
+    --reactW8: var(--CT_reactW8);
+    --reactW9: var(--CT_reactW9);
+    --reactW10: var(--CT_reactW10);
+    --reactW11: var(--CT_reactW11);
     --sideLen: 28.8675134595; // c = (50 * sin(30))) / sin(60)
 
     position: relative;
     width: 100%;
-    min-width: 20rem;
+    //min-width: 20rem;
     // Use `Max` in place of `max` to work around Sass/CSS collision, see: https://css-tricks.com/when-sass-and-new-css-features-collide/
     // stylelint-disable-next-line function-name-case
     padding: 1rem Max(2rem, calc((100 - 56.25) / 2 * 1%)); // try to keep 16:9
@@ -500,4 +500,9 @@
 }
 .react-label-11 {
     transform: translate3d(0, -100%, 0) rotate(-330deg) translateX(-100%);
+}
+
+.box .react {
+    --reactLine: var(--CT_reactBoxLine);
+    --reactIcon: var(--CT_reactBoxIcon);
 }

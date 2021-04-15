@@ -109,9 +109,9 @@
             <div class="react-line react-line-5"></div>
             <!-- wedges -->
             <div class="react-item react-item-0">
-                <div class="react-wedge react-wedge-0" style="--dim: 0%;"></div>
+                <div class="react-wedge react-wedge-0" style="--dim: 100%;"></div>
                 <div class="btn-check react-btn react-label-0">
-                    <input id="btn0" type="checkbox" class="btn-check-input" data-react-index="0">
+                    <input id="btn0" type="checkbox" class="btn-check-input" data-react-index="0" checked>
                     <label for="btn0" class="btn btn-react">suprised</label>
                 </div>
                 <div class="react-label react-label-0">suprised</div>
@@ -125,9 +125,9 @@
                 <div class="react-label react-label-1">interested</div>
             </div>
             <div class="react-item react-item-2">
-                <div class="react-wedge react-wedge-2" style="--dim: 0%;"></div>
+                <div class="react-wedge react-wedge-2" style="--dim: 100%;"></div>
                 <div class="btn-check react-btn react-label-2">
-                    <input id="btn2" type="checkbox" class="btn-check-input" data-react-index="2">
+                    <input id="btn2" type="checkbox" class="btn-check-input" data-react-index="2" checked>
                     <label for="btn2" class="btn btn-react">happy</label>
                 </div>
                 <div class="react-label react-label-2">happy</div>
@@ -149,9 +149,9 @@
                 <div class="react-label react-label-4">calm</div>
             </div>
             <div class="react-item react-item-5">
-                <div class="react-wedge react-wedge-5" style="--dim: 0%;"></div>
+                <div class="react-wedge react-wedge-5" style="--dim: 100%;"></div>
                 <div class="btn-check react-btn react-label-5">
-                    <input id="btn5" type="checkbox" class="btn-check-input" data-react-index="5">
+                    <input id="btn5" type="checkbox" class="btn-check-input" data-react-index="5" checked>
                     <label for="btn5" class="btn btn-react">okay</label>
                 </div>
                 <div class="react-label react-label-5">okay</div>
@@ -173,9 +173,9 @@
                 <div class="react-label react-label-7">sad</div>
             </div>
             <div class="react-item react-item-8">
-                <div class="react-wedge react-wedge-8" style="--dim: 0%;"></div>
+                <div class="react-wedge react-wedge-8" style="--dim: 100%;"></div>
                 <div class="btn-check react-btn react-label-8">
-                    <input id="btn8" type="checkbox" class="btn-check-input" data-react-index="8">
+                    <input id="btn8" type="checkbox" class="btn-check-input" data-react-index="8" checked>
                     <label for="btn8" class="btn btn-react">dissapointed</label>
                 </div>
                 <div class="react-label react-label-8">dissapointed</div>
@@ -215,87 +215,6 @@
         </div>  <!-- /.row -->
     </div>  <!-- /.container-xl -->
 </main>
-
-<script>
-$('#vis1').on('click', function() {
-    $('.react').removeClass('react-has-label').addClass('react-has-btn');
-});
-$('#vis2').on('click', function() {
-    $('.react').removeClass('react-has-btn').addClass('react-has-label');
-});
-
-
-$('[data-react-index]').on('click', function(e) {
-    var idx = e.currentTarget.dataset.reactIndex;
-    var wedge = document.querySelector('.react-wedge-' + idx);
-    var parent = e.currentTarget.closest('.react');
-
-    if (e.currentTarget.checked) {
-        reactDimAnimate(wedge, getRandomInt(15, 100));
-        //reactDimAnimate(wedge, Math.floor(Math.random() * 100), 10);
-        //reactDimAnimate(wedge, 100);
-    } else {
-        reactDimAnimate(wedge, 0);
-    }
-});
-
-function reactDimAnimate(element, newVal) {
-    var start;
-    var duration = 200;
-    var old = parseInt(getComputedStyle(element).getPropertyValue('--dim'), 10);
-    var delta = newVal - old;
-    var isAnimating = false;
-
-    function step(timestamp) {
-        isAnimating = true;
-        if (typeof start === 'undefined') {
-            start = timestamp;
-        }
-        var elapsed = timestamp - start;
-        var elapsedRatio  = elapsed / duration;
-        var update = Math.round(easeInOutQuad(elapsedRatio, old, delta, 1));
-
-        elapsedRatio = elapsedRatio > 1 ? 1 : elapsedRatio;
-        if (update < Math.min(old, newVal)) {
-            update = Math.min(old, newVal);
-        } else if (update > Math.max(old, newVal)) {
-            update = Math.max(old, newVal);
-        }
-
-        element.style.setProperty('--dim', update + '%');
-
-        if (elapsed <= duration || (update > Math.min(old, newVal) && update < Math.max(old, newVal))) {
-            window.requestAnimationFrame(step);
-        } else {
-            isAnimating = false;
-        }
-    }
-
-    if (!isAnimating) {
-        window.requestAnimationFrame(step);
-    }
-}
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-}
-
-/*
-  Easing functions
-  https://spicyyoghurt.com/tools/easing-functions
-
-  t = time
-  b = beginning value
-  c = change in value
-  d = duration
-*/
-function easeInOutQuad (t, b, c, d) {
-    if ((t /= d / 2) < 1) return c / 2 * t * t + b;
-    return -c / 2 * ((--t) * (t - 2) - 1) + b;
-}
-</script>
 
 </body>
 </html>
