@@ -38,11 +38,11 @@
                 <span class="sr-only">Clusive</span>
             </div>
             <button class="navbar-toggle btn btn-primary btn-small" type="button" data-cfw="collapse" data-cfw-collapse-target="#siteNav">
-                <span class="is-open">
+                <span class="not-open">
                     <span class="icon-menu" aria-hidden="true"></span>
                     <span class="sr-only">Open</span>
                 </span>
-                <span class="not-open">
+                <span class="is-open">
                     <span class="icon-cancel" aria-hidden="true"></span>
                     <span class="sr-only">Close</span>
                 </span>
@@ -137,8 +137,8 @@
             </p>
 
             <div class="row">
-                <div class="col">
-                    <div class="library-filter" role="region" aria-label="View and sort options">
+                <div class="col col-md-auto order-md-1">
+                    <div class="library-filter" role="region" aria-label="View options">
                         <ul class="nav">
                             <li class="nav-item">
                                 <span class="library-filter-label">View:</span>
@@ -149,6 +149,99 @@
                                     <li><a href="#">My content</a></li>
                                 </ul>
                             </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col col-md-auto order-md-2">
+                    <div class="mb-1">
+                        <button type="button" class="btn btn-primary" data-cfw="collapse" data-cfw-collapse-target="#filterSelection">
+                            <span class="not-open">Show filters</span>
+                            <span class="is-open">Hide filters</span>
+                        </button>
+                        <a href="#" role="button" class="ms-0_5">Clear filters</a>
+                    </div>
+                </div>
+                <div class="col-12 order-md-4">
+                    <div class="row library-filter-row collapse" id="filterSelection" role="region" aria-label="filters">
+                        <div class="col-md-8">
+                            <div class="box library-filter-box">
+                                <fieldset data-clusive="filterAllUpdate">
+                                    <legend class="form-label lh-1 pt-0"><strong>Topic</strong></legend>
+                                    <div class="form-check form-checkradio">
+                                        <input class="form-check-input" type="checkbox" id="topicAll" data-clusive="filterAll" value="" checked>
+                                        <label class="form-check-label" for="topicAll">All topics and genres</label>
+                                    </div>
+                                    <div class="box-divider-thin"></div>
+                                    <div class="library-filter-columns">
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic0" value="Adventure">
+                                            <label class="form-check-label" for="topic0">Adventure</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic1" value="Art">
+                                            <label class="form-check-label" for="topic1">Art</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic2" value="Animals">
+                                            <label class="form-check-label" for="topic2">Animals</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic3" value="Autobiography">
+                                            <label class="form-check-label" for="topic3">Autobiography</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic4" value="Biography">
+                                            <label class="form-check-label" for="topic4">Biography</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic5" value="Comedy">
+                                            <label class="form-check-label" for="topic5">Comedy</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic6" value="Debate">
+                                            <label class="form-check-label" for="topic6">Debate</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic7" value="Drama">
+                                            <label class="form-check-label" for="topic7">Drama</label>
+                                        </div>
+                                        <div class="form-check form-checkradio">
+                                            <input class="form-check-input" type="checkbox" id="topic8" value="Education">
+                                            <label class="form-check-label" for="topic8">Education</label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="box library-filter-box">
+                                <fieldset data-clusive="filterAllUpdate">
+                                    <legend class="form-label lh-1 pt-0"><strong>Word Count</strong></legend>
+                                    <div class="form-check form-checkradio">
+                                        <input class="form-check-input" type="checkbox" id="countAll" data-clusive="filterAll" value="" checked>
+                                        <label class="form-check-label" for="countAll">All word counts</label>
+                                    </div>
+                                    <div class="box-divider-thin"></div>
+                                    <div class="form-check form-checkradio">
+                                        <input class="form-check-input" type="checkbox" id="count0" value="0">
+                                        <label class="form-check-label" for="count0"><500 words</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input class="form-check-input" type="checkbox" id="count1" value="1">
+                                        <label class="form-check-label" for="count1">500 &ndash; 30,000 words</label>
+                                    </div>
+                                    <div class="form-check form-checkradio">
+                                        <input class="form-check-input" type="checkbox" id="count2" value="2">
+                                        <label class="form-check-label" for="count2">30,000+ words</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-md-end order-md-3">
+                    <div class="library-filter" role="region" aria-label="Sort and layout options">
+                        <ul class="nav">
                             <li class="nav-item">
                                 <span class="library-filter-label">Sort by:</span>
                                 <button type="button" class="link-btn" data-cfw="dropdown">Date added <span class="caret aria-hidden="true"></span></button>
@@ -159,35 +252,21 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <span class="library-filter-label">View as:</span>
-                                <ul class="library-filter-list">
-                                    <li class="library-filter-item">
-                                        <span class="library-filter-link active"><span class="icon-th-large" aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+                                <span class="library-filter-label">Layout:</span>
+                                <button type="button" class="link-btn" data-cfw="dropdown">Bricks <span class="caret aria-hidden="true"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
                                     </li>
-                                    <li class="library-filter-item">
-                                        <a href="library-list.html" class="library-filter-link"><span class="icon-menu" aria-hidden="true"></span>list</a>
+                                    <li>
+                                        <span class="dropdown-item active" tabindex="-1"><span class="icon-th-large" aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+                                    </li>
+                                    <li>
+                                        <a href="library-list.html"><span class="icon-menu" aria-hidden="true"></span>list</a>
                                     </li>
                                 </ul>
                             </li>
                         </ul>
-                    </div>
-
-                    <div class="library-grid-options">
-                        <div class="library-filter" role="region" aria-label="Cascading grid options">
-                            <ul class="nav">
-                                <li class="nav-item">
-                                    <span class="library-filter-label">Cascading grid:</span>
-                                    <ul class="library-filter-list">
-                                        <li class="library-filter-item">
-                                            <button type="button" class="link-btn library-masonry-on" onclick="libraryMasonryEnable();">Enable</button>
-                                        </li>
-                                        <li class="library-filter-item">
-                                            <button type="button" class="link-btn library-masonry-off" onclick="libraryMasonryDisable();" disabled>Disable</button>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -209,10 +288,21 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col card-library-tag">
-                                <a href="#" class="btn btn-tag link-above">abolition</a>
-                                <a href="#" class="btn btn-tag link-above">autobiography</a>
-                                <a href="#" class="btn btn-tag link-above">United States History</a>
+                                <span class="badge badge-tag">art</span>
+                                <span class="badge badge-tag">non-fiction</span>
+                                <span class="badge badge-tag">
+                                    <span class="badge-item">
+                                        <span class="icon-align-left" aria-hidden="true"></span>
+                                        51 <span class="sr-only">words</span>
+                                    </span>
+                                    <span class="badge-item">
+                                        <span class="icon-picture" aria-hidden="true"></span>
+                                        6 <span class="sr-only">images</span>
+                                    </span>
+                                </span>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-auto card-library-action">
                                 <span class="btn-check link-above">
                                     <input id="fav0" type="checkbox" class="btn-check-input">
@@ -252,6 +342,8 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col card-library-tag"></div>
+                        </div>
+                        <div class="row">
                             <div class="col-auto card-library-action">
                                 <span class="dropdown link-above">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
@@ -284,6 +376,8 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col card-library-tag"></div>
+                        </div>
+                        <div class="row">
                             <div class="col-auto card-library-action">
                                 <span class="dropdown link-above">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
@@ -316,10 +410,22 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col card-library-tag">
-                                <a href="#" class="btn btn-tag link-above">abolition</a>
-                                <a href="#" class="btn btn-tag link-above">autobiography</a>
-                                <a href="#" class="btn btn-tag link-above">United States History</a>
+                                <span class="badge badge-tag">science</span>
+                                <span class="badge badge-tag">sports</span>
+                                <span class="badge badge-tag">non-fiction</span>
+                                <span class="badge badge-tag">
+                                    <span class="badge-item">
+                                        <span class="icon-align-left" aria-hidden="true"></span>
+                                        312 <span class="sr-only">words</span>
+                                    </span>
+                                    <span class="badge-item">
+                                        <span class="icon-picture" aria-hidden="true"></span>
+                                        10 <span class="sr-only">images</span>
+                                    </span>
+                                </span>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-auto card-library-action">
                                 <span class="btn-check link-above">
                                     <input id="fav0" type="checkbox" class="btn-check-input">
@@ -359,6 +465,8 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col card-library-tag"></div>
+                        </div>
+                        <div class="row">
                             <div class="col-auto card-library-action">
                                 <span class="dropdown link-above">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
@@ -388,10 +496,21 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col card-library-tag">
-                                <a href="#" class="btn btn-tag link-above">abolition</a>
-                                <a href="#" class="btn btn-tag link-above">autobiography</a>
-                                <a href="#" class="btn btn-tag link-above">United States History</a>
+                                <span class="badge badge-tag">art</span>
+                                <span class="badge badge-tag">non-fiction</span>
+                                <span class="badge badge-tag">
+                                    <span class="badge-item">
+                                        <span class="icon-align-left" aria-hidden="true"></span>
+                                        51 <span class="sr-only">words</span>
+                                    </span>
+                                    <span class="badge-item">
+                                        <span class="icon-picture" aria-hidden="true"></span>
+                                        6 <span class="sr-only">images</span>
+                                    </span>
+                                </span>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-auto card-library-action">
                                 <span class="btn-check link-above">
                                     <input id="fav0" type="checkbox" class="btn-check-input">
@@ -454,7 +573,30 @@
 </div>
 
 <script>
-    libraryMasonryEnable();
+libraryMasonryEnable();
+
+function libraryMasonryDisable() {
+    'use strict';
+
+    var elem = document.querySelector('.library-grid');
+    elem.classList.remove('has-masonry');
+
+    document.removeEventListener('update.cisl.prefs', libraryMasonryLayout);
+
+    if (libraryMasonryApi !== null) {
+        libraryMasonryApi.destroy();
+        libraryMasonryApi = null;
+    }
+}
+
+$(document.body).one('themeControls', function() {
+    var html = '</br>';
+    html += 'Masonry: ';
+    html += '<a href="#" role="button" style="color: #009 !important;" onclick="libraryMasonryDisable(); return false;">Disable</a> |';
+    html += '<a href="#" role="button" style="color: #009 !important;" onclick="libraryMasonryEnable(); return false;">Enable</a>';
+    html += '</br>';
+    $('#themeTest').append(html);
+});
 </script>
 
 </body>

@@ -41,7 +41,9 @@ $enable-form-validation-icon:           false;
 
 // Components
 $enable-alert:                          false;
-$enable-badge:                          false;
+$enable-badge:                          true;
+$enable-badge-close:                    false;
+$enable-badge-group:                    false;
 $enable-breadcrumb:                     false;
 $enable-btn-group:                      false;
 $enable-card-subtitle:                  false;
@@ -76,7 +78,9 @@ $enable-nav-fill:                       false;
 $enable-nav-justify:                    false;
 $enable-tab-content:                    true;
 $enable-pagination:                     true;
-$enable-progress:                       false;
+$enable-progress:                       true;
+$enable-progress-striped:               false;
+$enable-progress-animated:              false;
 
 // Widgets
 $enable-modal-fullscreen:               false;
@@ -92,7 +96,16 @@ $enable-utility-display-down-none:      true;
 $enable-utility-display-print:          false;
 $enable-utility-user-select:            false;
 $enable-utility-pointer-events:         false;
-$enable-utility-flex:                   false;
+$enable-utility-flex-order:             true;
+$enable-utility-flex-direction:         false;
+$enable-utility-flex-wrap:              false;
+$enable-utility-flex-justify:           false;
+$enable-utility-flex-items:             false;
+$enable-utility-flex-content:           false;
+$enable-utility-flex-self:              false;
+$enable-utility-flex-sizing:            false;
+
+
 $enable-utility-float:                  false;
 $enable-utility-overflow:               false;
 $enable-utility-position:               false;
@@ -276,6 +289,12 @@ $form-switch-thumb-focus-bg:                var(--CT_formSwitchThumbFocusBg);
 $form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
 $form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
 $form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
+
+$progress-height:                           1.5rem;
+$progress-bg:                               transparent;
+$progress-border-radius:                    .25rem;
+$progress-bar-color:                        $body-color;
+$progress-bar-bg:                           var(--CT_progressBarBg);
 
 $dropdown-bg:                               var(--CT_dropdownBg);
 $dropdown-color:                            var(--CT_dropdownColor);
@@ -471,3 +490,14 @@ $toobox-btn-font-size:                  1.25rem;
 
 $img-ratio-mascot:                      .95614;
 $img-ratio-mascot-tipped:               .7807;
+
+$star-size:                             2em;
+$star-spacing-x:                        .75em;
+$star-focus-box-shadow:                 $input-focus-box-shadow;
+
+$tag-padding-y:                         .125em;
+$tag-padding-x:                         .5em;
+$tag-margin-y:                          .125rem;
+$tag-margin-right:                      .125rem;
+$tag-font-size:                         .875rem;
+$tag-font-weight:                       400;

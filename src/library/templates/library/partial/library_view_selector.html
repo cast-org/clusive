@@ -30,38 +30,47 @@
             </ul>
         </li>
         <li class="nav-item">
-            <span class="library-filter-label">View as:</span>
-            <ul class="library-filter-list">
-                <li class="library-filter-item">
+            <span class="library-filter-label">Layout:</span>
+            <button type="button" class="link-btn" data-cfw="dropdown">
+            {% if style == 'bricks' %}
+            Bricks
+            {% elif style == 'grid' %}
+            Grid
+            {% elif style == 'list' %}
+            List
+            {% endif %}
+            <span class="caret aria-hidden="true"></span></button>
+            <ul class="dropdown-menu">
+                <li>
                     {% if style == 'bricks' %}
-                        <span class="library-filter-link active"><span class="icon-bricks" aria-hidden="true"></span>bricks <span class="sr-only">current</span></span>
+                        <span class="dropdown-item active"><span class="icon-bricks" aria-hidden="true"></span>bricks <span class="sr-only">current</span></span>
                     {% else %}
                         {% if period %}
-                            <a href="{% url 'library' style='bricks' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
+                            <a href="{% url 'library' style='bricks' view=current_view period_id=period.id %}"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
                         {% else %}
-                            <a href="{% url 'library' style='bricks' view=current_view %}" class="library-filter-link"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
+                            <a href="{% url 'library' style='bricks' view=current_view %}"><span class="icon-bricks" aria-hidden="true"></span>bricks</a>
                         {% endif %}
                     {% endif %}
                 </li>
-                <li class="library-filter-item">
+                <li>
                     {% if style == 'grid' %}
-                        <span class="library-filter-link active"><span class="icon-th-large" aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
+                        <span class="dropdown-item active"><span class="icon-th-large" aria-hidden="true"></span>grid <span class="sr-only">current</span></span>
                     {% else %}
                         {% if period %}
-                            <a href="{% url 'library' style='grid' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-th-large" aria-hidden="true"></span>grid</a>
+                            <a href="{% url 'library' style='grid' view=current_view period_id=period.id %}"><span class="icon-th-large" aria-hidden="true"></span>grid</a>
                         {% else %}
-                            <a href="{% url 'library' style='grid' view=current_view %}" class="library-filter-link"><span class="icon-th-large" aria-hidden="true"></span>grid</a>
+                            <a href="{% url 'library' style='grid' view=current_view %}"><span class="icon-th-large" aria-hidden="true"></span>grid</a>
                         {% endif %}
                     {% endif %}
                 </li>
-                <li class="library-filter-item">
+                <li>
                     {% if style == 'list' %}
-                        <span class="library-filter-link active"><span class="icon-menu" aria-hidden="true"></span>list <span class="sr-only">current</span></span>
+                        <span class="dropdown-item active"><span class="icon-menu" aria-hidden="true"></span>list <span class="sr-only">current</span></span>
                     {% else %}
                         {% if period %}
-                            <a href="{% url 'library' style='list' view=current_view period_id=period.id %}" class="library-filter-link"><span class="icon-menu" aria-hidden="true"></span>list</a>
+                            <a href="{% url 'library' style='list' view=current_view period_id=period.id %}"><span class="icon-menu" aria-hidden="true"></span>list</a>
                         {% else %}
-                            <a href="{% url 'library' style='list' view=current_view %}" class="library-filter-link"><span class="icon-menu" aria-hidden="true"></span>list</a>
+                            <a href="{% url 'library' style='list' view=current_view %}"><span class="icon-menu" aria-hidden="true"></span>list</a>
                         {% endif %}
                     {% endif %}
                 </li>

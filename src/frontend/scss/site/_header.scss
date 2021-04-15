@@ -27,20 +27,6 @@ html {
     background: var(--CT_headerBg);
     @include border-radius($header-navbar-border-radius);
 
-    .navbar-toggle {
-        &:not(.open) {
-            .not-open {
-                display: none;
-            }
-        }
-
-        &.open {
-            .is-open {
-                display: none;
-            }
-        }
-    }
-
     @include media-breakpoint-up(md) {
         height: $header-md-navbar-height;
 
