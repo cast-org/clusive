@@ -1,17 +1,16 @@
 import logging
 
 from django.db import models
+from django.utils import timezone
 
-from roster.models import ClusiveUser
 from library.models import Book
+from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
 
 
 class ComprehensionCheck:
-    scale_response_title = "How much did you learn from this reading?"
     scale_response_key = "scale_response"
-    free_response_title = "What's one thing you learned?"    
     free_response_key = "free_response"
 
     class ComprehensionScale:
@@ -35,6 +34,8 @@ class ComprehensionCheckResponse(models.Model):
         null=True
     )    
     comprehension_free_response = models.TextField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return '<CCResp %s/%d>' % (self.user.anon_id, self.book.id)

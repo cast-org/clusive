@@ -9,17 +9,9 @@ var clusiveAssessment = {
 clusiveAssessment.showCompCheck = function() {
     'use strict';
 
-    clusiveAssessment.enableButton();
     if (!clusiveAssessment.compCheckDone) {
         $('#compPop').CFW_Popover('show');
     }
-};
-
-clusiveAssessment.enableButton = function() {
-    'use strict';
-
-    $('#noCompButton').hide();
-    $('#compButton').show();
 };
 
 clusiveAssessment.setUpCompCheck = function() {
@@ -29,7 +21,6 @@ clusiveAssessment.setUpCompCheck = function() {
 
     // Retrieve existing comprehension check values and set them
     $.get('/assessment/comprehension_check/' + bookId, function(data) {
-        clusiveAssessment.enableButton();
         clusiveAssessment.compCheckDone = true;
         var scaleResponse = data.scale_response;
         var freeResponse = data.free_response;
@@ -67,7 +58,9 @@ clusiveAssessment.setUpCompCheck = function() {
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
             var freeResponse = $('textarea[name="comprehension-free"]').val();
             var comprehensionResponse = {
+                scaleQuestion: $('#compScaleQuestion').text(),
                 scaleResponse: scaleResponse,
+                freeQuestion: $('#compFreeQuestion').children(':visible').text(),
                 freeResponse: freeResponse,
                 bookVersionId: clusiveContext.reader.info.publication.version_id,
                 bookId: clusiveContext.reader.info.publication.id,

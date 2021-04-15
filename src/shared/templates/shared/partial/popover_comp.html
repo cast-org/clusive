@@ -7,7 +7,7 @@
         </div>
         <div class="popover-body">
             <form id="comprehensionCheckForm">
-                <p>How much did you learn from this reading?</p>
+                <p id="compScaleQuestion">How much did you learn from this reading?</p>
                 <div class="form-inline">
                     <div class="form-check form-checkradio me-1">
                         <input id="compRadio0-0" class="form-check-input" type="radio" name="comprehension-scale" value="2">
@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div id="comprehensionFreeResponseArea" class="form-group" style="display:none;">
-                    <label for="compText0" class="form-label">
+                    <label id="compFreeQuestion" for="compText0" class="form-label">
                         <span id="compTextPromptYes" style="display:none;">What's one thing you learned?</span>
                         <span id="compTextPromptNo" style="display:none;">Comments:</span>
                     </label>
