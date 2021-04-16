@@ -74,6 +74,8 @@ class Event(models.Model):
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
     control = models.CharField(max_length=64, null=True)
+    # For assessment events, the question being answered.
+    object = models.CharField(max_length=128, null=True)
     # For events that operate on text (lookup, highlight), the actual text looked up or highlighted
     # For preferences, the new value chosen for the preference
     value = models.CharField(max_length=128, null=True)
@@ -87,7 +89,7 @@ class Event(models.Model):
               session=None, login_session=None, group=None, parent_event_id=None,
               book_version=None, book_id=None, book_version_id=None,
               resource_href=None, resource_progression=None, page=None,
-              control=None, value=None, event_time=None):
+              control=None, object=None, value=None, event_time=None):
         """Create an event based on the data provided."""
         if not session and not login_session:
             logger.error("Either a session object or a login_session must be provided")
@@ -102,6 +104,8 @@ class Event(models.Model):
             if event_time == None:
                 event_time = timezone.now()
             clusive_user = login_session.user
+            if object and len(object) > 128:
+                object = object[:126] + '…'
             if value and len(value) > 128:
                 value = value[:126] + '…'
             if not book_version_id and book_version:
@@ -129,6 +133,7 @@ class Event(models.Model):
                         resource_progression=resource_progression,
                         page=page,
                         control=control,
+                        object=object,
                         value=value,
                         event_time=event_time)
             return event

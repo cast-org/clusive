@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('./fontello.eot?13561234');
-  src: url('./fontello.eot?13561234#iefix') format('embedded-opentype'),
-       url('./fontello.woff2?13561234') format('woff2'),
-       url('./fontello.woff?13561234') format('woff'),
-       url('./fontello.ttf?13561234') format('truetype'),
-       url('./fontello.svg?13561234#fontello') format('svg');
+  src: url('./fontello.eot?74232978');
+  src: url('./fontello.eot?74232978#iefix') format('embedded-opentype'),
+       url('./fontello.woff2?74232978') format('woff2'),
+       url('./fontello.woff?74232978') format('woff'),
+       url('./fontello.ttf?74232978') format('truetype'),
+       url('./fontello.svg?74232978#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('./fontello.svg?13561234#fontello') format('svg');
+    src: url('./fontello.svg?74232978#fontello') format('svg');
   }
 }
 */
@@ -42,7 +42,7 @@
 
   /* Animation center compensation - margins should be symmetric */
   /* remove if not needed */
-  /* margin-left: .2em; */
+  /*margin-left: .2em; */
 
   /* you can be more comfortable with increased icons size */
   /* font-size: 120%; */
@@ -71,7 +71,7 @@
 .icon-volume-down:before { content: '\e80d'; } /* '' */
 .icon-climb:before { content: '\e80e'; } /* '' */
 .icon-hike:before { content: '\e80f'; } /* '' */
-.icon-logo-clusive:before { content: '\e810'; } /* '' */
+.icon-logo-clusive-orig:before { content: '\e810'; } /* '' */
 .icon-logo-clusive-toggle:before { content: '\e811'; } /* '' */
 .icon-a:before { content: '\e812'; } /* '' */
 .icon-walk:before { content: '\e813'; } /* '' */
@@ -105,6 +105,13 @@
 .icon-view-paged:before { content: '\e82f'; } /* '' */
 .icon-view-scroll:before { content: '\e830'; } /* '' */
 .icon-switch:before { content: '\e831'; } /* '' */
+.icon-universal-access:before { content: '\e832'; } /* '' */
+.icon-thought:before { content: '\e833'; } /* '' */
+.icon-logo-clusive:before { content: '\e834'; } /* '' */
+.icon-align-left:before { content: '\e835'; } /* '' */
+.icon-picture:before { content: '\e836'; } /* '' */
+.icon-cloud:before { content: '\e837'; } /* '' */
+.icon-flash:before { content: '\e838'; } /* '' */
 .icon-crown:before { content: '\e844'; } /* '' */
 .icon-move:before { content: '\f047'; } /* '' */
 .icon-bookmark-empty:before { content: '\f097'; } /* '' */
@@ -119,3 +126,4 @@
 .icon-ellipsis:before { content: '\f141'; } /* '' */
 .icon-ellipsis-vert:before { content: '\f142'; } /* '' */
 .icon-sticky-note-o:before { content: '\f24a'; } /* '' */
+.icon-hand-paper-o:before { content: '\f256'; } /* '' */

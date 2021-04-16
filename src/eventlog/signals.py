@@ -23,6 +23,7 @@ preference_changed = Signal(providing_args=['request', 'event_id', 'preference',
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
 word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating', 'book_id'])
+assessment_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
 
 #
 # Signal handlers that log specific events
@@ -143,11 +144,12 @@ def get_common_event_args(kwargs):
 
 # General function for event creation
 # Defaults action and type to the most common TOOL_USE_EVENT type
-def create_event(kwargs, control=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):
+def create_event(kwargs, control=None, object=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):
     common_event_args = get_common_event_args(kwargs)
     event = Event.build(type=event_type,                        
                         action=action,
                         control=control,
+                        object=object,
                         value=value,
                         **common_event_args)                      
     if event:
@@ -156,7 +158,18 @@ def create_event(kwargs, control=None, value=None, action='USED', event_type='TO
         # See https://docs.djangoproject.com/en/3.1/ref/models/instances/#validating-objects
         event.save()
 
-# word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
+@receiver(assessment_completed)
+def log_comprehension_check_completed(sender, **kwargs):
+    """User completes a comprehension check"""    
+    action = 'COMPLETED'
+    event_type = 'ASSESSMENT_ITEM_EVENT'
+    key = kwargs.get('key')
+    question = kwargs.get('question')
+    answer = kwargs.get('answer')
+    # 'request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id
+    control = 'comprehension_check_%s' % key
+    create_event(kwargs, control=control, object=question, value=answer, action=action, event_type=event_type)
+
 @receiver(word_rated)
 def log_word_rated(sender, **kwargs):
     """User rates a word"""

@@ -93,11 +93,13 @@
 .card-library-action {
     // 1. Use flex to remove whitespace between items
     // 2. Reduce margin/spacing to pull buttons out more
+    // 3. Push to right side of card
     display: flex; // 1
     align-items: flex-end;
     padding-right: .5rem; // 2
     margin-top: -.25rem; // 2
     margin-bottom: -.25rem; // 2
+    margin-left: auto; // 3
     white-space: nowrap;
 
     .dropdown {

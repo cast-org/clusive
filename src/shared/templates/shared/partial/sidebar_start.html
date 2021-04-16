@@ -13,8 +13,16 @@
 {% endif %}
 {% if why %}
 <div class="sidebar-support" role="region" aria-label="Support">
+    <button id="compButton" type="button" class="btn btn-nav btn-icon btn-thought" data-cfw="popover"
+            data-cfw-popover-target="#compPop" data-cfw-popover-viewport="viewport"
+            data-cfw-popover-container="body" data-cfw-popover-placement="top"
+            arial-label="Your thoughts" title="Your thoughts">
+        <span class="icon-thought" aria-hidden="true"></span>
+        <span class="sr-only">Your thoughts</span>
+    </button>
+
     {% if version_count == 1 %}
-    <span class="d-inline-block" tabindex="0" title="Can't switch: there is only one version of this content."
+    <span class="d-inline-block mt-0_75" tabindex="0" title="Can't switch: there is only one version of this content."
           data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="forward">
         <button id="noSwitchButton" type="button" disabled class="btn btn-nav btn-icon btn-switch-level">
             <span class="icon-ci-car" aria-hidden="true"></span>
@@ -37,3 +45,5 @@
     {% endif %}
 </div>
 {% endif %}
+
+{% include "shared/partial/popover_comp.html" %}

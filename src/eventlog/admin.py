@@ -17,7 +17,7 @@ class EventAdmin(admin.ModelAdmin):
                        'type', 'action',
                        'actor', 'group', 'membership',
                        'book_id', 'book_version_id', 'resource_href', 'resource_progression', 'tip_type',
-                       'page', 'control', 'value',
+                       'page', 'control', 'object', 'value',
                        'parent_event_id', 'session', )
     list_display = ('event_time', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
                     'book_id', 'book_version_id')

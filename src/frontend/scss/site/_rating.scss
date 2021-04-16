@@ -1,0 +1,508 @@
+@mixin star-disabled() {
+    &::before {
+        color: var(--CT_starsIconDisabledColor);
+    }
+    &::after {
+        color: var(--CT_starsIconDisabledColorAfter);
+    }
+}
+
+@mixin star-default() {
+    &::before {
+        color: var(--CT_starsIconActiveColor);
+        text-shadow: var(--CT_starsIconActiveTextShadow);
+    }
+    &::after {
+        display: none;
+    }
+}
+
+@mixin star-inactive() {
+    &::before {
+        color: var(--CT_starsIconColor);
+        text-shadow: none;
+    }
+    &::after {
+        display: block;
+        color: var(--CT_starsIconColorAfter);
+        content: "\e826";
+    }
+}
+
+@mixin star-active() {
+    &::before {
+        color: var(--CT_starsIconActiveColor);
+        text-shadow: var(--CT_starsIconActiveTextShadow);
+    }
+
+    &::after {
+        display: none;
+    }
+}
+
+.stars {
+    margin-bottom: 1rem;
+}
+
+.stars-outer {
+    padding: .25rem 0;
+    border-top: 3px solid var(--CT_starsBorderColor);
+    border-bottom: 3px solid var(--CT_starsBorderColor);
+}
+
+.stars-inner {
+    --starSize: #{$star-size};
+
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    line-height: 1;
+
+    > input {
+        position: absolute;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    > label {
+        position: relative;
+        box-sizing: content-box;
+        display: inline-block;
+        flex-grow: 1;
+        width: var(--starSize);
+        height: var(--starSize);
+        padding: #{$star-spacing-x / 2};
+        margin: 0;
+        line-height: 1;
+        cursor: pointer;
+
+        &::before,
+        &::after {
+            position: absolute;
+            left: 50%;
+            display: block;
+            width: 1em;
+            height: 1em;
+            // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+            font-family: fontello;
+            @include font-size( var(--starSize));
+            line-height: 1;
+            text-align: center;
+            //pointer-events: none;
+            content: "\e825";
+            //opacity: 0;
+            transform: translateX(-50%);
+        }
+
+        @include star-default();
+    }
+
+    > input:checked ~ label,
+    > input:focus ~ label {
+        @include star-inactive();
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > input:checked[disabled] ~ label,
+    > input:checked:disabled ~ label {
+        @include star-disabled();
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > input:checked[disabled] + label,
+    > input:checked:disabled + label,
+    > input:checked + label,
+    > input:focus + label {
+        @include star-active();
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > input[disabled] + label,
+    > input:disabled + label {
+        cursor: default;
+    }
+
+    &:hover > input:not([disabled]):not(:disabled) + label {
+        @include star-active();
+    }
+
+    > input:not([disabled]):not(:disabled):hover ~ label {
+        @include star-inactive();
+    }
+
+    > input:not([disabled]):not(:disabled):hover + label {
+        @include star-active();
+    }
+
+    > input:focus + label {
+        &::before {
+            @include border-radius(50%);
+            @include box-shadow($star-focus-box-shadow);
+        }
+    }
+}
+
+.stars-focus-indicator {
+    display: none;
+}
+
+.stars-no-rate {
+    &:focus {
+        ~ .stars-focus-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: block;
+            content: "";
+            @include box-shadow($star-focus-box-shadow);
+        }
+    }
+}
+
+.stars-text {
+    text-align: center;
+}
+
+.stars-chart {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid var(--CT_starsBorderColor);
+
+    // Switch to vertical orientation
+    .progress {
+        flex-direction: column-reverse;
+        width: $progress-height;
+        height: 5rem;
+
+        .progress-bar {
+            height: calc((var(--progressSize) / var(--progressMax)) * 100%);
+            @include border-radius($progress-border-radius);
+        }
+    }
+}
+.stars-chart-item {
+    position: relative;
+    display: inline-flex;
+    flex-flow: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: flex-end;
+}
+.stars-chart-result {
+    position: absolute;
+    bottom: -1.5rem;
+}
+
+// Reaction/Assessment chart
+.react {
+    --reactPad: 1rem;
+    --reactLine: var(--CT_reactLine);
+    --reactIcon: var(--CT_reactIcon);
+    --reactW0: var(--CT_reactW0);
+    --reactW1: var(--CT_reactW1);
+    --reactW2: var(--CT_reactW2);
+    --reactW3: var(--CT_reactW3);
+    --reactW4: var(--CT_reactW4);
+    --reactW5: var(--CT_reactW5);
+    --reactW6: var(--CT_reactW6);
+    --reactW7: var(--CT_reactW7);
+    --reactW8: var(--CT_reactW8);
+    --reactW9: var(--CT_reactW9);
+    --reactW10: var(--CT_reactW10);
+    --reactW11: var(--CT_reactW11);
+    --sideLen: 28.8675134595; // c = (50 * sin(30))) / sin(60)
+
+    position: relative;
+    width: 100%;
+    //min-width: 20rem;
+    // Use `Max` in place of `max` to work around Sass/CSS collision, see: https://css-tricks.com/when-sass-and-new-css-features-collide/
+    // stylelint-disable-next-line function-name-case
+    padding: 1rem Max(2rem, calc((100 - 56.25) / 2 * 1%)); // try to keep 16:9
+    overflow: hidden;
+}
+.react-chart {
+    position: relative;
+    width: 100%;
+    padding: var(--reactPad);
+}
+.react-chart::before {
+    display: block;
+    padding-top: 100%;
+    content: "";
+}
+.react-chart-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.react-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: block;
+    width: calc(100% - (var(--reactPad) * 2));
+    height: 1px;
+    content: "";
+    background-color: var(--reactLine);
+    transform-origin: center center;
+}
+.react-line-0 {
+    width: calc(100% + (var(--reactPad) * 1));
+    transform: translate3d(-50%, -50%, 0) rotate(0);
+}
+.react-line-0::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+    font-family: fontello;
+    @include font-size(1rem);
+    line-height: 1;
+    color: var(--reactIcon);
+    text-align: center;
+    content: "\e808";
+    transform: translate3d(-100%, -50%, 0) translateX(-.375rem);
+}
+.react-line-0::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+    font-family: fontello;
+    @include font-size(1rem);
+    line-height: 1;
+    color: var(--reactIcon);
+    text-align: center;
+    content: "\e807";
+    transform: translate3d(100%, -50%, 0) translateX(.375rem);
+}
+.react-line-1 {
+    width: calc(100% - (var(--reactPad) * 1));
+    transform: translate3d(-50%, -50%, 0) rotate(30deg);
+}
+.react-line-2 {
+    transform: translate3d(-50%, -50%, 0) rotate(60deg);
+}
+.react-line-3 {
+    transform: translate3d(-50%, -50%, 0) rotate(90deg);
+}
+.react-line-3::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+    font-family: fontello;
+    @include font-size(1rem);
+    line-height: 1;
+    color: var(--reactIcon);
+    text-align: center;
+    content: "\e838";
+    transform: translate3d(-100%, -50%, 0) translateX(-.375rem) rotate(-90deg);
+}
+.react-line-3::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+    font-family: fontello;
+    @include font-size(1rem);
+    line-height: 1;
+    color: var(--reactIcon);
+    text-align: center;
+    content: "\e837";
+    transform: translate3d(100%, -50%, 0) translateX(.375rem) rotate(-90deg);
+}
+.react-line-4 {
+    transform: translate3d(-50%, -50%, 0) rotate(120deg);
+}
+.react-line-5 {
+    width: calc(100% - (var(--reactPad) * 1));
+    transform: translate3d(-50%, -50%, 0) rotate(150deg);
+}
+
+.react-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    display: block;
+    width: calc(100% - (var(--reactPad) * 2));
+    height: calc(100% - (var(--reactPad) * 2));
+    content: "";
+    @include border-radius(50%);
+    @include transition(background .15s ease);
+    transform-origin: center center;
+}
+.react-wedge {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(50% 50%, 50% 0, calc((50 + var(--sideLen)) * 1%) 0);
+}
+
+.react-item-0 {
+    transform: translate3d(-50%, -50%, 0) rotate(0);
+}
+.react-item-1 {
+    transform: translate3d(-50%, -50%, 0) rotate(30deg);
+}
+.react-item-2 {
+    transform: translate3d(-50%, -50%, 0) rotate(60deg);
+}
+.react-item-3 {
+    transform: translate3d(-50%, -50%, 0) rotate(90deg);
+}
+.react-item-4 {
+    transform: translate3d(-50%, -50%, 0) rotate(120deg);
+}
+.react-item-5 {
+    transform: translate3d(-50%, -50%, 0) rotate(150deg);
+}
+.react-item-6 {
+    transform: translate3d(-50%, -50%, 0) rotate(180deg);
+}
+.react-item-7 {
+    transform: translate3d(-50%, -50%, 0) rotate(210deg);
+}
+.react-item-8 {
+    transform: translate3d(-50%, -50%, 0) rotate(240deg);
+}
+.react-item-9 {
+    transform: translate3d(-50%, -50%, 0) rotate(270deg);
+}
+.react-item-10 {
+    transform: translate3d(-50%, -50%, 0) rotate(300deg);
+}
+.react-item-11 {
+    transform: translate3d(-50%, -50%, 0) rotate(330deg);
+}
+.react-wedge-0 {
+    background: radial-gradient(closest-side, var(--reactW0) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-1 {
+    background: radial-gradient(closest-side, var(--reactW1) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-2 {
+    background: radial-gradient(closest-side, var(--reactW2) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-3 {
+    background: radial-gradient(closest-side, var(--reactW3) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-4 {
+    background: radial-gradient(closest-side, var(--reactW4) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-5 {
+    background: radial-gradient(closest-side, var(--reactW5) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-6 {
+    background: radial-gradient(closest-side, var(--reactW6) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-7 {
+    background: radial-gradient(closest-side, var(--reactW7) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-8 {
+    background: radial-gradient(closest-side, var(--reactW8) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-9 {
+    background: radial-gradient(closest-side, var(--reactW9) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-10 {
+    background: radial-gradient(closest-side, var(--reactW10) var(--dim), transparent calc(var(--dim) + 1%));
+}
+.react-wedge-11 {
+    background: radial-gradient(closest-side, var(--reactW11) var(--dim), transparent calc(var(--dim) + 1%));
+}
+
+.react-label,
+.react-btn {
+    position: absolute;
+    top: 0;
+    left: calc((50 + var(--sideLen) / 2) * 1%);
+    white-space: nowrap;
+    pointer-events: auto;
+    transform-origin: left center;
+}
+.react-label {
+    @include font-size(.8125rem);
+}
+.react:not(.react-has-label) .react-label {
+    @include sr-only();
+}
+.react-btn .btn {
+    padding: .25rem .375em;
+    @include font-size(.8125rem);
+    line-height: 1;
+    @include border-radius(.5rem);
+}
+.react:not(.react-has-btn) .react-btn {
+    display: none;
+}
+
+.react-label-0 {
+    transform: translate3d(0, -100%, 0) rotate(0);
+}
+.react-label-1 {
+    // transform: translate3d(0, -100%, 0) rotate(-30deg);
+    transform: translate3d(12%, -100%, 0) rotate(-30deg);
+}
+.react-label-2 {
+    transform: translate3d(0, -100%, 0) rotate(-60deg);
+}
+.react-label-3 {
+    transform: translate3d(0, -100%, 0) rotate(-90deg);
+}
+.react-label-4 {
+    // transform: translate3d(0, -100%, 0) rotate(-120deg);
+    transform: translate3d(-5%, -100%, 0) rotate(-120deg);
+}
+.react-label-5 {
+    transform: translate3d(0, -100%, 0) rotate(-150deg);
+}
+.react-label-6 {
+    transform: translate3d(0, -100%, 0) rotate(-180deg) translateX(-100%);
+}
+.react-label-7 {
+    // transform: translate3d(0, -100%, 0) rotate(-210deg) translateX(-100%);
+    transform: translate3d(12%, -100%, 0) rotate(-210deg) translateX(-100%);
+}
+.react-label-8 {
+    // transform: translate3d(0, -100%, 0) rotate(-240deg) translateX(-100%);
+    // transform: translate3d(0, -100%, 0) rotate(-240deg) translateX(-85%);
+    transform: translate3d(-2%, -105%, 0) rotate(-240deg) translateX(-87%);
+}
+.react-label-9 {
+    transform: translate3d(0, -100%, 0) rotate(-270deg) translateX(-100%);
+}
+.react-label-10 {
+    // transform: translate3d(0, -100%, 0) rotate(-300deg) translateX(-100%);
+    transform: translate3d(-5%, -100%, 0) rotate(-300deg) translateX(-100%);
+}
+.react-label-11 {
+    transform: translate3d(0, -100%, 0) rotate(-330deg) translateX(-100%);
+}
+
+.box .react {
+    --reactLine: var(--CT_reactBoxLine);
+    --reactIcon: var(--CT_reactBoxIcon);
+}
