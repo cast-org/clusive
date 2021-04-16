@@ -295,20 +295,22 @@ def set_sort_fields(book):
                 book.sort_author = sort_author
 
 def set_subjects(book):
-    # Read the subject array out of the first version.
+    # Get all valid subjects
+    valid_subjects = Subject.objects.all()
+
+    # Read the subject array out of the first version of the book
     bv = book.versions.all()[0]
     if os.path.exists(bv.manifest_file):
         with open(bv.manifest_file, 'r') as file:
             manifest = json.load(file)
-            subject_list = manifest['metadata'].get('subject')
-            logger.debug('These are the subjects: %s', subject_list)
-            # Loop through the subjects array
-            # check each of the subject entries against what is in the Subject table
-            for s in subject_list:
-                if Subject.objects.filter(subject=s).exists():
+            book_subjects = manifest['metadata'].get('subject')
+            logger.debug('These are the book subjects: %s', book_subjects)
+
+            # Loop through subjects array checking for valid subjects only
+            for s in book_subjects:
+                if valid_subjects.filter(subject__iexact=s).exists():
                     logger.debug('Adding subject relationship for: %s', s)
-                    subject_object = Subject.objects.filter(subject=s).first()
-                    subject_object.books.add(book)
+                    book.subjects.add(valid_subjects.filter(subject__iexact=s).first())
                 else:
                     logger.debug('Subject is not in the subject table: %s', s)
     else:

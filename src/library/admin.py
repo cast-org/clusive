@@ -73,5 +73,5 @@ class AnnotationAdmin(admin.ModelAdmin):
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ['subject']
+    list_display = ['subject', 'sortOrder']
 

@@ -2,7 +2,7 @@ import logging
 
 from django import forms
 
-from library.models import Book
+from library.models import Book, Subject
 from roster.models import Period, ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -26,13 +26,17 @@ class MetadataForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = ['title', 'sort_title', 'author', 'sort_author', 'description']
+#        fields = ['title', 'sort_title', 'author', 'sort_author', 'description', 'subjects']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Content title'}),
             'sort_title': forms.TextInput(attrs={'placeholder': 'Content title used for sorting'}),
             'author': forms.TextInput(attrs={'placeholder': 'Author of the content'}),
             'sort_author': forms.TextInput(attrs={'placeholder': 'Content author used for sorting'}),
             'description': forms.Textarea(attrs={'placeholder': 'Provide a brief description to show on the Library page.'}),
+            #'subjects': forms.Textarea(attrs={'placeholder': 'Check all that apply.'})
+            #'subjects': forms.ModelMultipleChoiceField(queryset=Subject.objects.all().order_by('sortOrder', 'subject')
         }
+
 
 
 class PeriodModelMultipleChoiceField(forms.ModelMultipleChoiceField):

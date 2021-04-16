@@ -1,0 +1,218 @@
+[
+  {
+    "model": "library.subject",
+    "pk": 1,
+    "fields": {
+      "subject": "Fiction",
+      "sortOrder": 1
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 2,
+    "fields": {
+      "subject": "Non-fiction",
+      "sortOrder": 1
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 3,
+    "fields": {
+      "subject": "Adventure",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 4,
+    "fields": {
+      "subject": "Art",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 5,
+    "fields": {
+      "subject": "Animals",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 6,
+    "fields": {
+      "subject": "Autobiography",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 7,
+    "fields": {
+      "subject": "Biography",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 8,
+    "fields": {
+      "subject": "Comedy",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 9,
+    "fields": {
+      "subject": "Debate",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 10,
+    "fields": {
+      "subject": "Drama",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 11,
+    "fields": {
+      "subject": "Education",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 12,
+    "fields": {
+      "subject": "Entertainment",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 13,
+    "fields": {
+      "subject": "Fantasy",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 14,
+    "fields": {
+      "subject": "Folklore",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 15,
+    "fields": {
+      "subject": "Health",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 16,
+    "fields": {
+      "subject": "History",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 17,
+    "fields": {
+      "subject": "Horror",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 18,
+    "fields": {
+      "subject": "Law & Civics",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 19,
+    "fields": {
+      "subject": "Mystery",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 20,
+    "fields": {
+      "subject": "Picture Book",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 21,
+    "fields": {
+      "subject": "Poetry",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 22,
+    "fields": {
+      "subject": "Sci-Fi",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 23,
+    "fields": {
+      "subject": "Science",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 24,
+    "fields": {
+      "subject": "Short Story",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 25,
+    "fields": {
+      "subject": "Sports",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 26,
+    "fields": {
+      "subject": "Technology",
+      "sortOrder": 2
+    }
+  },
+  {
+    "model": "library.subject",
+    "pk": 27,
+    "fields": {
+      "subject": "Young Adult",
+      "sortOrder": 2
+    }
+  }
+]

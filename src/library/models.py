@@ -14,6 +14,17 @@ from roster.models import ClusiveUser, Period
 
 logger = logging.getLogger(__name__)
 
+class Subject(models.Model):
+    subject = models.CharField(max_length=256, unique=True)
+    # a way to sort or order, especially to separate fiction/non-fiction
+    sortOrder = models.SmallIntegerField()
+
+    class Meta:
+        ordering = ['subject']
+
+    def __str__(self):
+        return self.subject
+
 
 class Book(models.Model):
     """Metadata about a single reading, to be represented as an item on the Library page.
@@ -27,6 +38,7 @@ class Book(models.Model):
     cover = models.CharField(max_length=256, null=True)
     word_count = models.PositiveIntegerField(null=True)
     picture_count = models.PositiveIntegerField(null=True)
+    subjects = models.ManyToManyField(Subject)
 
     @property
     def is_public(self):
@@ -328,12 +340,3 @@ class Annotation(models.Model):
     class Meta:
         ordering = ['progression']
 
-class Subject(models.Model):
-    subject = models.CharField(max_length=256)
-    books = models.ManyToManyField(Book, blank=True)
-
-    class Meta:
-        ordering = ['subject']
-
-    def __str__(self):
-        return self.subject
