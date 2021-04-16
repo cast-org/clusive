@@ -65,14 +65,14 @@
                         Previous
                     </a>
                     {% else %}
-                    <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                    <span class="page-link disabled">
                         <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                         Previous
-                    </a>
+                    </span>
                     {% endif %}
                     {% for pg in paginator.page_range %}
                         {% if pg == page_obj.number %}
-                            <a href="#" class="page-link active" aria-current="page">{{pg}}</a>
+                            <span class="page-link active" aria-current="page">{{pg}}</span>
                         {% else %}
                             <a href="{% pagination_search '' pg  query %}" class="page-link">{{pg}}</a>
                         {% endif %}
@@ -83,10 +83,10 @@
                         <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                     </a>
                     {% else %}
-                    <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                    <span class="page-link disabled">
                         Next
                         <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
-                    </a>
+                    </span>
                     {% endif %}
                 </div>
             </div>
