@@ -109,15 +109,14 @@
 </div>
 
 <div class="form-group">
+    {{ form.subjects.label_tag | formlabel }} *
+    {{ form.subjects.errors }}
     <div class="library-filter-columns">
-        <div class="form-check form-checkradio">
-<!--
-            {{ form.subjects.label_tag | formlabel }} *
-            {{ form.subjects.errors }}
-            {{ form.subjects | formcontrol }}
--->
-            <input class="form-check-input" type="checkbox" id="topic0" value="Adventure">
-            <label class="form-check-label" for="topic0">Adventure</label>
-        </div>
+        {% for checkbox in form.subjects %}
+            <div class="form-check form-checkradio">
+                {{ checkbox.tag | formcontrol }}
+                <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+            </div>
+        {% endfor %}
     </div>
 </div>

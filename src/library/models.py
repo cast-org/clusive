@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 class Subject(models.Model):
     subject = models.CharField(max_length=256, unique=True)
     # a way to sort or order, especially to separate fiction/non-fiction
-    sortOrder = models.SmallIntegerField()
+    sort_order = models.SmallIntegerField()
 
     class Meta:
-        ordering = ['subject']
+        ordering = ['sort_order', 'subject']
 
     def __str__(self):
         return self.subject
