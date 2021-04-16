@@ -88,6 +88,7 @@
 
         --CT_boxBg: #{$box-bg};
         --CT_boxColor: #{$box-color};
+        --CT_boxDivderColor: #{$box-divider-color};
         --CT_boxMascotSize: #{$box-mascot-size};
         //--CT_boxMascotTippedSize: #{$box-mascot-tipped-size};
 
@@ -229,6 +230,17 @@
         --CT_btnFavoriteActiveBg: #{$btn-favorite-active-bg};
         --CT_btnFavoriteActiveColor: #{$btn-favorite-active-color};
         --CT_btnFavoriteActiveBorderColor: #{$btn-favorite-active-border-color};
+
+        --CT_btnReactFocusRingRGB: #{red($btn-react-focus-ring), green($btn-react-focus-ring), blue($btn-react-focus-ring)};
+        --CT_btnReactBg: #{$btn-react-bg};
+        --CT_btnReactColor: #{$btn-react-color};
+        --CT_btnReactBorderColor: #{$btn-react-border-color};
+        --CT_btnReactHoverBg: #{$btn-react-hover-bg};
+        --CT_btnReactHoverColor: #{$btn-react-hover-color};
+        --CT_btnReactHoverBorderColor: #{$btn-react-hover-border-color};
+        --CT_btnReactActiveBg: #{$btn-react-active-bg};
+        --CT_btnReactActiveColor: #{$btn-react-active-color};
+        --CT_btnReactActiveBorderColor: #{$btn-react-active-border-color};
 
         --CT_errorListBg: #{$error-bg};
         --CT_errorListColor: #{$error-color};
@@ -384,6 +396,8 @@
         --CT_formSwitchThumbCheckedBoxShadowRGB: #{red($form-switch-thumb-checked-box-shadow-color), green($form-switch-thumb-checked-box-shadow-color), blue($form-switch-thumb-checked-box-shadow-color)};
         --CT_formSwitchThumbCheckedBoxShadowOpacity: #{$form-switch-thumb-checked-box-shadow-opacity};
 
+        --CT_progressBarBg: #{$progress-bar-bg};
+
         --CT_wordbankBorderColor: #{$wordbank-border-color};
         --CT_wordbankColBg: #{$wordbank-col-bg};
         --CT_wordbankControlColor: #{$wordbank-control-color};
@@ -429,5 +443,30 @@
 
         --CT_imgMascot: #{$img-mascot};
         --CT_imgMascotTipped: #{$img-mascot-tipped};
+
+        --CT_starsBorderColor: #{$stars-border-color};
+        --CT_starsIconColor: #{$stars-icon-color};
+        --CT_starsIconColorAfter: #{$stars-icon-color-after};
+        --CT_starsIconActiveColor: #{$stars-icon-active-color};
+        --CT_starsIconActiveTextShadow: #{$stars-icon-active-text-shadow};
+        --CT_starsIconDisabledColor: #{$stars-icon-disabled-color};
+        --CT_starsIconDisabledColorAfter: #{$stars-icon-disabled-color-after};
+
+        --CT_reactLine: #{$react-line};
+        --CT_reactIcon: #{$react-icon};
+        --CT_reactW0: #{$react-wedge-0};
+        --CT_reactW1: #{$react-wedge-1};
+        --CT_reactW2: #{$react-wedge-2};
+        --CT_reactW3: #{$react-wedge-3};
+        --CT_reactW4: #{$react-wedge-4};
+        --CT_reactW5: #{$react-wedge-5};
+        --CT_reactW6: #{$react-wedge-6};
+        --CT_reactW7: #{$react-wedge-7};
+        --CT_reactW8: #{$react-wedge-8};
+        --CT_reactW9: #{$react-wedge-9};
+        --CT_reactW10: #{$react-wedge-10};
+        --CT_reactW11: #{$react-wedge-11};
+        --CT_reactBoxLine: #{$react-box-line};
+        --CT_reactBoxIcon: #{$react-box-icon};
     }
 }

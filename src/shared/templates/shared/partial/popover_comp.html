@@ -1,0 +1,39 @@
+<div class="popover popover-comp popover-scrollable" id="compPop">
+    <div role="document">
+        <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+        <!-- <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span> -->
+        <div class="popover-header">
+            <strong>Your thoughts?</strong>
+        </div>
+        <div class="popover-body">
+            <form id="comprehensionCheckForm">
+                <p id="compScaleQuestion">How much did you learn from this reading?</p>
+                <div class="form-inline">
+                    <div class="form-check form-checkradio me-1">
+                        <input id="compRadio0-0" class="form-check-input" type="radio" name="comprehension-scale" value="2">
+                        <label for="compRadio0-0" class="form-check-label">A lot</label>
+                    </div>
+                    <div class="form-check form-checkradio me-1">
+                        <input id="compRadio0-1" class="form-check-input" type="radio" name="comprehension-scale" value="1">
+                        <label for="compRadio0-1" class="form-check-label">A little</label>
+                    </div>
+                    <div class="form-check form-checkradio me-1">
+                        <input id="compRadio0-2" class="form-check-input" type="radio" name="comprehension-scale" value="0">
+                        <label for="compRadio0-2" class="form-check-label">Nothing</label>
+                    </div>
+                </div>
+                <div id="comprehensionFreeResponseArea" class="form-group" style="display:none;">
+                    <label id="compFreeQuestion" for="compText0" class="form-label">
+                        <span id="compTextPromptYes" style="display:none;">What's one thing you learned?</span>
+                        <span id="compTextPromptNo" style="display:none;">Comments:</span>
+                    </label>
+                    <div class="stt-wrapper">
+                        <textarea id="compText0" class="form-control" name="comprehension-free"></textarea>
+                        <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#compText0"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="comprehensionCheckSubmit">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
