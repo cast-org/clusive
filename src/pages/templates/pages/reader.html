@@ -197,6 +197,13 @@ var manifest_path = "{{ manifest_path }}";
                         clusiveAssessment.showCompCheck();
                     }
                 },
+                resourceFitsScreen: function() {
+                    var currentResource = D2Reader.currentResource();
+                    var lastResource = (currentResource===D2Reader.totalResources()-1);
+                    if (lastResource) {
+                        clusiveAssessment.showCompCheck();
+                    }
+                },
                 // Not currently using.
                 // resourceAtStart: function() {
                 //     console.debug('resourceAtStart');
