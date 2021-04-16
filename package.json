@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/cast-org/clusive#readme",
   "dependencies": {
-    "@d-i-t-a/reader": "^1.6.14",
+    "@d-i-t-a/reader": "^1.7.5",
     "expose-loader": "2.0.0",
     "figuration": "^4.1.1",
     "fluid-binder": "fluid-project/fluid-binder.git#3283b44cd915f8c8c6a432fa60ccc0983ff547b7",

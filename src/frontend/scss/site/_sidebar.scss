@@ -98,6 +98,10 @@
     align-self: flex-end;
     justify-content: flex-end;
     margin-top: auto;
+
+    .btn + .btn {
+        margin-top: .75rem;
+    }
 }
 
 .sidebar-end {
