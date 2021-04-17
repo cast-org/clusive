@@ -1,5 +1,7 @@
+import logging
 from zipfile import ZipFile
 
+import dawn
 from django.contrib.auth.models import User
 from django.test import TestCase
 # Create your tests here.
@@ -8,6 +10,8 @@ from django.urls import reverse
 from roster.models import ClusiveUser, Period, Site
 from .models import Book, Paradata, BookVersion, BookAssignment
 from .parsing import TextExtractor
+
+logger = logging.getLogger(__name__)
 
 
 class LibraryTestCase(TestCase):
@@ -44,6 +48,15 @@ class LibraryTestCase(TestCase):
         self.assertTrue('penguin' in word_lists['glossary_words'], 'Parser didn\'t find penguin in glossary words')
         self.assertFalse('1' in word_lists['all_words'], 'Parser didn\'t exclude number')
         self.assertFalse('1' in word_lists['non_dict_words'], 'Parser didn\'t exclude number')
+
+    def test_manifest_picture_counting(self):
+        file = '../content/nysed-penguins/nysed-penguins-1.epub'
+        with open(file, 'rb') as f, dawn.open(f) as epub:
+            pictures = 0
+            for item in epub.manifest.values():
+                if item.mimetype.startswith('image/'):
+                    pictures += 1
+        self.assertEqual(1, pictures, 'Should have found one picture in Penguins book')
 
 
 class LibraryApiTestCase(TestCase):
