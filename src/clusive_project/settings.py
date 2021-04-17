@@ -39,10 +39,12 @@ INSTALLED_APPS = [
     'assessment.apps.AssessmentConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

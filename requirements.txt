@@ -14,6 +14,7 @@ marisa-trie==0.7.5
 wordfreq==2.3.2
 textstat==0.6.2
 django-multiselectfield==0.1.12
+django-debug-toolbar==3.2.1
 -e git+https://github.com/IMSGlobal/caliper-python@1.1.0.2#egg=imsglobal_caliper
 -e git+https://github.com/ouhouhsami/django-progressbarupload#egg=django-progressbarupload
 -e git+https://github.com/cast-org/django-session-timeout#egg=django-session-timeout
