@@ -6,6 +6,7 @@
 var exports = {};
 var pub_id = "{{ pub.id }}";
 var pub_version = "{{ version }}";
+var pub_version_id = "{{ version_id }}";
 var manifest_path = "{{ manifest_path }}";
 </script>
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
@@ -189,12 +190,31 @@ var manifest_path = "{{ manifest_path }}";
                     console.warn('Not implemented: Delete annotation: ', annotation.id);
                     return Promise.reject();
                 },
+                resourceAtEnd: function() {
+                    var currentResource = D2Reader.currentResource();
+                    var lastResource = (currentResource===D2Reader.totalResources()-1);
+                    if (lastResource) {
+                        clusiveAssessment.showCompCheck();
+                    }
+                },
+                resourceFitsScreen: function() {
+                    var currentResource = D2Reader.currentResource();
+                    var lastResource = (currentResource===D2Reader.totalResources()-1);
+                    if (lastResource) {
+                        clusiveAssessment.showCompCheck();
+                    }
+                },
+                // Not currently using.
+                // resourceAtStart: function() {
+                //     console.debug('resourceAtStart');
+                // },
                 updateCurrentLocation: function (locator) {
-                    // Grey out navigation buttons when necessary.
-                    var nRes = D2Reader.currentResource();
-                    // console.info('atStart: ', D2Reader.atStart(), ' atEnd: ', D2Reader.atEnd());
-                    var firstResource = (nRes===0);
-                    var lastResource = (nRes===D2Reader.totalResources()-1);
+                    // Grey out forward/back navigation buttons when necessary.
+                    // This logic cannot be moved to resourceAtStart/resourceAtEnd since it also needs to know
+                    // when you move away from the edge, so that the buttons can be re-enabled.
+                    var currentResource = D2Reader.currentResource();
+                    var firstResource = (currentResource===0);
+                    var lastResource = (currentResource===D2Reader.totalResources()-1);
                     if (firstResource) {
                         D2Reader.atStart().then((edge)=>{
                             document.getElementById('prevResourceButton').disabled = edge;

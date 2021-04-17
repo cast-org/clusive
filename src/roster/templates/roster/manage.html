@@ -3,6 +3,23 @@
 
 {% block title %}Manage{% endblock %}
 
+{% block head_additional %}
+<script>
+    $(function() {
+        $('#period-edit-button').on('click', function() {
+            $('#period-edit-button').hide();
+            $('#period-name').hide();
+            $('#period-form').show();
+        });
+        $('#period-edit-cancel').on('click', function() {
+            $('#period-edit-button').show();
+            $('#period-name').show();
+            $('#period-form').hide();
+        });
+    });
+</script>
+{% endblock %}
+
 {% block header %}
 {% include "shared/partial/site_header.html" with page_group="manage" %}
 {% endblock %}
@@ -10,19 +27,40 @@
 {% block content %}
 <div class="content">
     <main id="content" tabindex="-1">
-        <div class="row">
-            <div class="col">
-                <h1>Manage: {{ current_period.name }}</h1>
+        <div class="row" style="align-items: baseline;">
+        {% if current_period %}
+            <div class="col-md-auto pe-md-0_5">
+                <h1>
+                    Manage:
+                </h1>
+            </div>            
+            <div class="col ps-md-0 mb-0_5 mb-md-0">
+                <span id="period-name">{{ current_period.name }}</span>
+                <button id="period-edit-button" class="btn btn-primary btn-small ms-0_25">Edit</button>
+                <form method="post" action="{% url 'manage_edit_period' pk=current_period.pk  %}" id="period-form" class="form-inline" style="display:none;">
+                    {% csrf_token %}
+                    <label class="sr-only" for="{{ period_name_form.name.id_for_label }}">Class name</label>
+                    {{ period_name_form.name }}
+                    <button type="submit" class="btn btn-primary btn-small ms-0_25">Save</button>
+                    <button type="button" id="period-edit-cancel" class="btn btn-link btn-small" href="#">Cancel</button>
+                </form>
             </div>
             {% include "shared/partial/period_selector.html" %}
+            {% else %}
+            <div class="col-md-auto pe-md-0_5">
+                <h1>
+                    No Classes
+                </h1>
+                <p><a href="{% url 'manage_create_period' %}">Add a Class</a> to get started using Clusive with your students or children.</p>
+            </div>            
+            {% endif %}            
         </div>
-
+        {% if current_period %}
         <div class="table-scroll">
             <table class="table table-divided table-roster">
                 <thead>
                 <tr>
-                    <th scope="col">First name</th>
-                    <th scope="col">Last name</th>
+                    <th scope="col">Display name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Username</th>
                     <th scope="col">Password</th>
@@ -36,6 +74,12 @@
                 </tbody>
             </table>
         </div>
+        <p>
+            <a href="{% url 'manage_create_user' period_id=current_period.pk %}" class="btn btn-primary">
+                + Add Student
+            </a>
+        </p>
+        {% endif %}
     </main>
 
 {% endblock %}

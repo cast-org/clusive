@@ -11,7 +11,7 @@
         },
         config: {
             // Interval for trying to flush queue
-            flushInterval: 5000,
+            flushInterval: "@expand:{that}.getFlushInterval(15000)",
             // Namespace for local storage key
             localStorageKey: "clusive.messageQueue.queue"
         },
@@ -66,6 +66,10 @@
                 funcName: "clusive.messageQueue.flushQueue",
                 args: ["{that}", "{that}.setupQueueFlushPromise"]
             },
+            getFlushInterval: {
+                funcName: "clusive.messageQueue.getFlushInterval",
+                args: ["{arguments}.0"]
+            },
             setupQueueFlushPromise: {
                 funcName: "clusive.messageQueue.setupQueueFlushPromise",
                 args: ["{that}", "{arguments}.0", "{that}.handleQueueFlushPromiseSuccess", "{that}.handleQueueFlushPromiseFailure"]
@@ -96,6 +100,11 @@
             }            
         },
     });    
+
+    clusive.messageQueue.getFlushInterval = function (defaultInterval) {
+        console.log("clusive.messageQueue.getFlushInterval", defaultInterval);
+        return defaultInterval;
+    }
 
     clusive.messageQueue.flushQueue = function (that, setupPromiseFunc) {
         // Don't flush if we have an empty queue

@@ -7,7 +7,7 @@
     {% include "shared/partial/head.html" %}
 
     {% comment %}
-    For injection of additional markup into the head are
+    For injection of additional markup into the head area
     {% endcomment %}
     {% block head_additional %}{% endblock %}
 </head>
@@ -45,5 +45,11 @@
     {% include "shared/partial/modal_settings.html" %}
     {% include "shared/partial/modal_switch.html" %}
     {% include "shared/partial/popover_glossary.html" %}
+    {% if not user.is_anonymous %}
+        {% include "shared/partial/modal_timeout.html" %}
+        <button id="modalTimeoutTrigger" type="button" data-cfw="modal" data-cfw-modal-target="#modalTimeout" class="sr-only">
+            Timeout warning
+        </button>
+    {% endif %}
 </body>
 </html>

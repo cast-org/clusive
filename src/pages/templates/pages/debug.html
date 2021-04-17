@@ -1,0 +1,215 @@
+{% extends "shared/base.html" %}
+
+{% block title %}Debug Page{% endblock %}
+
+{% block head_additional %}
+<style>
+
+.debug-table {
+    width: 100%;
+}
+
+#flush-debug-table th, #queue-debug-table th, #flush-debug-table td, #queue-debug-table td {
+    border: 1px solid black;
+    padding: 0.5em;
+    font-size: 1em !important;
+    font-family: monospace !important;
+}
+
+#queue-flush-return-message, #queue-flush-timestamp, #clear-log {
+    font-size: 1em !important;
+    font-family: monospace !important;
+    font-weight: bold;
+}
+
+#debug-page-heading {
+    font-weight: bold;
+    font-size: 1.4em !important;
+}
+
+#debug-flush-heading, #debug-queue-heading {
+    font-weight: bold;
+    font-size: 1.2em !important;
+}
+
+</style>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<h1 id="debug-page-heading">Client-Side Message Queue Debug Page</h1>
+<hr />
+<h2 id="debug-flush-heading">Flush Debugging</h2>
+<label for="flush-override">Queue Flush Interval Override (milliseconds)</label> <input type="number" id="flush-override" step="1000" />
+
+<table id="flush-debug-table" class="debug-table">
+    <tr>
+        <th>caliperEvents queue status</th>
+        <th>preferenceChanges queue status</th>
+    </tr>
+    <tr>
+        <td id="queue-flush-status-clusive-messageQueue-caliperEvents">                    
+        Last flush attempt at: <span id="queue-flush-timestamp"></span><br/>
+        Last return message: <span id="queue-flush-return-message"></span>
+        </td>
+        <td id="queue-flush-status-clusive-messageQueue-preferenceChanges"> 
+        Last flush attempt at: <span id="queue-flush-timestamp"></span><br/>       
+        Last return message: <span id="queue-flush-return-message"></
+        </td>
+    </tr>
+    <tr>
+        <td>Items in queue: <span id="caliperEvents-length"></span></td>
+        <td>Items in queue: <span id="preferenceChanges-length"></span></td>
+    </tr>
+</table>
+<hr />
+<h2 id="debug-queue-heading">Message Queue Log</h2>
+<button id="clear-log">Clear Queue Log</button><br/>
+<table id="queue-debug-table" class="debug-table">
+<tbody>
+<tr>
+    <th id="th-event_id">Page Event Id</th>
+    <th id="th-user_id">User Id</th>
+    <th id="th_type">Type</th>
+    <th id="th_content">Content</th>
+</tr>
+</tbody>
+</table>
+<script>
+
+        PREF_CHANGE = 'PC'
+        CALIPER_EVENT = 'CE'
+        PAGE_TIMING = 'PT'
+        TIP_RELATED_ACTION = 'TRA'
+
+    var eventTypes = {
+        "PC": "Preference Change",
+        "CE": "Caliper Event",
+        "PT": "Page Timing",
+        "TRA": "Tip-Related Action"
+
+    }
+
+    var lastValues = {
+        "clusive.messageQueue.caliperEvents":[],
+        "clusive.messageQueue.preferenceChanges":[]        
+    }
+    var lastCaliperEventsQueue;
+    var lastPreferenceChangesQueue;
+    
+    window.addEventListener('storage', () => {        
+        handleStorageEvent("clusive.messageQueue.caliperEvents");
+        handleStorageEvent("clusive.messageQueue.preferenceChanges");
+        handleQueueLogEvent("clusive.messageQueue.caliperEvents.log.lastQueueFlushInfo");
+        handleQueueLogEvent("clusive.messageQueue.preferenceChanges.log.lastQueueFlushInfo");
+    })
+
+    $("#clear-log").click(function (e) {
+        clearMessageLog();
+        e.preventDefault();
+    })
+
+    $("#flush-override").val(function () {
+        return window.localStorage.getItem("clusive.messageQueue.config.flushInterval")
+    });
+
+    $("#flush-override").change(function () {
+        var overrideValue = $("#flush-override").val();
+        setFlushIntervalOverride(parseInt(overrideValue));
+    });
+
+    function setFlushIntervalOverride(overrideValue) {
+        console.log("Setting flush interval to: ", overrideValue)
+        window.localStorage.setItem("clusive.messageQueue.config.flushInterval", overrideValue);
+    };
+
+    function clearMessageLog() {
+        $("#queue-debug-table").find("tr:not(:first)").remove();
+    }
+
+    function handleStorageEvent(localStorageKey) {
+        var currentQueue = JSON.parse(window.localStorage.getItem(localStorageKey));
+        if(currentQueue) {
+            console.log(localStorageKey + ' Storage Event / Current Queue: ', currentQueue);
+            console.log('Last Queue:', lastValues[localStorageKey]); 
+
+            $('#' + localStorageKey.split('.')[2] + '-length').html(currentQueue.length);
+
+            var newMessages = currentQueue.filter(function (message) {
+                var duplicate = false;            
+                lastValues[localStorageKey].forEach(function (m) {
+                    console.log(message.timestamp, m.timestamp)
+                    if(message.timestamp === m.timestamp) {
+                        duplicate = true;
+                    }          
+                }) 
+                return !duplicate;
+            });
+            newMessages.forEach(function (message) {
+                var eventId = message.content.eventId;
+                var username = message.username;
+                var type = message.content.type;
+                var typeHumanReadable = eventTypes[type];
+                var displayedContent = getDisplayedMessageContent(message.content);
+                
+                $("#queue-debug-table").find("tr:last").after(`<tr>
+                    <td title="${eventId}">${eventId.substring(0,8)}...</td>
+                    <td>${username}</td>
+                    <td title="${type}">${typeHumanReadable}</td>
+                    <td>${displayedContent}</td></tr>`);
+            })            
+            lastValues[localStorageKey] = currentQueue;
+        } else {
+            $('#' + localStorageKey.split('.')[2] + '-length').html('null');
+        }
+    }
+
+    function handleQueueLogEvent(localStorageKey) {
+        var currentLogValue = JSON.parse(window.localStorage.getItem(localStorageKey));
+        if(currentLogValue) {
+            var returnValue = JSON.stringify(currentLogValue.returnMessage, null, 1);
+            var timestamp = JSON.stringify(currentLogValue.timestamp, null, 1);
+            console.log("Log event: ", currentLogValue, localStorageKey);
+            var selectorSuffix = localStorageKey.split(".").slice(0,3).join("-");
+            console.log("selectorSuffix", selectorSuffix);
+            var selector = "#queue-flush-status-" + selectorSuffix;
+            $(selector).find("#queue-flush-return-message").text(returnValue);
+            $(selector).find("#queue-flush-timestamp").text(timestamp);
+        }        
+    }
+
+    function getDisplayedMessageContent(messageContent) {
+            var displayedContent = "[content]";
+            if(messageContent.type === "CE") {
+                displayedContent = `
+                    Type: ${messageContent.caliperEvent.type}<br/>
+                    Action: ${messageContent.caliperEvent.action}<br/>
+                    Control: ${messageContent.caliperEvent.control}<br/>                    
+                    Value: ${messageContent.caliperEvent.value}<br/>`                
+            }
+            if(messageContent.type === "PT") {
+                displayedContent = `
+                    Active Duration: ${messageContent.activeDuration}<br />
+                    Duration: ${messageContent.duration}<br />
+                    Load Time: ${messageContent.loadTime}<br />
+                `
+            }
+            if(messageContent.type === "TRA") {
+                displayedContent = `
+                    Action: ${messageContent.action}
+                `
+            }    
+
+            if(messageContent.type === "PC") {
+                displayedContent = `
+                    Preferences: ${JSON.stringify(messageContent.preferences, null, 1)}
+                `
+            }                
+
+            return displayedContent;
+        }    
+
+</script>
+{% endblock %}

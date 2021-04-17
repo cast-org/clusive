@@ -35,13 +35,15 @@ $enable-form-text:                      true;
 $enable-form-file:                      true;
 $enable-form-color:                     false;
 $enable-form-row:                       false;
-$enable-form-inline:                    false;
+$enable-form-inline:                    true;
 $enable-form-validation-tooltip:        false;
 $enable-form-validation-icon:           false;
 
 // Components
 $enable-alert:                          false;
-$enable-badge:                          false;
+$enable-badge:                          true;
+$enable-badge-close:                    false;
+$enable-badge-group:                    false;
 $enable-breadcrumb:                     false;
 $enable-btn-group:                      false;
 $enable-card-subtitle:                  false;
@@ -54,7 +56,9 @@ $enable-card-img-overlay:               false;
 $enable-card-img-horizontal:            false;
 $enable-card-group:                     false;
 $enable-card-columns:                   false;
-$enable-input-group:                    false;
+$enable-input-group:                    true;
+$enable-input-group-text:               false;
+$enable-input-group-sizing:             false;
 $enable-jumbotron:                      false;
 $enable-list-bulleted:                  true;
 $enable-list-ordered:                   false;
@@ -73,8 +77,10 @@ $enable-nav-vertical:                   true;
 $enable-nav-fill:                       false;
 $enable-nav-justify:                    false;
 $enable-tab-content:                    true;
-$enable-pagination:                     false;
-$enable-progress:                       false;
+$enable-pagination:                     true;
+$enable-progress:                       true;
+$enable-progress-striped:               false;
+$enable-progress-animated:              false;
 
 // Widgets
 $enable-modal-fullscreen:               false;
@@ -86,18 +92,27 @@ $enable-tooltip:                        true;
 $enable-utility-bg:                     false;
 $enable-utility-border:                 false;
 $enable-utility-clearfix:               false;
-$enable-utility-display-down-none:      false;
+$enable-utility-display-down-none:      true;
 $enable-utility-display-print:          false;
 $enable-utility-user-select:            false;
 $enable-utility-pointer-events:         false;
-$enable-utility-flex:                   false;
+$enable-utility-flex-order:             true;
+$enable-utility-flex-direction:         false;
+$enable-utility-flex-wrap:              false;
+$enable-utility-flex-justify:           false;
+$enable-utility-flex-items:             false;
+$enable-utility-flex-content:           false;
+$enable-utility-flex-self:              false;
+$enable-utility-flex-sizing:            false;
+
+
 $enable-utility-float:                  false;
 $enable-utility-overflow:               false;
 $enable-utility-position:               false;
 $enable-utility-shadow:                 false;
 $enable-utility-sizing:                 false;
 $enable-utility-spacing-gap:            false;
-$enable-utility-spacing-padding:        false;
+$enable-utility-spacing-padding:        true;
 $enable-utility-spacing-margin:         true;
 $enable-utility-spacing-margin-auto:    false;
 $enable-utility-spacing-margin-negative:    false;
@@ -116,7 +131,7 @@ $enable-utility-text-colors:            false;
 $enable-utility-text-palette:           false;
 $enable-utility-text-special:           false;
 $enable-utility-text-reset:             false;
-$enable-utility-text-height:            false;
+$enable-utility-text-height:            true;
 $enable-utility-text-size:              false;
 $enable-utility-valign:                 false;
 $enable-utility-visibility:             false;
@@ -174,6 +189,15 @@ $border-radius:                         .5rem;
 // body line-height is set to 1 for Infusion/Redium consitency
 $line-height-base:                      var(--CT_lineHeight);
 
+// Line height utility classes
+$line-heights: (
+    "1":        1,
+    "1_125":    1.125,
+    "1_25":     1.25,
+    "base":     $line-height-base,
+    "1_5":      1.5
+);
+
 $body-bg:                               var(--CT_bodyBg);
 $body-color:                            var(--CT_bodyColor);
 $body-padding-y:                        .625rem;
@@ -222,6 +246,8 @@ $input-focus-box-shadow-size:           0 0 0 .1875rem;
 $input-focus-box-shadow-alpha:          .85;
 $input-focus-box-shadow:                $input-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $input-focus-box-shadow-alpha);
 
+$form-text-color:                       var(--CT_formTextColor);
+
 $form-group-margin-bottom:              .5rem;
 
 $form-checkradio-border-width:          1px;
@@ -263,6 +289,12 @@ $form-switch-thumb-focus-bg:                var(--CT_formSwitchThumbFocusBg);
 $form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
 $form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
 $form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
+
+$progress-height:                           1.5rem;
+$progress-bg:                               transparent;
+$progress-border-radius:                    .25rem;
+$progress-bar-color:                        $body-color;
+$progress-bar-bg:                           var(--CT_progressBarBg);
 
 $dropdown-bg:                               var(--CT_dropdownBg);
 $dropdown-color:                            var(--CT_dropdownColor);
@@ -317,6 +349,7 @@ $popover-footer-border-width:           1px;
 $popover-footer-border-color:           var(--CT_popoverFooterBorderColor);
 $popover-section-border-width:          3px;
 $popover-section-border-color:          var(--CT_popoverSectionBorderColor);
+$popover-comp-md-width:                 22rem;
 
 $modal-backdrop-bg:                     var(--CT_modalBackdropBg);
 $modal-backdrop-opacity:                var(--CT_modalBackdropOpacity);
@@ -377,6 +410,14 @@ $sidebar-sm-gutter:                     2rem;
 $sidebar-xl-width:                      calc((100vw - #{map-get($container-max-widths, xl)} + ((#{$sidebar-sm-width} - #{$body-padding-x}) * 2)) / 2);
 
 $library-grid-gutter:                   2rem;
+
+$box-padding-y:                         .75rem;
+$box-padding-x:                         1rem;
+$box-margin-bottom:                     1rem;
+$box-line-height:                       scale-line-height(1.5);
+$box-border-radius:                     $border-radius;
+$box-mascot-size:                       3.5rem;
+$box-mascot-tipped-size:                4.2865rem;  // align to same vertical size
 
 $setting-padding:                       .75rem 1rem 1rem;
 $setting-border-width:                  3px;
@@ -446,3 +487,17 @@ $toolbox-menu-arrow-width:              1.5rem;
 $toolbox-menu-arrow-height:             1rem;
 $toolbox-btn-padding:                   .125rem .375rem;
 $toobox-btn-font-size:                  1.25rem;
+
+$img-ratio-mascot:                      .95614;
+$img-ratio-mascot-tipped:               .7807;
+
+$star-size:                             2em;
+$star-spacing-x:                        .75em;
+$star-focus-box-shadow:                 $input-focus-box-shadow;
+
+$tag-padding-y:                         .125em;
+$tag-padding-x:                         .5em;
+$tag-margin-y:                          .125rem;
+$tag-margin-right:                      .125rem;
+$tag-font-size:                         .875rem;
+$tag-font-weight:                       400;

@@ -19,21 +19,28 @@ class EventMixin(ContextMixin):
     """
     
     def get(self, request, *args, **kwargs):
-        # Get event ID, it is needed during page construction
+        # Create Event first since Event ID is used during page construction
+        # Note, if no user is logged in this will return None.
         event = Event.build(type='VIEW_EVENT',
                             action='VIEWED',
                             session=request.session)
-        self.event_id = event.id
+        if event:
+            self.event_id = event.id
         # Super will create the page as normal
         result = super().get(request, *args, **kwargs)
-        # Configure_event run last so it can use any info generated during page construction.
-        self.configure_event(event)
-        event.save()
+        if event:
+            self.event_id = event.id
+            # Configure_event is run last so it can use any info generated during page construction.
+            self.configure_event(event)
+            event.save()
         return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['event_id'] = self.event_id
+        try:
+            context['event_id'] = self.event_id
+        except AttributeError:
+            logger.warning('event_id missing from page view.')
         return context
 
     def configure_event(self, event: Event):
@@ -44,7 +51,7 @@ class EventMixin(ContextMixin):
 def event_log_report(request):
     # TODO: get actor in same query
     events = Event.objects \
-        .filter(actor__permission=ResearchPermissions.PERMISSIONED) \
+        .filter(actor__permission__in=ResearchPermissions.RESEARCHABLE) \
         .select_related('actor', 'session', 'group')
 
     response = StreamingHttpResponse(row_generator(events), content_type="text/csv")
@@ -55,11 +62,11 @@ def event_log_report(request):
 def row_generator(events):
     pseudo_buffer = Echo()
     writer = csv.writer(pseudo_buffer)
-    yield writer.writerow(['Start Time', 'User', 'Role', 'Period', 'Site',
+    yield writer.writerow(['Start Time', 'User', 'Role', 'Permission', 'Period', 'Site',
                            'Type', 'Action', 'Page', 'Control', 'Value',
-                           'Book Version ID', 'Book TItle', 'Version Number', 'Book Owner',
+                           'Book Title', 'Book Version', 'Book Owner',
                            'Duration', 'Active Duration',
-                           'Event ID', 'Session ID'])
+                           'Event ID', 'Session ID', 'Book ID', 'Book Version ID'])
     period_site = {}
     book_info = {}
     for e in events:
@@ -101,11 +108,11 @@ def row_for_event(e: Event, period_site, book_info):
             'owner': None
         }
     duration_s = e.duration.total_seconds() if e.duration else ''
-    active_s = e.activeDuration.total_seconds() if e.activeDuration else ''
-    return [e.eventTime, e.actor.anon_id, e.membership, period, site,
+    active_s = e.active_duration.total_seconds() if e.active_duration else ''
+    return [e.event_time, e.actor.anon_id, e.membership, e.actor.permission, period, site,
             e.type, e.action, e.page, e.control, e.value,
-            e.book_version_id, info['title'], info['version'], info['owner'],
-            duration_s, active_s, e.id, e.session.id]
+            info['title'], info['version'], info['owner'],
+            duration_s, active_s, e.id, e.session.id, e.book_id, e.book_version_id]
 
 
 class Echo:

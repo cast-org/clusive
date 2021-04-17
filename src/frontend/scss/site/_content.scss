@@ -47,6 +47,18 @@ body {
     background-color: var(--CT_selectionBg);
 }
 
+
+*:not(.open) {
+    > .is-open {
+        display: none;
+    }
+}
+.open {
+    > .not-open {
+        display: none;
+    }
+}
+
 h1,
 .h1,
 h2,
@@ -85,6 +97,10 @@ h2,
     float: right;
     margin-top: 2em;
     clear: right;
+}
+
+.form-text {
+    line-height: 1.25;
 }
 
 .form-checkradio {
@@ -283,8 +299,8 @@ h2,
     left: $sidebar-width;
     margin-right: ($grid-gutter-width / -2);
     margin-left: ($grid-gutter-width / -2);
-    outline: 0;
     pointer-events: none;
+    outline: 0;
     @include sr-only();
 
     @include media-breakpoint-up(sm) {
@@ -298,5 +314,91 @@ h2,
     }
     .feature-icon {
         margin-left: -1.25rem;
+    }
+}
+
+.rule-text {
+    display: flex;
+    flex-direction: row;
+    padding: .5rem 0;
+
+    &::before,
+    &::after {
+        flex: 1 1;
+        margin: auto;
+        content: "";
+        border-bottom: 1px solid;
+    }
+    &::before {
+        margin-right: .5rem;
+    }
+    &::after {
+        margin-left: .5rem;
+    }
+}
+
+.content-text {
+    max-width: 70ch;
+    margin: 0 auto;
+    line-height: 1.5;
+
+    h1,
+    .h1,
+    h2,
+    .h2,
+    h3,
+    .h3,
+    h4,
+    .h4,
+    h5,
+    .h5,
+    h6,
+    .h6 {
+        font-family: "Arial Black", Arial, sans-serif;
+        font-weight: 900;
+        line-height: 1.125;
+    }
+    h1,
+    .h1 {
+        @include font-size(2rem);
+    }
+
+    h2,
+    .h2 {
+        @include font-size(1.75rem);
+    }
+
+    h3,
+    .h3 {
+        @include font-size(1.5rem);
+    }
+
+    h4,
+    .h4 {
+        @include font-size(1.25rem);
+    }
+
+    h5,
+    .h5 {
+        @include font-size(1.125rem);
+    }
+
+    h6,
+    .h6 {
+        @include font-size(1rem);
+    }
+
+    dt {
+        margin-bottom: -.25rem;
+    }
+
+    address {
+        line-height: 1.25;
+    }
+}
+
+@media (min-width: 36em) {
+    .order-sm-first {
+        order: -1;
     }
 }

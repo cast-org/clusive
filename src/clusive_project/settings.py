@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'glossary.apps.GlossaryConfig',
     'authoring.apps.AuthoringConfig',
     'tips.apps.TipsConfig',
+    'assessment.apps.AssessmentConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
 ]
@@ -160,11 +161,14 @@ SETTINGS_EXPORT = [
 ]
 
 # Session settings
-SESSION_EXPIRE_SECONDS = 1800   # 30 minutes, in seconds
+SESSION_IDLE_SECONDS = 600      # 10 minutes (in seconds)
+SESSION_TIMEOUT_SECONDS = 1500  # 25 minutes
+SESSION_EXPIRE_SECONDS = 1800   # 30 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/dashboard'
 
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py

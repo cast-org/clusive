@@ -53,8 +53,8 @@ class BookAssignmentAdmin(admin.ModelAdmin):
 
 @admin.register(Paradata)
 class ParadataAdmin(admin.ModelAdmin):
-    list_display = ('book', 'user', 'viewCount', 'lastVersion', 'lastLocation')
-    sortable_by = ('book', 'user', 'viewCount')
+    list_display = ('book', 'user', 'view_count', 'last_version', 'last_location')
+    sortable_by = ('book', 'user', 'view_count')
     list_filter = ('book', 'user' )
 
 

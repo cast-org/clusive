@@ -20,6 +20,7 @@
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.1.0/dist/js/figuration.min.js" integrity="sha384-mmncPfSUidq1LlOp/43b1c3A1knjWrGnwec26YYujQlzI2YgCmpcSEtsJ/gjJRHT" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
+<script src="../js/stt.js"></script>
 <script src="./js/theme-test.js"></script>
 
 </head>
@@ -36,11 +37,11 @@
                 <span class="sr-only">Clusive</span>
             </div>
             <button class="navbar-toggle btn btn-primary btn-small" type="button" data-cfw="collapse" data-cfw-collapse-target="#siteNav">
-                <span class="is-open">
+                <span class="not-open">
                     <span class="icon-menu" aria-hidden="true"></span>
                     <span class="sr-only">Open</span>
                 </span>
-                <span class="not-open">
+                <span class="is-open">
                     <span class="icon-cancel" aria-hidden="true"></span>
                     <span class="sr-only">Close</span>
                 </span>
@@ -76,12 +77,6 @@
     <div class="sidebars-wrapper">
         <div class="sidebars">
             <div class="sidebar sidebar-start">
-                <div class="sidebar-support" role="region" aria-label="Support">
-                    <button type="button" class="btn btn-nav btn-icon btn-support-help" aria-label="Help/Information">
-                        <span class="icon-help" aria-hidden="true"></span>
-                        <span class="icon-attention" aria-hidden="true"></span>
-                    </button>
-                </div>
             </div>
 
             <div class="sidebar sidebar-end" role="region" aria-label="Reading tools">
@@ -103,7 +98,25 @@
     <div class="content">
         <main id="content" tabindex="-1">
 
-            <h1>Library</h1>
+            <div class="row mt-0_5">
+                <div class="col">
+                    <h1>Library</h1>
+                </div>
+                <div class="col-md-auto">
+                    <div class="input-group library-search">
+                        <div class="stt-wrapper">
+                            <input id="librarySearch" class="form-control library-search-input" type="search" placeholder="Search library&hellip;" aria-label="Search library&hellip;">
+                            <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#librarySearch"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Showing results 1-10 of 37 for <strong>test.</strong>
+                <a href="#" class="ms-0_5">Show all content</a>
+            </p>
 
             <div class="row">
                 <div class="col">
@@ -479,6 +492,26 @@
                     </div>
                 </div>
             </div>
+
+            <nav aria-label="page">
+                <div class="library-pagination-wrapper">
+                    <div class="pagination library-pagination">
+                        <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                            <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                            Previous
+                        </a>
+                        <a href="#" class="page-link active" aria-current="page">1</a>
+                        <a href="#" class="page-link">2</a>
+                        <a href="#" class="page-link">3</a>
+                        <span class="page-text">&hellip;</span>
+                        <a href="#" class="page-link">9</a>
+                        <a href="#" class="page-link">
+                            Next
+                            <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
         </main>
 
         <footer>

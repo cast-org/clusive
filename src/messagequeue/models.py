@@ -58,3 +58,6 @@ class Message:
     def send_tip_related_action(self):
         tip_related_action.send(sender=self.__class__, timestamp=self.timestamp,
                                 request=self.request, action=self.content['action'])
+
+    def __str__(self):
+        return '<%s: %s>' % (self.type.name, self.content)

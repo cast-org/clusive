@@ -7,7 +7,8 @@ from django.utils import timezone
 from django_session_timeout.signals import user_timed_out
 
 from eventlog.models import LoginSession, Event, SESSION_ID_KEY, PERIOD_KEY
-from roster.models import Period, ClusiveUser
+from library.models import Paradata
+from roster.models import Period, ClusiveUser, UserStats
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,8 @@ vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
-word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
+word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating', 'book_id'])
+assessment_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
 
 #
 # Signal handlers that log specific events
@@ -38,17 +40,30 @@ def log_page_timing(sender, **kwargs):
     if event_id:
         try:
             event = Event.objects.get(id=event_id)
-            logger.debug('Adding page timing to %s: %s', event, times)
-            loadTime = times.get('loadTime')
-            duration = times.get('duration')
-            activeDuration = times.get('activeDuration')
-            if loadTime:
-                event.loadTime = timedelta(milliseconds=loadTime)
-            if duration:
-                event.duration = timedelta(milliseconds=duration)
-            if activeDuration:
-                event.activeDuration = timedelta(milliseconds=activeDuration)
-            event.save()
+            if event.load_time is not None \
+                or event.duration is not None \
+                or event.active_duration is not None:
+                logger.warning('Not overwriting existing page timing info on event %s', event)
+            else:
+                logger.debug('Adding page timing to %s: %s', event, times)
+                load_time = times.get('loadTime')
+                duration = times.get('duration')
+                active_duration = times.get('activeDuration')
+                if load_time:
+                    event.load_time = timedelta(milliseconds=load_time)
+                if duration:
+                    event.duration = timedelta(milliseconds=duration)
+                if active_duration:
+                    event.active_duration = timedelta(milliseconds=active_duration)
+                    # Page view events are used to calculate various totals.
+                    if event.type == 'VIEW_EVENT' and event.action == 'VIEWED':
+                        UserStats.add_active_time(event.actor, event.active_duration)
+                        if event.session is not None:
+                            event.session.add_active_time(event.active_duration)
+                        # For book page views, increment time spent in Book
+                        if event.book_id is not None:
+                            Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=event.active_duration)
+                event.save()
         except Event.DoesNotExist:
             logger.error('Received page timing for a non-existent event %s', event_id)
     else:
@@ -100,13 +115,24 @@ def get_common_event_args(kwargs):
     if event_id:
         try:
             associated_page_event = Event.objects.get(id=event_id)
-            page = associated_page_event.page             
-            book_version_id = associated_page_event.book_version_id
+            page = associated_page_event.page     
+
+            # book_id and book_version id can be supplied by events;
+            # if not supplied, try to fill them in from the associated
+            # page event
+            book_id = kwargs.get('book_id')       
+            if not book_id:
+                book_id = associated_page_event.book_id
+            book_version_id = kwargs.get('book_version_id')
+            if not book_version_id:
+                book_version_id = associated_page_event.book_version_id            
+
             resource_href = get_resource_href(kwargs)            
             resource_progression = get_resource_progression(kwargs)            
             common_event_args = dict(page=page,     
                                 parent_event_id=event_id,     
-                                eventTime=timestamp,
+                                event_time=timestamp,
+                                book_id=book_id,
                                 book_version_id=book_version_id,
                                 resource_href = resource_href,
                                 resource_progression=resource_progression,
@@ -118,11 +144,12 @@ def get_common_event_args(kwargs):
 
 # General function for event creation
 # Defaults action and type to the most common TOOL_USE_EVENT type
-def create_event(kwargs, control=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):
+def create_event(kwargs, control=None, object=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):
     common_event_args = get_common_event_args(kwargs)
     event = Event.build(type=event_type,                        
                         action=action,
                         control=control,
+                        object=object,
                         value=value,
                         **common_event_args)                      
     if event:
@@ -131,7 +158,18 @@ def create_event(kwargs, control=None, value=None, action='USED', event_type='TO
         # See https://docs.djangoproject.com/en/3.1/ref/models/instances/#validating-objects
         event.save()
 
-# word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating'])
+@receiver(assessment_completed)
+def log_comprehension_check_completed(sender, **kwargs):
+    """User completes a comprehension check"""    
+    action = 'COMPLETED'
+    event_type = 'ASSESSMENT_ITEM_EVENT'
+    key = kwargs.get('key')
+    question = kwargs.get('question')
+    answer = kwargs.get('answer')
+    # 'request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id
+    control = 'comprehension_check_%s' % key
+    create_event(kwargs, control=control, object=question, value=answer, action=action, event_type=event_type)
+
 @receiver(word_rated)
 def log_word_rated(sender, **kwargs):
     """User rates a word"""
@@ -140,6 +178,7 @@ def log_word_rated(sender, **kwargs):
     event_type = 'ASSESSMENT_ITEM_EVENT'
     word = kwargs.get('word')
     rating = kwargs.get('rating')
+    book_id = kwargs.get('book_id')
     value = "%s:%s" % (word, rating)    
     create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
 
@@ -189,7 +228,7 @@ def log_login(sender, **kwargs):
     try:
         clusive_user = ClusiveUser.objects.get(user=django_user)
         user_agent = kwargs['request'].META.get('HTTP_USER_AGENT', '')
-        login_session = LoginSession(user=clusive_user, userAgent=user_agent)
+        login_session = LoginSession(user=clusive_user, user_agent=user_agent)
         login_session.save()
         # Put the ID of the database object into the HTTP session so that we know which one to close later.
         django_session = kwargs['request'].session
@@ -208,7 +247,7 @@ def log_login(sender, **kwargs):
                             login_session=login_session,
                             group=current_period)
         event.save()
-        logger.debug("Login by user %s at %s" % (clusive_user, event.eventTime))
+        logger.debug("Login by user %s at %s" % (clusive_user, event.event_time))
     except ClusiveUser.DoesNotExist:
         logger.warning("Login by a non-Clusive user: %s", django_user)
 
@@ -227,10 +266,10 @@ def log_logout(sender, **kwargs):
         if event:
             event.save()
         # Close out session
-        login_session.endedAtTime = timezone.now()
+        login_session.ended_at_time = timezone.now()
         login_session.save()
         clusive_user = login_session.user
-        logger.debug("Logout user %s at %s" % (clusive_user, event.eventTime))
+        logger.debug("Logout user %s at %s" % (clusive_user, event.event_time))
 
 
 @receiver(user_timed_out)
@@ -251,7 +290,7 @@ def log_timeout(sender, **kwargs):
                                 group=period)
             event.save()
             # Close out session
-            login_session.endedAtTime = timezone.now()
+            login_session.ended_at_time = timezone.now()
             login_session.save()
             logger.debug("Timeout user %s", clusive_user)
         except ClusiveUser.DoesNotExist:

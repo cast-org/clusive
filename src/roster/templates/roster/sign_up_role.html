@@ -1,0 +1,35 @@
+{% extends "roster/password_base.html" %}
+{% load static %}
+{% load static figuration %}
+
+{% block title %}Clusive: Account signup{% endblock %}
+
+{% block h1 %}
+<h1 class="mb-1">Create a new account</h1>
+{% endblock %}
+
+{% block instructions %}
+{% endblock %}
+
+{% block form %}
+<h2>Who are you?</h2>
+<p>Which best describes your role?</p>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {% for radio in form.role %}
+        <div class="form-check form-checkradio mb-1">
+            {{ radio.tag | formcontrol }}
+            <label class="form-check-label" for="{{ radio.id_for_label }}">
+                <strong>{{ radio.choice_label }}.</strong>
+                I want to use Clusive
+                {% cycle 'with my students.' 'with my child(ren).' 'myself.' %}
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+    <input type="submit" class="btn btn-secondary" value="Continue"/>
+    <a class="btn btn-link" href="/">Cancel</a>
+</form>
+{% endblock %}
+

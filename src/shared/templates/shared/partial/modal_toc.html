@@ -35,6 +35,11 @@
                         </nav>
                     </div>
                     <div id="notesPanel" class="tab-pane">
+                        {% if not request.clusive_user.is_registered %}
+                        <div class="highlight-action">
+                            <a href="{% url 'sign_up_role' %}" class="btn btn-primary btn-small">Create an account to save your highlights</a>
+                        </div>
+                        {% endif %}
                         <div id="notesList">Loading...</div>
                     </div>
                 </div>

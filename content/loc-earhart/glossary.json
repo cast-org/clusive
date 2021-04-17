@@ -1,0 +1,359 @@
+[
+  {
+    "headword": "barrier",
+    "alternateForms": ["barriers"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Something that blocks the way such as a fence or wall." ,
+        "examples": [ "The cement barrier stopped people from walking into traffic." ],
+        "images": [
+          {
+            "src": "glossimages/barrier1.jpg",
+            "alt": "Photo of a wall.",
+            "description": "A person is trying to climb over the brick wall.",
+            "caption": "The wall is a barrier that blocks this person from easily going over it.",
+            "source": {
+              "url": "https://www.pexels.com/photo/faceless-male-tracer-climbing-brick-fence-in-park-6008935/",
+              "title": "Faceless male tracer climbing brick fence in park",
+              "author": "Mary Taylor",
+              "author_url": "https://www.pexels.com/@mary-taylor",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+{
+    "headword": "impediment",
+    "alternateForms": ["impediments"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Something that blocks the way such as a fence or wall." ,
+        "examples": [ "The wall was an impediment that stopped people from walking into traffic." ],
+        "images": [
+          {
+            "src": "glossimages/barrier1.jpg",
+            "alt": "Photo of a wall.",
+            "description": "A person is trying to climb over the brick wall.",
+            "caption": "The wall is an impediment that blocks this person from easily going over it.",
+            "source": {
+              "url": "https://www.pexels.com/photo/faceless-male-tracer-climbing-brick-fence-in-park-6008935/",
+              "title": "Faceless male tracer climbing brick fence in park",
+              "author": "Mary Taylor",
+              "author_url": "https://www.pexels.com/@mary-taylor",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "find",
+    "alternateForms": ["finds","found","finding"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To come upon after losing something and searching for it." ,
+        "examples": [ "Alex found his father's watch." ],
+        "images": [
+          {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child is finding hidden objects in this popup book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "recover",
+    "alternateForms": ["recovers","recovered","recovering"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To come upon after losing something and searching for it." ,
+        "examples": [ "Alex recovered his father's watch." ],
+        "images": [
+          {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child recovers objects her father has hidden in the book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "polish",
+    "alternateForms": ["polishes","polished","polishing"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make improve, to make better." ,
+        "examples": [ "The team polished their soccer skills at every practice." ], 
+        "images": [
+          {
+            "src": "glossimages/polish1.jpg",
+            "alt": "Photo of a person bouncing a soccer ball on his head.",
+            "description": "A person bouncing a soccer ball on his head.",
+            "caption": "Polishing your skills helps you get better at whatever you want to do.",
+            "source": {
+              "url": "https://www.pexels.com/photo/adult-happy-sportsman-hitting-ball-with-head-5609026/",
+              "title": "Adult happy sportsman hitting ball with head",
+              "author": "Yogendra Singh",
+              "author_url": "https://www.pexels.com/@yogendras31",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "refine",
+    "alternateForms": ["refines","refined","refining"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make improve, to make better." ,
+        "examples": [ "The team refined their soccer skills at every practice." ], 
+        "images": [
+          {
+            "src": "glossimages/polish1.jpg",
+            "alt": "Photo of a person bouncing a soccer ball on his head.",
+            "description": "A person bouncing a soccer ball on his head.",
+            "caption": "Refining your skills helps you get better at whatever you want to do.",
+            "source": {
+              "url": "https://www.pexels.com/photo/adult-happy-sportsman-hitting-ball-with-head-5609026/",
+              "title": "Adult happy sportsman hitting ball with head",
+              "author": "Yogendra Singh",
+              "author_url": "https://www.pexels.com/@yogendras31",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "instrument",
+    "alternateForms": ["instruments"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A tool or mechanical device used for special work." ,
+        "examples": [ "Airplanes have many instruments that help pilots fly." ],
+        "images": [
+          {
+            "src": "glossimages/instrument1.jpg",
+            "alt": "Photo of the instruments in an airplane cockpit",
+            "description": "Instruments in an airplane cockpit. Some instruments show dials, others show numbers. There are many, many instruments shown in this picture. ",
+            "caption": "Instruments a pilot uses to fly an airplane.",
+            "source": {
+              "url": "https://www.pexels.com/photo/black-multicolored-control-panel-lot-726233/",
+              "title": "Black Multicolored Control Panel Lot",
+              "author": "Marina Hinic",
+              "author_url": "https://www.pexels.com/@marina-hinic-199169",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "gizmo",
+    "alternateForms": ["gizmos"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A tool or mechanical device used for special work." ,
+        "examples": [ "Airplanes have many gizmos that help pilots fly." ],
+        "images": [
+          {
+            "src": "glossimages/instrument1.jpg",
+            "alt": "Photo of the instruments in an airplane cockpit",
+            "description": "Instruments in an airplane cockpit. Some instruments show dials, others show numbers. There are many, many instruments shown in this picture. ",
+            "caption": "Some of the gizmos a pilot uses to fly an airplane.",
+            "source": {
+              "url": "https://www.pexels.com/photo/black-multicolored-control-panel-lot-726233/",
+              "title": "Black Multicolored Control Panel Lot",
+              "author": "Marina Hinic",
+              "author_url": "https://www.pexels.com/@marina-hinic-199169",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "depart",
+    "alternateForms": ["departs","departed","departing"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To leave; go away." ,
+        "examples": [ "The boat departed and moved away from the large ship." ],
+        "images": [
+          {
+            "src": "glossimages/depart1.jpg",
+            "alt": "Photo of a small boat moving away from a larger ship.",
+            "description": "A small boat is shown moving away from a larger ship. ",
+            "caption": "A smaller boat departing from a large ship.",
+            "source": {
+              "url": "https://www.pexels.com/photo/high-angle-view-of-people-sailing-on-sea-327337/",
+              "title": "High Angle View of People Sailing on Sea",
+              "author": "Pixabay",
+              "author_url": "https://www.pexels.com/@pixabay",
+              "license": "Free to use (CC0)",
+              "license_url": "https://www.pexels.com/creative-commons-images/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "embark",
+    "alternateForms": ["embarks","embarked","embarking"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To leave; go away." ,
+        "examples": [ "The boat embarked and moved away from the large ship." ],
+        "images": [
+          {
+            "src": "glossimages/depart1.jpg",
+            "alt": "Photo of a small boat moving away from a larger ship.",
+            "description": "A small boat is shown moving away from a larger ship. ",
+            "caption": "A smaller boat embarking from a large ship.",
+            "source": {
+              "url": "https://www.pexels.com/photo/high-angle-view-of-people-sailing-on-sea-327337/",
+              "title": "High Angle View of People Sailing on Sea",
+              "author": "Pixabay",
+              "author_url": "https://www.pexels.com/@pixabay",
+              "license": "Free to use (CC0)",
+              "license_url": "https://www.pexels.com/creative-commons-images/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "career",
+    "alternateForms": ["careers"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "The work a person chooses to do through life." ,
+        "examples": [ "She wants to have a career as a scientist." ],
+        "images": [
+          {
+            "src": "glossimages/career1.jpg",
+            "alt": "Photo of a doctor wearing a white lab coat.",
+            "description": "Photo of a doctor wearing a white lab coat. ",
+            "caption": "This person has a career as a doctor.",
+            "source": {
+              "url": "https://www.pexels.com/photo/woman-in-white-medical-robe-3714743/",
+              "title": "Woman in White Medical Robe",
+              "author": "Jeff Denlea ",
+              "author_url": "https://www.pexels.com/@jeff-denlea-721292",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "thrill",
+    "alternateForms": ["thrills","thrilled","thrilling"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To make someone suddenly excited or very happy." ,
+        "examples": [ "I am thrilled to have a chance to go up in a hot air balloon!" ],
+        "images": [
+          {
+            "src": "glossimages/thrill1.jpg",
+            "alt": "Photo of a with her hands up near her face and her mouth wide open.",
+            "description": "A person with her mouth wide open and her hands on either side of her face. She looks excited.",
+            "caption": "This person is thrilled about something!",
+            "source": {
+              "url": "https://www.pexels.com/photo/photo-of-woman-squatting-on-graffiti-wall-posing-while-looking-away-3006177/",
+              "title": "White and Blue Crew-neck T-shirt",
+              "author": "Atul Choudhary",
+              "author_url": "https://www.pexels.com/@atulchoudharya9",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "nor",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "conjunction",
+        "definition": "Used to introduce a negative phrase or clause, especially after a phrase using neither." ,
+        "examples": [ "He is neither honest nor trustworthy." ]
+      }
+    ]
+  },
+  {
+    "headword": "perish",
+    "alternateForms": ["perishes", "perished","perishing"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To die by violence or in some other sudden way." ,
+        "examples": [ "Many people perished in the earthquake." ]
+      }
+    ]
+  },
+  {
+    "headword": "transatlantic",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adjective",
+        "definition": "Going or reaching across the Atlantic Ocean." ,
+        "examples": [ "We took a transatlantic flight from the U.S. to France." ]
+      }
+    ]
+  }
+]

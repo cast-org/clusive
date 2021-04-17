@@ -1,5 +1,13 @@
 <ul class="navbar-nav">
     <li class="nav-item">
+        {% if page_group == 'dashboard' %}
+        <span class="nav-link current" aria-current="true">Dashboard</span>
+        {% else %}
+        <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+        {% endif %}
+    </li>
+
+    <li class="nav-item">
         {% if page_group == 'library' %}
         <span class="nav-link current" aria-current="true">Library</span>
         {% else %}
@@ -28,13 +36,16 @@
     {% if not user.is_anonymous %}
     <li class="nav-item">
         <a href="#" class="nav-link"data-cfw="dropdown">
-            {{ user }} <span class="caret" aria-hidden="true"></span>
+            {{ user.first_name }} <span class="caret" aria-hidden="true"></span>
         </a>
         <ul class="dropdown-menu dropreverse">
             {% if request.clusive_user.can_set_password %}
             <li><a href="{% url 'password_change' %}">Change password</a></li>
             {% endif %}
-            <li><a id="logoutLink" href="{% url 'logout' %}">Log out</a></li>
+            {% if not request.clusive_user.is_registered %}
+              <li><a href="{% url 'sign_up_role' %}">Create an account</a></li>
+            {% endif %}
+            <li><a id="logoutLink" class="link-logout" href="{% url 'logout' %}">Log out</a></li>
         </ul>
     </li>
     {% else %}

@@ -1,10 +1,12 @@
 import json
 import logging
+from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from multiselectfield import MultiSelectField
 from pytz import country_timezones
 
 logger = logging.getLogger(__name__)
@@ -31,10 +33,11 @@ class Site(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
 
+
 class Period(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    anon_id = models.CharField(max_length=30, unique=True, null=True)
+    name = models.CharField(max_length=100, verbose_name='Class name')
+    anon_id = models.CharField(max_length=30, unique=True, null=True, verbose_name='Anonymous identifier')
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
@@ -63,6 +66,9 @@ class ResearchPermissions:
     PENDING = 'PD'
     DECLINED = 'DC'
     WITHDREW = 'WD'
+    SELF_CREATED = 'SC'
+    PARENT_CREATED = 'PC'
+    TEACHER_CREATED = 'TC'
     TEST_ACCOUNT = 'TA'
     GUEST = 'GU'
 
@@ -71,8 +77,31 @@ class ResearchPermissions:
         (PENDING, 'Pending'),
         (DECLINED, 'Declined'),
         (WITHDREW, 'Withdrew'),
-        (TEST_ACCOUNT, 'Test Account'),
-        (GUEST, 'Guest Account')
+        (SELF_CREATED, 'Self-created account'),
+        (PARENT_CREATED, 'Parent-created account'),
+        (TEACHER_CREATED, 'Teacher-created account'),
+        (TEST_ACCOUNT, 'Test account'),
+        (GUEST, 'Guest account')
+    ]
+
+    RESEARCHABLE = [
+        PERMISSIONED,
+        SELF_CREATED,
+        TEACHER_CREATED,
+        PARENT_CREATED]
+
+
+class EducationLevels:
+    LOWER_ELEMENTARY = 'LE'
+    UPPER_ELEMENTARY = 'UE'
+    MIDDLE_SCHOOL = 'MS'
+    HIGH_SCHOOL = 'HS'
+
+    CHOICES = [
+        (LOWER_ELEMENTARY, 'Lower Elementary'),
+        (UPPER_ELEMENTARY, 'Upper Elementary'),
+        (MIDDLE_SCHOOL, 'Middle School'),
+        (HIGH_SCHOOL, 'High School'),
     ]
 
 
@@ -111,10 +140,11 @@ class LibraryStyles:
 
 
 class ClusiveUser(models.Model):
-    
+    guest_serial_number = 0
+    anon_id_serial_number = 0
+
     # Django standard user class contains the following fields already
     # - first_name
-    # - last_name
     # - username
     # - password
     # - email
@@ -122,6 +152,9 @@ class ClusiveUser(models.Model):
 
     # Anonymous ID for privacy protection when logging activities for research
     anon_id = models.CharField(max_length=30, unique=True, null=True)
+
+    # If True, user cannot log in until they have confirmed their email.
+    unconfirmed_email = models.BooleanField(default=False)
 
     # List of all class periods the user is part of
     periods = models.ManyToManyField(Period, blank=True, related_name='users')
@@ -137,9 +170,28 @@ class ClusiveUser(models.Model):
     library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
                                      choices=LibraryStyles.CHOICES)
 
-    @property 
-    def is_permissioned(self):
-        return self.permission == ResearchPermissions.PERMISSIONED
+    education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
+                                        verbose_name='Education levels',
+                                        default=[])
+
+    # Site that this user is connected to. Although users can have multiple Periods,
+    # these are generally assumed to be all part of one Site.
+    # If this assumption is changed, then the Manage pages will need updates
+    # to allow users to manage their different Sites.
+    def get_site(self):
+        period = self.current_period or self.periods.first()
+        if period:
+            return period.site
+        # If the user can manage periods (Parent or Teacher) 
+        # and doesn't currently have a Site, we create
+        # a personal one for them at this point
+        if self.can_manage_periods:
+            personal_site_name = "user-" + str(self.user.id) + "-personal-site"
+            personal_site = Site(name=personal_site_name)
+            personal_site.save()
+            return personal_site
+        else: 
+            return None
 
     permission = models.CharField(
         max_length=2,
@@ -152,6 +204,14 @@ class ClusiveUser(models.Model):
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
     )
+
+    @property
+    def is_permissioned(self):
+        return self.permission in ResearchPermissions.RESEARCHABLE
+
+    @property
+    def is_registered(self):
+        return self.role and self.role != Roles.GUEST
 
     @property
     def can_set_password(self):
@@ -208,8 +268,6 @@ class ClusiveUser(models.Model):
         except PreferenceSet.DoesNotExist:
             logger.error("preference set named %s not found", prefset_name)       
 
-    guest_serial_number = 0
-
     @classmethod
     def from_request(cls, request):
         try:
@@ -219,20 +277,32 @@ class ClusiveUser(models.Model):
 
     @classmethod
     def next_guest_username(cls):
-        cls.guest_serial_number += 1
-        return 'guest%d' % (cls.guest_serial_number)
+        # Loop until we find an unused username. (should only require looping the first time)
+        while True:
+            cls.guest_serial_number += 1
+            uname = 'guest%d' % (cls.guest_serial_number)
+            if not User.objects.filter(username=uname).exists():
+                return uname
+
+    @classmethod
+    def next_anon_id(cls):
+        # Loop until we find an unused ID. (should only require looping the first time)
+        while True:
+            cls.anon_id_serial_number += 1
+            anon_id = 's%d' % cls.anon_id_serial_number
+            if not ClusiveUser.objects.filter(anon_id=anon_id).exists():
+                return anon_id
 
     @classmethod
     def add_defaults(cls, properties):
         """Add default values to a partially-specified ClusiveUser properties dict.
-
         """
         if not properties.get('role'):
             properties['role'] = Roles.STUDENT
         if not properties.get('password'):
             properties['password'] = User.objects.make_random_password()
         if not properties.get('anon_id'):
-            properties['anon_id'] = properties['username']
+            properties['anon_id'] = cls.next_anon_id()
         if not properties.get('permission'):
             properties['permission'] = ResearchPermissions.TEST_ACCOUNT
         return properties
@@ -260,7 +330,6 @@ class ClusiveUser(models.Model):
         period = Period.objects.get(site__name=props.get('site'), name=props.get('period'))
         django_user = User.objects.create_user(username=props.get('username'),
                                                first_name=props.get('first_name'),
-                                               last_name=props.get('last_name'),
                                                password=props.get('password'),
                                                email=props.get('email'))
         clusive_user = ClusiveUser.objects.create(user=django_user,
@@ -275,17 +344,14 @@ class ClusiveUser(models.Model):
 
     @classmethod
     def make_guest(cls):
-        username = cls.next_guest_username()
-        while User.objects.filter(username=username).exists():
-            username = cls.next_guest_username()
-        logger.info("Creating guest user: %s", username)
-        django_user = User.objects.create_user(username=username,
-                                               first_name='Guest',
-                                               last_name=str(cls.guest_serial_number))
+        uname = cls.next_guest_username()
+        logger.info("Creating guest user: %s", uname)
+        django_user = User.objects.create_user(username=uname,
+                                               first_name='Guest ' + str(cls.guest_serial_number))
         clusive_user = ClusiveUser.objects.create(user=django_user,
                                                   role=Roles.GUEST,
                                                   permission=ResearchPermissions.GUEST,
-                                                  anon_id=username)
+                                                  anon_id=cls.next_anon_id())
         return clusive_user
 
     def __str__(self):
@@ -379,6 +445,7 @@ class UserStats (models.Model):
 
     user = models.OneToOneField(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     reading_views = models.PositiveIntegerField(default=0)
+    active_duration = models.DurationField(null=True)
 
     class Meta:
         verbose_name = 'user stats'
@@ -401,3 +468,11 @@ class UserStats (models.Model):
         if created:
             logger.debug('Created new UserStats object for %s', clusive_user)
         return obj
+
+    @classmethod
+    def add_active_time(cls, clusive_user: ClusiveUser, duration):
+        stats = cls.for_clusive_user(clusive_user)
+        if stats.active_duration is None:
+            stats.active_duration = timedelta()
+        stats.active_duration += duration
+        stats.save()

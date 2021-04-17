@@ -98,6 +98,10 @@
     align-self: flex-end;
     justify-content: flex-end;
     margin-top: auto;
+
+    .btn + .btn {
+        margin-top: .75rem;
+    }
 }
 
 .sidebar-end {
@@ -162,6 +166,42 @@
     &:not(.paused) {
         .tts-resume {
             display: none;
+        }
+    }
+}
+
+.sidebar-no-start {
+    .sidebar-start {
+        visibility: hidden;
+    }
+    .content {
+        padding-left: 2rem;
+    }
+    &.home {
+        .content {
+            padding-left: 1rem;
+
+            @include media-breakpoint-up(sm) {
+                padding-left: 2rem;
+            }
+        }
+    }
+}
+
+.sidebar-no-end {
+    .sidebar-end {
+        visibility: hidden;
+    }
+    .content {
+        padding-right: 2rem;
+    }
+    &.home {
+        .content {
+            padding-right: 1rem;
+
+            @include media-breakpoint-up(sm) {
+                padding-right: 2rem;
+            }
         }
     }
 }

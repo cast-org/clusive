@@ -6,19 +6,23 @@ from eventlog.models import LoginSession, Event
 
 
 class SessionAdmin(admin.ModelAdmin):
-    readonly_fields = ('id', 'user', 'startedAtTime', 'endedAtTime', 'userAgent')
-    list_filter= ('user', 'startedAtTime')
-    list_display = ('id', 'user', 'startedAtTime', 'endedAtTime')
-    ordering = ('-startedAtTime',)
+    readonly_fields = ('id', 'user', 'started_at_time', 'ended_at_time', 'active_duration', 'user_agent')
+    list_filter= ('user', 'started_at_time')
+    list_display = ('id', 'user', 'started_at_time', 'ended_at_time', 'active_duration')
+    ordering = ('-started_at_time',)
 
 
 class EventAdmin(admin.ModelAdmin):
-    readonly_fields = ('id', 'eventTime', 'actor', 'group', 'membership', 'parent_event_id', 'type', 'action', 'session',
-                       'book_version_id', 'resource_href', 'resource_progression', 'page', 'control', 'value')
-    list_display = ('eventTime', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
-                    'book_version_id')
-    list_filter = ('actor__permission', 'eventTime')
-    ordering = ('-eventTime',)
+    readonly_fields = ('id', 'event_time', 'load_time', 'duration', 'active_duration',
+                       'type', 'action',
+                       'actor', 'group', 'membership',
+                       'book_id', 'book_version_id', 'resource_href', 'resource_progression', 'tip_type',
+                       'page', 'control', 'object', 'value',
+                       'parent_event_id', 'session', )
+    list_display = ('event_time', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
+                    'book_id', 'book_version_id')
+    list_filter = ('actor__permission', 'event_time', 'actor')
+    ordering = ('-event_time',)
     change_list_template = 'eventlog/event_changelist.html'
 
     def group_anon_id(self,obj):

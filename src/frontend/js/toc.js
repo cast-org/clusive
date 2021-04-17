@@ -63,9 +63,12 @@ function buildTocLevel(list, level, id) {
                 '</div>';
         }
         out += '<li class="nav-item">' +
-            '<a href="' +
-            element.href +
-            '" onclick="' + click + '" class="' + li_class + '">' +
+            '<a href="' + element.href + '" ' +
+            'data-cle-handler="click" ' +
+            'data-cle-control="reader-navigation-toc" ' +
+            'data-cle-value="toc-nav-link:' + element.href + '" ' +
+            'onclick="' + click + '" ' +
+            'class="' + li_class + '">' +
             element.title +
             '</a>' +
             twiddle +
@@ -133,7 +136,11 @@ function buildTableOfContents() {
 
     if (typeof D2Reader === 'object') {
         D2Reader.tableOfContents().then(function(items) {
-            if (items.length > 1) {
+            var has_structure = items.length > 1;
+            if (items.length === 1 && items[0].children && items[0].children.length > 1) {
+                has_structure = true;
+            }
+            if (has_structure) {
                 $(TOC_EMPTY).hide();
                 var out = buildTocLevel(items, 0, 'toc');
                 $(TOC_CONTAINER).html(out).CFW_Init();
@@ -147,22 +154,11 @@ function buildTableOfContents() {
                         markTocItemActive();
                     }, 100);
                 });
-                // Attach tracking events after markup is built
-                navLinks.each(function (i, elem) {
-                    console.debug("adding tracking for navLink", elem)
-                    var interactionDef = {
-                        selector: elem,
-                        handler: "click",
-                        control: "reader-navigation-toc",
-                        value: "toc-nav-link:" + $(elem).attr("href")
-                    };                    
-                    clusiveEvents.trackControlInteraction(interactionDef);
-                });
             } else {
                 // Empty TOC
                 $(TOC_CONTAINER).hide();
             }
-        });        
+        });
     }
 }
 
@@ -262,19 +258,6 @@ function buildAnnotationList() {
     return $.get('/library/annotationlist/' + window.pub_id + '/' + window.pub_version)
         .done(function(data) {
             $annotationsContainer.html(data);
-            // Add tracking events for using annotation navigation
-            $annotationsContainer.find('.goto-highlight').each(function (i, elem) {
-                var annotationId = $(elem).parent("div").attr("data-annotation-id");
-
-                var interactionDef = {                
-                    selector: elem,
-                    handler: "click",
-                    control: "reader-navigation-annotation",
-                    value: "annotation-nav-link:" + annotationId
-                };           
-
-                clusiveEvents.trackControlInteraction(interactionDef);
-            });
         })
         .fail(function(err) {
             console.error(err);
@@ -385,7 +368,6 @@ function goToAnnotation(event) {
     'use strict';
 
     event.preventDefault();
-    event.stopPropagation();
     var encoded = $(this).closest('.annotation-container').data('annotation');
     // Decode base-64 encoded JSON attribute value
     var json = JSON.parse(atob(encoded));

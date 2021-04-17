@@ -1,0 +1,59 @@
+.stt-wrapper {
+    position: relative;
+
+    textarea,
+    input {
+        padding-right: 1.5rem;
+    }
+
+    &:focus-within {
+        .stt-btn:not(:hover):not(:focus) {
+            color: inherit;
+            opacity: .7;
+        }
+    }
+}
+
+.stt-btn {
+    position: absolute;
+    top: .25em;
+    right: 0;
+    z-index: 100;
+    display: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: .25rem;
+    line-height: 1rem;
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+    content: " ";
+    user-select: none;
+    background-color: transparent;
+    border: 0;
+    @include border-radius(50%);
+    opacity: .2;
+
+    &.enabled {
+        display: block;
+    }
+    &:hover,
+    &:focus {
+        color: inherit;
+        opacity: 1;
+    }
+    &:focus {
+        outline: 0;
+        box-shadow: $btn-focus-box-shadow-size rgba(var(--CT_focusRingRGB), $btn-focus-box-shadow-alpha);
+    }
+    &.active {
+        display: block;
+        //color: #fff;
+        //background-color: #ff665a;
+        color: var(--CT_btnPrimaryActiveColor);
+        background-color: var(--CT_btnPrimaryActiveBg);
+        border-color: var(--CT_btnPrimaryActiveBorderColor);
+        opacity: 1;
+    }
+
+}

@@ -23,7 +23,7 @@ def checklist(request, book_id):
         paradata, created = Paradata.objects.get_or_create(user=user, book=book)
 
         # We present a checklist only the first time a user goes to a new Book
-        if paradata.viewCount > 0:
+        if paradata.view_count > 0:
             logger.debug('Book already viewed, skipping checklist')
             return JsonResponse({'words': []})
 
@@ -108,8 +108,8 @@ def cuelist(request, book_id, version):
     try:
         user = ClusiveUser.objects.get(user=request.user)
         bv = BookVersion.lookup(book_id=book_id, version_number=version)
-        all_glossary_words = json.loads(bv.glossary_words)
-        all_book_words = json.loads(bv.all_words)
+        all_glossary_words = bv.glossary_word_list
+        all_book_words = bv.all_word_list
 
         # Get all a user's words
         all_user_words = list(WordModel.objects.filter(user=user))
@@ -209,8 +209,12 @@ def set_word_rating(request, word, rating):
         base = base_form(word)
         wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
+            book_id = None            
+            if "bookId" in request.GET:                                
+                book_id = request.GET.get("bookId")
             wm.register_rating(rating)
             word_rated.send(sender=GlossaryConfig.__class__,
+                            book_id=book_id,
                             request=request, 
                             word=word, 
                             rating=rating)

@@ -8,20 +8,20 @@
                 <span class="icon-logo-clusive" aria-hidden="true"></span>
                 <span class="sr-only">Clusive</span>
                 {% else %}
-                <a href="{% url 'reader_index' %}" class="icon-logo-clusive-link">
+                <a href="{% url 'dashboard' %}" class="icon-logo-clusive-link">
                     <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
                     <span class="icon-logo-clusive" aria-hidden="true"></span>
-                    <span class="sr-only">Back to Library</span>
+                    <span class="sr-only">Back to dashboard</span>
                 </a>
                 {% endif %}
             </div>
 
             <button class="navbar-toggle btn btn-primary btn-small" type="button" data-cfw="collapse" data-cfw-collapse-target="#siteNav">
-                <span class="is-open">
+                <span class="not-open">
                     <span class="icon-menu" aria-hidden="true"></span>
                     <span class="sr-only">Open</span>
                 </span>
-                <span class="not-open">
+                <span class="is-open">
                     <span class="icon-cancel" aria-hidden="true"></span>
                     <span class="sr-only">Close</span>
                 </span>

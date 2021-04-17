@@ -212,11 +212,25 @@ clusiveTTS.scrollWatchStop = function() {
     $(document).off('wheel keydown touchmove', clusiveTTS.scrollWatch);
 };
 
+clusiveTTS.isVisible = function(elem) {
+    'use strict';
+
+    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length && window.getComputedStyle(elem).visibility !== "hidden");
+}
+
 clusiveTTS.readQueuedElements = function() {
     'use strict';
 
-    if (clusiveTTS.elementsToRead.length > 0) {
-        var toRead = clusiveTTS.elementsToRead.shift();
+     var toRead = null;
+
+     while (clusiveTTS.elementsToRead.length && toRead === null) {
+        toRead = clusiveTTS.elementsToRead.shift();
+        if (!clusiveTTS.isVisible(toRead.element)) {
+            toRead = null;
+        }
+    }
+
+    if (typeof toRead !== 'undefined' && toRead !== null) {
         var end = toRead.end ? toRead.end : null;
         clusiveTTS.readElement(toRead.element, toRead.offset, end);
     } else {

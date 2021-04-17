@@ -15,11 +15,18 @@ class LibraryTestCase(TestCase):
     def test_text_extraction(self):
         te = TextExtractor()
         result = te.extract(
-            '<html><head><title>Hi</title></head><body><p>Some nice text.</p><script type="text/javascript">Script</script><p>More and nicer texts.</p></body></html>')
-        self.assertEqual(result, "Some nice text. More and nicer texts. ")
-        self.assertListEqual(['text', 'nice', 'some', 'more', 'and'],
-                             te.get_word_list(),
-                             "Did not extract correct set of words")
+            '<html><head><title>Hi</title></head><body><p>Some nice text.</p><script type="text/javascript">Script</script><p>More and nicer texts. Imnotinthebook.</p></body></html>')
+        self.assertEqual(result, "Some nice text. More and nicer texts. Imnotinthebook. ")
+        lists = te.get_word_lists(['nice', 'and'])
+        self.assertListEqual(['text', 'nice', 'more', 'and'],
+                             lists['all_words'],
+                             'Did not extract correct set of words')
+        self.assertListEqual(['imnotinthebook', 'some'],
+                             lists['non_dict_words'],
+                             'Did not recognize nonword')
+        self.assertListEqual(['and', 'nice'],
+                             lists['glossary_words'],
+                             'Did not find glossary word')
 
     def test_parse_file(self):
         te = TextExtractor()
@@ -30,10 +37,13 @@ class LibraryTestCase(TestCase):
         result = te.text
         self.assertRegex(result, "Penguins are funny birds")
         self.assertNotRegex(result, "Photo")
-        word_list = te.get_word_list()
-        print(word_list)
-        self.assertTrue('penguin' in word_list, "Parser didn't find a penguin in the penguins article")
-        self.assertFalse('1' in word_list, "Parser didn't exclude number")
+        word_lists = te.get_word_lists(['penguin'])
+        #print(word_lists)
+        self.assertTrue('penguin' in word_lists['all_words'], 'Parser didn\'t find a penguin in the penguins article')
+        self.assertTrue('adelie' in word_lists['non_dict_words'], 'Parser didn\'t find Adelie as non-word')
+        self.assertTrue('penguin' in word_lists['glossary_words'], 'Parser didn\'t find penguin in glossary words')
+        self.assertFalse('1' in word_lists['all_words'], 'Parser didn\'t exclude number')
+        self.assertFalse('1' in word_lists['non_dict_words'], 'Parser didn\'t exclude number')
 
 
 class LibraryApiTestCase(TestCase):
@@ -47,7 +57,7 @@ class LibraryApiTestCase(TestCase):
         self.book.save()
         bv = BookVersion.objects.create(book=self.book, sortOrder=0)
         bv.save()
-        para = Paradata.objects.create(book=self.book, user=cuser, lastVersion = bv)
+        para = Paradata.objects.create(book=self.book, user=cuser, last_version = bv)
         para.save()
 
     def test_setlocation_error_for_get(self):
@@ -65,7 +75,7 @@ class LibraryApiTestCase(TestCase):
         response = self.client.post(reverse('setlocation'), { 'book' : self.book.pk, 'version': '0', 'locator' : 'testtest'})
         self.assertEqual(response.status_code, 200)
         pd = Paradata.objects.get(book=self.book)
-        self.assertEqual('testtest', pd.lastLocation)
+        self.assertEqual('testtest', pd.last_location)
 
 
 class ShareFormTestCase(TestCase):
@@ -89,13 +99,13 @@ class ShareFormTestCase(TestCase):
     def test_adds_assignments(self):
         # Add an assignment
         response = self.client.post(reverse('share', kwargs={'pk': self.book.pk}), { 'periods': self.period.pk})
-        self.assertRedirects(response, '/', fetch_redirect_response=False)
+        self.assertRedirects(response, '/reader', fetch_redirect_response=False)
         assignments = BookAssignment.objects.all()
         self.assertEqual(1, len(assignments))
 
         # And remove it again
         response = self.client.post(reverse('share', kwargs={'pk': self.book.pk}), { })
-        self.assertRedirects(response, '/', fetch_redirect_response=False)
+        self.assertRedirects(response, '/reader', fetch_redirect_response=False)
         assignments = BookAssignment.objects.all()
         self.assertEqual(0, len(assignments))
 

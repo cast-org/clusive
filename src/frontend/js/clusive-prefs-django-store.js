@@ -16,6 +16,9 @@
             onPreferencesSetAdopted: null
         },
         members: {
+            // Holds the initial model (defaults) from the prefs editor
+            initialModel: {                
+            },
             // Holds the time a request was last made
             lastRequestTime: null,
             // Holds the last response for reuse if within the debounce time
@@ -31,7 +34,8 @@
                 type: "clusive.djangoMessageQueue",
                 options: {
                     config: {                        
-                        localStorageKey: "clusive.messageQueue.preferenceChanges"                        
+                        localStorageKey: "clusive.messageQueue.preferenceChanges",
+                        lastQueueFlushInfoKey: "clusive.messageQueue.preferenceChanges.log.lastQueueFlushInfo"
                     }
                 }
             }
@@ -55,7 +59,7 @@
         listeners: {
             'onWrite.impl': {
                 listener: 'clusive.prefs.djangoStore.setUserPreferences',
-                args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue", "{that}.lastRequestTime", "{that}"]
+                args: ["{arguments}.0", "{arguments}.1", "{that}.messageQueue", "{that}.initialModel"]
             }
         },
         invokers: {
@@ -72,8 +76,6 @@
     fluid.makeGradeLinkage('clusive.prefs.djangoStore.linkage', ['fluid.dataSource.writable', 'clusive.prefs.djangoStore'], 'clusive.prefs.djangoStore.writable');
 
     clusive.prefs.djangoStore.getUserPreferences = function(directModel, messageQueue, lastRequestTime, that) {
-        console.debug('clusive.prefs.djangoStore.getUserPreferences', directModel, messageQueue);
-
         var djangoStorePromise = fluid.promise();
 
         var preferenceChangeMessages = [].concat(messageQueue.queue).filter(function (item) {
@@ -107,16 +109,17 @@
             
             // Use cached result if within debounce time
             if(timeDiff < debounce && that.lastResponse) {
-                console.debug('Get user preferences from cache of last result');
+                console.debug('Getting user preferences from cache of last result');
                 djangoStorePromise.resolve({
                     preferences: that.lastResponse
                 });
-            } else if(that.requestIsInFlight) {
-                djangoStorePromise.reject('Won\'t get user preferences from server, another GET request is currently in flight')                
+            } else if(that.requestIsInFlight && that.requestInFlightPromise) {
+                console.debug("Returning Promise from existing in-flight request");
+                return that.requestInFlightPromise;
             } else {
                 that.requestIsInFlight = true;
+                that.requestInFlightPromise = djangoStorePromise;
                 $.get(getURL, function(data) {
-                    that.requestIsInFlight = false;
                     console.debug('Get user preferences from the server ', getURL);
                     console.debug('Received preferences: ', data);
                     that.lastResponse = data;
@@ -125,8 +128,12 @@
                     djangoStorePromise.resolve({
                         preferences: data
                     });
+
+                    that.requestIsInFlight = false;
+                    that.requestInFlightPromise = null;
                 }).fail(function(error) {
                     that.requestIsInFlight = false;
+                    that.requestInFlightPromise = null;
                     console.error('Error getting preferences:', error);
                     djangoStorePromise.reject('error');
                 });
@@ -164,9 +171,10 @@
             });
     };
 
-    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, lastRequestTime, that) {
-        console.debug('clusive.prefs.djangoStore.setUserPreferences', directModel, model, messageQueue);
-        messageQueue.add({"type": "PC", "preferences": fluid.get(model, 'preferences'), "readerInfo": clusiveContext.reader.info, "eventId": PAGE_EVENT_ID});
+    clusive.prefs.djangoStore.setUserPreferences = function(model, directModel, messageQueue, initialModel) {                
+        // Merge non-default preferences (the ones relayed from the editor) with defaults for storage
+        var prefsToSave = $.extend({}, fluid.get(initialModel, "preferences"), fluid.get(model, "preferences"));                
+        messageQueue.add({"type": "PC", "preferences": prefsToSave, "readerInfo": clusiveContext.reader.info, "eventId": PAGE_EVENT_ID});
     };
     
 }(fluid_3_0_0));

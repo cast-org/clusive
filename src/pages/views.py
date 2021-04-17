@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import TemplateView, RedirectView
@@ -13,6 +14,35 @@ from roster.models import ClusiveUser
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
+
+
+class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
+    template_name='pages/dashboard.html'
+
+    def get(self, request, *args, **kwargs):
+        self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
+        if not self.last_reads or len(self.last_reads) < 3:
+            # Add featured books to the list
+            features = list(Book.get_featured_books()[:3])
+            # Remove any featured books that are in the user's last-read list.
+            for para in self.last_reads:
+                if para.book in features:
+                    features.remove(para.book)
+            self.featured = features
+        else:
+            self.featured = []
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['last_reads'] = self.last_reads
+        data['featured'] = self.featured
+        data['query'] = None
+        return data
+
+    def configure_event(self, event: Event):
+        event.page = 'Dashboard'
+
 
 class ReaderIndexView(LoginRequiredMixin,RedirectView):
     """This is the 'home page', currently just redirects to the user's default library view."""
@@ -56,7 +86,7 @@ class ReaderChooseVersionView(RedirectView):
             try:
                 paradata = Paradata.objects.get(book__pk=book_id, user=clusive_user)
                 # Return to the last version this user viewed.
-                v = paradata.lastVersion.sortOrder
+                v = paradata.last_version.sortOrder
                 logger.debug('Returning to last version viewed (%d)', v)
             except:
                 # No previous view - determine where to send the user based on vocabulary.
@@ -114,9 +144,12 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         book_id = kwargs.get('book_id')
         version = kwargs.get('version')
         book = Book.objects.get(pk=book_id)
+        if not book.is_visible_to(request.clusive_user):
+            raise PermissionDenied()
         versions = book.versions.all()
         clusive_user = request.clusive_user
         self.book_version = versions[version]
+        self.book = book
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
         pdata = Paradata.record_view(book, version, clusive_user)
 
@@ -134,9 +167,10 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
 
         self.extra_context = {
             'pub': book,
+            'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
-            'last_position': pdata.lastLocation or "null",
+            'last_position': pdata.last_location or "null",
             'annotations': annotationList,
             'tip_name': tip_name,
         }
@@ -145,6 +179,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
     def configure_event(self, event: Event):
         event.page = self.page_name
         event.book_version_id = self.book_version.id
+        event.book_id = self.book.id
         event.tip_type = self.tip_shown
 
 
@@ -159,3 +194,13 @@ class WordBankView(LoginRequiredMixin, EventMixin, TemplateView):
 
     def configure_event(self, event: Event):
         event.page = 'Wordbank'
+
+
+class DebugView(TemplateView):
+    template_name = 'pages/debug.html'
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+class PrivacyView(TemplateView):
+    template_name = 'pages/privacy.html'

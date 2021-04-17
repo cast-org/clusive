@@ -27,20 +27,6 @@ html {
     background: var(--CT_headerBg);
     @include border-radius($header-navbar-border-radius);
 
-    .navbar-toggle {
-        &:not(.open) {
-            .not-open {
-                display: none;
-            }
-        }
-
-        &.open {
-            .is-open {
-                display: none;
-            }
-        }
-    }
-
     @include media-breakpoint-up(md) {
         height: $header-md-navbar-height;
 
@@ -100,6 +86,25 @@ html {
         color: var(--CT_headerLogoColor);
     }
 
+    @include hover-focus() {
+        > .icon-logo-clusive-toggle {
+            color: var(--CT_headerLogoIconHoverColor);
+        }
+        > .icon-logo-clusive {
+            color: var(--CT_headerLogoHoverColor);
+        }
+    }
+}
+
+.icon-logo-clusive-link-alt {
+    display: flex;
+    align-self: stretch;
+    justify-content: center;
+
+    .icon-logo-clusive {
+        align-self: center;
+        color: var(--CT_bodyColor);
+    }
     @include hover-focus() {
         > .icon-logo-clusive-toggle {
             color: var(--CT_headerLogoIconHoverColor);
