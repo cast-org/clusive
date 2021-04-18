@@ -307,12 +307,13 @@ def set_subjects(book):
             logger.debug('These are the book subjects: %s', book_subjects)
 
             # Loop through subjects array checking for valid subjects only
-            for s in book_subjects:
-                if valid_subjects.filter(subject__iexact=s).exists():
-                    logger.debug('Adding subject relationship for: %s', s)
-                    book.subjects.add(valid_subjects.filter(subject__iexact=s).first())
-                else:
-                    logger.debug('Subject is not in the subject table: %s', s)
+            if book_subjects and isinstance(book_subjects, list):
+                for s in book_subjects:
+                    if valid_subjects.filter(subject__iexact=s).exists():
+                        logger.debug('Adding subject relationship for: %s', s)
+                        book.subjects.add(valid_subjects.filter(subject__iexact=s).first())
+                    else:
+                        logger.debug('Subject is not in the subject table: %s', s)
     else:
         logger.error("Book directory had no manifest: %s", bv.manifest_file)
 
