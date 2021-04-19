@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 from glossary.util import base_form
-from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject
 from library.parsing import TextExtractor, scan_all_books
 
 logger = logging.getLogger(__name__)
@@ -17,11 +17,18 @@ class VersionsInline(admin.StackedInline):
     model = BookVersion
     extra = 0
 
+class SubjectsInline(admin.TabularInline):
+    model = Subject
+    extra = 1
+
+class subjectBookAdmin(admin.ModelAdmin):
+    inlines = (SubjectsInline,)
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'owner', 'title', 'author')
-    sortable_by = ('id', 'owner', 'title', 'author')
+    list_display = ('id', 'owner', 'title', 'author', 'word_count')
+    sortable_by = ('id', 'owner', 'title', 'author', 'word_count')
+    inlines = [subjectBookAdmin]
     inlines = [VersionsInline]
 
     change_list_template = 'library/book_changelist.html'
@@ -63,3 +70,8 @@ class AnnotationAdmin(admin.ModelAdmin):
     list_display = ('user', 'bookVersion', 'dateAdded', 'dateDeleted', 'progression', 'clean_text')
     sortable_by = ('progression', 'user', 'bookVersion', 'dateAdded', 'dateDeleted')
     list_filter = ('bookVersion', 'user' )
+
+@admin.register(Subject)
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ['subject', 'sort_order']
+

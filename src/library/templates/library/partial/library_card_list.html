@@ -19,7 +19,7 @@
                     <div class="col-auto card-toggle">
                         <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-{{ book.id }}">
                             <span class="icon-chevron-right" aria-hidden="true"></span>
-                            <span class="sr-only">Publication settings</span>
+                            <span class="sr-only">Expand card</span>
                         </button>
                     </div>
                 </div>
@@ -28,17 +28,30 @@
                 <div class="card-body">
                     {% if book.description %}<p>{{ book.description|highlight:query }}</p>{% endif %}
                 </div>
-                {% if book.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
                 <div class="card-footer">
                     <div class="row">
                         <div class="col card-library-tag">
+                            {% for s in book.subjects.all %}
+                                <span class="badge badge-tag">{{ s.subject }}</span>
+                            {% endfor %}
+                            <span class="badge badge-tag" title="{{book.word_count}} words, {{book.picture_count}} pictures">
+                                <span class="badge-item">
+                                    <span class="icon-align-left" aria-hidden="true"></span>
+                                    {{ book.word_count }} <span class="sr-only">words</span>
+                                </span>
+                                <span class="badge-item">
+                                    <span class="icon-picture" aria-hidden="true"></span>
+                                    {{ book.picture_count }} <span class="sr-only">pictures</span>
+                                </span>
+                            </span>
                         </div>
+                        {% if book.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
                         <div class="col-auto card-library-action">
                             {% include "library/partial/library_action_menu.html" %}
                         </div>
+                        {% endif %}
                     </div>
                 </div>
-                {% endif %}
             </div>
         </div>
     </div>

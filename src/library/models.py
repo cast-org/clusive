@@ -14,15 +14,31 @@ from roster.models import ClusiveUser, Period
 
 logger = logging.getLogger(__name__)
 
+class Subject(models.Model):
+    subject = models.CharField(max_length=256, unique=True)
+    # a way to sort or order, especially to separate fiction/non-fiction
+    sort_order = models.SmallIntegerField()
+
+    class Meta:
+        ordering = ['sort_order', 'subject']
+
+    def __str__(self):
+        return self.subject
+
 
 class Book(models.Model):
     """Metadata about a single reading, to be represented as an item on the Library page.
     There may be multiple versions of a single Book, which are separate EPUB files."""
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=256)
+    sort_title = models.CharField(max_length=256)
     author = models.CharField(max_length=256)
+    sort_author = models.CharField(max_length=256)
     description = models.TextField(default="", blank=True)
     cover = models.CharField(max_length=256, null=True)
+    word_count = models.PositiveIntegerField(null=True)
+    picture_count = models.PositiveIntegerField(null=True)
+    subjects = models.ManyToManyField(Subject)
 
     @property
     def is_public(self):
@@ -88,6 +104,8 @@ class BookVersion(models.Model):
     """Database representation of metadata about a single EPUB file."""
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='versions')
     sortOrder = models.SmallIntegerField()
+    word_count = models.PositiveIntegerField(null=True)
+    picture_count = models.PositiveIntegerField(null=True)
     glossary_words = models.TextField(default="[]")  # Words in the glossary that occur in this version
     all_words = models.TextField(default="[]")  # All dictionary words that occur in this version
     new_words = models.TextField(default="[]")  # Dictionary words that occur in this version but not the previous one.
