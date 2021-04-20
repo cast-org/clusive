@@ -1,5 +1,6 @@
 {% extends "shared/base.html" %}
 {% load static %}
+{% load pagination %}
 
 {% block bodyClass %}library{% endblock %}
 {% block title %}Library | Clusive{% endblock %}
@@ -14,7 +15,21 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
-    <h1>Library</h1>
+    <div class="row mt-0_5">
+        <div class="col">
+            <h1>Library</h1>
+        </div>
+        <div class="col-md-auto">
+            <form method="get">
+                <div class="input-group library-search">
+                    <div class="stt-wrapper">
+                        {{ search_form.query }}
+                    </div>
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col">
@@ -39,6 +54,43 @@
             {% include "library/partial/library_list_content.html" %}
         {% else %}
             {% include "library/partial/library_grid_content.html" %}
+        {% endif %}
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="page">
+            <div class="library-pagination-wrapper">
+                <div class="pagination library-pagination">
+                    {% if page_obj.has_previous %}
+                    <a href="{% pagination_search '' page_obj.previous_page_number query %}" class="page-link">
+                        <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                        Previous
+                    </a>
+                    {% else %}
+                    <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                        <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                        Previous
+                    </a>
+                    {% endif %}
+                    {% for pg in paginator.page_range %}
+                        {% if pg == page_obj.number %}
+                            <a href="#" class="page-link active" aria-current="page">{{pg}}</a>
+                        {% else %}
+                            <a href="{% pagination_search '' pg  query %}" class="page-link">{{pg}}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <a href="{% pagination_search '' page_obj.next_page_number query %}" class="page-link">
+                        Next
+                        <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                    </a>
+                    {% else %}
+                    <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                        Next
+                        <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
         {% endif %}
     {% endif %}
 </main>

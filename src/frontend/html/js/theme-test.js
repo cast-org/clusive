@@ -1,4 +1,5 @@
 /* exported themeCSS */
+var TOOLTIP_NAME = null;
 
 function themeControls() {
     'use strict';

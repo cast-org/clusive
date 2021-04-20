@@ -430,6 +430,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
             self.handle_no_permission()
         cu = ClusiveUser.objects.create(user=target,
                                         role=Roles.STUDENT,
+                                        anon_id=ClusiveUser.next_anon_id(),
                                         permission=perm)
         # Add user to the Period
         self.period.users.add(cu)

@@ -2,10 +2,21 @@ import logging
 
 from django import forms
 
-from library.models import Book
+from library.models import Book, Subject
 from roster.models import Period, ClusiveUser
 
 logger = logging.getLogger(__name__)
+
+
+class SearchForm(forms.Form):
+    query = forms.fields.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'type': 'search',
+            'placeholder': 'Search library',
+            'aria-label': 'Search library',
+            'class': 'form-control library-search-input',
+        }))
 
 
 class UploadForm(forms.Form):
@@ -25,12 +36,18 @@ class MetadataForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ['title', 'author', 'description']
+        fields = ['title', 'sort_title', 'author', 'sort_author', 'description', 'subjects']
+#        fields = ['title', 'sort_title', 'author', 'sort_author', 'description', 'subjects']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Content title'}),
+            'sort_title': forms.TextInput(attrs={'placeholder': 'Content title used for sorting'}),
             'author': forms.TextInput(attrs={'placeholder': 'Author of the content'}),
+            'sort_author': forms.TextInput(attrs={'placeholder': 'Content author used for sorting'}),
             'description': forms.Textarea(attrs={'placeholder': 'Provide a brief description to show on the Library page.'}),
+            #'subjects': forms.Textarea(attrs={'placeholder': 'Check all that apply.'})
+            'subjects': forms.CheckboxSelectMultiple(),
         }
+
 
 
 class PeriodModelMultipleChoiceField(forms.ModelMultipleChoiceField):
