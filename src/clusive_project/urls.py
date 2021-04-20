@@ -17,10 +17,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
+from django.http import HttpResponse
 
 urlpatterns = [        
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
+    url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow: /account", content_type="text/plain"), name="robots_file"),    
     path('account/', include('roster.urls')),
     path('assessment/', include('assessment.urls')),
     path('author/', include('authoring.urls')),
