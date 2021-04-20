@@ -83,17 +83,22 @@ def update_metadata(xmlstr: str, args) -> str:
 
     if metadata is not None:
         if args.title:
-            if update_simple_metadata_item(metadata, 'title', title, args.title,
-                                           '{http://purl.org/dc/elements/1.1/}title', None):
+            if update_simple_metadata_item(metadata, 'title', title, args.title, '{http://purl.org/dc/elements/1.1/}title', {'id': 'title'}):
                 modified = True
+            if 'id' not in title.attrib:
+                print('  title needs an id attribute')
+                if add_attribute(title, {'id': 'title'}):
+                    modified = True
         if args.language:
-            if update_simple_metadata_item(metadata, 'language', language, args.language,
-                                           '{http://purl.org/dc/elements/1.1/}language', None):
+            if update_simple_metadata_item(metadata, 'language', language, args.language, '{http://purl.org/dc/elements/1.1/}language', None):
                 modified = True
         if args.author:
-            if update_simple_metadata_item(metadata, 'author', author, args.author,
-                                           '{http://purl.org/dc/elements/1.1/}creator', {'id': 'author'}):
+            if update_simple_metadata_item(metadata, 'author', author, args.author,'{http://purl.org/dc/elements/1.1/}creator', {'id': 'author'}):
                 modified = True
+            if 'id' not in author.attrib:
+                print('  author needs an id attribute')
+                if add_attribute(author, {'id': 'author'}):
+                    modified = True
         if args.sorttitle:
             if args.sorttitle is not None:
                 title_id = title.attrib.get('id')
@@ -169,14 +174,15 @@ def update_metadata(xmlstr: str, args) -> str:
 
 
 def update_simple_metadata_item(metadata, elt_name, elt, new_val, elt_spec, attributes):
+    # element exists
     if elt is not None:
         old_val = "".join(elt.itertext())
-        ### print('  Found language: ', "".join(elt.itertext()))
         if old_val == new_val:
             print('  %s unchanged' % elt_name)
             return False
         else:
             print('  Mod. %s: %s -> %s' % (elt_name, old_val, new_val))
+    # create element
     else:
         print('  Create %s: -> %s' % (elt_name, new_val))
         if attributes:
@@ -184,6 +190,12 @@ def update_simple_metadata_item(metadata, elt_name, elt, new_val, elt_spec, attr
         else:
             elt = ET.SubElement(metadata, elt_spec)
     elt.text = new_val
+    return True
+
+
+def add_attribute(elt, attributes):
+    elt.attrib.update(attributes)
+    print('  Adding attribute: %s to %s' % (attributes.keys(), elt))
     return True
 
 
