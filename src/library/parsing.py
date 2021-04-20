@@ -289,6 +289,7 @@ def set_sort_fields(book):
             if author_list:
                 author = author_list[0].get('name')
                 sort_author = author_list[0].get('sortAs')
+                logger.debug('Sort author: %s', sort_author)
                 if not sort_author:
                     # TODO: maybe should make some default assumptions, First Last -> Last first
                     sort_author = author
