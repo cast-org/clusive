@@ -282,6 +282,7 @@ def set_sort_fields(book):
             logger.debug('Sort title: %s', sort_title)
             if not sort_title:
                 # TODO: should make some simple default assumptions, like removing 'The'/'A'
+                logger.debug('Setting sort title to the title: %s', title)
                 sort_title = title
             book.sort_title = sort_title
 
@@ -289,8 +290,10 @@ def set_sort_fields(book):
             if author_list:
                 author = author_list[0].get('name')
                 sort_author = author_list[0].get('sortAs')
+                logger.debug('Sort author: %s', sort_author)
                 if not sort_author:
                     # TODO: maybe should make some default assumptions, First Last -> Last first
+                    logger.debug('Setting sort author to the author: %s', author )
                     sort_author = author
                 book.sort_author = sort_author
 
@@ -307,7 +310,7 @@ def set_subjects(book):
             logger.debug('These are the book subjects: %s', book_subjects)
 
             # Loop through subjects array checking for valid subjects only
-            if book_subjects and isinstance(book_subjects, list):
+            if book_subjects:
                 for s in book_subjects:
                     if valid_subjects.filter(subject__iexact=s).exists():
                         logger.debug('Adding subject relationship for: %s', s)
