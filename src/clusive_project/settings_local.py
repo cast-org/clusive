@@ -22,6 +22,10 @@ ALLOWED_HOSTS = [
     '10.21.12.86'
 ]
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
