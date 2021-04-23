@@ -26,6 +26,18 @@ class AffectCheckView(LoginRequiredMixin, View):
 
         (acr, created) = AffectiveCheckResponse.objects.get_or_create(user=clusive_user, book=book)
         acr.annoyed_option_response = affect_check_data.get('affect-option-annoyed')
+        acr.bored_option_response = affect_check_data.get('affect-option-bored')
+        acr.calm_option_response = affect_check_data.get('affect-option-calm')
+        acr.confused_option_response = affect_check_data.get('affect-option-confused')
+        acr.curious_option_response = affect_check_data.get('affect-option-curious')
+        acr.disappointed_option_response = affect_check_data.get('affect-option-disappointed')
+        acr.frustrated_option_response = affect_check_data.get('affect-option-frustrated')
+        acr.happy_option_response = affect_check_data.get('affect-option-happy')
+        acr.interested_option_response = affect_check_data.get('affect-option-interested')
+        acr.okay_option_response = affect_check_data.get('affect-option-okay')
+        acr.sad_option_response = affect_check_data.get('affect-option-sad')
+        acr.surprised_option_response = affect_check_data.get('affect-option-surprised')
+
         acr.save()
 
         return JsonResponse({"success": "1"})
