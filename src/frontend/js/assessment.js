@@ -83,7 +83,7 @@ clusiveAssessment.setUpCompCheck = function() {
                     clusiveAssessment.affectCheckDone = true;
                 })
                 .fail(function(err) {
-                    console.error('Comp check save failed!', err);
+                    console.error('Affect check save failed!', err);
                 });                
             
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
