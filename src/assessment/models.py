@@ -74,4 +74,17 @@ class ComprehensionCheckResponse(CheckResponse):
     def __str__(self):
         return '<CCResp %s/%d>' % (self.user.anon_id, self.book.id)
 
-
+# Affective check responses
+class AffectiveCheckResponse(CheckResponse):
+    annoyed_option_response = models.BooleanField(null=True)
+    bored_option_response = models.BooleanField(null=True)
+    calm_option_response = models.BooleanField(null=True)
+    confused_option_response = models.BooleanField(null=True)
+    curious_option_response = models.BooleanField(null=True)
+    disappointed_option_response = models.BooleanField(null=True)
+    frustrated_option_response = models.BooleanField(null=True)
+    happy_option_response = models.BooleanField(null=True)
+    interested_option_response = models.BooleanField(null=True)
+    okay_option_response = models.BooleanField(null=True)
+    sad_option_response = models.BooleanField(null=True)
+    surprised_option_response = models.BooleanField(null=True)
