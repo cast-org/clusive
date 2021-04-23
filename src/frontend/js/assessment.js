@@ -21,15 +21,20 @@ clusiveAssessment.setUpCompCheck = function() {
     var bookId = clusiveContext.reader.info.publication.id;
 
     // Retrieve existing affect check values and set them
-    $.get('/assessment/affect_check/' + bookId, function(data) {
-        console.log("affect check", data);
+    $.get('/assessment/affect_check/' + bookId, function(data) {            
+        Object.keys(data).forEach(function (affectOptionName) {
+            var shouldCheck = data[affectOptionName];            
+            var affectInput = $('input[name="' + affectOptionName + '"]');
+            affectInput.prop("checked", shouldCheck);
+            console.log("affectInput", affectInput, shouldCheck);
+        })
     }).fail(function(error) {
         if (error.status === 404) {
             console.debug('No pre-existing affect check response');
         } else {
             console.warn('failed to get affect check, status code: ', error.status);
         }
-    });;
+    });
 
     // Retrieve existing comprehension check values and set them
     $.get('/assessment/comprehension_check/' + bookId, function(data) {
