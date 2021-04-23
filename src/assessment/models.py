@@ -8,9 +8,35 @@ from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
 
-# 1. Extract a general "checkresponse" model
-# 2. Create an affective checkresponse model
-# 3. Write tests
+class AffectiveCheck:
+    
+    ANNOYED = 'annoyed'
+    BORED = 'bored'
+    CALM = 'calm'
+    CONFUSED = 'confused'
+    CURIOUS = 'curious'
+    DISAPPOINTED = 'disappointed'
+    FRUSTRATED = 'frustrated'
+    HAPPY = 'happy'
+    INTERESTED = 'interested'
+    OKAY = 'okay'
+    SAD = 'sad'
+    SURPRISED = 'surprised'
+
+    AFFECTIVE_CHECK_OPTIONS = [
+        (ANNOYED, 'Annoyed'),
+        (BORED, 'Bored'),
+        (CALM, 'Calm'),
+        (CONFUSED, 'Confused'),
+        (CURIOUS, 'Curious'),
+        (DISAPPOINTED, 'Disappointed'),
+        (FRUSTRATED, 'Frustrated'),
+        (HAPPY, 'Happy'),
+        (INTERESTED, 'Interested'),
+        (OKAY, 'Okay'),
+        (SAD, 'Sad'),
+        (SURPRISED, 'Surprised')
+    ]    
 
 class ComprehensionCheck:
     scale_response_key = "scale_response"
@@ -27,7 +53,7 @@ class ComprehensionCheck:
             (LOT, 'A lot')
         ]
 
-# Common model characteristics of check responses
+# Common abstract model characteristics of check responses
 class CheckResponse(models.Model):
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
     book = models.ForeignKey(to=Book, on_delete=models.PROTECT)
