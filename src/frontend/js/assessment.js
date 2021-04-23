@@ -55,6 +55,23 @@ clusiveAssessment.setUpCompCheck = function() {
     $('#comprehensionCheckSubmit').click(
         function(e) {
             e.preventDefault();
+
+            // Create basic affect response structure
+            var affectResponse = {
+                bookVersionId: clusiveContext.reader.info.publication.version_id,
+                bookId: clusiveContext.reader.info.publication.id,
+                eventId: PAGE_EVENT_ID
+            };
+
+            // Get all affect inputs
+            var checkedAffectInputs = $('input[name^="affect-option"]');
+            // Add to data object                        
+            checkedAffectInputs.each(function (i, elem) {
+                affectResponse[elem.name] = elem.checked
+            });             
+
+            console.log("Affect response data", affectResponse);
+
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
             var freeResponse = $('textarea[name="comprehension-free"]').val();
             var comprehensionResponse = {
