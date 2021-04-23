@@ -40,13 +40,28 @@ class AffectCheckView(LoginRequiredMixin, View):
 
         acr.save()
 
+        # TODO: event creation - is each boolean one event, by the Caliper standard?
+
         return JsonResponse({"success": "1"})
 
     def get(self, request, book_id):
         user = request.clusive_user
         book = Book.objects.get(id=book_id)        
         acr = get_object_or_404(AffectiveCheckResponse, user=user, book=book)            
-        response_value = {"foo": "bar"}
+        response_value = {
+            "affect-option-annoyed": acr.annoyed_option_response,
+            "affect-option-bored": acr.bored_option_response,
+            "affect-option-calm": acr.calm_option_response,
+            "affect-option-confused": acr.confused_option_response,
+            "affect-option-curious": acr.curious_option_response,
+            "affect-option-disappointed": acr.disappointed_option_response,
+            "affect-option-frustrated": acr.frustrated_option_response,
+            "affect-option-happy": acr.happy_option_response,
+            "affect-option-interested": acr.interested_option_response,
+            "affect-option-okay": acr.okay_option_response,
+            "affect-option-sad": acr.sad_option_response,
+            "affect-option-surprised": acr.surprised_option_response,
+        }
         return JsonResponse(response_value)        
 
 class ComprehensionCheckView(LoginRequiredMixin, View):
