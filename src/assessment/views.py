@@ -42,6 +42,13 @@ class AffectCheckView(LoginRequiredMixin, View):
 
         return JsonResponse({"success": "1"})
 
+    def get(self, request, book_id):
+        user = request.clusive_user
+        book = Book.objects.get(id=book_id)        
+        acr = get_object_or_404(AffectiveCheckResponse, user=user, book=book)            
+        response_value = {"foo": "bar"}
+        return JsonResponse(response_value)        
+
 class ComprehensionCheckView(LoginRequiredMixin, View):
     def post(self, request):            
         try:
