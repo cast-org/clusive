@@ -88,3 +88,6 @@ class AffectiveCheckResponse(CheckResponse):
     okay_option_response = models.BooleanField(null=True)
     sad_option_response = models.BooleanField(null=True)
     surprised_option_response = models.BooleanField(null=True)
+
+    def __str__(self):
+        return '<ACResp %s/%d>' % (self.user.anon_id, self.book.id)    
