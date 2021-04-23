@@ -3,6 +3,7 @@
 /* exported clusiveAssessment */
 
 var clusiveAssessment = {
+    affectCheckDone: false,
     compCheckDone: false
 };
 
@@ -70,8 +71,21 @@ clusiveAssessment.setUpCompCheck = function() {
                 affectResponse[elem.name] = elem.checked
             });             
 
-            console.log("Affect response data", affectResponse);
-
+            $.ajax('/assessment/affect_check', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify(affectResponse)
+            })
+                .done(function(data) {
+                    console.debug('Affect check save complete', data);
+                    clusiveAssessment.affectCheckDone = true;
+                })
+                .fail(function(err) {
+                    console.error('Comp check save failed!', err);
+                });                
+            
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
             var freeResponse = $('textarea[name="comprehension-free"]').val();
             var comprehensionResponse = {
@@ -98,6 +112,7 @@ clusiveAssessment.setUpCompCheck = function() {
                 .fail(function(err) {
                     console.error('Comp check save failed!', err);
                 });
+                
             $(this).closest('.popover').CFW_Popover('hide');
         });
 };

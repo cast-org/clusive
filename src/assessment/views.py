@@ -8,10 +8,27 @@ from django.views import View
 
 from eventlog.signals import assessment_completed
 from library.models import Book
-from .models import ComprehensionCheck, ComprehensionCheckResponse
+from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheck, AffectiveCheckResponse
 
 logger = logging.getLogger(__name__)
 
+class AffectCheckView(LoginRequiredMixin, View):
+    def post(self, request):
+        try:
+            affect_check_data = json.loads(request.body)
+            logger.info('Received a valid affect check response: %s' % affect_check_data)
+        except json.JSONDecodeError:
+            logger.warning('Received malformed affect check data: %s' % request.body)
+            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})     
+
+        clusive_user = request.clusive_user
+        book = Book.objects.get(id=affect_check_data.get("bookId"))            
+
+        (acr, created) = AffectiveCheckResponse.objects.get_or_create(user=clusive_user, book=book)
+        acr.annoyed_option_response = affect_check_data.get('affect-option-annoyed')
+        acr.save()
+
+        return JsonResponse({"success": "1"})
 
 class ComprehensionCheckView(LoginRequiredMixin, View):
     def post(self, request):            
