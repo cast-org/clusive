@@ -68,18 +68,16 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# The `allauth` redirect URI from OAuth2 server back to Clusive after a
-# successful authorization is set to '/accounts/profile/', passing back the
-# access token.  But, according to the FAQ, that will result in a 404 because
-# `allauth` does not implement anything here -- it's up to individual users of
-# the `allauth` library to handle the "callback".  Specifically, Clusive needs
-# to implement the details of what to do with a successful confirmation from the
-# OAuth2 server.  A suggestion from `allauth` is to set the LOGIN_REDIRECT_URL
-# to where the app would go after a local successful login:
-# https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
-# It's set to an invisible 'finish_login' to note that this is an instance of
-# SSO and to either proceed to the role/age workflow to set the role of the SSO
-# user or, if already set, go to 'dashboard'
+# 1. Out-of-the-box, the `allauth` redirect URI is set to '/accounts/profile',
+# 2. SSO will 404 since `allauth` does not implement a handler for that end point,
+# 3. Advice: set a `LOGIN_REDIRECT_URL` to override allauth's default behaviour.
+# See:  https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
+#
+# LOGIN_REDIRECT_URL is set to '/account/finish_login' that checks the type of login:
+# - if the role is unknown (first time SSO login), proceed to the role/age
+#   workflow to set the role of the user before going to '/dashboard'.
+# - if the role is set, go to '/dashboard'.
+# The latter condition is met by non-SSO logins, as well as subsequent SSO logins.
 LOGIN_REDIRECT_URL = '/account/finish_login'
 
 MIDDLEWARE = [
