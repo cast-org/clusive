@@ -3,6 +3,8 @@ import logging
 from django.db import models
 from django.utils import timezone
 
+from django.core import serializers
+
 from library.models import Book
 from roster.models import ClusiveUser
 
@@ -89,8 +91,18 @@ class AffectiveCheckResponse(CheckResponse):
     sad_option_response = models.BooleanField(null=True)
     surprised_option_response = models.BooleanField(null=True)
 
+    # Returns all True options as a single comma-separated string
+    # Used for Caliper event creation
     def toAnswerString(self):
-        return "answerString"
+        model_values = self.__dict__
+        answer_string = ""
+        for val in model_values:
+            if "option_response" in val and model_values[val]:
+                if(len(answer_string) == 0):
+                    answer_string = val.split("_")[0]
+                else:
+                    answer_string = answer_string + "," + val.split("_")[0]
+        return answer_string
 
     def __str__(self):
         return '<ACResp %s/%d>' % (self.user.anon_id, self.book.id)    
