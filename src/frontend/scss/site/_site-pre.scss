@@ -321,6 +321,10 @@ $card-header-padding-x:                 $card-padding-x;
 $card-footer-padding-y:                 $card-padding-y;
 $card-footer-padding-x:                 $card-padding-x;
 
+$tooltip-bg:                            var(--CT_tooltipBg);
+$tooltip-color:                         var(--CT_tooltipColor);
+$tooltip-opacity:                       .95;
+
 $tooltip-feature-max-width:             14rem;
 $tooltip-feature-padding-y:             .5rem;
 $tooltip-feature-padding-x:             .75rem;

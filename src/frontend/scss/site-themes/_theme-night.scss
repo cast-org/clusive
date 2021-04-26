@@ -132,8 +132,8 @@ $btn-tag-focus-ring:                    #a0abfd;
 $btn-tag-bg:                            rgba(#f0f0f0, .2);
 $btn-tag-color:                         #eceff5;
 $btn-tag-border-color:                  transparent;
-$btn-tag-hover-bg:                      rgba(#f0f0f0, .1675);
-$btn-tag-hover-color:                   palette($btn-tag-color, 450);
+$btn-tag-hover-bg:                      rgba(#f0f0f0, .375);
+$btn-tag-hover-color:                   #fff;
 $btn-tag-hover-border-color:            transparent;
 $btn-tag-active-bg:                     rgba(#f0f0f0, .25);
 $btn-tag-active-color:                  $btn-tag-color;
@@ -274,6 +274,10 @@ $dropdown-link-hover-bg:                #6268ad;
 $dropdown-link-hover-color:             #fbfbfb;
 $dropdown-link-active-bg:               #ff554d;
 $dropdown-link-active-color:            #111;
+
+// Tooltip - default
+$tooltip-bg:                            #727272;
+$tooltip-color:                         #fff;
 
 // Tooltip - feature
 $tooltip-feature-bg:                    #97ebdd;
