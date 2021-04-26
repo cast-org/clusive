@@ -1,0 +1,333 @@
+[
+    {
+        "headword": "provide",
+        "alternateForms": ["provides","provided","providing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give what is needed.",
+                "examples": [ "The doctor, however, refused to provide pills to assist with suicide." ],
+                "images": [
+                    {
+                        "src": "glossimages/provide1.jpg",
+                        "alt": "Photo of one person helping another.",
+                        "description": "A person holding out his hand to help another person up a hill.",
+                        "caption": "One person providing help to another.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/pensive-black-tourist-providing-hand-for-friend-5064660/",
+                            "title": "Pensive black tourist providing hand for friend",
+                            "author": "Kamaji Ogino",
+                            "author_url": "",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "supply",
+        "alternateForms": ["supplies","supplied","supplying" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To give what is needed.",
+                "examples": [ "The doctor, however, refused to supply pills to assist with suicide." ],
+                "images": [
+                    {
+                        "src": "glossimages/provide1.jpg",
+                        "alt": "Photo of one person helping another.",
+                        "description": "A person holding out his hand to help another person up a hill.",
+                        "caption": "One person providing help to another.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/pensive-black-tourist-providing-hand-for-friend-5064660/",
+                            "title": "Pensive black tourist providing hand for friend",
+                            "author": "Kamaji Ogino",
+                            "author_url": "",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "reduce",
+        "alternateForms": ["reduces","reduced","reducing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make less in amount or size.",
+                "examples": [ "Those who are against assisted suicide also worry that family members might urge a sick relative to die in order to reduce medical bills." ]
+            }
+        ]
+    },
+    {
+        "headword": "decrease",
+        "alternateForms": ["decreases","decreased","decreasing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make less in amount or size.",
+                "examples": [ "Those who are against assisted suicide also worry that family members might urge a sick relative to die in order to reduce medical bills." ]
+            }
+        ]
+    },
+    {
+        "headword": "consider",
+        "alternateForms": ["considers","considered","considering"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To think of as.",
+                "examples": [ "In all other states a doctor who assists a suicide is considered to be guilty of murder." ],
+                "images": [
+                    {
+                        "src": "glossimages/consider1.jpg",
+                        "alt": "Photo of a person looking down, hand on chin, as if thinking.",
+                        "description": "A person looking down. He has his hand on his chin. He looks like he is thinking about something.",
+                        "caption": "It is important to carefully consider important decisions.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/crop-ethnic-man-in-park-6532531/",
+                            "title": "Crop ethnic man in park",
+                            "author": "Budgeron Bach",
+                            "author_url": "https://www.pexels.com/@budgeron-bach",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "deem",
+        "alternateForms": ["deems","deemed","deeming"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To think of as.",
+                "examples": [ "In all other states a doctor who assists a suicide is deemed to be guilty of murder." ],
+                "images": [
+                    {
+                        "src": "glossimages/consider1.jpg",
+                        "alt": "Photo of a person looking down, hand on chin, as if thinking.",
+                        "description": "A person looking down. He has his hand on his chin. He looks like he is thinking about something.",
+                        "caption": "Someone thinking carefully about an important decision.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/crop-ethnic-man-in-park-6532531/",
+                            "title": "Crop ethnic man in park",
+                            "author": "Budgeron Bach",
+                            "author_url": "https://www.pexels.com/@budgeron-bach",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "severe",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Very strong or intense.",
+                "examples": [ "When Ryan’s uncle was in the hospital in severe pain the doctor said he had only about a month to live." ],
+                "images": [
+                    {
+                        "src": "glossimages/severe1.jpg",
+                        "alt": "Photo of a holding her stomach with a pained expression on her face.",
+                        "description": "A person lays on her side. She holds her stomach. Her eyes are closed, her mouth is open in a grimace, as though she is in pain.",
+                        "caption": "This person looks like she is in a lot of pain.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-woman-in-pain-on-couch-5938365/",
+                            "title": "Black woman in pain on couch",
+                            "author": " Sora Shimazaki",
+                            "author_url": "https://www.pexels.com/@sora-shimazaki",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "terrible",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Very strong or intense.",
+                "examples": [ "When Ryan’s uncle was in the hospital in terrible pain the doctor said he had only about a month to live." ],
+                "images": [
+                    {
+                        "src": "glossimages/severe1.jpg",
+                        "alt": "Photo of a holding her stomach with a pained expression on her face.",
+                        "description": "A person lays on her side. She holds her stomach. Her eyes are closed, her mouth is open in a grimace, as though she is in pain.",
+                        "caption": "This person looks like she is in a lot of pain.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-woman-in-pain-on-couch-5938365/",
+                            "title": "Black woman in pain on couch",
+                            "author": " Sora Shimazaki",
+                            "author_url": "https://www.pexels.com/@sora-shimazaki",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "excruciating",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Very strong or intense.",
+                "examples": [ "When Ryan’s uncle was in the hospital in excruciating pain the doctor said he had only about a month to live." ],
+                "images": [
+                    {
+                        "src": "glossimages/severe1.jpg",
+                        "alt": "Photo of a holding her stomach with a pained expression on her face.",
+                        "description": "A person lays on her side. She holds her stomach. Her eyes are closed, her mouth is open in a grimace, as though she is in pain.",
+                        "caption": "This person looks like she is in a lot of pain.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-woman-in-pain-on-couch-5938365/",
+                            "title": "Black woman in pain on couch",
+                            "author": " Sora Shimazaki",
+                            "author_url": "https://www.pexels.com/@sora-shimazaki",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "urge",
+        "alternateForms": ["urges","urged","urging"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To strongly encourage or try to persuade.",
+                "examples": [ "Those who are against assisted suicide also worry that family members might urge a sick relative to die in order to reduce medical bills." ]
+            }
+        ]
+    },
+    {
+        "headword": "ask",
+        "alternateForms": ["asks","asked","asking"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make a request.",
+                "examples": [ "Those who are against assisted suicide also worry that family members might ask a sick relative to die in order to reduce medical bills." ]
+            }
+        ]
+    },
+    {
+        "headword": "implore",
+        "alternateForms": ["implores","implored","imploring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To beg urgently of (someone) or for (something).",
+                "examples": [ "Those who are against assisted suicide also worry that family members might implore a sick relative to die in order to reduce medical bills." ]
+            }
+        ]
+    },
+    {
+        "headword": "prevention",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The act or process of stopping something from happening.",
+                "examples": [ "Diet can play an important role in the prevention of disease." ],
+                "images": [
+                    {
+                        "src": "glossimages/prevention1.jpg",
+                        "alt": "Photo of a group of people talking while wearing medical masks.",
+                        "description": "A group of people talking while wearing medical face masks.",
+                        "caption": "Prevention, like wearing masks, is a good way to stop the spread of illnesses.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/business-people-wearing-face-masks-and-talking-4427957/",
+                            "title": "Business People Wearing Face Masks and Talking",
+                            "author": "August de Richelieu",
+                            "author_url": "https://www.pexels.com/@august-de-richelieu",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "critical",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Likely to find fault.",
+                "examples": [ "The students are critical of the bad tasting cafeteria food." ],
+                "images": [
+                    {
+                        "src": "glossimages/critical1.jpg",
+                        "alt": "Photo of a person frowning, pointing at the viewer.group of people talking while wearing medical masks.",
+                        "description": "A person is frowning, and her brow are furrowed. She looks unhappy and points her finger at the viewer.",
+                        "caption": "This person looks like she is not happy with someone.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/ethnic-woman-frowning-face-and-pointing-at-camera-5699866/",
+                            "title": "Ethnic woman frowning face and pointing at camera",
+                            "author": "Alex Green",
+                            "author_url": "https://www.pexels.com/@alex-green",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "pursue",
+        "alternateForms": ["pursues","pursued","pursuing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To spend time doing; work at; practice.",
+                "examples": [ "They pursued careers in engineering." ]
+            }
+        ]
+    },
+    {
+        "headword": "alter",
+        "alternateForms": ["alters","altered","altering"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make different in some way; change.",
+                "examples": [ "The dress was altered to make it shorter." ]
+            }
+        ]
+    },
+    {
+        "headword": "approach",
+        "alternateForms": ["approaches"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A way of dealing with something.",
+                "examples": [ "Her approach to studying for tests seems to work." ]
+            }
+        ]
+    }
+]
