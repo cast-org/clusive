@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 
-from eventlog.signals import comprehension_check_completed
+from eventlog.signals import affect_check_completed, comprehension_check_completed
 from library.models import Book
 from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheck, AffectiveCheckResponse
 
@@ -39,6 +39,13 @@ class AffectCheckView(LoginRequiredMixin, View):
         acr.surprised_option_response = affect_check_data.get('affect-option-surprised')
 
         acr.save()
+
+        page_event_id=affect_check_data.get("eventId")
+        
+        affect_check_completed.send(sender=self.__class__,
+                                  request=self.request, event_id=page_event_id,
+                                  affect_check_response_id=acr.id,                                  
+                                  answer=acr.toAnswerString())
 
         # TODO: event creation - is each boolean one event, by the Caliper standard?
 
