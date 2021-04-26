@@ -26,7 +26,30 @@
         <div class="col-sm-6 col-lg-4">
             <div class="card card-login">
                 <div class="card-body login-section">
-                    <h2 class="mb-1">Log in to Clusive</h2>
+                    <h2 class="mb-1">Log in to Clusive<sup>&trade;</sup></h2>
+
+                    <div class="socialaccount_ballot">
+                        {% load socialaccount %}
+                        {% get_providers as socialaccount_providers %}
+                        <ul class="list-unstyled text-center mb-0_5">
+                            {% for provider in socialaccount_providers %}
+                            <li class="mb-0_5">
+                            <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+                               class="socialaccount_provider login-btn login-google">
+                                <span class="sr-only">Sign in with {{provider.name}}</span>
+                            </a>
+                            <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                                <button type="submit" class="socialaccount_provider login-btn login-google">
+                                    <span class="sr-only">Sign in with {{provider.name}}</span>
+                                </button>
+                            </form>
+                            <li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="rule-text">or</div>
+
                     {% if email_validate %}
                     <div class="errorlist">
                         You need to validate your email address before you can log in.
@@ -89,26 +112,6 @@
                             <div class="media-body">Customizable reader preferences</div>
                         </li>
                     </ul>
-                </div>
-                <div class="socialaccount_ballot card-body login-section">
-                {% load socialaccount %}
-                {% get_providers as socialaccount_providers %}
-                {% for provider in socialaccount_providers %}
-                    <!-- TODO: Not supporting `openid` providers yet so this
-                         inner for-loop over `provider.get_brands` is a no-op.
-                         It's here for future support.  Remove?
-                    -->
-                    {% if provider.id == "openid" %}
-                        {% for brand in provider.get_brands %}
-                            <form method="get" action="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
-                                <button type="submit" class="socialaccount_provider {{provider.id}} {{brand.id}}">Sign in with {{brand.name}} SSO</button>
-                            </form>
-                        {% endfor %}
-                    {% endif %}
-                    <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-                        <button type="submit" class="socialaccount_provider btn btn-primary">Sign in with {{provider.name}}</button>
-                    </form>
-                {% endfor %}
                 </div>
             </div>
 
