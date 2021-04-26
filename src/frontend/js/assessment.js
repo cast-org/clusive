@@ -26,6 +26,14 @@ clusiveAssessment.setUpCompCheck = function() {
             var shouldCheck = data[affectOptionName];            
             var affectInput = $('input[name="' + affectOptionName + '"]');
             affectInput.prop("checked", shouldCheck);
+            var idx = affectInput.attr("data-react-index");
+            var wedge = document.querySelector('.react-wedge-' + idx);
+
+            if(shouldCheck) {
+                reactDimAnimate(wedge, 100);
+            } else {
+                reactDimAnimate(wedge, 0);
+            }
             console.log("affectInput", affectInput, shouldCheck);
         })
     }).fail(function(error) {
