@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # including only Google provider for now, see:
     # https://django-allauth.readthedocs.io/en/latest/installation.html#django
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
+    'debug_toolbar',
 ]
 
 SITE_ID = 1 # django-allauth, id of the django_site record
@@ -82,6 +83,7 @@ LOGIN_REDIRECT_URL = '/account/finish_login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
