@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 
-from eventlog.signals import assessment_completed
+from eventlog.signals import comprehension_check_completed
 from library.models import Book
 from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheck, AffectiveCheckResponse
 
@@ -83,13 +83,13 @@ class ComprehensionCheckView(LoginRequiredMixin, View):
 
         # Fire event creation signals
         page_event_id =comprehension_check_data.get("eventId")
-        assessment_completed.send(sender=self.__class__,
+        comprehension_check_completed.send(sender=self.__class__,
                                   request=self.request, event_id=page_event_id,
                                   comprehension_check_response_id=ccr.id,
                                   key=ComprehensionCheck.scale_response_key,
                                   question=comprehension_check_data.get('scaleQuestion'),
                                   answer=ccr.comprehension_scale_response)
-        assessment_completed.send(sender=self.__class__,
+        comprehension_check_completed.send(sender=self.__class__,
                                   request=self.request, event_id=page_event_id,
                                   comprehension_check_response_id=ccr.id,
                                   key=ComprehensionCheck.free_response_key,
