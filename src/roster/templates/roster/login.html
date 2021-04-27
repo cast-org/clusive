@@ -34,10 +34,6 @@
                         <ul class="list-unstyled text-center mb-0_5">
                             {% for provider in socialaccount_providers %}
                             <li class="mb-0_5">
-                            <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
-                               class="socialaccount_provider login-btn login-google">
-                                <span class="sr-only">Sign in with {{provider.name}}</span>
-                            </a>
                             <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
                                 <button type="submit" class="socialaccount_provider login-btn login-google">
                                     <span class="sr-only">Sign in with {{provider.name}}</span>
