@@ -123,6 +123,11 @@
     display: inline-block;
     width: 191px;
     height: 46px;
+    padding: 0;
+    user-select: none;
+    background-color: transparent;
+    border: 0;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
     &::before {
         display: block;
