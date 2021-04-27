@@ -1,0 +1,198 @@
+[
+    {
+        "headword": "find",
+        "alternateForms": ["finds","found","finding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To come upon after losing something and searching for it." ,
+                "examples": [ "Stem cells are found in different parts of the human body, including in our blood." ],
+                "images": [
+                    {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child is finding hidden objects in this popup book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+    {
+        "headword": "locate",
+        "alternateForms": ["locates","located","locating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To find the position or place of." ,
+                "examples": [ "Stem cells are located in different parts of the human body, including in our blood." ],
+                "images": [
+                    {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child is finding hidden objects in this popup book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+    {
+        "headword": "replacement",
+        "alternateForms": ["replacements"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that takes the position of another or takes over the function of another." ,
+                "examples": [ "With more research, we may be able to grow replacement parts for humans from stem cells." ],
+                "images": [
+                    {
+                        "src": "glossimages/replacement1.jpg",
+                        "alt": "Rows of candies, with one green diamond in the place of a red heart.",
+                        "description": "A large number are shown, gathered around a stage. ",
+                        "caption": "A green diamond-shaped candy replaces one of the red heart candies.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/heart-shaped-gummy-candy-assorted-in-rows-with-one-candy-aside-against-pink-background-4016522/",
+                            "title": "Heart shaped gummy candy assorted in rows with one candy aside against pink background",
+                            "author": "Karolina Grabowska",
+                            "author_url": "https://www.pexels.com/@karolina-grabowska",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "new",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having recently arrived, been produced, or come into being. " ,
+                "examples": [ "With more research, we may be able to grow new parts for humans from stem cells." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "embryo",
+        "alternateForms": ["embryos"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An animal or plant that is just starting to develop. An embryo grows inside an egg, a seed, or its mother." ,
+                "examples": [ "A seed holds a plant embryo." ],
+                "images": [
+                    {
+                        "src": "glossimages/embryo1.jpg",
+                        "alt": "Photo of a human embryo.",
+                        "description": "A light colored object, against a bright background. Light shines through the object, making some bones and blood vessels visible.",
+                        "caption": "Photo of a human embryo at 7 weeks of development.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/d9455165-37b8-4ff2-8a8a-d990fabe6004",
+                            "title": "7 week embryo",
+                            "author": "lunar caustic",
+                            "author_url": "https://www.flickr.com/photos/28004184@N00",
+                            "license": " CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "paralyze",
+        "alternateForms": ["paralyzes","paralyzed","paralyzing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make unable to move or to feel any sensation." ,
+                "examples": [ "A paralyzing disease made him unable to walk." ]
+            }
+        ]
+    },    
+    {
+        "headword": "theory",
+        "alternateForms": ["theories"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A reasonable, widely accepted explanation for why something happens." ,
+                "examples": [ "After studying plants and animals in South America, Charles Darwin worked out the theory of evolution by natural selection." ]
+            }
+        ]
+    },     
+    {
+        "headword": "investigate",
+        "alternateForms": ["investigates","investigated","investigating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To look into carefully and closely so as to learn the facts; examine." ,
+                "examples": [ "The police are investigating the crime." ],
+                "images": [
+                    {
+                        "src": "glossimages/investigate1.jpg",
+                        "alt": "Photo of child using a magnifying glass to look at an object in her hand",
+                        "description": "In one hand, a child holds a round, hand-held glass that magnifies the appearance of objects. She is looking through the glass at something she holds in her other hand.",
+                        "caption": "A magnifying glass helps this girl investigate the details of an object.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/cute-asian-girl-investigating-leaves-of-potted-plants-5062990/",
+                            "title": "Cute Asian girl investigating leaves of potted plants",
+                            "author": " Gabby K",
+                            "author_url": "https://www.pexels.com/@gabby-k",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "obtain",
+        "alternateForms": ["obtains","obtained","obtaining"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get; gain." ,
+                "examples": [ "To obtain a driver's license, you have to pass a test." ],
+                "images": [
+                    {
+                        "src": "glossimages/obtain1.jpg",
+                        "alt": "Photo of a person's arm reaching out and taking a book from a shelf.",
+                        "description": "A person reaches out to take a book from a bookshelf.",
+                        "caption": "Go to the library to obtain a book on almost any subject.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/person-holding-book-from-shelf-1370298/",
+                            "title": "Person Holding Book from Shelf",
+                            "author": "Element5 Digital",
+                            "author_url": "https://www.pexels.com/@element5",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

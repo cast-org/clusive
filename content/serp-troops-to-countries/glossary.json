@@ -1,0 +1,339 @@
+[
+    {
+        "headword": "displace",
+        "alternateForms": ["displaces","displaced","displacing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To force out of a home territory or particular place." ,
+                "examples": [ "Many families were displaced by the flood." ],
+                "images": [
+                    {
+                        "src": "glossimages/displace1.jpg",
+                        "alt": "Photo of people and canvas tents.",
+                        "description": "People, including adults and small children, in an area with many canvas tents. A wooden house is on a small hill near the group of tents.",
+                        "caption": "People displaced from their homes often need to live in temporary housing like these tents.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/1a0d4c97-d20d-47cb-b12c-97bdfa4b2b8c",
+                            "title": "Emergency food, drinking water and shelter to help people displaced in Rakhine State, western Burma.",
+                            "author": "DFID - UK Department for International Development ",
+                            "author_url": "https://www.flickr.com/photos/14214150@N02",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "regime",
+        "alternateForms": ["regimes"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A system of rule or government." ,
+                "examples": [ "The current military regime has run the government for over twenty years." ]
+            }
+        ]
+    },
+    {
+        "headword": "diminish",
+        "alternateForms": ["diminishes","diminished","diminishing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make smaller or cause to appear smaller in size or importance." ,
+                "examples": [ "The pain diminished after he took aspirin." ],
+                "images": [
+                    {
+                        "src": "glossimages/diminish1.jpg",
+                        "alt": "Photo of a staircase that gets smaller as it gets higher.",
+                        "description": "A staircase with its base in a pool of water. As the staircase goes up and away, it gets smaller and narrower. It looks like the staircase disappears into the distance at the top.",
+                        "caption": "The staircase diminishes as it moves up and away.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/cbb79b42-2696-43a2-b653-ef6d127b6c31",
+                            "title": "Diminish And Ascend Sculpture. ",
+                            "author": "Bernard Spragg ",
+                            "author_url": "https://www.flickr.com/photos/88123769@N02",
+                            "license": "CC0 1.0 ",
+                            "license_url": "https://creativecommons.org/licenses/cc0/1.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "stable",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Fixed, firm, or steady in position; not shaky or easily moved." ,
+                "examples": [ "We are lucky to have a stable form of government." ],
+                "images": [
+                    {
+                        "src": "glossimages/stable1.jpg",
+                        "alt": "Photo of a stack of logs.",
+                        "description": "Wood logs cut into pieces and stacked in long, low line.",
+                        "caption": "Firewood piled up into a sturdy, stable pile that will not fall.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/pile-of-dry-firewood-logs-1817017/",
+                            "title": "Pile of dry firewood logs",
+                            "author": "Michael Morse",
+                            "author_url": "https://www.pexels.com/@michael-morse",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "estimate",
+        "alternateForms": ["estimates","estimated","estimating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make a careful guess about the amount, size, or worth of." ,
+                "examples": [ "We estimated that our grocery bill would be about $50." ]
+            }
+        ]
+    },
+    {
+        "headword": "find",
+        "alternateForms": ["finds","found","finding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To come upon after losing something and searching for it." ,
+                "examples": [ "Stem cells are found in different parts of the human body, including in our blood." ],
+                "images": [
+                    {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child is finding hidden objects in this popup book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "locate",
+        "alternateForms": ["locates","located","locating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To come upon after losing something and searching for it." ,
+                "examples": [ "Stem cells are located in different parts of the human body, including in our blood." ],
+                "images": [
+                    {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child is finding hidden objects in this popup book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "claim",
+        "alternateForms": ["claims","claimed","claiming"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To state or demand as one's right." ,
+                "examples": [ "Members of the U.S. government claimed that the Iraqi regime had weapons of mass destruction that could be used against Americans." ]
+            }
+        ]
+    },
+    {
+        "headword": "allege",
+        "alternateForms": ["alleges","alleged","alleging"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To say or claim to be true without having proof." ,
+                "examples": [ "Members of the U.S. government alleged that the Iraqi regime had weapons of mass destruction that could be used against Americans." ]
+            }
+        ]
+    },
+    {
+        "headword": "say",
+        "alternateForms": ["says","said","saying"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To state or speak. " ,
+                "examples": [ "Members of the U.S. government claimed that the Iraqi regime had weapons of mass destruction that could be used against Americans." ]
+            }
+        ]
+    },
+    {
+        "headword": "expense",
+        "alternateForms": ["expenses"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A cause of spending money or paying out." ,
+                "examples": [ "Buying a new car is a big expense." ],
+                "images": [
+                    {
+                        "src": "glossimages/expense1.jpg",
+                        "alt": "photo of person paying for something with a credit card",
+                        "description": "A person paying for something with a credit card ",
+                        "caption": "When you buy things, you pay for them with cash, credit, or with a debit account.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-person-handing-card-2988232/",
+                            "title": "A person handing card",
+                            "author": "energepic.com",
+                            "author_url": "https://www.pexels.com/@energepic-com-27411",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+                }
+            ]
+    },
+    {
+        "headword": "expenditure",
+        "alternateForms": ["expenditures"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The act of paying or spending money." ,
+                "examples": [ "Buying a new car means that you will be making a big expenditure." ],
+                "images": [
+                    {
+                        "src": "glossimages/expense1.jpg",
+                        "alt": "photo of person paying for something with a credit card",
+                        "description": "A person paying for something with a credit card ",
+                        "caption": "When you buy things, you pay for them with cash, credit, or with a debit account.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-person-handing-card-2988232/",
+                            "title": "A person handing card",
+                            "author": "energepic.com",
+                            "author_url": "https://www.pexels.com/@energepic-com-27411",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "cost",
+        "alternateForms": ["costs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The amount of money charged or paid for something." ,
+                "examples": [ "Buying a new car is a big cost." ],
+                "images": [
+                    {
+                        "src": "glossimages/expense1.jpg",
+                        "alt": "photo of person paying for something with a credit card",
+                        "description": "A person paying for something with a credit card ",
+                        "caption": "When you buy things, you pay for them with cash, credit, or with a debit account.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-person-handing-card-2988232/",
+                            "title": "A person handing card",
+                            "author": "energepic.com",
+                            "author_url": "https://www.pexels.com/@energepic-com-27411",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "domestic",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having to do with what happens inside a country." ,
+                "examples": [ "Many Americans think that this money should have been used for domestic issues, like improving American schools." ]
+            }
+        ]
+    },
+    {
+        "headword": "internal",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having to do with what happens inside a country." ,
+                "examples": [ "Many Americans think that this money should have been used for internal issues, like improving American schools." ]
+            }
+        ]
+    },
+    {
+        "headword": "national",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having to do with what happens inside a country." ,
+                "examples": [ "Many Americans think that this money should have been used for national issues, like improving American schools." ]
+            }
+        ]
+    },
+    {
+        "headword": "commit",
+        "alternateForms": ["commits","committed","committing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To dedicate, devote or pledge." ,
+                "examples": [ "Should we commit troops when our economic interests are threatened?" ]
+            }
+        ]
+    },
+    {
+        "headword": "designate",
+        "alternateForms": ["designates","designated","designating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To choose for a particular job or purpose." ,
+                "examples": [ "Should we designate troops when our economic interests are threatened?" ]
+            }
+        ]
+    },
+    {
+        "headword": "send",
+        "alternateForms": ["sends","sent","sending"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cause to go." ,
+                "examples": [ "Should we send troops when our economic interests are threatened?" ]
+            }
+        ]
+    }
+]
