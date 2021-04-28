@@ -1,0 +1,290 @@
+[
+    {
+        "headword": "exist",
+        "alternateForms": ["exists","existed","existing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be real; have being.",
+                "examples": [ "We must confront the fact that racial inequality exists in our society." ]
+            }
+        ]
+    },
+    {
+        "headword": "persist",
+        "alternateForms": ["persists","persisted","persisting" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To be real; have being.",
+                "examples": [ "We must confront the fact that racial inequality persists in our society." ]
+            }
+        ]
+    },
+    {
+        "headword": "tough",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Difficult to do or understand.",
+                "examples": [ "Because the process is tough, deciding what factors should be relevant in admissions decisions can be controversial." ],
+                "images": [
+                    {
+                        "src": "glossimages/tough1.jpg",
+                        "alt": "Photo of a person lifting a large wheel.",
+                        "description": "A person lifting a large wheel. The wheel looks like it is very heavy. It looks like it is hard to lift.",
+                        "caption": "Lifting this large, heavy wheel is a tough job, and looks difficult to do.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/strong-shirtless-black-man-flipping-heavy-tire-in-dark-gym-5611633/",
+                            "title": "Strong shirtless black man flipping heavy tire in dark gym",
+                            "author": "Sukh Winder",
+                            "author_url": "https://www.pexels.com/@sukh-winder-3740393",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "challenging",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "An interesting or difficult problem or task.",
+                "examples": [ "Because the process is challenging, deciding what factors should be relevant in admissions decisions can be controversial." ],
+                "images": [
+                    {
+                        "src": "glossimages/tough1.jpg",
+                        "alt": "Photo of a person lifting a large wheel.",
+                        "description": "A person lifting a large wheel. The wheel looks like it is very heavy. It looks like it is hard to lift.",
+                        "caption": "Lifting this large, heavy wheel is a challenging job, and looks difficult to do.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/strong-shirtless-black-man-flipping-heavy-tire-in-dark-gym-5611633/",
+                            "title": "Strong shirtless black man flipping heavy tire in dark gym",
+                            "author": "Sukh Winder",
+                            "author_url": "https://www.pexels.com/@sukh-winder-3740393",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "hard",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Difficult.",
+                "examples": [ "Because the process is hard, deciding what factors should be relevant in admissions decisions can be controversial." ],
+                "images": [
+                    {
+                        "src": "glossimages/tough1.jpg",
+                        "alt": "Photo of a person lifting a large wheel.",
+                        "description": "A person lifting a large wheel. The wheel looks like it is very heavy. It looks like it is hard to lift.",
+                        "caption": "Lifting this large, heavy wheel is a hard job, and looks difficult to do.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/strong-shirtless-black-man-flipping-heavy-tire-in-dark-gym-5611633/",
+                            "title": "Strong shirtless black man flipping heavy tire in dark gym",
+                            "author": "Sukh Winder",
+                            "author_url": "https://www.pexels.com/@sukh-winder-3740393",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "factor",
+        "alternateForms": ["factors"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that has an influence on something that happens or is one of the causes of it.",
+                "examples": [ "Deciding what factors should be relevant in admissions decisions can be controversial." ]
+            }
+        ]
+    },
+    {
+        "headword": "determinant",
+        "alternateForms": ["determinants"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that has an influence on something that happens or is one of the causes of it.",
+                "examples": [ "Deciding what determinants should be relevant in admissions decisions can be controversial." ]
+            }
+        ]
+    },
+    {
+        "headword": "obligate",
+        "alternateForms": ["obligates","obligated","obligating" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make someone do something because of a law or moral principle.",
+                "examples": [ "She was upset when the Supreme Court ruled that Michigan state universities were not obligated to retain affirmative action in admissions." ]
+            }
+        ]
+    },
+    {
+        "headword": "require",
+        "alternateForms": ["requires","required","requiring" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make someone do something.",
+                "examples": [ "She was upset when the Supreme Court ruled that Michigan state universities were not required to retain affirmative action in admissions." ]
+            }
+        ]
+    },
+    {
+        "headword": "academic",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Having to do with a school.",
+                "examples": [ "In short, he felt that people believed he had been accepted into Yale only because of his race, and not as a result of his academic achievement." ],
+                "images": [
+                    {
+                        "src": "glossimages/academic1.jpg",
+                        "alt": "Photo of students raising hand in a classroom.",
+                        "description": "A teacher stands in the background, facing the viewer. Students face toward the teacher and raise their hands.  ",
+                        "caption": "When people are excited about learning, academic success goes up!",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/34ae40fc-afde-470d-8e68-c922d7420ccb",
+                            "title": "",
+                            "author": "pttgogofish",
+                            "author_url": "https://www.flickr.com/photos/9709742@N04",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "school",
+        "alternateForms": ["schools"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A place for teaching and learning.",
+                "examples": [ "In short, he felt that people believed he had been accepted into Yale only because of his race, and not as a result of his school achievement." ],
+                "images": [
+                    {
+                        "src": "glossimages/academic1.jpg",
+                        "alt": "Photo of students raising hand in a classroom.",
+                        "description": "A teacher stands in the background, facing the viewer. Students face toward the teacher and raise their hands.  ",
+                        "caption": "When people are excited about learning, success in school goes up!",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/34ae40fc-afde-470d-8e68-c922d7420ccb",
+                            "title": "",
+                            "author": "pttgogofish",
+                            "author_url": "https://www.flickr.com/photos/9709742@N04",
+                            "license": "CC BY-NC-SA 2.0 ",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-sa/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "affirmative",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Saying yes.",
+                "examples": [ "It was a cold day, so when he asked if I needed a ride, I gave an affirmative answer." ],
+                "images": [
+                    {
+                        "src": "glossimages/affirmative1.jpg",
+                        "alt": "Photo of two people giving a thumbs up sign.",
+                        "description": "Two people smiling and holding their hands with a thumb up. A thumbs up sign is a way to say yes.",
+                        "caption": "Thumbs up is one way to say, yes!",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/34ae40fc-afde-470d-8e68-c922d7420ccb",
+                            "title": "Two Boys Doing Thumbs Up Sign",
+                            "author": " Peace Alberto Iteriteka",
+                            "author_url": "https://www.pexels.com/@iterpeal",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }, 
+    {
+        "headword": "discrimination",
+        "alternateForms": ["discriminations" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The act of treating some people unfairly because of prejudice.",
+                "examples": [ "The civil rights movement fought to bring an end to discrimination in this country." ],
+                "images": [
+                    {
+                        "src": "glossimages/discrimination1.jpg",
+                        "alt": "Photo of a group of people protesting",
+                        "description": "A group of people standing together with signs. One of the signs says, 'I want to be heard.' Another sign says, 'Equal Rights.' ",
+                        "caption": "These people are protesting for equal rights and against discrimination.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/city-man-people-woman-6257700/",
+                            "title": "Group of People Standing Near Brown Brick Wall",
+                            "author": "RODNAE Productions",
+                            "author_url": "https://www.pexels.com/@rodnae-prod",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }, 
+    {
+        "headword": "aspect",
+        "alternateForms": ["aspects" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A part or element.",
+                "examples": [ "Our assignment was to write about one interesting aspect of summer vacation." ]
+            }
+        ]
+    },
+    {
+        "headword": "retain",
+        "alternateForms": ["retains","retained","retaining"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To hold or keep.",
+                "examples": [ "The sidewalk retains heat from the sun." ]
+            }
+        ]
+    },
+    {
+        "headword": "relevant",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Related to what is being discussed or is presently important.",
+                "examples": [ "The comment about cooking is not relevant to our discussion about sports." ]
+            }
+        ]
+    }
+]

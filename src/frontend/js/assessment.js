@@ -1,16 +1,27 @@
 /* Code for comprehension and affect assessments */
-/* global clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN, fluid */
+/* global clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN, fluid, D2Reader */
 /* exported clusiveAssessment */
 
 var clusiveAssessment = {
+    tooEarly: true, // auto-show of popover is blocked for a few seconds after page load
+    affectCheckDone: false,
     compCheckDone: false
 };
 
 clusiveAssessment.showCompCheck = function() {
     'use strict';
 
-    if (!clusiveAssessment.compCheckDone) {
-        $('#compPop').CFW_Popover('show');
+    if (!clusiveAssessment.compCheckDone && !clusiveAssessment.tooEarly) {
+        // Set timer. Don't show comp check if user immediately moves away from the bottom.
+        window.setTimeout(function() {
+            D2Reader.atEnd().then(function(edge) {
+                if (edge) {
+                    $('#compPop').CFW_Popover('show');
+                } else {
+                    console.debug('Was no longer at end of resource after time delay');
+                }
+            });
+        }, 2000);
     }
 };
 
@@ -18,6 +29,34 @@ clusiveAssessment.setUpCompCheck = function() {
     'use strict';
 
     var bookId = clusiveContext.reader.info.publication.id;
+
+    // Block auto-show for at least 10 seconds after page load, to prevent it erroneously getting shown.
+    clusiveAssessment.tooEarly = true;
+    window.setTimeout(function() { clusiveAssessment.tooEarly = false; }, 10000);
+
+    // Retrieve existing affect check values and set them
+    $.get('/assessment/affect_check/' + bookId, function(data) {
+        Object.keys(data).forEach(function (affectOptionName) {
+            var shouldCheck = data[affectOptionName];
+            var affectInput = $('input[name="' + affectOptionName + '"]');
+            affectInput.prop("checked", shouldCheck);
+            var idx = affectInput.attr("data-react-index");
+            var wedge = document.querySelector('.react-wedge-' + idx);
+
+            if(shouldCheck) {
+                reactDimAnimate(wedge, 100);
+            } else {
+                reactDimAnimate(wedge, 0);
+            }
+            console.log("affectInput", affectInput, shouldCheck);
+        })
+    }).fail(function(error) {
+        if (error.status === 404) {
+            console.debug('No pre-existing affect check response');
+        } else {
+            console.warn('failed to get affect check, status code: ', error.status);
+        }
+    });
 
     // Retrieve existing comprehension check values and set them
     $.get('/assessment/comprehension_check/' + bookId, function(data) {
@@ -55,6 +94,36 @@ clusiveAssessment.setUpCompCheck = function() {
     $('#comprehensionCheckSubmit').click(
         function(e) {
             e.preventDefault();
+
+            // Create basic affect response structure
+            var affectResponse = {
+                bookVersionId: clusiveContext.reader.info.publication.version_id,
+                bookId: clusiveContext.reader.info.publication.id,
+                eventId: PAGE_EVENT_ID
+            };
+
+            // Get all affect inputs
+            var checkedAffectInputs = $('input[name^="affect-option"]');
+            // Add to data object
+            checkedAffectInputs.each(function (i, elem) {
+                affectResponse[elem.name] = elem.checked
+            });
+
+            $.ajax('/assessment/affect_check', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': DJANGO_CSRF_TOKEN
+                },
+                data: JSON.stringify(affectResponse)
+            })
+                .done(function(data) {
+                    console.debug('Affect check save complete', data);
+                    clusiveAssessment.affectCheckDone = true;
+                })
+                .fail(function(err) {
+                    console.error('Affect check save failed!', err);
+                });
+
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
             var freeResponse = $('textarea[name="comprehension-free"]').val();
             var comprehensionResponse = {
@@ -81,6 +150,7 @@ clusiveAssessment.setUpCompCheck = function() {
                 .fail(function(err) {
                     console.error('Comp check save failed!', err);
                 });
+
             $(this).closest('.popover').CFW_Popover('hide');
         });
 };

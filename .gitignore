@@ -159,3 +159,5 @@ src/imsglobal-caliper
 src/pip-delete-this-directory.txt
 
 /staticfiles
+
+win-fresh-local-install.ps1

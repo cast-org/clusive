@@ -1,0 +1,403 @@
+[
+    {
+        "headword": "situation",
+        "alternateForms": ["situations" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The state of affairs; circumstances.",
+                "examples": [ "That situation changed in 2013, when a British newspaper reported that the NSA collected phone records from millions of customers every day." ]
+            }
+        ]
+    },
+    {
+        "headword": "circumstance",
+        "alternateForms": ["circumstances" ],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The state of affairs; situation.",
+                "examples": [ "That circumstances changed in 2013, when a British newspaper reported that the NSA collected phone records from millions of customers every day." ]
+            }
+        ]
+    },
+    {
+        "headword": "access",
+        "alternateForms": ["accesses","accessed","accessing" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get to; to reach.",
+                "examples": [ "The Act required the NSA to ask judges for permission to access communications between people in the U.S." ],
+                "images": [
+                    {
+                        "src": "glossimages/access1.jpeg",
+                        "alt": "Photo of cat going through small door.",
+                        "description": "A cat going through a very small door that is embedded in a larger door.",
+                        "caption": "The small cat door gives this animal easy access to going in or out.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/ec2ce50b-7f51-4e63-8db8-c1c3a59f52a1",
+                            "title": "Case Study - Starbucks Bathroom Codes",
+                            "author": "Nik Payne",
+                            "author_url": "https://flickr.com/search/?text=Nik%20Payne",
+                            "license": "CC BY-NC-ND 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "retrieve",
+        "alternateForms": ["retrieves","retrieved","retrieving" ],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get to; to reach.",
+                "examples": [ "The Act required the NSA to ask judges for permission to retrieve communications between people in the U.S." ],
+                "images": [
+                    {
+                        "src": "glossimages/access1.jpeg",
+                        "alt": "Photo of cat going through small door.",
+                        "description": "A cat going through a very small door that is embedded in a larger door.",
+                        "caption": "The small cat door gives this animal easy access to going in or out.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/ec2ce50b-7f51-4e63-8db8-c1c3a59f52a1",
+                            "title": "Case Study - Starbucks Bathroom Codes",
+                            "author": "Nik Payne",
+                            "author_url": "https://flickr.com/search/?text=Nik%20Payne",
+                            "license": "CC BY-NC-ND 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "get",
+        "alternateForms": ["gets","got","getting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To gain, to come to have.",
+                "examples": [ "The Act required the NSA to ask judges for permission to get communications between people in the U.S." ],
+                "images": [
+                    {
+                        "src": "glossimages/access1.jpeg",
+                        "alt": "Photo of cat going through small door.",
+                        "description": "A cat going through a very small door that is embedded in a larger door.",
+                        "caption": "The small cat door gives this animal an easy way to get its food.",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/ec2ce50b-7f51-4e63-8db8-c1c3a59f52a1",
+                            "title": "Case Study - Starbucks Bathroom Codes",
+                            "author": "Nik Payne",
+                            "author_url": "https://flickr.com/search/?text=Nik%20Payne",
+                            "license": "CC BY-NC-ND 4.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "strict",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "To act within the rules in an exact way.",
+                "examples": [ "But those in charge of protecting American security thought the limitations on surveillance of suspicious people were too strict." ]
+            }
+        ]
+    },    
+    {
+        "headword": "stringent",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "To act within the rules in an exact way.",
+                "examples": [ "But those in charge of protecting American security thought the limitations on surveillance of suspicious people were too stringent." ]
+            }
+        ]
+    },
+    {
+        "headword": "tight",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Difficult to manage or get out of.",
+                "examples": [ "But those in charge of protecting American security thought the limitations on surveillance of suspicious people were to tight." ]
+            }
+        ]
+    },
+    {
+        "headword": "duty",
+        "alternateForms": ["duties"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that a person should do because it is right or fair; responsibility.",
+                "examples": [ "Snowden was opposed to the massive NSA surveillance, and felt it was his duty as a patriot to reveal its existence." ],
+                "images": [
+                    {
+                        "src": "glossimages/duty1.jpg",
+                        "alt": "American Flags and Pins on White Background",
+                        "description": "Small round pins with American flags or the word 'vote' on them. The pins are next to three small American flags.",
+                        "caption": "It is the right and duty of every American citizen to vote.",
+		 "source": {
+                            "url": "https://www.pexels.com/photo/american-flags-and-pins-on-white-background-4669109/",
+                            "title": "American Flags and Pins on White Background",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "obligation",
+        "alternateForms": ["obligations"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something that a person should do because it is right or fair; responsibility.",
+                "examples": [ "Snowden was opposed to the massive NSA surveillance, and felt it was his obligation as a patriot to reveal its existence." ],
+                "images": [
+                    {
+                        "src": "glossimages/duty1.jpg",
+                        "alt": "American Flags and Pins on White Background",
+                        "description": "Small round pins with American flags or the word 'vote' on them. The pins are next to three small American flags.",
+                        "caption": "It is the right and duty of every American citizen to vote.",
+		 "source": {
+                            "url": "https://www.pexels.com/photo/american-flags-and-pins-on-white-background-4669109/",
+                            "title": "American Flags and Pins on White Background",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "job",
+        "alternateForms": ["jobs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A duty or responsibility.",
+                "examples": [ "Snowden was opposed to the massive NSA surveillance, and felt it was his job as a patriot to reveal its existence." ],
+                "images": [
+                    {
+                        "src": "glossimages/duty1.jpg",
+                        "alt": "American Flags and Pins on White Background",
+                        "description": "Small round pins with American flags or the word 'vote' on them. The pins are next to three small American flags.",
+                        "caption": "It is the right and duty of every American citizen to vote.",
+		 "source": {
+                            "url": "https://www.pexels.com/photo/american-flags-and-pins-on-white-background-4669109/",
+                            "title": "American Flags and Pins on White Background",
+                            "author": "cottonbro",
+                            "author_url": "https://www.pexels.com/@cottonbro",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "prominent",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Easy to see or notice because of some difference.",
+                "examples": [ "Many members of Congress and prominent judges have begun to take action against NSA surveillance programs." ],
+                "images": [
+                    {
+                        "src": "glossimages/prominent1.jpg",
+                        "alt": "Colorful mural painted on a city building wall.",
+                        "description": "Gray city buildings with one wall painted with words in bright, bold colors. The words say, Hold Nothing Back.",
+                        "caption": "The bold colors of the mural make it stand out in this gray city setting.",
+		 "source": {
+                            "url": "https://www.pexels.com/photo/parking-lot-behind-tall-buildings-2833648/",
+                            "title": "Parking Lot Behind Tall Buildings",
+                            "author": "Kelly Lacy",
+                            "author_url": "https://www.pexels.com/@kelly-lacy-1179532",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "renowned",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Known and praised by many; famous.",
+                "examples": [ "Many members of Congress and renowned judges have begun to take action against NSA surveillance programs." ],
+                "images": [
+                    {
+                        "src": "glossimages/prominent1.jpg",
+                        "alt": "Colorful mural painted on a city building wall.",
+                        "description": "Gray city buildings with one wall painted with words in bright, bold colors. The words say, Hold Nothing Back.",
+                        "caption": "The bold colors of the mural make it well known in this gray city setting.",
+		 "source": {
+                            "url": "https://www.pexels.com/photo/parking-lot-behind-tall-buildings-2833648/",
+                            "title": "Parking Lot Behind Tall Buildings",
+                            "author": "Kelly Lacy",
+                            "author_url": "https://www.pexels.com/@kelly-lacy-1179532",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "major",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Known and praised by many; famous.",
+                "examples": [ "Many members of Congress and major judges have begun to take action against NSA surveillance programs." ],
+                "images": [
+                    {
+                        "src": "glossimages/prominent1.jpg",
+                        "alt": "Colorful mural painted on a city building wall.",
+                        "description": "Gray city buildings with one wall painted with words in bright, bold colors. The words say, Hold Nothing Back.",
+                        "caption": "The bold colors of the mural make it a major landmark in this gray city setting.",
+		 "source": {
+                            "url": "https://www.pexels.com/photo/parking-lot-behind-tall-buildings-2833648/",
+                            "title": "Parking Lot Behind Tall Buildings",
+                            "author": "Kelly Lacy",
+                            "author_url": "https://www.pexels.com/@kelly-lacy-1179532",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "wiretap",
+        "alternateForms": ["wiretaps","wiretapped","wiretapping"],
+        "meanings": [
+            {
+                "pos": "transitive verb",
+                "definition": "To monitor (a telephone line) by means of a concealed device attached to the wires of a telephone.",
+                "examples": [ "The police sometimes wiretap telephone lines to catch criminals." ]
+            }
+        ]
+    },
+    {
+        "headword": "patriot",
+        "alternateForms": ["patriots"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "One who loves, supports, and defends their country.",
+                "examples": [ "People who have fought to preserve their country's freedoms are patriots." ],
+                "images": [
+                    {
+                        "src": "glossimages/patriot1.jpg",
+                        "alt": "Person in military uniform saluting an American flag",
+                        "description": "A large American flag is the background. A person in military uniform stands and salutes the flag.",
+                        "caption": "",
+			"source": {
+                            "url": "https://www.pexels.com/photo/man-standing-on-stage-1340504/",
+                            "title": "Man Standing On Stage",
+                            "author": " Brett Sayles",
+                            "author_url": "https://www.pexels.com/@brett-sayles",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "eliminate",
+        "alternateForms": ["eliminates","eliminated","eliminating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get rid of or destroy.",
+                "examples": [ "He is trying to eliminate weeds from his garden." ],
+                "images": [
+                    {
+                        "src": "glossimages/eliminate1.jpg",
+                        "alt": "Person removing garden weeds",
+                        "description": "A person kneels low to the ground. The person is reaching down and picking up weeds and plants that are growing in the dirt. Behind the person there are no weeds or plants growing in the dirt.",
+                        "caption": "This person is eliminating the weeds by picking them from the dirt.",
+			"source": {
+                            "url": "https://www.pexels.com/photo/faceless-ethnic-man-weeding-soil-and-removing-garden-weeds-4732350/",
+                            "title": "Faceless ethnic man weeding soil and removing garden weeds",
+                            "author": "Thom Gonzalez",
+                            "author_url": "https://www.pexels.com/@thom-gonzalez-3126166",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "suspicious",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Causing questions or doubt.",
+                "examples": [ "The police questioned them about the suspicious activities." ]
+            }
+        ]
+    },
+    {
+        "headword": "source",
+        "alternateForms": ["sources"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The start or cause of something.",
+                "examples": [ "Lake Victoria is the source of the Nile River." ],
+                "images": [
+                    {
+                        "src": "glossimages/source1.jpg",
+                        "alt": "The sun shining behind a 3-blade windmill.",
+                        "description": "A 3-blade windmill with blurred blades, showing that the windmill is moving. The sun shines in the background.",
+                        "caption": "The sun is the source of wind and solar energy.",
+			"source": {
+                            "url": "https://www.pexels.com/photo/brown-3-blade-windmill-on-surise-851005/",
+                            "title": "Brown 3-blade Windmill on Surise",
+                            "author": "Peter de Vink",
+                            "author_url": "https://www.pexels.com/@peter-de-vink-288978",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
