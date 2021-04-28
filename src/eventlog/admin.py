@@ -19,7 +19,7 @@ class EventAdmin(admin.ModelAdmin):
                        'book_id', 'book_version_id', 'resource_href', 'resource_progression', 'tip_type',
                        'page', 'control', 'object', 'value',
                        'parent_event_id', 'session', )
-    list_display = ('event_time', 'actor', 'group_anon_id', 'type', 'action', 'page', 'control', 'value',
+    list_display = ('event_time', 'actor', 'type', 'action', 'object', 'page', 'control', 'value',
                     'book_id', 'book_version_id')
     list_filter = ('actor__permission', 'event_time', 'actor')
     ordering = ('-event_time',)
