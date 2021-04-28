@@ -78,18 +78,18 @@ class ComprehensionCheckResponse(CheckResponse):
 
 # Affective check responses
 class AffectiveCheckResponse(CheckResponse):
-    annoyed_option_response = models.BooleanField(null=True)
-    bored_option_response = models.BooleanField(null=True)
-    calm_option_response = models.BooleanField(null=True)
-    confused_option_response = models.BooleanField(null=True)
-    curious_option_response = models.BooleanField(null=True)
-    disappointed_option_response = models.BooleanField(null=True)
-    frustrated_option_response = models.BooleanField(null=True)
-    happy_option_response = models.BooleanField(null=True)
-    interested_option_response = models.BooleanField(null=True)
-    okay_option_response = models.BooleanField(null=True)
-    sad_option_response = models.BooleanField(null=True)
-    surprised_option_response = models.BooleanField(null=True)
+    annoyed_option_response = models.BooleanField(null=False, default=False)
+    bored_option_response = models.BooleanField(null=False, default=False)
+    calm_option_response = models.BooleanField(null=False, default=False)
+    confused_option_response = models.BooleanField(null=False, default=False)
+    curious_option_response = models.BooleanField(null=False, default=False)
+    disappointed_option_response = models.BooleanField(null=False, default=False)
+    frustrated_option_response = models.BooleanField(null=False, default=False)
+    happy_option_response = models.BooleanField(null=False, default=False)
+    interested_option_response = models.BooleanField(null=False, default=False)
+    okay_option_response = models.BooleanField(null=False, default=False)
+    sad_option_response = models.BooleanField(null=False, default=False)
+    surprised_option_response = models.BooleanField(null=False, default=False)
 
     # Returns all True options as a single comma-separated string
     # Used for Caliper event creation
