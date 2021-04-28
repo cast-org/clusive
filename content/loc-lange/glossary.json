@@ -1,0 +1,402 @@
+[
+    {
+        "headword": "internment",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The act of putting someone in a prison for political reasons or during a war." ,
+                "examples": [ "Japanese-Americans were forced to leave their homes and were held in internment during World War II." ],
+                "images": [
+                    {
+                        "src": "glossimages/internment1.jpg",
+                        "alt": "Photo of children in internment camp.",
+                        "description": "Children standing in front of tar-paper covered buildings.",
+                        "caption": "Americans with Japanese ancestry were relocated to internment camps like this during World War II.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/6f0221c0-e09d-4d27-aa41-a501b53a7c0a",
+                            "title": "",
+                            "author": "mliu92",
+                            "author_url": "https://www.flickr.com/photos/23807199@N00",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "condition",
+        "alternateForms": ["conditions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A state of health or of being fit for use." ,
+                "examples": [ "Her teeth are in good condition from frequent brushing." ]
+            }
+        ]
+    },
+    {
+        "headword": "depression",
+        "alternateForms": ["depressions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An economic state in which business is very bad and many people are out of work and poor." ,
+                "examples": [ "With the city in a depression, it was almost impossible to find a job and many businesses were failing." ],
+                "images": [
+                    {
+                        "src": "glossimages/depression1.jpg",
+                        "alt": "Photo of people in a line outside for food.",
+                        "description": "Unemployed men lined up outside a depression soup kitchen opened in Chicago by Al Capone in 1931. The storefront sign reads \"Free Soup, Coffee and Doughnuts for the Unemployed.\"",
+                        "caption": "People lined up for food during the economic depression of the 1930s.",
+                        "source": {
+                            "url": "https://www.archives.gov/files/research/american-cities/images/american-cities-129.jpg",
+                            "title": "Unemployed men queued outside a depression soup kitchen opened in Chicago by Al Capone. February 1931",
+                            "author": "The U.S. National Archives and Records Administration",
+                            "author_url": "",
+                            "license": "No known restrictions.",
+                            "license_url": ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "physical",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or involving the body." ,
+                "examples": [ "Bruises and broken bones are evidence of physical abuse." ],
+                "images": [
+                    {
+                        "src": "glossimages/physical1.jpg",
+                        "alt": "Photo of a bruised hand",
+                        "description": "A hand with a large bruise below the thumb.",
+                        "caption": "A bruise is physical evidence that someone has been hurt. ",
+                        "source": {
+                            "url": "https://ccsearch.creativecommons.org/photos/7c02360c-c57e-4d57-82c4-31ce65960334",
+                            "title": "Evolution Of A Bruise",
+                            "author": "Vicious Bits",
+                            "author_url": "https://www.flickr.com/photos/42798669@N00",
+                            "license": "CC BY-NC-SA 2.0",
+                            "license_url": "https://ccsearch.creativecommons.org/photos/null?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "contract",
+        "alternateForms": ["contracts", "contracted", "contracting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get or acquire." ,
+                "examples": [ "I contracted a cold from my friend." ]
+            }
+        ]
+    },
+    {
+        "headword": "plight",
+        "alternateForms": ["plights"],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "An unhappy or unlucky state or situation." ,
+                "examples": [ "After no electricity for a week, the plight of the people was dismal. " ],
+                "images": [
+                    {
+                        "src": "glossimages/plight1.jpg",
+                        "alt": "Photo of a woman with her head down, face in hands.",
+                        "description": "A person with head down, her face in her hands.",
+                        "caption": "A person crying over her plight.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/grayscale-photography-of-crying-woman-568027/",
+                            "title": "Grayscale Photography of Crying Woman",
+                            "author": "Kat Jayne",
+                            "author_url": "https://www.pexels.com/@katlovessteve",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "symbol",
+        "alternateForms": ["symbols"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An object or picture that represents something else." ,
+                "examples": [ "The American flag is a symbol of the United States." ],
+                "images": [
+                    {
+                        "src": "glossimages/symbol1.jpg",
+                        "alt": "Photo of American flag",
+                        "description": "The flag of the United States. The flag has red and white stripes, and a field of blue with white stars in the upper left corner.",
+                        "caption": "A flag is a symbol that represents a country.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/shallow-photography-of-usa-flag-973049/",
+                            "title": "Shallow Photography of Usa Flag",
+                            "author": "Sawyer Sutton",
+                            "author_url": "https://www.pexels.com/@sawyersutton",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "migrant",
+        "alternateForms": ["migrants"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Someone who moves from place to place." ,
+                "examples": [ "At one time, some Native Americans were migrant people." ],
+                "images": [
+                    {
+                        "src": "glossimages/migrant1.jpg",
+                        "alt": "Photo of people in a crop field.",
+                        "description": "Photo of a field with plants growing low to the ground. Six people are in the field. Some are sitting on wooden boxes. One seems to be reclining back.",
+                        "caption": "Migrant workers taking a break from havesting crops.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/572466f7-40dc-444d-9bb1-8b73097f78bb",
+                            "title": "Working - Migrant Farm Workers ",
+                            "author": "Bob Jagendorf ",
+                            "author_url": "https://www.flickr.com/photos/20801313@N00",
+                            "license": "CC BY-NC 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nc/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "establish",
+        "alternateForms": ["establishes","established","establishing"],
+        "meanings": [
+            {
+                "pos": "transitive verb",
+                "definition": "To bring into being; to found." ,
+                "examples": [ "Of the 10 internment camps that were established, two of the larger ones were in Arizona." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "commonly",
+        "alternateForms": [" "],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "Ordinarily; usually." ,
+                "examples": [ "Dorothea Lange's most famous photograph is commonly known as the 'Migrant Mother.'" ]
+
+            }
+        ]
+    },
+    {
+        "headword": "survive",
+        "alternateForms": ["survives","survived","surviving"],
+        "meanings": [
+            {
+                "pos": "intransitive verb",
+                "definition": "To continue to live despite serious threat to one's life." ,
+                "examples": [ "The woman was a widow with seven children, who survived by eating frozen peas from the fields and birds her children caught." ],
+                "images": [
+                    {
+                        "src": "glossimages/survive1.jpg",
+                        "alt": "Photo of small plants in sand",
+                        "description": "Small plants growing in dry sand.",
+                        "caption": "Small plants surviving in harsh conditions.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/mini-plants-growing-on-smooth-soil-in-sandbox-4299491/",
+                            "title": "Mini plants growing on smooth soil in sandbox",
+                            "author": "Jorge Sepúlveda",
+                            "author_url": "https://www.pexels.com/@jorge-sepulveda-2486901",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "craft",
+        "alternateForms": ["crafts"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A skill or talent in making things by hand or in the arts." ,
+                "examples": [ "Lange decided at 18 that she wanted to be a photographer and began learning the skill through classes and apprenticeships, in which she worked with other photographers to learn her craft." ],
+                "images": [
+                    {
+                        "src": "glossimages/craft1.jpg",
+                        "alt": "Photo of hands shaping clay.",
+                        "description": "A person's hands are touching the sides of a wet clay pot. The sides of the pot are soft and can be shaped. The person is holds a wet cloth along the rim of the clay pot to shape it.",
+                        "caption": "Pottery is the craft of making things out of clay.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-making-clay-pot-2166456/",
+                            "title": "Woman Making Clay Pot",
+                            "author": "Quang Nguyen Vinh",
+                            "author_url": "https://www.pexels.com/@quang-nguyen-vinh-222549",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "circumstance",
+        "alternateForms": ["circumstances"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A condition or fact connected with or having an effect on an event or situation." ,
+                "examples": [ "Lange recalled the circumstances of taking the photo." ]
+            }
+        ]
+    },
+    {
+        "headword": "institute",
+        "alternateForms": ["institutes","instituted","instituting"],
+        "meanings": [
+            {
+                "pos": "transitive verb",
+                "definition": "To bring into being; to found." ,
+                "examples": [ "Of the 10 internment camps that were instituted, two of the larger ones were in Arizona." ]
+
+            }
+        ]
+    },
+    {
+        "headword": "predominantly",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adverb",
+                "definition": "Ordinarily; usually." ,
+                "examples": [ "Dorothea Lange's most famous photograph is predominantly known as the 'Migrant Mother.'" ]
+
+            }
+        ]
+    },
+    {
+        "headword": "subsist",
+        "alternateForms": ["subsists","subsisted","subsisting"],
+        "meanings": [
+            {
+                "pos": "intransitive verb",
+                "definition": "To continue to live despite serious threat to one's life." ,
+                "examples": [ "The woman was a widow with seven children, who subsisted by eating frozen peas from the fields and birds her children caught." ],
+                "images": [
+                    {
+                        "src": "glossimages/survive1.jpg",
+                        "alt": "Photo of small plants in sand",
+                        "description": "Small plants growing in dry sand.",
+                        "caption": "Small plants surviving in harsh conditions.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/mini-plants-growing-on-smooth-soil-in-sandbox-4299491/",
+                            "title": "Mini plants growing on smooth soil in sandbox",
+                            "author": "Jorge Sepúlveda",
+                            "author_url": "https://www.pexels.com/@jorge-sepulveda-2486901",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "vocation",
+        "alternateForms": ["vocations"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A job or career; occupation." ,
+                "examples": [ "Lange decided at 18 that she wanted to be a photographer and began learning the skill through classes and apprenticeships, in which she worked with other photographers to learn her vocation." ],
+                "images": [
+                    {
+                        "src": "glossimages/craft1.jpg",
+                        "alt": "Photo of hands shaping clay.",
+                        "description": "A person's hands are touching the sides of a wet clay pot. The sides of the pot are soft and can be shaped. The person is holds a wet cloth along the rim of the clay pot to shape it.",
+                        "caption": "Pottery is the vocation of making things out of clay.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-making-clay-pot-2166456/",
+                            "title": "Woman Making Clay Pot",
+                            "author": "Quang Nguyen Vinh",
+                            "author_url": "https://www.pexels.com/@quang-nguyen-vinh-222549",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "instance",
+        "alternateForms": ["instances"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A condition or fact connected with or having an effect on an event or situation." ,
+                "examples": [ "Lange recalled the instances around taking the photo." ]
+            }
+        ]
+    },
+    {
+        "headword": "trade",
+        "alternateForms": ["trades"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A job or career; occupation." ,
+                "examples": [ "Lange decided at 18 that she wanted to be a photographer and began learning the skill through classes and apprenticeships, in which she worked with other photographers to learn her trade." ],
+                "images": [
+                    {
+                        "src": "glossimages/craft1.jpg",
+                        "alt": "Photo of hands shaping clay.",
+                        "description": "A person's hands are touching the sides of a wet clay pot. The sides of the pot are soft and can be shaped. The person is holds a wet cloth along the rim of the clay pot to shape it.",
+                        "caption": "Pottery is the trade of making things out of clay.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/woman-making-clay-pot-2166456/",
+                            "title": "Woman Making Clay Pot",
+                            "author": "Quang Nguyen Vinh",
+                            "author_url": "https://www.pexels.com/@quang-nguyen-vinh-222549",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "event",
+        "alternateForms": ["events"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A condition or fact connected with or having an effect on an event or situation." ,
+                "examples": [ "Lange recalled the events around taking the photo."]
+            }
+        ]
+    }
+]
