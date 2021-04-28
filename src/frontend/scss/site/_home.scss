@@ -98,9 +98,9 @@
         align-items: center;
 
         .media-img {
-            width: 1.75rem;
-            margin-right: 1rem;
-            @include font-size(1.75rem);
+            width: 2rem;
+            margin-right: .75rem;
+            @include font-size(2rem);
         }
         .media-body {
             font-weight: $font-weight-bold;
