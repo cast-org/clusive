@@ -22,7 +22,7 @@ vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'object', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
-word_rated = Signal(providing_args=['request', 'event_id', 'control', 'word', 'rating'])
+word_rated = Signal(providing_args=['request', 'event_id', 'book_id', 'control', 'word', 'rating'])
 word_removed = Signal(providing_args=['request', 'event_id', 'word'])
 comprehension_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
 affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'answer', 'affect_check_response_id'])
@@ -184,6 +184,7 @@ def log_affect_check_completed(sender, **kwargs):
 def log_word_rated(sender, **kwargs):
     """User rates a word"""
     control = kwargs.get('control')
+    book_id = kwargs.get('book_id')
     word = kwargs.get('word')
     rating = str(kwargs.get('rating'))
     event_type = 'ASSESSMENT_ITEM_EVENT'

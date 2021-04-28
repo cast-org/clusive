@@ -210,8 +210,12 @@ def set_word_rating(request, control, word, rating):
         wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
             wm.register_rating(rating)
+            book_id = None
+            if "bookId" in request.GET:
+                book_id = request.GET.get("bookId")
             word_rated.send(sender=GlossaryConfig.__class__,
                             request=request,
+                            book_id=book_id,
                             control=control,
                             word=word,
                             rating=rating)
