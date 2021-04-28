@@ -293,9 +293,9 @@ function reactDimAnimate(element, newVal) {
         }
         var elapsed = timestamp - start;
         var elapsedRatio  = elapsed / duration;
+        elapsedRatio = elapsedRatio > 1 ? 1 : elapsedRatio;
         var update = Math.round(easeInOutQuad(elapsedRatio, old, delta, 1));
 
-        elapsedRatio = elapsedRatio > 1 ? 1 : elapsedRatio;
         if (update < Math.min(old, newVal)) {
             update = Math.min(old, newVal);
         } else if (update > Math.max(old, newVal)) {
