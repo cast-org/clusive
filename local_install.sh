@@ -1,6 +1,6 @@
-# Run from the root 'clusive' directory
+# Run from the root 'clusive' directory after setting up your virtual environment
 
-source ./env/scripts/activate
+source ./env/bin/activate
 npm install
 pip install -r requirements.txt
 python -m nltk.downloader wordnet

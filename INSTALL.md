@@ -6,7 +6,7 @@ To try it out quickly using Docker skip ahead to that section.
 
 ## Local Installation
 
-Note: all steps between **Create/Activitate Virtual Environment** and **Create a Superuser** can be run using `local_install.sh` (on Unix-based systems) or `local_install.ps1` (on Windows) to more easily set up or refresh a local environment.
+Note: all steps between **Create/Activitate Virtual Environment** and **Create a Superuser** can be run using `local_install.sh` (on Unix-based systems) or `local_install.ps1` (on Windows) to more easily set up or refresh a local environment. Be sure to set up your virtual environment first.
 
 ### Prerequisites
 

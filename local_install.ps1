@@ -1,4 +1,4 @@
-# Run from the root 'clusive' directory
+# Run from the root 'clusive' directory after setting up your virtual environment
 
 ./env/Scripts/activate
 npm install
