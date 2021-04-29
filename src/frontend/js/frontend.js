@@ -510,8 +510,29 @@ function showTooltip(name) {
     }
 }
 
+// Determine if this page has any filtering active. It does if there is an unchecked "All" checkbox.
+function hasActiveFilters() {
+    'use strict';
+
+    return $('[data-clusive="filterAll"]').not(':checked').length > 0;
+}
+
 function filterAllUpdate() {
     'use strict';
+
+    // set up initial state based on page markup
+    $('[data-clusive="filterAllUpdate"]').each(function() {
+        var $par = $(this);
+        var $all = $par.find('[data-clusive="filterAll"]');
+        var $checked = $par.find('input:checked');
+        if (!$par.length || !$all.length) { return; }
+        if (!$checked.length) {
+            $all.prop('checked', true);
+        } else {
+            $all.prop('checked', false);
+        }
+    });
+    $('#clearFilters').toggle(hasActiveFilters());
 
     $(document.body).on('click', '[data-clusive="filterAllUpdate"] input', function(e) {
         var $elm = $(e.currentTarget);
@@ -529,6 +550,7 @@ function filterAllUpdate() {
         } else {
             $all.prop('checked', false);
         }
+        $('#clearFilters').toggle(hasActiveFilters());
     });
 }
 

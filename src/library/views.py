@@ -6,7 +6,7 @@ from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -20,7 +20,7 @@ from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject
 from library.parsing import unpack_epub_file, scan_book
 from roster.models import ClusiveUser, Period, LibraryViews
 
@@ -30,17 +30,21 @@ logger = logging.getLogger(__name__)
 class LibraryView(LoginRequiredMixin, EventMixin, ListView):
     """Library page showing a list of books"""
     template_name = 'library/library.html'
+    paginate_by = 21
+    paginate_orphans = 3
+
     style = None
     view = 'public'
     view_name = None  # User-visible name for the current view
     period = None
-    paginate_by = 21
-    paginate_orphans = 3
+    query = None
+    subjects = None
 
     def configure_event(self, event):
         event.page = 'Library'
 
     def get_queryset(self):
+        q: QuerySet
         if self.view == 'period' and self.period:
             q = Book.objects.filter(assignments__period=self.period)
         elif self.view == 'mine':
@@ -55,10 +59,18 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
                 | Q(owner=self.clusive_user)).distinct()
         else:
             raise Http404('Unknown view type')
+
         if self.query:
             q = q.filter(Q(title__icontains=self.query) |
                          Q(author__icontains=self.query) |
                          Q(description__icontains=self.query))
+
+        if self.subjects:
+            q  = q.filter(Q(subjects__in=self.subjects))
+
+        # Avoid separate queries for the topic list of every book
+        q = q.prefetch_related('subjects')
+
         return q
 
     def dispatch(self, request, *args, **kwargs):
@@ -69,6 +81,14 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
         self.clusive_user = request.clusive_user
         self.query = request.GET.get('query')
         self.view = kwargs.get('view')
+
+        self.filter_string = request.GET.get('filter')
+        if self.filter_string:
+            subject_strings = self.filter_string.split(',')
+            s = Subject.objects.filter(subject__in=subject_strings)
+            logger.debug('Found subjects %s', s)
+            self.subjects = s
+
         if kwargs.get('style'):
             self.style = kwargs.get('style')
         else:
@@ -100,11 +120,14 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
         context['clusive_user'] = self.clusive_user
         context['search_form'] = self.search_form
         context['query'] = self.query
+        context['filter'] = self.filter_string
+        context['subjects'] = self.subjects
         context['period'] = self.period
         context['style'] = self.style
         context['current_view'] = self.view
         context['current_view_name'] = self.view_name
         context['view_names'] = dict(LibraryViews.CHOICES)
+        context['topics'] = Subject.get_list()
         return context
 
 
@@ -415,7 +438,7 @@ class AnnotationView(LoginRequiredMixin, View):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
         page_event_id = request.POST.get('eventId')
         if request.POST.get('undelete'):
-            anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)            
+            anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)
             anno.dateDeleted = None
             anno.save()
             logger.debug('Undeleting annotation %s', anno)
@@ -457,7 +480,7 @@ class AnnotationView(LoginRequiredMixin, View):
         logger.debug('Deleting annotation %s', anno)
         anno.dateDeleted = timezone.now()
         anno.save()
-        page_event_id = request.GET.get('eventId')            
+        page_event_id = request.GET.get('eventId')
         annotation_action.send(sender=AnnotationView.__class__,
                                request=request,
                                annotation=anno,

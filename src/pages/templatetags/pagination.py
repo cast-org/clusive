@@ -2,18 +2,24 @@ from django import template
 register = template.Library()
 
 @register.simple_tag
-def pagination_search(url, page, query):
+def pagination_search(url, page, query, filters):
     """
-    Build URL for pagination that passes optional search query
+    Build URL for the library page including pagination, search and filter parameters, and sort option.
     """
-
-    if query and page:
-        return '%s?query=%s&page=%s' % (url, query, page)
+    params = []
 
     if query:
-        return '%s?query=%s' % (url, query)
+        params.append('query=%s' % query)
+    else:
+        params.append('query=')
 
     if page:
-        return '%s?page=%s' % (url, page)
+        params.append('page=%s' % page)
 
-    return url
+    if filters:
+        params.append('filter=%s' % filters)
+
+    if params:
+        return "%s?%s" % (url, "&".join(params))
+    else:
+        return url

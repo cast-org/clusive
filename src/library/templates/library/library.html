@@ -31,21 +31,34 @@
         </div>
     </div>
 
+    {% if query %}
+    <p>
+        Showing results for <strong>{{ query }}</strong>
+        <a href="{% pagination_search '' 0 '' filters %}" class="ms-0_5">Clear search</a>
+    </p>
+    {% endif %}
+
+    <div class="row">
+        {% include "library/partial/library_collection_selector.html" %}
+
+        {% include "library/partial/library_filter_selector.html" %}
+
+        {% include "library/partial/library_view_selector.html" %}
+    </div>
+
+    {% if style == 'list' %}
+        {% include "library/partial/library_list_options.html" %}
+    {% else %}
+        {% include "library/partial/library_grid_options.html" %}
+    {% endif %}
+
+    {% if current_view == 'mine' %}
     <div class="row">
         <div class="col">
-            {% include "library/partial/library_view_selector.html" %}
-            {% if style == 'list' %}
-                {% include "library/partial/library_list_options.html" %}
-            {% else %}
-                {% include "library/partial/library_grid_options.html" %}
-            {% endif %}
-        </div>
-        {% if current_view == 'mine' %}
-        <div class="col-md-auto text-md-end mb-1 mb-md-0">
             <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add content</a>
         </div>
-        {% endif %}
     </div>
+    {% endif %}
 
     {% if object_list|length == 0 %}
         No content found.
@@ -60,7 +73,7 @@
             <div class="library-pagination-wrapper">
                 <div class="pagination library-pagination">
                     {% if page_obj.has_previous %}
-                    <a href="{% pagination_search '' page_obj.previous_page_number query %}" class="page-link">
+                    <a href="{% pagination_search '' page_obj.previous_page_number query filters %}" class="page-link">
                         <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                         Previous
                     </a>
@@ -74,11 +87,11 @@
                         {% if pg == page_obj.number %}
                             <span class="page-link active" aria-current="page">{{pg}}</span>
                         {% else %}
-                            <a href="{% pagination_search '' pg  query %}" class="page-link">{{pg}}</a>
+                            <a href="{% pagination_search '' pg  query filters %}" class="page-link">{{pg}}</a>
                         {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
-                    <a href="{% pagination_search '' page_obj.next_page_number query %}" class="page-link">
+                    <a href="{% pagination_search '' page_obj.next_page_number query filters %}" class="page-link">
                         Next
                         <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                     </a>
