@@ -28,17 +28,17 @@ class GlossaryTestCase(TestCase):
         book_2 = BookVersion.objects.create(book=self.book, sortOrder=1,
                                             glossary_words='["test tricky"]',
                                             all_words='["a", "tricky", "test", "the", "end"]',
-                                            new_words='["a", "tricky"]')        
+                                            new_words='["a", "tricky"]')
 
     def login_and_generate_page_event_id(self):
-        login = self.client.login(username='user1', password='password1')       
+        login = self.client.login(username='user1', password='password1')
         library_page_response = self.client.get('/library/public')
         page_view_event = Event.objects.latest('event_time')
-        self.event_id = page_view_event.id     
+        self.event_id = page_view_event.id
 
-    def test_set_and_get_rating(self):                      
-        self.login_and_generate_page_event_id()                        
-        response = self.client.get('/glossary/rating/something/2', HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
+    def test_set_and_get_rating(self):
+        self.login_and_generate_page_event_id()
+        response = self.client.get('/glossary/rating/checkin/something/2', HTTP_CLUSIVE_PAGE_EVENT_ID=self.event_id)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(str(response.content, encoding='utf8'),
                              {'success': 1})

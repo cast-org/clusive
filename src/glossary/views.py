@@ -5,7 +5,7 @@ import random
 from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 
-from eventlog.signals import vocab_lookup, word_rated
+from eventlog.signals import vocab_lookup, word_rated, word_removed
 from glossary.apps import GlossaryConfig
 from glossary.models import WordModel
 from glossary.util import base_form, all_forms, lookup, has_definition
@@ -117,13 +117,13 @@ def cuelist(request, book_id, version):
         # Filter user's word list by words in the book
         user_words = [wm for wm in all_user_words
                       if wm.word in all_book_words
-                      ]        
+                      ]
 
         # Target number of words.  For now, just pick an arbitrary number.
         # TODO: target number should depend on word count of the book.
         to_find = 10
 
-        # First, find any words where we think the user is interested  
+        # First, find any words where we think the user is interested
 
         interest_words = [wm.word for wm in user_words
                           if wm.interest_est() > 0
@@ -171,12 +171,12 @@ def glossdef(request, book_id, cued, word):
         book = Book.objects.get(pk=book_id)
     except Book.DoesNotExist:
         book = None
-    defs = lookup(book, base)    
+    defs = lookup(book, base)
 
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=base,
-                      cued=cued,                                            
+                      cued=cued,
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:
@@ -203,20 +203,21 @@ def get_word_rating(request, word):
                              'rating' : False})
 
 
-def set_word_rating(request, word, rating):
+def set_word_rating(request, control, word, rating):
     try:
         user = ClusiveUser.objects.get(user=request.user)
         base = base_form(word)
         wm, created = WordModel.objects.get_or_create(user=user, word=base)
         if WordModel.is_valid_rating(rating):
-            book_id = None            
-            if "bookId" in request.GET:                                
-                book_id = request.GET.get("bookId")
             wm.register_rating(rating)
+            book_id = None
+            if "bookId" in request.GET:
+                book_id = request.GET.get("bookId")
             word_rated.send(sender=GlossaryConfig.__class__,
+                            request=request,
                             book_id=book_id,
-                            request=request, 
-                            word=word, 
+                            control=control,
+                            word=word,
                             rating=rating)
             return JsonResponse({'success' : 1})
         else:
@@ -233,6 +234,9 @@ def word_bank_remove(request, word):
         wm = WordModel.objects.get(user=user, word=base)
         if wm:
             wm.register_wordbank_remove()
+            word_removed.send(sender=GlossaryConfig.__class__,
+                              request=request,
+                              word=word)
             return JsonResponse({'success' : 1})
         else:
             return JsonResponse({'success' : 0})

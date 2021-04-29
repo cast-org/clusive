@@ -1,26 +1,19 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views import View
-
-from roster.models import ClusiveUser
-from roster.views import set_user_preferences
-
-from django.utils import timezone
-
-from dateutil.parser import parse as dateutil_parse
-from dateutil.relativedelta import relativedelta
-
-
-from .models import Message
-
 import json
 import logging
 
+from dateutil.parser import parse as dateutil_parse
+from dateutil.relativedelta import relativedelta
+from django.http import JsonResponse
+from django.utils import timezone
+from django.views import View
+
+from .models import Message
+
 logger = logging.getLogger(__name__)
 
-def process_messages(queue_timestamp, messages, user, request):    
-    client_reported_time = dateutil_parse(queue_timestamp)    
-    delta = get_delta_from_now(client_reported_time)    
+def process_messages(queue_timestamp, messages, user, request):
+    client_reported_time = dateutil_parse(queue_timestamp)
+    delta = get_delta_from_now(client_reported_time)
 
     for message in messages:
         message_username = message["username"]
@@ -29,9 +22,9 @@ def process_messages(queue_timestamp, messages, user, request):
             logger.debug("Rejected individual message, message username %s did not match session username %s ",
                          message_username, session_username)
             continue
-        message_timestamp = adjust_message_timestamp(message["timestamp"], delta)                
+        message_timestamp = adjust_message_timestamp(message["timestamp"], delta)
         message_content = message["content"]
-        
+
         message_type = message["content"]["type"]
         new_message = Message(message_type, message_timestamp, message_content, request)
         try:
@@ -43,7 +36,7 @@ def adjust_message_timestamp(timestamp, delta):
     message_time = dateutil_parse(timestamp)
     adjusted_message_time = message_time+delta
     message_timestamp = adjusted_message_time.isoformat()
-    
+
     return message_timestamp
 
 def get_delta_from_now(compare_time):
