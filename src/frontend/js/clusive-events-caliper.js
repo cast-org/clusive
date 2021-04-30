@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     var addVocabCheckSkippedEventToQueue = function() {
         window.clusiveEvents.addCaliperEventToQueue(window.clusiveEvents.caliperEventTypes.ASSESSMENT_ITEM_EVENT,
-            'word_rating', null, window.clusiveEvents.caliperEventActions.ASSESSMENT_ITEM_SKIPPED);
+            'checkin', null, window.clusiveEvents.caliperEventActions.ASSESSMENT_ITEM_SKIPPED);
     };
 
     var addTipRelatedActionToQueue = function(action) {

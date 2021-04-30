@@ -24,7 +24,7 @@ class Message:
     def __init__(self, message_type, timestamp, content, request):
         # This will raise ValueError if the given type is not in AllowedTypes
         self.type = Message.AllowedTypes(message_type)
-        self.timestamp = timestamp 
+        self.timestamp = timestamp
         self.content = content
         self.request = request
 
@@ -41,8 +41,8 @@ class Message:
     def send_client_side_prefs_change(self):
         client_side_prefs_change.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
 
-    def send_client_side_caliper_event(self):    
-        event_id = self.content['eventId']  
+    def send_client_side_caliper_event(self):
+        event_id = self.content['eventId']
         event_type = self.content['caliperEvent']['type']
         control = self.content['caliperEvent']['control']
         value = self.content['caliperEvent']['value']

@@ -1,0 +1,489 @@
+[
+    {
+        "headword": "novel",
+        "alternateForms": ["novels"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A long work of fiction, usually having a plot and characters." ,
+                "examples": [ "If I read one chapter each night, I will finish the novel in two weeks. " ],
+                "images": [
+                    {
+                        "src": "glossimages/novel1.jpg",
+                        "alt": "Photo of books on a table.",
+                        "description": "Many chapter books are gathered on a table. Books titles include Eragon, Where rainbows end, Prep, P.S. Love You, If You Could See Me Now, and five books from the Chronicles of Narnia series. ",
+                        "caption": "Dive in and get lost in a great novel!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/466233c2-955f-4326-bc50-bee2472e09d7 ",
+                            "title": "",
+                            "author": ".angels.",
+                            "author_url": "https://www.flickr.com/photos/30846728@N00",
+                            "license": "CC BY-ND 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-nd/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "inspire",
+        "alternateForms": ["inspires", "inspired", "inspiring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To cause, urge, stimulate or influence to do." ,
+                "examples": [ "My mother's kindness inspired me to write a book about her." ]
+            }
+        ]
+    },
+    {
+        "headword": "audience",
+        "alternateForms": ["audiences"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A group of people gathered to see or hear something." ,
+                "examples": [ "The audience was silent during his speech." ],
+                "images": [
+                    {
+                        "src": "glossimages/audience1.jpg",
+                        "alt": "Photo of a crowd of people around a stage.",
+                        "description": "A large number are shown, gathered around a stage. ",
+                        "caption": "This audience looks ready to hear a debate!",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/c490dc47-c99d-4ec4-9c10-f197fea0de9b",
+                            "title": "",
+                            "author": "Ava Lowery",
+                            "author_url": "https://www.flickr.com/photos/34841891@N00",
+                            "license": "CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "issue",
+        "alternateForms": ["issues"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A subject being talked about." ,
+                "examples": [ "Andre believed that a lot of issues could be settled by people talking and listening to each other. " ],
+                "images": [
+                    {
+                        "src": "glossimages/issue1.jpg",
+                        "alt": "Photo of trash on a beach.",
+                        "description": "A sandy beach with plastic bottles, straws, bottle caps, buckets, styrofoam, and other trash and rocks and sticks on it. Boats float on water in the background. ",
+                        "caption": "Pollution is a key issue that needs to be solved.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/5a76380c-c271-4f4f-ac02-ef7c0efc11e5",
+                            "title": "Garbage on Pantai Pangalisang, Pulau Bunaken, Sulawesi",
+                            "author": "travelourplanet.com",
+                            "author_url": "https://www.flickr.com/photos/63503049@N03",
+                            "license": " CC BY 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by/2.0/?ref=ccsearch&atype=rich"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "journalist",
+        "alternateForms": ["journalists"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A person whose work is collecting news and information, and sharing it with people through newspapers or other media." ,
+                "examples": [ "He is a journalist for the local television station." ],
+                "images": [
+                    {
+                        "src": "glossimages/journalist1.jpg",
+                        "alt": "A person using a video camera.",
+                        "description": "A person holding a large video camera. The camera rests on the person's shoulder, and the person looks through a viewfinder as he records video.",
+                        "caption": "This journalist collects news with a camera.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/man-holding-video-camera-3928557/",
+                            "title": "Man Holding Video Camera",
+                            "author": "CineDirektor FILMS",
+                            "author_url": "https://www.pexels.com/@cinedirektorfilms",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "fathom",
+        "alternateForms": ["fathoms"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "a unit of length equal to six feet, used to measure the depth of water or mines." ,
+                "examples": [ "The water was 5 fathoms, or 30 feet deep in the middle of the lake." ]
+            }
+        ]
+    },
+    {
+        "headword": "satire",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A literary or dramatic work that makes fun of human vice or foolishness, usually through the use of parody or irony." ,
+                "examples": [ "The play is a satire that makes fun of upper-class snobbery." ],
+                "images": [
+                    {
+                        "src": "glossimages/satire1.png",
+                        "alt": "Magazine cover image of a man with a monacle.",
+                        "description": "A man wearing a tall top hat, high collared shirt, and fancy coat. He holds a monacle. He has his head tilted back, eyes slightly closed, and looks at a butterfly through the monacle.",
+                        "caption": "This image is a satire of the rich in the 1920s.",
+                        "source": {
+                            "url": "https://commons.wikimedia.org/wiki/File:The_New_Yorker_volume_1,_numbers_1-19.pdf",
+                            "title": "The New Yorker volume 1, numbers 1-19",
+                            "author": "The New Yorker Magazine",
+                            "author_url": "https://www.google.com/books/edition/The_New_Yorker/11IQAAAAIAAJ?hl=en",
+                            "license": "Public domain",
+                            "license_url": "https://en.wikipedia.org/wiki/public_domain"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "ridicule",
+        "alternateForms": ["ridicules","ridiculed","ridiculing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To make fun of or laugh at in an unkind way." ,
+                "examples": [ "In the children's story, Rabbit's long ears left him open to ridicule from the other animals." ],
+                "images": [
+                    {
+                        "src": "glossimages/ridicule1.jpg",
+                        "alt": "A person looking sad while others look on.",
+                        "description": "A person leaning against a wall, looking worried and sad. In the near distance, two other people are looking at her, smiling. ",
+                        "caption": "Ridicule can be a form of bullying.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/diverse-classmates-bullying-hispanic-student-in-university-6147156/",
+                            "title": "Diverse classmates bullying Hispanic student in university",
+                            "author": "Keira Burton",
+                            "author_url": "https://www.pexels.com/@keira-burton",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "word",
+        "alternateForms": ["words"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A sound, group of sounds, or the symbols for such sounds in writing that have some meaning." ,
+                "examples": [ "Twain used accents and slang words to bring his characters to life." ],
+                "images": [
+                    {
+                        "src": "glossimages/word1.jpg",
+                        "alt": "Photo of letters on small square tiles.",
+                        "description": "Square wood tiles with letters spelling the word DREAM.",
+                        "caption": "The word DREAM.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/art-arts-and-crafts-board-game-conceptual-279321/",
+                            "title": "Dream Scrabble Tile",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "license",
+        "alternateForms": ["licenses","licensed","licensing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "Legal permission to do something, or a paper or card that shows permission." ,
+                "examples": [ "He was licensed as a steamboat pilot." ],
+                "images": [
+                    {
+                        "src": "glossimages/license1.jpg",
+                        "alt": "Photo of a driver's license",
+                        "description": "A driver's license with UK printed in the upper left corner.",
+                        "caption": "A person who is licensed is able to legally drive a car.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/uk-driving-license-45113/",
+                            "title": "Uk Driving License",
+                            "author": "Dom J",
+                            "author_url": "https://www.pexels.com/@dom-j-7304",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "location",
+        "alternateForms": ["locations"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The place to which a person is going or goods or baggage are sent." ,
+                "examples": [ "In addition to writing articles and books, Mark Twain delighted audiences with his public lectures about the far-flung locations he visited on his travels." ],
+                "images": [
+                    {
+                        "src": "glossimages/location1.jpg",
+                        "alt": "Photo of a map on a computer tablet.",
+                        "description": "A map displaying on a computer tablet. Roads and locations on the map are labeled.",
+                        "caption": "Roads and other locations are labeled on this map.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/white-ipad-38271/",
+                            "title": "White Ipad",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "exotic",
+        "alternateForms": [" "],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Very unusual and interesting." ,
+                "examples": [ "People were eager to learn about his trips to then-exotic places, such as the Sandwich Islands (now Hawaii), Egypt and the Holy Land." ]
+            }
+        ]
+    },
+    {
+        "headword": "establishment",
+        "alternateForms": ["establishments"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The people and organizations that are in control of society or government." ,
+                "examples": [ "In 1889, Twain took on another establishment -- British royalty." ],
+                "images": [
+                    {
+                        "src": "glossimages/establishment1.jpg",
+                        "alt": "Statue of a queen in front of a large, marble building.",
+                        "description": "A marble statue of Queen Victoria, wearing a crown and holding a golden orb in one hand and a scepter in the other, looking to the side. The golden orb and scepter are symbols of authority.",
+                        "caption": "A statue of Queen Victoria, a famous ruler of Britain.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/beige-concrete-cathedral-823760/",
+                            "title": "Beige Concrete Cathedral",
+                            "author": " Nicolas Postiglioni ",
+                            "author_url": "https://www.pexels.com/@postiglioni",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "vernacular",
+        "alternateForms": [""],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The language that is spoken or written in the common, everyday life of a people or region." ,
+                "examples": [ "Twain used accents and slang vernacular to bring his characters to life." ],
+                "images": [
+                    {
+                        "src": "glossimages/word1.jpg",
+                        "alt": "Photo of letters on small square tiles.",
+                        "description": "Square wood tiles with letters spelling the word DREAM.",
+                        "caption": "A common word spelled out with letter tiles.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/art-arts-and-crafts-board-game-conceptual-279321/",
+                            "title": "Dream Scrabble Tile",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "sanction",
+        "alternateForms": ["sanctions","sanctioned","sanctioning"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "Permission for an action; approval." ,
+                "examples": [ "He got legal sanction to be a steamboat pilot. " ],
+                "images": [
+                    {
+                        "src": "glossimages/license1.jpg",
+                        "alt": "Photo of a driver's license",
+                        "description": "A driver's license with UK printed in the upper left corner.",
+                        "caption": "A person who has a license is legally sanctioned to drive a car.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/uk-driving-license-45113/",
+                            "title": "Uk Driving License",
+                            "author": "Dom J",
+                            "author_url": "https://www.pexels.com/@dom-j-7304",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "destination",
+        "alternateForms": ["destinations"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "The place to which a person is going or goods or baggage are sent." ,
+                "examples": [ "In addition to writing articles and books, Mark Twain delighted audiences with his public lectures about the far-flung destinations he visited on his travels." ],
+                "images": [
+                    {
+                        "src": "glossimages/location1.jpg",
+                        "alt": "Photo of a map on a computer tablet.",
+                        "description": "A map displaying on a computer tablet. Roads and locations on the map are labeled.",
+                        "caption": "Roads and other destinations are labeled on this map.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/white-ipad-38271/",
+                            "title": "White Ipad",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "unfamiliar",
+        "alternateForms": [" "],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not known or experienced before; unusual; strange." ,
+                "examples": [ "People were eager to learn about his trips to then-unfamiliar places, such as the Sandwich Islands (now Hawaii), Egypt and the Holy Land." ]
+            }
+        ]
+    },
+    {
+        "headword": "approve",
+        "alternateForms": ["approves","approved","approving"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "Permission for an action." ,
+                "examples": [ "He got legal approval to be a steamboat pilot. " ],
+                "images": [
+                    {
+                        "src": "glossimages/license1.jpg",
+                        "alt": "Photo of a driver's license",
+                        "description": "A driver's license with UK printed in the upper left corner.",
+                        "caption": "A person who has a license is legally approved to drive a car.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/uk-driving-license-45113/",
+                            "title": "Uk Driving License",
+                            "author": "Dom J",
+                            "author_url": "https://www.pexels.com/@dom-j-7304",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "place",
+        "alternateForms": ["places"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A location." ,
+                "examples": [ "In addition to writing articles and books, Mark Twain delighted audiences with his public lectures about the far-flung places he visited on his travels." ],
+                "images": [
+                    {
+                        "src": "glossimages/location1.jpg",
+                        "alt": "Photo of a map on a computer tablet.",
+                        "description": "A map displaying on a computer tablet. Roads and locations on the map are labeled.",
+                        "caption": "Roads and other places are labeled on this map.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/white-ipad-38271/",
+                            "title": "White Ipad",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "different",
+        "alternateForms": [" "],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Not the same; not alike." ,
+                "examples": [ "People were eager to learn about his trips to then-unfamiliar places, such as the Sandwich Islands (now Hawaii), Egypt and the Holy Land." ]
+            }
+        ]
+    },
+    {
+        "headword": "institution",
+        "alternateForms": ["institutions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An organization set up for a specific purpose, usually serving the public." ,
+                "examples": [ "In 1889, Twain took on another institution-- British royalty." ],
+                "images": [
+                    {
+                        "src": "glossimages/establishment1.jpg",
+                        "alt": "Statue of a queen in front of a large, marble building.",
+                        "description": "A marble statue of Queen Victoria, wearing a crown and holding a golden orb in one hand and a scepter in the other, looking to the side. The golden orb and scepter are symbols of authority.",
+                        "caption": "A statue of Queen Victoria, a famous ruler of Britain.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/beige-concrete-cathedral-823760/",
+                            "title": "Beige Concrete Cathedral",
+                            "author": " Nicolas Postiglioni ",
+                            "author_url": "https://www.pexels.com/@postiglioni",
+                            "license": "Free to use",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

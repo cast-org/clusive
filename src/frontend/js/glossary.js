@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck */
+/* global vocabCheck, clusiveEvents */
 
 // Glossary-related functionality
 
@@ -27,7 +27,7 @@ function load_definition(cued, word) {
     if (word) {
         glossaryCurrentWord = word;
         title = word;
-        var pub = window.pub_id || 0;        
+        var pub = window.pub_id || 0;
         $.get('/glossary/glossdef/' + pub + '/' + cued + '/' + word)
             // eslint-disable-next-line no-unused-vars
             .done(function(data, status) {
@@ -77,9 +77,10 @@ window.wordBank.moveRating = function(elt, delta) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word');
     var rating = Number(item.data('rating'));
+    var control = delta>0 ? 'wb_shift_right' : 'wb_shift_left';
     var newrating = rating + delta;
     if (newrating >= 0 && newrating <= 3) {
-        $.get('/glossary/rating/' + word.text() + '/' + newrating);
+        $.get('/glossary/rating/' + control + '/' + word.text() + '/' + newrating);
         window.wordBank.displayNewWordRating(item, newrating);
     }
 };
@@ -231,7 +232,7 @@ $(function() {
     // When ranking in the glossary popup is selected, notify server
     $('#glossaryInput').on('change', 'input', function() {
         var newValue = $(this).val();
-        $.get('/glossary/rating/' + glossaryCurrentWord + '/' + newValue);
+        $.get('/glossary/rating/defpanel/' + glossaryCurrentWord + '/' + newValue);
         // If we're on the word bank page, need to update the word's position as well
         $('div.wordbank-item .wordbank-word').each(function() {
             var wbw = $(this);
@@ -245,7 +246,7 @@ $(function() {
     $('#vocabCheckModal').on('change', 'input[type="radio"]', function() {
         var value = $(this).val();
         var bookId = vocabCheck.pendingArticle;
-        $.get('/glossary/rating/' + vocabCheck.words[vocabCheck.wordIndex] + '/' + value + "?bookId=" + bookId);
+        $.get('/glossary/rating/checkin/' + vocabCheck.words[vocabCheck.wordIndex] + '/' + value + '?bookId=' + bookId);
         vocabCheck.selected(value);
     });
 

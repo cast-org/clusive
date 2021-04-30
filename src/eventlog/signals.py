@@ -21,9 +21,11 @@ page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'event_id', 'control', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
-word_rated = Signal(providing_args=['request', 'event_id', 'word', 'rating', 'book_id'])
-assessment_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
+control_used = Signal(providing_args=['request', 'event_id', 'control', 'object', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
+word_rated = Signal(providing_args=['request', 'event_id', 'book_id', 'control', 'word', 'rating'])
+word_removed = Signal(providing_args=['request', 'event_id', 'word'])
+comprehension_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
+affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'answer', 'affect_check_response_id'])
 
 #
 # Signal handlers that log specific events
@@ -69,7 +71,7 @@ def log_page_timing(sender, **kwargs):
     else:
         logger.error('Missing event ID in page timing message')
 
-# Tries to get an associated page_event_id 
+# Tries to get an associated page_event_id
 # First priority: event_id sent as part of keyword argument
 # Second priority: event_id sent as part of request header
 # Returns associated page event ID if found, or None
@@ -80,15 +82,15 @@ def get_page_event_id(kwargs):
     except KeyError:
         request = kwargs.get('request')
         page_event_id = request.headers.get('Clusive-Page-Event-Id')
-    return page_event_id        
+    return page_event_id
 
 # Tries to get information about the current reader href
 # First priority: reader_info sent as part of the keyword argument
 # Second priority: Clusive-Document-Location-Href from request header
 def get_resource_href(kwargs):
-    reader_info = kwargs.get('reader_info') 
+    reader_info = kwargs.get('reader_info')
     resource_href = None
-    try:                        
+    try:
         resource_href = reader_info.get('location').get('href')
     except AttributeError:
         request = kwargs.get('request')
@@ -99,68 +101,68 @@ def get_resource_href(kwargs):
 # First priority: reader_info sent as part of the keyword argument
 # Second priority: Clusive-Document-Location-Progression from request header
 def get_resource_progression(kwargs):
-    reader_info = kwargs.get('reader_info') 
+    reader_info = kwargs.get('reader_info')
     resource_progression = None
-    try:                        
+    try:
         resource_progression = reader_info.get('location').get('progression')
     except AttributeError:
-        request = kwargs.get('request')        
+        request = kwargs.get('request')
         resource_progression = request.headers.get('Clusive-Reader-Document-Progression')
     return resource_progression
 
 # Handle parameters non-pageview / session events should have in common
-def get_common_event_args(kwargs):        
+def get_common_event_args(kwargs):
     event_id = get_page_event_id(kwargs)
     timestamp = kwargs.get('timestamp')
     if event_id:
         try:
             associated_page_event = Event.objects.get(id=event_id)
-            page = associated_page_event.page     
+            page = associated_page_event.page
 
             # book_id and book_version id can be supplied by events;
             # if not supplied, try to fill them in from the associated
             # page event
-            book_id = kwargs.get('book_id')       
+            book_id = kwargs.get('book_id')
             if not book_id:
                 book_id = associated_page_event.book_id
             book_version_id = kwargs.get('book_version_id')
             if not book_version_id:
-                book_version_id = associated_page_event.book_version_id            
+                book_version_id = associated_page_event.book_version_id
 
-            resource_href = get_resource_href(kwargs)            
-            resource_progression = get_resource_progression(kwargs)            
-            common_event_args = dict(page=page,     
-                                parent_event_id=event_id,     
+            resource_href = get_resource_href(kwargs)
+            resource_progression = get_resource_progression(kwargs)
+            common_event_args = dict(page=page,
+                                parent_event_id=event_id,
                                 event_time=timestamp,
                                 book_id=book_id,
                                 book_version_id=book_version_id,
                                 resource_href = resource_href,
                                 resource_progression=resource_progression,
-                                session=kwargs['request'].session)  
+                                session=kwargs['request'].session)
             return common_event_args
         except Event.DoesNotExist:
-            logger.error('get_common_event_args with a non-existent page event ID %s', event_id)                
+            logger.error('get_common_event_args with a non-existent page event ID %s', event_id)
     return {}
 
 # General function for event creation
 # Defaults action and type to the most common TOOL_USE_EVENT type
 def create_event(kwargs, control=None, object=None, value=None, action='USED', event_type='TOOL_USE_EVENT'):
     common_event_args = get_common_event_args(kwargs)
-    event = Event.build(type=event_type,                        
+    event = Event.build(type=event_type,
                         action=action,
                         control=control,
                         object=object,
                         value=value,
-                        **common_event_args)                      
+                        **common_event_args)
     if event:
-        # TODO: this doesn't validate the object by the rules like 
+        # TODO: this doesn't validate the object by the rules like
         # limited choices for ACTION and TYPE based on Caliper's spec
         # See https://docs.djangoproject.com/en/3.1/ref/models/instances/#validating-objects
         event.save()
 
-@receiver(assessment_completed)
+@receiver(comprehension_check_completed)
 def log_comprehension_check_completed(sender, **kwargs):
-    """User completes a comprehension check"""    
+    """User completes a comprehension check"""
     action = 'COMPLETED'
     event_type = 'ASSESSMENT_ITEM_EVENT'
     key = kwargs.get('key')
@@ -170,53 +172,73 @@ def log_comprehension_check_completed(sender, **kwargs):
     control = 'comprehension_check_%s' % key
     create_event(kwargs, control=control, object=question, value=answer, action=action, event_type=event_type)
 
+@receiver(affect_check_completed)
+def log_affect_check_completed(sender, **kwargs):
+    action = 'COMPLETED'
+    event_type = 'ASSESSMENT_ITEM_EVENT'
+    control = 'affect_check'
+    answer = kwargs.get('answer')
+    create_event(kwargs, control=control, value=answer, action=action, event_type=event_type)
+
 @receiver(word_rated)
 def log_word_rated(sender, **kwargs):
     """User rates a word"""
-    control = 'word_rating'
-    action = 'COMPLETED'
-    event_type = 'ASSESSMENT_ITEM_EVENT'
-    word = kwargs.get('word')
-    rating = kwargs.get('rating')
+    control = kwargs.get('control')
     book_id = kwargs.get('book_id')
-    value = "%s:%s" % (word, rating)    
-    create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
+    word = kwargs.get('word')
+    rating = str(kwargs.get('rating'))
+    event_type = 'ASSESSMENT_ITEM_EVENT'
+    action = 'COMPLETED'
+    create_event(kwargs, control=control, object=word, value=rating, action=action, event_type=event_type)
+
+
+@receiver(word_removed)
+def log_word_removed(sender, **kwargs):
+    """User removes a word from the Wordbank"""
+    word = kwargs.get('word')
+    event_type = 'TOOL_USE_EVENT'
+    action = 'USED'
+    create_event(kwargs, control='wb_remove', object=word, action=action, event_type=event_type)
+
 
 @receiver(vocab_lookup)
 def log_vocab_lookup(sender, **kwargs):
     """User looks up a vocabulary word"""
-    # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one        
+    # TODO: differentiate definition source (Wordnet, custom, ...) once there is more than one
     control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
-    value = kwargs['word']    
+    value = kwargs['word']
     create_event(kwargs, control=control, value=value)
+
 
 @receiver(control_used)
 def log_control_used(sender, **kwargs):
-    """User interacts with a control"""        
+    """User interacts with a control"""
     control = kwargs.get('control')
+    object = kwargs.get('object')
     value = kwargs.get('value')
-    event_type = kwargs.get('event_type') 
+    event_type = kwargs.get('event_type')
     action = kwargs.get('action')
-    create_event(kwargs, control=control, value=value, action=action, event_type=event_type)
+    create_event(kwargs, control=control, object=object, value=value, action=action, event_type=event_type)
+
 
 @receiver(preference_changed)
 def log_pref_change(sender, **kwargs):
-    """User changes a preference setting"""    
-    preference = kwargs.get('preference')                  
-    control='pref:'+preference.pref                      
-    value=preference.value    
+    """User changes a preference setting"""
+    preference = kwargs.get('preference')
+    control='pref:'+preference.pref
+    value=preference.value
     create_event(kwargs, control=control, value=value)
 
 @receiver(annotation_action)
 def log_annotation_action(sender, **kwargs):
     """User adds, deletes, or undeletes an annotation"""
-    common_event_args = get_common_event_args(kwargs)    
+    common_event_args = get_common_event_args(kwargs)
     action = kwargs.get('action')   # Should be HIGHLIGHTED or REMOVED
     annotation = kwargs.get('annotation')
     logger.debug("Annotation %s: %s" % (action, annotation))
     event = Event.build(type='ANNOTATION_EVENT',
-                        action=action,                        
-                        value=annotation.clean_text(),                        
+                        action=action,
+                        value=annotation.clean_text(),
                         **common_event_args)
     event.save()
 

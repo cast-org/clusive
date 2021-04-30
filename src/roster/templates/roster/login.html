@@ -1,7 +1,7 @@
 {% extends "shared/base.html" %}
 {% load static %}
 
-{% block bodyClass %}home{% endblock %}
+{% block bodyClass %}home sidebar-no-start sidebar-no-end{% endblock %}
 {% block title %}Welcome to Clusive{% endblock %}
 
 {% block preference_panel %} {% endblock %}
@@ -96,11 +96,11 @@
                 <div class="card-body login-section d-xs-down-none">
                     <ul class="list-unstyled">
                         <li class="media">
-                            <div class="media-img"><span class="icon-hand-paper-o" aria-hidden="true"></span></div>
+                            <div class="media-img"><img src="{% static "shared/images/home-hand.png" %}" class="img-fluid" role="presentation" alt=""></div>
                             <div class="media-body">Adaptive learning environment</div>
                         </li>
                         <li class="media">
-                            <div class="media-img text-muted"><span class="icon-universal-access" aria-hidden="true"></span></div>
+                            <div class="media-img"><img src="{% static "shared/images/home-accessible.svg" %}" class="img-fluid" role="presentation" alt=""></div>
                             <div class="media-body">High-quality accessible content</div>
                         </li>
                         <li class="media">
@@ -116,7 +116,7 @@
         <div class="col-lg-4">
             <h2 class="mb-1">See a demo</h2>
             <div class="embed-fluid embed-fluid-16x9">
-                <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/31Vd8zvl2GE" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/BqhfDOuV4jE" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
             <h2 class="mb-1 pt-1 mt-1">Learn more</h2>
