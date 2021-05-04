@@ -306,17 +306,32 @@ def set_subjects(book):
     if os.path.exists(bv.manifest_file):
         with open(bv.manifest_file, 'r') as file:
             manifest = json.load(file)
-            book_subjects = manifest['metadata'].get('subject')
-            logger.debug('These are the book subjects: %s', book_subjects)
+
+            # clear any current subjects
+            if book.subjects.count() > 0:
+                logger.debug('Removing these subjects from the book: %s', book.subjects.all())
+                book.subjects.clear()
+
+            #  make a list of subjects from the manifest
+            bs = manifest['metadata'].get('subject')
+
+            #  if bs is a string then there is only 1 subject
+            book_subjects = []
+            if isinstance(bs, str) or bs == None:
+                book_subjects.append(bs)
+            else:
+                book_subjects.extend(bs)
+            logger.debug('These are the book subjects to add: %s', book_subjects)
 
             # Loop through subjects array checking for valid subjects only
             if book_subjects:
                 for s in book_subjects:
-                    if valid_subjects.filter(subject__iexact=s).exists():
-                        logger.debug('Adding subject relationship for: %s', s)
-                        book.subjects.add(valid_subjects.filter(subject__iexact=s).first())
-                    else:
-                        logger.debug('Subject is not in the subject table: %s', s)
+                    if s is not None:
+                        if valid_subjects.filter(subject__iexact=s).exists():
+                            logger.debug('Adding subject relationship for: %s', s)
+                            book.subjects.add(valid_subjects.filter(subject__iexact=s).first())
+                        else:
+                            logger.debug('Subject is not in the subject table: %s', s)
     else:
         logger.error("Book directory had no manifest: %s", bv.manifest_file)
 
