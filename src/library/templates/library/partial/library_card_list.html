@@ -30,21 +30,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="row">
-                        <div class="col card-library-tag">
-                            {% for s in book.subjects.all %}
-                                <span class="badge badge-tag">{{ s.subject }}</span>
-                            {% endfor %}
-                            <span class="badge badge-tag" title="{{book.word_count}} words, {{book.picture_count}} pictures">
-                                <span class="badge-item">
-                                    <span class="icon-align-left" aria-hidden="true"></span>
-                                    {{ book.word_count }} <span class="sr-only">words</span>
-                                </span>
-                                <span class="badge-item">
-                                    <span class="icon-picture" aria-hidden="true"></span>
-                                    {{ book.picture_count }} <span class="sr-only">pictures</span>
-                                </span>
-                            </span>
-                        </div>
+                        {% include 'library/partial/library_card_topics.html' %}
                         {% if book.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
                         <div class="col-auto card-library-action">
                             {% include "library/partial/library_action_menu.html" %}

@@ -34,7 +34,7 @@
     {% if query %}
     <p>
         Showing results for <strong>{{ query }}</strong>
-        <a href="{% pagination_search '' 0 '' filters %}" class="ms-0_5">Clear search</a>
+        <a href="?" class="ms-0_5">Clear search</a>
     </p>
     {% endif %}
 
@@ -43,7 +43,7 @@
 
         {% include "library/partial/library_filter_selector.html" %}
 
-        {% include "library/partial/library_view_selector.html" %}
+        {% include "library/partial/library_style_selector.html" %}
     </div>
 
     {% if style == 'list' %}
@@ -60,52 +60,7 @@
     </div>
     {% endif %}
 
-    {% if object_list|length == 0 %}
-        No content found.
-    {% else %}
-        {% if style == 'list' %}
-            {% include "library/partial/library_list_content.html" %}
-        {% else %}
-            {% include "library/partial/library_grid_content.html" %}
-        {% endif %}
-        {% if page_obj.has_other_pages %}
-        <nav aria-label="page">
-            <div class="library-pagination-wrapper">
-                <div class="pagination library-pagination">
-                    {% if page_obj.has_previous %}
-                    <a href="{% pagination_search '' page_obj.previous_page_number query filters %}" class="page-link">
-                        <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
-                        Previous
-                    </a>
-                    {% else %}
-                    <span class="page-link disabled">
-                        <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
-                        Previous
-                    </span>
-                    {% endif %}
-                    {% for pg in paginator.page_range %}
-                        {% if pg == page_obj.number %}
-                            <span class="page-link active" aria-current="page">{{pg}}</span>
-                        {% else %}
-                            <a href="{% pagination_search '' pg  query filters %}" class="page-link">{{pg}}</a>
-                        {% endif %}
-                    {% endfor %}
-                    {% if page_obj.has_next %}
-                    <a href="{% pagination_search '' page_obj.next_page_number query filters %}" class="page-link">
-                        Next
-                        <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
-                    </a>
-                    {% else %}
-                    <span class="page-link disabled">
-                        Next
-                        <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
-                    </span>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
-        {% endif %}
-    {% endif %}
+    {% include 'library/partial/library_data.html' %}
 </main>
 
 {% include "shared/partial/modal_vocab_check.html" %}

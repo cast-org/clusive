@@ -27,9 +27,9 @@ from roster.models import ClusiveUser, Period, LibraryViews
 logger = logging.getLogger(__name__)
 
 
-class LibraryView(LoginRequiredMixin, EventMixin, ListView):
-    """Library page showing a list of books"""
-    template_name = 'library/library.html'
+class LibraryDataView(LoginRequiredMixin, ListView):
+    """Just the list of cards and navigation bar part of the library page"""
+    template_name = 'library/partial/library_data.html'
     paginate_by = 21
     paginate_orphans = 3
 
@@ -40,8 +40,53 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
     query = None
     subjects = None
 
-    def configure_event(self, event):
-        event.page = 'Library'
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.style = kwargs.get('style')
+        self.view = kwargs.get('view')
+        self.query = request.GET.get('query')
+
+        self.subjects_string = request.GET.get('subjects')
+        if self.subjects_string:
+            subject_strings = self.subjects_string.split(',')
+            s = Subject.objects.filter(subject__in=subject_strings)
+            self.subjects = s
+
+        lengths = request.GET.get('words')
+        if lengths:
+            self.lengths = lengths.split(',')
+        else:
+            self.lengths = None
+
+        if self.view == 'period':
+            # Make sure period_id is specified and legal.
+            if kwargs.get('period_id'):
+                self.period = get_object_or_404(Period, id=kwargs.get('period_id'))
+                if not self.clusive_user.periods.filter(id=self.period.id).exists():
+                    raise Http404('Not a Period of this User.')
+            else:
+                # Need to set a default period.
+                self.period = self.clusive_user.periods.first()
+                if not self.period:
+                    # No periods, must be a guest user.  Switch to showing public content.
+                    return HttpResponseRedirect(redirect_to=reverse('library_style_redirect', kwargs = {'view': 'public'}))
+            self.view_name = self.period.name
+        else:
+            self.view_name = LibraryViews.display_name_of(self.view)
+        # Set defaults for next time
+        user_changed = False
+        if self.clusive_user.library_view != self.view:
+            self.clusive_user.library_view = self.view
+            user_changed = True
+        if self.clusive_user.current_period != self.period:
+            self.clusive_user.current_period = self.period
+            user_changed = True
+        if self.clusive_user.library_style != self.style:
+            self.clusive_user.library_style = self.style
+            user_changed = True
+        if user_changed:
+            self.clusive_user.save()
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         q: QuerySet
@@ -68,59 +113,34 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
         if self.subjects:
             q  = q.filter(Q(subjects__in=self.subjects))
 
+        if self.lengths:
+            length_query = None
+            for option in self.lengths:
+                if not length_query:
+                    length_query = self.query_for_length(option)
+                else:
+                    length_query |= self.query_for_length(option)
+            q = q.filter(length_query)
+
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
 
         return q
 
-    def dispatch(self, request, *args, **kwargs):
-        self.search_form = SearchForm(request.GET)
-        return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        self.clusive_user = request.clusive_user
-        self.query = request.GET.get('query')
-        self.view = kwargs.get('view')
-
-        self.filter_string = request.GET.get('filter')
-        if self.filter_string:
-            subject_strings = self.filter_string.split(',')
-            s = Subject.objects.filter(subject__in=subject_strings)
-            logger.debug('Found subjects %s', s)
-            self.subjects = s
-
-        if kwargs.get('style'):
-            self.style = kwargs.get('style')
-        else:
-            self.style = self.clusive_user.library_style
-        if self.view == 'period':
-            # Make sure period_id is specified and legal.
-            if kwargs.get('period_id'):
-                self.period = get_object_or_404(Period, id=kwargs.get('period_id'))
-                if not self.clusive_user.periods.filter(id=self.period.id).exists():
-                    raise Http404('Not a Period of this User.')
-            else:
-                # Need to set a default period.
-                self.period = self.clusive_user.periods.first()
-                if not self.period:
-                    # No periods, must be a guest user.  Switch to showing public content.
-                    return HttpResponseRedirect(redirect_to=reverse('library', kwargs = {'view': 'public'}))
-            self.view_name = self.period.name
-        else:
-            self.view_name = LibraryViews.display_name_of(self.view)
-        # Set defaults for next time
-        self.clusive_user.library_view = self.view
-        self.clusive_user.current_period = self.period
-        self.clusive_user.library_style = self.style
-        self.clusive_user.save()
-        return super().get(request, *args, **kwargs)
+    def query_for_length(self, size):
+        if size=='S':
+            return Q(word_count__lt=500)
+        if size=='M':
+            return Q(word_count__gte=500) & Q(word_count__lte=30000)
+        if size=='L':
+            return Q(word_count__gt=30000)
+        raise Exception('invalid input')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['clusive_user'] = self.clusive_user
-        context['search_form'] = self.search_form
         context['query'] = self.query
-        context['filter'] = self.filter_string
+        context['subjects_string'] = self.subjects_string
         context['subjects'] = self.subjects
         context['period'] = self.period
         context['style'] = self.style
@@ -129,6 +149,34 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
         context['view_names'] = dict(LibraryViews.CHOICES)
         context['topics'] = Subject.get_list()
         return context
+
+
+class LibraryView(EventMixin, LibraryDataView):
+    """Library page showing a list of books"""
+    template_name = 'library/library.html'
+
+    def configure_event(self, event):
+        event.page = 'Library'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.search_form = SearchForm(request.GET)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.search_form
+        return context
+
+
+class LibraryStyleRedirectView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        view = kwargs.get('view')
+        style = request.clusive_user.library_style
+        return HttpResponseRedirect(redirect_to=reverse('library', kwargs={
+            'view': view,
+            'style': style,
+        }))
 
 
 class UploadFormView(LoginRequiredMixin, EventMixin, FormView):

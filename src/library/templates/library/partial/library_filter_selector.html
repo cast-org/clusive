@@ -6,7 +6,7 @@
             <span class="not-open">Show filters</span>
             <span class="is-open">Hide filters</span>
         </button>
-        <a id="clearFilters" href="{% pagination_search '' pg  query '' %}" role="button" class="ms-0_5">Clear filters</a>
+        <a id="clearFilters" href="{% pagination_search ''  query '' %}" role="button" class="ms-0_5">Clear filters</a>
     </div>
 </div>
 
@@ -17,7 +17,7 @@
                 <fieldset data-clusive="filterAllUpdate">
                     <legend class="form-label lh-1 pt-0"><strong>Topic</strong></legend>
                     <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="checkbox" id="topicAll" data-clusive="filterAll" value="">
+                        <input class="form-check-input" type="checkbox" id="topicAll" name="subjects" data-clusive="filterAll" value="">
                         <label class="form-check-label" for="topicAll">All topics and genres</label>
                     </div>
                     <div class="box-divider-thin"></div>
@@ -39,20 +39,20 @@
                 <fieldset data-clusive="filterAllUpdate">
                     <legend class="form-label lh-1 pt-0"><strong>Word Count</strong></legend>
                     <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="checkbox" id="countAll" data-clusive="filterAll" value="">
+                        <input class="form-check-input" type="checkbox" id="countAll" name="words" data-clusive="filterAll" value="">
                         <label class="form-check-label" for="countAll">All word counts</label>
                     </div>
                     <div class="box-divider-thin"></div>
                     <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="checkbox" id="count0" value="0">
+                        <input class="form-check-input" type="checkbox" id="count0" value="S">
                         <label class="form-check-label" for="count0"><500 words</label>
                     </div>
                     <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="checkbox" id="count1" value="1">
+                        <input class="form-check-input" type="checkbox" id="count1" value="M">
                         <label class="form-check-label" for="count1">500 &ndash; 30,000 words</label>
                     </div>
                     <div class="form-check form-checkradio">
-                        <input class="form-check-input" type="checkbox" id="count2" value="2">
+                        <input class="form-check-input" type="checkbox" id="count2" value="L">
                         <label class="form-check-label" for="count2">30,000+ words</label>
                     </div>
                 </fieldset>

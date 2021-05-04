@@ -1,7 +1,8 @@
 /* global clusiveContext, PAGE_EVENT_ID, fluid */
+/* exported updateLibraryData */
 
 // Set up common headers for Ajax requests for Clusive's event logging
-$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+$.ajaxPrefilter(function(options) {
     'use strict';
 
     options.beforeSend = function(xhr) {
@@ -67,7 +68,7 @@ function easeInOutQuad(t, b, c, d) {
     'use strict';
 
     if ((t /= d / 2) < 1) { return c / 2 * t * t + b; }
-    return -c / 2 * ((--t) * (t - 2) - 1) + b;
+    return -c / 2 * (--t * (t - 2) - 1) + b;
 }
 
 function getBreakpointByName(name) {
@@ -418,7 +419,6 @@ function formUseThisLinks() {
     });
     $('body').on('change', '.usethis-cover', function(e) {
         var checked = $(this).prop('checked');
-        console.debug('Checkbox now ', checked);
         if (checked) {
             $('#new-cover').slideUp();
             $('#cover-label').hide();
@@ -475,7 +475,6 @@ function showTooltip(name) {
     'use strict';
 
     if (name) {
-        console.debug('setting up tip: ', name);
         $(window).ready(function() {
             var tip_control = $('[data-clusive-tip-id="' + name + '"]');
             var tip_popover = $('#tip');
@@ -517,6 +516,55 @@ function hasActiveFilters() {
     return $('[data-clusive="filterAll"]').not(':checked').length > 0;
 }
 
+// Look at the filter checkboxes and return an object mapping filter names to values.
+function getFilterArgs() {
+    'use strict';
+
+    var args = {};
+    $('[data-clusive="filterAllUpdate"]').each(function() {
+        var $par = $(this);
+        var $all = $par.find('[data-clusive="filterAll"]');
+        var name = $all.attr('name');
+        if ($all.is(':checked')) {
+            args[name] = '';
+        } else {
+            var values = [];
+            $par.find('input:checked').each(function() {
+                values.push(encodeURIComponent($(this).val()));
+            });
+            args[name] = values.join(',');
+        }
+    });
+    return args;
+}
+
+// AJAX update the library cards based on the current collection, view, query, and filters.
+// If a page is specified it will go to that page.
+function updateLibraryData(page) {
+    'use strict';
+
+    // eslint-disable-next-line compat/compat
+    var uri = new URL(window.location); // not good for Opera Mini, IE
+    uri.pathname = uri.pathname
+        .replace('/library/', '/library/data/');
+    var params = uri.searchParams;
+    if (page) {
+        params.set('page', page);
+    } else {
+        params.delete('page'); // Force first page of results when filters are changed.
+    }
+    var args = getFilterArgs();
+    for (var index in args) {
+        if (Object.prototype.hasOwnProperty.call(args, index)) {
+            params.set(index, args[index]);
+        }
+    }
+    return $.get(uri).done(function(data) {
+        $('#libraryData').html(data);
+    });
+}
+
+// Handle filter checkbox dynamic behavior
 function filterAllUpdate() {
     'use strict';
 
@@ -551,8 +599,45 @@ function filterAllUpdate() {
             $all.prop('checked', false);
         }
         $('#clearFilters').toggle(hasActiveFilters());
+        updateLibraryData();
     });
 }
+
+// Set up pagination links to AJAX update the library page content.
+function libraryPageLinkSetup() {
+    'use strict';
+
+    $(document.body).on('click', 'a.page-link', function(e) {
+        e.preventDefault();
+        var $elm = $(e.currentTarget);
+        updateLibraryData($elm.attr('href'))
+            .then(function() {
+                $('#libraryData')[0].scrollIntoView();
+            });
+    });
+}
+
+// Set up style links on the library page to dynamically add page number & filter settings to the URL linked.
+function libraryStyleLinkSetup() {
+    'use strict';
+
+    $(document.body).on('click', 'a.style-link', function(e) {
+        e.preventDefault();
+        // eslint-disable-next-line compat/compat
+        var url = new URL($(e.currentTarget).attr('href'), window.location);
+        var args = getFilterArgs();
+        for (var index in args) {
+            if (Object.prototype.hasOwnProperty.call(args, index)) {
+                url.searchParams.set(index, args[index]);
+            }
+        }
+        if (window.current_page_number) {
+            url.searchParams.set('page', window.current_page_number);
+        }
+        window.location = url;
+    });
+}
+
 
 $(window).ready(function() {
     'use strict';
@@ -570,6 +655,8 @@ $(window).ready(function() {
     formUseThisLinks();
     showTooltip(TOOLTIP_NAME);
     filterAllUpdate();
+    libraryPageLinkSetup();
+    libraryStyleLinkSetup();
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
