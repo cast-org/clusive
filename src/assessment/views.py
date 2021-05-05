@@ -13,15 +13,11 @@ from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveChe
 logger = logging.getLogger(__name__)
 
 class AffectCheckView(LoginRequiredMixin, View):
-    def post(self, request):
-        try:
-            affect_check_data = json.loads(request.body)
-            logger.info('Received a valid affect check response: %s' % affect_check_data)
-        except json.JSONDecodeError:
-            logger.warning('Received malformed affect check data: %s' % request.body)
-            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})     
-
+    @staticmethod
+    def create(request, affect_check_data):
         clusive_user = request.clusive_user
+        logger.debug("create with data: %s", affect_check_data)
+        logger.debug("create with data_bookId: %s", affect_check_data.get("bookId"))
         book = Book.objects.get(id=affect_check_data.get("bookId"))            
 
         (acr, created) = AffectiveCheckResponse.objects.get_or_create(user=clusive_user, book=book)
@@ -42,12 +38,20 @@ class AffectCheckView(LoginRequiredMixin, View):
 
         page_event_id=affect_check_data.get("eventId")
         
-        affect_check_completed.send(sender=self.__class__,
-                                  request=self.request, event_id=page_event_id,
+        affect_check_completed.send(sender=AffectCheckView,
+                                  request=request, event_id=page_event_id,
                                   affect_check_response_id=acr.id,                                  
                                   answer=acr.toAnswerString())
+        
+    def post(self, request):
+        try:
+            affect_check_data = json.loads(request.body)
+            logger.info('Received a valid affect check response: %s' % affect_check_data)
+        except json.JSONDecodeError:
+            logger.warning('Received malformed affect check data: %s' % request.body)
+            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'}) 
 
-        # TODO: event creation - is each boolean one event, by the Caliper standard?
+        AffectCheckView.create(request, affect_check_data)                
 
         return JsonResponse({"success": "1"})
 

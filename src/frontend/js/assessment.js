@@ -28,6 +28,13 @@ clusiveAssessment.showCompCheck = function() {
 clusiveAssessment.setUpCompCheck = function() {
     'use strict';
 
+    var autosaveQueue = clusive.djangoMessageQueue({
+        config: {                        
+            localStorageKey: "clusive.messageQueue.autosave",
+            lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
+        }
+    });
+
     var bookId = clusiveContext.reader.info.publication.id;
 
     // Block auto-show for at least 10 seconds after page load, to prevent it erroneously getting shown.
@@ -109,20 +116,23 @@ clusiveAssessment.setUpCompCheck = function() {
                 affectResponse[elem.name] = elem.checked
             });
 
-            $.ajax('/assessment/affect_check', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': DJANGO_CSRF_TOKEN
-                },
-                data: JSON.stringify(affectResponse)
-            })
-                .done(function(data) {
-                    console.debug('Affect check save complete', data);
-                    clusiveAssessment.affectCheckDone = true;
-                })
-                .fail(function(err) {
-                    console.error('Affect check save failed!', err);
-                });
+
+            autosaveQueue.add({"type": "AS", "url": "/assessment/affect_check", "data": JSON.stringify(affectResponse)});
+
+            // $.ajax('/assessment/affect_check', {
+            //     method: 'POST',
+            //     headers: {
+            //         'X-CSRFToken': DJANGO_CSRF_TOKEN
+            //     },
+            //     data: JSON.stringify(affectResponse)
+            // })
+            //     .done(function(data) {
+            //         console.debug('Affect check save complete', data);
+            //         clusiveAssessment.affectCheckDone = true;
+            //     })
+            //     .fail(function(err) {
+            //         console.error('Affect check save failed!', err);
+            //     });
 
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
             var freeResponse = $('textarea[name="comprehension-free"]').val();

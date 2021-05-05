@@ -2,6 +2,10 @@ from enum import Enum
 
 from django.db import models
 
+from django.urls import resolve
+
+import json
+
 import django.dispatch
 
 from eventlog.signals import control_used, page_timing
@@ -20,6 +24,7 @@ class Message:
         CALIPER_EVENT = 'CE'
         PAGE_TIMING = 'PT'
         TIP_RELATED_ACTION = 'TRA'
+        AUTOSAVE = 'AS'
 
     def __init__(self, message_type, timestamp, content, request):
         # This will raise ValueError if the given type is not in AllowedTypes
@@ -37,6 +42,15 @@ class Message:
             self.send_page_timing()
         if self.type == Message.AllowedTypes.TIP_RELATED_ACTION:
             self.send_tip_related_action()
+        if self.type == Message.AllowedTypes.AUTOSAVE:
+            self.send_autosave()
+
+    def send_autosave(self):
+        logger.debug("autosave request received: %s", self.content)
+        associated_view = resolve(self.content['url'])
+        # logger.debug("self.content['data'] 1: %s", self.content['data'])
+        associated_view.func.view_class.create(self.request, json.loads(self.content['data']))
+        # logger.debug("self.content['data'] 2: %s", self.content['data'])        
 
     def send_client_side_prefs_change(self):
         client_side_prefs_change.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
