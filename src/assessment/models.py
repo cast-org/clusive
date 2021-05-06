@@ -41,8 +41,8 @@ class AffectiveCheck:
     ]    
 
 class ComprehensionCheck:
-    scale_response_key = "scale_response"
-    free_response_key = "free_response"
+    scale_response_key = "scaleResponse"
+    free_response_key = "freeResponse"
 
     class ComprehensionScale:
         NOTHING = 0

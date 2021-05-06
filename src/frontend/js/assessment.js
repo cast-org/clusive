@@ -49,7 +49,7 @@ clusiveAssessment.setUpCompCheck = function() {
                 });
                 
                 if(autosaveMessages.length > 0) {                    
-                    var latestLocalData = autosaveMessages.pop().content.data;
+                    var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
                     console.log("local data for url: " + url + " found");
                     callback(latestLocalData);
                 } else {                   
@@ -103,8 +103,8 @@ clusiveAssessment.setUpCompCheck = function() {
     var set_comprehension_check = function(data) {
         console.log("calling set_comprehension_check", data);
         clusiveAssessment.compCheckDone = true;
-        var scaleResponse = data.scale_response;
-        var freeResponse = data.free_response;
+        var scaleResponse = data.scaleResponse;
+        var freeResponse = data.freeResponse;
         $('textarea[name="comprehension-free"]').val(freeResponse);
         $('input[name="comprehension-scale"]').val([scaleResponse]);
         $('input[name="comprehension-scale"]').change();
