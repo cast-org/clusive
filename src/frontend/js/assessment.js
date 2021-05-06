@@ -67,7 +67,7 @@ clusiveAssessment.saveAffectCheck = function () {
     checkedAffectInputs.each(function (i, elem) {
         affectResponse[elem.name] = elem.checked
     });        
-    clusiveAutosave.set("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));        
+    clusiveAutosave.save("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));        
 }
 
 clusiveAssessment.saveComprehensionCheck = function () {
@@ -82,7 +82,7 @@ clusiveAssessment.saveComprehensionCheck = function () {
         bookId: clusiveContext.reader.info.publication.id,
         eventId: PAGE_EVENT_ID
     };
-    clusiveAutosave.set("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
+    clusiveAutosave.save("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
 }
 
 clusiveAssessment.setUpCompCheck = function() {

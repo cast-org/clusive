@@ -9,7 +9,7 @@ var clusiveAutosave = {
                 lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
             }
         }),
-    set: function(url, data) {
+    save: function(url, data) {
         clusiveAutosave.queue.add({"type": "AS", "url": url, "data": data});
     },
     retrieve: 
