@@ -530,7 +530,7 @@ function getFilterArgs() {
         } else {
             var values = [];
             $par.find('input:checked').each(function() {
-                values.push(encodeURIComponent($(this).val()));
+                values.push($(this).val());
             });
             args[name] = values.join(',');
         }
