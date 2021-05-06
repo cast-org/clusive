@@ -47,8 +47,12 @@ class Message:
 
     def send_autosave(self):
         logger.debug("autosave request received: %s", self.content)
-        associated_view = resolve(self.content['url'])        
-        associated_view.func.view_class.create_from_request(self.request, json.loads(self.content['data']))        
+        try:
+            url = self.content['url']
+            associated_view = resolve(url)        
+            associated_view.func.view_class.create_from_request(self.request, json.loads(self.content['data']))        
+        except django.urls.exceptons.Resolver404:
+            logger.debug("autosave request had URL %s, but could not be resolved to a View", url)
 
     def send_client_side_prefs_change(self):
         client_side_prefs_change.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
