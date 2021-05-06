@@ -53,49 +53,40 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     $('input[name="comprehension-scale"]').change();
 }
 
+clusiveAssessment.saveAffectCheck = function () {
+    // Create basic affect response structure
+    var affectResponse = {
+        bookVersionId: clusiveContext.reader.info.publication.version_id,
+        bookId: clusiveContext.reader.info.publication.id,
+        eventId: PAGE_EVENT_ID
+    };
+
+    // Get all affect inputs
+    var checkedAffectInputs = $('input[name^="affect-option"]');
+    // Add to data object
+    checkedAffectInputs.each(function (i, elem) {
+        affectResponse[elem.name] = elem.checked
+    });        
+    clusiveAutosave.set("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));        
+}
+
+clusiveAssessment.saveComprehensionCheck = function () {
+    var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
+    var freeResponse = $('textarea[name="comprehension-free"]').val();
+    var comprehensionResponse = {
+        scaleQuestion: $('#compScaleQuestion').text(),
+        scaleResponse: scaleResponse,
+        freeQuestion: $('#compFreeQuestion').children(':visible').text(),
+        freeResponse: freeResponse,
+        bookVersionId: clusiveContext.reader.info.publication.version_id,
+        bookId: clusiveContext.reader.info.publication.id,
+        eventId: PAGE_EVENT_ID
+    };
+    clusiveAutosave.set("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
+}
+
 clusiveAssessment.setUpCompCheck = function() {
     'use strict';
-
-    // var autosave = {
-    //     queue: clusive.djangoMessageQueue({
-    //             config: {                        
-    //                 localStorageKey: "clusive.messageQueue.autosave",
-    //                 lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
-    //             }
-    //         }),
-    //     set: function(url, data) {
-    //         autosave.queue.add({"type": "AS", "url": url, "data": data});
-    //     },
-    //     retrieve: 
-    //         function(url, callback) {
-    //             var hasLocal = false;                
-    //             var autosaveMessages = [].concat(autosave.queue.getMessages()).filter(function (item) {                    
-    //                     if(item.content.type === "AS" && item.content.url === url) {
-    //                         return true;
-    //                     }                    
-    //             });
-                
-    //             if(autosaveMessages.length > 0) {                                        
-    //                 var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
-    //                 console.log("local data for url: " + url + " found", latestLocalData);
-    //                 callback(latestLocalData);
-    //             } else {                   
-    //                 console.log("No local data for url: " + url + ", trying to get from server");
-    //                 $.get(url, function(data) {
-    //                     console.log("Found data on server for url: " + url);
-    //                     callback(data);                    
-    //                 }).fail(function(error) {
-    //                     if (error.status === 404) {
-    //                         console.debug('No matching data on server for url: ' + url);
-    //                     } else {
-    //                         console.warn('failed to get data: ', error.status);
-    //                     }
-    //                 });
-    //             }                 
-    //         }                
-    // };
-
-
     var bookId = clusiveContext.reader.info.publication.id;
 
     // Block auto-show for at least 10 seconds after page load, to prevent it erroneously getting shown.
@@ -129,35 +120,9 @@ clusiveAssessment.setUpCompCheck = function() {
         function(e) {
             e.preventDefault();
 
-            // Create basic affect response structure
-            var affectResponse = {
-                bookVersionId: clusiveContext.reader.info.publication.version_id,
-                bookId: clusiveContext.reader.info.publication.id,
-                eventId: PAGE_EVENT_ID
-            };
+            clusiveAssessment.saveAffectCheck();
 
-            // Get all affect inputs
-            var checkedAffectInputs = $('input[name^="affect-option"]');
-            // Add to data object
-            checkedAffectInputs.each(function (i, elem) {
-                affectResponse[elem.name] = elem.checked
-            });
-            
-            clusiveAutosave.set("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));
-
-            var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
-            var freeResponse = $('textarea[name="comprehension-free"]').val();
-            var comprehensionResponse = {
-                scaleQuestion: $('#compScaleQuestion').text(),
-                scaleResponse: scaleResponse,
-                freeQuestion: $('#compFreeQuestion').children(':visible').text(),
-                freeResponse: freeResponse,
-                bookVersionId: clusiveContext.reader.info.publication.version_id,
-                bookId: clusiveContext.reader.info.publication.id,
-                eventId: PAGE_EVENT_ID
-            };
-
-            clusiveAutosave.set("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
+            clusiveAssessment.saveComprehensionCheck();                  
 
             $(this).closest('.popover').CFW_Popover('hide');
         });
