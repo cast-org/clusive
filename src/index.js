@@ -25,7 +25,6 @@ import execGPIIBinder from "script-loader!fluid-binder/src/js/binder.js";
 
 // Files from src/frontend:
 
-import execAssessment from "script-loader!../src/frontend/js/assessment.js";
 import execClusiveContext from "script-loader!../src/frontend/js/clusive-context.js";
 import execClusiveEventsCaliper from "script-loader!../src/frontend/js/clusive-events-caliper.js"
 import execClusiveReaderPrefs from "script-loader!../src/frontend/js/clusive-reader-prefs.js";
@@ -34,6 +33,7 @@ import execClusiveMessageQueue from "script-loader!../src/frontend/js/clusive-me
 import execClusiveDjangoMessageQueue from "script-loader!../src/frontend/js/clusive-django-message-queue.js"
 import execClusivePrefsDjangoStore from "script-loader!../src/frontend/js/clusive-prefs-django-store.js"
 import execClusivePrefsModalSettings from "script-loader!../src/frontend/js/clusive-prefs-modal-settings.js"
+import execAssessment from "script-loader!../src/frontend/js/assessment.js";
 import execFrontEnd from "script-loader!../src/frontend/js/frontend.js"
 import execGlossary from "script-loader!../src/frontend/js/glossary.js"
 import execImages from "script-loader!../src/frontend/js/images.js"

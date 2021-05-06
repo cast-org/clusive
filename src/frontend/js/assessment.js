@@ -1,5 +1,5 @@
 /* Code for comprehension and affect assessments */
-/* global clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN, fluid, D2Reader */
+/* global clusive, clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN, fluid, D2Reader */
 /* exported clusiveAssessment */
 
 var clusiveAssessment = {
@@ -53,47 +53,86 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     $('input[name="comprehension-scale"]').change();
 }
 
+var autosave = {
+    queue: clusive.djangoMessageQueue({
+            config: {                        
+                localStorageKey: "clusive.messageQueue.autosave",
+                lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
+            }
+        }),
+    set: function(url, data) {
+        autosave.queue.add({"type": "AS", "url": url, "data": data});
+    },
+    retrieve: 
+        function(url, callback) {
+            var hasLocal = false;                
+            var autosaveMessages = [].concat(autosave.queue.getMessages()).filter(function (item) {                    
+                    if(item.content.type === "AS" && item.content.url === url) {
+                        return true;
+                    }                    
+            });
+            
+            if(autosaveMessages.length > 0) {                                        
+                var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
+                console.log("local data for url: " + url + " found", latestLocalData);
+                callback(latestLocalData);
+            } else {                   
+                console.log("No local data for url: " + url + ", trying to get from server");
+                $.get(url, function(data) {
+                    console.log("Found data on server for url: " + url);
+                    callback(data);                    
+                }).fail(function(error) {
+                    if (error.status === 404) {
+                        console.debug('No matching data on server for url: ' + url);
+                    } else {
+                        console.warn('failed to get data: ', error.status);
+                    }
+                });
+            }                 
+        }                
+};
+
 clusiveAssessment.setUpCompCheck = function() {
     'use strict';
 
-    var autosave = {
-        queue: clusive.djangoMessageQueue({
-                config: {                        
-                    localStorageKey: "clusive.messageQueue.autosave",
-                    lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
-                }
-            }),
-        set: function(url, data) {
-            autosave.queue.add({"type": "AS", "url": url, "data": data});
-        },
-        retrieve: 
-            function(url, callback) {
-                var hasLocal = false;                
-                var autosaveMessages = [].concat(autosave.queue.getMessages()).filter(function (item) {                    
-                        if(item.content.type === "AS" && item.content.url === url) {
-                            return true;
-                        }                    
-                });
+    // var autosave = {
+    //     queue: clusive.djangoMessageQueue({
+    //             config: {                        
+    //                 localStorageKey: "clusive.messageQueue.autosave",
+    //                 lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
+    //             }
+    //         }),
+    //     set: function(url, data) {
+    //         autosave.queue.add({"type": "AS", "url": url, "data": data});
+    //     },
+    //     retrieve: 
+    //         function(url, callback) {
+    //             var hasLocal = false;                
+    //             var autosaveMessages = [].concat(autosave.queue.getMessages()).filter(function (item) {                    
+    //                     if(item.content.type === "AS" && item.content.url === url) {
+    //                         return true;
+    //                     }                    
+    //             });
                 
-                if(autosaveMessages.length > 0) {                                        
-                    var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
-                    console.log("local data for url: " + url + " found", latestLocalData);
-                    callback(latestLocalData);
-                } else {                   
-                    console.log("No local data for url: " + url + ", trying to get from server");
-                    $.get(url, function(data) {
-                        console.log("Found data on server for url: " + url);
-                        callback(data);                    
-                    }).fail(function(error) {
-                        if (error.status === 404) {
-                            console.debug('No matching data on server for url: ' + url);
-                        } else {
-                            console.warn('failed to get data: ', error.status);
-                        }
-                    });
-                }                 
-            }                
-    };
+    //             if(autosaveMessages.length > 0) {                                        
+    //                 var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
+    //                 console.log("local data for url: " + url + " found", latestLocalData);
+    //                 callback(latestLocalData);
+    //             } else {                   
+    //                 console.log("No local data for url: " + url + ", trying to get from server");
+    //                 $.get(url, function(data) {
+    //                     console.log("Found data on server for url: " + url);
+    //                     callback(data);                    
+    //                 }).fail(function(error) {
+    //                     if (error.status === 404) {
+    //                         console.debug('No matching data on server for url: ' + url);
+    //                     } else {
+    //                         console.warn('failed to get data: ', error.status);
+    //                     }
+    //                 });
+    //             }                 
+    //         }                
+    // };
 
 
     var bookId = clusiveContext.reader.info.publication.id;
