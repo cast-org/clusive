@@ -49,7 +49,7 @@ class Message:
         logger.debug("autosave request received: %s", self.content)
         associated_view = resolve(self.content['url'])
         # logger.debug("self.content['data'] 1: %s", self.content['data'])
-        associated_view.func.view_class.create(self.request, json.loads(self.content['data']))
+        associated_view.func.view_class.create_from_request(self.request, json.loads(self.content['data']))
         # logger.debug("self.content['data'] 2: %s", self.content['data'])        
 
     def send_client_side_prefs_change(self):

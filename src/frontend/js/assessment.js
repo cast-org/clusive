@@ -28,12 +28,23 @@ clusiveAssessment.showCompCheck = function() {
 clusiveAssessment.setUpCompCheck = function() {
     'use strict';
 
-    var autosaveQueue = clusive.djangoMessageQueue({
-        config: {                        
-            localStorageKey: "clusive.messageQueue.autosave",
-            lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
-        }
-    });
+    var autosave = {
+        queue: clusive.djangoMessageQueue({
+                config: {                        
+                    localStorageKey: "clusive.messageQueue.autosave",
+                    lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
+                }
+            }),
+        set: function(url, data) {
+            autosave.queue.add({"type": "AS", "url": url, "data": data});
+        },
+        retrieve: {
+            function(url) {
+
+            }
+        }                
+    };
+
 
     var bookId = clusiveContext.reader.info.publication.id;
 
@@ -115,9 +126,8 @@ clusiveAssessment.setUpCompCheck = function() {
             checkedAffectInputs.each(function (i, elem) {
                 affectResponse[elem.name] = elem.checked
             });
-
-
-            autosaveQueue.add({"type": "AS", "url": "/assessment/affect_check", "data": JSON.stringify(affectResponse)});
+            
+            autosave.set("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));
 
             // $.ajax('/assessment/affect_check', {
             //     method: 'POST',
@@ -146,20 +156,22 @@ clusiveAssessment.setUpCompCheck = function() {
                 eventId: PAGE_EVENT_ID
             };
 
-            $.ajax('/assessment/comprehension_check', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': DJANGO_CSRF_TOKEN
-                },
-                data: JSON.stringify(comprehensionResponse)
-            })
-                .done(function(data) {
-                    console.debug('Comp check save complete', data);
-                    clusiveAssessment.compCheckDone = true;
-                })
-                .fail(function(err) {
-                    console.error('Comp check save failed!', err);
-                });
+            // $.ajax('/assessment/comprehension_check', {
+            //     method: 'POST',
+            //     headers: {
+            //         'X-CSRFToken': DJANGO_CSRF_TOKEN
+            //     },
+            //     data: JSON.stringify(comprehensionResponse)
+            // })
+            //     .done(function(data) {
+            //         console.debug('Comp check save complete', data);
+            //         clusiveAssessment.compCheckDone = true;
+            //     })
+            //     .fail(function(err) {
+            //         console.error('Comp check save failed!', err);
+            //     });
+
+            autosave.set("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
 
             $(this).closest('.popover').CFW_Popover('hide');
         });

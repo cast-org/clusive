@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class AffectCheckView(LoginRequiredMixin, View):
     @staticmethod
-    def create(request, affect_check_data):
+    def create_from_request(request, affect_check_data):
         clusive_user = request.clusive_user
         logger.debug("create with data: %s", affect_check_data)
         logger.debug("create with data_bookId: %s", affect_check_data.get("bookId"))
@@ -51,7 +51,7 @@ class AffectCheckView(LoginRequiredMixin, View):
             logger.warning('Received malformed affect check data: %s' % request.body)
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'}) 
 
-        AffectCheckView.create(request, affect_check_data)                
+        AffectCheckView.create_from_request(request, affect_check_data)                
 
         return JsonResponse({"success": "1"})
 
@@ -76,14 +76,8 @@ class AffectCheckView(LoginRequiredMixin, View):
         return JsonResponse(response_value)        
 
 class ComprehensionCheckView(LoginRequiredMixin, View):
-    def post(self, request):            
-        try:
-            comprehension_check_data = json.loads(request.body)            
-            logger.info('Received a valid comprehension check response: %s' % comprehension_check_data)
-        except json.JSONDecodeError:
-            logger.warning('Received malformed comprehension check data: %s' % request.body)
-            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
-        
+    @staticmethod
+    def create_from_request(request, comprehension_check_data):    
         clusive_user = request.clusive_user
         book = Book.objects.get(id=comprehension_check_data.get("bookId"))
 
@@ -94,19 +88,30 @@ class ComprehensionCheckView(LoginRequiredMixin, View):
 
         # Fire event creation signals
         page_event_id =comprehension_check_data.get("eventId")
-        comprehension_check_completed.send(sender=self.__class__,
-                                  request=self.request, event_id=page_event_id,
-                                  comprehension_check_response_id=ccr.id,
-                                  key=ComprehensionCheck.scale_response_key,
-                                  question=comprehension_check_data.get('scaleQuestion'),
-                                  answer=ccr.comprehension_scale_response)
-        comprehension_check_completed.send(sender=self.__class__,
-                                  request=self.request, event_id=page_event_id,
-                                  comprehension_check_response_id=ccr.id,
-                                  key=ComprehensionCheck.free_response_key,
-                                  question=comprehension_check_data.get('freeQuestion'),
-                                  answer=ccr.comprehension_free_response)
+        comprehension_check_completed.send(sender=ComprehensionCheckView,
+                                request=request, event_id=page_event_id,
+                                comprehension_check_response_id=ccr.id,
+                                key=ComprehensionCheck.scale_response_key,
+                                question=comprehension_check_data.get('scaleQuestion'),
+                                answer=ccr.comprehension_scale_response)
+                                
+        comprehension_check_completed.send(sender=ComprehensionCheckView,
+                                request=request, event_id=page_event_id,
+                                comprehension_check_response_id=ccr.id,
+                                key=ComprehensionCheck.free_response_key,
+                                question=comprehension_check_data.get('freeQuestion'),
+                                answer=ccr.comprehension_free_response)            
 
+    def post(self, request):            
+        try:
+            comprehension_check_data = json.loads(request.body)            
+            logger.info('Received a valid comprehension check response: %s' % comprehension_check_data)
+        except json.JSONDecodeError:
+            logger.warning('Received malformed comprehension check data: %s' % request.body)
+            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
+
+        ComprehensionCheckView.create_from_request(request, comprehension_check_data)
+                
         return JsonResponse({"success": "1"})
 
     def get(self, request, book_id):
