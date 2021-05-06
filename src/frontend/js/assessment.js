@@ -38,23 +38,12 @@ clusiveAssessment.setUpCompCheck = function() {
         set: function(url, data) {
             autosave.queue.add({"type": "AS", "url": url, "data": data});
         },
-        retrieve: {
+        retrieve: 
             function(url, callback) {
-                $.get(url, callback(data) {
-                    Object.keys(data).forEach(function (affectOptionName) {
-                        var shouldCheck = data[affectOptionName];
-                        var affectInput = $('input[name="' + affectOptionName + '"]');
-                        affectInput.prop("checked", shouldCheck);
-                        var idx = affectInput.attr("data-react-index");
-                        var wedge = document.querySelector('.react-wedge-' + idx);
-            
-                        if(shouldCheck) {
-                            reactDimAnimate(wedge, 100);
-                        } else {
-                            reactDimAnimate(wedge, 0);
-                        }
-                        console.log("affectInput", affectInput, shouldCheck);
-                    })
+                console.log("No local data for url: " + url + ", trying to get from server");
+                $.get(url, function(data) {
+                    console.log("Found data on server for url: " + url);
+                    callback(data);                    
                 }).fail(function(error) {
                     if (error.status === 404) {
                         console.debug('No matching object on server');
@@ -62,8 +51,7 @@ clusiveAssessment.setUpCompCheck = function() {
                         console.warn('failed to get data: ', error.status);
                     }
                 });
-            }
-        }                
+            }                
     };
 
 
@@ -76,7 +64,7 @@ clusiveAssessment.setUpCompCheck = function() {
     // Retrieve existing affect check values and set them
 
     var set_affect_check = function(data) {
-        Object.keys(affect_check_data).forEach(function (affectOptionName) {
+        Object.keys(data).forEach(function (affectOptionName) {
             var shouldCheck = data[affectOptionName];
             var affectInput = $('input[name="' + affectOptionName + '"]');
             affectInput.prop("checked", shouldCheck);
