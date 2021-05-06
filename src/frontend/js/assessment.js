@@ -53,7 +53,8 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     $('input[name="comprehension-scale"]').change();
 }
 
-clusiveAssessment.saveAffectCheck = function () {
+clusiveAssessment.saveAffectCheck = function () {    
+    var bookId = clusiveContext.reader.info.publication.id;
     // Create basic affect response structure
     var affectResponse = {
         bookVersionId: clusiveContext.reader.info.publication.version_id,
@@ -67,10 +68,12 @@ clusiveAssessment.saveAffectCheck = function () {
     checkedAffectInputs.each(function (i, elem) {
         affectResponse[elem.name] = elem.checked
     });        
+
     clusiveAutosave.save("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));        
 }
 
-clusiveAssessment.saveComprehensionCheck = function () {
+clusiveAssessment.saveComprehensionCheck = function () {        
+    var bookId = clusiveContext.reader.info.publication.id;
     var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
     var freeResponse = $('textarea[name="comprehension-free"]').val();
     var comprehensionResponse = {
