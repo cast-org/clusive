@@ -110,41 +110,7 @@ clusiveAssessment.setUpCompCheck = function() {
 
     // Retrieve existing affect check values and set them
 
-    clusiveAssessment.setAffectCheck;
-    clusiveAssessment.setCompCheck;
-
-    // var set_affect_check = function(data) {
-    //     console.log("calling set_affect_check", data)
-    //     Object.keys(data).forEach(function (key) {
-    //         if(key.includes("affect-option")) {
-    //             var affectOptionName = key                
-    //             var shouldCheck = data[affectOptionName];
-    //             var affectInput = $('input[name="' + affectOptionName + '"]');
-    //             affectInput.prop("checked", shouldCheck);
-    //             var idx = affectInput.attr("data-react-index");
-    //             var wedge = document.querySelector('.react-wedge-' + idx);
-        
-    //             if(shouldCheck) {
-    //                 reactDimAnimate(wedge, 100);
-    //             } else {
-    //                 reactDimAnimate(wedge, 0);
-    //             }
-    //             console.log("affectInput", affectInput, shouldCheck);
-    //             }
-    //     })
-    // };
-
     autosave.retrieve('/assessment/affect_check/' + bookId, clusiveAssessment.setAffectCheck);
-
-    // var set_comprehension_check = function(data) {
-    //     console.log("calling set_comprehension_check", data);
-    //     clusiveAssessment.compCheckDone = true;
-    //     var scaleResponse = data.scaleResponse;
-    //     var freeResponse = data.freeResponse;
-    //     $('textarea[name="comprehension-free"]').val(freeResponse);
-    //     $('input[name="comprehension-scale"]').val([scaleResponse]);
-    //     $('input[name="comprehension-scale"]').change();
-    // };
 
     autosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
 
