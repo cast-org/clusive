@@ -25,8 +25,7 @@ clusiveAssessment.showCompCheck = function() {
     }
 };
 
-clusiveAssessment.setAffectCheck = function(data) {
-    console.log("calling setAffectCheck", data)
+clusiveAssessment.setAffectCheck = function(data) {    
     Object.keys(data).forEach(function (key) {
         if(key.includes("affect-option")) {
             var affectOptionName = key                
@@ -40,14 +39,12 @@ clusiveAssessment.setAffectCheck = function(data) {
                 reactDimAnimate(wedge, 100);
             } else {
                 reactDimAnimate(wedge, 0);
-            }
-            console.log("affectInput", affectInput, shouldCheck);
+            }            
             }
     })
 }
 
-clusiveAssessment.setComprehensionCheck = function(data) {
-    console.log("calling setComprehensionCheck", data);
+clusiveAssessment.setComprehensionCheck = function(data) {    
     clusiveAssessment.compCheckDone = true;
     var scaleResponse = data.scaleResponse;
     var freeResponse = data.freeResponse;
@@ -71,16 +68,14 @@ clusiveAssessment.setUpCompCheck = function() {
         },
         retrieve: 
             function(url, callback) {
-                var hasLocal = false;
-                console.log("autosave queue", autosave.queue.getMessages());
+                var hasLocal = false;                
                 var autosaveMessages = [].concat(autosave.queue.getMessages()).filter(function (item) {                    
                         if(item.content.type === "AS" && item.content.url === url) {
                             return true;
                         }                    
                 });
                 
-                if(autosaveMessages.length > 0) {                    
-                    console.log("autosaveMessages", autosaveMessages);
+                if(autosaveMessages.length > 0) {                                        
                     var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
                     console.log("local data for url: " + url + " found", latestLocalData);
                     callback(latestLocalData);
