@@ -56,6 +56,13 @@ class SignUpView(EventMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
 
+    def get_initial(self, *args, **kwargs):
+        initial = super(SignUpView, self).get_initial(**kwargs)
+        # If registration during SSO, track the SSO user
+        if self.request.session.get('sso', False):
+            initial['user'] = self.request.user
+        return initial
+
     def dispatch(self, request, *args, **kwargs):
         self.role = kwargs['role']
         return super().dispatch(request, *args, **kwargs)
@@ -78,10 +85,13 @@ class SignUpView(EventMixin, CreateView):
             raise PermissionError('Invalid role')
         user: User
         if self.current_clusive_user:
-            # There is a logged-in (presumably Guest or SSO) user.
+            # There is a logged-in user, either a Guest or an SSO user.
             # Update the ClusiveUser and User objects based on the form target.
             clusive_user: ClusiveUser
             clusive_user = self.current_clusive_user
+            isSso = self.request.session.get('sso', False)
+            if isSso:
+                clusive_user.unconfirmed_email = False
             update_clusive_user(clusive_user,
                                 self.role,
                                 ResearchPermissions.SELF_CREATED,
@@ -92,8 +102,11 @@ class SignUpView(EventMixin, CreateView):
             user.set_password(form.cleaned_data["password1"])
             user.email = target.email
             user.save()
+            if not isSso:
+                send_validation_email(self.current_site, clusive_user)
             login(self.request, user, 'django.contrib.auth.backends.ModelBackend')
-            send_validation_email(self.current_site, clusive_user)
+            if isSso:
+                return HttpResponseRedirect(reverse('dashboard'))
         else:
             # This is a new user.  Save the form target User object, and create a ClusiveUser.
             user = target
@@ -192,9 +205,7 @@ class SignUpRoleView(EventMixin, FormView):
             # clusive_user and its role is UNKNOWN
             if clusive_user and clusive_user.role == Roles.UNKNOWN:
                 update_clusive_user(clusive_user, role, ResearchPermissions.SELF_CREATED)
-                self.success_url = reverse('dashboard')
-            else:
-                self.success_url = reverse('sign_up', kwargs={'role': role})
+            self.success_url = reverse('sign_up', kwargs={'role': role})
         return super().form_valid(form)
 
     def configure_event(self, event: Event):
@@ -215,9 +226,7 @@ class SignUpAgeCheckView(EventMixin, FormView):
                 update_clusive_user(self.request.clusive_user,
                                     Roles.STUDENT,
                                     ResearchPermissions.SELF_CREATED)
-                self.success_url = reverse('dashboard')
-            else:
-                self.success_url = reverse('sign_up', kwargs={'role': Roles.STUDENT})
+            self.success_url = reverse('sign_up', kwargs={'role': Roles.STUDENT})
         else:
             self.success_url = reverse('sign_up_ask_parent')
         return super().form_valid(form)
@@ -552,6 +561,7 @@ def finish_login(request):
     logger.debug("checking SSO account for UNKNOWN role")
     clusive_user = ClusiveUser.from_request(request)
     if clusive_user.role == Roles.UNKNOWN:
+        request.session['sso'] = True
         return HttpResponseRedirect(reverse('sign_up_role'))
     else:
         return HttpResponseRedirect(reverse('dashboard'))
@@ -607,7 +617,7 @@ def logout_sso(request, student=''):
     records, effectively logging out.  If not an SSO situation, this does
     nothing."""
     clusive_user = request.clusive_user
-    if clusive_user and clusive_user.role == Roles.UNKNOWN:
+    if (clusive_user and clusive_user.role == Roles.UNKNOWN) or request.session.get('sso', False):
         logger.debug("SSO logout, and removing records for %s %s", student, clusive_user)
         django_user = request.user
         logout(request)
