@@ -53,45 +53,6 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     $('input[name="comprehension-scale"]').change();
 }
 
-var autosave = {
-    queue: clusive.djangoMessageQueue({
-            config: {                        
-                localStorageKey: "clusive.messageQueue.autosave",
-                lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
-            }
-        }),
-    set: function(url, data) {
-        autosave.queue.add({"type": "AS", "url": url, "data": data});
-    },
-    retrieve: 
-        function(url, callback) {
-            var hasLocal = false;                
-            var autosaveMessages = [].concat(autosave.queue.getMessages()).filter(function (item) {                    
-                    if(item.content.type === "AS" && item.content.url === url) {
-                        return true;
-                    }                    
-            });
-            
-            if(autosaveMessages.length > 0) {                                        
-                var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
-                console.log("local data for url: " + url + " found", latestLocalData);
-                callback(latestLocalData);
-            } else {                   
-                console.log("No local data for url: " + url + ", trying to get from server");
-                $.get(url, function(data) {
-                    console.log("Found data on server for url: " + url);
-                    callback(data);                    
-                }).fail(function(error) {
-                    if (error.status === 404) {
-                        console.debug('No matching data on server for url: ' + url);
-                    } else {
-                        console.warn('failed to get data: ', error.status);
-                    }
-                });
-            }                 
-        }                
-};
-
 clusiveAssessment.setUpCompCheck = function() {
     'use strict';
 
@@ -143,9 +104,9 @@ clusiveAssessment.setUpCompCheck = function() {
 
     // Retrieve existing affect check values and set them
 
-    autosave.retrieve('/assessment/affect_check/' + bookId, clusiveAssessment.setAffectCheck);
+    clusiveAutosave.retrieve('/assessment/affect_check/' + bookId, clusiveAssessment.setAffectCheck);
 
-    autosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
+    clusiveAutosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
 
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
@@ -182,7 +143,7 @@ clusiveAssessment.setUpCompCheck = function() {
                 affectResponse[elem.name] = elem.checked
             });
             
-            autosave.set("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));
+            clusiveAutosave.set("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));
 
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
             var freeResponse = $('textarea[name="comprehension-free"]').val();
@@ -196,7 +157,7 @@ clusiveAssessment.setUpCompCheck = function() {
                 eventId: PAGE_EVENT_ID
             };
 
-            autosave.set("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
+            clusiveAutosave.set("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
 
             $(this).closest('.popover').CFW_Popover('hide');
         });

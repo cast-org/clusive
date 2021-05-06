@@ -25,12 +25,13 @@ import execGPIIBinder from "script-loader!fluid-binder/src/js/binder.js";
 
 // Files from src/frontend:
 
+import execClusiveMessageQueue from "script-loader!../src/frontend/js/clusive-message-queue.js"
+import execClusiveDjangoMessageQueue from "script-loader!../src/frontend/js/clusive-django-message-queue.js"
+import execClusiveAutosave from "script-loader!../src/frontend/js/clusive-autosave.js";
 import execClusiveContext from "script-loader!../src/frontend/js/clusive-context.js";
 import execClusiveEventsCaliper from "script-loader!../src/frontend/js/clusive-events-caliper.js"
 import execClusiveReaderPrefs from "script-loader!../src/frontend/js/clusive-reader-prefs.js";
 import execClusivePrefsPanel from "script-loader!../src/frontend/js/clusive-prefs-panel.js";
-import execClusiveMessageQueue from "script-loader!../src/frontend/js/clusive-message-queue.js"
-import execClusiveDjangoMessageQueue from "script-loader!../src/frontend/js/clusive-django-message-queue.js"
 import execClusivePrefsDjangoStore from "script-loader!../src/frontend/js/clusive-prefs-django-store.js"
 import execClusivePrefsModalSettings from "script-loader!../src/frontend/js/clusive-prefs-modal-settings.js"
 import execAssessment from "script-loader!../src/frontend/js/assessment.js";
