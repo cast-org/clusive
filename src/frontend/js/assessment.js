@@ -102,6 +102,12 @@ clusiveAssessment.setupAssessments = function() {
 
     clusiveAutosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
 
+    window.setInterval(function() {
+        console.log("adding current state of assessments to autosave queue")
+        clusiveAssessment.saveAffectCheck();
+        clusiveAssessment.saveComprehensionCheck();        
+    }, 15000)
+
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
         function() {
@@ -116,19 +122,7 @@ clusiveAssessment.setupAssessments = function() {
                 $('#comprehensionFreeResponseArea').show();
             }
         }
-    );
-
-    // When submit button is clicked, build JSON and send to server, close popover.
-    $('#comprehensionCheckSubmit').click(
-        function(e) {
-            e.preventDefault();
-
-            clusiveAssessment.saveAffectCheck();
-
-            clusiveAssessment.saveComprehensionCheck();                  
-
-            $(this).closest('.popover').CFW_Popover('hide');
-        });
+    );  
 };
 
 $(function() {
