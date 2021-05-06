@@ -112,22 +112,6 @@ clusiveAssessment.setUpCompCheck = function() {
 
     autosave.retrieve('/assessment/comprehension_check/' + bookId, set_comprehension_check);
 
-    // // Retrieve existing comprehension check values and set them
-    // $.get('/assessment/comprehension_check/' + bookId, function(data) {
-    //     clusiveAssessment.compCheckDone = true;
-    //     var scaleResponse = data.scale_response;
-    //     var freeResponse = data.free_response;
-    //     $('textarea[name="comprehension-free"]').val(freeResponse);
-    //     $('input[name="comprehension-scale"]').val([scaleResponse]);
-    //     $('input[name="comprehension-scale"]').change();
-    // }).fail(function(error) {
-    //     if (error.status === 404) {
-    //         console.debug('No pre-existing comp check response');
-    //     } else {
-    //         console.warn('failed to get comprehension check, status code: ', error.status);
-    //     }
-    // });
-
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
         function() {
@@ -165,21 +149,6 @@ clusiveAssessment.setUpCompCheck = function() {
             
             autosave.set("/assessment/affect_check/" + bookId, JSON.stringify(affectResponse));
 
-            // $.ajax('/assessment/affect_check', {
-            //     method: 'POST',
-            //     headers: {
-            //         'X-CSRFToken': DJANGO_CSRF_TOKEN
-            //     },
-            //     data: JSON.stringify(affectResponse)
-            // })
-            //     .done(function(data) {
-            //         console.debug('Affect check save complete', data);
-            //         clusiveAssessment.affectCheckDone = true;
-            //     })
-            //     .fail(function(err) {
-            //         console.error('Affect check save failed!', err);
-            //     });
-
             var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
             var freeResponse = $('textarea[name="comprehension-free"]').val();
             var comprehensionResponse = {
@@ -191,21 +160,6 @@ clusiveAssessment.setUpCompCheck = function() {
                 bookId: clusiveContext.reader.info.publication.id,
                 eventId: PAGE_EVENT_ID
             };
-
-            // $.ajax('/assessment/comprehension_check', {
-            //     method: 'POST',
-            //     headers: {
-            //         'X-CSRFToken': DJANGO_CSRF_TOKEN
-            //     },
-            //     data: JSON.stringify(comprehensionResponse)
-            // })
-            //     .done(function(data) {
-            //         console.debug('Comp check save complete', data);
-            //         clusiveAssessment.compCheckDone = true;
-            //     })
-            //     .fail(function(err) {
-            //         console.error('Comp check save failed!', err);
-            //     });
 
             autosave.set("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
 
