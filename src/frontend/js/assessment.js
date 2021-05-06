@@ -40,17 +40,31 @@ clusiveAssessment.setUpCompCheck = function() {
         },
         retrieve: 
             function(url, callback) {
-                console.log("No local data for url: " + url + ", trying to get from server");
-                $.get(url, function(data) {
-                    console.log("Found data on server for url: " + url);
-                    callback(data);                    
-                }).fail(function(error) {
-                    if (error.status === 404) {
-                        console.debug('No matching object on server');
-                    } else {
-                        console.warn('failed to get data: ', error.status);
-                    }
+                var hasLocal = false;
+                console.log("autosave queue", autosave.queue.getMessages());
+                var autosaveMessages = [].concat(autosave.queue.getMessages()).filter(function (item) {                    
+                        if(item.content.type === "AS" && item.content.url === url) {
+                            return true;
+                        }                    
                 });
+                
+                if(autosaveMessages.length > 0) {                    
+                    var latestLocalData = autosaveMessages.pop().content.data;
+                    console.log("local data for url: " + url + " found");
+                    callback(latestLocalData);
+                } else {                   
+                    console.log("No local data for url: " + url + ", trying to get from server");
+                    $.get(url, function(data) {
+                        console.log("Found data on server for url: " + url);
+                        callback(data);                    
+                    }).fail(function(error) {
+                        if (error.status === 404) {
+                            console.debug('No matching data on server for url: ' + url);
+                        } else {
+                            console.warn('failed to get data: ', error.status);
+                        }
+                    });
+                }                 
             }                
     };
 
@@ -64,25 +78,30 @@ clusiveAssessment.setUpCompCheck = function() {
     // Retrieve existing affect check values and set them
 
     var set_affect_check = function(data) {
-        Object.keys(data).forEach(function (affectOptionName) {
-            var shouldCheck = data[affectOptionName];
-            var affectInput = $('input[name="' + affectOptionName + '"]');
-            affectInput.prop("checked", shouldCheck);
-            var idx = affectInput.attr("data-react-index");
-            var wedge = document.querySelector('.react-wedge-' + idx);
-    
-            if(shouldCheck) {
-                reactDimAnimate(wedge, 100);
-            } else {
-                reactDimAnimate(wedge, 0);
-            }
-            console.log("affectInput", affectInput, shouldCheck);
+        console.log("calling set_affect_check", data)
+        Object.keys(data).forEach(function (key) {
+            if(key.includes("affect-option")) {
+                var affectOptionName = key                
+                var shouldCheck = data[affectOptionName];
+                var affectInput = $('input[name="' + affectOptionName + '"]');
+                affectInput.prop("checked", shouldCheck);
+                var idx = affectInput.attr("data-react-index");
+                var wedge = document.querySelector('.react-wedge-' + idx);
+        
+                if(shouldCheck) {
+                    reactDimAnimate(wedge, 100);
+                } else {
+                    reactDimAnimate(wedge, 0);
+                }
+                console.log("affectInput", affectInput, shouldCheck);
+                }
         })
     };
 
     autosave.retrieve('/assessment/affect_check/' + bookId, set_affect_check);
 
     var set_comprehension_check = function(data) {
+        console.log("calling set_comprehension_check", data);
         clusiveAssessment.compCheckDone = true;
         var scaleResponse = data.scale_response;
         var freeResponse = data.free_response;
