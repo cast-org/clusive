@@ -250,7 +250,7 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, UpdateView):
     """Parent class for several metadata-editing pages."""
     model = Book
     form_class = MetadataForm
-    success_url = '/library/mine'
+    success_url = reverse_lazy('library_style_redirect', kwargs={'view': 'mine'})
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -334,7 +334,8 @@ class MetadataReplaceFormView(MetadataFormView):
             if self.orig_book.cover:
                 os.remove(self.orig_book.cover_storage)
             self.orig_book.cover = self.object.cover
-            os.rename(self.object.cover_storage, self.orig_book.cover_storage)
+            if self.object.cover:
+                os.rename(self.object.cover_storage, self.orig_book.cover_storage)
         self.orig_book.save()
 
         orig_bv = self.orig_book.versions.get()
