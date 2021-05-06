@@ -39,8 +39,29 @@ clusiveAssessment.setUpCompCheck = function() {
             autosave.queue.add({"type": "AS", "url": url, "data": data});
         },
         retrieve: {
-            function(url) {
-
+            function(url, callback) {
+                $.get(url, callback(data) {
+                    Object.keys(data).forEach(function (affectOptionName) {
+                        var shouldCheck = data[affectOptionName];
+                        var affectInput = $('input[name="' + affectOptionName + '"]');
+                        affectInput.prop("checked", shouldCheck);
+                        var idx = affectInput.attr("data-react-index");
+                        var wedge = document.querySelector('.react-wedge-' + idx);
+            
+                        if(shouldCheck) {
+                            reactDimAnimate(wedge, 100);
+                        } else {
+                            reactDimAnimate(wedge, 0);
+                        }
+                        console.log("affectInput", affectInput, shouldCheck);
+                    })
+                }).fail(function(error) {
+                    if (error.status === 404) {
+                        console.debug('No matching object on server');
+                    } else {
+                        console.warn('failed to get data: ', error.status);
+                    }
+                });
             }
         }                
     };
@@ -53,14 +74,15 @@ clusiveAssessment.setUpCompCheck = function() {
     window.setTimeout(function() { clusiveAssessment.tooEarly = false; }, 10000);
 
     // Retrieve existing affect check values and set them
-    $.get('/assessment/affect_check/' + bookId, function(data) {
-        Object.keys(data).forEach(function (affectOptionName) {
+
+    var set_affect_check = function(data) {
+        Object.keys(affect_check_data).forEach(function (affectOptionName) {
             var shouldCheck = data[affectOptionName];
             var affectInput = $('input[name="' + affectOptionName + '"]');
             affectInput.prop("checked", shouldCheck);
             var idx = affectInput.attr("data-react-index");
             var wedge = document.querySelector('.react-wedge-' + idx);
-
+    
             if(shouldCheck) {
                 reactDimAnimate(wedge, 100);
             } else {
@@ -68,29 +90,36 @@ clusiveAssessment.setUpCompCheck = function() {
             }
             console.log("affectInput", affectInput, shouldCheck);
         })
-    }).fail(function(error) {
-        if (error.status === 404) {
-            console.debug('No pre-existing affect check response');
-        } else {
-            console.warn('failed to get affect check, status code: ', error.status);
-        }
-    });
+    };
 
-    // Retrieve existing comprehension check values and set them
-    $.get('/assessment/comprehension_check/' + bookId, function(data) {
+    autosave.retrieve('/assessment/affect_check/' + bookId, set_affect_check);
+
+    var set_comprehension_check = function(data) {
         clusiveAssessment.compCheckDone = true;
         var scaleResponse = data.scale_response;
         var freeResponse = data.free_response;
         $('textarea[name="comprehension-free"]').val(freeResponse);
         $('input[name="comprehension-scale"]').val([scaleResponse]);
         $('input[name="comprehension-scale"]').change();
-    }).fail(function(error) {
-        if (error.status === 404) {
-            console.debug('No pre-existing comp check response');
-        } else {
-            console.warn('failed to get comprehension check, status code: ', error.status);
-        }
-    });
+    };
+
+    autosave.retrieve('/assessment/comprehension_check/' + bookId, set_comprehension_check);
+
+    // // Retrieve existing comprehension check values and set them
+    // $.get('/assessment/comprehension_check/' + bookId, function(data) {
+    //     clusiveAssessment.compCheckDone = true;
+    //     var scaleResponse = data.scale_response;
+    //     var freeResponse = data.free_response;
+    //     $('textarea[name="comprehension-free"]').val(freeResponse);
+    //     $('input[name="comprehension-scale"]').val([scaleResponse]);
+    //     $('input[name="comprehension-scale"]').change();
+    // }).fail(function(error) {
+    //     if (error.status === 404) {
+    //         console.debug('No pre-existing comp check response');
+    //     } else {
+    //         console.warn('failed to get comprehension check, status code: ', error.status);
+    //     }
+    // });
 
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
