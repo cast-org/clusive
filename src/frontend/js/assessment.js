@@ -85,7 +85,7 @@ clusiveAssessment.saveComprehensionCheck = function () {
     clusiveAutosave.save("/assessment/comprehension_check/" + bookId, JSON.stringify(comprehensionResponse));
 }
 
-clusiveAssessment.setUpCompCheck = function() {
+clusiveAssessment.setupAssessments = function() {
     'use strict';
     var bookId = clusiveContext.reader.info.publication.id;
 
@@ -134,7 +134,7 @@ $(function() {
     $(document).ready(function() {
         // Don't set up a comp check unless on a book page
         if (fluid.get(clusiveContext, 'reader.info.publication.id')) {
-            clusiveAssessment.setUpCompCheck();
+            clusiveAssessment.setupAssessments();
         }
     });
 });

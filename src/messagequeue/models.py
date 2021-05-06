@@ -47,10 +47,8 @@ class Message:
 
     def send_autosave(self):
         logger.debug("autosave request received: %s", self.content)
-        associated_view = resolve(self.content['url'])
-        # logger.debug("self.content['data'] 1: %s", self.content['data'])
-        associated_view.func.view_class.create_from_request(self.request, json.loads(self.content['data']))
-        # logger.debug("self.content['data'] 2: %s", self.content['data'])        
+        associated_view = resolve(self.content['url'])        
+        associated_view.func.view_class.create_from_request(self.request, json.loads(self.content['data']))        
 
     def send_client_side_prefs_change(self):
         client_side_prefs_change.send(sender=self.__class__, timestamp=self.timestamp, content=self.content, request=self.request)
