@@ -26,7 +26,7 @@ clusiveAssessment.showCompCheck = function() {
 };
 
 clusiveAssessment.setAffectCheck = function(data) {
-    console.log("calling set_affect_check", data)
+    console.log("calling setAffectCheck", data)
     Object.keys(data).forEach(function (key) {
         if(key.includes("affect-option")) {
             var affectOptionName = key                
@@ -47,15 +47,13 @@ clusiveAssessment.setAffectCheck = function(data) {
 }
 
 clusiveAssessment.setComprehensionCheck = function(data) {
-    var set_comprehension_check = function(data) {
-        console.log("calling set_comprehension_check", data);
-        clusiveAssessment.compCheckDone = true;
-        var scaleResponse = data.scaleResponse;
-        var freeResponse = data.freeResponse;
-        $('textarea[name="comprehension-free"]').val(freeResponse);
-        $('input[name="comprehension-scale"]').val([scaleResponse]);
-        $('input[name="comprehension-scale"]').change();
-    };        
+    console.log("calling setComprehensionCheck", data);
+    clusiveAssessment.compCheckDone = true;
+    var scaleResponse = data.scaleResponse;
+    var freeResponse = data.freeResponse;
+    $('textarea[name="comprehension-free"]').val(freeResponse);
+    $('input[name="comprehension-scale"]').val([scaleResponse]);
+    $('input[name="comprehension-scale"]').change();
 }
 
 clusiveAssessment.setUpCompCheck = function() {
@@ -82,8 +80,9 @@ clusiveAssessment.setUpCompCheck = function() {
                 });
                 
                 if(autosaveMessages.length > 0) {                    
+                    console.log("autosaveMessages", autosaveMessages);
                     var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
-                    console.log("local data for url: " + url + " found");
+                    console.log("local data for url: " + url + " found", latestLocalData);
                     callback(latestLocalData);
                 } else {                   
                     console.log("No local data for url: " + url + ", trying to get from server");
