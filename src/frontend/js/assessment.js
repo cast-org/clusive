@@ -50,7 +50,9 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     var freeResponse = data.freeResponse;
     $('textarea[name="comprehension-free"]').val(freeResponse);
     $('input[name="comprehension-scale"]').val([scaleResponse]);
-    $('input[name="comprehension-scale"]').change();
+    if(freeResponse.length > 0) {
+        $('#comprehensionFreeResponseArea').show();
+    }    
 }
 
 clusiveAssessment.saveAffectCheck = function () {    
@@ -101,11 +103,12 @@ clusiveAssessment.setupAssessments = function() {
 
     clusiveAutosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
 
+    // TODO: this should be an onchange on the elements
     window.setInterval(function() {
         console.log("adding current state of assessments to autosave queue")
         clusiveAssessment.saveAffectCheck();
         clusiveAssessment.saveComprehensionCheck();        
-    }, 15000)
+    }, 1000)
 
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(

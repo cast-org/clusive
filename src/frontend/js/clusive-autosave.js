@@ -9,10 +9,23 @@ var clusiveAutosave = {
                 lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
             }
         }),
+    // Test if data is equivalent for autosave purposes        
+    isEquivalentData: function (oldData, newData) {
+        var isEquivalent = true;
+        Object.keys(newData).forEach(function (key) {
+            if(newData[key] !== oldData[key]) {
+                console.log("comparison of values", newData[key], oldData[key]);
+                console.log("found differing values for " + key, newData[key], oldData[key]);
+                isEquivalent = false;                
+            }
+        });
+        console.log("isEquivalent", isEquivalent);
+        return isEquivalent;                
+    },
     save: function(url, data) {        
         var lastData = clusiveAutosave.lastDataCache[url];
-        var isNewData = (lastData !== data);        
-        console.log("comparison of data and lastData: ", data, lastData, isNewData);
+        // TODO: Only check that same keys with same values exist
+        var isNewData = !clusiveAutosave.isEquivalentData(lastData, data);                
         if(isNewData) {
             console.log("adding changed data to autosave queue");
             clusiveAutosave.queue.add({"type": "AS", "url": url, "data": JSON.stringify(data)});
