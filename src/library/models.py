@@ -19,11 +19,20 @@ class Subject(models.Model):
     # a way to sort or order, especially to separate fiction/non-fiction
     sort_order = models.SmallIntegerField()
 
+    cached_list = None
+
     class Meta:
         ordering = ['sort_order', 'subject']
 
     def __str__(self):
         return self.subject
+
+    @classmethod
+    def get_list(cls):
+        """List of all Subjects.  Cached in memory the first time this method is called."""
+        if not cls.cached_list:
+            cls.cached_list = list(cls.objects.all())
+        return cls.cached_list
 
 
 class Book(models.Model):

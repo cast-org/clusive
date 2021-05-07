@@ -1,0 +1,62 @@
+{% load figuration pagination %}
+
+<div class="col col-md-auto order-md-2">
+    <div class="mb-1">
+        <button type="button" class="btn btn-primary" data-cfw="collapse" data-cfw-collapse-target="#filterSelection">
+            <span class="not-open">Show filters</span>
+            <span class="is-open">Hide filters</span>
+        </button>
+        <a id="clearFilters" href="{% pagination_search ''  query '' %}" role="button" class="ms-0_5">Clear filters</a>
+    </div>
+</div>
+
+<div class="col-12 order-md-4">
+    <div class="row library-filter-row collapse" id="filterSelection" role="region" aria-label="filters">
+        <div class="col-md-8">
+            <div class="box library-filter-box">
+                <fieldset data-clusive="filterAllUpdate">
+                    <legend class="form-label lh-1 pt-0"><strong>Topic</strong></legend>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="topicAll" name="subjects" data-clusive="filterAll" value="">
+                        <label class="form-check-label" for="topicAll">All topics and genres</label>
+                    </div>
+                    <div class="box-divider-thin"></div>
+                    <div class="library-filter-columns">
+                        {% for t in topics %}
+                        <div class="form-check form-checkradio">
+                            <input class="form-check-input" type="checkbox"
+                                   id="topic-{{ t.id }}" value="{{ t.subject }}"
+                                   {% if t in subjects %}checked{% endif %}>
+                            <label class="form-check-label" for="topic-{{ t.id }}">{{ t.subject }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box library-filter-box">
+                <fieldset data-clusive="filterAllUpdate">
+                    <legend class="form-label lh-1 pt-0"><strong>Word Count</strong></legend>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="countAll" name="words" data-clusive="filterAll" value="">
+                        <label class="form-check-label" for="countAll">All word counts</label>
+                    </div>
+                    <div class="box-divider-thin"></div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="count0" value="S">
+                        <label class="form-check-label" for="count0"><500 words</label>
+                    </div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="count1" value="M">
+                        <label class="form-check-label" for="count1">500 &ndash; 30,000 words</label>
+                    </div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="count2" value="L">
+                        <label class="form-check-label" for="count2">30,000+ words</label>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

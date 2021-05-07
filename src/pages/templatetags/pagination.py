@@ -1,19 +1,20 @@
+from urllib.parse import urlencode
+
 from django import template
+
 register = template.Library()
 
 @register.simple_tag
-def pagination_search(url, page, query):
+def pagination_search(url, query, subject):
     """
-    Build URL for pagination that passes optional search query
+    Build URL for the library page including search and filter parameters, and sort option.
     """
-
-    if query and page:
-        return '%s?query=%s&page=%s' % (url, query, page)
+    params = []
 
     if query:
-        return '%s?query=%s' % (url, query)
+        params.append(('query', query))
 
-    if page:
-        return '%s?page=%s' % (url, page)
+    if subject:
+        params.append(('subjects', subject))
 
-    return url
+    return "%s?%s" % (url, urlencode(params))

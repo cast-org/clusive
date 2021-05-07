@@ -16,6 +16,47 @@ logger = logging.getLogger(__name__)
 
 class LibraryTestCase(TestCase):
 
+    @classmethod
+    def setUpTestData(cls):
+        user = User.objects.create_user(username="user1", password="password1")
+        user.save()
+        clusive_user = ClusiveUser.objects.create(anon_id="Student1", user=user, role='ST')
+        clusive_user.save()
+        book = Book.objects.create(id=1, owner=clusive_user, title='Foo', sort_title='Foo', author='Bar', sort_author='Bar')
+        book.save()
+        bv = BookVersion.objects.create(book=book, sortOrder=0)
+        bv.save()
+
+    def test_upload_create_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/upload/create')
+        self.assertEqual(response.status_code, 200)
+
+    def test_upload_replace_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/upload/replace/1')
+        self.assertEqual(response.status_code, 200)
+
+    def test_metadata_create_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/metadata/upload/1')
+        self.assertEqual(response.status_code, 200)
+
+    def test_metadata_edit_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/metadata/edit/1')
+        self.assertEqual(response.status_code, 200)
+
+    def test_library_style_redirect(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/mine')
+        self.assertRedirects(response, '/library/bricks/mine/')
+
+    def test_library_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/bricks/mine/')
+        self.assertEqual(response.status_code, 200)
+
     def test_text_extraction(self):
         te = TextExtractor()
         result = te.extract(
