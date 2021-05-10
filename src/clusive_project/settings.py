@@ -75,8 +75,8 @@ SOCIALACCOUNT_PROVIDERS = {
 # See:  https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
 #
 # LOGIN_REDIRECT_URL is set to '/account/finish_login' that checks the type of login:
-# - if the role is unknown (first time SSO login), proceed to the role/age
-#   workflow to set the role of the user before going to '/dashboard'.
+# - if the role is unknown (first time SSO login), proceed to the registration
+#   workflow before going to '/dashboard'.
 # - if the role is set, go to '/dashboard'.
 # The latter condition is met by non-SSO logins, as well as subsequent SSO logins.
 LOGIN_REDIRECT_URL = '/account/finish_login'

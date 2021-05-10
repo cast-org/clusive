@@ -33,7 +33,7 @@ urlpatterns = [
     path('sign_up_role', views.SignUpRoleView.as_view(), name='sign_up_role'),
     path('sign_up_age', views.SignUpAgeCheckView.as_view(), name='sign_up_age_check'),
     path('sign_up_ask_parent', views.SignUpAskParentView.as_view(), name='sign_up_ask_parent'),
-    path('sign_up/<role>', views.SignUpView.as_view(), name='sign_up'),
+    path('sign_up/<role>/<isSSO>', views.SignUpView.as_view(), name='sign_up'),
 
     path('validate_sent/<int:user_id>', views.ValidateSentView.as_view(), name='validate_sent'),
     path('validate_resend/<int:user_id>', views.ValidateResendView.as_view(), name='validate_resend'),

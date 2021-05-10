@@ -58,7 +58,7 @@ class SignUpView(EventMixin, CreateView):
 
     def get_initial(self, *args, **kwargs):
         initial = super(SignUpView, self).get_initial(**kwargs)
-        # If registration during SSO, track the SSO user
+        # If registration during SSO, use info from the SSO user
         if self.request.session.get('sso', False):
             initial['user'] = self.request.user
         return initial
@@ -75,6 +75,7 @@ class SignUpView(EventMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['role'] = self.role
+        context['isSSO'] = self.request.session.get('sso', False)
         return context
 
     def form_valid(self, form):
@@ -89,24 +90,25 @@ class SignUpView(EventMixin, CreateView):
             # Update the ClusiveUser and User objects based on the form target.
             clusive_user: ClusiveUser
             clusive_user = self.current_clusive_user
-            isSso = self.request.session.get('sso', False)
-            if isSso:
-                clusive_user.unconfirmed_email = False
+            isSSO = self.request.session.get('sso', False)
             update_clusive_user(clusive_user,
                                 self.role,
                                 ResearchPermissions.SELF_CREATED,
+                                isSSO,
                                 form.cleaned_data['education_levels'])
             user = clusive_user.user
             user.username = target.username
             user.first_name = target.first_name
-            user.set_password(form.cleaned_data["password1"])
+            if not isSSO:
+                user.set_password(form.cleaned_data["password1"])
             user.email = target.email
             user.save()
-            if not isSso:
-                send_validation_email(self.current_site, clusive_user)
-            login(self.request, user, 'django.contrib.auth.backends.ModelBackend')
-            if isSso:
+            if isSSO:
+                login(self.request, user, 'allauth.account.auth_backends.AuthenticationBackend')
                 return HttpResponseRedirect(reverse('dashboard'))
+            else:
+                send_validation_email(self.current_site, clusive_user)
+                login(self.request, user, 'django.contrib.auth.backends.ModelBackend')
         else:
             # This is a new user.  Save the form target User object, and create a ClusiveUser.
             user = target
@@ -203,9 +205,13 @@ class SignUpRoleView(EventMixin, FormView):
         else:
             # Logging in via SSO for the first time entails that there is a
             # clusive_user and its role is UNKNOWN
-            if clusive_user and clusive_user.role == Roles.UNKNOWN:
-                update_clusive_user(clusive_user, role, ResearchPermissions.SELF_CREATED)
-            self.success_url = reverse('sign_up', kwargs={'role': role})
+            isSSO = True if (clusive_user and clusive_user.role == Roles.UNKNOWN) else False
+            if isSSO:
+                update_clusive_user(clusive_user,
+                                    role,
+                                    ResearchPermissions.SELF_CREATED, 
+                                    isSSO)
+            self.success_url = reverse('sign_up', kwargs={'role': role, 'isSSO': isSSO})
         return super().form_valid(form)
 
     def configure_event(self, event: Event):
@@ -222,11 +228,13 @@ class SignUpAgeCheckView(EventMixin, FormView):
         if form.cleaned_data['of_age'] == 'True':
             # Logging in via SSO for the first time entails that there is a
             # clusive_user and its role is UNKNOWN
+            isSSO = True if (clusive_user and clusive_user.role == Roles.UNKNOWN) else False
             if clusive_user and clusive_user.role == Roles.UNKNOWN:
                 update_clusive_user(self.request.clusive_user,
                                     Roles.STUDENT,
-                                    ResearchPermissions.SELF_CREATED)
-            self.success_url = reverse('sign_up', kwargs={'role': Roles.STUDENT})
+                                    ResearchPermissions.SELF_CREATED,
+                                    isSSO)
+            self.success_url = reverse('sign_up', kwargs={'role': Roles.STUDENT, 'isSSO': isSSO})
         else:
             self.success_url = reverse('sign_up_ask_parent')
         return super().form_valid(form)
@@ -567,12 +575,14 @@ def finish_login(request):
         return HttpResponseRedirect(reverse('dashboard'))
 
 
-def update_clusive_user(current_clusive_user, role, permissions, edu_levels=None):
+def update_clusive_user(current_clusive_user, role, permissions, isSSO, edu_levels=None):
     clusive_user: ClusiveUser
     clusive_user = current_clusive_user
-    logger.debug('Upgrading %s from %s to %s', clusive_user, clusive_user.role, role)
+    logger.debug('Updating %s from %s to %s', clusive_user, clusive_user.role, role)
     clusive_user.role = role
     clusive_user.permission = permissions
+    if isSSO:
+        clusive_user.unconfirmed_email = False
     if edu_levels:
         clusive_user.education_levels = edu_levels
     clusive_user.save()

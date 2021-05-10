@@ -14,6 +14,7 @@
         {{ form.username }}
         <div class="form-text">This is how you will log in to Clusive.</div>
     </div>
+    {% if not isSSO %}
     <div class="form-group">
         {{ form.password1.label_tag | formlabel }}
         {{ form.password1.errors}}
@@ -28,6 +29,7 @@
         <div class="form-text">Enter the same password again, for verification.</div>
         {{ form.non_field_errors }}
     </div>
+    {% endif %}
     <div class="form-group">
         {{ form.email.label_tag | formlabel }}
         {{ form.email.errors}}
