@@ -97,12 +97,19 @@ class SignUpView(EventMixin, CreateView):
                                 isSSO,
                                 form.cleaned_data['education_levels'])
             user = clusive_user.user
-            user.username = target.username
-            user.first_name = target.first_name
+            # If the user is already logged in via SSO, these fields are already
+            # set by the SSO process.  If not an SSO user, get the values from
+            # the form.
             if not isSSO:
+                user.first_name = target.first_name
+                user.username = target.username
                 user.set_password(form.cleaned_data["password1"])
-            user.email = target.email
+                user.email = target.email
             user.save()
+
+            # Either log in the SSO user and redirect to the dashboard, or, for
+            # Guests signing up, send the confirmation email to the new user and
+            # log them in.
             if isSSO:
                 login(self.request, user, 'allauth.account.auth_backends.AuthenticationBackend')
                 return HttpResponseRedirect(reverse('dashboard'))
@@ -209,7 +216,7 @@ class SignUpRoleView(EventMixin, FormView):
             if isSSO:
                 update_clusive_user(clusive_user,
                                     role,
-                                    ResearchPermissions.SELF_CREATED, 
+                                    ResearchPermissions.SELF_CREATED,
                                     isSSO)
             self.success_url = reverse('sign_up', kwargs={'role': role, 'isSSO': isSSO})
         return super().form_valid(form)

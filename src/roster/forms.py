@@ -109,9 +109,7 @@ class UserRegistrationForm(UserCreationForm):
             self.fields['first_name'].initial = self.user.first_name # Display name
             self.fields['email'].initial = self.user.email
             self.fields['email'].disabled = True
-            self.fields['username'].label = 'Username'
             self.fields['username'].required = False
-            self.fields['username'].initial = self.user.username
             self.fields['password1'].required = False
             self.fields['password2'].required = False
 
@@ -123,17 +121,12 @@ class UserRegistrationForm(UserCreationForm):
                 self.add_error('email', 'There is already a user with that email address.')
         return super().clean()
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        user_with_that_username = User.objects.filter(username=username)
-        if not self.is_logged_in(user_with_that_username):
-            if user_with_that_username.exists():
-                self.add_error('username', 'There is already a user with that username')
-        return username
-
     def _post_clean(self):
         if not self.cleaned_data.get('first_name'):
-            self.cleaned_data['first_name'] = self.cleaned_data.get('username')
+            if self.cleaned_data.get('username'):
+                self.cleaned_data['first_name'] = self.cleaned_data.get('username')
+            elif self.user:
+                self.cleaned_data['first_name'] = self.user.first_name
         super()._post_clean()
 
     def is_logged_in(self, criteria):
