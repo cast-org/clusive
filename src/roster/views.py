@@ -97,11 +97,11 @@ class SignUpView(EventMixin, CreateView):
                                 isSSO,
                                 form.cleaned_data['education_levels'])
             user = clusive_user.user
+            user.first_name = target.first_name
             # If the user is already logged in via SSO, these fields are already
             # set by the SSO process.  If not an SSO user, get the values from
             # the form.
             if not isSSO:
-                user.first_name = target.first_name
                 user.username = target.username
                 user.set_password(form.cleaned_data["password1"])
                 user.email = target.email
