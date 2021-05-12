@@ -11,6 +11,12 @@
     background-color: var(--CT_btnTagBg);
     border-color: var(--CT_btnTagBorderColor);
     @include border-radius($btn-border-radius);
+
+    &.active {
+        color: var(--CT_btnTagActiveColor);
+        background-color: var(--CT_btnTagActiveBg);
+        border-color: var(--CT_btnTagActiveBorderColor);
+    }
 }
 
 .badge-item {
