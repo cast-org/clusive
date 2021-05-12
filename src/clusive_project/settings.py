@@ -39,8 +39,47 @@ INSTALLED_APPS = [
     'assessment.apps.AssessmentConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
+    # added for django-allauth:
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # including only Google provider for now, see:
+    # https://django-allauth.readthedocs.io/en/latest/installation.html#django
+    'allauth.socialaccount.providers.google',
     'debug_toolbar',
 ]
+
+SITE_ID = 1 # django-allauth, id of the django_site record
+
+# django-allauth provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'openid',
+            'https://www.googleapis.com/auth/classroom.rosters.readonly',
+        ],
+        'AUTH_PARAMS': {
+            # for automatically refresh access token, see:
+            # https://django-allauth.readthedocs.io/en/latest/providers.html?highlight=refresh%20token#django-configuration
+            'access_type': 'offline'
+        }
+    }
+}
+
+# 1. Out-of-the-box, the `allauth` redirect URI is set to '/accounts/profile',
+# 2. SSO will 404 since `allauth` does not implement a handler for that end point,
+# 3. Advice: set a `LOGIN_REDIRECT_URL` to override allauth's default behaviour.
+# See:  https://django-allauth.readthedocs.io/en/latest/faq.html#when-i-attempt-to-login-i-run-into-a-404-on-accounts-profile
+#
+# LOGIN_REDIRECT_URL is set to '/account/finish_login' that checks the type of login:
+# - if the role is unknown (first time SSO login), proceed to the registration
+#   workflow before going to '/dashboard'.
+# - if the role is set, go to '/dashboard'.
+# The latter condition is met by non-SSO logins, as well as subsequent SSO logins.
+LOGIN_REDIRECT_URL = '/account/finish_login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -112,6 +151,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTHENTICATION_BACKENDS needed by `django-allauth` solution
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -170,7 +217,6 @@ SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 LOGIN_URL = '/account/login'
-LOGIN_REDIRECT_URL = '/dashboard'
 
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py

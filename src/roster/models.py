@@ -8,6 +8,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from multiselectfield import MultiSelectField
 from pytz import country_timezones
+from allauth.account.signals import user_signed_up
+from allauth.socialaccount.models import SocialAccount
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +52,7 @@ class Roles:
     TEACHER = 'TE'
     RESEARCHER = 'RE'
     ADMIN = 'AD'
+    UNKNOWN = 'UN'
 
     ROLE_CHOICES = [
         (GUEST, 'Guest'),
@@ -57,7 +60,8 @@ class Roles:
         (PARENT, 'Parent'),
         (TEACHER, 'Teacher'),
         (RESEARCHER, 'Researcher'),
-        (ADMIN, 'Admin')
+        (ADMIN, 'Admin'),
+        (UNKNOWN, 'Unknown')
     ]
 
 
@@ -216,7 +220,8 @@ class ClusiveUser(models.Model):
     @property
     def can_set_password(self):
         """True if this user can change their own password."""
-        return self.role and self.role != Roles.GUEST
+        social_account = SocialAccount.objects.filter(user=self.user).exists()
+        return self.role and self.role != Roles.GUEST and not social_account
 
     @property
     def can_upload(self):
@@ -366,6 +371,24 @@ def set_default_preferences(sender, instance, created, **kwargs):
         logger.info("New user created, setting preferences to 'default' set")
         instance.adopt_preferences_set('default_display')
         instance.adopt_preferences_set('default_reading_tools')
+
+# The signal is sent from django-allauth, and indicates the first time that a
+# user has connected a social account to their local account using another
+# app's single-sign-on (e.g, Google), but before they are fully logged in.
+# Check to see if the associated User has an associated ClusiveUser; and,
+# if not, create one.
+@receiver(user_signed_up)
+def add_clusive_user_for_sociallogin(sender, **kwargs):
+    django_user = kwargs['sociallogin'].user
+    try:
+        clusive_user = ClusiveUser.objects.get(user=django_user)
+    except ClusiveUser.DoesNotExist:
+        logger.info("New social user, attaching new ClusiveUser")
+        clusive_user = ClusiveUser.objects.create(user=django_user,
+                                                  role=Roles.UNKNOWN,
+                                                  permission=ResearchPermissions.GUEST,
+                                                  anon_id=ClusiveUser.next_anon_id())
+
 
 class Preference (models.Model):
     """Store a single user preference setting."""

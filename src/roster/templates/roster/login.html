@@ -26,7 +26,26 @@
         <div class="col-sm-6 col-lg-4">
             <div class="card card-login">
                 <div class="card-body login-section">
-                    <h2 class="mb-1">Log in to Clusive</h2>
+                    <h2 class="mb-1">Log in to Clusive<sup>&trade;</sup></h2>
+
+                    <div class="socialaccount_ballot">
+                        {% load socialaccount %}
+                        {% get_providers as socialaccount_providers %}
+                        <ul class="list-unstyled text-center mb-0_5">
+                            {% for provider in socialaccount_providers %}
+                            <li class="mb-0_5">
+                            <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                                <button type="submit" class="socialaccount_provider login-btn login-google">
+                                    <span class="sr-only">Sign in with {{provider.name}}</span>
+                                </button>
+                            </form>
+                            <li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="rule-text">or</div>
+
                     {% if email_validate %}
                     <div class="errorlist">
                         You need to validate your email address before you can log in.
@@ -91,6 +110,7 @@
                     </ul>
                 </div>
             </div>
+
         </div>
 
         <div class="col-lg-4">

@@ -7,7 +7,6 @@ from multiselectfield import MultiSelectFormField
 
 from roster.models import Period, Roles, ClusiveUser, EducationLevels
 
-
 class ClusiveLoginForm(AuthenticationForm):
 
     def confirm_login_allowed(self, user: User):
@@ -104,17 +103,37 @@ class UserRegistrationForm(UserCreationForm):
         self.fields['email'].required = True
         self.fields['username'].label = '*Username'
         self.fields['username'].required = True
+        #  Potential SSO user already logged in
+        self.user = kwargs['initial'].get('user', None)
+        if self.user:
+            self.fields['first_name'].initial = self.user.first_name # Display name
+            self.fields['email'].initial = self.user.email
+            self.fields['email'].disabled = True
+            self.fields['username'].required = False
+            self.fields['password1'].required = False
+            self.fields['password2'].required = False
 
     def clean(self):
         email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            self.add_error('email', 'There is already a user with that email address.')
+        user_with_that_email = User.objects.filter(email=email)
+        if not self.is_logged_in(user_with_that_email):
+            if user_with_that_email.exists():
+                self.add_error('email', 'There is already a user with that email address.')
         return super().clean()
 
     def _post_clean(self):
         if not self.cleaned_data.get('first_name'):
-            self.cleaned_data['first_name'] = self.cleaned_data.get('username')
+            if self.cleaned_data.get('username'):
+                self.cleaned_data['first_name'] = self.cleaned_data.get('username')
+            elif self.user:
+                self.cleaned_data['first_name'] = self.user.first_name
         super()._post_clean()
+
+    def is_logged_in(self, criteria):
+        if self.user:
+            return (self.user in criteria)
+        else:
+            return False
 
     class Meta:
         model = User
