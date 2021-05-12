@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['clusive.cast.org',
                  '10.*',
                  '[::1]']
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
