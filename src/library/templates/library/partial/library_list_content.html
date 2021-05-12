@@ -2,6 +2,6 @@
 
 <div class="library-list">
     {% for book in object_list %}
-        {% include "library/partial/library_card_list.html" with menu=True %}
+        {% include "library/partial/library_card_list.html" with show_menu=True show_topics=True %}
     {% endfor %}
 </div>

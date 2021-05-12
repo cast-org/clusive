@@ -1,4 +1,5 @@
 {% load pagination %}
+{% if show_topics %}
 <div class="col card-library-tag">
     {% for s in book.subjects.all %}
         <a href="{% pagination_search ''  query s %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
@@ -15,3 +16,4 @@
         </span>
     </span>
 </div>
+{% endif %}

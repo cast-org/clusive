@@ -50,10 +50,10 @@
                 <div class="library-grid">
                 {% endif %}
                     {% for para in last_reads %}
-                        {% include "library/partial/library_card.html" with book=para.book %}
+                        {% include "library/partial/library_card.html" with book=para.book show_menu=False show_topics=False %}
                     {% endfor %}
                     {% for book in featured %}
-                        {% include "library/partial/library_card.html" with book=book %}
+                        {% include "library/partial/library_card.html" with book=book show_menu=False show_topics=False %}
                     {% endfor %}
                 </div>
                 {% else %}
@@ -64,7 +64,7 @@
                 <div class="library-grid">
                 {% endif %}
                     {% for book in featured %}
-                        {% include "library/partial/library_card.html" with book=book %}
+                        {% include "library/partial/library_card.html" with book=book show_menu=False show_topics=False %}
                     {% endfor %}
                     <div class="card card-special">
                         <div class="card-body">
