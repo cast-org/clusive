@@ -138,3 +138,33 @@ docker run -p 8000:8000 \\
 Docker will run any pending database migrations and import the default books at startup, but users must be added manually:
 
 * `docker exec -it <container_id> python manage.py createsuperuser`
+
+## Connecting Google Authentication
+
+To allow users to log in with their Google account, 
+there are several additional steps.
+
+* Create a Project in the [Google Cloud Console](https://console.cloud.google.com).
+  * Enable the Google Classroom API
+  * Configure the authentication on the "OAuth Consent Screen" page in the "APIs and Services" section of the Console.
+  * Required scopes:
+    * `auth/userinfo.email`
+    * `auth/userinfo.profile`
+    * `auth/classroom.rosters.readonly`
+  * Create an "OAuth client ID" on the "Credentials" page, which is also in the "APIs and Services" section of the Console.
+    * Application type is "Web application"
+    * Authorized JavaScript origins should be the URL of your instance, eg `https://clusive.cast.org`.
+    * Authorized redirect URIs should the the URL of your instance plus accounts/google/login/callback/, eg `https://clusive.cast.org/accounts/google/login/callback/`
+    * When created, take note of the Client ID and Client Secret.
+* Add the Google "provider" as [documented](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration) for the Django-allauth module.
+  * There are a few different ways to do this. The manual method is as follows:
+    * Log in to your instance as an administrator.
+    * Go to "Social Applications", click Add.
+      * provider: Google
+      * name: Google
+      * Client id: from previous step.
+      * Secret key: "Client Secret" from previous step.
+      * Key: leave blank.
+      * Chosen sites: add the default site (must have id=1). You may want to rename it from 'example.com'.
+  
+
