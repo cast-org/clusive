@@ -65,6 +65,5 @@ var clusiveAutosave = {
         },
     // Maintains per-url record of data to avoid unneeded autosaving
     lastDataCache: {
-
     }
 };

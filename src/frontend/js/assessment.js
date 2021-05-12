@@ -102,13 +102,12 @@ clusiveAssessment.setupAssessments = function() {
     clusiveAutosave.retrieve('/assessment/affect_check/' + bookId, clusiveAssessment.setAffectCheck);
 
     clusiveAutosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
-
-    // TODO: this should be an onchange on the elements
+    
     window.setInterval(function() {
         console.log("adding current state of assessments to autosave queue")
         clusiveAssessment.saveAffectCheck();
         clusiveAssessment.saveComprehensionCheck();        
-    }, 1000)
+    }, 15000)
 
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
