@@ -145,32 +145,32 @@ To allow users to log in with their Google account,
 there are several additional steps.
 
 1. Create a Project in the [Google Cloud Console](https://console.cloud.google.com).
-  1. Enable the Google Classroom API
-  2. Configure the authentication on the "OAuth Consent Screen" page in the 
+2. Enable the Google Classroom API
+3. Configure the authentication on the "OAuth Consent Screen" page in the 
      "APIs and Services" section of the Console.  The "EDIT APP" link at the top
      of the "OAuth Consent Screen" provides an "Edit app registration"
      step-by-step process for filling in the information.
-  3. Required scopes (step 2 of the "Edit app registration"):
+4. Required scopes (step 2 of the "Edit app registration"):
      * `auth/userinfo.email`
      * `auth/userinfo.profile`
      * `auth/classroom.rosters.readonly`
-  4. Create an "OAuth client ID" on the "Credentials" page, which is also in the
+5. Create an "OAuth client ID" on the "Credentials" page, which is also in the
      "APIs and Services" section of the Console.
      * Application type is "Web application"
      * Authorized JavaScript origins should be the URL of your instance, eg `https://clusive.cast.org`.
      * Authorized redirect URIs should be the URL of your instance plus accounts/google/login/callback/,
        eg `https://clusive.cast.org/accounts/google/login/callback/`
      * When created, take note of the Client ID and Client Secret.
-2. Add the Google "provider" to Clusive as [documented](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration) for the Django-allauth module.
-  * There are a few different ways to do this. The manual method is as follows:
+6. Add the Google "provider" to Clusive as [documented](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration) for the Django-allauth module. There are a few different ways to do this. The manual method is as follows:
     * Log in to your instance as an administrator.
-    * Go to "Social Applications", click Add.
+    * Go to "Social Applications", click Add, and set:
       * provider: Google
       * name: Google
       * Client id: from previous step 4, above.
       * Secret key: "Client Secret" from previous step 4.
       * Key: leave blank.
-      * Chosen sites: add the default site (must have id=1). You may want to
-        rename it from 'example.com'.   In `settings.py`, set the `SITE_ID = 1`.
+      * Chosen sites: add the default site (if you haven't changed anything, this will be called "example.com" and have ID=1).
+    * You can rename the default site from "example.com" if you want, it does not really matter. 
+      But its ID must match what is in `settings.py`; the provided settings file includes `SITE_ID = 1`.
   
 
