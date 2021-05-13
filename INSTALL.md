@@ -166,8 +166,8 @@ there are several additional steps.
     * Go to "Social Applications", click Add, and set:
       * provider: Google
       * name: Google
-      * Client id: from previous step 4, above.
-      * Secret key: "Client Secret" from previous step 4.
+      * Client id: from step 5, above.
+      * Secret key: "Client Secret" from step 5.
       * Key: leave blank.
       * Chosen sites: add the default site (if you haven't changed anything, this will be called "example.com" and have ID=1).
     * You can rename the default site from "example.com" if you want, it does not really matter. 
