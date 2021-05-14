@@ -1,0 +1,140 @@
+.readtime-list-view {
+    display: inline-flex;
+    margin-left: .25rem;
+    line-height: 1;
+    border-color: inherit;
+
+    .active {
+        font-weight: 700;
+    }
+
+    &.list-horizontal > .list-item {
+        padding-right: .325rem;
+        padding-left: .325rem;
+    }
+}
+
+.readtime-legend-label {
+    color: var(--CT_readTimeLegendLabelColor);
+}
+.readtime-legend-mark {
+    position: relative;
+    display: inline-block;
+    width: .5rem;
+    height: 1rem;
+    line-height: 1;
+    vertical-align: middle;
+
+    .readtime-mark-shared {
+        position: absolute;
+        top: .125rem;
+        left: 0;
+    }
+}
+
+.readtime-mark-shared {
+    @include caret(up, .375rem, var(--CT_readTimeMarkColor));
+    margin-top: 0;
+    transform: translateY(50%) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.readtime-table-scroll {
+    margin-top: -1rem;
+    margin-bottom: 0;
+}
+
+// stylelint-disable selector-max-type
+// 1 - work around Chrome's issue with non-fixed width table in overflow container
+.readtime-table {
+    position: relative; // 1
+    margin-bottom: 0;
+
+    th {
+        @include font-size(1rem);
+        font-weight: 600;
+    }
+    td {
+        vertical-align: middle;
+    }
+
+    th:first-child,
+    td:first-child {
+        padding-left: 0;
+    }
+    th:last-child,
+    td:last-child {
+        padding-right: 0;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+        width: 100%;
+        min-width: 15rem;
+        padding-right: 0;
+    }
+    th:nth-child(3),
+    td:nth-child(3) {
+        padding-left: 1.25rem;
+        border-left: 3px solid var(--CT_boxDivderColor);
+    }
+
+    tbody > tr > td {
+        padding-top: .5rem;
+        white-space: nowrap;
+
+        &:nth-child(3) {
+            @include font-size(1.25rem);
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+        }
+        &:nth-child(4) {
+            padding-left: 1rem;
+            @include font-size(1.25rem);
+            font-weight: 700;
+            line-height: 1;
+        }
+    }
+}
+// stylelint-enable selector-max-type
+
+.readtime-progress {
+    display: flex;
+    height: 1.75rem;
+    overflow: hidden;
+
+    .tooltip-body {
+        max-width: 12rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+.readtime-bar {
+    position: relative;
+    display: flex;
+    margin-left: 4px;
+    overflow: hidden;
+    background-color: var(--CT_readTimeBarBg);
+
+    &:focus {
+        outline: 0;
+        box-shadow: inset 0 0 0 .1875rem rgba(var(--CT_focusRingRGB), .45);
+    }
+
+    &.active {
+        background-color: var(--CT_readTimeBarActiveBg);
+    }
+
+    &.striped {
+        background-image: linear-gradient(135deg, var(--CT_readTimeBarStripedBg) 25%, transparent 25%, transparent 50%, var(--CT_readTimeBarStripedBg) 50%, var(--CT_readTimeBarStripedBg) 75%, transparent 75%, transparent);
+        background-size: .625rem .625rem;
+    }
+
+    .readtime-mark-shared {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}

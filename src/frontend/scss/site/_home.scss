@@ -127,7 +127,7 @@
     user-select: none;
     background-color: transparent;
     border: 0;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    @include transition(color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out);
 
     &::before {
         display: block;
