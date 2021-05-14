@@ -11,6 +11,10 @@ var clusiveAutosave = {
         }),
     // Test if data is equivalent for autosave purposes        
     isEquivalentData: function (oldData, newData) {
+        // Null guard
+        if(!oldData || !newData) {
+            return false;
+        }
         var isEquivalent = true;
         Object.keys(newData).forEach(function (key) {
             if(newData[key] !== oldData[key]) {
@@ -23,8 +27,7 @@ var clusiveAutosave = {
         return isEquivalent;                
     },
     save: function(url, data) {        
-        var lastData = clusiveAutosave.lastDataCache[url];
-        // TODO: Only check that same keys with same values exist
+        var lastData = clusiveAutosave.lastDataCache[url];        
         var isNewData = !clusiveAutosave.isEquivalentData(lastData, data);                
         if(isNewData) {
             console.log("adding changed data to autosave queue");
