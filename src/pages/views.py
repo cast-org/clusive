@@ -60,12 +60,14 @@ class ReaderIndexView(LoginRequiredMixin,RedirectView):
             if view == 'period' and clusive_user.current_period:
                 return reverse('library', kwargs = {
                     'style': style,
+                    'sort': 'title',   # FIXME
                     'view': 'period',
                     'period_id': clusive_user.current_period.id
                 })
             else:
                 return reverse('library', kwargs = {
                     'style': style,
+                    'sort': 'title',  # FIXME
                     'view': view
                 })
 

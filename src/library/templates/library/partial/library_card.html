@@ -1,4 +1,4 @@
-{% load static figuration pagination %}
+{% load static library %}
 <div class="card card-library">
     <div class="card-header">
         <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title|highlight:query }}</h2></a>

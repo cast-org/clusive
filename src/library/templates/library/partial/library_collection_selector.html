@@ -1,5 +1,3 @@
-{% load pagination %}
-
 <div class="col col-md-auto order-md-1">
     <div class="library-filter" role="region" aria-label="View options">
         <ul class="nav">
@@ -9,24 +7,24 @@
                 <ul class="dropdown-menu">
                     {% for p in clusive_user.periods.all %}
                     <li>
-                        <a href="{% url 'library' style=style view='period' period_id=p.id %}"
+                        <a href="{% url 'library' style=style sort=sort view='period' period_id=p.id %}"
                          {% if p == period %}class="active" aria-current="true"{% endif %}>
                             {{ p.name }}
                         </a>
                     </li>
                     {% endfor %}
                     <li>
-                        <a href="{% url 'library' style=style view='public' %}"
+                        <a href="{% url 'library' style=style sort=sort view='public' %}"
                            {% if current_view == 'public' %}class="active" aria-current="true"{% endif %}>
                         {{view_names.public}}</a>
                     </li>
                     <li>
-                        <a href="{% url 'library' style=style view='mine' %}"
+                        <a href="{% url 'library' style=style sort=sort view='mine' %}"
                            {% if current_view == 'mine' %}class="active" aria-current="true"{% endif %}>
                         {{view_names.mine}}</a>
                     </li>
                     <li>
-                        <a href="{% url 'library' style=style view='all' %}"
+                        <a href="{% url 'library' style=style sort=sort view='all' %}"
                            {% if current_view == 'all' %}class="active" aria-current="true"{% endif %}>
                         {{view_names.all}}</a>
                     </li>

@@ -50,11 +50,11 @@ class LibraryTestCase(TestCase):
     def test_library_style_redirect(self):
         login = self.client.login(username='user1', password='password1')
         response = self.client.get('/library/mine')
-        self.assertRedirects(response, '/library/bricks/mine/')
+        self.assertRedirects(response, '/library/bricks/title/mine/')
 
     def test_library_page(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/library/bricks/mine/')
+        response = self.client.get('/library/bricks/title/mine/')
         self.assertEqual(response.status_code, 200)
 
     def test_text_extraction(self):

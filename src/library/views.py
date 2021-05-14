@@ -26,9 +26,51 @@ from roster.models import ClusiveUser, Period, LibraryViews
 
 logger = logging.getLogger(__name__)
 
+# The library page requires a lot of parameters, which interact in rather complex ways.
+# Here's a summary.  It is a sort-of hierarchy, in that changing parameters higher on this list
+# can reset parameters that are lower on the list, but the effects never go in the opposite direction.
+#
+# STYLE (which should perhaps have been called "layout"): [bricks, grid, list]
+#   This is the first part of the URL
+#   Changing the style leaves all the other parameters unchanged.
+#   The links in the style menu therefore have a JS helper to add the current filter and page to the URL.
+#   The ClusiveUser model holds a default for style.
+# VIEW (which should perhaps have been called "collection"): [public, mine, or period]
+#   This is the third part of the library URL
+#   If view is "period", there is a fourth part of the URL which is the specific period being viewed.
+#   Changing the view resets QUERY, FILTER, and PAGE to their defaults.
+#   Links in the view menu are just URLs.
+#   The ClusiveUser model holds a default for view & period.
+# SORT: [title, author]
+#   This is the second part of the URL
+#   Changing the sort resets the PAGE to its default.
+#   The links in the sort menu have a JS helper to add the current filter to the URL.
+# QUERY: [any search string typed in by the user]
+#   This is represented as a query= parameter in the URL
+#   Changing the query resets the FILTER and PAGE to their defaults.
+#   Query is changed by the search form, which does a simple GET.
+# FILTER: [sets of keywords for "subject" and for "words"]
+#   This is represented as subject= and words= URL parameters
+#   Changing the filter resets the PAGE to its default.
+#   The filter form has AJAX functionality to live-update the contents of the page when checkboxes are changed.
+# PAGE: [1-n]
+#   This is represented as a page= paramter in the URL.
+#   Changing the page leaves all the other parameters unchanged.
+#   Page links are implemented with AJAX.
+#
+# Summary of what resets what:
+# STYLE:
+# VIEW:  query, filter, page
+# SORT:                 page
+# QUERY:        filter, page
+# FILTER:               page
+# PAGE:
 
 class LibraryDataView(LoginRequiredMixin, ListView):
-    """Just the list of cards and navigation bar part of the library page"""
+    """
+    Just the list of cards and navigation bar part of the library page.
+    Used for AJAX updates of the library page.
+    """
     template_name = 'library/partial/library_data.html'
     paginate_by = 21
     paginate_orphans = 3
@@ -43,6 +85,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
         self.style = kwargs.get('style')
+        self.sort = kwargs.get('sort')
         self.view = kwargs.get('view')
         self.query = request.GET.get('query')
 
@@ -122,6 +165,13 @@ class LibraryDataView(LoginRequiredMixin, ListView):
                     length_query |= self.query_for_length(option)
             q = q.filter(length_query)
 
+        if self.sort == 'title':
+            q = q.order_by('sort_title', 'sort_author')
+        elif self.sort == 'author':
+            q = q.order_by('sort_author', 'sort_title')
+        else:
+            logger.warning('unknown sort setting')
+
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
 
@@ -146,13 +196,16 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['style'] = self.style
         context['current_view'] = self.view
         context['current_view_name'] = self.view_name
+        context['sort'] = self.sort
         context['view_names'] = dict(LibraryViews.CHOICES)
         context['topics'] = Subject.get_list()
         return context
 
 
 class LibraryView(EventMixin, LibraryDataView):
-    """Library page showing a list of books"""
+    """
+    Full library page showing the controls at the top and the list of cards.
+    """
     template_name = 'library/library.html'
 
     def configure_event(self, event):
@@ -169,12 +222,15 @@ class LibraryView(EventMixin, LibraryDataView):
 
 
 class LibraryStyleRedirectView(View):
-
+    """
+    Does a redirect to the user's preferred version of the library page.
+    """
     def dispatch(self, request, *args, **kwargs):
         view = kwargs.get('view')
         style = request.clusive_user.library_style
         return HttpResponseRedirect(redirect_to=reverse('library', kwargs={
             'view': view,
+            'sort': 'title',  # FIXME
             'style': style,
         }))
 
