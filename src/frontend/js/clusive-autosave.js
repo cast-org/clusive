@@ -10,16 +10,18 @@ var clusiveAutosave = {
             }
         }),
     // Test if data is equivalent for autosave purposes        
-    isEquivalentData: function (oldData, newData) {        
-        var isEquivalent = true;
+    isEquivalentData: function (oldData, newData) {                
         if(!oldData || !newData) {
-            isEquivalent = false;
+            return false;
         }
+        var isEquivalent = true;
+
         Object.keys(newData).forEach(function (key) {
             if(newData[key] !== oldData[key]) {                
                 isEquivalent = false;                
             }
-        });        
+        }); 
+               
         return isEquivalent;                
     },
     save: function(url, data) {        
