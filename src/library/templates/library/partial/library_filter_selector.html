@@ -1,4 +1,4 @@
-{% load figuration pagination %}
+{% load figuration library %}
 
 <div class="col col-md-auto order-md-2">
     <div class="mb-1">
@@ -6,7 +6,7 @@
             <span class="not-open">Show filters</span>
             <span class="is-open">Hide filters</span>
         </button>
-        <a id="clearFilters" href="{% pagination_search ''  query '' %}" role="button" class="ms-0_5">Clear filters</a>
+        <a id="clearFilters" href="{% search_args query '' %}" role="button" class="ms-0_5">Clear filters</a>
     </div>
 </div>
 

@@ -516,26 +516,26 @@ function hasActiveFilters() {
     return $('[data-clusive="filterAll"]').not(':checked').length > 0;
 }
 
-// Look at the filter checkboxes and return an object mapping filter names to values.
-function getFilterArgs() {
+// Look at the filter checkboxes and update the given URI with appropriate arguments to reflect them.
+function addFilterArgs(uri) {
     'use strict';
 
-    var args = {};
+    var params = uri.searchParams;
     $('[data-clusive="filterAllUpdate"]').each(function() {
         var $par = $(this);
         var $all = $par.find('[data-clusive="filterAll"]');
         var name = $all.attr('name');
         if ($all.is(':checked')) {
-            args[name] = '';
+            params.delete(name);
         } else {
             var values = [];
             $par.find('input:checked').each(function() {
                 values.push($(this).val());
             });
-            args[name] = values.join(',');
+            params.set(name, values.join(','));
         }
     });
-    return args;
+    return uri;
 }
 
 // AJAX update the library cards based on the current collection, view, query, and filters.
@@ -553,12 +553,8 @@ function updateLibraryData(page) {
     } else {
         params.delete('page'); // Force first page of results when filters are changed.
     }
-    var args = getFilterArgs();
-    for (var index in args) {
-        if (Object.prototype.hasOwnProperty.call(args, index)) {
-            params.set(index, args[index]);
-        }
-    }
+    uri = addFilterArgs(uri);
+
     return $.get(uri).done(function(data) {
         $('#libraryData').html(data);
     });
@@ -617,23 +613,28 @@ function libraryPageLinkSetup() {
     });
 }
 
-// Set up style links on the library page to dynamically add page number & filter settings to the URL linked.
-function libraryStyleLinkSetup() {
+// Set up style and sort links on the library page to dynamically add page number & filter settings to the URL linked.
+function libraryStyleSortLinkSetup() {
     'use strict';
 
+    // Style links add filters and page numbers
     $(document.body).on('click', 'a.style-link', function(e) {
         e.preventDefault();
         // eslint-disable-next-line compat/compat
         var url = new URL($(e.currentTarget).attr('href'), window.location);
-        var args = getFilterArgs();
-        for (var index in args) {
-            if (Object.prototype.hasOwnProperty.call(args, index)) {
-                url.searchParams.set(index, args[index]);
-            }
-        }
+        url = addFilterArgs(url);
         if (window.current_page_number) {
             url.searchParams.set('page', window.current_page_number);
         }
+        window.location = url;
+    });
+
+    // Sort links add filters, but page number is reset to 1.
+    $(document.body).on('click', 'a.sort-link', function(e) {
+        e.preventDefault();
+        // eslint-disable-next-line compat/compat
+        var url = new URL($(e.currentTarget).attr('href'), window.location);
+        url = addFilterArgs(url);
         window.location = url;
     });
 }
@@ -656,7 +657,7 @@ $(window).ready(function() {
     showTooltip(TOOLTIP_NAME);
     filterAllUpdate();
     libraryPageLinkSetup();
-    libraryStyleLinkSetup();
+    libraryStyleSortLinkSetup();
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;

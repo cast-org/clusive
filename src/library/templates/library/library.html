@@ -1,6 +1,5 @@
 {% extends "shared/base.html" %}
 {% load static %}
-{% load pagination %}
 
 {% block bodyClass %}library sidebar-no-start{% endblock %}
 {% block title %}Library | Clusive{% endblock %}
@@ -33,16 +32,14 @@
 
     {% if query %}
     <p>
-        Showing results for <strong>{{ query }}</strong>
+        Showing results for <strong id="currentQuery">{{ query }}</strong>
         <a href="?" class="ms-0_5">Clear search</a>
     </p>
     {% endif %}
 
     <div class="row">
         {% include "library/partial/library_collection_selector.html" %}
-
         {% include "library/partial/library_filter_selector.html" %}
-
         {% include "library/partial/library_style_selector.html" %}
     </div>
 

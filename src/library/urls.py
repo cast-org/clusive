@@ -34,15 +34,15 @@ urlpatterns = [
     path('switch/<int:book_id>/<int:version>', views.SwitchModalContentView.as_view(),
          name='modal_switch'),
 
-    path('data/<str:style>/<str:view>/<int:period_id>', views.LibraryDataView.as_view(),
+    path('data/<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryDataView.as_view(),
         name='library_data'),
-    path('data/<str:style>/<str:view>/', views.LibraryDataView.as_view(),
+    path('data/<str:style>/<str:sort>/<str:view>/', views.LibraryDataView.as_view(),
          name='library_data'),
 
     # Warning: patterns below here will match any URL. Put more specific matchers above.
-    path('<str:style>/<str:view>/<int:period_id>', views.LibraryView.as_view(),
+    path('<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryView.as_view(),
          name='library'),
-    path('<str:style>/<str:view>/', views.LibraryView.as_view(),
+    path('<str:style>/<str:sort>/<str:view>/', views.LibraryView.as_view(),
          name='library'),
 
     path('<str:view>', views.LibraryStyleRedirectView.as_view(),
