@@ -3,7 +3,7 @@
 /* exported clusiveAutosave */
 
 var clusiveAutosave = {
-    queue: clusive.djangoMessageQueue({
+    messageQueue: clusive.djangoMessageQueue({
             config: {                        
                 localStorageKey: "clusive.messageQueue.autosave",
                 lastQueueFlushInfoKey: "clusive.messageQueue.autosave.log.lastQueueFlushInfo"
@@ -21,7 +21,7 @@ var clusiveAutosave = {
                 isEquivalent = false;                
             }
         }); 
-               
+
         return isEquivalent;                
     },
     save: function(url, data) {        
@@ -29,7 +29,7 @@ var clusiveAutosave = {
         var isNewData = !clusiveAutosave.isEquivalentData(lastData, data);                
         if(isNewData) {
             console.debug("adding changed data for URL " + url + "to autosave queue: ", data);
-            clusiveAutosave.queue.add({"type": "AS", "url": url, "data": JSON.stringify(data)});
+            clusiveAutosave.messageQueue.add({"type": "AS", "url": url, "data": JSON.stringify(data)});
             clusiveAutosave.lastDataCache[url] = data; 
         } else {
             console.debug("no changed data for URL " + url + ", not adding to autosave queue", data)
@@ -38,7 +38,7 @@ var clusiveAutosave = {
     retrieve: 
         function(url, callback) {
             var hasLocal = false;                
-            var autosaveMessages = [].concat(clusiveAutosave.queue.getMessages()).filter(function (item) {                    
+            var autosaveMessages = [].concat(clusiveAutosave.messageQueue.getMessages()).filter(function (item) {                    
                     if(item.content.type === "AS" && item.content.url === url) {
                         return true;
                     }                    
