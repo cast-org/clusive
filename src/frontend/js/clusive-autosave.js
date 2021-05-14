@@ -33,9 +33,8 @@ var clusiveAutosave = {
             // Test if we should replace an existing autosave message
             // TODO: this functionality should be ported over to the message queue,
             // should the need for it arise outside the autosave
-            
-            var currentPosition = clusiveAutosave.messageQueue.getMessages().findIndex(function (message) {
-                console.log("testing for message for URL: ", url, message);
+
+            var currentPosition = clusiveAutosave.messageQueue.getMessages().findIndex(function (message) {                
                 if(message.content.type === "AS" && message.content.url === url) {                    
                     return true;
                 }                
@@ -55,8 +54,7 @@ var clusiveAutosave = {
         }
     },
     retrieve: 
-        function(url, callback) {
-            var hasLocal = false;                
+        function(url, callback) {                    
             var autosaveMessages = [].concat(clusiveAutosave.messageQueue.getMessages()).filter(function (item) {                    
                     if(item.content.type === "AS" && item.content.url === url) {
                         return true;
