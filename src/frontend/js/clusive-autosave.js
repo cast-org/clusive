@@ -28,8 +28,27 @@ var clusiveAutosave = {
         var lastData = clusiveAutosave.lastDataCache[url];        
         var isNewData = !clusiveAutosave.isEquivalentData(lastData, data);                
         if(isNewData) {
-            console.debug("adding changed data for URL " + url + "to autosave queue: ", data);
-            clusiveAutosave.messageQueue.add({"type": "AS", "url": url, "data": JSON.stringify(data)});
+            console.debug("adding changed data for URL " + url + " to autosave queue: ", data);
+            
+            // Test if we should replace an existing autosave message
+            // TODO: this functionality should be ported over to the message queue,
+            // should the need for it arise outside the autosave
+            
+            var currentPosition = clusiveAutosave.messageQueue.getMessages().findIndex(function (message) {
+                console.log("testing for message for URL: ", url, message);
+                if(message.content.type === "AS" && message.content.url === url) {                    
+                    return true;
+                }                
+                return false;
+            });
+            if(currentPosition >= 0) {                
+                var newMessage = clusiveAutosave.messageQueue.wrapMessage({"type": "AS", "url": url, "data": JSON.stringify(data)});
+                clusiveAutosave.messageQueue.queue[currentPosition] = newMessage;
+                clusiveAutosave.messageQueue.syncToLocalStorage();
+            }
+            else {
+                clusiveAutosave.messageQueue.add({"type": "AS", "url": url, "data": JSON.stringify(data)});
+            }            
             clusiveAutosave.lastDataCache[url] = data; 
         } else {
             console.debug("no changed data for URL " + url + ", not adding to autosave queue", data)
