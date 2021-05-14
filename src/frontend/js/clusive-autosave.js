@@ -10,31 +10,27 @@ var clusiveAutosave = {
             }
         }),
     // Test if data is equivalent for autosave purposes        
-    isEquivalentData: function (oldData, newData) {
-        // Null guard
-        if(!oldData || !newData) {
-            return false;
-        }
+    isEquivalentData: function (oldData, newData) {        
         var isEquivalent = true;
+        if(!oldData || !newData) {
+            isEquivalent = false;
+        }
         Object.keys(newData).forEach(function (key) {
-            if(newData[key] !== oldData[key]) {
-                console.log("comparison of values", newData[key], oldData[key]);
-                console.log("found differing values for " + key, newData[key], oldData[key]);
+            if(newData[key] !== oldData[key]) {                
                 isEquivalent = false;                
             }
-        });
-        console.log("isEquivalent", isEquivalent);
+        });        
         return isEquivalent;                
     },
     save: function(url, data) {        
         var lastData = clusiveAutosave.lastDataCache[url];        
         var isNewData = !clusiveAutosave.isEquivalentData(lastData, data);                
         if(isNewData) {
-            console.log("adding changed data to autosave queue");
+            console.debug("adding changed data for URL " + url + "to autosave queue: ", data);
             clusiveAutosave.queue.add({"type": "AS", "url": url, "data": JSON.stringify(data)});
             clusiveAutosave.lastDataCache[url] = data; 
         } else {
-            console.log("data has not changed, not adding to autosave queue");
+            console.debug("no changed data for URL " + url + ", not adding to autosave queue", data)
         }
     },
     retrieve: 
@@ -47,14 +43,12 @@ var clusiveAutosave = {
             });
             
             if(autosaveMessages.length > 0) {                                        
-                var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);
-                console.log("local data for url: " + url + " found", latestLocalData);
+                var latestLocalData = JSON.parse(autosaveMessages.pop().content.data);                
                 callback(latestLocalData);
                 clusiveAutosave.lastDataCache[url] = latestLocalData;
             } else {                   
-                console.log("No local data for url: " + url + ", trying to get from server");
-                $.get(url, function(data) {
-                    console.log("Found data on server for url: " + url);
+                console.debug("No local data for url: " + url + ", trying to get from server");
+                $.get(url, function(data) {                    
                     callback(data);                    
                     clusiveAutosave.lastDataCache[url] = data;
                 }).fail(function(error) {
