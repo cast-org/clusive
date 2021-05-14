@@ -103,11 +103,18 @@ clusiveAssessment.setupAssessments = function() {
 
     clusiveAutosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
     
-    window.setInterval(function() {
-        console.log("adding current state of assessments to autosave queue")
+    // Set up autosave calls for change events on relevant inputs
+    
+    $('input[name^="affect-option"]').change(function () {
         clusiveAssessment.saveAffectCheck();
-        clusiveAssessment.saveComprehensionCheck();        
-    }, 15000)
+    });
+
+    $('input[name="comprehension-scale"]').change(function() {
+        clusiveAssessment.saveComprehensionCheck();
+    });
+    $('textarea[name="comprehension-free"]').change(function() {
+        clusiveAssessment.saveComprehensionCheck();
+    });
 
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
