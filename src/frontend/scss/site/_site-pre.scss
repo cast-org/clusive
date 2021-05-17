@@ -290,7 +290,7 @@ $form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
 $form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
 $form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
 
-$progress-height:                           1.5rem;
+$progress-height:                           2.125rem; //1.5rem;
 $progress-bg:                               transparent;
 $progress-border-radius:                    .25rem;
 $progress-bar-color:                        $body-color;
