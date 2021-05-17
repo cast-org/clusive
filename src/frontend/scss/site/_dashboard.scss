@@ -40,8 +40,7 @@
 }
 
 .readtime-table-scroll {
-    margin-top: -1rem;
-    margin-bottom: 0;
+    margin: -1rem #{-$box-padding-x} 0;
 }
 
 // stylelint-disable selector-max-type
@@ -53,6 +52,7 @@
     th {
         @include font-size(1rem);
         font-weight: 600;
+        border-bottom: 3px solid var(--CT_boxDivderColor);
     }
     td {
         vertical-align: middle;
@@ -60,11 +60,11 @@
 
     th:first-child,
     td:first-child {
-        padding-left: 0;
+        padding-left: $box-padding-x;
     }
     th:last-child,
     td:last-child {
-        padding-right: 0;
+        padding-right: $box-padding-x;
     }
 
     th:nth-child(2),
@@ -76,7 +76,6 @@
     th:nth-child(3),
     td:nth-child(3) {
         padding-left: 1.25rem;
-        border-left: 3px solid var(--CT_boxDivderColor);
     }
 
     tbody > tr > td {
@@ -88,6 +87,7 @@
             font-weight: 700;
             line-height: 1;
             text-align: center;
+            border-left: 3px solid var(--CT_boxDivderColor);
         }
         &:nth-child(4) {
             padding-left: 1rem;
@@ -101,22 +101,28 @@
 
 .readtime-progress {
     display: flex;
-    height: 1.75rem;
+    height: $progress-height;
     overflow: hidden;
 
     .tooltip-body {
-        max-width: 12rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        display: inline-flex;
+
+        .tooltip-truncate {
+            max-width: 12rem;
+            margin-right: .5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 }
 .readtime-bar {
     position: relative;
     display: flex;
     margin-left: 4px;
-    overflow: hidden;
+    //overflow: hidden;
     background-color: var(--CT_readTimeBarBg);
+    @include border-radius($progress-border-radius);
 
     &:focus {
         outline: 0;

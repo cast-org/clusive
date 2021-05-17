@@ -188,8 +188,8 @@
 .stars-chart-item {
     position: relative;
     display: inline-flex;
+    flex: 1 1 0;
     flex-flow: column;
-    flex-grow: 1;
     align-items: center;
     justify-content: flex-end;
 }

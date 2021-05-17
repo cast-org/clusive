@@ -336,11 +336,12 @@
                                     55%
                                 </div>
                             </div>
-                            <div class="stars-chart-item"><div class="stars-chart-result">
+                            <div class="stars-chart-item">
                                 <div class="progress" aria-hidden="true">
                                     <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="--progressSize: 15; --progressMax: 55;"></div>
                                 </div>
-                                <div class="sr-only">Really liked it</div>
+                                <div class="stars-chart-result">
+                                    <div class="sr-only">Really liked it</div>
                                     15%
                                 </div>
                             </div>
@@ -408,9 +409,13 @@
                         <div class="table-scroll readtime-table-scroll">
                             <table class="table readtime-table">
                                 <thead>
+                                    <!-- Available sort indicators for table header anchors:
+                                          - `.sort-up`
+                                          - `.sort-down`
+                                    -->
                                     <tr>
                                         <th><a href="#" class="sort-up">Student</a></th>
-                                        <th><a href="#" class="sort-down">Books<span class="sr-only"> read></span></a></th>
+                                        <th><span class="sr-only">Books read</span></th>
                                         <th><a href="#">Hours</a></th>
                                         <th><a href="#"><span class="sr-only">Number of </span>Books<span class="sr-only"> read></span></a></th>
                                     </tr>
@@ -420,13 +425,36 @@
                                         <td><a href="#">Davey C.</a></td>
                                         <td>
                                             <div class="readtime-progress">
-                                                <div class="readtime-bar" style="width: 25%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
+                                                <div class="readtime-bar" style="width: 25%;" tabindex="0" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_0">
                                                     <span class="readtime-mark-shared"></span>
                                                 </div>
-                                                <div class="readtime-bar active" style="width: 50%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
+                                                <div id="tooltip_0" class="tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div class="tooltip-truncate">Some book title and other information?</div>
+                                                        <span class="aria-hidden">[</span>x.x <span class="sr-only">hours</span><span class="ms-0_25" aria-hidden="true"> hrs]</span>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
-                                                <div class="readtime-bar" style="width: 25%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
+
+                                                <div class="readtime-bar active" style="width: 50%;" tabindex="0" data-cfw="tooltip"  data-cfw-tooltip-target="#tooltip_1">
+                                                </div>
+                                                <div id="tooltip_1" class="tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div class="tooltip-truncate">Some book title and other information?</div>
+                                                        <span class="aria-hidden">[</span>x.x <span class="sr-only">hours</span><span class="ms-0_25" aria-hidden="true"> hrs]</span>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
+                                                </div>
+
+                                                <div class="readtime-bar" style="width: 25%;" tabindex="0" data-cfw="tooltip"  data-cfw-tooltip-target="#tooltip_2">
                                                     <span class="readtime-mark-shared"></span>
+                                                </div>
+                                                <div id="tooltip_2" class="tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div class="tooltip-truncate">Some book title and other information?</div>
+                                                        <span class="aria-hidden">[</span>x.x <span class="sr-only">hours</span><span class="ms-0_25" aria-hidden="true"> hrs]</span>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
                                             </div>
                                         </td>
