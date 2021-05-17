@@ -33,7 +33,7 @@
                 <h1>
                     Manage:
                 </h1>
-            </div>            
+            </div>
             <div class="col ps-md-0 mb-0_5 mb-md-0">
                 <span id="period-name">{{ current_period.name }}</span>
                 <button id="period-edit-button" class="btn btn-primary btn-small ms-0_25">Edit</button>
@@ -45,15 +45,15 @@
                     <button type="button" id="period-edit-cancel" class="btn btn-link btn-small" href="#">Cancel</button>
                 </form>
             </div>
-            {% include "shared/partial/period_selector.html" %}
+            {% include "shared/partial/period_selector.html" with target='manage' add_link=True %}
             {% else %}
             <div class="col-md-auto pe-md-0_5">
                 <h1>
                     No Classes
                 </h1>
                 <p><a href="{% url 'manage_create_period' %}">Add a Class</a> to get started using Clusive with your students or children.</p>
-            </div>            
-            {% endif %}            
+            </div>
+            {% endif %}
         </div>
         {% if current_period %}
         <div class="table-scroll">

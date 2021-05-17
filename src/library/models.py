@@ -296,7 +296,7 @@ class Paradata(models.Model):
         """
         Calculate time, number of books, and individual book stats for each user in the given Period.
         :param period:
-        :return: a map {clusive_user: {clusive_user: u, book_count: n, total_time: t, paradata: [para, para] } }
+        :return: a map {clusive_user: {clusive_user: u, book_count: n, total_time: t, paradata: [para, para,...] } }
         """
         students = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'paradata': []} for s in students}
@@ -309,17 +309,18 @@ class Paradata(models.Model):
             entry['paradata'].append(p)
         # Add a percent_time field to each paradata.
         # This is the fraction of the largest total # of hours for any student.
-        max_hours = max([e['hours'] for e in map.values()])
-        for s, entry in map.items():
-            for p in entry['paradata']:
-                if p.total_time:
-                    p.hours = p.total_time/one_hour
-                    p.percent_time = round(100*(p.total_time/one_hour)/max_hours)
-                else:
-                    p.hours = 0
-                    p.percent_time = 0
-            # Sort paradata entries by time
-            entry['paradata'].sort(reverse=True, key=lambda p: p.hours)
+        if map:
+            max_hours = max([e['hours'] for e in map.values()])
+            for s, entry in map.items():
+                for p in entry['paradata']:
+                    if p.total_time:
+                        p.hours = p.total_time/one_hour
+                        p.percent_time = round(100*(p.total_time/one_hour)/max_hours)
+                    else:
+                        p.hours = 0
+                        p.percent_time = 0
+                # Sort paradata entries by time
+                entry['paradata'].sort(reverse=True, key=lambda p: p.hours)
         logger.debug('Final map: %s', map)
         return map
 
