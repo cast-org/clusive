@@ -161,6 +161,11 @@ $btn-react-active-bg:                   #636b82;
 $btn-react-active-color:                #fff;
 $btn-react-active-border-color:         #636b82;
 
+// Badges
+$badge-count-bg:                        transparent;
+$badge-count-color:                     #eceff5;
+$badge-count-border-color:              #636b82;
+
 // Skiplink
 $skiplink-bg:                           #6268ad;
 $skiplink-color:                        #fbfbfb;
@@ -527,3 +532,10 @@ $react-wedge-10:                        #f55423;
 $react-wedge-11:                        #ff3500;
 $react-box-line:                        #9da4b1;
 $react-box-icon:                        #9da4b1;
+
+// Reading time activity chart
+$readtime-legend-label-color:           #eceff5;
+$readtime-mark-color:                   #afc5ff;
+$readtime-bar-bg:                       #636b82;
+$readtime-bar-active-bg:                #ff554d;
+$readtime-bar-striped-bg:               $box-bg;

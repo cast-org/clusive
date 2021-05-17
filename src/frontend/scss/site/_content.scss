@@ -402,3 +402,25 @@ h2,
         order: -1;
     }
 }
+
+// Sorting indicators
+.sort-up {
+    white-space: nowrap;
+
+    &::after {
+        @extend %caret-after;
+        @include caret-up($sort-border-width);
+        margin-left: .25rem;
+        color: var(--CT_bodyColor);
+    }
+}
+.sort-down {
+    white-space: nowrap;
+
+    &::after {
+        @extend %caret-after;
+        @include caret-down($sort-border-width);
+        margin-left: .25rem;
+        color: var(--CT_bodyColor);
+    }
+}

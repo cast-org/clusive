@@ -4,7 +4,7 @@
     {% for s in book.subjects.all %}
         <a href="{% search_args query s %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
     {% endfor %}
-    <span class="badge badge-tag link-above" tabindex="0" data-cfw="tooltip"
+    <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"
           title="{{book.word_count}} word{{book.word_count|pluralize}}, {{book.picture_count}} picture{{book.picture_count|pluralize}}">
         <span class="badge-item">
             <span class="icon-tag-word" aria-hidden="true"></span>
