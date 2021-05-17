@@ -1,5 +1,5 @@
 {% extends "shared/base.html" %}
-{% load static %}
+{% load static socialaccount %}
 
 {% block bodyClass %}home sidebar-no-start sidebar-no-end{% endblock %}
 {% block title %}Welcome to Clusive{% endblock %}
@@ -20,16 +20,14 @@
 <main id="content" tabindex="-1">
 
     <h1>Welcome to Clusive</h1>
-    <p>Clusive is a flexible, customizable learning environment that adapts to you. Clusive is part of the <a href="https://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>.</p>
+    <p>Clusive<sup>&trade;</sup> is a flexible, customizable learning environment that adapts to you. Clusive is part of the <a href="https://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>.</p>
 
     <div class="row">
         <div class="col-sm-6 col-lg-4">
             <div class="card card-login">
                 <div class="card-body login-section">
-                    <h2 class="mb-1">Log in to Clusive<sup>&trade;</sup></h2>
-
+                    <h2 class="mb-1">Log in to Clusive</h2>
                     <div class="socialaccount_ballot">
-                        {% load socialaccount %}
                         {% get_providers as socialaccount_providers %}
                         <ul class="list-unstyled text-center mb-0_5">
                             {% for provider in socialaccount_providers %}
@@ -42,6 +40,13 @@
                             <li>
                             {% endfor %}
                         </ul>
+                        {% if messages %}
+                        <div class="errorlist">
+                            {% for message in messages %}
+                            <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="rule-text">or</div>
