@@ -55,6 +55,7 @@
                     <div class="errorlist">
                         You need to validate your email address before you can log in.
                         Please check your email for the link.
+                        <p><a href="{% url 'validate_resend' user_id=user_id %}" style="color: inherit">Resend email</a></p>
                     </div>
                     {% elif form.errors %}
                     <div class="errorlist">

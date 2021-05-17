@@ -44,10 +44,17 @@ class LoginView(auth_views.LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if context.get('form').errors:
-            for err in context.get('form').errors.as_data().get('__all__'):
+        form = context.get('form')
+        if form.errors:
+            for err in form.errors.as_data().get('__all__'):
                 if err.code == 'email_validate':
                     context['email_validate'] = True
+                    username = form.cleaned_data['username']
+                    try:
+                        user = User.objects.get_by_natural_key(username=username)
+                        context['user_id'] = user.id
+                    except User.DoesNotExist:
+                        logger.error('Email not validated error signalled when account does not exist')
         return context
 
 
