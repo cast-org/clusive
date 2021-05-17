@@ -1,0 +1,59 @@
+<div class="col">
+    <div class="box">
+        <div class="row gx-1">
+            <div class="col">
+                <h4 class="h2 mb-0">Active reading time</h4>
+            </div>
+            <div class="col-12 col-md-auto">
+                <section aria-label="Legend">
+                    <span class="readtime-legend-mark">
+                        <span class="readtime-mark-shared"></span>
+                    </span>
+                    <span class="readtime-legend-label">Shared</span>
+                </section>
+            </div>
+            <div class="col-12 col-md-auto">
+                <span class="text-muted">View:</span>
+                <ul class="list list-horizontal list-divided readtime-list-view">
+                    <li class="list-item"><a href="#">Past week</a></li>
+                    <li class="list-item"><a href="#">Month</a></li>
+                    <li class="list-item"><span class="active" aria-current="true">Overall</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="box-divider"></div>
+
+        <div class="table-scroll readtime-table-scroll">
+            <table class="table readtime-table">
+                <thead>
+                <tr>
+                    <th>Student</th>
+                    <th><span class="sr-only">Reading time for books</span></th>
+                    <th>Hours</th>
+                    <th><span class="sr-only">Number of </span>Books<span class="sr-only"> read></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for info in reading_data %}
+                <tr>
+                    <td>{{ info.clusive_user.user.first_name }}</td>
+                    <td>
+                        <div class="readtime-progress">
+                            {% for p in info.paradata %}
+                            <div class="readtime-bar" style="width:{{p.percent_time}}%;"
+                                 tabindex="0" data-cfw="tooltip" title="{{ p.book.title }}, {{ p.hours|floatformat:1}} hours">
+                                <span class="readtime-mark-shared"></span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>{{ info.hours|floatformat:1 }}</td>
+                    <td>{{ info.book_count }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

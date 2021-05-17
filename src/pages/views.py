@@ -5,18 +5,57 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import TemplateView, RedirectView
+from django.views.generic.base import ContextMixin
 
 from eventlog.models import Event
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
-from roster.models import ClusiveUser
+from roster.models import ClusiveUser, Period, Roles
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
 
-class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
+class PeriodChoiceMixin(ContextMixin):
+    """
+    Add this to Views that allow users to select one of their Periods to be active.
+    Sets context variables "periods" (a list) and current_period (the selected one).
+    If a kwarg called "period_id" is received, updates the current_period.
+    """
+    periods = None
+    current_period = None
+
+    def get(self, request, *args, **kwargs):
+        clusive_user = request.clusive_user
+        if self.periods is None:
+            self.periods = clusive_user.periods.all()
+        if kwargs.get('period_id'):
+            # User is setting a new period
+            self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
+            if self.current_period not in self.periods:
+                self.handle_no_permission()   # attempted to access a Period the user is not in
+        if self.current_period is None:
+            # Set user's default Period
+            if clusive_user.current_period:
+                self.current_period = clusive_user.current_period
+            elif self.periods:
+                self.current_period = self.periods[0]
+        if self.current_period != clusive_user.current_period and self.current_period != None:
+            # Update user's default period to current
+            clusive_user.current_period = self.current_period
+            clusive_user.save()
+        result = super().get(request, *args, **kwargs)
+        return result
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['periods'] = self.periods
+        context['current_period'] = self.current_period
+        return context
+
+
+class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateView):
     template_name='pages/dashboard.html'
 
     def get(self, request, *args, **kwargs):
@@ -38,7 +77,16 @@ class DashboardView(LoginRequiredMixin, EventMixin, TemplateView):
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
         data['query'] = None
+        if self.current_period != None:
+            data['reading_data'] = self.make_student_info_list()
         return data
+
+    def make_student_info_list(self):
+        map = Paradata.reading_data_for_period(self.current_period)
+        infos = list(map.values())
+        # TODO handle other sort options
+        infos.sort(key=lambda item: item['clusive_user'].user.first_name)
+        return infos
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'

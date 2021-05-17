@@ -3,14 +3,14 @@ import logging
 import os
 import textwrap
 from base64 import b64encode
-from datetime import timedelta
+from datetime import timedelta, date
 from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
 from django.db import models
 from django.utils import timezone
 
-from roster.models import ClusiveUser, Period
+from roster.models import ClusiveUser, Period, Roles
 
 logger = logging.getLogger(__name__)
 
@@ -236,6 +236,7 @@ class Paradata(models.Model):
 
     @classmethod
     def record_view(cls, book, version_number, clusive_user):
+        """Update Paradata and ParadataDaily records to a view for the given book, user, version, and time."""
         bv = BookVersion.objects.get(book=book, sortOrder=version_number)
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
         para.view_count += 1
@@ -245,6 +246,11 @@ class Paradata(models.Model):
             para.last_location = None
             para.last_version = bv
         para.save()
+
+        parad, created = ParadataDaily.objects.get_or_create(book=book, user=clusive_user, date=date.today())
+        parad.view_count += 1
+        parad.save()
+
         return para
 
     @classmethod
@@ -262,12 +268,20 @@ class Paradata(models.Model):
 
     @classmethod
     def record_additional_time(cls, book_id, user, time):
+        """Update Paradata and ParadataDaily tables with the time increment specified"""
         b = Book.objects.get(pk=book_id)
         para, created = cls.objects.get_or_create(book=b, user=user)
         if para.total_time is None:
             para.total_time = timedelta()
         para.total_time += time
         para.save()
+
+        today = date.today()
+        parad, created = ParadataDaily.objects.get_or_create(book=b, user=user, date=today)
+        if parad.total_time is None:
+            parad.total_time = timedelta()
+        parad.total_time += time
+        parad.save()
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
@@ -277,10 +291,54 @@ class Paradata(models.Model):
         """Return a QuerySet for Paradatas for a user with most recent last_view time"""
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
+    @classmethod
+    def reading_data_for_period(cls, period: Period):
+        """
+        Calculate time, number of books, and individual book stats for each user in the given Period.
+        :param period:
+        :return: a map {clusive_user: {clusive_user: u, book_count: n, total_time: t, paradata: [para, para] } }
+        """
+        students = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+        map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'paradata': []} for s in students}
+        one_hour: timedelta = timedelta(hours=1)
+        for p in Paradata.objects.filter(user__in=students):
+            entry = map[p.user]
+            entry['book_count'] += 1
+            if p.total_time:
+                entry['hours'] += p.total_time/one_hour
+            entry['paradata'].append(p)
+        # Add a percent_time field to each paradata.
+        # This is the fraction of the largest total # of hours for any student.
+        max_hours = max([e['hours'] for e in map.values()])
+        for s, entry in map.items():
+            for p in entry['paradata']:
+                if p.total_time:
+                    p.hours = p.total_time/one_hour
+                    p.percent_time = round(100*(p.total_time/one_hour)/max_hours)
+                else:
+                    p.hours = 0
+                    p.percent_time = 0
+            # Sort paradata entries by time
+            entry['paradata'].sort(reverse=True, key=lambda p: p.hours)
+        logger.debug('Final map: %s', map)
+        return map
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['book', 'user'], name='unique_book_user')
         ]
+
+
+class ParadataDaily(models.Model):
+    """
+    Interaction of a User and a Book for a particular date. Used for efficiently constructing dashboard views.
+    """
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
+    user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    date = models.DateField(default=date.today, db_index=True)
+
+    view_count = models.SmallIntegerField(default=0, verbose_name='View count on date')
+    total_time = models.DurationField(null=True, verbose_name='Reading time on date')
 
 
 class Annotation(models.Model):
