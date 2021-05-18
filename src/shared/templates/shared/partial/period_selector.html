@@ -3,7 +3,7 @@
         {{ current_period.name }}
         <span class="caret" aria-hidden="true"></span>
     </button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu dropreverse">
         {% for p in periods %}
         <li>
             <a href="{% url target period_id=p.id %}"

@@ -299,6 +299,7 @@ class Paradata(models.Model):
         :return: a map {clusive_user: {clusive_user: u, book_count: n, total_time: t, paradata: [para, para,...] } }
         """
         students = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+        assigned_books = [a.book for a in period.bookassignment_set.all()]
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'paradata': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
         for p in Paradata.objects.filter(user__in=students):
@@ -306,6 +307,7 @@ class Paradata(models.Model):
             entry['book_count'] += 1
             if p.total_time:
                 entry['hours'] += p.total_time/one_hour
+            p.is_assigned = p.book in assigned_books
             entry['paradata'].append(p)
         # Add a percent_time field to each paradata.
         # This is the fraction of the largest total # of hours for any student.

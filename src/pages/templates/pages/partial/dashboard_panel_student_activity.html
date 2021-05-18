@@ -28,21 +28,22 @@
                 <thead>
                 <tr>
                     <th>Student</th>
-                    <th><span class="sr-only">Reading time for books</span></th>
+                    <th class="d-xs-down-none"><span class="sr-only">Reading time for books</span></th>
                     <th>Hours</th>
-                    <th><span class="sr-only">Number of </span>Books<span class="sr-only"> read></span></th>
+                    <th><span class="sr-only">Number of </span>Books<span class="sr-only"> read</span></th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for info in reading_data %}
                 <tr>
                     <td>{{ info.clusive_user.user.first_name }}</td>
-                    <td>
+                    <td class="d-xs-down-none">
                         <div class="readtime-progress">
                             {% for p in info.paradata %}
-                            <div class="readtime-bar" style="width:{{p.percent_time}}%;"
-                                 tabindex="0" data-cfw="tooltip" title="{{ p.book.title }}, {{ p.hours|floatformat:1}} hours">
-                                <span class="readtime-mark-shared"></span>
+                            <div class="readtime-bar" style="width:{{p.percent_time}}%;" tabindex="0" data-cfw="tooltip"
+                                 data-clusive-book-id="{{ p.book.id }}"
+                                 title="{{ p.book.title }}, {{ p.hours|floatformat:1}} hours">
+                                {% if p.is_assigned %}<span class="readtime-mark-shared"></span>{% endif %}
                             </div>
                             {% endfor %}
                         </div>
@@ -54,6 +55,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
+

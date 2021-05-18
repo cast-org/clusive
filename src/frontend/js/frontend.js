@@ -639,6 +639,16 @@ function libraryStyleSortLinkSetup() {
     });
 }
 
+// Clicking one of the bars in the dashboard reading-time visualization highlights other bars for the same book.
+function dashboardSetup() {
+    'use strict';
+
+    $('.readtime-bar').click(function() {
+        var id = $(this).data('clusive-book-id');
+        $('.readtime-bar.active').removeClass('active');
+        $('[data-clusive-book-id="' + id + '"]').addClass('active');
+    });
+}
 
 $(window).ready(function() {
     'use strict';
@@ -658,6 +668,7 @@ $(window).ready(function() {
     filterAllUpdate();
     libraryPageLinkSetup();
     libraryStyleSortLinkSetup();
+    dashboardSetup();
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
