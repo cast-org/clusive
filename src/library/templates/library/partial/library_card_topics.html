@@ -1,4 +1,4 @@
-{% load library %}
+{% load library humanize %}
 {% if show_topics %}
 <div class="col card-library-tag">
     {% for s in book.subjects.all %}
@@ -8,11 +8,11 @@
           title="{{book.word_count}} word{{book.word_count|pluralize}}, {{book.picture_count}} picture{{book.picture_count|pluralize}}">
         <span class="badge-item">
             <span class="icon-tag-word" aria-hidden="true"></span>
-            {{ book.word_count }} <span class="sr-only">word{{book.word_count|pluralize}}</span>
+            {{ book.word_count|intcomma }} <span class="sr-only">word{{book.word_count|pluralize}}</span>
         </span>
         <span class="badge-item">
             <span class="icon-tag-img" aria-hidden="true"></span>
-            {{ book.picture_count }} <span class="sr-only">picture{{book.picture_count|pluralize}}</span>
+            {{ book.picture_count|intcomma }} <span class="sr-only">picture{{book.picture_count|pluralize}}</span>
         </span>
     </span>
 </div>
