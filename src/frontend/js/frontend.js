@@ -509,6 +509,14 @@ function showTooltip(name) {
     }
 }
 
+// Determine if page has bricks layout
+function hasBricksLayout() {
+    'use strict';
+
+    var regex = new RegExp('/bricks/');
+    return regex.test(window.location.pathname);
+}
+
 // Determine if this page has any filtering active. It does if there is an unchecked "All" checkbox.
 function hasActiveFilters() {
     'use strict';
@@ -557,6 +565,9 @@ function updateLibraryData(page) {
 
     return $.get(uri).done(function(data) {
         $('#libraryData').html(data);
+        if (hasBricksLayout()) {
+            libraryMasonryEnable();
+        }
     });
 }
 
@@ -596,6 +607,9 @@ function filterAllUpdate() {
         }
         $('#clearFilters').toggle(hasActiveFilters());
         updateLibraryData();
+        if (hasBricksLayout()) {
+            libraryMasonryEnable();
+        }
     });
 }
 
