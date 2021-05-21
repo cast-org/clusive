@@ -204,10 +204,8 @@ function trackReadingLocation(book, version, locator) {
         var storedDate = store.getItem(LOC_DATE_KEY);
         // Send to server if we haven't already sent one for this book, or last did so more than a minute ago
         if (!storedDate || storedDate < Date.now() - LOC_UPDATE_INTERVAL) {
-            return sendLocationToServer(book, version, locString)
-                .done(function() {
-                    store.setItem(LOC_DATE_KEY, Date.now());
-                });
+            store.setItem(LOC_DATE_KEY, Date.now());
+            return sendLocationToServer(book, version, locString);
         }
     }
     // eslint-disable-next-line compat/compat
