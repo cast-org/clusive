@@ -8,6 +8,8 @@ from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
 from django.db import models
+from django.db.models import Sum, Q
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles
@@ -247,7 +249,7 @@ class Paradata(models.Model):
             para.last_version = bv
         para.save()
 
-        parad, created = ParadataDaily.objects.get_or_create(book=book, user=clusive_user, date=date.today())
+        parad, created = ParadataDaily.objects.get_or_create(paradata=para, date=date.today())
         parad.view_count += 1
         parad.save()
 
@@ -277,7 +279,7 @@ class Paradata(models.Model):
         para.save()
 
         today = date.today()
-        parad, created = ParadataDaily.objects.get_or_create(book=b, user=user, date=today)
+        parad, created = ParadataDaily.objects.get_or_create(paradata=para, date=today)
         if parad.total_time is None:
             parad.total_time = timedelta()
         parad.total_time += time
@@ -292,21 +294,40 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def reading_data_for_period(cls, period: Period):
+    def reading_data_for_period(cls, period: Period, days=0):
         """
         Calculate time, number of books, and individual book stats for each user in the given Period.
-        :param period:
-        :return: a map {clusive_user: {clusive_user: u, book_count: n, total_time: t, paradata: [para, para,...] } }
+        :param period: group of students to consider
+        :param days: number of days before and including today. If 0 or omitted, include all time.
+        :return: a list of {clusive_user: u, book_count: n, total_time: t, paradata: [para, para,...] }
         """
         students = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
         assigned_books = [a.book for a in period.bookassignment_set.all()]
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'paradata': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
-        for p in Paradata.objects.filter(user__in=students):
+        # Query for all Paradata records showing book views for these students
+        paradatas = Paradata.objects.filter(user__in=students)
+        # If we're date limited, annotate this query with information from ParadataDaily
+        if days:
+            start_date = date.today()-timedelta(days=days)
+            logger.debug('Query dailies since %s', start_date)
+            paradatas = paradatas.annotate(recent_time=Sum('paradatadaily__total_time',
+                                                        filter=Q(paradatadaily__date__gt=start_date)))
+        for p in paradatas:
+            # Skip if time is zero.
+            if days:
+                if not p.recent_time:
+                    continue
+            else:
+                if not p.total_time:
+                    continue
+                p.recent_time = p.total_time
+            logger.debug('%s recent time %s', p, p.recent_time)
+            # add to entry map
             entry = map[p.user]
             entry['book_count'] += 1
-            if p.total_time:
-                entry['hours'] += p.total_time/one_hour
+            entry['hours'] += p.recent_time/one_hour
+            p.hours = p.recent_time/one_hour
             p.is_assigned = p.book in assigned_books
             entry['paradata'].append(p)
         # Add a percent_time field to each paradata.
@@ -315,16 +336,14 @@ class Paradata(models.Model):
             max_hours = max([e['hours'] for e in map.values()])
             for s, entry in map.items():
                 for p in entry['paradata']:
-                    if p.total_time:
-                        p.hours = p.total_time/one_hour
-                        p.percent_time = round(100*(p.total_time/one_hour)/max_hours)
+                    if p.hours:
+                        p.percent_time = round(100*p.hours/max_hours)
                     else:
-                        p.hours = 0
                         p.percent_time = 0
                 # Sort paradata entries by time
                 entry['paradata'].sort(reverse=True, key=lambda p: p.hours)
         logger.debug('Final map: %s', map)
-        return map
+        return list(map.values())
 
     class Meta:
         constraints = [
@@ -334,10 +353,9 @@ class Paradata(models.Model):
 
 class ParadataDaily(models.Model):
     """
-    Interaction of a User and a Book for a particular date. Used for efficiently constructing dashboard views.
+    Slice of Paradata for a particular date. Used for efficiently constructing dashboard views.
     """
-    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
-    user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    paradata = models.ForeignKey(to=Paradata, on_delete=models.CASCADE, db_index=True)
     date = models.DateField(default=date.today, db_index=True)
 
     view_count = models.SmallIntegerField(default=0, verbose_name='View count on date')

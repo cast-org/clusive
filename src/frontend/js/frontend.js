@@ -643,10 +643,26 @@ function libraryStyleSortLinkSetup() {
 function dashboardSetup() {
     'use strict';
 
-    $('.readtime-bar').click(function() {
+    var $body = $('body');
+    $body.on('focus', '.readtime-bar', function() {
         var id = $(this).data('clusive-book-id');
         $('.readtime-bar.active').removeClass('active');
         $('[data-clusive-book-id="' + id + '"]').addClass('active');
+    });
+    $body.on('blur', '.readtime-bar', function() {
+        $('.readtime-bar.active').removeClass('active');
+    });
+
+    $body.on('click', 'a.activity-panel-days', function(e) {
+        e.preventDefault();
+        $.get('/dashboard-activity-panel/' + $(this).data('days'))
+            .done(function(result) {
+                $('#StudentActivityPanel').replaceWith(result);
+                $('#StudentActivityPanel').CFW_Init();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
     });
 }
 

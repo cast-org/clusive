@@ -59,6 +59,7 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
     template_name='pages/dashboard.html'
 
     def get(self, request, *args, **kwargs):
+        # Data for "recent reads" panel
         self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
         if not self.last_reads or len(self.last_reads) < 3:
             # Add featured books to the list
@@ -77,19 +78,37 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
         data['query'] = None
+        data['days'] = 0
         if self.current_period != None:
             data['reading_data'] = self.make_student_info_list()
         return data
 
     def make_student_info_list(self):
-        map = Paradata.reading_data_for_period(self.current_period)
-        infos = list(map.values())
+        infos = Paradata.reading_data_for_period(self.current_period, days=0)
         # TODO handle other sort options
         infos.sort(key=lambda item: item['clusive_user'].user.first_name)
         return infos
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
+
+
+class DashboardActivityPanelView(TemplateView):
+    template_name = 'pages/partial/dashboard_panel_student_activity.html'
+
+    def get(self, request, *args, **kwargs):
+        self.current_period = request.clusive_user.current_period
+        self.days = kwargs['days']
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['days'] = self.days
+        # TODO: fix this inelegantly repeated code from above
+        infos = Paradata.reading_data_for_period(self.current_period, days=self.days)
+        infos.sort(key=lambda item: item['clusive_user'].user.first_name)
+        data['reading_data'] = infos
+        return data
 
 
 class ReaderIndexView(LoginRequiredMixin,RedirectView):
