@@ -86,7 +86,7 @@
     clusive.djangoMessageQueue.getFlushInterval = function (defaultInterval, flushIntervalOverrideKey) {        
         var flushIntervalOverrideValue = window.localStorage.getItem(flushIntervalOverrideKey);        
         if(flushIntervalOverrideValue) {
-            console.log("flushIntervalOverrideValue found", flushIntervalOverrideValue);
+            console.debug("flushIntervalOverrideValue found", flushIntervalOverrideValue);
             return flushIntervalOverrideValue;
         } else {
             return defaultInterval;
@@ -101,9 +101,10 @@
         window.localStorage.setItem(lastQueueFlushInfoKey, JSON.stringify(flushInfo));
     }
 
-    clusive.djangoMessageQueue.logoutFlush = function (that) {                   
-        if(that.isQueueEmpty()) {
-            // Mark flush for this queue complete on the logoutFlushManger
+    clusive.djangoMessageQueue.logoutFlush = function (that) {      
+        console.debug("calling logout flush for djangoMessageQueue", that);           
+        if(that.isQueueEmpty()) {            
+            // Mark flush for this queue complete on the logoutFlushManager
             that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
             // Fire that the logout flush for this queue is complete
             that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
@@ -127,19 +128,24 @@
     }
 
     clusive.djangoMessageQueue.attachLogoutEvents = function(that) {
+        
+        console.debug("preparing attachment of logout events for djangoMessageQueue: ", that);
         var logoutLinkSelector = that.options.config.logoutLinkSelector;
-
-        $(logoutLinkSelector).click(
-            function(e) {
-                $(logoutLinkSelector).text('Saving changes...').fadeIn();
-                e.preventDefault();
-                PageTiming.reportEndTime();
-                that.logoutFlush();
-            }
-        );
+        $(document).ready(function () {
+            console.debug("document ready, attaching logout event for djangoMessageQueue with key " + that.options.config.localStorageKey + "to log out link: ", $(logoutLinkSelector));
+            $(logoutLinkSelector).click(
+                function(e) {
+                    $(logoutLinkSelector).text('Saving changes...').fadeIn();
+                    e.preventDefault();
+                    PageTiming.reportEndTime();
+                    that.logoutFlush();
+                }
+            );
+        });
     };
 
     clusive.djangoMessageQueue.doLogout = function (that, numberOfQueues, completedFlushes) {
+        console.debug("doLogout attempt, numberOfQueues/completedFlushes", numberOfQueues, completedFlushes);
         if (completedFlushes >= numberOfQueues) {
             var logoutLinkSelector = that.options.config.logoutLinkSelector;
             $(logoutLinkSelector).text('Logging out').fadeIn();
