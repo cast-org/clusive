@@ -3,20 +3,22 @@
         {{ current_period.name }}
         <span class="caret" aria-hidden="true"></span>
     </button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu dropreverse">
         {% for p in periods %}
         <li>
-            <a href="{% url 'manage' period_id=p.id %}"
+            <a href="{% url target period_id=p.id %}"
                {% if p == current_period %}class="active" aria-current="true"{% endif %}>
                 {{ p.name }}
             </a>
         </li>
         {% endfor %}
+        {% if add_link %}
         <li class="dropdown-divider"></li>
         <li>
             <a href="{% url 'manage_create_period' %}">
               + Add Class
             </a>
         </li>
+        {% endif %}
     </ul>
 </div>

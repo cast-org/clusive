@@ -653,6 +653,34 @@ function libraryStyleSortLinkSetup() {
     });
 }
 
+// Clicking one of the bars in the dashboard reading-time visualization highlights other bars for the same book.
+function dashboardSetup() {
+    'use strict';
+
+    var $body = $('body');
+    $body.on('focus', '.readtime-bar', function() {
+        var id = $(this).data('clusive-book-id');
+        if (id) {
+            $('.readtime-bar.active').removeClass('active');
+            $('[data-clusive-book-id="' + id + '"]').addClass('active');
+        }
+    });
+    $body.on('blur', '.readtime-bar', function() {
+        $('.readtime-bar.active').removeClass('active');
+    });
+
+    $body.on('click', 'a.activity-panel-days', function(e) {
+        e.preventDefault();
+        $.get('/dashboard-activity-panel/' + $(this).data('days'))
+            .done(function(result) {
+                $('#StudentActivityPanel').replaceWith(result);
+                $('#StudentActivityPanel').CFW_Init();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
+    });
+}
 
 $(window).ready(function() {
     'use strict';
@@ -672,6 +700,7 @@ $(window).ready(function() {
     filterAllUpdate();
     libraryPageLinkSetup();
     libraryStyleSortLinkSetup();
+    dashboardSetup();
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
