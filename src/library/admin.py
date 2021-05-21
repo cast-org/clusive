@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 from glossary.util import base_form
-from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily
 from library.parsing import TextExtractor, scan_all_books
 
 logger = logging.getLogger(__name__)
@@ -63,6 +63,12 @@ class ParadataAdmin(admin.ModelAdmin):
     list_display = ('book', 'user', 'view_count', 'last_version', 'last_location')
     sortable_by = ('book', 'user', 'view_count')
     list_filter = ('book', 'user' )
+
+
+@admin.register(ParadataDaily)
+class ParadataDailyAdmin(admin.ModelAdmin):
+    list_display = ('paradata', 'date', 'view_count', 'total_time')
+    sortable_by = ('paradata__book', 'paradata__user', 'date')
 
 
 @admin.register(Annotation)
