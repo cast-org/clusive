@@ -19,21 +19,24 @@
                         {% if days == 7 %}
                         <span class="active" aria-current="true">Past week</span>
                         {% else %}
-                        <a href="#" class="activity-panel-days" data-days="7">Past week</a>
+                        <a href="#" class="activity-panel-days" data-days="7"
+                           data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="7">Past week</a>
                         {% endif %}
                     </li>
                     <li class="list-item">
                         {% if days == 30 %}
                         <span class="active" aria-current="true">Month</span>
                         {% else %}
-                        <a href="#" class="activity-panel-days" data-days="30">Month</a>
+                        <a href="#" class="activity-panel-days" data-days="30"
+                           data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="30">Month</a>
                         {% endif %}
                     </li>
                     <li class="list-item">
                         {% if days == 0 %}
                         <span class="active" aria-current="true">Overall</span>
                         {% else %}
-                        <a href="#" class="activity-panel-days" data-days="0">Overall</a>
+                        <a href="#" class="activity-panel-days" data-days="0"
+                           data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="all">Overall</a>
                         {% endif %}
                     </li>
                 </ul>

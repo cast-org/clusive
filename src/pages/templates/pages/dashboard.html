@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    {% if request.clusive_user.role == 'TE' or request.clusive_user.role == 'PA' %}
+    {% if reading_data %}
     <div class="row">
         {% include "pages/partial/dashboard_panel_student_activity.html" %}
     </div>

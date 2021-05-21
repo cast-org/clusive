@@ -59,6 +59,7 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
     template_name='pages/dashboard.html'
 
     def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
         # Data for "recent reads" panel
         self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
         if not self.last_reads or len(self.last_reads) < 3:
@@ -78,9 +79,10 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
         data['query'] = None
-        data['days'] = 0
-        if self.current_period != None:
-            data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=0)
+        if self.clusive_user.can_manage_periods:
+            data['days'] = 0
+            if self.current_period != None:
+                data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=0)
         return data
 
     def configure_event(self, event: Event):
