@@ -9,7 +9,6 @@ from json import JSONDecodeError
 from django.core.files.storage import default_storage
 from django.db import models
 from django.db.models import Sum, Q
-from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles
@@ -299,11 +298,11 @@ class Paradata(models.Model):
         Calculate time, number of books, and individual book stats for each user in the given Period.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
-        :return: a list of {clusive_user: u, book_count: n, total_time: t, paradata: [para, para,...] }
+        :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
-        students = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+        students = period.users.filter(role=Roles.STUDENT)
         assigned_books = [a.book for a in period.bookassignment_set.all()]
-        map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'paradata': []} for s in students}
+        map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'books': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
         # Query for all Paradata records showing book views for these students
         paradatas = Paradata.objects.filter(user__in=students)
@@ -322,28 +321,49 @@ class Paradata(models.Model):
                 if not p.total_time:
                     continue
                 p.recent_time = p.total_time
-            logger.debug('%s recent time %s', p, p.recent_time)
             # add to entry map
             entry = map[p.user]
             entry['book_count'] += 1
             entry['hours'] += p.recent_time/one_hour
-            p.hours = p.recent_time/one_hour
-            p.is_assigned = p.book in assigned_books
-            entry['paradata'].append(p)
-        # Add a percent_time field to each paradata.
+            entry['books'].append({
+                'book_id': p.book.id,
+                'title': p.book.title,
+                'hours': p.recent_time/one_hour,
+                'is_assigned': p.book in assigned_books,
+            })
+        # Add a percent_time field to each item.
         # This is the fraction of the largest total # of hours for any student.
         if map:
             max_hours = max([e['hours'] for e in map.values()])
             for s, entry in map.items():
-                for p in entry['paradata']:
-                    if p.hours:
-                        p.percent_time = round(100*p.hours/max_hours)
+                for p in entry['books']:
+                    if p['hours']:
+                        p['percent_time'] = round(100*p['hours']/max_hours)
                     else:
-                        p.percent_time = 0
-                # Sort paradata entries by time
-                entry['paradata'].sort(reverse=True, key=lambda p: p.hours)
-        logger.debug('Final map: %s', map)
-        return list(map.values())
+                        p['percent_time'] = 0
+                # Sort book entries by time
+                entry['books'].sort(reverse=True, key=lambda p: p['hours'])
+                # Combine low-time items into an "other" item.
+                # First item is never considered "other".
+                if len(entry['books']) > 2:
+                    too_small_items = list(filter(lambda p: p['percent_time']<10, entry['books'][1:]))
+                    if len(too_small_items) > 1:
+                        # Remove the too-small items from the main list
+                        del entry['books'][-len(too_small_items):]
+                        # Make an "other" item.
+                        other_hours = sum(item['hours'] for item in too_small_items)
+                        entry['books'].append({
+                            'book_id': 0,
+                            'title': '%d other books' % (len(too_small_items)),
+                            'hours': other_hours,
+                            'percent_time': round(100*other_hours/max_hours),
+                            'is_assigned': False,
+                            'is_other': True,
+                        })
+        result = list(map.values())
+        # TODO handle other sort options
+        result.sort(key=lambda item: item['clusive_user'].user.first_name)
+        return result
 
     class Meta:
         constraints = [

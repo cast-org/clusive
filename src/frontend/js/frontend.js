@@ -646,8 +646,10 @@ function dashboardSetup() {
     var $body = $('body');
     $body.on('focus', '.readtime-bar', function() {
         var id = $(this).data('clusive-book-id');
-        $('.readtime-bar.active').removeClass('active');
-        $('[data-clusive-book-id="' + id + '"]').addClass('active');
+        if (id) {
+            $('.readtime-bar.active').removeClass('active');
+            $('[data-clusive-book-id="' + id + '"]').addClass('active');
+        }
     });
     $body.on('blur', '.readtime-bar', function() {
         $('.readtime-bar.active').removeClass('active');

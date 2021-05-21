@@ -80,14 +80,8 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
         data['query'] = None
         data['days'] = 0
         if self.current_period != None:
-            data['reading_data'] = self.make_student_info_list()
+            data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=0)
         return data
-
-    def make_student_info_list(self):
-        infos = Paradata.reading_data_for_period(self.current_period, days=0)
-        # TODO handle other sort options
-        infos.sort(key=lambda item: item['clusive_user'].user.first_name)
-        return infos
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
@@ -104,10 +98,7 @@ class DashboardActivityPanelView(TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['days'] = self.days
-        # TODO: fix this inelegantly repeated code from above
-        infos = Paradata.reading_data_for_period(self.current_period, days=self.days)
-        infos.sort(key=lambda item: item['clusive_user'].user.first_name)
-        data['reading_data'] = infos
+        data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=self.days)
         return data
 
 
