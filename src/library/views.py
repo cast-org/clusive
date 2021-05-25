@@ -423,7 +423,7 @@ class RemoveBookView(LoginRequiredMixin, View):
         if book.owner != request.clusive_user:
             raise PermissionDenied()
         book.delete()
-        return redirect('library', view='mine')
+        return redirect('library_style_redirect', view='mine')
 
 
 class RemoveBookConfirmView(LoginRequiredMixin, View):
