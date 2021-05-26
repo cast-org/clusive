@@ -13,9 +13,7 @@
 {% endif %}
 {% if why %}
 <div class="sidebar-support" role="region" aria-label="Support">
-    <button id="compButton" type="button" class="btn btn-nav btn-icon btn-thought" data-cfw="popover"
-            data-cfw-popover-target="#compPop" data-cfw-popover-viewport="viewport"
-            data-cfw-popover-container="body" data-cfw-popover-placement="top"
+    <button id="compButton" type="button" class="btn btn-nav btn-icon btn-thought"
             arial-label="Your thoughts" title="Your thoughts">
         <span class="icon-thought" aria-hidden="true"></span>
         <span class="sr-only">Your thoughts</span>
@@ -44,6 +42,20 @@
     </button>
     {% endif %}
 </div>
-{% endif %}
 
 {% include "shared/partial/popover_comp.html" %}
+
+<script>
+$('#compButton').CFW_Popover({
+    target: '#compPop',
+    placement: 'top',
+    drag: true,
+    viewport: 'viewport',
+    container: 'body',
+    popperConfig: {
+        positionFixed: true,
+        eventsEnabled: false
+    }
+});
+</script>
+{% endif %}

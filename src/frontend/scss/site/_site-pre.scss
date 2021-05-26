@@ -62,6 +62,7 @@ $enable-input-group-sizing:             false;
 $enable-jumbotron:                      false;
 $enable-list-bulleted:                  true;
 $enable-list-ordered:                   false;
+$enable-list-marker-inner:              false;
 $enable-list-group:                     false;
 $enable-list-item-colors:               false;
 $enable-media:                          true;
@@ -83,6 +84,8 @@ $enable-progress-striped:               false;
 $enable-progress-animated:              false;
 
 // Widgets
+$enable-modal-side-top:                 false;
+$enable-modal-side-bottom:              false;
 $enable-modal-fullscreen:               false;
 $enable-modal-fullscreen-responsive:    false;
 $enable-dropdown:                       true;
