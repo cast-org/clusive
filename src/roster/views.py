@@ -29,6 +29,7 @@ from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
+from roster.signals import user_registered
 
 logger = logging.getLogger(__name__)
 
@@ -119,6 +120,8 @@ class SignUpView(EventMixin, CreateView):
             # log them in.
             if isSSO:
                 login(self.request, user, 'allauth.account.auth_backends.AuthenticationBackend')
+                logger.debug('sending signal for new google user who has completed registration')
+                user_registered.send(self.__class__, clusive_user=clusive_user)
                 return HttpResponseRedirect(reverse('dashboard'))
             else:
                 send_validation_email(self.current_site, clusive_user)
@@ -191,6 +194,8 @@ class ValidateEmailView(View):
                     clusive_user.unconfirmed_email = False
                     clusive_user.save()
                     result = 'activated'
+                    logger.debug('sending signal for new user who has completed email validation')
+                    user_registered.send(self.__class__, clusive_user=clusive_user)
                 else:
                     logger.warning('Email validation check failed. User=%s; token=%s; result=%s',
                                 user, token, check_token)
