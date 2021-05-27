@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.urls import path
 
 from . import views
-from .models import Site, Period, ClusiveUser, Preference, PreferenceSet, UserStats
+from .models import Site, Period, ClusiveUser, Preference, PreferenceSet, UserStats, MailingListMember
 
 
 class ClusiveUserInline(admin.StackedInline):
@@ -64,3 +64,7 @@ class UserStatsAdmin(admin.ModelAdmin):
     model = UserStats
     list_display = ('user', 'reading_views')
     ordering = ('user',)
+
+@admin.register(MailingListMember)
+class MailingListMemberAdmin(admin.ModelAdmin):
+    model = MailingListMember
