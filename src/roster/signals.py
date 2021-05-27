@@ -1,13 +1,12 @@
 import logging
 
-from allauth.account.models import EmailAddress
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.signals import pre_social_login
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -16,8 +15,15 @@ from roster.models import UserStats, ClusiveUser
 
 logger = logging.getLogger(__name__)
 
-# TODO: add a new watcher for teachers, parents, or self registering students successfully validated
 
+# This signal is sent when a new user completes the registration/validation process.
+user_registered = Signal(providing_args=['clusive_user'])
+
+
+@receiver(user_registered)
+def new_registration_watcher(sender, clusive_user, **kwargs):
+    logger.debug('Noticed new registration from %s', clusive_user)
+    # TODO: Check whether user is self-created; if so, add to table of mailing-list users
 
 @receiver(post_save, sender=Event)
 def stats_event_watcher(sender, instance, **kwargs):
