@@ -50,11 +50,17 @@ $('#compButton').CFW_Popover({
     target: '#compPop',
     placement: 'top',
     drag: true,
-    viewport: 'viewport',
-    container: 'body',
     popperConfig: {
         positionFixed: true,
-        eventsEnabled: false
+        eventsEnabled: false,
+        modifiers: {
+            preventOverflow: {
+                boundariesElement: 'viewport'
+            },
+            computeStyle: {
+                gpuAcceleration: false
+            }
+        }
     }
 });
 </script>
