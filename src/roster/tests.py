@@ -1,20 +1,17 @@
 from contextlib import contextmanager
 from unittest import mock
 
-from django.test import TestCase
-from django.contrib.auth.models import User
-
-from eventlog.models import Event
-from eventlog.signals import preference_changed
-from .models import Site, Period, ClusiveUser, Roles, Preference
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
+from eventlog.signals import preference_changed
+from .models import Preference, MailingListMember
 from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
-
 # TODO: make sure all tests have helpful messages
+from .signals import user_registered
+
 
 def set_up_test_sites():
     Site.objects.create(name="CAST Collegiate", city="Wakefield", state_or_province="MA", country="USA").save()

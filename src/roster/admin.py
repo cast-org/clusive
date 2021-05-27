@@ -9,7 +9,7 @@ from .models import Site, Period, ClusiveUser, Preference, PreferenceSet, UserSt
 
 class ClusiveUserInline(admin.StackedInline):
     model = ClusiveUser
-    can_delete = False 
+    can_delete = False
     verbose_name = 'Clusive User Detail'
 
 
@@ -68,3 +68,5 @@ class UserStatsAdmin(admin.ModelAdmin):
 @admin.register(MailingListMember)
 class MailingListMemberAdmin(admin.ModelAdmin):
     model = MailingListMember
+    list_display = ('user', 'sync_date')
+

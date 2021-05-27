@@ -1,19 +1,19 @@
 import json
 import logging
-from datetime import timedelta, datetime
+from datetime import timedelta
 
+from allauth.account.signals import user_signed_up
+from allauth.socialaccount.models import SocialAccount
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from multiselectfield import MultiSelectField
-from pytz import country_timezones
-from allauth.account.signals import user_signed_up
-from allauth.socialaccount.models import SocialAccount
+from django.utils import timezone
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
-
-from django.conf import settings
+from multiselectfield import MultiSelectField
+from pytz import country_timezones
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ for tz in available_timezones:
 class Site(models.Model):
     name = models.CharField(max_length=100)
     anon_id = models.CharField(max_length=30, unique=True, null=True)
-        
+
     city = models.CharField(max_length=50, default="")
     state_or_province = models.CharField(max_length=50, default="")
     country = models.CharField(max_length=50, default="")
@@ -190,7 +190,7 @@ class ClusiveUser(models.Model):
         period = self.current_period or self.periods.first()
         if period:
             return period.site
-        # If the user can manage periods (Parent or Teacher) 
+        # If the user can manage periods (Parent or Teacher)
         # and doesn't currently have a Site, we create
         # a personal one for them at this point
         if self.can_manage_periods:
@@ -198,7 +198,7 @@ class ClusiveUser(models.Model):
             personal_site = Site(name=personal_site_name)
             personal_site.save()
             return personal_site
-        else: 
+        else:
             return None
 
     permission = models.CharField(
@@ -264,18 +264,18 @@ class ClusiveUser(models.Model):
         logger.info("trying to adopt preference set named %s for %s" % (prefset_name, self.user.username))
         try:
             prefs_set = PreferenceSet.objects.get(name=prefset_name)
-             
-            desired_prefs = json.loads(prefs_set.prefs_json)    
+
+            desired_prefs = json.loads(prefs_set.prefs_json)
 
             for pref_key in desired_prefs:
                 pref_val = desired_prefs[pref_key]
-                preference = self.get_preference(pref_key)               
-                if(preference.value != pref_val):                           
+                preference = self.get_preference(pref_key)
+                if(preference.value != pref_val):
                     preference.value = pref_val
                     preference.save()
 
         except PreferenceSet.DoesNotExist:
-            logger.error("preference set named %s not found", prefset_name)       
+            logger.error("preference set named %s not found", prefset_name)
 
     @classmethod
     def from_request(cls, request):
@@ -366,11 +366,11 @@ class ClusiveUser(models.Model):
     def __str__(self):
         return '%s' % (self.anon_id)
 
-# This is the current recommended way to ensure additional code is run after 
-# the initial creation of an object; 'created' is True only on the save() from 
+# This is the current recommended way to ensure additional code is run after
+# the initial creation of an object; 'created' is True only on the save() from
 # initial creation
 @receiver(post_save, sender=ClusiveUser)
-def set_default_preferences(sender, instance, created, **kwargs):    
+def set_default_preferences(sender, instance, created, **kwargs):
     if(created):
         logger.info("New user created, setting preferences to 'default' set")
         instance.adopt_preferences_set('default_display')
@@ -514,15 +514,15 @@ class MailingListMember (models.Model):
     """
 
     user = models.OneToOneField(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
-    sync_date = models.DateTimeField(null=True)
+    sync_date = models.DateTimeField(null=True, blank=True)
 
     def update_sync_date(self):
-        self.sync_date = datetime.now();
-        # does this need a save?
+        self.sync_date = timezone.now()
+        self.save()
 
     @classmethod
     def get_members_to_sync(cls):
-        members_to_sync = cls.objects.filter(send_completion_date=None)
+        members_to_sync = cls.objects.filter(sync_date=None)
         return members_to_sync
 
     @classmethod
@@ -542,17 +542,28 @@ class MailingListMember (models.Model):
             # loop through all users that have not been synchronized
             for member in members_to_synch:
                 member_info = {
-                    "email_address": member.user.email,
+                    "email_address": member.user.user.email,
                     "status": "subscribed",
-                    "merge_fields": {"FNAME": member.user.first_name,
-                         "MMERGE5": member.user.role.capitalize()}
+                    "merge_fields": {
+                        "FNAME": member.user.user.first_name,
+                        "MMERGE5": member.user.get_role_display()
                     }
+                }
                 try:
                     response = mailchimp.lists.add_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member_info)
-                    logger.debug("response: {}".format(response))
-                    cls.update_sync_date(member)
+                    logger.debug("response: %s", response)
+                    member.update_sync_date()
                 except ApiClientError as error:
-                    logger.error("A mailchimp subscribe exception occurred: {}".format(error.text))
+                    logger.error("A mailchimp subscribe exception occurred: %s", error.text)
+        else:
+            for member in members_to_synch:
+                member_info = {
+                    "email_address": member.user.user.email,
+                    "status": "subscribed",
+                    "merge_fields": {"FNAME": member.user.user.first_name,
+                                     "MMERGE5": member.user.get_role_display()}
+                }
+                logger.debug('Would send to MailChimp: %s', member_info)
 
 # The signal is sent when a new user is successfully self added and validated.
 # Only add to the UserEmail table if MailChimp is set up.

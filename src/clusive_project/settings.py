@@ -219,6 +219,11 @@ SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 LOGIN_URL = '/account/login'
 
+# If new registrants should be synced to a MailChimp mailing list, set these to valid values.
+MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', None)
+MAILCHIMP_SERVER = os.environ.get('MAILCHIMP_SERVER', None)
+MAILCHIMP_EMAIL_LIST_ID = os.environ.get('MAILCHIMP_EMAIL_LIST_ID', None)
+
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py
 settingsFileName = os.environ.get('DJANGO_CONFIG', 'local')

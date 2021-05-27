@@ -28,7 +28,7 @@ from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm
-from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
+from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
 
 logger = logging.getLogger(__name__)
@@ -654,3 +654,11 @@ def logout_sso(request, student=''):
         django_user.delete()
     else:
         logger.debug("Unregistered user, nothing to delete")
+
+
+class SyncMailingListView(View):
+
+    def get(self, request):
+        logger.debug('Sync mailing list request received')
+        MailingListMember.synchronize_user_emails()
+        return JsonResponse({'success': 1})

@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 from eventlog.models import Event
-from roster.models import UserStats, ClusiveUser
+from roster.models import UserStats, ClusiveUser, ResearchPermissions, MailingListMember
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +22,13 @@ user_registered = Signal(providing_args=['clusive_user'])
 
 @receiver(user_registered)
 def new_registration_watcher(sender, clusive_user, **kwargs):
-    logger.debug('Noticed new registration from %s', clusive_user)
-    # TODO: Check whether user is self-created; if so, add to table of mailing-list users
+    if clusive_user.permission == ResearchPermissions.SELF_CREATED:
+        new_member = MailingListMember.objects.create(user=clusive_user)
+        new_member.save()
+        logger.debug('Noticed and added new registration from %s', clusive_user)
+    else:
+        logger.debug('Ignoring new user, not self-created: %s', clusive_user)
+
 
 @receiver(post_save, sender=Event)
 def stats_event_watcher(sender, instance, **kwargs):

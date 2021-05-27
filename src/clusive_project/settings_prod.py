@@ -59,7 +59,3 @@ EMAIL_HOST_USER     = os.environ.get('DJANGO_EMAIL_USER', None)
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_PASSWORD', None)
 EMAIL_USE_TLS       = os.environ.get('DJANGO_EMAIL_TLS', False)
 EMAIL_USE_SSL       = os.environ.get('DJANGO_EMAIL_SSL', False)
-
-MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', None)
-MAILCHIMP_SERVER = os.environ.get('MAILCHIMP_SERVER', None)
-MAILCHIMP_EMAIL_LIST_ID = os.environ.get('MAILCHIMP_EMAIL_LIST_ID', None)
