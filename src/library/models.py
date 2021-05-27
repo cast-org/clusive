@@ -389,10 +389,8 @@ class Annotation(models.Model):
     highlight = models.TextField()
     progression = models.FloatField()   # Location in the book, expressed as a number from 0 to 1
     dateAdded = models.DateTimeField(default=timezone.now)
-    dateDeleted = models.DateTimeField(null=True, db_index=True)
-
-    # later: note
-    # later: category
+    dateDeleted = models.DateTimeField(null=True, blank=True, db_index=True)
+    note = models.TextField(null=True, blank=True)
 
     @property
     def highlight_object(self):

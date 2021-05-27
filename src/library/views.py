@@ -1,4 +1,5 @@
 import imghdr
+import json
 import logging
 import os
 import shutil
@@ -531,7 +532,7 @@ class UpdateLastLocationView(LoginRequiredMixin, View):
 
 class AnnotationView(LoginRequiredMixin, View):
     """
-    POST to this view to add a new highlight to the database.
+    POST to this view to add a new annotation to the database.
     DELETE to it to remove one.
     Logically would support the GET method to return information on a highlight or annotation,
     but that is not needed right now.
@@ -604,6 +605,39 @@ class AnnotationListView(LoginRequiredMixin, ListView):
         clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
         bookVersion = BookVersion.lookup(self.kwargs['book'], self.kwargs['version'])
         return Annotation.objects.filter(bookVersion=bookVersion, user=clusive_user, dateDeleted=None)
+
+
+class AnnotationNoteView(LoginRequiredMixin, View):
+    """
+    For attaching/updating a note belonging to an annotation.
+    Supports GET, POST and DELETE.  (GET not currently used).
+    """
+    @staticmethod
+    def create_from_request(request, note_data, annotation_id):
+        clusive_user = request.clusive_user
+        anno = get_object_or_404(Annotation, id=annotation_id, user=clusive_user)
+        anno.note = note_data.get('note')
+        anno.save()
+        # TODO signal for event logging
+
+    def post(self, request, annotation_id):
+        try:
+            note_data = json.loads(request.body)
+            logger.info('Received a valid note update: %s' % note_data)
+        except json.JSONDecodeError:
+            logger.warning('Received malformed note update: %s' % request.body)
+            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
+        AnnotationNoteView.create_from_request(request, note_data, annotation_id)
+        return JsonResponse({"success": "1"})
+
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, annotation_id):
+        logger.info('GET received')
+
+    def delete(self, request, annotation_id):
+        logger.info('DELETE received')
 
 
 class SwitchModalContentView(LoginRequiredMixin, TemplateView):
