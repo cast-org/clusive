@@ -172,6 +172,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         else:
             logger.warning('unknown sort setting')
 
+        # Make sure results are not duplicated (can happen with IN queries)
+        q = q.distinct()
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
 
