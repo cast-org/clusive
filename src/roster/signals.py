@@ -16,6 +16,8 @@ from roster.models import UserStats, ClusiveUser
 
 logger = logging.getLogger(__name__)
 
+# TODO: add a new watcher for teachers, parents, or self registering students successfully validated
+
 
 @receiver(post_save, sender=Event)
 def stats_event_watcher(sender, instance, **kwargs):

@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -10,6 +10,10 @@ from multiselectfield import MultiSelectField
 from pytz import country_timezones
 from allauth.account.signals import user_signed_up
 from allauth.socialaccount.models import SocialAccount
+from mailchimp_marketing import Client
+from mailchimp_marketing.api_client import ApiClientError
+
+from src.clusive_project.settings_prod import MAILCHIMP_API_KEY, MAILCHIMP_SERVER, MAILCHIMP_EMAIL_LIST_ID
 
 logger = logging.getLogger(__name__)
 
@@ -499,3 +503,56 @@ class UserStats (models.Model):
             stats.active_duration = timedelta()
         stats.active_duration += duration
         stats.save()
+
+
+class UserEmail (models.Model):
+    """
+    Email automation integration status;
+    Records without a send_completion_date have not been synchronized.
+    All Users have successfully been self added and email validated.
+    Periodically the user information will be synchronized with MailChimp.
+    """
+
+    user = models.OneToOneField(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    send_completion_date = models.DateTimeField(null=True)
+
+    @classmethod
+    def update_send_completion_date(cls, user_email):
+        user_email.send_completion_date = datetime.datetime.now()
+        user_email.save()
+
+    @classmethod
+    def get_users_to_synchronize(cls):
+        user_email_list = cls.objects.filter(send_completion_date=None)
+        return user_email_list
+
+    @classmethod
+    def synchronize_user_emails(cls):
+        if MAILCHIMP_API_KEY:
+            # set up the mailchimp connection
+            mailchimp = Client()
+            mailchimp.set_config({
+                "api_key": MAILCHIMP_API_KEY,
+                "server": MAILCHIMP_SERVER
+            })
+
+            # loop through all users that have not been synchronized
+            user_email_list = cls.get_users_to_synchronize()
+            for user_email in user_email_list.iterator():
+                member_info = {
+                    "email_address": user_email.user.email,
+                    "status": "subscribed",
+                    "merge_fields": {"FNAME": user_email.user.first_name,
+                         "MMERGE5": user_email.user.role.capitalize()}
+                    }
+            try:
+                response = mailchimp.lists.add_list_member(MAILCHIMP_EMAIL_LIST_ID, member_info)
+                logger.debug("response: {}".format(response))
+                cls.update_send_completion_date(cls, user_email)
+            except ApiClientError as error:
+                logger.error("A mailchimp subscribe exception occurred: {}".format(error.text))
+
+# The signal is sent when a new user is successfully self added and validated.
+# Only add to the UserEmail table if MailChimp is set up.
+#@receiver(add_user_email)
+#def add_user_email_record(sender, **kwargs):
