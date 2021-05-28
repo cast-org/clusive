@@ -12,6 +12,9 @@ urlpatterns = [
     path('annotationlist/<int:book>/<int:version>', views.AnnotationListView.as_view(),
          name='annotation_list'),
 
+    path('annotationnote/<int:annotation_id>', views.AnnotationNoteView.as_view(),
+         name='annotation_note'),
+
     path('upload/create', views.UploadCreateFormView.as_view(),
          name='upload'),
     path('upload/replace/<int:pk>', views.UploadReplaceFormView.as_view(),
