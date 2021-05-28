@@ -201,6 +201,17 @@ var manifest_path = "{{ manifest_path }}";
             },
 
             api: {
+                resourceReady: function() {
+                    console.debug("D2Reader finished loading the resource at: " + new Date());
+                    $(document).ready(function () {
+                        buildTableOfContents();
+                        buildAnnotationList();      
+                        setTimeout(function () {
+                            console.debug("Creating prefs editor at: " + new Date());
+                            clusivePrefs = createClusivePrefsEditor();
+                        }, 500);                                                        
+                    });
+                },
                 resourceAtEnd: function() {
                     var currentResource = D2Reader.currentResource();
                     var lastResource = (currentResource===D2Reader.totalResources()-1);
@@ -247,18 +258,7 @@ var manifest_path = "{{ manifest_path }}";
                 }
             }
         }).then(instance => {
-                console.debug("D2Reader loaded ", instance);
-                // Create the preference editor when the Reader has loaded,
-                // after a short delay
-                // TODO: improve this sequencing
-                $(document).ready(function () {
-                    buildTableOfContents();
-                    buildAnnotationList();
-                    setTimeout(function() {
-                        clusivePrefs = createClusivePrefsEditor();
-                    }, 250);
-                });
-
+                console.debug("D2Reader began loading resource at: " +  new Date());                
             }).catch(error => {
                 console.error("error loading: ", error);
             });
