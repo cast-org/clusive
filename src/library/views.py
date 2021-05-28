@@ -610,7 +610,10 @@ class AnnotationListView(LoginRequiredMixin, ListView):
 class AnnotationNoteView(LoginRequiredMixin, View):
     """
     For attaching/updating a note belonging to an annotation.
-    Supports GET, POST and DELETE.  (GET not currently used).
+    Only supports POST at the moment. GET is not used since notes are loaded with the page.
+    Note: this means if you reload the page with auto-save changes pending, you'll see the outdated content.
+    I think this case is rare enough that we can ignore it for now.
+    I'd rather not have to do a GET on every single note after page load.
     """
     @staticmethod
     def create_from_request(request, note_data, annotation_id):
@@ -618,26 +621,15 @@ class AnnotationNoteView(LoginRequiredMixin, View):
         anno = get_object_or_404(Annotation, id=annotation_id, user=clusive_user)
         anno.note = note_data.get('note')
         anno.save()
-        # TODO signal for event logging
 
     def post(self, request, annotation_id):
         try:
             note_data = json.loads(request.body)
-            logger.info('Received a valid note update: %s' % note_data)
         except json.JSONDecodeError:
             logger.warning('Received malformed note update: %s' % request.body)
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
         AnnotationNoteView.create_from_request(request, note_data, annotation_id)
         return JsonResponse({"success": "1"})
-
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request, annotation_id):
-        logger.info('GET received')
-
-    def delete(self, request, annotation_id):
-        logger.info('DELETE received')
 
 
 class SwitchModalContentView(LoginRequiredMixin, TemplateView):

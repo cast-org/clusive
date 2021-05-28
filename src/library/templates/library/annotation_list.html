@@ -18,8 +18,7 @@
                 </div>
                 <form>
                     <div class="form-group">
-                        <input type="text" value="{{ a.note|default_if_none:'' }}"
-                               class="form-control form-control-small" placeholder="Add a note..." aria-label="Add a note">
+                        <textarea type="text" class="form-control form-control-small" placeholder="Add a note..." aria-label="Add a note">{{ a.note|default_if_none:'' }}</textarea>
                     </div>
                     <div>
                         <button type="submit" class="btn btn-primary btn-small">Done</button>
@@ -30,11 +29,17 @@
                 <div class="note-title">
                     <span class="icon-sticky-note-o" aria-hidden="true"></span>Note
                 </div>
-                <p>{{ a.note|default_if_none:'' }}</p>
+                <p class="note-content">{{ a.note|default_if_none:'' }}</p>
                 <ul class="list list-divided list-horizontal list-note-action">
                     <li class="list-item"><a href="#" role="button" class="note-edit-button">Edit</a></li>
-                    <li class="list-item"><a href="#" role="button">Delete note</a></li>
+                    <li class="list-item"><a href="#" role="button" class="note-delete-button">Delete note</a></li>
                 </ul>
+            </div>
+            <div class="note note-deleted-placeholder" style="display:none">
+                <div class="note-undelete">
+                    Deleted
+                    <a href="#" class="link-undelete link-undelete-note">Undo</a>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -43,31 +48,3 @@
 {% else %}
 <p id="noAnnotationsMessage">No highlights or notes yet.</p>
 {% endif %}
-<script>
-// $('body').on('click', '.add-note-button', function(e) {
-//     e.preventDefault();
-//     console.debug('note ADD');
-//     $container = $(this).closest('.annotation-container');
-//     $container.find('.note-display').hide();
-//     $container.find('.note-edit').show();
-// });
-
-$('body').on('click', '.note-edit-button', function(e) {
-   e.preventDefault();
-   console.debug('note EDIT');
-   $container = $(this).closest('.annotation-container');
-   $container.find('.note-display').hide();
-   $container.find('.note-edit').show();
-   $container.find('.note-add-button').hide(); // Really only needed if that was the button clicked.
-});
-
-$('body').on('click', '.note button[type=submit]', function(e) {
-    e.preventDefault();
-    console.debug('note DONE');
-    $container = $(this).closest('.annotation-container');
-    $container.find('.note-display').show();
-    $container.find('.note-edit').hide();
-});
-
-$('.note-edit').hide();
-</script>

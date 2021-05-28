@@ -1,4 +1,4 @@
-/* global D2Reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID */
+/* global D2Reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
 /* exported buildTableOfContents, trackReadingLocation,
    buildAnnotationList, addNewAnnotation, showExistingAnnotation */
 
@@ -306,7 +306,7 @@ function deleteAnnotation(e) {
         id: id
     });
     $container.html('<div class="highlight-undelete">Deleted' +
-        '<a href="#" class="link-undelete">Undo</a></div>');
+        '<a href="#" class="link-undelete link-undelete-annotation">Undo</a></div>');
     $.ajax('/library/annotation/' + id + '?eventId=' + PAGE_EVENT_ID, {
         method: 'DELETE',
         headers: {
@@ -382,17 +382,88 @@ function goToAnnotation(event) {
     }
 }
 
+// For any changes to the 'note' of an annotation, keep display text updated and invoke auto-save.
+function handleNoteTextChange($container) {
+    'use strict';
+
+    var text = $container.find('textarea').val();
+    $container.find('.note-content').text(text);
+    var id = $container.data('annotation-id');
+    // console.debug('note ', id, ' CHANGED text=', text);
+    clusiveAutosave.save('/library/annotationnote/' + id, {
+        note: text
+    });
+}
+
+// Initialize actions for all the notes-related functionality
+function setUpNotes() {
+    'use strict';
+
+    var $area = $(NOTES_CONTAINER);
+
+    // Show edit area
+    $area.on('click', 'a.note-edit-button', function(e) {
+        e.preventDefault();
+        console.debug('note EDIT');
+        var $container = $(this).closest('.annotation-container');
+        $container.find('.note-display').hide();
+        $container.find('.note-edit').show();
+        $container.find('.note-add-button').hide();
+    });
+
+    // Hide edit area and show static display
+    $area.on('click', '.note button[type=submit]', function(e) {
+        e.preventDefault();
+        console.debug('note DONE');
+        var $container = $(this).closest('.annotation-container');
+        $container.find('.note-display').show();
+        $container.find('.note-edit').hide();
+    });
+
+    // Delete note by setting it to empty, but stash previous value for use by undo.
+    $area.on('click', '.note a.note-delete-button', function(e) {
+        e.preventDefault();
+        console.debug('note DELETE');
+        var $container = $(this).closest('.annotation-container');
+        var $textarea = $container.find('textarea');
+        $container.data('deleted-note', $textarea.val());
+        $textarea.val('');
+        handleNoteTextChange($container);
+        $container.find('.note-display').hide();
+        $container.find('.note-edit').hide();
+        $container.find('.note-deleted-placeholder').show();
+    });
+
+    // Undelete note by restoring old value
+    $area.on('click', '.note a.link-undelete-note', function(e) {
+        e.preventDefault();
+        console.debug('note UNDELETE');
+        var $container = $(this).closest('.annotation-container');
+        var $textarea = $container.find('textarea');
+        $textarea.val($container.data('deleted-note'));
+        handleNoteTextChange($container);
+        $container.find('.note-display').show();
+        $container.find('.note-deleted-placeholder').hide();
+    });
+
+    // Watch for user changes to note text.
+    $area.on('change', '.note textarea', function(e) {
+        handleNoteTextChange($(e.target).closest('.annotation-container'));
+    });
+}
+
 //  Initial setup
 
 $(document).ready(function() {
     'use strict';
 
     savePendingLocationUpdate();
+    setUpNotes();
 
     $(NOTES_CONTAINER)
         .on('click touchstart', '.delete-highlight', deleteAnnotation)
         .on('click touchstart', '.goto-highlight', goToAnnotation)
-        .on('click touchstart', '.link-undelete', undeleteAnnotation);
+        .on('click touchstart', '.link-undelete-annotation', undeleteAnnotation);
 
     $(TOC_MODAL)
         .on('beforeShow.cfw.modal', function() {
