@@ -39,7 +39,7 @@ urlpatterns = [
     path('validate_resend/<int:user_id>', views.ValidateResendView.as_view(), name='validate_resend'),
     path('validate/<int:user_id>/<token>', views.ValidateEmailView.as_view(), name='validate'),
 
-    path('prefs', views.PreferenceView.as_view(), name='prefs'),        
+    path('prefs', views.PreferenceView.as_view(), name='prefs'),
     path('prefs/profile', views.PreferenceSetView.as_view(), name='prefs_profile'),
 
     path('manage/<int:period_id>', views.ManageView.as_view(), name='manage'),
@@ -51,4 +51,6 @@ urlpatterns = [
     path('manage_create_period/', views.ManageCreatePeriodView.as_view(), name='manage_create_period'),
     path('finish_login', views.finish_login, name='finish_login'),
     path('cancel_registration', views.cancel_registration, name='cancel_registration'),
+
+    path('sync_mailing_list', views.SyncMailingListView.as_view(), name='sync_mailing_list'),
 ]

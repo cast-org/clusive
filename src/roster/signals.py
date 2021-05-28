@@ -1,20 +1,33 @@
 import logging
 
-from allauth.account.models import EmailAddress
 from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.signals import pre_social_login
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 from django.shortcuts import redirect
 from django.urls import reverse
 
 from eventlog.models import Event
-from roster.models import UserStats, ClusiveUser
+from roster.models import UserStats, ClusiveUser, ResearchPermissions, MailingListMember
 
 logger = logging.getLogger(__name__)
+
+
+# This signal is sent when a new user completes the registration/validation process.
+user_registered = Signal(providing_args=['clusive_user'])
+
+
+@receiver(user_registered)
+def new_registration_watcher(sender, clusive_user, **kwargs):
+    if clusive_user.permission == ResearchPermissions.SELF_CREATED:
+        new_member = MailingListMember.objects.create(user=clusive_user)
+        new_member.save()
+        logger.debug('Noticed and added new registration from %s', clusive_user)
+    else:
+        logger.debug('Ignoring new user, not self-created: %s', clusive_user)
 
 
 @receiver(post_save, sender=Event)
