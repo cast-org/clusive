@@ -207,7 +207,7 @@ var manifest_path = "{{ manifest_path }}";
                         buildTableOfContents();
                         buildAnnotationList();   
                         // We only need to create the prefs editor once for a page
-                        if(typeof clusivePrefs !== undefined) {
+                        if(typeof clusivePrefs === undefined) {
                             clusivePrefs = createClusivePrefsEditor();                        
                         }                                                   
                     });
