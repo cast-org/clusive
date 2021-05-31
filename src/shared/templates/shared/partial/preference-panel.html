@@ -59,7 +59,7 @@
 
         clusive.prefs.djangoStoreMapper();
 
-        var createClusivePrefsEditor = function() {
+        var createClusivePrefsEditor = function() {            
             var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
             var buildGradeNames =  [
                             "cisl.prefs.auxSchema.starter", // starter set
@@ -108,7 +108,7 @@
                                                         "onCreate.announce": {
                                                             "this": "console",
                                                             "method": "log",
-                                                            "args": ["Prefs editor created,", "{that}"]
+                                                            "args": ["Prefs editor created at " + new Date(), "{that}"]
                                                         }
                                                     },
                                                 }
