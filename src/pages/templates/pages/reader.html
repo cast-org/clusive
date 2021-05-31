@@ -205,11 +205,9 @@ var manifest_path = "{{ manifest_path }}";
                     console.debug("D2Reader finished loading the resource at: " + new Date());
                     $(document).ready(function () {
                         buildTableOfContents();
-                        buildAnnotationList();      
-                        setTimeout(function () {
-                            console.debug("Creating prefs editor at: " + new Date());
-                            clusivePrefs = createClusivePrefsEditor();
-                        }, 500);                                                        
+                        buildAnnotationList();                              
+                        console.debug("Creating prefs editor at: " + new Date());
+                        clusivePrefs = createClusivePrefsEditor();                        
                     });
                 },
                 resourceAtEnd: function() {
