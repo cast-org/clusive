@@ -62,6 +62,7 @@ $enable-input-group-sizing:             false;
 $enable-jumbotron:                      false;
 $enable-list-bulleted:                  true;
 $enable-list-ordered:                   false;
+$enable-list-marker-inner:              false;
 $enable-list-group:                     false;
 $enable-list-item-colors:               false;
 $enable-media:                          true;
@@ -83,6 +84,8 @@ $enable-progress-striped:               false;
 $enable-progress-animated:              false;
 
 // Widgets
+$enable-modal-side-top:                 false;
+$enable-modal-side-bottom:              false;
 $enable-modal-fullscreen:               false;
 $enable-modal-fullscreen-responsive:    false;
 $enable-dropdown:                       true;
@@ -290,7 +293,7 @@ $form-switch-thumb-checked-bg:              var(--CT_formSwitchThumbCheckedBg);
 $form-switch-thumb-checked-border-color:    var(--CT_formSwitchThumbCheckedBorderColor);
 $form-switch-thumb-checked-box-shadow:      -.1875rem 0 0 .025rem rgba(var(--CT_formSwitchThumbCheckedBoxShadowRGB), var(--CT_formSwitchThumbCheckedBoxShadowOpacity));
 
-$progress-height:                           1.5rem;
+$progress-height:                           2.125rem; //1.5rem;
 $progress-bg:                               transparent;
 $progress-border-radius:                    .25rem;
 $progress-bar-color:                        $body-color;
@@ -320,6 +323,10 @@ $card-header-padding-y:                 $card-padding-y;
 $card-header-padding-x:                 $card-padding-x;
 $card-footer-padding-y:                 $card-padding-y;
 $card-footer-padding-x:                 $card-padding-x;
+
+$tooltip-bg:                            var(--CT_tooltipBg);
+$tooltip-color:                         var(--CT_tooltipColor);
+$tooltip-opacity:                       .95;
 
 $tooltip-feature-max-width:             14rem;
 $tooltip-feature-padding-y:             .5rem;
@@ -501,3 +508,5 @@ $tag-margin-y:                          .125rem;
 $tag-margin-right:                      .125rem;
 $tag-font-size:                         .875rem;
 $tag-font-weight:                       400;
+
+$sort-border-width:                     .3125rem;

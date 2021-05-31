@@ -8,6 +8,7 @@
         {{ form.first_name }}
         <div class="form-text">The name you want Clusive to use for you. Just a first name or nickname is fine.</div>
     </div>
+    {% if not isSSO %}
     <div class="form-group">
         {{ form.username.label_tag | formlabel }}
         {{ form.username.errors}}
@@ -28,6 +29,7 @@
         <div class="form-text">Enter the same password again, for verification.</div>
         {{ form.non_field_errors }}
     </div>
+    {% endif %}
     <div class="form-group">
         {{ form.email.label_tag | formlabel }}
         {{ form.email.errors}}
@@ -58,5 +60,5 @@
         </div>
     </div>
     <input type="submit" class="btn btn-secondary" value="Continue"/>
-    <a class="btn btn-link" href="/">Cancel</a>
+    <a class="btn btn-link" href="/account/cancel_registration">Cancel</a>
 </form>

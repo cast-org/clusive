@@ -6,6 +6,8 @@ To try it out quickly using Docker skip ahead to that section.
 
 ## Local Installation
 
+Note: all steps between **Create/Activitate Virtual Environment** and **Create a Superuser** can be run using `local_install.sh` (on Unix-based systems) or `local_install.ps1` (on Windows) to more easily set up or refresh a local environment. Be sure to set up your virtual environment first.
+
 ### Prerequisites
 
 * [Python 3](https://www.python.org/downloads/)
@@ -77,13 +79,7 @@ The local development configuration uses sqlite, so no database setup is require
 
 To initialize the schema and initial data, run in the Clusive\target directory:
 * `python manage.py migrate`
-* `python manage.py loaddata preferencesets tiptypes` 
-
-
-### Create a Superuser
-
-Run in the Clusive\target directory:
-* `python manage.py createsuperuser`
+* `python manage.py loaddata preferencesets tiptypes subjects` 
 
 ### Import public content
 There are a number of learning materials ready for import in the Clusive\content directory.
@@ -100,6 +96,11 @@ or multiple files which are considered to be a set of leveled versions
 of the same content. A glossary JSON file and directory of images that
 it refers to can also be included on the command line.
 The content directory contains many examples of these.  
+
+### Create a Superuser
+
+Run in the Clusive\target directory:
+* `python manage.py createsuperuser`
 
 ### Verify the Application
 
@@ -137,3 +138,39 @@ docker run -p 8000:8000 \\
 Docker will run any pending database migrations and import the default books at startup, but users must be added manually:
 
 * `docker exec -it <container_id> python manage.py createsuperuser`
+
+## Connecting Google Authentication
+
+To allow users to log in with their Google account, 
+there are several additional steps.
+
+1. Create a Project in the [Google Cloud Console](https://console.cloud.google.com).
+2. Enable the Google Classroom API
+3. Configure the authentication on the "OAuth Consent Screen" page in the 
+     "APIs and Services" section of the Console.  The "EDIT APP" link at the top
+     of the "OAuth Consent Screen" provides an "Edit app registration"
+     step-by-step process for filling in the information.
+4. Required scopes (step 2 of the "Edit app registration"):
+     * `auth/userinfo.email`
+     * `auth/userinfo.profile`
+     * `auth/classroom.rosters.readonly`
+5. Create an "OAuth client ID" on the "Credentials" page, which is also in the
+     "APIs and Services" section of the Console.
+     * Application type is "Web application"
+     * Authorized JavaScript origins should be the URL of your instance, eg `https://clusive.cast.org`.
+     * Authorized redirect URIs should be the URL of your instance plus accounts/google/login/callback/,
+       eg `https://clusive.cast.org/accounts/google/login/callback/`
+     * When created, take note of the Client ID and Client Secret.
+6. Add the Google "provider" to Clusive as [documented](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration) for the Django-allauth module. There are a few different ways to do this. The manual method is as follows:
+    * Log in to your instance as an administrator.
+    * Go to "Social Applications", click Add, and set:
+      * provider: Google
+      * name: Google
+      * Client id: from step 5, above.
+      * Secret key: "Client Secret" from step 5.
+      * Key: leave blank.
+      * Chosen sites: add the default site (if you haven't changed anything, this will be called "example.com" and have ID=1).
+    * You can rename the default site from "example.com" if you want, it does not really matter. 
+      But its ID must match what is in `settings.py`; the provided settings file includes `SITE_ID = 1`.
+  
+

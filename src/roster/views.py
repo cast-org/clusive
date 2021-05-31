@@ -4,7 +4,7 @@ import logging
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -28,14 +28,14 @@ from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm
-from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions
+from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
+from roster.signals import user_registered
 
 logger = logging.getLogger(__name__)
 
-
 def guest_login(request):
     clusive_user = ClusiveUser.make_guest()
-    login(request, clusive_user.user)
+    login(request, clusive_user.user, 'django.contrib.auth.backends.ModelBackend')
     return redirect('dashboard')
 
 
@@ -45,10 +45,17 @@ class LoginView(auth_views.LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if context.get('form').errors:
-            for err in context.get('form').errors.as_data().get('__all__'):
+        form = context.get('form')
+        if form.errors:
+            for err in form.errors.as_data().get('__all__'):
                 if err.code == 'email_validate':
                     context['email_validate'] = True
+                    username = form.cleaned_data['username']
+                    try:
+                        user = User.objects.get_by_natural_key(username=username)
+                        context['user_id'] = user.id
+                    except User.DoesNotExist:
+                        logger.error('Email not validated error signalled when account does not exist')
         return context
 
 
@@ -56,6 +63,13 @@ class SignUpView(EventMixin, CreateView):
     template_name='roster/sign_up.html'
     model = User
     form_class = UserRegistrationForm
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(SignUpView, self).get_initial(**kwargs)
+        # If registration during SSO, use info from the SSO user
+        if self.request.session.get('sso', False):
+            initial['user'] = self.request.user
+        return initial
 
     def dispatch(self, request, *args, **kwargs):
         self.role = kwargs['role']
@@ -69,6 +83,7 @@ class SignUpView(EventMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['role'] = self.role
+        context['isSSO'] = self.request.session.get('sso', False)
         return context
 
     def form_valid(self, form):
@@ -79,23 +94,38 @@ class SignUpView(EventMixin, CreateView):
             raise PermissionError('Invalid role')
         user: User
         if self.current_clusive_user:
-            # There is a logged-in (presumably Guest) user.
+            # There is a logged-in user, either a Guest or an SSO user.
             # Update the ClusiveUser and User objects based on the form target.
             clusive_user: ClusiveUser
             clusive_user = self.current_clusive_user
-            logger.debug('Upgrading %s from guest to %s', clusive_user, self.role)
-            clusive_user.role = self.role
-            clusive_user.permission = ResearchPermissions.SELF_CREATED
-            clusive_user.education_levels = form.cleaned_data['education_levels']
-            clusive_user.save()
+            isSSO = self.request.session.get('sso', False)
+            update_clusive_user(clusive_user,
+                                self.role,
+                                ResearchPermissions.SELF_CREATED,
+                                isSSO,
+                                form.cleaned_data['education_levels'])
             user = clusive_user.user
-            user.username = target.username
             user.first_name = target.first_name
-            user.set_password(form.cleaned_data["password1"])
-            user.email = target.email
+            # If the user is already logged in via SSO, these fields are already
+            # set by the SSO process.  If not an SSO user, get the values from
+            # the form.
+            if not isSSO:
+                user.username = target.username
+                user.set_password(form.cleaned_data["password1"])
+                user.email = target.email
             user.save()
-            login(self.request, user) # Need to login again since User object has changed.
-            send_validation_email(self.current_site, clusive_user)
+
+            # Either log in the SSO user and redirect to the dashboard, or, for
+            # Guests signing up, send the confirmation email to the new user and
+            # log them in.
+            if isSSO:
+                login(self.request, user, 'allauth.account.auth_backends.AuthenticationBackend')
+                logger.debug('sending signal for new google user who has completed registration')
+                user_registered.send(self.__class__, clusive_user=clusive_user)
+                return HttpResponseRedirect(reverse('dashboard'))
+            else:
+                send_validation_email(self.current_site, clusive_user)
+                login(self.request, user, 'django.contrib.auth.backends.ModelBackend')
         else:
             # This is a new user.  Save the form target User object, and create a ClusiveUser.
             user = target
@@ -164,6 +194,8 @@ class ValidateEmailView(View):
                     clusive_user.unconfirmed_email = False
                     clusive_user.save()
                     result = 'activated'
+                    logger.debug('sending signal for new user who has completed email validation')
+                    user_registered.send(self.__class__, clusive_user=clusive_user)
                 else:
                     logger.warning('Email validation check failed. User=%s; token=%s; result=%s',
                                 user, token, check_token)
@@ -185,11 +217,20 @@ class SignUpRoleView(EventMixin, FormView):
     template_name = 'roster/sign_up_role.html'
 
     def form_valid(self, form):
+        clusive_user = self.request.clusive_user
         role = form.cleaned_data['role']
-        if role == 'ST':
+        if role == Roles.STUDENT:
             self.success_url = reverse('sign_up_age_check')
         else:
-            self.success_url = reverse('sign_up', kwargs={'role': role})
+            # Logging in via SSO for the first time entails that there is a
+            # clusive_user and its role is UNKNOWN
+            isSSO = True if (clusive_user and clusive_user.role == Roles.UNKNOWN) else False
+            if isSSO:
+                update_clusive_user(clusive_user,
+                                    role,
+                                    ResearchPermissions.SELF_CREATED,
+                                    isSSO)
+            self.success_url = reverse('sign_up', kwargs={'role': role, 'isSSO': isSSO})
         return super().form_valid(form)
 
     def configure_event(self, event: Event):
@@ -201,9 +242,18 @@ class SignUpAgeCheckView(EventMixin, FormView):
     template_name = 'roster/sign_up_age_check.html'
 
     def form_valid(self, form):
+        clusive_user = self.request.clusive_user
         logger.debug("of age: %s", repr(form.cleaned_data['of_age']))
         if form.cleaned_data['of_age'] == 'True':
-            self.success_url = reverse('sign_up', kwargs={'role': 'ST'})
+            # Logging in via SSO for the first time entails that there is a
+            # clusive_user and its role is UNKNOWN
+            isSSO = True if (clusive_user and clusive_user.role == Roles.UNKNOWN) else False
+            if clusive_user and clusive_user.role == Roles.UNKNOWN:
+                update_clusive_user(self.request.clusive_user,
+                                    Roles.STUDENT,
+                                    ResearchPermissions.SELF_CREATED,
+                                    isSSO)
+            self.success_url = reverse('sign_up', kwargs={'role': Roles.STUDENT, 'isSSO': isSSO})
         else:
             self.success_url = reverse('sign_up_ask_parent')
         return super().form_valid(form)
@@ -215,9 +265,15 @@ class SignUpAgeCheckView(EventMixin, FormView):
 class SignUpAskParentView(EventMixin, TemplateView):
     template_name = 'roster/sign_up_ask_parent.html'
 
+    def get(self, request, *args, **kwargs):
+        # Create and log the event as usual, but then delete any SSO underage
+        # student records.
+        result = super().get(request, *args, **kwargs)
+        logout_sso(request, 'student')
+        return result
+
     def configure_event(self, event: Event):
         event.page = 'RegisterAskParent'
-
 
 class PreferenceView(View):
 
@@ -264,17 +320,17 @@ class PreferenceSetView(View):
 
 # Set user preferences from a dictionary
 def set_user_preferences(user, new_prefs, event_id, timestamp, request, reader_info=None):
-    """Sets User's preferences to match the given dictionary of preference values."""    
+    """Sets User's preferences to match the given dictionary of preference values."""
     old_prefs = user.get_preferences_dict()
-    prefs_to_use = new_prefs    
+    prefs_to_use = new_prefs
     for pref_key in prefs_to_use:
         old_val = old_prefs.get(pref_key)
         if old_val != prefs_to_use[pref_key]:
             # Preference changes associated with a page event (user action)
             if(event_id):
                 set_user_preference_and_log_event(user, pref_key, prefs_to_use[pref_key], event_id, timestamp, request, reader_info=reader_info)
-            # Preference changes not associated with a page event - not logged                
-            else:                 
+            # Preference changes not associated with a page event - not logged
+            else:
                 user.set_preference(pref_key, prefs_to_use[pref_key])
 
             # logger.debug("Pref %s changed %s (%s) -> %s (%s)", pref_key,
@@ -287,7 +343,7 @@ def set_user_preference_and_log_event(user, pref_key, pref_value, event_id, time
 
 @receiver(client_side_prefs_change, sender=Message)
 def set_preferences_from_message(sender, content, timestamp, request, **kwargs):
-    logger.info("client_side_prefs_change message received")    
+    logger.debug("client_side_prefs_change message received")
     reader_info = content.get("readerInfo")
     user = request.clusive_user
     set_user_preferences(user, content["preferences"], content["eventId"], timestamp, request, reader_info=reader_info)
@@ -528,6 +584,29 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, CreateView):
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
 
+def finish_login(request):
+    if request.user.is_staff:
+        return HttpResponseRedirect('/admin')
+    clusive_user = ClusiveUser.from_request(request)
+    if clusive_user.role == Roles.UNKNOWN:
+        request.session['sso'] = True
+        return HttpResponseRedirect(reverse('sign_up_role'))
+    else:
+        return HttpResponseRedirect(reverse('dashboard'))
+
+
+def update_clusive_user(current_clusive_user, role, permissions, isSSO, edu_levels=None):
+    clusive_user: ClusiveUser
+    clusive_user = current_clusive_user
+    logger.debug('Updating %s from %s to %s', clusive_user, clusive_user.role, role)
+    clusive_user.role = role
+    clusive_user.permission = permissions
+    if isSSO:
+        clusive_user.unconfirmed_email = False
+    if edu_levels:
+        clusive_user.education_levels = edu_levels
+    clusive_user.save()
+
 
 def send_validation_email(site, clusive_user : ClusiveUser):
     clusive_user.unconfirmed_email = True
@@ -555,3 +634,31 @@ def send_validation_email(site, clusive_user : ClusiveUser):
     #     html_email = loader.render_to_string(html_email_template_name, context)
     #     email_message.attach_alternative(html_email, 'text/html')
     email_message.send()
+
+def cancel_registration(request):
+    logger.debug("Cancelling registration")
+    logout_sso(request)
+    return HttpResponseRedirect('/')
+
+def logout_sso(request, student=''):
+    """This is used in the cases where (1) an SSO user has cancelled the
+    registration process or (2) a student signed up using SSO, but is not of
+    age.  Remove associated User, ClusiveUser, SocialAccount, and AccessToken
+    records, effectively logging out.  If not an SSO situation, this does
+    nothing."""
+    clusive_user = request.clusive_user
+    if (clusive_user and clusive_user.role == Roles.UNKNOWN) or request.session.get('sso', False):
+        logger.debug("SSO logout, and removing records for %s %s", student, clusive_user)
+        django_user = request.user
+        logout(request)
+        django_user.delete()
+    else:
+        logger.debug("Unregistered user, nothing to delete")
+
+
+class SyncMailingListView(View):
+
+    def get(self, request):
+        logger.debug('Sync mailing list request received')
+        MailingListMember.synchronize_user_emails()
+        return JsonResponse({'success': 1})

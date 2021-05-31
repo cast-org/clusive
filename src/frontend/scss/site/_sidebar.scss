@@ -186,6 +186,11 @@
             }
         }
     }
+    &.library {
+        .content {
+            padding-left: 1.7rem;
+        }
+    }
 }
 
 .sidebar-no-end {

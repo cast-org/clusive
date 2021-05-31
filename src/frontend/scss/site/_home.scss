@@ -98,9 +98,9 @@
         align-items: center;
 
         .media-img {
-            width: 1.75rem;
-            margin-right: 1rem;
-            @include font-size(1.75rem);
+            width: 2rem;
+            margin-right: .75rem;
+            @include font-size(2rem);
         }
         .media-body {
             font-weight: $font-weight-bold;
@@ -123,6 +123,11 @@
     display: inline-block;
     width: 191px;
     height: 46px;
+    padding: 0;
+    user-select: none;
+    background-color: transparent;
+    border: 0;
+    @include transition(color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out);
 
     &::before {
         display: block;

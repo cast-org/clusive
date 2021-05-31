@@ -242,6 +242,10 @@
         --CT_btnReactActiveColor: #{$btn-react-active-color};
         --CT_btnReactActiveBorderColor: #{$btn-react-active-border-color};
 
+        --CT_badgeCountBg: #{$badge-count-bg};
+        --CT_badgeCountColor: #{$badge-count-color};
+        --CT_badgeCountBorderColor: #{$badge-count-border-color};
+
         --CT_errorListBg: #{$error-bg};
         --CT_errorListColor: #{$error-color};
 
@@ -253,6 +257,9 @@
         --CT_dropdownLinkHoverColor: #{$dropdown-link-hover-color};
         --CT_dropdownLinkActiveBg: #{$dropdown-link-active-bg};
         --CT_dropdownLinkActiveColor: #{$dropdown-link-active-color};
+
+        --CT_tooltipBg: #{$tooltip-bg};
+        --CT_tooltipColor: #{$tooltip-color};
 
         --CT_tooltipFeatureBg: #{$tooltip-feature-bg};
         --CT_tooltipFeatureColor: #{$tooltip-feature-color};
@@ -468,5 +475,11 @@
         --CT_reactW11: #{$react-wedge-11};
         --CT_reactBoxLine: #{$react-box-line};
         --CT_reactBoxIcon: #{$react-box-icon};
+
+        --CT_readTimeLegendLabelColor: #{$readtime-legend-label-color};
+        --CT_readTimeMarkColor: #{$readtime-mark-color};
+        --CT_readTimeBarBg: #{$readtime-bar-bg};
+        --CT_readTimeBarActiveBg: #{$readtime-bar-active-bg};
+        --CT_readTimeBarStripedBg: #{$readtime-bar-striped-bg};
     }
 }

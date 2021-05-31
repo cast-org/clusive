@@ -14,7 +14,7 @@ from django.utils import timezone
 from nltk import RegexpTokenizer
 
 from glossary.util import base_form
-from library.models import Book, BookVersion
+from library.models import Book, BookVersion, Subject
 
 logger = logging.getLogger(__name__)
 
@@ -46,8 +46,8 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
 
     This method will:
      * unzip the file into the user media area
-     * find metadata
-     * create a manifest
+     * find the most basic metadata
+     * create the manifest.json
      * make a database record
 
     It does NOT look for glossary words or parse the text content for vocabulary lists,
@@ -60,14 +60,13 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     If there are any errors (such as a non-EPUB file), an exception will be raised.
     """
     with open(file, 'rb') as f, dawn.open(f) as upload:
-        book_version = None
         manifest = make_manifest(upload)
         title = get_metadata_item(upload, 'titles') or ''
         author = get_metadata_item(upload, 'creators') or ''
         description = get_metadata_item(upload, 'description') or ''
         language = get_metadata_item(upload, 'language') or ''
-        mod_date = upload.meta.get('dates').get('modification') or None
 
+        mod_date = upload.meta.get('dates').get('modification') or None
         # Date, if provided should be UTC according to spec.
         if mod_date:
             mod_date = timezone.make_aware(mod_date, timezone=timezone.utc)
@@ -108,7 +107,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
         # Find or create the BOOK VERSION
         book_version = BookVersion.objects.filter(book=book, sortOrder=sort_order).first()
         if book_version:
-            logger.info('Existing BV was found')
+            logger.debug('Existing BV was found')
             if mod_date > book_version.mod_date:
                 logger.info('Replacing older content of this book version')
                 book_version.mod_date = mod_date
@@ -122,7 +121,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
                 # Short circuit the import and just return the existing object.
                 return book_version, False
         else:
-            logger.info('Creating new BV: book=%s, sortOrder=%d' % (book, sort_order))
+            logger.debug('Creating new BV: book=%s, sortOrder=%d' % (book, sort_order))
             book_version = BookVersion(book=book, sortOrder=sort_order, mod_date=mod_date)
 
         book_version.filename = basename(file)
@@ -227,7 +226,7 @@ def make_contributor(val):
         item = {'name': str(v.value)}
         if v.data.get('role'):
             item['role'] = v.data.get('role')
-        if v.data.get('file=as'):
+        if v.data.get('file-as'):
             item['sortAs'] = v.data.get('file-as')
         result.append(item)
     return result
@@ -254,7 +253,15 @@ def scan_book(b):
     versions = b.versions.all()
     for bv in versions:
         find_all_words(bv, glossary_words)
-    # After all versions are read, determine new words added in each version.
+        count_pictures(bv)
+    # After all versions are read, gather global metadata
+    # Book word_count is the average of version word_counts.
+    set_sort_fields(b)
+    set_subjects(b)
+    b.word_count = sum([v.word_count for v in versions])/len(versions)
+    b.picture_count = sum([v.picture_count for v in versions])/len(versions)
+    b.save()
+    # determine new words added in each version.
     if len(versions) > 1:
         for bv in versions:
             if bv.sortOrder > 0:
@@ -264,22 +271,70 @@ def scan_book(b):
                 bv.save()
 
 
-def find_title(manifest):
-    title = manifest['metadata'].get('title')
-    if not title:
-        title = manifest['metadata'].get('headline')
-    return title
+def set_sort_fields(book):
+    # Read the title and sort_title out of the first version. THey should all be the same.
+    bv = book.versions.all()[0]
+    if os.path.exists(bv.manifest_file):
+        with open(bv.manifest_file, 'r') as file:
+            manifest = json.load(file)
+            title = manifest['metadata'].get('title')
+            sort_title = manifest['metadata'].get('sortAs')
+            logger.debug('Sort title: %s', sort_title)
+            if not sort_title:
+                # TODO: should make some simple default assumptions, like removing 'The'/'A'
+                logger.debug('Setting sort title to the title: %s', title)
+                sort_title = title
+            book.sort_title = sort_title
 
+            author_list = manifest['metadata'].get('author')
+            if author_list:
+                author = author_list[0].get('name')
+                sort_author = author_list[0].get('sortAs')
+                logger.debug('Sort author: %s', sort_author)
+                if not sort_author:
+                    # TODO: maybe should make some default assumptions, First Last -> Last first
+                    logger.debug('Setting sort author to the author: %s', author )
+                    sort_author = author
+                book.sort_author = sort_author
 
-def find_description(manifest):
-    return manifest['metadata'].get('description') or ""
+def set_subjects(book):
+    # Get all valid subjects
+    valid_subjects = Subject.objects.all()
 
+    # Read the subject array out of the first version of the book
+    bv = book.versions.all()[0]
+    if os.path.exists(bv.manifest_file):
+        with open(bv.manifest_file, 'r') as file:
+            manifest = json.load(file)
 
-def find_cover(manifest):
-    for item in manifest['resources']:
-        if item.get('rel') == 'cover':
-            return item.get('href')
-    return None
+            # clear any current subjects
+            if book.subjects.count() > 0:
+                logger.debug('Removing these subjects from the book: %s', book.subjects.all())
+                book.subjects.clear()
+
+            #  make a list of subjects from the manifest
+            bs = manifest['metadata'].get('subject')
+
+            #  if bs is a string then there is only 1 subject
+            book_subjects = []
+            if isinstance(bs, str) or bs == None:
+                book_subjects.append(bs)
+            else:
+                book_subjects.extend(bs)
+            logger.debug('These are the book subjects to add: %s', book_subjects)
+
+            # Loop through subjects array checking for valid subjects only
+            if book_subjects:
+                for s in book_subjects:
+                    if s is not None:
+                        if valid_subjects.filter(subject__iexact=s).exists():
+                            logger.debug('Adding subject relationship for: %s', s)
+                            book.subjects.add(valid_subjects.filter(subject__iexact=s).first())
+                        else:
+                            logger.debug('Subject is not in the subject table: %s', s)
+    else:
+        logger.error("Book directory had no manifest: %s", bv.manifest_file)
+
 
 
 def find_glossary_words(book_dir):
@@ -291,6 +346,19 @@ def find_glossary_words(book_dir):
             return words
     else:
         return []
+
+
+def count_pictures(bv):
+    if os.path.exists(bv.manifest_file):
+        with open(bv.manifest_file, 'r') as file:
+            manifest = json.load(file)
+            pictures = 0
+            for item in manifest['resources']:
+                logger.debug('Manifest item: %s', repr(item))
+                if item['type'] and item['type'].startswith('image/'):
+                    pictures += 1
+            bv.picture_count = pictures
+            bv.save()
 
 
 def find_all_words(bv, glossary_words):
@@ -307,8 +375,9 @@ def find_all_words(bv, glossary_words):
             bv.all_word_list = found['all_words']
             bv.non_dict_word_list = found['non_dict_words']
             bv.glossary_word_list = found['glossary_words']
-            logger.debug('%s: parsed %d glossary words; %d dictionary words; %d non-dict words',
-                         bv,
+            bv.word_count = found['word_count']
+            logger.debug('%s: parsed %d words; %d glossary words; %d dictionary words; %d non-dict words',
+                         bv, bv.word_count,
                          len(bv.glossary_word_list), len(bv.all_word_list), len(bv.non_dict_word_list))
             bv.save()
     else:
@@ -333,7 +402,9 @@ class TextExtractor(HTMLParser):
 
     def get_word_lists(self, glossary_words):
         self.close()
-        token_set = set(RegexpTokenizer(r'\w+').tokenize(self.text))
+        tokens = RegexpTokenizer(r'\w+').tokenize(self.text)
+        word_count = len(tokens)
+        token_set = set(tokens)
         glossary_set = set()
         word_set = set()
         non_word_set = set()
@@ -367,6 +438,7 @@ class TextExtractor(HTMLParser):
             'glossary_words': glossary_list,
             'all_words': word_list,
             'non_dict_words': non_word_list,
+            'word_count': word_count,
         }
 
     # We sort the hardest (low-frequency) words to the front of our list.

@@ -132,11 +132,11 @@ $btn-tag-focus-ring:                    #a0abfd;
 $btn-tag-bg:                            rgba(#f0f0f0, .2);
 $btn-tag-color:                         #eceff5;
 $btn-tag-border-color:                  transparent;
-$btn-tag-hover-bg:                      rgba(#f0f0f0, .1675);
-$btn-tag-hover-color:                   palette($btn-tag-color, 450);
+$btn-tag-hover-bg:                      rgba(#f0f0f0, .375);
+$btn-tag-hover-color:                   #fff;
 $btn-tag-hover-border-color:            transparent;
-$btn-tag-active-bg:                     rgba(#f0f0f0, .25);
-$btn-tag-active-color:                  $btn-tag-color;
+$btn-tag-active-bg:                     #ff554d;
+$btn-tag-active-color:                  #111;
 $btn-tag-active-border-color:           transparent;
 
 $btn-favorite-focus-ring:               #a0abfd;
@@ -160,6 +160,11 @@ $btn-react-hover-border-color:          #636b82;
 $btn-react-active-bg:                   #636b82;
 $btn-react-active-color:                #fff;
 $btn-react-active-border-color:         #636b82;
+
+// Badges
+$badge-count-bg:                        transparent;
+$badge-count-color:                     #eceff5;
+$badge-count-border-color:              #636b82;
 
 // Skiplink
 $skiplink-bg:                           #6268ad;
@@ -274,6 +279,10 @@ $dropdown-link-hover-bg:                #6268ad;
 $dropdown-link-hover-color:             #fbfbfb;
 $dropdown-link-active-bg:               #ff554d;
 $dropdown-link-active-color:            #111;
+
+// Tooltip - default
+$tooltip-bg:                            #727272;
+$tooltip-color:                         #fff;
 
 // Tooltip - feature
 $tooltip-feature-bg:                    #97ebdd;
@@ -523,3 +532,10 @@ $react-wedge-10:                        #f55423;
 $react-wedge-11:                        #ff3500;
 $react-box-line:                        #9da4b1;
 $react-box-icon:                        #9da4b1;
+
+// Reading time activity chart
+$readtime-legend-label-color:           #eceff5;
+$readtime-mark-color:                   #fbfbfb;
+$readtime-bar-bg:                       #a0abfd;
+$readtime-bar-active-bg:                #ff554d;
+$readtime-bar-striped-bg:               $box-bg;

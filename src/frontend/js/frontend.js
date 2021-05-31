@@ -1,7 +1,8 @@
 /* global clusiveContext, PAGE_EVENT_ID, fluid */
+/* exported updateLibraryData */
 
 // Set up common headers for Ajax requests for Clusive's event logging
-$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+$.ajaxPrefilter(function(options) {
     'use strict';
 
     options.beforeSend = function(xhr) {
@@ -67,7 +68,7 @@ function easeInOutQuad(t, b, c, d) {
     'use strict';
 
     if ((t /= d / 2) < 1) { return c / 2 * t * t + b; }
-    return -c / 2 * ((--t) * (t - 2) - 1) + b;
+    return -c / 2 * (--t * (t - 2) - 1) + b;
 }
 
 function getBreakpointByName(name) {
@@ -293,9 +294,9 @@ function reactDimAnimate(element, newVal) {
         }
         var elapsed = timestamp - start;
         var elapsedRatio  = elapsed / duration;
+        elapsedRatio = elapsedRatio > 1 ? 1 : elapsedRatio;
         var update = Math.round(easeInOutQuad(elapsedRatio, old, delta, 1));
 
-        elapsedRatio = elapsedRatio > 1 ? 1 : elapsedRatio;
         if (update < Math.min(old, newVal)) {
             update = Math.min(old, newVal);
         } else if (update > Math.max(old, newVal)) {
@@ -418,7 +419,6 @@ function formUseThisLinks() {
     });
     $('body').on('change', '.usethis-cover', function(e) {
         var checked = $(this).prop('checked');
-        console.debug('Checkbox now ', checked);
         if (checked) {
             $('#new-cover').slideUp();
             $('#cover-label').hide();
@@ -475,7 +475,6 @@ function showTooltip(name) {
     'use strict';
 
     if (name) {
-        console.debug('setting up tip: ', name);
         $(window).ready(function() {
             var tip_control = $('[data-clusive-tip-id="' + name + '"]');
             var tip_popover = $('#tip');
@@ -510,8 +509,85 @@ function showTooltip(name) {
     }
 }
 
+// Determine if page has bricks layout
+function hasBricksLayout() {
+    'use strict';
+
+    var regex = new RegExp('/bricks/');
+    return regex.test(window.location.pathname);
+}
+
+// Determine if this page has any filtering active. It does if there is an unchecked "All" checkbox.
+function hasActiveFilters() {
+    'use strict';
+
+    return $('[data-clusive="filterAll"]').not(':checked').length > 0;
+}
+
+// Look at the filter checkboxes and update the given URI with appropriate arguments to reflect them.
+function addFilterArgs(uri) {
+    'use strict';
+
+    var params = uri.searchParams;
+    $('[data-clusive="filterAllUpdate"]').each(function() {
+        var $par = $(this);
+        var $all = $par.find('[data-clusive="filterAll"]');
+        var name = $all.attr('name');
+        if ($all.is(':checked')) {
+            params.delete(name);
+        } else {
+            var values = [];
+            $par.find('input:checked').each(function() {
+                values.push($(this).val());
+            });
+            params.set(name, values.join(','));
+        }
+    });
+    return uri;
+}
+
+// AJAX update the library cards based on the current collection, view, query, and filters.
+// If a page is specified it will go to that page.
+function updateLibraryData(page) {
+    'use strict';
+
+    // eslint-disable-next-line compat/compat
+    var uri = new URL(window.location); // not good for Opera Mini, IE
+    uri.pathname = uri.pathname
+        .replace('/library/', '/library/data/');
+    var params = uri.searchParams;
+    if (page) {
+        params.set('page', page);
+    } else {
+        params.delete('page'); // Force first page of results when filters are changed.
+    }
+    uri = addFilterArgs(uri);
+
+    return $.get(uri).done(function(data) {
+        $('#libraryData').html(data);
+        if (hasBricksLayout()) {
+            libraryMasonryEnable();
+        }
+    });
+}
+
+// Handle filter checkbox dynamic behavior
 function filterAllUpdate() {
     'use strict';
+
+    // set up initial state based on page markup
+    $('[data-clusive="filterAllUpdate"]').each(function() {
+        var $par = $(this);
+        var $all = $par.find('[data-clusive="filterAll"]');
+        var $checked = $par.find('input:checked');
+        if (!$par.length || !$all.length) { return; }
+        if (!$checked.length) {
+            $all.prop('checked', true);
+        } else {
+            $all.prop('checked', false);
+        }
+    });
+    $('#clearFilters').toggle(hasActiveFilters());
 
     $(document.body).on('click', '[data-clusive="filterAllUpdate"] input', function(e) {
         var $elm = $(e.currentTarget);
@@ -529,6 +605,80 @@ function filterAllUpdate() {
         } else {
             $all.prop('checked', false);
         }
+        $('#clearFilters').toggle(hasActiveFilters());
+        updateLibraryData();
+        if (hasBricksLayout()) {
+            libraryMasonryEnable();
+        }
+    });
+}
+
+// Set up pagination links to AJAX update the library page content.
+function libraryPageLinkSetup() {
+    'use strict';
+
+    $(document.body).on('click', 'a.page-link', function(e) {
+        e.preventDefault();
+        var $elm = $(e.currentTarget);
+        updateLibraryData($elm.attr('href'))
+            .then(function() {
+                $('#libraryData')[0].scrollIntoView();
+            });
+    });
+}
+
+// Set up style and sort links on the library page to dynamically add page number & filter settings to the URL linked.
+function libraryStyleSortLinkSetup() {
+    'use strict';
+
+    // Style links add filters and page numbers
+    $(document.body).on('click', 'a.style-link', function(e) {
+        e.preventDefault();
+        // eslint-disable-next-line compat/compat
+        var url = new URL($(e.currentTarget).attr('href'), window.location);
+        url = addFilterArgs(url);
+        if (window.current_page_number) {
+            url.searchParams.set('page', window.current_page_number);
+        }
+        window.location = url;
+    });
+
+    // Sort links add filters, but page number is reset to 1.
+    $(document.body).on('click', 'a.sort-link', function(e) {
+        e.preventDefault();
+        // eslint-disable-next-line compat/compat
+        var url = new URL($(e.currentTarget).attr('href'), window.location);
+        url = addFilterArgs(url);
+        window.location = url;
+    });
+}
+
+// Clicking one of the bars in the dashboard reading-time visualization highlights other bars for the same book.
+function dashboardSetup() {
+    'use strict';
+
+    var $body = $('body');
+    $body.on('focus', '.readtime-bar', function() {
+        var id = $(this).data('clusive-book-id');
+        if (id) {
+            $('.readtime-bar.active').removeClass('active');
+            $('[data-clusive-book-id="' + id + '"]').addClass('active');
+        }
+    });
+    $body.on('blur', '.readtime-bar', function() {
+        $('.readtime-bar.active').removeClass('active');
+    });
+
+    $body.on('click', 'a.activity-panel-days', function(e) {
+        e.preventDefault();
+        $.get('/dashboard-activity-panel/' + $(this).data('days'))
+            .done(function(result) {
+                $('#StudentActivityPanel').replaceWith(result);
+                $('#StudentActivityPanel').CFW_Init();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
     });
 }
 
@@ -548,6 +698,9 @@ $(window).ready(function() {
     formUseThisLinks();
     showTooltip(TOOLTIP_NAME);
     filterAllUpdate();
+    libraryPageLinkSetup();
+    libraryStyleSortLinkSetup();
+    dashboardSetup();
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;

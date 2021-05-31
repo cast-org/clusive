@@ -8,8 +8,30 @@
     font-weight: $tag-font-weight;
     line-height: $btn-line-height;
     color: var(--CT_btnTagColor);
+    vertical-align: middle;
     background-color: var(--CT_btnTagBg);
     border-color: var(--CT_btnTagBorderColor);
+    @include border-radius($btn-border-radius);
+
+    &.active {
+        color: var(--CT_btnTagActiveColor);
+        background-color: var(--CT_btnTagActiveBg);
+        border-color: var(--CT_btnTagActiveBorderColor);
+    }
+}
+
+.badge-count {
+    padding: $tag-padding-y $tag-padding-x;
+    margin-top: $tag-margin-y;
+    margin-right: $tag-margin-right;
+    margin-bottom: $tag-margin-y;
+    @include font-size($tag-font-size);
+    font-weight: $tag-font-weight;
+    line-height: $btn-line-height;
+    color: var(--CT_badgeCountColor);
+    vertical-align: middle;
+    background-color: var(--CT_badgeCountBg);
+    border-color: var(--CT_badgeCountBorderColor);
     @include border-radius($btn-border-radius);
 }
 

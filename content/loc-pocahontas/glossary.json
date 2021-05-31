@@ -1,0 +1,301 @@
+[
+  {
+    "headword": "find",
+    "alternateForms": ["finds","found","finding"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To come upon after losing something and searching for it." ,
+        "examples": [ "Alex found his father's lost watch." ],
+        "images": [
+          {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child is finding hidden objects in this popup book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "seriously",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adverb",
+        "definition": "Marked by careful thinking or consideration." ,
+        "examples": [ "They have to seriously consider what will result from their actions." ]
+      }
+    ]
+  },
+  {
+    "headword": "colony",
+    "alternateForms": ["colonies"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A place where a group of people come to settle which is under the control of their home country." ,
+        "examples": [ "America was a colony of England before it became independent." ]
+      }
+    ]
+  },
+  {
+    "headword": "negotiate",
+    "alternateForms": ["negotiates","negotiated","negotiating"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To bargain or come to an agreement with another person." ,
+        "examples": [ "If the price is too high, try negotiating with the seller." ]
+      }
+    ]
+  },
+  {
+    "headword": "intermediary",
+    "alternateForms": ["intermediaries"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A person who acts as an agent or mediator between persons, groups, or the like; go-between." ,
+        "examples": [ "Pocahontas was an intermediary between the Algonquian people and the English colonists." ], 
+        "images": [
+          {
+            "src": "glossimages/intermediary1.jpg",
+            "alt": "Photo of three people talking.",
+            "description": "One person talks to two other people.",
+            "caption": "This intermediary talks with two other people, explaining each person's point of view.",
+            "source": {
+              "url": "https://www.pexels.com/photo/businesspeople-talking-4427611/",
+              "title": "Businesspeople Talking",
+              "author": "August de Richelieu",
+              "author_url": "https://www.pexels.com/@august-de-richelieu",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "settlement",
+    "alternateForms": ["settlements"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A place where a group of people come to settle which is under the control of their home country." ,
+        "examples": [ "America was a colony of England before it became independent." ]
+      }
+    ]
+  },
+  {
+    "headword": "settle",
+    "alternateForms": ["settles","settled","settling"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To bargain or come to an agreement with another person." ,
+        "examples": [ "If the price is too high, offer a lower price and see if the owner will settle for it."]
+      }
+    ]
+  },
+  {
+    "headword": "negotiator",
+    "alternateForms": ["negotiators"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A person who acts as an agent or mediator between persons, groups, or the like; go-between." ,
+        "examples": [ "Pocahontas was an negotiator between the Algonquian people and the English colonists." ], 
+        "images": [
+          {
+            "src": "glossimages/intermediary1.jpg",
+            "alt": "Photo of three people talking.",
+            "description": "One person talks to two other people.",
+            "caption": "This negotiator talks with two other people, explaining each person's point of view.",
+            "source": {
+              "url": "https://www.pexels.com/photo/businesspeople-talking-4427611/",
+              "title": "Businesspeople Talking",
+              "author": "August de Richelieu",
+              "author_url": "https://www.pexels.com/@august-de-richelieu",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "observe",
+    "alternateForms": ["observes","observed","observing"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To look at carefully." ,
+        "examples": [ "Alex observed where his father's left his watch." ],
+        "images": [
+          {
+            "src": "glossimages/find1.jpg",
+            "alt": "Photo of a father and daughter reading a book.",
+            "description": "A father and daughter reading a book.",
+            "caption": "This child is observing and discovering hidden objects in this popup book.",
+            "source": {
+              "url": "https://www.pexels.com/photo/dad-and-daughter-reading-a-cutouts-fairy-tale-book-6139602/",
+              "title": "Dad and Daughter Reading a Cutouts Fairy Tale Book",
+              "author": "cottonbro",
+              "author_url": "https://www.pexels.com/@cottonbro",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "gravely",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "adverb",
+        "definition": "Marked by careful thinking or consideration." ,
+        "examples": [ "They have to gravely consider what will result from their thoughtless actions." ]
+      }
+    ]
+  },
+  {
+    "headword": "township",
+    "alternateForms": ["townships"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A place where a group of people come to settle which is under the control of their home country." ,
+        "examples": [ "Jamestown was a township in Virginia, an early colony of England in America." ]
+      }
+    ]
+  },
+  {
+    "headword": "compromise",
+    "alternateForms": ["compromises","compromised","compromising"],
+    "meanings": [
+      {
+        "pos": "verb",
+        "definition": "To bargain or come to an agreement with another person." ,
+        "examples": [ "If the price is too high, try compromising on a lower price with the seller." ]
+      }
+    ]
+  },
+  {
+    "headword": "newcomer",
+    "alternateForms": ["newcomers"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A person who arrived not long ago." ,
+        "examples": [ "The family just moved in and are newcomers to the neighborhood." ],
+        "images": [
+          {
+            "src": "glossimages/newcomer1.jpg",
+            "alt": "Photo of man and child holding a newborn baby.",
+            "description": "A man, wearing a mask and hair covering, and young child hold a newborn baby. The baby is wrapped in a white blanket, has its eyes closed and its mouth open.",
+            "caption": "This newborn baby is a newcomer to the family.",
+            "source": {
+              "url": "https://www.pexels.com/photo/man-and-child-holding-baby-3279209/",
+              "title": "Man and child holding baby" ,
+              "author": " Jonathan Borba",
+              "author_url": "https://www.pexels.com/@jonathanborba",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "tribe",
+    "alternateForms": ["tribes"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A group of people, families, or villages that share the same language, social customs, and ancestors." ,
+        "examples": [ "She left her tribe to go explore the world." ],
+        "images": [
+          {
+            "src": "glossimages/tribe1.jpg",
+            "alt": "Photo of a group of men from the same tribe.",
+            "description": "A group of men standing together. The men are dressed in similar clothing. They wear sandals and large, bright, loosely draped cloth around their shoulders and bodies.",
+            "caption": "Men from a tribe gathered together.",
+            "source": {
+              "url": "https://www.pexels.com/photo/photo-of-group-of-men-wearing-assorted-scarves-holding-sticks-667200/",
+              "title": "Photo of Group of Men Wearing Assorted Scarves Holding Sticks" ,
+              "author": "Follow Alice",
+              "author_url": "https://www.pexels.com/@followalice",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "colonist",
+    "alternateForms": ["colonists"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "A person who lives in or is a member of a new settlement or colony." ,
+        "examples": [ "John Smith was one of the English colonists in Virginia." ]
+      }
+    ]
+  },
+  {
+    "headword": "tension",
+    "alternateForms": [],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Physical or mental pressure." ,
+        "examples": [ "I could feel the tension in the exam room." ]
+      }
+    ]
+  },
+  {
+    "headword": "captor",
+    "alternateForms": ["captors"],
+    "meanings": [
+      {
+        "pos": "noun",
+        "definition": "Someone who takes or holds someone or something else captive." ,
+        "examples": [ "The prisoners planned their escape from their captors." ],
+        "images": [
+          {
+            "src": "glossimages/captor1.jpg",
+            "alt": "Photo of a person in handcuffs being held by a person in uniform.",
+            "description": "A person is wearing handcuffs and an orange jumpsuit. Next to this person is a person wearing a dark uniform and a badge. The person in the uniform holds the arm of the person wearing handcuffs.",
+            "caption": "The police officer is the captor, and the person in handcuffs is the captive.",
+            "source": {
+              "url": "https://www.pexels.com/photo/man-in-orange-jacket-standing-beside-man-in-black-leather-jacket-6065469/",
+              "title": "Man in Orange Jacket Standing Beside Man in Black Leather Jacket" ,
+              "author": "RODNAE Productions",
+              "author_url": "https://www.pexels.com/@rodnae-prod",
+              "license": "Free to use",
+              "license_url": "https://www.pexels.com/license/"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -117,10 +117,20 @@ var manifest_path = "{{ manifest_path }}";
                 textAlignment:'start',
                 verticalScroll: 'readium-scroll-on',
             },
+            lastReadingPosition: lastReadingPosition,
+            injectables: injectables,
+            attributes: {
+                margin: 50,
+            },
             rights: {
-                enableBookmarks: true,
                 enableAnnotations: true,
-                enableTTS: true
+                enableTTS: true,
+                enableBookmarks: false,
+                enableMaterial: false,
+                enableSearch: false,
+                enableTimeline: false,
+                enableContentProtection: false,
+                autoGeneratePositions: false
             },
             tts: {
                 enableSplitter: true,
@@ -150,13 +160,6 @@ var manifest_path = "{{ manifest_path }}";
                     }
                 }
             },
-            attributes: {
-                margin: 50,
-            },
-            initialAnnotations: {"bookmarks":[], "highlights": annotations},
-            lastReadingPosition: lastReadingPosition,
-            injectables: injectables,
-
             highlighter: {
                 selectionMenuItems: selectionMenuItems,
                 api: {
@@ -165,31 +168,39 @@ var manifest_path = "{{ manifest_path }}";
                     }
                 }
             },
+            initialAnnotations: {"bookmarks":[], "highlights": annotations},
             annotations: {
                 initialAnnotationColor: "var(--CRT_highlightOverlayBg)",
+                api: {
+                    addAnnotation: function (annotation) {
+                        console.info('addAnnotation called');
+                        return addNewAnnotation(annotation, pub_id, pub_version);
+                    },
+                    selectedAnnotation: function (annotation) {
+                        console.debug('Selected annotation: ', annotation.id);
+                        showExistingAnnotation(annotation);
+                        return Promise.resolve();
+                    },
+                    deleteAnnotation: function (annotation) {
+                        console.warn('Not implemented: Delete annotation: ', annotation.id);
+                        return Promise.reject();
+                    }
+                }
+            },
+            bookmarks: {
+                api: {
+                    addBookmark: function (bookmark) {
+                        console.error('Bookmark saving is not implemented yet. Received: ', bookmark);
+                        return Promise.reject();
+                    },
+                    deleteBookmark: function (bookmark) {
+                        console.error('Bookmark deletion is not implemented yet. Received: ', bookmark);
+                        return Promise.reject();
+                    }
+                }
             },
 
             api: {
-                addBookmark: function (bookmark) {
-                    console.error('Bookmark saving is not implemented yet. Received: ', bookmark);
-                    return Promise.reject();
-                },
-                deleteBookmark: function (bookmark) {
-                    console.error('Bookmark deletion is not implemented yet. Received: ', bookmark);
-                    return Promise.reject();
-                },
-                addAnnotation: function (annotation) {
-                    return addNewAnnotation(annotation, pub_id, pub_version);
-                },
-                selectedAnnotation: function (annotation) {
-                    console.debug('Selected annotation: ', annotation.id);
-                    showExistingAnnotation(annotation);
-                    return Promise.resolve();
-                },
-                deleteAnnotation: function (annotation) {
-                    console.warn('Not implemented: Delete annotation: ', annotation.id);
-                    return Promise.reject();
-                },
                 resourceAtEnd: function() {
                     var currentResource = D2Reader.currentResource();
                     var lastResource = (currentResource===D2Reader.totalResources()-1);

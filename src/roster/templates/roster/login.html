@@ -1,7 +1,7 @@
 {% extends "shared/base.html" %}
-{% load static %}
+{% load static socialaccount %}
 
-{% block bodyClass %}home{% endblock %}
+{% block bodyClass %}home sidebar-no-start sidebar-no-end{% endblock %}
 {% block title %}Welcome to Clusive{% endblock %}
 
 {% block preference_panel %} {% endblock %}
@@ -20,17 +20,42 @@
 <main id="content" tabindex="-1">
 
     <h1>Welcome to Clusive</h1>
-    <p>Clusive is a flexible, customizable learning environment that adapts to you. Clusive is part of the <a href="https://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>.</p>
+    <p>Clusive<sup>&trade;</sup> is a flexible, customizable learning environment that adapts to you. Clusive is part of the <a href="https://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>.</p>
 
     <div class="row">
         <div class="col-sm-6 col-lg-4">
             <div class="card card-login">
                 <div class="card-body login-section">
                     <h2 class="mb-1">Log in to Clusive</h2>
+                    <div class="socialaccount_ballot">
+                        {% get_providers as socialaccount_providers %}
+                        <ul class="list-unstyled text-center mb-0_5">
+                            {% for provider in socialaccount_providers %}
+                            <li class="mb-0_5">
+                            <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                                <button type="submit" class="socialaccount_provider login-btn login-google">
+                                    <span class="sr-only">Sign in with {{provider.name}}</span>
+                                </button>
+                            </form>
+                            <li>
+                            {% endfor %}
+                        </ul>
+                        {% if messages %}
+                        <div class="errorlist">
+                            {% for message in messages %}
+                            <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="rule-text">or</div>
+
                     {% if email_validate %}
                     <div class="errorlist">
                         You need to validate your email address before you can log in.
                         Please check your email for the link.
+                        <p><a href="{% url 'validate_resend' user_id=user_id %}" style="color: inherit">Resend email</a></p>
                     </div>
                     {% elif form.errors %}
                     <div class="errorlist">
@@ -77,11 +102,11 @@
                 <div class="card-body login-section d-xs-down-none">
                     <ul class="list-unstyled">
                         <li class="media">
-                            <div class="media-img"><span class="icon-hand-paper-o" aria-hidden="true"></span></div>
+                            <div class="media-img"><img src="{% static "shared/images/home-hand.png" %}" class="img-fluid" role="presentation" alt=""></div>
                             <div class="media-body">Adaptive learning environment</div>
                         </li>
                         <li class="media">
-                            <div class="media-img text-muted"><span class="icon-universal-access" aria-hidden="true"></span></div>
+                            <div class="media-img"><img src="{% static "shared/images/home-accessible.svg" %}" class="img-fluid" role="presentation" alt=""></div>
                             <div class="media-body">High-quality accessible content</div>
                         </li>
                         <li class="media">
@@ -91,12 +116,13 @@
                     </ul>
                 </div>
             </div>
+
         </div>
 
         <div class="col-lg-4">
             <h2 class="mb-1">See a demo</h2>
             <div class="embed-fluid embed-fluid-16x9">
-                <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/31Vd8zvl2GE" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/BqhfDOuV4jE" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
             <h2 class="mb-1 pt-1 mt-1">Learn more</h2>

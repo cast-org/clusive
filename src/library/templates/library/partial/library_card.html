@@ -1,4 +1,4 @@
-{% load static figuration %}
+{% load static library %}
 <div class="card card-library">
     <div class="card-header">
         <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title|highlight:query }}</h2></a>
@@ -12,17 +12,10 @@
     <div class="card-body">
         {% if book.description %}<p>{{ book.description|highlight:query }}</p>{% endif %}
     </div>
-    {% if menu %}
-        {% if pub.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
         <div class="card-footer">
             <div class="row">
-                <div class="col card-library-tag">
-                </div>
-                <div class="col-auto card-library-action">
-                    {% include "library/partial/library_action_menu.html" %}
-                </div>
+                {% include 'library/partial/library_card_topics.html' %}
+                {% include "library/partial/library_action_menu.html" %}
             </div>
         </div>
-        {% endif %}
-    {% endif %}
 </div>

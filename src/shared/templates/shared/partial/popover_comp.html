@@ -1,11 +1,125 @@
 <div class="popover popover-comp popover-scrollable" id="compPop">
-    <div role="document">
+    <div role="document">        
         <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
-        <!-- <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span> -->
+        <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
         <div class="popover-header">
             <strong>Your thoughts?</strong>
+            <span class="icon-thought" aria-hidden="true"></span>
         </div>
         <div class="popover-body">
+            <p id="affectScaleQuestion">How did this reading make you feel?</p>
+            <div class="react react-has-btn">
+                <div class="react-chart">
+                    <div class="react-chart-inner">
+                        <!-- lines -->
+                        <div class="react-line react-line-0"></div>
+                        <div class="react-line react-line-1"></div>
+                        <div class="react-line react-line-2"></div>
+                        <div class="react-line react-line-3"></div>
+                        <div class="react-line react-line-4"></div>
+                        <div class="react-line react-line-5"></div>
+                        <!-- wedges -->
+                        <form id="affectCheckForm">
+                            <div class="react-item react-item-0">
+                                <div class="react-wedge react-wedge-0" style="--dim: 0%;"></div>
+                                <div class="btn-check react-btn react-label-0">
+                                    <input id="btn0" type="checkbox" class="btn-check-input" data-react-index="0" name="affect-option-surprised">
+                                    <label for="btn0" class="btn btn-react">suprised</label>
+                                </div>
+                                <div class="react-label react-label-0">suprised</div>
+                            </div>
+                        </form>
+                        <div class="react-item react-item-1">
+                            <div class="react-wedge react-wedge-1" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-1">
+                                <input id="btn1" type="checkbox" class="btn-check-input" data-react-index="1" name="affect-option-interested">
+                                <label for="btn1" class="btn btn-react">interested</label>
+                            </div>
+                            <div class="react-label react-label-1">interested</div>
+                        </div>
+                        <div class="react-item react-item-2">
+                            <div class="react-wedge react-wedge-2" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-2">
+                                <input id="btn2" type="checkbox" class="btn-check-input" data-react-index="2" name="affect-option-happy">
+                                <label for="btn2" class="btn btn-react">happy</label>
+                            </div>
+                            <div class="react-label react-label-2">happy</div>
+                        </div>
+                        <div class="react-item react-item-3">
+                            <div class="react-wedge react-wedge-3" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-3">
+                                <input id="btn3" type="checkbox" class="btn-check-input" data-react-index="3" name="affect-option-curious">
+                                <label for="btn3" class="btn btn-react">curious</label>
+                            </div>
+                            <div class="react-label react-label-3">curious</div>
+                        </div>
+                        <div class="react-item react-item-4">
+                            <div class="react-wedge react-wedge-4" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-4">
+                                <input id="btn4" type="checkbox" class="btn-check-input" data-react-index="4" name="affect-option-calm">
+                                <label for="btn4" class="btn btn-react">calm</label>
+                            </div>
+                            <div class="react-label react-label-4">calm</div>
+                        </div>
+                        <div class="react-item react-item-5">
+                            <div class="react-wedge react-wedge-5" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-5">
+                                <input id="btn5" type="checkbox" class="btn-check-input" data-react-index="5" name="affect-option-okay">
+                                <label for="btn5" class="btn btn-react">okay</label>
+                            </div>
+                            <div class="react-label react-label-5">okay</div>
+                        </div>
+                        <div class="react-item react-item-6">
+                            <div class="react-wedge react-wedge-6" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-6">
+                                <input id="btn6" type="checkbox" class="btn-check-input" data-react-index="6" name="affect-option-bored">
+                                <label for="btn6" class="btn btn-react">bored</label>
+                            </div>
+                            <div class="react-label react-label-6">bored</div>
+                        </div>
+                        <div class="react-item react-item-7">
+                            <div class="react-wedge react-wedge-7" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-7">
+                                <input id="btn7" type="checkbox" class="btn-check-input" data-react-index="7" name="affect-option-sad">
+                                <label for="btn7" class="btn btn-react">sad</label>
+                            </div>
+                            <div class="react-label react-label-7">sad</div>
+                        </div>
+                        <div class="react-item react-item-8">
+                            <div class="react-wedge react-wedge-8" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-8">
+                                <input id="btn8" type="checkbox" class="btn-check-input" data-react-index="8" name="affect-option-disappointed">
+                                <label for="btn8" class="btn btn-react">disappointed</label>
+                            </div>
+                            <div class="react-label react-label-8">disappointed</div>
+                        </div>
+                        <div class="react-item react-item-9">
+                            <div class="react-wedge react-wedge-9" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-9">
+                                <input id="btn9" type="checkbox" class="btn-check-input" data-react-index="9" name="affect-option-confused">
+                                <label for="btn9" class="btn btn-react">confused</label>
+                            </div>
+                            <div class="react-label react-label-9">confused</div>
+                        </div>
+                        <div class="react-item react-item-10">
+                            <div class="react-wedge react-wedge-10" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-10">
+                                <input id="btn10" type="checkbox" class="btn-check-input" data-react-index="10" name="affect-option-frustrated">
+                                <label for="btn10" class="btn btn-react">frustrated</label>
+                            </div>
+                            <div class="react-label react-label-10">frustrated</div>
+                        </div>
+                        <div class="react-item react-item-11">
+                            <div class="react-wedge react-wedge-11" style="--dim: 0%;"></div>
+                            <div class="btn-check react-btn react-label-11">
+                                <input id="btn11" type="checkbox" class="btn-check-input" data-react-index="11" name="affect-option-annoyed">
+                                <label for="btn11" class="btn btn-react">annoyed</label>
+                            </div>
+                            <div class="react-label react-label-11">annoyed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
             <form id="comprehensionCheckForm">
                 <p id="compScaleQuestion">How much did you learn from this reading?</p>
                 <div class="form-inline">
@@ -31,8 +145,7 @@
                         <textarea id="compText0" class="form-control" name="comprehension-free"></textarea>
                         <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#compText0"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
                     </div>
-                </div>
-                <button type="button" class="btn btn-primary" id="comprehensionCheckSubmit">Save</button>
+                </div>                
             </form>
         </div>
     </div>

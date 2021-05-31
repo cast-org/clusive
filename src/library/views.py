@@ -1,4 +1,5 @@
 import imghdr
+import json
 import logging
 import os
 import shutil
@@ -6,7 +7,7 @@ from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -20,27 +21,119 @@ from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject
 from library.parsing import unpack_epub_file, scan_book
 from roster.models import ClusiveUser, Period, LibraryViews
 
 logger = logging.getLogger(__name__)
 
+# The library page requires a lot of parameters, which interact in rather complex ways.
+# Here's a summary.  It is a sort-of hierarchy, in that changing parameters higher on this list
+# can reset parameters that are lower on the list, but the effects never go in the opposite direction.
+#
+# STYLE (which should perhaps have been called "layout"): [bricks, grid, list]
+#   This is the first part of the URL
+#   Changing the style leaves all the other parameters unchanged.
+#   The links in the style menu therefore have a JS helper to add the current filter and page to the URL.
+#   The ClusiveUser model holds a default for style.
+# VIEW (which should perhaps have been called "collection"): [public, mine, or period]
+#   This is the third part of the library URL
+#   If view is "period", there is a fourth part of the URL which is the specific period being viewed.
+#   Changing the view resets QUERY, FILTER, and PAGE to their defaults.
+#   Links in the view menu are just URLs.
+#   The ClusiveUser model holds a default for view & period.
+# SORT: [title, author]
+#   This is the second part of the URL
+#   Changing the sort resets the PAGE to its default.
+#   The links in the sort menu have a JS helper to add the current filter to the URL.
+# QUERY: [any search string typed in by the user]
+#   This is represented as a query= parameter in the URL
+#   Changing the query resets the FILTER and PAGE to their defaults.
+#   Query is changed by the search form, which does a simple GET.
+# FILTER: [sets of keywords for "subject" and for "words"]
+#   This is represented as subject= and words= URL parameters
+#   Changing the filter resets the PAGE to its default.
+#   The filter form has AJAX functionality to live-update the contents of the page when checkboxes are changed.
+# PAGE: [1-n]
+#   This is represented as a page= paramter in the URL.
+#   Changing the page leaves all the other parameters unchanged.
+#   Page links are implemented with AJAX.
+#
+# Summary of what resets what:
+# STYLE:
+# VIEW:  query, filter, page
+# SORT:                 page
+# QUERY:        filter, page
+# FILTER:               page
+# PAGE:
 
-class LibraryView(LoginRequiredMixin, EventMixin, ListView):
-    """Library page showing a list of books"""
-    template_name = 'library/library.html'
+class LibraryDataView(LoginRequiredMixin, ListView):
+    """
+    Just the list of cards and navigation bar part of the library page.
+    Used for AJAX updates of the library page.
+    """
+    template_name = 'library/partial/library_data.html'
+    paginate_by = 21
+    paginate_orphans = 3
+
     style = None
     view = 'public'
     view_name = None  # User-visible name for the current view
     period = None
-    paginate_by = 21
-    paginate_orphans = 3
+    query = None
+    subjects = None
 
-    def configure_event(self, event):
-        event.page = 'Library'
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.style = kwargs.get('style')
+        self.sort = kwargs.get('sort')
+        self.view = kwargs.get('view')
+        self.query = request.GET.get('query')
+
+        self.subjects_string = request.GET.get('subjects')
+        if self.subjects_string:
+            subject_strings = self.subjects_string.split(',')
+            s = Subject.objects.filter(subject__in=subject_strings)
+            self.subjects = s
+
+        lengths = request.GET.get('words')
+        if lengths:
+            self.lengths = lengths.split(',')
+        else:
+            self.lengths = None
+
+        if self.view == 'period':
+            # Make sure period_id is specified and legal.
+            if kwargs.get('period_id'):
+                self.period = get_object_or_404(Period, id=kwargs.get('period_id'))
+                if not self.clusive_user.periods.filter(id=self.period.id).exists():
+                    raise Http404('Not a Period of this User.')
+            else:
+                # Need to set a default period.
+                self.period = self.clusive_user.periods.first()
+                if not self.period:
+                    # No periods, must be a guest user.  Switch to showing public content.
+                    return HttpResponseRedirect(redirect_to=reverse('library_style_redirect', kwargs = {'view': 'public'}))
+            self.view_name = self.period.name
+        else:
+            self.view_name = LibraryViews.display_name_of(self.view)
+        # Set defaults for next time
+        user_changed = False
+        if self.clusive_user.library_view != self.view:
+            self.clusive_user.library_view = self.view
+            user_changed = True
+        if self.clusive_user.current_period != self.period:
+            self.clusive_user.current_period = self.period
+            user_changed = True
+        if self.clusive_user.library_style != self.style:
+            self.clusive_user.library_style = self.style
+            user_changed = True
+        if user_changed:
+            self.clusive_user.save()
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
+        q: QuerySet
         if self.view == 'period' and self.period:
             q = Book.objects.filter(assignments__period=self.period)
         elif self.view == 'mine':
@@ -55,57 +148,94 @@ class LibraryView(LoginRequiredMixin, EventMixin, ListView):
                 | Q(owner=self.clusive_user)).distinct()
         else:
             raise Http404('Unknown view type')
+
         if self.query:
             q = q.filter(Q(title__icontains=self.query) |
                          Q(author__icontains=self.query) |
                          Q(description__icontains=self.query))
+
+        if self.subjects:
+            q  = q.filter(Q(subjects__in=self.subjects))
+
+        if self.lengths:
+            length_query = None
+            for option in self.lengths:
+                if not length_query:
+                    length_query = self.query_for_length(option)
+                else:
+                    length_query |= self.query_for_length(option)
+            q = q.filter(length_query)
+
+        if self.sort == 'title':
+            q = q.order_by('sort_title', 'sort_author')
+        elif self.sort == 'author':
+            q = q.order_by('sort_author', 'sort_title')
+        else:
+            logger.warning('unknown sort setting')
+
+        # Make sure results are not duplicated (can happen with IN queries)
+        q = q.distinct()
+        # Avoid separate queries for the topic list of every book
+        q = q.prefetch_related('subjects')
+
         return q
+
+    def query_for_length(self, size):
+        if size=='S':
+            return Q(word_count__lt=500)
+        if size=='M':
+            return Q(word_count__gte=500) & Q(word_count__lte=30000)
+        if size=='L':
+            return Q(word_count__gt=30000)
+        raise Exception('invalid input')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clusive_user'] = self.clusive_user
+        context['query'] = self.query
+        context['subjects_string'] = self.subjects_string
+        context['subjects'] = self.subjects
+        context['period'] = self.period
+        context['style'] = self.style
+        context['current_view'] = self.view
+        context['current_view_name'] = self.view_name
+        context['sort'] = self.sort
+        context['view_names'] = dict(LibraryViews.CHOICES)
+        context['topics'] = Subject.get_list()
+        return context
+
+
+class LibraryView(EventMixin, LibraryDataView):
+    """
+    Full library page showing the controls at the top and the list of cards.
+    """
+    template_name = 'library/library.html'
+
+    def configure_event(self, event):
+        event.page = 'Library'
 
     def dispatch(self, request, *args, **kwargs):
         self.search_form = SearchForm(request.GET)
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
-        self.clusive_user = request.clusive_user
-        self.query = request.GET.get('query')
-        self.view = kwargs.get('view')
-        if kwargs.get('style'):
-            self.style = kwargs.get('style')
-        else:
-            self.style = self.clusive_user.library_style
-        if self.view == 'period':
-            # Make sure period_id is specified and legal.
-            if kwargs.get('period_id'):
-                self.period = get_object_or_404(Period, id=kwargs.get('period_id'))
-                if not self.clusive_user.periods.filter(id=self.period.id).exists():
-                    raise Http404('Not a Period of this User.')
-            else:
-                # Need to set a default period.
-                self.period = self.clusive_user.periods.first()
-                if not self.period:
-                    # No periods, must be a guest user.  Switch to showing public content.
-                    return HttpResponseRedirect(redirect_to=reverse('library', kwargs = {'view': 'public'}))
-            self.view_name = self.period.name
-        else:
-            self.view_name = LibraryViews.display_name_of(self.view)
-        # Set defaults for next time
-        self.clusive_user.library_view = self.view
-        self.clusive_user.current_period = self.period
-        self.clusive_user.library_style = self.style
-        self.clusive_user.save()
-        return super().get(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['clusive_user'] = self.clusive_user
         context['search_form'] = self.search_form
-        context['query'] = self.query
-        context['period'] = self.period
-        context['style'] = self.style
-        context['current_view'] = self.view
-        context['current_view_name'] = self.view_name
-        context['view_names'] = dict(LibraryViews.CHOICES)
         return context
+
+
+class LibraryStyleRedirectView(View):
+    """
+    Does a redirect to the user's preferred version of the library page.
+    """
+    def dispatch(self, request, *args, **kwargs):
+        view = kwargs.get('view')
+        style = request.clusive_user.library_style
+        return HttpResponseRedirect(redirect_to=reverse('library', kwargs={
+            'view': view,
+            'sort': 'title',  # FIXME
+            'style': style,
+        }))
 
 
 class UploadFormView(LoginRequiredMixin, EventMixin, FormView):
@@ -179,7 +309,7 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, UpdateView):
     """Parent class for several metadata-editing pages."""
     model = Book
     form_class = MetadataForm
-    success_url = '/library/mine'
+    success_url = reverse_lazy('library_style_redirect', kwargs={'view': 'mine'})
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
@@ -263,7 +393,8 @@ class MetadataReplaceFormView(MetadataFormView):
             if self.orig_book.cover:
                 os.remove(self.orig_book.cover_storage)
             self.orig_book.cover = self.object.cover
-            os.rename(self.object.cover_storage, self.orig_book.cover_storage)
+            if self.object.cover:
+                os.rename(self.object.cover_storage, self.orig_book.cover_storage)
         self.orig_book.save()
 
         orig_bv = self.orig_book.versions.get()
@@ -295,7 +426,7 @@ class RemoveBookView(LoginRequiredMixin, View):
         if book.owner != request.clusive_user:
             raise PermissionDenied()
         book.delete()
-        return redirect('library', view='mine')
+        return redirect('library_style_redirect', view='mine')
 
 
 class RemoveBookConfirmView(LoginRequiredMixin, View):
@@ -401,7 +532,7 @@ class UpdateLastLocationView(LoginRequiredMixin, View):
 
 class AnnotationView(LoginRequiredMixin, View):
     """
-    POST to this view to add a new highlight to the database.
+    POST to this view to add a new annotation to the database.
     DELETE to it to remove one.
     Logically would support the GET method to return information on a highlight or annotation,
     but that is not needed right now.
@@ -415,7 +546,7 @@ class AnnotationView(LoginRequiredMixin, View):
         clusive_user = get_object_or_404(ClusiveUser, user=request.user)
         page_event_id = request.POST.get('eventId')
         if request.POST.get('undelete'):
-            anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)            
+            anno = get_object_or_404(Annotation, id=request.POST.get('undelete'), user=clusive_user)
             anno.dateDeleted = None
             anno.save()
             logger.debug('Undeleting annotation %s', anno)
@@ -457,7 +588,7 @@ class AnnotationView(LoginRequiredMixin, View):
         logger.debug('Deleting annotation %s', anno)
         anno.dateDeleted = timezone.now()
         anno.save()
-        page_event_id = request.GET.get('eventId')            
+        page_event_id = request.GET.get('eventId')
         annotation_action.send(sender=AnnotationView.__class__,
                                request=request,
                                annotation=anno,
@@ -474,6 +605,31 @@ class AnnotationListView(LoginRequiredMixin, ListView):
         clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
         bookVersion = BookVersion.lookup(self.kwargs['book'], self.kwargs['version'])
         return Annotation.objects.filter(bookVersion=bookVersion, user=clusive_user, dateDeleted=None)
+
+
+class AnnotationNoteView(LoginRequiredMixin, View):
+    """
+    For attaching/updating a note belonging to an annotation.
+    Only supports POST at the moment. GET is not used since notes are loaded with the page.
+    Note: this means if you reload the page with auto-save changes pending, you'll see the outdated content.
+    I think this case is rare enough that we can ignore it for now.
+    I'd rather not have to do a GET on every single note after page load.
+    """
+    @staticmethod
+    def create_from_request(request, note_data, annotation_id):
+        clusive_user = request.clusive_user
+        anno = get_object_or_404(Annotation, id=annotation_id, user=clusive_user)
+        anno.note = note_data.get('note')
+        anno.save()
+
+    def post(self, request, annotation_id):
+        try:
+            note_data = json.loads(request.body)
+        except json.JSONDecodeError:
+            logger.warning('Received malformed note update: %s' % request.body)
+            return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
+        AnnotationNoteView.create_from_request(request, note_data, annotation_id)
+        return JsonResponse({"success": "1"})
 
 
 class SwitchModalContentView(LoginRequiredMixin, TemplateView):

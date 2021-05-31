@@ -1,5 +1,7 @@
+import logging
 from zipfile import ZipFile
 
+import dawn
 from django.contrib.auth.models import User
 from django.test import TestCase
 # Create your tests here.
@@ -9,8 +11,51 @@ from roster.models import ClusiveUser, Period, Site
 from .models import Book, Paradata, BookVersion, BookAssignment
 from .parsing import TextExtractor
 
+logger = logging.getLogger(__name__)
+
 
 class LibraryTestCase(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        user = User.objects.create_user(username="user1", password="password1")
+        user.save()
+        clusive_user = ClusiveUser.objects.create(anon_id="Student1", user=user, role='ST')
+        clusive_user.save()
+        book = Book.objects.create(id=1, owner=clusive_user, title='Foo', sort_title='Foo', author='Bar', sort_author='Bar')
+        book.save()
+        bv = BookVersion.objects.create(book=book, sortOrder=0)
+        bv.save()
+
+    def test_upload_create_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/upload/create')
+        self.assertEqual(response.status_code, 200)
+
+    def test_upload_replace_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/upload/replace/1')
+        self.assertEqual(response.status_code, 200)
+
+    def test_metadata_create_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/metadata/upload/1')
+        self.assertEqual(response.status_code, 200)
+
+    def test_metadata_edit_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/metadata/edit/1')
+        self.assertEqual(response.status_code, 200)
+
+    def test_library_style_redirect(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/mine')
+        self.assertRedirects(response, '/library/bricks/title/mine/')
+
+    def test_library_page(self):
+        login = self.client.login(username='user1', password='password1')
+        response = self.client.get('/library/bricks/title/mine/')
+        self.assertEqual(response.status_code, 200)
 
     def test_text_extraction(self):
         te = TextExtractor()
@@ -44,6 +89,15 @@ class LibraryTestCase(TestCase):
         self.assertTrue('penguin' in word_lists['glossary_words'], 'Parser didn\'t find penguin in glossary words')
         self.assertFalse('1' in word_lists['all_words'], 'Parser didn\'t exclude number')
         self.assertFalse('1' in word_lists['non_dict_words'], 'Parser didn\'t exclude number')
+
+    def test_manifest_picture_counting(self):
+        file = '../content/nysed-penguins/nysed-penguins-1.epub'
+        with open(file, 'rb') as f, dawn.open(f) as epub:
+            pictures = 0
+            for item in epub.manifest.values():
+                if item.mimetype.startswith('image/'):
+                    pictures += 1
+        self.assertEqual(1, pictures, 'Should have found one picture in Penguins book')
 
 
 class LibraryApiTestCase(TestCase):

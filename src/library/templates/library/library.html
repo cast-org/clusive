@@ -1,8 +1,7 @@
 {% extends "shared/base.html" %}
 {% load static %}
-{% load pagination %}
 
-{% block bodyClass %}library{% endblock %}
+{% block bodyClass %}library sidebar-no-start{% endblock %}
 {% block title %}Library | Clusive{% endblock %}
 
 {% block header %}
@@ -31,68 +30,34 @@
         </div>
     </div>
 
+    {% if query %}
+    <p>
+        Showing results for <strong id="currentQuery">{{ query }}</strong>
+        <a href="?" class="ms-0_5">Clear search</a>
+    </p>
+    {% endif %}
+
     <div class="row">
-        <div class="col">
-            {% include "library/partial/library_view_selector.html" %}
-            {% if style == 'list' %}
-                {% include "library/partial/library_list_options.html" %}
-            {% else %}
-                {% include "library/partial/library_grid_options.html" %}
-            {% endif %}
-        </div>
-        {% if current_view == 'mine' %}
-        <div class="col-md-auto text-md-end mb-1 mb-md-0">
-            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add content</a>
-        </div>
-        {% endif %}
+        {% include "library/partial/library_collection_selector.html" %}
+        {% include "library/partial/library_filter_selector.html" %}
+        {% include "library/partial/library_style_selector.html" %}
     </div>
 
-    {% if object_list|length == 0 %}
-        No content found.
+    {% if style == 'list' %}
+        {% include "library/partial/library_list_options.html" %}
     {% else %}
-        {% if style == 'list' %}
-            {% include "library/partial/library_list_content.html" %}
-        {% else %}
-            {% include "library/partial/library_grid_content.html" %}
-        {% endif %}
-        {% if page_obj.has_other_pages %}
-        <nav aria-label="page">
-            <div class="library-pagination-wrapper">
-                <div class="pagination library-pagination">
-                    {% if page_obj.has_previous %}
-                    <a href="{% pagination_search '' page_obj.previous_page_number query %}" class="page-link">
-                        <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
-                        Previous
-                    </a>
-                    {% else %}
-                    <span class="page-link disabled">
-                        <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
-                        Previous
-                    </span>
-                    {% endif %}
-                    {% for pg in paginator.page_range %}
-                        {% if pg == page_obj.number %}
-                            <span class="page-link active" aria-current="page">{{pg}}</span>
-                        {% else %}
-                            <a href="{% pagination_search '' pg  query %}" class="page-link">{{pg}}</a>
-                        {% endif %}
-                    {% endfor %}
-                    {% if page_obj.has_next %}
-                    <a href="{% pagination_search '' page_obj.next_page_number query %}" class="page-link">
-                        Next
-                        <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
-                    </a>
-                    {% else %}
-                    <span class="page-link disabled">
-                        Next
-                        <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
-                    </span>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
-        {% endif %}
+        {% include "library/partial/library_grid_options.html" %}
     {% endif %}
+
+    {% if current_view == 'mine' %}
+    <div class="row">
+        <div class="col">
+            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add content</a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% include 'library/partial/library_data.html' %}
 </main>
 
 {% include "shared/partial/modal_vocab_check.html" %}

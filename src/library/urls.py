@@ -12,6 +12,9 @@ urlpatterns = [
     path('annotationlist/<int:book>/<int:version>', views.AnnotationListView.as_view(),
          name='annotation_list'),
 
+    path('annotationnote/<int:annotation_id>', views.AnnotationNoteView.as_view(),
+         name='annotation_note'),
+
     path('upload/create', views.UploadCreateFormView.as_view(),
          name='upload'),
     path('upload/replace/<int:pk>', views.UploadReplaceFormView.as_view(),
@@ -34,11 +37,17 @@ urlpatterns = [
     path('switch/<int:book_id>/<int:version>', views.SwitchModalContentView.as_view(),
          name='modal_switch'),
 
+    path('data/<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryDataView.as_view(),
+        name='library_data'),
+    path('data/<str:style>/<str:sort>/<str:view>/', views.LibraryDataView.as_view(),
+         name='library_data'),
+
     # Warning: patterns below here will match any URL. Put more specific matchers above.
-    path('<str:style>/<str:view>/<int:period_id>', views.LibraryView.as_view(),
+    path('<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryView.as_view(),
          name='library'),
-    path('<str:style>/<str:view>/', views.LibraryView.as_view(),
+    path('<str:style>/<str:sort>/<str:view>/', views.LibraryView.as_view(),
          name='library'),
-    path('<str:view>', views.LibraryView.as_view(),
-         name='library'),
+
+    path('<str:view>', views.LibraryStyleRedirectView.as_view(),
+         name='library_style_redirect'),
 ]
