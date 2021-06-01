@@ -111,6 +111,8 @@ var manifest_path = "{{ manifest_path }}";
             }
         ];
 
+        var firstResourceLoaded = false;
+
         D2Reader.load({
             url: new URL(url),
             userSettings: {
@@ -204,11 +206,13 @@ var manifest_path = "{{ manifest_path }}";
                 resourceReady: function() {
                     console.debug("D2Reader finished loading the resource at: " + new Date());
                     $(document).ready(function () {
-                        buildTableOfContents();
-                        buildAnnotationList();   
-                        // We only need to create the prefs editor once for a page
-                        if(typeof clusivePrefs === "undefined") {
+                        // Do things that only need to be done once
+                        if(!firstResourceLoaded) {
+                            console.debug("Performing UI tasks on first Reader resource load");
+                            buildTableOfContents();
+                            buildAnnotationList();   
                             clusivePrefs = createClusivePrefsEditor();                        
+                            firstResourceLoaded = true;
                         }                                                   
                     });
                 },
