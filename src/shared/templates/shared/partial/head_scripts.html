@@ -17,6 +17,10 @@ var TOOLTIP_NAME = '{{tip_name}}';
 // Global reference to the preferences editor for non-Infusion code
 // Initialized with the results of createClusivePrefsEditor() when that's called
 var clusivePrefs;
+
+// Predefined user preferences to apply now
+var clusivePrefs_contrast = '{{ request.clusive_user.get_preferences_dict.fluid_prefs_contrast }}';
+var clusivePrefs_lineSpace = '{{ request.clusive_user.get_preferences_dict.fluid_prefs_lineSpace }}';
 </script>
 
 <script src="{% static 'shared/js/lib/main.js' %}"></script>

@@ -715,3 +715,15 @@ $(window).ready(function() {
         formRangeTip(settingReadSpeed, formRangeReadSpeed);
     }
 });
+
+// Using setTimeout seems to work around Infusion blowing out all `<body>` classes
+// if they are updated immediately.
+setTimeout(function() {
+    if (/^(sepia|night)$/.test(clusivePrefs_contrast)) {
+        document.body.classList.add('clusive-theme-' + clusivePrefs_contrast);
+    }
+});
+if (clusivePrefs_lineSpace && document.body.style.getPropertyValue('--CT_lineHeight') === '') {
+    document.body.style.setProperty('--CT_lineHeight', clusivePrefs_lineSpace);
+    document.body.style.setProperty('lineHeight', clusivePrefs_lineSpace);
+}
