@@ -723,7 +723,9 @@ setTimeout(function() {
         document.body.classList.add('clusive-theme-' + clusivePrefs_contrast);
     }
 });
+/*
 if (clusivePrefs_lineSpace && document.body.style.getPropertyValue('--CT_lineHeight') === '') {
     document.body.style.setProperty('--CT_lineHeight', clusivePrefs_lineSpace);
     document.body.style.setProperty('lineHeight', clusivePrefs_lineSpace);
 }
+*/
