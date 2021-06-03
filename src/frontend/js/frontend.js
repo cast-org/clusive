@@ -54,6 +54,20 @@ function clusiveDebounce(func, wait, immediate) {
     };
 }
 
+function localStorageGet(keyName) {
+    'use strict';
+
+    var item = window.localStorage.getItem(keyName);
+    item = typeof item === 'string' ? JSON.parse(item) : item;
+    return item;
+};
+
+function localStorageGetPrefs() {
+    var store = localStorageGet('clusive.messageQueue.preferenceChanges');
+    if (store === null || !store.length) { return null; }
+
+    return store[store.length - 1].content.preferences;
+}
 
 /*
   Easing functions
@@ -716,16 +730,22 @@ $(window).ready(function() {
     }
 });
 
+// Check local storage to see if prefs in process
+var localPrefs = localStorageGetPrefs();
+if (localPrefs !== null) {
+    clusivePrefs_contrast = localPrefs.fluid_prefs_contrast;
+}
+
 // Using setTimeout seems to work around Infusion blowing out all `<body>` classes
 // if they are updated immediately.
 setTimeout(function() {
     if (/^(sepia|night)$/.test(clusivePrefs_contrast)) {
         document.body.classList.add('clusive-theme-' + clusivePrefs_contrast);
     }
+    /*
+    if (clusivePrefs_lineSpace && document.body.style.getPropertyValue('--CT_lineHeight') === '') {
+        document.body.style.setProperty('--CT_lineHeight', clusivePrefs_lineSpace);
+        document.body.style.setProperty('lineHeight', clusivePrefs_lineSpace);
+    }
+    */
 });
-/*
-if (clusivePrefs_lineSpace && document.body.style.getPropertyValue('--CT_lineHeight') === '') {
-    document.body.style.setProperty('--CT_lineHeight', clusivePrefs_lineSpace);
-    document.body.style.setProperty('lineHeight', clusivePrefs_lineSpace);
-}
-*/
