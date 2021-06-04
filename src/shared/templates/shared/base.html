@@ -47,7 +47,7 @@
     {% include "shared/partial/popover_glossary.html" %}
     {% if not user.is_anonymous %}
         {% include "shared/partial/modal_timeout.html" %}
-        <button id="modalTimeoutTrigger" type="button" data-cfw="modal" data-cfw-modal-target="#modalTimeout" class="sr-only">
+        <button id="modalTimeoutTrigger" type="button" data-cfw="modal" data-cfw-modal-target="#modalTimeout" class="sr-only fixed-center">
             Timeout warning
         </button>
     {% endif %}

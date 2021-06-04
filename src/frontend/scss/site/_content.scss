@@ -36,6 +36,13 @@ body {
 #reader-info-bottom {
     height: auto !important;
 }
+
+// Fix to center of viewport
+.fixed-center {
+    position: fixed !important;
+    top: 50vh !important;
+    left: 50vw !important;
+}
 // stylelint-enable declaration-no-important, selector-max-id
 
 :focus {
