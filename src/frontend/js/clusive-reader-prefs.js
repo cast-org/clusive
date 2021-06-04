@@ -178,7 +178,7 @@
 
     cisl.prefs.readerPreferencesBridge.dispatchCreateEvent = function (that) {
         console.debug("cisl.prefs.readerPreferencesBridge.dispatchCreateEvent", that);
-        var evt = new Event("cisl.prefs.readerPreferencesBridge.onCreate", {"bubbles": true, "cancelable": false});
+        var evt = new CustomEvent("cisl.prefs.readerPreferencesBridge.onCreate", {"bubbles": true, "cancelable": false, "detail": {"readerPreferences": that.model.readerPreferences}});
         document.dispatchEvent(evt);
     }
 
@@ -191,11 +191,7 @@
                 [settingName]:settingValue
             };
             
-            reader.applyUserSettings(settingsObj).then(function (d) {
-                    console.debug("reader.applyUserSettings promise success", d);
-                }, function (r) {
-                    console.debug("reader.applyUserSettings promise rejection", r);
-                });
+            reader.applyUserSettings(settingsObj);
         }
     };
 
