@@ -262,11 +262,14 @@ var manifest_path = "{{ manifest_path }}";
             }        
         };
 
-        D2Reader.load(readerOptions).then(instance => {
-                console.debug("D2Reader began loading resource at: " +  new Date());
-            }).catch(error => {
-                console.error("error loading: ", error);
-            });
+        document.addEventListener("cisl.prefs.readerPreferencesBridge.onCreate", function (e) {
+            console.debug("cisl.prefs.readerPreferencesBridge.created event fired", e);
+            D2Reader.load(readerOptions).then(instance => {
+                    console.debug("D2Reader began loading resource at: " +  new Date());
+                }).catch(error => {
+                    console.error("error loading: ", error);
+                });            
+        });
     </script>
 </div>
 

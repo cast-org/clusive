@@ -134,44 +134,68 @@
         modelListeners: {
             'readerPreferences.fontSize': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
-                args: ['fontSize', '{change}.value']
+                args: ['fontSize', '{change}.value'],
+                excludeSource: "init"
             },
             'readerPreferences.fontFamily': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
-                args: ['fontFamily', '{change}.value']
+                args: ['fontFamily', '{change}.value'],
+                excludeSource: "init"
             },
             'readerPreferences.letterSpacing': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
-                args: ['letterSpacing', '{change}.value']
+                args: ['letterSpacing', '{change}.value'],
+                excludeSource: "init"
             },
             'readerPreferences.lineHeight': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
-                args: ['lineHeight', '{change}.value']
+                args: ['lineHeight', '{change}.value'],
+                excludeSource: "init"
             },
             'readerPreferences.appearance': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
-                args: ['appearance', '{change}.value']
+                args: ['appearance', '{change}.value'],
+                excludeSource: "init"
             },
             'readerPreferences.tts.rate': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyUserTTSSetting',
-                args: ['rate', '{change}.value']
+                args: ['rate', '{change}.value'],
+                excludeSource: "init"
             },
             'readerPreferences.scroll': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
-                args: ['scroll', '{change}.value']
+                args: ['scroll', '{change}.value'],
+                excludeSource: "init"
+            }
+        },
+        listeners: {
+            'onCreate.dispatchCreateEvent': {
+                func: 'cisl.prefs.readerPreferencesBridge.dispatchCreateEvent',
+                args: ["{that}"]
             }
         }
     });
 
+    cisl.prefs.readerPreferencesBridge.dispatchCreateEvent = function (that) {
+        console.debug("cisl.prefs.readerPreferencesBridge.dispatchCreateEvent", that);
+        var evt = new Event("cisl.prefs.readerPreferencesBridge.onCreate", {"bubbles": true, "cancelable": false});
+        document.dispatchEvent(evt);
+    }
+
     cisl.prefs.readerPreferencesBridge.applyUserSetting = function(settingName, settingValue) {
         console.debug('applyUserSetting: ', settingName, settingValue);
         var reader = clusiveContext.reader.instance;
-        if (reader) {
+        if (reader.applyUserSettings) {
             var settingsObj =
             {
                 [settingName]:settingValue
             };
-            reader.applyUserSettings(settingsObj);
+            
+            reader.applyUserSettings(settingsObj).then(function (d) {
+                    console.debug("reader.applyUserSettings promise success", d);
+                }, function (r) {
+                    console.debug("reader.applyUserSettings promise rejection", r);
+                });
         }
     };
 
