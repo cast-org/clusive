@@ -1,0 +1,47 @@
+<div id="star_rating_panel" class="box">
+    <fieldset disabled>
+        <legend class="form-label"><strong>How would you rate your experience with Clusive so far?</strong></legend>
+        <div class="stars">
+            <div class="stars-outer">
+                <div class="stars-inner">
+                    {% for value, text in star_form.star_rating.field.choices %}
+                    {% if not value %}
+                    <input type="radio" id="id_star_rating_0" class="stars-no-rate" name="{{star_form.star_rating.name}}" value="0" {% if star_form.star_rating.value == 0 %}checked=""{% endif %} aria-label="Unrated">
+                    <span class="stars-focus-indicator"></span>
+                    {% else %}
+                    <input type="radio" id="id_star_rating_{{value}}" name="{{star_form.star_rating.name}}" value="{{value}}" {% if star_form.star_rating.value == value %}checked=""{% endif %}>
+                    <label for="id_star_rating_{{value}}"><span class="sr-only">{{text}}</span></label>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="stars-text">
+                <span class="sr-only">Selected rating:</span>
+                <span class="stars-text-result"><span class="sr-only">Unrated</span></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="box-divider"></div>
+    <p><strong>Thanks! Here's how others rated their experience:</strong></p>
+    <!--
+    Progress bar: Per design - visually show largest column as '100%' height
+        - Use inline style with CSS vars to apply sizing:
+            - `--progressSize` = percentage value (without %) of actual value
+            - `--progressMax` = percentage value (without %) of maximum value in set
+    -->
+    <div class="stars-chart">
+        {% for r in results %}
+        <div class="stars-chart-item">
+            <div class="progress" aria-hidden="true">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{r.percent}}" aria-valuemin="0" aria-valuemax="100"
+                     style="--progressSize: {{r.percent}}; --progressMax: {{r.max}};"></div>
+            </div>
+            <div class="stars-chart-result">
+                <div class="sr-only">{{r.name}}</div>
+                {{r.percent}}%
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

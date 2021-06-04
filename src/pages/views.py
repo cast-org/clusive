@@ -2,11 +2,15 @@ import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.views.generic import TemplateView, RedirectView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import TemplateView, RedirectView, CreateView
 from django.views.generic.base import ContextMixin
+from django.views.generic.edit import BaseCreateView
 
+from assessment.forms import ClusiveRatingForm
+from assessment.models import ClusiveRatingResponse, StarRatingScale
 from eventlog.models import Event
 from eventlog.views import EventMixin
 from glossary.models import WordModel
@@ -58,8 +62,18 @@ class PeriodChoiceMixin(ContextMixin):
 class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateView):
     template_name='pages/dashboard.html'
 
+    def __init__(self):
+        super().__init__()
+
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+        # Form for star rating panel
+        self.star_form = ClusiveRatingForm(initial={'star_rating': 0})
+        logger.debug('Set up star form: %s', self.star_form)
+
         # Data for "recent reads" panel
         self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
         if not self.last_reads or len(self.last_reads) < 3:
@@ -76,6 +90,7 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['star_form'] = self.star_form
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
         data['query'] = None
@@ -102,6 +117,67 @@ class DashboardActivityPanelView(TemplateView):
         data['days'] = self.days
         data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=self.days)
         return data
+
+
+class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
+    form_class = ClusiveRatingForm
+    template_name = 'pages/partial/dashboard_panel_star_rating.html'
+    success_url = reverse_lazy('star_rating_results')
+
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        logger.debug('Form valid: %s', form)
+        self.object = form.save(commit=False)
+        self.object.user = self.request.clusive_user
+        self.object.save()
+        logger.debug('Totals now: %s', repr(ClusiveRatingResponse.get_results()))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        logger.debug('Form invalid: %s', form)
+        return super().form_invalid(form)
+
+
+class StarRatingResultsView(LoginRequiredMixin,TemplateView):
+    template_name = 'pages/partial/dashboard_panel_star_rating_results.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        initial = {'star_rating': self.rating.star_rating} if self.rating else None
+        self.star_form = ClusiveRatingForm(initial=initial)
+        data['star_form'] = self.star_form
+        data['results'] = self.calculate_star_results_percentages()
+        return data
+
+    def calculate_star_results_percentages(self):
+        results = ClusiveRatingResponse.get_results()
+        total = sum(r['count'] for r in results)
+        maximum = max(r['count'] for r in results)
+        max_percent = round(100*maximum/total)
+        # Set up data structure
+        data = {}
+        for value, name in StarRatingScale.STAR_CHOICES:
+            data[value] = {
+                'value': value,
+                'name': name
+            }
+
+        # Add percentage and maximum
+        for r in results:
+            item = data[r['star_rating']]
+            item['percent'] = round(100*r['count']/total)
+            item['max'] = max_percent
+        # Unpack map to sorted list.
+        result = list(data.values())
+        result.sort(key=lambda item: item['value'])
+        logger.debug('Data for graph: %s', result)
+        return result
 
 
 class ReaderIndexView(LoginRequiredMixin,RedirectView):

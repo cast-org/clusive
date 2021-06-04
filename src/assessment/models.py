@@ -1,6 +1,7 @@
 import logging
 
 from django.db import models
+from django.db.models import Count
 from django.utils import timezone
 
 from django.core import serializers
@@ -11,7 +12,7 @@ from roster.models import ClusiveUser
 logger = logging.getLogger(__name__)
 
 class AffectiveCheck:
-    
+
     ANNOYED = 'annoyed'
     BORED = 'bored'
     CALM = 'calm'
@@ -38,7 +39,7 @@ class AffectiveCheck:
         (OKAY, 'Okay'),
         (SAD, 'Sad'),
         (SURPRISED, 'Surprised')
-    ]    
+    ]
 
 class ComprehensionCheck:
     scale_response_key = "scaleResponse"
@@ -66,12 +67,12 @@ class CheckResponse(models.Model):
         abstract = True
 
 # Comprehension check responses
-class ComprehensionCheckResponse(CheckResponse):        
-    comprehension_scale_response = models.IntegerField(        
+class ComprehensionCheckResponse(CheckResponse):
+    comprehension_scale_response = models.IntegerField(
         choices=ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES,
         null=True
-    )    
-    comprehension_free_response = models.TextField(null=True)    
+    )
+    comprehension_free_response = models.TextField(null=True)
 
     def __str__(self):
         return '<CCResp %s/%d>' % (self.user.anon_id, self.book.id)
@@ -105,4 +106,33 @@ class AffectiveCheckResponse(CheckResponse):
         return answer_string
 
     def __str__(self):
-        return '<ACResp %s/%d>' % (self.user.anon_id, self.book.id)    
+        return '<ACResp %s/%d>' % (self.user.anon_id, self.book.id)
+
+
+class StarRatingScale:
+    ONE_STAR = 1
+    TWO_STAR = 2
+    THREE_STAR = 3
+    FOUR_STAR = 4
+
+    STAR_CHOICES = [
+        (ONE_STAR, 'Really don\'t like it'),
+        (TWO_STAR, 'Don\'t like it'),
+        (THREE_STAR, 'Like it'),
+        (FOUR_STAR, 'Really like it'),
+    ]
+
+
+class ClusiveRatingResponse(models.Model):
+    user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE)
+    star_rating = models.SmallIntegerField(choices=StarRatingScale.STAR_CHOICES)
+    created = models.DateTimeField(auto_now_add=True)
+
+    @classmethod
+    def get_results(cls):
+        return cls.objects\
+            .values('star_rating')\
+            .annotate(count=Count('star_rating'))
+
+    def __str__(self):
+        return '<ClusiveRatingResp %s:%d>' % (self.user.anon_id, self.star_rating)

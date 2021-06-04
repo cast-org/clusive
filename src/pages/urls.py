@@ -14,4 +14,6 @@ urlpatterns = [
     path('wordbank', views.WordBankView.as_view(), name='word_bank'),
     path('debug', views.DebugView.as_view(), name='debug'),
     path('privacy', views.PrivacyView.as_view(), name='privacy'),
+    path('set_star_rating', views.SetStarRatingView.as_view(), name='set_star_rating'),
+    path('star_rating_results', views.StarRatingResultsView.as_view(), name='star_rating_results'),
 ]

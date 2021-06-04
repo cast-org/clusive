@@ -24,27 +24,8 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <div class="box box-mascot-tipped-offset">
-                <h2>Welcome!</h2>
-                <p>Clusive&mdash;a personalized reading environment that adapts to every learner.</p>
-                {% if request.clusive_user.role == 'GU' %}
-                <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
-                    Or dive into the Library and see what you discover!</p>
-                <p>Tip: As a guest, you cannot save settings or highlights, get recommendations,
-                    or explore the parent and teacher features of Clusive. To get more out of Clusive,
-                    <a href="{% url 'sign_up_role' %}">create your own account</a>.</p>
-                {% endif %}
-                {% if request.clusive_user.role == 'ST' %}
-                <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
-                    Or dive into the Library and see what you discover!</p>
-                {% endif %}
-                {% if request.clusive_user.role == 'PA' %}
-                <p>Create accounts for your child(ren) by clicking the "Manage" link in the navigation bar.</p>
-                {% endif %}
-                {% if request.clusive_user.role == 'TE' %}
-                <p>Create your classes and student accounts by clicking the "Manage" link in the navigation bar.</p>
-                {% endif %}
-            </div>
+            {% include "pages/partial/dashboard_panel_welcome.html" %}
+            {% include "pages/partial/dashboard_panel_star_rating.html" %}
         </div>
 
         <div class="col-md-8 pt-1 mt-1 pt-md-0 mt-md-0">
