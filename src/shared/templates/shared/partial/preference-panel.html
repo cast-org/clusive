@@ -163,9 +163,17 @@
             }             
 
         {% if not prefs_is_reader %}        
-        // If not on the Reader page, we can create the preference editor now
+
         $(document).ready(function () {            
                 clusivePrefs = createClusivePrefsEditor();
+        });
+
+        {% endif %}
+
+        {% if prefs_is_reader %}
+        $(document).ready(function () {            
+            console.debug("Creating preferences editor on the Reader page");
+            clusivePrefs = createClusivePrefsEditor();
         });
         {% endif %}
 
