@@ -117,7 +117,7 @@ var manifest_path = "{{ manifest_path }}";
             url: new URL(url),
             userSettings: {
                 textAlignment:'start',
-                verticalScroll: 'readium-scroll-on'                
+                verticalScroll: 'readium-scroll-on'         
             },
             lastReadingPosition: lastReadingPosition,
             injectables: injectables,
@@ -262,6 +262,7 @@ var manifest_path = "{{ manifest_path }}";
             }        
         };
 
+        // Wait for the reader preferences bridge to be created, then create the Reader
         document.addEventListener("cisl.prefs.readerPreferencesBridge.onCreate", function (e) {
             console.debug("cisl.prefs.readerPreferencesBridge.created event fired", e);
             D2Reader.load(readerOptions).then(instance => {
