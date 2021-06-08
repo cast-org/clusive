@@ -26,6 +26,7 @@ word_rated = Signal(providing_args=['request', 'event_id', 'book_id', 'control',
 word_removed = Signal(providing_args=['request', 'event_id', 'word'])
 comprehension_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
 affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'answer', 'affect_check_response_id'])
+star_rating_completed = Signal(providing_args=['request', 'question', 'answer'])
 
 #
 # Signal handlers that log specific events
@@ -179,6 +180,16 @@ def log_affect_check_completed(sender, **kwargs):
     control = 'affect_check'
     answer = kwargs.get('answer')
     create_event(kwargs, control=control, value=answer, action=action, event_type=event_type)
+
+@receiver(star_rating_completed)
+def log_star_rating_completed(sender, **kwargs):
+    action = 'COMPLETED'
+    event_type = 'ASSESSMENT_ITEM_EVENT'
+    control = 'star_rating'
+    question = kwargs.get('question')
+    value = str(kwargs.get('answer'))
+    create_event(kwargs, event_type=event_type, control=control, action=action, object=question, value=value)
+
 
 @receiver(word_rated)
 def log_word_rated(sender, **kwargs):

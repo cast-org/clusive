@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.core import serializers
 
 from library.models import Book
-from roster.models import ClusiveUser
+from roster.models import ClusiveUser, ResearchPermissions
 
 logger = logging.getLogger(__name__)
 
@@ -130,7 +130,9 @@ class ClusiveRatingResponse(models.Model):
 
     @classmethod
     def get_results(cls):
+        """Count all ratings except those from test accounts, return count of votes for each rating."""
         return cls.objects\
+            .exclude(user__permission=ResearchPermissions.TEST_ACCOUNT)\
             .values('star_rating')\
             .annotate(count=Count('star_rating'))
 
@@ -139,6 +141,9 @@ class ClusiveRatingResponse(models.Model):
         """Return results in a graphable form"""
         results = cls.get_results()
         total = sum(r['count'] for r in results)
+        if total < 10:
+            logger.debug('Not enough votes to display graph (%d)', total)
+            return []
         maximum = max(r['count'] for r in results)
         max_percent = round(100*maximum/total)
         # Set up data structure

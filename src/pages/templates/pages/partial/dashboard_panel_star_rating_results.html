@@ -23,6 +23,7 @@
     </fieldset>
 
     <div class="box-divider"></div>
+    {% if star_results %}
     <p><strong>Thanks! Here's how others rated their experience:</strong></p>
     <div class="stars-chart">
         {% for r in star_results %}
@@ -38,4 +39,7 @@
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <p><strong>Thanks for participating!</strong></p>
+    {% endif %}
 </div>

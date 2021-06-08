@@ -13,6 +13,7 @@ from django.views.generic.edit import BaseCreateView
 from assessment.forms import ClusiveRatingForm
 from assessment.models import ClusiveRatingResponse, StarRatingScale
 from eventlog.models import Event
+from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
@@ -121,6 +122,10 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
         if self.star_rating:
             return False
 
+        # Guests can't vote
+        if request.clusive_user.role == Roles.GUEST:
+            return False
+
         # Otherwise, show if user has 3+ logins or 1+ hours active use.
         user_stats = UserStats.objects.get(user=request.clusive_user)
         if user_stats.logins > 3:
@@ -167,11 +172,12 @@ class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        logger.debug('Form valid: %s', form)
         self.object = form.save(commit=False)
         self.object.user = self.request.clusive_user
         self.object.save()
-        logger.debug('Totals now: %s', repr(ClusiveRatingResponse.get_results()))
+        question = 'How would you rate your experience with Clusive so far?'
+        star_rating_completed.send(SetStarRatingView.__class__, request=self.request,
+                                   question=question, answer=self.object.star_rating)
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
