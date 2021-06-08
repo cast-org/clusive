@@ -1,17 +1,23 @@
 import logging
+from datetime import timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.views.generic import TemplateView, RedirectView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import TemplateView, RedirectView, CreateView
 from django.views.generic.base import ContextMixin
+from django.views.generic.edit import BaseCreateView
 
+from assessment.forms import ClusiveRatingForm
+from assessment.models import ClusiveRatingResponse, StarRatingScale
 from eventlog.models import Event
+from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
-from roster.models import ClusiveUser, Period, Roles
+from roster.models import ClusiveUser, Period, Roles, UserStats
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
@@ -58,8 +64,26 @@ class PeriodChoiceMixin(ContextMixin):
 class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateView):
     template_name='pages/dashboard.html'
 
+    def __init__(self):
+        super().__init__()
+
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+
+        # Data for star rating panel
+        self.star_rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
+        self.show_star_rating = self.should_show_star_rating(request)
+        self.show_star_results = self.should_show_star_results(request)
+        if self.show_star_rating:
+            self.star_form = ClusiveRatingForm(initial={'star_rating': 0})
+            self.star_results = None
+        elif self.show_star_results:
+            self.star_results = ClusiveRatingResponse.get_graphable_results()
+            self.star_form = ClusiveRatingForm(initial={'star_rating': self.star_rating.star_rating})
+        else:
+            self.star_results = None
+            self.star_form = None
+
         # Data for "recent reads" panel
         self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
         if not self.last_reads or len(self.last_reads) < 3:
@@ -76,6 +100,10 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['show_star_rating'] = self.show_star_rating
+        data['star_form'] = self.star_form
+        data['show_star_results'] = self.show_star_results
+        data['star_results'] = self.star_results
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
         data['query'] = None
@@ -84,6 +112,37 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
             if self.current_period != None:
                 data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=0)
         return data
+
+    def should_show_star_rating(self, request):
+        # Put 'starpanel=1' in URL for debugging
+        if request.GET.get('starpanel'):
+            return True
+
+        # If already rated, don't show again.
+        if self.star_rating:
+            return False
+
+        # Guests can't vote
+        if request.clusive_user.role == Roles.GUEST:
+            return False
+
+        # Otherwise, show if user has 3+ logins or 1+ hours active use.
+        user_stats = UserStats.objects.get(user=request.clusive_user)
+        if user_stats.logins > 3:
+            logger.debug('Requesting star rating: logins=%d', user_stats.logins)
+            return True
+        if user_stats.active_duration and user_stats.active_duration > timedelta(hours=1):
+            logger.debug('Requesting star rating: active_duration=%d', user_stats.active_duration)
+            return True
+        return False
+
+    def should_show_star_results(self, request):
+        # Put 'starresults=1' in URL for debugging
+        if request.GET.get('starresults'):
+            return True
+
+        # Otherwise, only shown via AJAX request after rating.
+        return False
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
@@ -101,6 +160,46 @@ class DashboardActivityPanelView(TemplateView):
         data = super().get_context_data(**kwargs)
         data['days'] = self.days
         data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=self.days)
+        return data
+
+
+class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
+    form_class = ClusiveRatingForm
+    template_name = 'pages/partial/dashboard_panel_star_rating.html'
+    success_url = reverse_lazy('star_rating_results')
+
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.clusive_user
+        self.object.save()
+        question = 'How would you rate your experience with Clusive so far?'
+        star_rating_completed.send(SetStarRatingView.__class__, request=self.request,
+                                   question=question, answer=self.object.star_rating)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        logger.debug('Form invalid: %s', form)
+        return super().form_invalid(form)
+
+
+class StarRatingResultsView(LoginRequiredMixin,TemplateView):
+    """Display just the star rating panel. Used for AJAX request"""
+    template_name = 'pages/partial/dashboard_panel_star_rating_results.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
+        self.results = ClusiveRatingResponse.get_graphable_results()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        initial = {'star_rating': self.rating.star_rating} if self.rating else None
+        self.star_form = ClusiveRatingForm(initial=initial)
+        data['star_form'] = self.star_form
+        data['star_results'] = self.results
         return data
 
 

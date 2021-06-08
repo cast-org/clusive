@@ -62,8 +62,9 @@ class PreferenceSetAdmin(admin.ModelAdmin):
 @admin.register(UserStats)
 class UserStatsAdmin(admin.ModelAdmin):
     model = UserStats
-    list_display = ('user', 'reading_views')
+    list_display = ('user', 'logins', 'reading_views')
     ordering = ('user',)
+
 
 @admin.register(MailingListMember)
 class MailingListMemberAdmin(admin.ModelAdmin):

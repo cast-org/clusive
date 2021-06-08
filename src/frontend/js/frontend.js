@@ -230,10 +230,12 @@ function starsSelectedTextUpdate(node) {
     var input = node.querySelector('input[type="radio"]:checked');
     var output = node.querySelector('.stars-text-result');
     var label = input.nextElementSibling;
+    var $button = $(node).closest('form').find('button[type="submit"]');
 
     if (output !== null) {
         if (label.nodeName.toLowerCase() === 'label') {
             output.innerText = label.innerText;
+            $button.prop('disabled', false);
         } else {
             output.innerHTML = '<span class="sr-only">Unrated</span>';
         }
@@ -272,6 +274,20 @@ function starsSelectedText() {
     });
     $(document.body).on('mouseleave', '.stars label', function(e) {
         starsSelectedTextUpdate(e.target.closest('.stars'));
+    });
+    $('#star_rating_panel form').on('submit', function(e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+        $.ajax({
+            type: 'POST',
+            url: '/set_star_rating',
+            data: data
+        }).done(function(html) {
+            $('#star_rating_panel').replaceWith(html);
+            starsSelectedTextUpdate($('#star_rating_panel .stars')[0]);
+        }).fail(function(err) {
+            console.error('Failed sending star rating results: ', err);
+        });
     });
     $('.stars').each(function() {
         starsSelectedTextUpdate(this);
