@@ -134,5 +134,31 @@ class ClusiveRatingResponse(models.Model):
             .values('star_rating')\
             .annotate(count=Count('star_rating'))
 
+    @classmethod
+    def get_graphable_results(cls):
+        """Return results in a graphable form"""
+        results = cls.get_results()
+        total = sum(r['count'] for r in results)
+        maximum = max(r['count'] for r in results)
+        max_percent = round(100*maximum/total)
+        # Set up data structure
+        data = {}
+        for value, name in StarRatingScale.STAR_CHOICES:
+            data[value] = {
+                'value': value,
+                'name': name
+            }
+
+        # Add percentage and maximum
+        for r in results:
+            item = data[r['star_rating']]
+            item['percent'] = round(100*r['count']/total)
+            item['max'] = max_percent
+        # Unpack map to sorted list.
+        result = list(data.values())
+        result.sort(key=lambda item: item['value'])
+        logger.debug('Data for graph: %s', result)
+        return result
+
     def __str__(self):
         return '<ClusiveRatingResp %s:%d>' % (self.user.anon_id, self.star_rating)

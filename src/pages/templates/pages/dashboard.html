@@ -24,8 +24,9 @@
     </div>
     <div class="row">
         <div class="col-md-4">
+            {% if show_star_rating %}{% include "pages/partial/dashboard_panel_star_rating.html" %}{% endif %}
+            {% if show_star_results %}{% include "pages/partial/dashboard_panel_star_rating_results.html" %}{% endif %}
             {% include "pages/partial/dashboard_panel_welcome.html" %}
-            {% include "pages/partial/dashboard_panel_star_rating.html" %}
         </div>
 
         <div class="col-md-8 pt-1 mt-1 pt-md-0 mt-md-0">

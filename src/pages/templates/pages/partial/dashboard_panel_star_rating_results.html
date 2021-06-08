@@ -24,14 +24,8 @@
 
     <div class="box-divider"></div>
     <p><strong>Thanks! Here's how others rated their experience:</strong></p>
-    <!--
-    Progress bar: Per design - visually show largest column as '100%' height
-        - Use inline style with CSS vars to apply sizing:
-            - `--progressSize` = percentage value (without %) of actual value
-            - `--progressMax` = percentage value (without %) of maximum value in set
-    -->
     <div class="stars-chart">
-        {% for r in results %}
+        {% for r in star_results %}
         <div class="stars-chart-item">
             <div class="progress" aria-hidden="true">
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{r.percent}}" aria-valuemin="0" aria-valuemax="100"

@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -15,7 +16,7 @@ from eventlog.models import Event
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
-from roster.models import ClusiveUser, Period, Roles
+from roster.models import ClusiveUser, Period, Roles, UserStats
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
@@ -65,14 +66,22 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
     def __init__(self):
         super().__init__()
 
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
-        # Form for star rating panel
-        self.star_form = ClusiveRatingForm(initial={'star_rating': 0})
-        logger.debug('Set up star form: %s', self.star_form)
+
+        # Data for star rating panel
+        self.star_rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
+        self.show_star_rating = self.should_show_star_rating(request)
+        self.show_star_results = self.should_show_star_results(request)
+        if self.show_star_rating:
+            self.star_form = ClusiveRatingForm(initial={'star_rating': 0})
+            self.star_results = None
+        elif self.show_star_results:
+            self.star_results = ClusiveRatingResponse.get_graphable_results()
+            self.star_form = ClusiveRatingForm(initial={'star_rating': self.star_rating.star_rating})
+        else:
+            self.star_results = None
+            self.star_form = None
 
         # Data for "recent reads" panel
         self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
@@ -90,7 +99,10 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['show_star_rating'] = self.show_star_rating
         data['star_form'] = self.star_form
+        data['show_star_results'] = self.show_star_results
+        data['star_results'] = self.star_results
         data['last_reads'] = self.last_reads
         data['featured'] = self.featured
         data['query'] = None
@@ -99,6 +111,33 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
             if self.current_period != None:
                 data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=0)
         return data
+
+    def should_show_star_rating(self, request):
+        # Put 'starpanel=1' in URL for debugging
+        if request.GET.get('starpanel'):
+            return True
+
+        # If already rated, don't show again.
+        if self.star_rating:
+            return False
+
+        # Otherwise, show if user has 3+ logins or 1+ hours active use.
+        user_stats = UserStats.objects.get(user=request.clusive_user)
+        if user_stats.logins > 3:
+            logger.debug('Requesting star rating: logins=%d', user_stats.logins)
+            return True
+        if user_stats.active_duration and user_stats.active_duration > timedelta(hours=1):
+            logger.debug('Requesting star rating: active_duration=%d', user_stats.active_duration)
+            return True
+        return False
+
+    def should_show_star_results(self, request):
+        # Put 'starresults=1' in URL for debugging
+        if request.GET.get('starresults'):
+            return True
+
+        # Otherwise, only shown via AJAX request after rating.
+        return False
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
@@ -141,10 +180,12 @@ class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
 
 
 class StarRatingResultsView(LoginRequiredMixin,TemplateView):
+    """Display just the star rating panel. Used for AJAX request"""
     template_name = 'pages/partial/dashboard_panel_star_rating_results.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
+        self.results = ClusiveRatingResponse.get_graphable_results()
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -152,32 +193,8 @@ class StarRatingResultsView(LoginRequiredMixin,TemplateView):
         initial = {'star_rating': self.rating.star_rating} if self.rating else None
         self.star_form = ClusiveRatingForm(initial=initial)
         data['star_form'] = self.star_form
-        data['results'] = self.calculate_star_results_percentages()
+        data['star_results'] = self.results
         return data
-
-    def calculate_star_results_percentages(self):
-        results = ClusiveRatingResponse.get_results()
-        total = sum(r['count'] for r in results)
-        maximum = max(r['count'] for r in results)
-        max_percent = round(100*maximum/total)
-        # Set up data structure
-        data = {}
-        for value, name in StarRatingScale.STAR_CHOICES:
-            data[value] = {
-                'value': value,
-                'name': name
-            }
-
-        # Add percentage and maximum
-        for r in results:
-            item = data[r['star_rating']]
-            item['percent'] = round(100*r['count']/total)
-            item['max'] = max_percent
-        # Unpack map to sorted list.
-        result = list(data.values())
-        result.sort(key=lambda item: item['value'])
-        logger.debug('Data for graph: %s', result)
-        return result
 
 
 class ReaderIndexView(LoginRequiredMixin,RedirectView):
