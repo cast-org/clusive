@@ -471,7 +471,11 @@ class UserStats (models.Model):
     """
 
     user = models.OneToOneField(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    # Total number of login sessions for this user
+    logins = models.PositiveIntegerField(default=0)
+    # Number of times opening a book for reading
     reading_views = models.PositiveIntegerField(default=0)
+    # Total active time using Clusive
     active_duration = models.DurationField(null=True)
 
     class Meta:
@@ -502,6 +506,12 @@ class UserStats (models.Model):
         if stats.active_duration is None:
             stats.active_duration = timedelta()
         stats.active_duration += duration
+        stats.save()
+
+    @classmethod
+    def add_login(cls, clusive_user: ClusiveUser):
+        stats = cls.for_clusive_user(clusive_user)
+        stats.logins += 1
         stats.save()
 
 
