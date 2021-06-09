@@ -11,7 +11,7 @@
     {% endcomment %}
     {% block head_additional %}{% endblock %}
 </head>
-<body class="{% block bodyClass %}{% endblock %}">
+<body class="{% block bodyClass %}{% endblock %} {{theme_class}}">
     {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=False %} {% endblock %}
     <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
