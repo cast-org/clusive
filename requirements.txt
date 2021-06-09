@@ -1,4 +1,4 @@
-django==2.2.20
+django==2.2.22
 django-allauth==0.44.0
 psycopg2==2.8.3
 pytz==2019.2
