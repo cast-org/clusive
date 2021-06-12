@@ -117,7 +117,7 @@ var manifest_path = "{{ manifest_path }}";
             url: new URL(url),
             userSettings: {
                 textAlignment:'start',
-                verticalScroll: 'readium-scroll-on'       
+                verticalScroll: 'readium-scroll-on'
 
             },
             lastReadingPosition: lastReadingPosition,
@@ -147,19 +147,29 @@ var manifest_path = "{{ manifest_path }}";
                 },
                 api: {
                     started: function() {
+                        console.log('api started');
                         window.parent.clusiveTTS.updateUI('play');
+                        return null;
                     },
                     stopped: function() {
+                        console.log('api stoped');
                         window.parent.clusiveTTS.updateUI('stop');
+                        return null;
                     },
                     paused: function() {
+                        console.log('api paused');
                         window.parent.clusiveTTS.updateUI('pause');
+                        return null;
                     },
                     resumed: function() {
+                        console.log('api resumed');
                         window.parent.clusiveTTS.updateUI('resume');
+                        return null;
                     },
                     finished: function() {
+                        console.log('api finished');
                         window.parent.clusiveTTS.updateUI('stop');
+                        return null;
                     }
                 }
             },
@@ -211,7 +221,7 @@ var manifest_path = "{{ manifest_path }}";
                         if(!firstResourceLoaded) {
                             console.debug("Performing UI tasks on first Reader resource load");
                             buildTableOfContents();
-                            buildAnnotationList();                                                        
+                            buildAnnotationList();
                             firstResourceLoaded = true;
                         }
                     });
@@ -260,7 +270,7 @@ var manifest_path = "{{ manifest_path }}";
                 updateUserSettings: function (userSettings) {
                     return Promise.resolve();
                 }
-            }        
+            }
         };
 
         // Wait for the reader preferences bridge to be created, then create the Reader
@@ -268,14 +278,15 @@ var manifest_path = "{{ manifest_path }}";
             console.debug("cisl.prefs.readerPreferencesBridge.created event fired", e);
             var readerPreferences = e.detail.readerPreferences;
             var mergedUserSettings = $.extend({}, readerOptions.userSettings, readerPreferences);
-            console.log("mergedUserSettings", mergedUserSettings);            
+            console.log("mergedUserSettings", mergedUserSettings);
             readerOptions.userSettings = mergedUserSettings;
             console.log("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
                     console.debug("D2Reader began loading resource at: " +  new Date());
+                    clusiveTTS.readerReady = true;
                 }).catch(error => {
                     console.error("error loading: ", error);
-                });            
+                });
         });
     </script>
 </div>
