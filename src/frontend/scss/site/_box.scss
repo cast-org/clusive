@@ -75,3 +75,34 @@
 .box-mascot-tipped-offset {
     margin-top: calc(var(--CT_boxMascotSize) * .25);
 }
+
+.box-tabs {
+    flex-basis: 100%;
+    order: 1;
+    margin: .5rem 0 .25rem -.5rem;
+
+    .nav-link {
+        padding: 0 .125rem;
+        margin: 0 .5rem;
+        color: var(--CT_boxTabColor);
+        text-decoration: none;
+        background-color: var(--CT_boxTabBg);
+        border-bottom: 7px solid var(--CT_boxTabBorderColor);
+
+        @include hover-focus() {
+            color: var(--CT_boxTabHoverColor);
+            text-decoration: underline;
+            background-color: var(--CT_boxTabHoverBg);
+            border-color: var(--CT_boxTabHoverBorderColor);
+        }
+    }
+
+    .nav-link.active,
+    .nav-item.open .nav-link {
+        font-weight: $font-weight-bold;
+        color: var(--CT_boxTabActiveColor);
+        text-decoration: none;
+        background-color: var(--CT_boxTabActiveBg);
+        border-color: var(--CT_boxTabActiveBorderColor);
+    }
+}

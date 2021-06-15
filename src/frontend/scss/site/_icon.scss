@@ -21,3 +21,67 @@
 //        fill: var(--CT_ciDisabledPrimaryColor, #636b82);
 //    }
 //}
+
+.ci {
+    display: inline-block;
+    line-height: 1;
+}
+
+.ci-1x {
+    @include font-size(1em);
+}
+.ci-2x {
+    @include font-size(2em);
+}
+.ci-3x {
+    @include font-size(3em);
+}
+
+.ci-mascot {
+    &::after {
+        display: block;
+        width: 1em;
+        height: 1em * $img-ratio-mascot;
+        content: "";
+        background-image: var(--CT_imgMascot);
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+}
+
+.ci-mascot-tipped {
+    &::after {
+        display: block;
+        width: 1em;
+        height: 1em * $img-ratio-mascot-tipped;
+        content: "";
+        background-image: var(--CT_imgMascotTipped);
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+}
+
+.ci-mascot-triple {
+    position: relative;
+    width: 2.125em;
+    height: 1.75em;
+    line-height: 1;
+    vertical-align: text-bottom;
+
+    .ci:nth-child(1) {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .ci:nth-child(2) {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .ci:nth-child(3) {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}

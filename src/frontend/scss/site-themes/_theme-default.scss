@@ -238,6 +238,17 @@ $box-bg:                                #84d2c4;
 $box-color:                             $body-color;
 $box-divider-color:                     #75c0b2;
 
+// Box tabs
+$box-tab-bg:                            transparent;
+$box-tab-color:                         #333;
+$box-tab-border-color:                  transparent;
+$box-tab-hover-bg:                      #6268ad;
+$box-tab-hover-color:                   #fbfbfb;
+$box-tab-hover-border-color:            transparent;
+$box-tab-active-bg:                     transparent;
+$box-tab-active-color:                  #333;
+$box-tab-active-border-color:           #ff554d;
+
 // Cards
 $card-bg:                               #ebe9e4;
 $card-color:                            inherit;

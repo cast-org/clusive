@@ -431,3 +431,11 @@ h2,
         color: var(--CT_bodyColor);
     }
 }
+
+.section-rule {
+    & + & {
+        padding-top: 1rem;
+        margin-top: 1rem;
+        border-top: 1px solid var(--CT_modalContentBorderColor);
+    }
+}
