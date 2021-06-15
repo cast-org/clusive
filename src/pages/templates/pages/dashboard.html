@@ -30,6 +30,9 @@
             {% if panels.affect %}
                 {% include "pages/partial/dashboard_panel_affect.html" with data=data.affect %}
             {% endif %}
+            {% if panels.class_affect %}
+                {% include "pages/partial/dashboard_panel_class_affect.html" with data=data.class_affect %}
+            {% endif %}
             {% if panels.star_rating %}
                 {% include "pages/partial/dashboard_panel_star_rating.html" with data=data.star_rating %}
             {% endif %}

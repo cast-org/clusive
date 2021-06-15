@@ -2,7 +2,7 @@ import logging
 
 import math
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.utils import timezone
 
 from django.core import serializers
@@ -170,8 +170,28 @@ class AffectiveSummary(models.Model):
         return {word: getattr(self, word) for word in affect_words}
 
     # Calculate the values to show in the starburst visualization for each word
-    def to_scaled_values(self):
-        return [AffectiveSummary.scale_value(v) for v in self.to_list()]
+    @classmethod
+    def scale_values(cls, summary):
+        """
+        Given an AffectiveSummary instance, calculate the values to show in the starburst visualization.
+        Returned in a format convenient for sending to the template.
+        If the argument is None, returns the same data structure with all 0 values.
+        :param summary: an AffectiveSummary, or None
+        :return: data structure for visualization: [ { 'word': value }, ... ]
+        """
+        if summary:
+            map = summary.to_map()
+            return [{ 'word': w, 'value': AffectiveSummary.scale_value(map[w]) } for w in affect_words]
+        else:
+            return [{ 'word':w, 'value': 0} for w in affect_words]
+
+    @classmethod
+    def aggregate_and_scale(cls, query_set):
+        """Given a QuerySet that would return multiple AffectiveSummarys,
+        this asks the database to sum them all and then returns them scaled and ready for visualization."""
+        sums = [Sum(w) for w in affect_words]
+        summed = query_set.aggregate(*sums)
+        return [{ 'word': w, 'value': cls.scale_value(summed[w+'__sum']) } for w in affect_words]
 
     @classmethod
     def scale_value(cls, value):

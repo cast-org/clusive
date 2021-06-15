@@ -5,6 +5,7 @@ import math
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -71,6 +72,7 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+        self.teacher = self.clusive_user.can_manage_periods
         self.current_period = request.clusive_user.current_period
         self.panels = {} # This will hold info on which panels are to be displayed.
         self.data = {} # This will hold panel-specific data
@@ -82,12 +84,23 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
         self.panels['welcome'] = user_stats.reading_views == 0
 
         # Affect panel
-        self.panels['affect'] = user_stats.reading_views > 0
+        self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
         if self.panels['affect']:
             totals = AffectiveUserTotal.objects.filter(user=request.clusive_user).first()
             self.data['affect'] = {
-                'totals':  totals.to_scaled_values() if totals else None,
+                'totals':  AffectiveUserTotal.scale_values(totals),
+                'empty': totals is None,
             }
+
+        self.panels['class_affect'] = self.teacher and self.current_period
+        if self.panels['class_affect']:
+            sa = AffectiveUserTotal.objects.filter(user__periods=self.current_period, user__role=Roles.STUDENT)
+            scaled = AffectiveUserTotal.aggregate_and_scale(sa)
+            self.data['class_affect'] = {
+                'totals': scaled,
+                'empty': not any(scaled),
+            }
+            logger.debug("Scaled: %s", scaled)
 
         # Star rating panel
         self.star_rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
@@ -131,7 +144,7 @@ class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateV
             }
 
         # Student Activity panel
-        self.panels['student_activity'] = self.clusive_user.can_manage_periods
+        self.panels['student_activity'] = self.teacher
         if self.panels['student_activity']:
             self.data['student_activity'] = {
                 'days': 0,

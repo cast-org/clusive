@@ -1,10 +1,10 @@
 <div class="box box-mascot-tipped-offset">
-<h4 class="h3">Your thoughts <span class="icon-thought" aria-hidden="true"></h4>
+    <h4 class="h3">Your thoughts <span class="icon-thought" aria-hidden="true"></span></h4>
     <div class="box-divider"></div>
-    {% if not data.totals %}
+    {% if data.empty %}
         You haven’t reacted, yet. Click the
         <span class="icon-thought" aria-hidden="true"></span><span class="sr-only">"Your thoughts"</span>
-        button at the bottom left of reading to add a reaction.
+        button at the bottom left of a reading to add a reaction.
     {% endif %}
-    {% include 'shared/partial/affect_wheel_display.html' with wedge=data.totals %}
+    {% include 'shared/partial/affect_wheel_display.html' with data=data.totals %}
 </div>
