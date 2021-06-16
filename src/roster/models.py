@@ -443,6 +443,11 @@ class Preference (models.Model):
                 # Otherwise string type.
                 return val
 
+    @classmethod
+    def get_theme_for_user(cls, user: ClusiveUser):
+        pref = cls.objects.filter(user=user, pref='fluid_prefs_contrast').first() if user else None
+        return pref.value if pref else 'default'
+
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
 
