@@ -59,8 +59,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': [
             'profile',
             'email',
-            'openid',
-            'https://www.googleapis.com/auth/classroom.rosters.readonly',
+            'openid'
         ],
         'AUTH_PARAMS': {
             # for automatically refresh access token, see:
