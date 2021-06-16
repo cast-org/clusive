@@ -144,3 +144,21 @@
         left: 0;
     }
 }
+
+.dashboard-grid {
+    .card {
+        align-self: flex-start;
+    }
+
+    .card-body {
+        flex: 0 0 auto;
+    }
+
+    .card-img {
+        img {
+            @include media-breakpoint-up(xl) {
+                max-height: 10rem;
+            }
+        }
+    }
+}

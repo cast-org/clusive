@@ -31,6 +31,33 @@
     }
 }
 
+.card-divider {
+    padding-top: calc(3px + #{$card-padding-y});
+    margin: 0 #{-$card-padding-x};
+    line-height: 1;
+    border-top: 3px solid var(--CT_cardDividerColor);
+
+    & + & {
+        margin-top: -1rem;
+    }
+}
+
+.card {
+    .stars-chart {
+        border-color: var(--CT_cardDividerColor);
+
+        .progress {
+            width: 1.5rem;
+        }
+        .progress-bar {
+            background-color: var(--CT_cardProgressBarBg);
+        }
+    }
+    .stars-chart-result {
+        @include font-size(.8125rem);
+    }
+}
+
 .card-library {
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
