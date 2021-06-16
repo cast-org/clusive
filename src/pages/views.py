@@ -36,7 +36,7 @@ class ThemedPageMixin(ContextMixin):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['theme_class'] = 'clusive-theme-' + Preference.get_theme_for_user(self.clusive_user).value
+        data['theme_class'] = 'clusive-theme-' + Preference.get_theme_for_user(self.clusive_user)
         return data
 
 
