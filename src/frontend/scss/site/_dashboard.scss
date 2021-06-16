@@ -146,12 +146,12 @@
 }
 
 .dashboard-grid {
-    .card {
+    .card:not(.card-special) {
         align-self: flex-start;
-    }
 
-    .card-body {
-        flex: 0 0 auto;
+        .card-body {
+            flex: 0 0 auto;
+        }
     }
 
     .card-img {
