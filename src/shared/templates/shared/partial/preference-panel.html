@@ -59,7 +59,8 @@
 
         clusive.prefs.djangoStoreMapper();
 
-        var createClusivePrefsEditor = function() {
+        var createClusivePrefsEditor = function(readerPage) {     
+            console.debug("createClusivePrefsEditor; readerPage: ", readerPage);
             var buildAuxiliarySchemaTemplate = "{% static 'shared/html/SeparatedPanelPrefsEditorNoGloss.html' %}";
             var buildGradeNames =  [
                             "cisl.prefs.auxSchema.starter", // starter set
@@ -108,7 +109,7 @@
                                                         "onCreate.announce": {
                                                             "this": "console",
                                                             "method": "log",
-                                                            "args": ["Prefs editor created,", "{that}"]
+                                                            "args": ["Prefs editor created at " + new Date(), "{that}"]
                                                         }
                                                     },
                                                 }
@@ -163,9 +164,17 @@
             }             
 
         {% if not prefs_is_reader %}        
-        // If not on the Reader page, we can create the preference editor now
+
         $(document).ready(function () {            
-                clusivePrefs = createClusivePrefsEditor();
+                clusivePrefs = createClusivePrefsEditor(false);
+        });
+
+        {% endif %}
+
+        {% if prefs_is_reader %}
+        $(document).ready(function () {            
+            console.debug("Creating preferences editor on the Reader page");
+            clusivePrefs = createClusivePrefsEditor(true);
         });
         {% endif %}
 

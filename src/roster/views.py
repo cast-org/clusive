@@ -24,6 +24,7 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
+from pages.views import ThemedPageMixin
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
@@ -59,7 +60,7 @@ class LoginView(auth_views.LoginView):
         return context
 
 
-class SignUpView(EventMixin, CreateView):
+class SignUpView(EventMixin, ThemedPageMixin, CreateView):
     template_name='roster/sign_up.html'
     model = User
     form_class = UserRegistrationForm
@@ -144,37 +145,38 @@ class SignUpView(EventMixin, CreateView):
         event.page = 'Register'
 
 
-class ValidateSentView(View):
+class ValidateSentView(ThemedPageMixin, TemplateView):
+    template_name = 'roster/validate_sent.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(pk=kwargs.get('user_id'))
+        context['user_id'] = user.id
+        context['email'] = user.email
+        context['status'] = 'sent'
+        return context
+
+
+class ValidateResendView(ThemedPageMixin, TemplateView):
     template_name = 'roster/validate_sent.html'
 
     def get(self, request, *args, **kwargs):
-        user = User.objects.get(pk=kwargs.get('user_id'))
-        context = {
-            'user_id': user.id,
-            'email': user.email,
-            'status': 'sent',
-        }
-        return render(request, self.template_name, context)
-
-
-class ValidateResendView(TemplateView):
-    template_name = 'roster/validate_sent.html'
-
-    def get(self, request, *args, **kwargs):
-        user = User.objects.get(pk=kwargs.get('user_id'))
-        clusive_user = ClusiveUser.objects.get(user=user)
+        self.user = User.objects.get(pk=kwargs.get('user_id'))
+        clusive_user = ClusiveUser.objects.get(user=self.user)
         if clusive_user.unconfirmed_email:
             send_validation_email(get_current_site(request), clusive_user)
-            status = 'resent'
+            self.status = 'resent'
         else:
             logger.warning('Skipping email sending; already activated user %s', clusive_user)
-            status = 'unneeded'
-        context = {
-            'user_id': user.id,
-            'email': user.email,
-            'status': status,
-        }
-        return render(request, self.template_name, context)
+            self.status = 'unneeded'
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_id'] = self.user.id
+        context['email'] = self.user.email
+        context['status'] = self.status
+        return context
 
 
 class ValidateEmailView(View):
@@ -212,7 +214,7 @@ class ValidateEmailView(View):
         return render(request, self.template, context)
 
 
-class SignUpRoleView(EventMixin, FormView):
+class SignUpRoleView(EventMixin, ThemedPageMixin, FormView):
     form_class = AccountRoleForm
     template_name = 'roster/sign_up_role.html'
 
@@ -237,7 +239,7 @@ class SignUpRoleView(EventMixin, FormView):
         event.page = 'RegisterRole'
 
 
-class SignUpAgeCheckView(EventMixin, FormView):
+class SignUpAgeCheckView(EventMixin, ThemedPageMixin, FormView):
     form_class = AgeCheckForm
     template_name = 'roster/sign_up_age_check.html'
 
@@ -262,7 +264,7 @@ class SignUpAgeCheckView(EventMixin, FormView):
         event.page = 'RegisterAge'
 
 
-class SignUpAskParentView(EventMixin, TemplateView):
+class SignUpAskParentView(EventMixin, ThemedPageMixin, TemplateView):
     template_name = 'roster/sign_up_ask_parent.html'
 
     def get(self, request, *args, **kwargs):
@@ -395,7 +397,7 @@ def upload_csv(request):
     return render(request, template, context)
 
 
-class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
+class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     template_name = 'roster/manage.html'
     periods = None
     current_period = None
@@ -444,7 +446,7 @@ class ManageView(LoginRequiredMixin, EventMixin, TemplateView):
         event.page = 'Manage'
 
 
-class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
+class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, CreateView):
     model = User
     form_class = SimpleUserCreateForm
     template_name = 'roster/manage_create_user.html'
@@ -496,7 +498,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, CreateView):
         event.page = 'ManageCreateStudent'
 
 
-class ManageEditUserView(LoginRequiredMixin, EventMixin, UpdateView):
+class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
     model = User
     form_class = UserEditForm
     template_name = 'roster/manage_edit_user.html'
@@ -536,7 +538,7 @@ class ManageEditUserView(LoginRequiredMixin, EventMixin, UpdateView):
         event.page = 'ManageEditStudent'
 
 
-class ManageEditPeriodView(LoginRequiredMixin, EventMixin, UpdateView):
+class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
     model = Period
     form_class = PeriodForm
     template_name = 'roster/manage_edit_period.html'
@@ -554,7 +556,7 @@ class ManageEditPeriodView(LoginRequiredMixin, EventMixin, UpdateView):
         event.page = 'ManageEditPeriod'
 
 
-class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, CreateView):
+class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, CreateView):
     model = Period
     form_class = PeriodForm
     template_name = 'roster/manage_create_period.html'

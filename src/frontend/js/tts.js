@@ -4,7 +4,7 @@
 /* eslint-disable no-use-before-define */
 /* global D2Reader */
 
-window.clusiveTTS = {
+var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
     region: {},
@@ -13,7 +13,8 @@ window.clusiveTTS = {
     textElement: null,
     copiedElement: null,
     autoScroll: true,
-    userScrolled: false
+    userScrolled: false,
+    readerReady: false
 };
 
 // Bind controls
@@ -130,24 +131,6 @@ clusiveTTS.updateUI = function(mode) {
 
     var region = clusiveTTS.region.elm;
 
-    /*
-     * Partially works, are speechSynthesis methods async() ?
-     *
-    if (clusiveTTS.synth.paused) {
-        region.classList.add('paused');
-    } else {
-        region.classList.remove('paused');
-    }
-
-    if (clusiveTTS.synth.speaking || clusiveTTS.synth.pending) {
-        region.classList.add('active');
-    } else {
-        region.classList.remove('paused');
-        region.classList.remove('active');
-        clusiveTTS.region = {};
-    }
-    */
-
     switch (mode) {
         case 'resume':
         case 'play': {
@@ -215,15 +198,16 @@ clusiveTTS.scrollWatchStop = function() {
 clusiveTTS.isVisible = function(elem) {
     'use strict';
 
-    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length && window.getComputedStyle(elem).visibility !== "hidden");
-}
+    return Boolean(elem.offsetWidth || elem.offsetHeight
+        || elem.getClientRects().length && window.getComputedStyle(elem).visibility !== 'hidden');
+};
 
 clusiveTTS.readQueuedElements = function() {
     'use strict';
 
-     var toRead = null;
+    var toRead = null;
 
-     while (clusiveTTS.elementsToRead.length && toRead === null) {
+    while (clusiveTTS.elementsToRead.length && toRead === null) {
         toRead = clusiveTTS.elementsToRead.shift();
         if (!clusiveTTS.isVisible(toRead.element)) {
             toRead = null;
@@ -514,7 +498,7 @@ clusiveTTS.setCurrentVoice = function(name) {
         window.speechSynthesis.getVoices().forEach(function(voice) {
             if (voice.name === name) {
                 clusiveTTS.currentVoice = voice;
-                if (typeof D2Reader !== 'undefined') {
+                if (clusiveTTS.readerReady) {
                     console.debug('setting D2Reader voice to ', voice);
                     D2Reader.applyTTSSettings({
                         voice: voice
@@ -524,7 +508,7 @@ clusiveTTS.setCurrentVoice = function(name) {
         });
     } else {
         clusiveTTS.currentVoice = null;
-        if (typeof D2Reader !== 'undefined') {
+        if (clusiveTTS.readerReady) {
             console.debug('Unsetting D2Reader voice');
             D2Reader.applyTTSSettings({
                 voice: 'none'
@@ -540,7 +524,7 @@ clusiveTTS.readAloudSample = function() {
     window.speechSynthesis.speak(utt);
 };
 
-window.clusiveSelection = {
+var clusiveSelection = {
     directions: {
         FORWARD: 'Forward',
         BACKWARD: 'Backward',

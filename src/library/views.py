@@ -23,6 +23,7 @@ from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject
 from library.parsing import unpack_epub_file, scan_book
+from pages.views import ThemedPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
 
 logger = logging.getLogger(__name__)
@@ -205,7 +206,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         return context
 
 
-class LibraryView(EventMixin, LibraryDataView):
+class LibraryView(EventMixin, ThemedPageMixin, LibraryDataView):
     """
     Full library page showing the controls at the top and the list of cards.
     """
@@ -238,7 +239,7 @@ class LibraryStyleRedirectView(View):
         }))
 
 
-class UploadFormView(LoginRequiredMixin, EventMixin, FormView):
+class UploadFormView(LoginRequiredMixin, ThemedPageMixin, EventMixin, FormView):
     """Parent class for several pages that allow uploading of EPUBs."""
     form_class = UploadForm
 
@@ -305,7 +306,7 @@ class UploadReplaceFormView(UploadFormView):
         event.page = 'UploadReplacement'
 
 
-class MetadataFormView(LoginRequiredMixin, EventMixin, UpdateView):
+class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
     """Parent class for several metadata-editing pages."""
     model = Book
     form_class = MetadataForm

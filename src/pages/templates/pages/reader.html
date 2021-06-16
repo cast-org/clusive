@@ -111,11 +111,14 @@ var manifest_path = "{{ manifest_path }}";
             }
         ];
 
-        D2Reader.load({
+        var firstResourceLoaded = false;
+
+        var readerOptions = {
             url: new URL(url),
             userSettings: {
                 textAlignment:'start',
-                verticalScroll: 'readium-scroll-on',
+                verticalScroll: 'readium-scroll-on'
+
             },
             lastReadingPosition: lastReadingPosition,
             injectables: injectables,
@@ -144,19 +147,29 @@ var manifest_path = "{{ manifest_path }}";
                 },
                 api: {
                     started: function() {
+                        console.log('api started');
                         window.parent.clusiveTTS.updateUI('play');
+                        return null;
                     },
                     stopped: function() {
+                        console.log('api stoped');
                         window.parent.clusiveTTS.updateUI('stop');
+                        return null;
                     },
                     paused: function() {
+                        console.log('api paused');
                         window.parent.clusiveTTS.updateUI('pause');
+                        return null;
                     },
                     resumed: function() {
+                        console.log('api resumed');
                         window.parent.clusiveTTS.updateUI('resume');
+                        return null;
                     },
                     finished: function() {
+                        console.log('api finished');
                         window.parent.clusiveTTS.updateUI('stop');
+                        return null;
                     }
                 }
             },
@@ -201,6 +214,18 @@ var manifest_path = "{{ manifest_path }}";
             },
 
             api: {
+                resourceReady: function() {
+                    console.debug("D2Reader finished loading the resource at: " + new Date());
+                    $(document).ready(function () {
+                        // Do things that only need to be done once
+                        if(!firstResourceLoaded) {
+                            console.debug("Performing UI tasks on first Reader resource load");
+                            buildTableOfContents();
+                            buildAnnotationList();
+                            firstResourceLoaded = true;
+                        }
+                    });
+                },
                 resourceAtEnd: function() {
                     var currentResource = D2Reader.currentResource();
                     var lastResource = (currentResource===D2Reader.totalResources()-1);
@@ -246,22 +271,23 @@ var manifest_path = "{{ manifest_path }}";
                     return Promise.resolve();
                 }
             }
-        }).then(instance => {
-                console.debug("D2Reader loaded ", instance);
-                // Create the preference editor when the Reader has loaded,
-                // after a short delay
-                // TODO: improve this sequencing
-                $(document).ready(function () {
-                    buildTableOfContents();
-                    buildAnnotationList();
-                    setTimeout(function() {
-                        clusivePrefs = createClusivePrefsEditor();
-                    }, 250);
-                });
+        };
 
-            }).catch(error => {
-                console.error("error loading: ", error);
-            });
+        // Wait for the reader preferences bridge to be created, then create the Reader
+        document.addEventListener("cisl.prefs.readerPreferencesBridge.onCreate", function (e) {
+            console.debug("cisl.prefs.readerPreferencesBridge.created event fired", e);
+            var readerPreferences = e.detail.readerPreferences;
+            var mergedUserSettings = $.extend({}, readerOptions.userSettings, readerPreferences);
+            console.log("mergedUserSettings", mergedUserSettings);
+            readerOptions.userSettings = mergedUserSettings;
+            console.log("readerOptions", readerOptions);
+            D2Reader.load(readerOptions).then(instance => {
+                    console.debug("D2Reader began loading resource at: " +  new Date());
+                    clusiveTTS.readerReady = true;
+                }).catch(error => {
+                    console.error("error loading: ", error);
+                });
+        });
     </script>
 </div>
 

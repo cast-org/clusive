@@ -222,10 +222,15 @@
                 }
                 var voiceName = $(this).text();
                 console.log("Current voice button being checked: " + voiceName);
-                if(voiceName === preferredVoice) {
-                    console.log("Preferred voice available, setting to " + voiceName);
+                if(voiceName === preferredVoice) {                    
                     voiceFound = true;
-                    $(this).click();                                                       
+                    var voiceButton = $(this);    
+                    // Currently necessary to avoid clicking button before Reader is ready                
+                    setTimeout(function() {
+                        console.debug("clicking voice button", voiceButton);
+                        $(voiceButton).click();               
+                    }, 500, voiceButton);
+                                                            
                 }
             });
         });

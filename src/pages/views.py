@@ -17,10 +17,27 @@ from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
-from roster.models import ClusiveUser, Period, Roles, UserStats
+from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
+
+
+class ThemedPageMixin(ContextMixin):
+    """
+    Set up for the correct color theme to be applied to the page.
+    This mixin provides a theme_class context variable to the view, according to user's preference,
+    which is used by base.html to set a class attribute on the body tag.
+    """
+
+    def dispatch(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['theme_class'] = 'clusive-theme-' + Preference.get_theme_for_user(self.clusive_user).value
+        return data
 
 
 class PeriodChoiceMixin(ContextMixin):
@@ -61,7 +78,7 @@ class PeriodChoiceMixin(ContextMixin):
         return context
 
 
-class DashboardView(LoginRequiredMixin, EventMixin, PeriodChoiceMixin, TemplateView):
+class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoiceMixin, TemplateView):
     template_name='pages/dashboard.html'
 
     def __init__(self):
@@ -296,7 +313,7 @@ class ReaderChooseVersionView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
+class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
     page_name = 'Reading'
@@ -344,7 +361,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, TemplateView):
         event.tip_type = self.tip_shown
 
 
-class WordBankView(LoginRequiredMixin, EventMixin, TemplateView):
+class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     template_name = 'pages/wordbank.html'
 
     def get(self, request, *args, **kwargs):
