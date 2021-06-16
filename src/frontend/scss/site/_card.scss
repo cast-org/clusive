@@ -42,6 +42,21 @@
     }
 }
 
+.card-graph {
+    position: relative;
+    z-index: 2;
+
+    .link-stretch {
+        &::after {
+            top: -$card-padding-y;
+            right: -$card-padding-x;
+            bottom: calc(-2rem + #{-$card-padding-y});
+            left: -$card-padding-x;
+        }
+    }
+
+}
+
 .card {
     .stars-chart {
         border-color: var(--CT_cardDividerColor);
@@ -61,7 +76,7 @@
 .card-library {
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
-    .link-stretch {
+    *:not(.card-graph) > .link-stretch {
         color: inherit;
         text-decoration: none;
 
