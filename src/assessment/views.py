@@ -6,10 +6,12 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
+from django.views.generic import TemplateView
 
 from eventlog.signals import affect_check_completed, comprehension_check_completed
 from library.models import Book
-from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheck, AffectiveCheckResponse, \
+from roster.models import Roles
+from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheckResponse, \
     AffectiveUserTotal, AffectiveBookTotal
 
 logger = logging.getLogger(__name__)
@@ -84,6 +86,64 @@ class AffectCheckView(LoginRequiredMixin, View):
             "affect-option-surprised": acr.surprised_option_response,
         }
         return JsonResponse(response_value)
+
+
+class AffectDetailView(LoginRequiredMixin, TemplateView):
+    student_template_name = 'shared/partial/modal_affect_detail.html'
+    teacher_template_name = 'shared/partial/modal_class_affect_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        self.word = kwargs['word']
+        clusive_user = request.clusive_user
+        self.teacher_view = False
+        self.class_popular = None
+        self.my_recent = None
+        if clusive_user.can_manage_periods and clusive_user.current_period:
+            self.teacher_view = True
+            # Find and count student responses in this period with the given affect word
+            period = clusive_user.current_period
+            field = self.word + '_option_response'
+            filters = {
+                field: True,
+                'user__periods': period,
+                'user__role': Roles.STUDENT
+            }
+            map_book_to_votes = {}
+            for resp in AffectiveCheckResponse.objects.filter(**filters):
+                if resp.book in map_book_to_votes:
+                    map_book_to_votes[resp.book].append(resp)
+                else:
+                    map_book_to_votes[resp.book] = [resp]
+            top_books = list(map_book_to_votes.values()) # list of lists
+            top_books.sort(reverse=True, key=lambda l: len(l))
+            top_books = top_books[0:10]
+            self.class_popular = [{
+                'count': len(votes),
+                'book': votes[0].book,
+                'names': ', '.join([v.user.user.first_name for v in votes]),
+            } for votes in top_books]
+        else:
+            self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
+        self.popular = AffectiveBookTotal.most_with_word(self.word)[0:5]
+        # Make it easier to access the correct count from template.
+        for abt in self.popular:
+            abt.count = getattr(abt, self.word)
+        return super().get(request, *args, **kwargs)
+
+    def get_template_names(self):
+        if self.teacher_view:
+            return [self.teacher_template_name]
+        else:
+            return [self.student_template_name]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['word'] = self.word
+        context['my_recent'] = self.my_recent
+        context['class_popular'] = self.class_popular
+        context['popular'] = self.popular
+        return context
+
 
 class ComprehensionCheckView(LoginRequiredMixin, View):
     @staticmethod

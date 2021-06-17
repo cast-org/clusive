@@ -1,0 +1,41 @@
+<p>
+    <strong>The class felt {{word}} reading&hellip;</strong>
+</p>
+
+{% if class_popular %}
+    <ul class="list-unstyled">
+    {% for item in class_popular %}
+        <li class="mb-0_5">
+            <a href="#" onclick="vocabCheck.start(this, '{{book.id}}'); return false;">
+                <strong>{{ item.book.title }}</strong>
+            </a>
+            ({{ item.count }})
+            <p>{{ item.names }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No readings have made students feel {{word}} yet.</p>
+{% endif %}
+
+<hr>
+
+<p>
+    <span class="icon-globe ci-2x" aria-hidden="true"></span>
+    <strong>Other Clusive readers felt {{ word }} reading&hellip;</strong>
+</p>
+
+{% if popular %}
+<ul class="list-unstyled">
+    {% for resp in popular %}
+    <li class="mb-0_5">
+        <a href="#" onclick="vocabCheck.start(this, '{{resp.book.id}}'); return false;">
+            <strong>{{ resp.book.title }}</strong>
+        </a>
+        ({{ resp.count }})
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No readings have made people feel {{word}} yet.</p>
+{% endif %}

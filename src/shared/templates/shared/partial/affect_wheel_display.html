@@ -14,10 +14,40 @@
                 <div class="react-wedge react-wedge-{{ forloop.counter0 }}"
                      style="--dim: {{ w.value|default:0 }}%;"></div>
                 <div class="btn-check react-btn react-label-{{ forloop.counter0 }}">
-                    <button type="button" class="btn btn-react">{{ w.word }}</button>
+                    <a href="#" data-cfw="modal" data-cfw-modal-target="#react-detail-{{w.word}}">{{ w.word }}</a>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
 </div>
+{% for w in data %}
+<div id="react-detail-{{w.word}}" class="modal why-modal modal-react-detail" data-word="{{w.word}}">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">{{w.word}} <span class="icon-thought" aria-hidden="true"></span></h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<script>
+$('.modal-react-detail').one('beforeShow.cfw.modal', function(e) {
+    var word = $(this).data('word');
+    var target = $(this).find('.modal-body');
+    $.get('/assessment/affect_detail/'+ word)
+        .done(function(data, status) {
+            target.html(data);
+        })
+        .fail(function(err) {
+            console.error(err);
+        });
+});
+</script>

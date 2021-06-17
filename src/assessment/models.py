@@ -3,9 +3,6 @@ import logging
 import math
 from django.db import models
 from django.db.models import Count, Sum
-from django.utils import timezone
-
-from django.core import serializers
 
 from library.models import Book
 from roster.models import ClusiveUser, ResearchPermissions
@@ -122,12 +119,12 @@ class AffectiveCheckResponse(CheckResponse):
         return '<ACResp %s/%d>' % (self.user.anon_id, self.book.id)
 
     @classmethod
-    def recent_with_word(cls, user: ClusiveUser, word, max=5):
-        """Find most-recent responses by a user that include a true value for the given affect word."""
+    def recent_with_word(cls, user: ClusiveUser, word):
+        """Construct QuerySet for the most-recent responses by a user that include a true value for the given affect word."""
         field = word + '_option_response'
-        filters = { user: user,
+        filters = { 'user': user,
                    field: True }
-        return cls.objects.filter(**filters).order_by('-updated').limit(max)
+        return cls.objects.filter(**filters).order_by('-updated')
 
 
 class AffectiveSummary(models.Model):
@@ -209,6 +206,13 @@ class AffectiveSummary(models.Model):
             return min(100, round(40+30*math.log(value, 10)))
         else:
             return 0
+
+    @classmethod
+    def most_with_word(cls, word):
+        """Construct QuerySet for the summaries with the highest total for the given affect word."""
+        # At least 1 vote, order by number of votes desc.
+        filters = { word + '__gte': 1 }
+        return cls.objects.filter(**filters).order_by('-'+word)
 
 
 class AffectiveUserTotal(AffectiveSummary):
