@@ -202,7 +202,7 @@ class AffectiveSummary(models.Model):
         # 10 -> 70
         # 100 -> 100
         # Over 100 -> 100
-        if value>0:
+        if value:
             return min(100, round(40+30*math.log(value, 10)))
         else:
             return 0
