@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('roster', '0034_auto_20210602_0100'),
+        ('eventlog', '0029_auto_20210427_1749'),
     ]
 
     operations = [
