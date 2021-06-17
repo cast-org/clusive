@@ -1,6 +1,6 @@
 <div class="box box-mascot-tipped">
     <h2>Getting started</h2>
-    <div class="library-grid{% if data.featured|length <= 1 %} library-grid-col-2{% endif %}">
+    <div class="library-grid{% if data.featured|length <= 1 %} library-grid-col-2{% endif %} dashboard-grid">
         {% for book in data.featured %}
         {% include "library/partial/library_card.html" with book=book show_menu=False show_topics=False %}
         {% endfor %}

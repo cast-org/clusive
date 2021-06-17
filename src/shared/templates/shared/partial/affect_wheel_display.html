@@ -1,4 +1,4 @@
-<div class="react react-has-btn">
+<div class="react react-has-label">
     <div class="react-chart">
         <div class="react-chart-inner">
             <!-- lines -->
@@ -13,9 +13,7 @@
             <div class="react-item react-item-{{ forloop.counter0 }}">
                 <div class="react-wedge react-wedge-{{ forloop.counter0 }}"
                      style="--dim: {{ w.value|default:0 }}%;"></div>
-                <div class="btn-check react-btn react-label-{{ forloop.counter0 }}">
-                    <a href="#" data-cfw="modal" data-cfw-modal-target="#react-detail-{{w.word}}">{{ w.word }}</a>
-                </div>
+                <a href="#" class="react-label react-label-{{ forloop.counter0 }}" data-cfw="modal" data-cfw-modal-target="#react-detail-{{w.word}}">{{ w.word }}</a>
             </div>
             {% endfor %}
         </div>
