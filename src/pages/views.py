@@ -52,25 +52,32 @@ class PeriodChoiceMixin(ContextMixin):
     periods = None
     current_period = None
 
+    def get_current_period(self, request, **kwargs):
+        """Return the current period for this user, setting it if necessary."""
+        if not self.current_period:
+            clusive_user = request.clusive_user
+            if self.periods is None:
+                self.periods = clusive_user.periods.all()
+            if kwargs.get('period_id'):
+                # User is setting a new period
+                self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
+                if self.current_period not in self.periods:
+                    self.handle_no_permission()   # attempted to access a Period the user is not in
+                logger.debug('Set current period to %s', self.current_period)
+            if self.current_period is None:
+                # Set user's default Period
+                if clusive_user.current_period:
+                    self.current_period = clusive_user.current_period
+                elif self.periods:
+                    self.current_period = self.periods[0]
+            if self.current_period != clusive_user.current_period and self.current_period != None:
+                # Update user's default period to current
+                clusive_user.current_period = self.current_period
+                clusive_user.save()
+        return self.current_period
+
     def get(self, request, *args, **kwargs):
-        clusive_user = request.clusive_user
-        if self.periods is None:
-            self.periods = clusive_user.periods.all()
-        if kwargs.get('period_id'):
-            # User is setting a new period
-            self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
-            if self.current_period not in self.periods:
-                self.handle_no_permission()   # attempted to access a Period the user is not in
-        if self.current_period is None:
-            # Set user's default Period
-            if clusive_user.current_period:
-                self.current_period = clusive_user.current_period
-            elif self.periods:
-                self.current_period = self.periods[0]
-        if self.current_period != clusive_user.current_period and self.current_period != None:
-            # Update user's default period to current
-            clusive_user.current_period = self.current_period
-            clusive_user.save()
+        self.get_current_period(request, **kwargs)
         result = super().get(request, *args, **kwargs)
         return result
 
@@ -90,7 +97,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
         self.teacher = self.clusive_user.can_manage_periods
-        self.current_period = request.clusive_user.current_period
+        self.current_period = self.get_current_period(request, **kwargs)
         self.panels = {} # This will hold info on which panels are to be displayed.
         self.data = {} # This will hold panel-specific data
 
@@ -100,7 +107,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
         # Welcome panel
         self.panels['welcome'] = user_stats.reading_views == 0
 
-        # Affect panel
+        # Affect panel (for student)
         self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
         if self.panels['affect']:
             totals = AffectiveUserTotal.objects.filter(user=request.clusive_user).first()
@@ -109,13 +116,15 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
                 'empty': totals is None,
             }
 
+        # Class Affect panel (for parent/teacher)
         self.panels['class_affect'] = self.teacher and self.current_period
         if self.panels['class_affect']:
             sa = AffectiveUserTotal.objects.filter(user__periods=self.current_period, user__role=Roles.STUDENT)
             scaled = AffectiveUserTotal.aggregate_and_scale(sa)
+            logger.debug('scaled: %s', scaled)
             self.data['class_affect'] = {
                 'totals': scaled,
-                'empty': not any(scaled),
+                'empty': not any([item['value'] for item in scaled]),
             }
             logger.debug("Scaled: %s", scaled)
 

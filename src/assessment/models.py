@@ -166,19 +166,34 @@ class AffectiveSummary(models.Model):
     def to_map(self):
         return {word: getattr(self, word) for word in affect_words}
 
+    def maximum_value(self):
+        return max(self.to_list())
+
     # Calculate the values to show in the starburst visualization for each word
-    @classmethod
-    def scale_values(cls, summary):
+    def scaled_values(self):
         """
-        Given an AffectiveSummary instance, calculate the values to show in the starburst visualization.
-        Returned in a format convenient for sending to the template.
-        If the argument is None, returns the same data structure with all 0 values.
+        Calculate the values to show in the starburst visualization.
+        :return: data structure for in a format convenient for sending to the visualization: [ { 'word': value }, ... ]
+        """
+        # testvals = [1,  2,  3,  4,  5, 10,
+        #             20, 30, 40, 50, 75, 100]
+        # maximum = max(testvals)
+        # return [{ 'word': w, 'value': AffectiveSummary.scale_value(testvals[i], maximum) } for i, w in enumerate(affect_words)]
+        maximum = self.maximum_value()
+        map = self.to_map()
+        return [{ 'word': w, 'value': AffectiveSummary.scale_value(map[w], maximum) } for w in affect_words]
+
+    @classmethod
+    def scale_values(cls, instance):
+        """
+        Convert instance to visualization data structure with null safety.
+        Call scaled_values on the instance if one is provided.
+        If the argument is None, then return the same data structure but with all 0 values.
         :param summary: an AffectiveSummary, or None
         :return: data structure for visualization: [ { 'word': value }, ... ]
         """
-        if summary:
-            map = summary.to_map()
-            return [{ 'word': w, 'value': AffectiveSummary.scale_value(map[w]) } for w in affect_words]
+        if instance:
+            return instance.scaled_values()
         else:
             return [{ 'word':w, 'value': 0} for w in affect_words]
 
@@ -186,24 +201,19 @@ class AffectiveSummary(models.Model):
     def aggregate_and_scale(cls, query_set):
         """Given a QuerySet that would return multiple AffectiveSummarys,
         this asks the database to sum them all and then returns them scaled and ready for visualization."""
-        sums = [Sum(w) for w in affect_words]
-        summed = query_set.aggregate(*sums)
-        return [{ 'word': w, 'value': cls.scale_value(summed[w+'__sum']) } for w in affect_words]
+        sum_commands = [Sum(w) for w in affect_words]
+        summed = query_set.aggregate(*sum_commands)
+        maximum = max([summed[w+'__sum'] or 0 for w in affect_words])
+        return [{ 'word': w, 'value': cls.scale_value(summed[w+'__sum'], maximum) } for w in affect_words]
 
     @classmethod
-    def scale_value(cls, value):
+    def scale_value(cls, value, maximum):
+        # Transform absolute value to scaled value relative to the given maximum.
         # Output of this formula needs be 0-100.
-        # Uses a logarithmic scale to compress the range and compensate for the fact that
-        # the visualization's bars start narrow and get wide.
-        # Some example outputs:
-        # 0 -> 0
-        # 1 -> 40
-        # 2 -> 49
-        # 10 -> 70
-        # 100 -> 100
-        # Over 100 -> 100
-        if value:
-            return min(100, round(40+30*math.log(value, 10)))
+        # Uses a square-root transformation to compress the range because this is returning a radius
+        # but the visualization fills in an area - area is proportional to r^2.
+        if value and maximum:
+            return min(100, round(100 * math.sqrt(value/maximum)))
         else:
             return 0
 

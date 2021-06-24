@@ -13,7 +13,11 @@
             <div class="react-item react-item-{{ forloop.counter0 }}">
                 <div class="react-wedge react-wedge-{{ forloop.counter0 }}"
                      style="--dim: {{ w.value|default:0 }}%;"></div>
-                <a href="#" class="react-label react-label-{{ forloop.counter0 }}" data-cfw="modal" data-cfw-modal-target="#react-detail-{{w.word}}">{{ w.word }}</a>
+                <a href="#" class="react-label react-label-{{ forloop.counter0 }}"
+                   data-cfw="modal" data-cfw-modal-target="#react-detail-{{w.word}}"
+                   data-cle-handler="click" data-cle-control="dash_affect_detail" data-cle-value="{{w.word}}">
+                    {% if w.value %}<strong>{{ w.word }}</strong>{% else %}{{ w.word }}{% endif %}
+                </a>
             </div>
             {% endfor %}
         </div>
