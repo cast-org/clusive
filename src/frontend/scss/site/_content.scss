@@ -203,7 +203,7 @@ h2,
 
 .link-back {
     margin-bottom: .75rem;
-    @include font-size(.875rem);
+    //@include font-size(.875rem);
 
     @include media-breakpoint-up(md) {
         margin-left: -1rem;

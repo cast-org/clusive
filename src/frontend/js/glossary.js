@@ -77,7 +77,7 @@ window.wordBank.moveRating = function(elt, delta) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word');
     var rating = Number(item.data('rating'));
-    var control = delta>0 ? 'wb_shift_right' : 'wb_shift_left';
+    var control = delta > 0 ? 'wb_shift_right' : 'wb_shift_left';
     var newrating = rating + delta;
     if (newrating >= 0 && newrating <= 3) {
         $.get('/glossary/rating/' + control + '/' + word.text() + '/' + newrating);
@@ -94,15 +94,21 @@ window.wordBank.displayNewWordRating = function(item, newrating) {
 };
 
 window.wordBank.updateColumnCounts = function() {
+    var wordCount = 0;
     for (var rank = 0; rank <= 3; rank++) {
         var n = $('.wordbank-item.offset' + rank).length;
         var indicator = $('#count' + rank);
         indicator.text(n);
+        wordCount += n;
         if (n === 0) {
             indicator.closest('.wordbank-count').addClass('wordbank-count-empty');
         } else {
             indicator.closest('.wordbank-count').removeClass('wordbank-count-empty');
         }
+    }
+    if (wordCount === 0) {
+        document.querySelector('#wordbankEmptyMsg').classList.remove('d-none');
+        document.querySelector('#wordbankTable').classList.add('d-none');
     }
 };
 
