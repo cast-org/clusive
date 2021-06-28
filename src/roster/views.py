@@ -2,6 +2,7 @@ import csv
 import json
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model, logout
@@ -20,6 +21,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView
 
+
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
@@ -31,6 +33,15 @@ from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserReg
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
+
+from urllib.parse import urlencode
+from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.errors import HttpError
+from allauth.socialaccount.models import SocialToken, SocialApp
+
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -470,6 +481,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
         return data
 
     def form_valid(self, form):
+        self.check_access_token()
         # Create User
         form.save()
         target : User
@@ -490,13 +502,19 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
                                         role=Roles.STUDENT,
                                         anon_id=ClusiveUser.next_anon_id(),
                                         permission=perm)
+        
         # Add user to the Period
         self.period.users.add(cu)
         return super().form_valid(form)
 
     def configure_event(self, event: Event):
         event.page = 'ManageCreateStudent'
-
+    
+#     def check_access_token(self):
+#         results = check_scope_access(self.request, 'google', ['https://www.googleapis.com/auth/classroom.courses.readonly'])        # Could get existing scopes from settings?  
+#         pdb.set_trace()
+#         courses = results.get('courses', [])
+#         x = 5
 
 class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
     model = User
@@ -657,6 +675,100 @@ def logout_sso(request, student=''):
     else:
         logger.debug("Unregistered user, nothing to delete")
 
+# def check_scope_access(request, provider, scopes):
+#     """Checks if the user has access to the given scopes and, if not, sets off
+#     a chain of requests to add those scopes and get a new access token for the
+#     user."""
+#     logger.debug('check_scope_access() for user: ', request.user)
+#     pdb.set_trace()
+#     results = None
+#     scopes.extend(settings.SOCIALACCOUNT_PROVIDERS[provider]['SCOPE'])
+#     
+#     # Get the access token for this user/provider and the client info
+#     django_user = request.user
+#     access_token = SocialToken.objects.filter(
+#         account__user=django_user, account__provider=provider
+#     ).first()
+#     client_info = SocialApp.objects.filter(provider=provider).first()
+# 
+#     # Set up the Credentials to access the new scope(s)
+#     # TODO: parameterize the token request uri: add to settings.py or see if
+#     # available from allauth library
+#     token_endpoint = 'https://oauth2.googleapis.com/token'
+#     creds = get_credentials(access_token, client_info, token_endpoint)
+# 
+#     # Check that the access works with the new `scopes`
+#     # TODO: parameterize the `classroom` and version arguments.  They are
+#     # required arguments and while it's sort of embedded in the `scopes`
+#     # parameter to this function, you can't use that.
+#     service = build('classroom', 'v1', credentials=creds)
+#     try:
+#         # TODO:  look for a generic access check in the client (service)
+#         # TODO:  what type is `results` when this call succeeds
+#         results = service.courses().list(pageSize=10).execute()
+#     except HttpError as http_error:
+#         add_scope_access(django_user, access_token, client_info, creds, scopes)
+#         logger.info("Exception in accessing courses: ", http_error)
+#         results = None
+#     
+#     # TODO: "Refresh" the token by asking for permission for more scopes.
+#     return results
+
+def get_credentials(access_token, client_info, token_endpoint):
+    creds = Credentials(
+        token = access_token.token,
+        refresh_token = access_token.token_secret,
+        token_uri=token_endpoint,
+        client_id=client_info.client_id,
+        client_secret=client_info.secret
+    )
+    if creds and not creds.valid:
+        logger.debug('Credentials are not valid!')
+        if creds and creds.expired :
+            logger.debug('REFRESHING credentials')
+            # TODO: save new access token, but maybe later when/if the scope is
+            # updated?
+            creds.refresh(Request())
+    #else:
+        # TODO: what to do if credentials are not valid?  Under what conditions
+        # other than the checks above (expired) are they not valid?
+    return creds
+
+#def add_scope_access(user, access_token, client_info, creads, scopes):
+def add_scope_access(request):
+    # Space separated list
+    new_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly'
+    
+    # Get the access token for this user/provider and the client info
+    access_token = retrieve_access_token(request.user, 'google')
+    client_info = retrieve_client_info('google')
+
+    parameters = urlencode({
+        'client_id': client_info.client_id,
+        'response_type': 'token',
+        'scope': new_scopes,
+        'include_granted_scopes': 'true',
+        'prompt': 'consent',
+        'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
+    })
+    pdb.set_trace()
+    return HttpResponseRedirect('http://accounts.google.com/o/oauth2/v2/auth?' + parameters)
+
+def add_scope_callback(request):
+    logger.debug('add_scope_access called by google')
+    pdb.set_trace()
+
+def retrieve_access_token(user, provider):
+    # TODO: Check whether use of first() is always correct.  It assumes there is
+    # only ever one access token per user/provider
+    access_token = SocialToken.objects.filter(
+        account__user=user, account__provider=provider
+    ).first()
+    return access_token
+
+def retrieve_client_info(provider):
+    client_info = SocialApp.objects.filter(provider=provider).first()
+    return client_info
 
 class SyncMailingListView(View):
 
