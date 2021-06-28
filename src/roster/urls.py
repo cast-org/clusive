@@ -51,7 +51,7 @@ urlpatterns = [
     path('manage_create_period/', views.ManageCreatePeriodView.as_view(), name='manage_create_period'),
     path('finish_login', views.finish_login, name='finish_login'),
     path('cancel_registration', views.cancel_registration, name='cancel_registration'),
-    path('add_scope_access', views.add_scope_access, name='add_scope_access'),
+    path('add_scope_access/google/', views.add_scope_access_google, name='add_scope_access_google'),
     path('add_scope_callback/', views.add_scope_callback, name='add_scope_callback'),
 
     path('sync_mailing_list', views.SyncMailingListView.as_view(), name='sync_mailing_list'),

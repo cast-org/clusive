@@ -35,6 +35,7 @@ from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPer
 from roster.signals import user_registered
 
 from urllib.parse import urlencode
+from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
@@ -734,33 +735,79 @@ def get_credentials(access_token, client_info, token_endpoint):
         # other than the checks above (expired) are they not valid?
     return creds
 
-#def add_scope_access(user, access_token, client_info, creads, scopes):
-def add_scope_access(request):
-    # Space separated list
-    new_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly'
-    
-    # Get the access token for this user/provider and the client info
-    access_token = retrieve_access_token(request.user, 'google')
-    client_info = retrieve_client_info('google')
+def add_scope_access_google(request):
+    new_scopes = [
+        'https://www.googleapis.com/auth/classroom.courses.readonly',
+        'https://www.googleapis.com/auth/classroom.courses'
+    ]
+    return add_scope_access(request, 'google', new_scopes)
 
-    parameters = urlencode({
-        'client_id': client_info.client_id,
-        'response_type': 'token',
-        'scope': new_scopes,
-        'include_granted_scopes': 'true',
-        'prompt': 'consent',
-        'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
-    })
-    pdb.set_trace()
-    return HttpResponseRedirect('http://accounts.google.com/o/oauth2/v2/auth?' + parameters)
+def add_scope_access(request, provider, new_scopes=[]):
+    # Get the access token for this user/provider and the client info
+    access_token = retrieve_access_token(request.user, provider)
+    client_info = retrieve_client_info(provider)
+    client_config = {
+        "installed": {
+            "client_id": client_info.client_id,
+            "client_secret": client_info.secret,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://accounts.google.com/o/oauth2/token",
+            "response_type": "token"
+        }
+    }
+    flow = Flow.from_client_config(client_config,
+        scopes=new_scopes,
+        redirect_uri='http://localhost:8000/account/add_scope_callback/'
+    )
+    auth_url, oauth_state = flow.authorization_url(
+        prompt='consent',
+        include_granted_scopes='true',
+        access_type='offline'
+    )
+    request.session['oauth2_url'] = auth_url
+    request.session['oauth2_state'] = oauth_state
+    request.session['oauth2_scopes'] = new_scopes
+    return HttpResponseRedirect(auth_url)
+ 
+#     scopes_string = " ".join(new_scopes)    
+#     parameters = urlencode({
+#         'client_id': client_info.client_id,
+#         'response_type': 'token',
+#         'scope': scopes_string,
+#         'include_granted_scopes': 'true',
+#         'prompt': 'consent',
+#         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
+#     })
+#    pdb.set_trace()
+#    return HttpResponseRedirect('https://accounts.google.com/o/oauth2/v2/auth?' + parameters)
 
 def add_scope_callback(request):
     logger.debug('add_scope_access called by google')
+    oauth2_state = request.session.get('oauth2_state')
+    new_scopes = request.session.get('oauth2_scopes')
+    client_info = retrieve_client_info('google')
+    client_config = {
+        "installed": {
+            "client_id": client_info.client_id,
+            "client_secret": client_info.secret,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://accounts.google.com/o/oauth2/token",
+            "response_type": "token"
+        }
+    }
+    flow = Flow.from_client_config(client_config,
+        scopes=new_scopes,
+        state=oauth2_state
+    )
     pdb.set_trace()
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    credentials = flow.credentials
+    pdb.set_trace()
+    return flow.credentials
 
 def retrieve_access_token(user, provider):
     # TODO: Check whether use of first() is always correct.  It assumes there is
-    # only ever one access token per user/provider
+    # only ever one access token per (user, provider) combination.
     access_token = SocialToken.objects.filter(
         account__user=user, account__provider=provider
     ).first()
