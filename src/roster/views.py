@@ -39,8 +39,6 @@ from datetime import timedelta
 import requests
 from urllib.parse import urlencode
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -710,7 +708,6 @@ def add_scope_access(request):
 
 def add_scope_callback(request):
     logger.debug('add_scope_access called by google')
-    pdb.set_trace()
     code = request.GET.get('code')
     # TODO: the provider is hard coded here -- how to parameterize?  Note that
     # this function is specific to google, so perhaps okay.
@@ -736,15 +733,14 @@ def add_scope_callback(request):
     return HttpResponseRedirect(reverse('manage'))
 
 def update_access_token_db(access_token_json, user, provider):
-    pdb.set_trace()
     db_token = retrieve_access_token_from_db(user, provider)
     db_token.token = access_token_json.get('access_token')
     print(timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in'))))
     db_token.expires_at = timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in')))
-    
+
     # Update the refresh token only if a new one was provided.  OAuth2 providers
     # don't always send a refresh token.
     if access_token_json.get('refresh_token') != None:
         db_token.token_secret = access_token_json['refresh_token']
-        
+
     db_token.save()
