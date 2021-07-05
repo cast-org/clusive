@@ -13,7 +13,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponseNotModified
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse
@@ -38,6 +38,8 @@ from allauth.socialaccount.models import SocialToken, SocialApp
 from datetime import timedelta
 import requests
 from urllib.parse import urlencode
+
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -675,6 +677,7 @@ class SyncMailingListView(View):
 ########################################
 #
 # Functions for adding scope(s) workflow
+# TODO: turn into a View
 
 def retrieve_client_info_from_db(provider):
     client_info = SocialApp.objects.filter(provider=provider).first()
@@ -689,20 +692,17 @@ def retrieve_access_token_from_db(user, provider):
     return access_token
 
 def add_scope_access(request):
-    # TODO: make new_scopes a list or array parameter of this method, or part
-    # of the `request` parameter.
-    # Space separated list
-    new_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly'
+    pdb.set_trace()
+    provider = request.GET.get('provider')
+    new_scopes = request.GET.get('scopes')
 
     # Get the access token for this user/provider and the client info
-    # TODO: the provider is hard coded here; it should be part of the `request`
-    client_info = retrieve_client_info_from_db('google')
+    client_info = retrieve_client_info_from_db(provider)
     parameters = urlencode({
         'client_id': client_info.client_id,
         'response_type': 'code',
         'scope': new_scopes,
         'include_granted_scopes': 'true',
-        'prompt': 'consent',
         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
     })
     return HttpResponseRedirect('http://accounts.google.com/o/oauth2/v2/auth?' + parameters)
