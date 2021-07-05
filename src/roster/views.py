@@ -13,7 +13,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseNotModified
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse
@@ -34,15 +34,10 @@ from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserReg
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
 
-from urllib.parse import urlencode
-from google_auth_oauthlib.flow import Flow
-from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.errors import HttpError
 from allauth.socialaccount.models import SocialToken, SocialApp
-
-import pdb
+from datetime import timedelta
+import requests
+from urllib.parse import urlencode
 
 logger = logging.getLogger(__name__)
 
@@ -510,12 +505,6 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
 
     def configure_event(self, event: Event):
         event.page = 'ManageCreateStudent'
-    
-#     def check_access_token(self):
-#         results = check_scope_access(self.request, 'google', ['https://www.googleapis.com/auth/classroom.courses.readonly'])        # Could get existing scopes from settings?  
-#         pdb.set_trace()
-#         courses = results.get('courses', [])
-#         x = 5
 
 class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
     model = User
@@ -676,150 +665,83 @@ def logout_sso(request, student=''):
     else:
         logger.debug("Unregistered user, nothing to delete")
 
-# def check_scope_access(request, provider, scopes):
-#     """Checks if the user has access to the given scopes and, if not, sets off
-#     a chain of requests to add those scopes and get a new access token for the
-#     user."""
-#     logger.debug('check_scope_access() for user: ', request.user)
-#     pdb.set_trace()
-#     results = None
-#     scopes.extend(settings.SOCIALACCOUNT_PROVIDERS[provider]['SCOPE'])
-#     
-#     # Get the access token for this user/provider and the client info
-#     django_user = request.user
-#     access_token = SocialToken.objects.filter(
-#         account__user=django_user, account__provider=provider
-#     ).first()
-#     client_info = SocialApp.objects.filter(provider=provider).first()
-# 
-#     # Set up the Credentials to access the new scope(s)
-#     # TODO: parameterize the token request uri: add to settings.py or see if
-#     # available from allauth library
-#     token_endpoint = 'https://oauth2.googleapis.com/token'
-#     creds = get_credentials(access_token, client_info, token_endpoint)
-# 
-#     # Check that the access works with the new `scopes`
-#     # TODO: parameterize the `classroom` and version arguments.  They are
-#     # required arguments and while it's sort of embedded in the `scopes`
-#     # parameter to this function, you can't use that.
-#     service = build('classroom', 'v1', credentials=creds)
-#     try:
-#         # TODO:  look for a generic access check in the client (service)
-#         # TODO:  what type is `results` when this call succeeds
-#         results = service.courses().list(pageSize=10).execute()
-#     except HttpError as http_error:
-#         add_scope_access(django_user, access_token, client_info, creds, scopes)
-#         logger.info("Exception in accessing courses: ", http_error)
-#         results = None
-#     
-#     # TODO: "Refresh" the token by asking for permission for more scopes.
-#     return results
-
-def get_credentials(access_token, client_info, token_endpoint):
-    creds = Credentials(
-        token = access_token.token,
-        refresh_token = access_token.token_secret,
-        token_uri=token_endpoint,
-        client_id=client_info.client_id,
-        client_secret=client_info.secret
-    )
-    if creds and not creds.valid:
-        logger.debug('Credentials are not valid!')
-        if creds and creds.expired :
-            logger.debug('REFRESHING credentials')
-            # TODO: save new access token, but maybe later when/if the scope is
-            # updated?
-            creds.refresh(Request())
-    #else:
-        # TODO: what to do if credentials are not valid?  Under what conditions
-        # other than the checks above (expired) are they not valid?
-    return creds
-
-def add_scope_access_google(request):
-    new_scopes = [
-        'https://www.googleapis.com/auth/classroom.courses.readonly',
-        'https://www.googleapis.com/auth/classroom.courses'
-    ]
-    return add_scope_access(request, 'google', new_scopes)
-
-def add_scope_access(request, provider, new_scopes=[]):
-    # Get the access token for this user/provider and the client info
-    access_token = retrieve_access_token(request.user, provider)
-    client_info = retrieve_client_info(provider)
-    client_config = {
-        "installed": {
-            "client_id": client_info.client_id,
-            "client_secret": client_info.secret,
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://accounts.google.com/o/oauth2/token",
-            "response_type": "token"
-        }
-    }
-    flow = Flow.from_client_config(client_config,
-        scopes=new_scopes,
-        redirect_uri='http://localhost:8000/account/add_scope_callback/'
-    )
-    auth_url, oauth_state = flow.authorization_url(
-        prompt='consent',
-        include_granted_scopes='true',
-        access_type='offline'
-    )
-    request.session['oauth2_url'] = auth_url
-    request.session['oauth2_state'] = oauth_state
-    request.session['oauth2_scopes'] = new_scopes
-    return HttpResponseRedirect(auth_url)
- 
-#     scopes_string = " ".join(new_scopes)    
-#     parameters = urlencode({
-#         'client_id': client_info.client_id,
-#         'response_type': 'token',
-#         'scope': scopes_string,
-#         'include_granted_scopes': 'true',
-#         'prompt': 'consent',
-#         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
-#     })
-#    pdb.set_trace()
-#    return HttpResponseRedirect('https://accounts.google.com/o/oauth2/v2/auth?' + parameters)
-
-def add_scope_callback(request):
-    logger.debug('add_scope_access called by google')
-    oauth2_state = request.session.get('oauth2_state')
-    new_scopes = request.session.get('oauth2_scopes')
-    client_info = retrieve_client_info('google')
-    client_config = {
-        "installed": {
-            "client_id": client_info.client_id,
-            "client_secret": client_info.secret,
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://accounts.google.com/o/oauth2/token",
-            "response_type": "token"
-        }
-    }
-    flow = Flow.from_client_config(client_config,
-        scopes=new_scopes,
-        state=oauth2_state
-    )
-    pdb.set_trace()
-    flow.fetch_token(authorization_response=request.build_absolute_uri())
-    credentials = flow.credentials
-    pdb.set_trace()
-    return flow.credentials
-
-def retrieve_access_token(user, provider):
-    # TODO: Check whether use of first() is always correct.  It assumes there is
-    # only ever one access token per (user, provider) combination.
-    access_token = SocialToken.objects.filter(
-        account__user=user, account__provider=provider
-    ).first()
-    return access_token
-
-def retrieve_client_info(provider):
-    client_info = SocialApp.objects.filter(provider=provider).first()
-    return client_info
-
 class SyncMailingListView(View):
 
     def get(self, request):
         logger.debug('Sync mailing list request received')
         MailingListMember.synchronize_user_emails()
         return JsonResponse({'success': 1})
+
+########################################
+#
+# Functions for adding scope(s) workflow
+
+def retrieve_client_info_from_db(provider):
+    client_info = SocialApp.objects.filter(provider=provider).first()
+    return client_info
+
+def retrieve_access_token_from_db(user, provider):
+    # TODO: Check whether use of first() is always correct.  It assumes
+    # there is only ever one access token per user/provider combo.
+    access_token = SocialToken.objects.filter(
+        account__user=user, account__provider=provider
+    ).first()
+    return access_token
+
+def add_scope_access(request):
+    # TODO: make new_scopes a list or array parameter of this method, or part
+    # of the `request` parameter.
+    # Space separated list
+    new_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly'
+
+    # Get the access token for this user/provider and the client info
+    # TODO: the provider is hard coded here; it should be part of the `request`
+    client_info = retrieve_client_info_from_db('google')
+    parameters = urlencode({
+        'client_id': client_info.client_id,
+        'response_type': 'code',
+        'scope': new_scopes,
+        'include_granted_scopes': 'true',
+        'prompt': 'consent',
+        'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
+    })
+    return HttpResponseRedirect('http://accounts.google.com/o/oauth2/v2/auth?' + parameters)
+
+def add_scope_callback(request):
+    logger.debug('add_scope_access called by google')
+    code = request.GET.get('code')
+    # TODO: the provider is hard coded here -- how to parameterize?  Note that
+    # this function is specific to google, so perhaps okay.
+    client_info = retrieve_client_info_from_db('google')
+    resp = requests.request(
+        'POST',
+        'https://accounts.google.com/o/oauth2/token',
+        data={
+            'redirect_uri': 'http://localhost:8000/account/add_scope_callback/',
+            'grant_type': 'authorization_code',
+            'code': code,
+            'client_id': client_info.client_id,
+            'client_secret': client_info.secret
+        }
+    )
+    access_token = None
+    if resp.status_code == 200 or resp.status_code == 201:
+        access_token = resp.json()
+    if not access_token or access_token.get('access_token') == None:
+        # TODO better error handling as this leads to allauth error page.
+        raise OAuth2Error("Error retrieving access token: %s" % resp.content)
+    update_access_token_db(access_token, request.user, 'google')
+    return HttpResponseRedirect(reverse('manage'))
+
+def update_access_token_db(access_token_json, user, provider):
+    db_token = retrieve_access_token_from_db(user, provider)
+    db_token.token = access_token_json.get('access_token')
+    print(timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in'))))
+    db_token.expires_at = timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in')))
+
+    # Update the refresh token only if a new one was provided.  OAuth2 providers
+    # don't always send a refresh token.
+    if access_token_json.get('refresh_token') != None:
+        db_token.token_secret = access_token_json['refresh_token']
+
+    db_token.save()
