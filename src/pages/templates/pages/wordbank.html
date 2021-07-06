@@ -20,14 +20,24 @@
 
 {% block content %}
 <div class="link-back">
-    <a href="#" onclick="window.history.back(); return false;" class="link-prev">back</a>
+    <a href="#" onclick="window.history.back(); return false;" class="link-prev">Back</a>
 </div>
 
 <main id="content" tabindex="-1">
 
     <h1>Word bank</h1>
 
-    <div class="wordbank-scroll">
+    {% if words|length %}
+    <div id="wordbankEmptyMsg" class="content-text mt-1 d-none">
+    {% else %}
+    <div id="wordbankEmptyMsg" class="content-text mt-1">
+    {% endif %}
+        <h2 class="h4">Rate some words!</h2>
+        <p>Tell us how well you know some words as you start or look up words in a reading. That helps Clusive to personalize settings and word highlighting for you. Change ratings of words you are learning anytime in the Word bank.</p>
+    </div>
+
+    {% if words|length %}
+    <div id="wordbankTable" class="wordbank-scroll">
         <div class="wordbank">
             <div class="wordbank-header">
                 <div class="wordbank-col">
@@ -67,5 +77,6 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </main>
 {% endblock %}
