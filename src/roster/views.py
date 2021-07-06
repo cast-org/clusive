@@ -676,27 +676,46 @@ class SyncMailingListView(View):
 ########################################
 #
 # Functions for adding scope(s) workflow
-# TODO: turn into a View
+# TODO: turn into a View?
 
-def retrieve_client_info_from_db(provider):
-    client_info = SocialApp.objects.filter(provider=provider).first()
-    return client_info
+class OAuth2Database(object):
 
-def retrieve_access_token_from_db(user, provider):
-    # TODO: Check whether use of first() is always correct.  It assumes
-    # there is only ever one access token per user/provider combo.
-    access_token = SocialToken.objects.filter(
-        account__user=user, account__provider=provider
-    ).first()
-    return access_token
+    def retrieve_client_info(self, provider):
+        client_info = SocialApp.objects.filter(provider=provider).first()
+        return client_info
+
+    def retrieve_access_token(self, user, provider):
+        # TODO: Check whether use of first() is always correct.  It assumes
+        # there is only ever one access token per user/provider combo.
+        access_token = SocialToken.objects.filter(
+            account__user=user, account__provider=provider
+        ).first()
+        return access_token
+
+    def update_access_token(self, access_token_json, user, provider):
+        db_token = self.retrieve_access_token(user, provider)
+        db_token.token = access_token_json.get('access_token')
+        db_token.expires_at = timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in')))
+
+        # Update the refresh token only if a new one was provided.  OAuth2
+        # providers don't always send a refresh token.
+        if access_token_json.get('refresh_token') != None:
+            db_token.token_secret = access_token_json['refresh_token']
+
+        db_token.save()
 
 def add_scope_access(request):
+    """First step for the request-additional-scope-access workflow.  Sets a new 
+    `state` query parameter (the anti-forgery token) for the workflow, and
+    stores it in the session as `oauth2_state`.  Redirects to provider's
+    authorization end point."""
     provider = request.GET.get('provider')
     new_scopes = request.GET.get('scopes')
+    authorization_uri = request.GET.get('authorization')
     state = get_random_string(12)
     request.session['oauth2_state'] = state
 
-    client_info = retrieve_client_info_from_db(provider)
+    client_info = OAuth2Database().retrieve_client_info(provider)
     parameters = urlencode({
         'client_id': client_info.client_id,
         'response_type': 'code',
@@ -705,9 +724,11 @@ def add_scope_access(request):
         'state': state,
         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
     })
-    return HttpResponseRedirect('http://accounts.google.com/o/oauth2/v2/auth?' + parameters)
+    return HttpResponseRedirect(authorization_uri + parameters)
 
 def add_scope_callback(request):
+    """Handles callback from OAuth2 provider where access tokens are given for
+    the requested scopes."""
     request_state = request.GET.get('state')
     session_state = request.session.get('oauth2_state')
     if request_state != session_state:
@@ -715,9 +736,10 @@ def add_scope_callback(request):
         raise OAuth2Error("Mismatched state in request: %s" % request_state)
 
     code = request.GET.get('code')
+    dbAccess = OAuth2Database()
     # TODO: the provider is hard coded here -- how to parameterize?  Note that
     # this function is specific to google, so perhaps okay.
-    client_info = retrieve_client_info_from_db('google')
+    client_info = dbAccess.retrieve_client_info('google')
     resp = requests.request(
         'POST',
         'https://accounts.google.com/o/oauth2/token',
@@ -735,18 +757,6 @@ def add_scope_callback(request):
     if not access_token or access_token.get('access_token') == None:
         # TODO better error handling as this leads to allauth error page.
         raise OAuth2Error("Error retrieving access token: %s" % resp.content)
-    update_access_token_db(access_token, request.user, 'google')
+    dbAccess.update_access_token(access_token, request.user, 'google')
     return HttpResponseRedirect(reverse('manage'))
 
-def update_access_token_db(access_token_json, user, provider):
-    db_token = retrieve_access_token_from_db(user, provider)
-    db_token.token = access_token_json.get('access_token')
-    print(timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in'))))
-    db_token.expires_at = timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in')))
-
-    # Update the refresh token only if a new one was provided.  OAuth2 providers
-    # don't always send a refresh token.
-    if access_token_json.get('refresh_token') != None:
-        db_token.token_secret = access_token_json['refresh_token']
-
-    db_token.save()
