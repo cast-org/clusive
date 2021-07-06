@@ -34,12 +34,11 @@ from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserReg
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
 
+from django.utils.crypto import get_random_string
 from allauth.socialaccount.models import SocialToken, SocialApp
 from datetime import timedelta
 import requests
 from urllib.parse import urlencode
-
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -692,23 +691,29 @@ def retrieve_access_token_from_db(user, provider):
     return access_token
 
 def add_scope_access(request):
-    pdb.set_trace()
     provider = request.GET.get('provider')
     new_scopes = request.GET.get('scopes')
+    state = get_random_string(12)
+    request.session['oauth2_state'] = state
 
-    # Get the access token for this user/provider and the client info
     client_info = retrieve_client_info_from_db(provider)
     parameters = urlencode({
         'client_id': client_info.client_id,
         'response_type': 'code',
         'scope': new_scopes,
         'include_granted_scopes': 'true',
+        'state': state,
         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
     })
     return HttpResponseRedirect('http://accounts.google.com/o/oauth2/v2/auth?' + parameters)
 
 def add_scope_callback(request):
-    logger.debug('add_scope_access called by google')
+    request_state = request.GET.get('state')
+    session_state = request.session.get('oauth2_state')
+    if request_state != session_state:
+        logger.info('Mismatched state in request')
+        raise OAuth2Error("Mismatched state in request: %s" % request_state)
+
     code = request.GET.get('code')
     # TODO: the provider is hard coded here -- how to parameterize?  Note that
     # this function is specific to google, so perhaps okay.
