@@ -34,11 +34,14 @@ from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserReg
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
 
-from django.utils.crypto import get_random_string
 from allauth.socialaccount.models import SocialToken, SocialApp
+from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from django.utils.crypto import get_random_string
 from datetime import timedelta
 import requests
 from urllib.parse import urlencode
+
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -732,13 +735,13 @@ def add_scope_callback(request):
     request_state = request.GET.get('state')
     session_state = request.session.get('oauth2_state')
     if request_state != session_state:
-        logger.info('Mismatched state in request')
         raise OAuth2Error("Mismatched state in request: %s" % request_state)
 
     code = request.GET.get('code')
     dbAccess = OAuth2Database()
     # TODO: the provider is hard coded here -- how to parameterize?  Note that
     # this function is specific to google, so perhaps okay.
+    # Note: for production, replace the `redirect_uri` with the official uri
     client_info = dbAccess.retrieve_client_info('google')
     resp = requests.request(
         'POST',
@@ -748,15 +751,15 @@ def add_scope_callback(request):
             'grant_type': 'authorization_code',
             'code': code,
             'client_id': client_info.client_id,
-            'client_secret': client_info.secret
+            'client_secret': client_info.secret,
+            'state': request_state
         }
     )
     access_token = None
     if resp.status_code == 200 or resp.status_code == 201:
         access_token = resp.json()
     if not access_token or access_token.get('access_token') == None:
-        # TODO better error handling as this leads to allauth error page.
-        raise OAuth2Error("Error retrieving access token: %s" % resp.content)
+        raise OAuth2Error("Error retrieving access token: none given, status: %d" % resp.status_code)
     dbAccess.update_access_token(access_token, request.user, 'google')
     return HttpResponseRedirect(reverse('manage'))
 
