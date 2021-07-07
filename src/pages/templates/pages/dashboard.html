@@ -27,6 +27,9 @@
             {% if panels.welcome %}
                 {% include "pages/partial/dashboard_panel_welcome.html" %}
             {% endif %}
+            {% if panels.challenge %}
+                {% include "pages/partial/dashboard_panel_challenge.html" %}
+            {% endif %}
             {% if panels.affect %}
                 {% include "pages/partial/dashboard_panel_affect.html" with data=data.affect %}
             {% endif %}
