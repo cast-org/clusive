@@ -107,6 +107,9 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
         # Welcome panel
         self.panels['welcome'] = user_stats.reading_views == 0
 
+        # Summer reading challenge - currently only notifies guests
+        self.panels['challenge'] = not self.clusive_user.is_registered
+
         # Affect panel (for student)
         self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
         if self.panels['affect']:
