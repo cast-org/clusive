@@ -41,8 +41,6 @@ from datetime import timedelta
 import requests
 from urllib.parse import urlencode
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
