@@ -144,3 +144,34 @@
         left: 0;
     }
 }
+
+.dashboard-grid {
+    .card:not(.card-special) {
+        align-self: flex-start;
+
+        .card-body {
+            flex: 0 0 auto;
+        }
+    }
+
+    .card-img {
+        img {
+            max-height: 55vw;
+
+            // Use `Min` in place of `min` to work around Sass/CSS collision, see: https://css-tricks.com/when-sass-and-new-css-features-collide/
+            // stylelint-disable function-name-case
+            @include media-breakpoint-up(sm) {
+                max-height: Min(10rem, 32vw);
+            }
+
+            @include media-breakpoint-up(md) {
+                max-height: Min(10rem, 23vw);
+            }
+
+            @include media-breakpoint-up(xl) {
+                max-height: Min(10rem, 10rem);
+            }
+            // stylelint-enable function-name-case
+        }
+    }
+}

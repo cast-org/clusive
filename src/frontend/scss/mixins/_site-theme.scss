@@ -90,7 +90,16 @@
         --CT_boxColor: #{$box-color};
         --CT_boxDivderColor: #{$box-divider-color};
         --CT_boxMascotSize: #{$box-mascot-size};
-        //--CT_boxMascotTippedSize: #{$box-mascot-tipped-size};
+
+        --CT_boxTabBg: #{$box-tab-bg};
+        --CT_boxTabColor: #{$box-tab-color};
+        --CT_boxTabBorderColor: #{$box-tab-border-color};
+        --CT_boxTabHoverBg: #{$box-tab-hover-bg};
+        --CT_boxTabHoverColor: #{$box-tab-hover-color};
+        --CT_boxTabHoverBorderColor: #{$box-tab-hover-border-color};
+        --CT_boxTabActiveBg: #{$box-tab-active-bg};
+        --CT_boxTabActiveColor: #{$box-tab-active-color};
+        --CT_boxTabActiveBorderColor: #{$box-tab-active-border-color};
 
         --CT_cardBg: #{$card-bg};
         --CT_cardColor: #{$card-color};
@@ -98,6 +107,8 @@
         --CT_cardImgBg: #{$card-img-bg};
         --CT_cardLibraryBoxShadow: #{$card-library-box-shadow};
         --CT_cardLibraryAuthorColor: #{$card-library-author-color};
+        --CT_cardDividerColor: #{$card-divider-color};
+        --CT_cardProgressBarBg: #{$card-progress-bar-bg};
 
         --CT_cardLoginBg: #{$card-login-bg};
         --CT_cardLoginColor: #{$card-login-color};
@@ -299,15 +310,15 @@
         --CT_settingModalFooterBg: #{$setting-modal-footer-bg};
         --CT_settingModalFooterBorderColor: #{$setting-modal-footer-border-color};
 
-        --CT_settingTabBg: #{$toc-tab-bg};
-        --CT_settingTabColor: #{$toc-tab-color};
-        --CT_settingTabBorderColor: #{$toc-tab-border-color};
-        --CT_settingTabHoverBg: #{$toc-tab-hover-bg};
-        --CT_settingTabHoverColor: #{$toc-tab-hover-color};
-        --CT_settingTabHoverBorderColor: #{$toc-tab-hover-border-color};
-        --CT_settingTabActiveBg: #{$toc-tab-active-bg};
-        --CT_settingTabActiveColor: #{$toc-tab-active-color};
-        --CT_settingTabActiveBorderColor: #{$toc-tab-active-border-color};
+        --CT_settingTabBg: #{$setting-tab-bg};
+        --CT_settingTabColor: #{$setting-tab-color};
+        --CT_settingTabBorderColor: #{$setting-tab-border-color};
+        --CT_settingTabHoverBg: #{$setting-tab-hover-bg};
+        --CT_settingTabHoverColor: #{$setting-tab-hover-color};
+        --CT_settingTabHoverBorderColor: #{$setting-tab-hover-border-color};
+        --CT_settingTabActiveBg: #{$setting-tab-active-bg};
+        --CT_settingTabActiveColor: #{$setting-tab-active-color};
+        --CT_settingTabActiveBorderColor: #{$setting-tab-active-border-color};
 
         --CT_tocModalContentBg: #{$toc-modal-content-bg};
         --CT_tocModalContentColor: #{$toc-modal-content-color};

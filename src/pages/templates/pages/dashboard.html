@@ -24,46 +24,39 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            {% if show_star_rating %}{% include "pages/partial/dashboard_panel_star_rating.html" %}{% endif %}
-            {% if show_star_results %}{% include "pages/partial/dashboard_panel_star_rating_results.html" %}{% endif %}
-            {% include "pages/partial/dashboard_panel_welcome.html" %}
+            {% if panels.welcome %}
+                {% include "pages/partial/dashboard_panel_welcome.html" %}
+            {% endif %}
+            {% if panels.challenge %}
+                {% include "pages/partial/dashboard_panel_challenge.html" %}
+            {% endif %}
+            {% if panels.affect %}
+                {% include "pages/partial/dashboard_panel_affect.html" with data=data.affect %}
+            {% endif %}
+            {% if panels.class_affect %}
+                {% include "pages/partial/dashboard_panel_class_affect.html" with data=data.class_affect %}
+            {% endif %}
+            {% if panels.star_rating %}
+                {% include "pages/partial/dashboard_panel_star_rating.html" with data=data.star_rating %}
+            {% endif %}
+            {% if panels.star_results %}
+                {% include "pages/partial/dashboard_panel_star_rating_results.html" with data=data.star_results %}
+            {% endif %}
         </div>
 
         <div class="col-md-8 pt-1 mt-1 pt-md-0 mt-md-0">
-            <div class="box box-mascot-tipped">
-                {% if last_reads %}
-                <h2>Recent reads</h2>
-                <p>Revisit something you've read, or head to the <a href="{% url 'reader_index' %}">Library</a> for something new.</p>
-
-                <div class="library-grid{% if last_reads|length <= 1 and featured|length <= 1 %} library-grid-col-2{% endif %}">
-                    {% for para in last_reads %}
-                        {% include "library/partial/library_card.html" with book=para.book show_menu=False show_topics=False %}
-                    {% endfor %}
-                    {% for book in featured %}
-                        {% include "library/partial/library_card.html" with book=book show_menu=False show_topics=False %}
-                    {% endfor %}
-                </div>
-                {% else %}
-                <h2>Getting started</h2>
-
-                <div class="library-grid{% if featured|length <= 1 %} library-grid-col-2{% endif %}">
-                    {% for book in featured %}
-                        {% include "library/partial/library_card.html" with book=book show_menu=False show_topics=False %}
-                    {% endfor %}
-                    <div class="card card-special">
-                        <div class="card-body">
-                            <p>Dive into the Library to find something to read.</p>
-                            <a href="{% url 'reader_index' %}" class="btn btn-primary">Go to the library</a>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
+            {% if panels.getting_started %}
+                {% include "pages/partial/dashboard_panel_getting_started.html" with data=data.getting_started %}
+            {% endif %}
+            {% if panels.recent_reads %}
+                {% include "pages/partial/dashboard_panel_recent_reads.html" with data=data.recent_reads %}
+            {% endif %}
         </div>
     </div>
-    {% if reading_data %}
+
+    {% if panels.student_activity %}
     <div class="row">
-        {% include "pages/partial/dashboard_panel_student_activity.html" %}
+        {% include "pages/partial/dashboard_panel_student_activity.html" with data=data.student_activity %}
     </div>
     {% endif %}
 

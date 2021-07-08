@@ -1,0 +1,44 @@
+<p>
+    <span class="ci ci-2x ci-mascot-tipped"></span>
+    <strong>You felt {{word}} reading&hellip;</strong>
+</p>
+
+{% if my_recent %}
+    <ul class="list-unstyled">
+    {% for resp in my_recent %}
+        <li class="mb-0_5">
+            <a href="#" onclick="vocabCheck.start(this, '{{resp.book.id}}'); return false;">
+                <strong>{{ resp.book.title }}</strong>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No readings have made you feel {{word}} yet.</p>
+{% endif %}
+
+<hr>
+
+<p>
+    <span class="ci ci-mascot-triple">
+        <span class="ci ci-1x ci-mascot-tipped"></span>
+        <span class="ci ci-1x ci-mascot-tipped"></span>
+        <span class="ci ci-1x ci-mascot-tipped"></span>
+    </span>
+    <strong>Other Clusive readers felt {{ word }} reading&hellip;</strong>
+</p>
+
+{% if popular %}
+<ul class="list-unstyled">
+    {% for resp in popular %}
+    <li class="mb-0_5">
+        <a href="#" onclick="vocabCheck.start(this, '{{resp.book.id}}'); return false;">
+            <strong>{{ resp.book.title }}</strong>
+        </a>
+        ({{ resp.count }})
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No readings have made people feel {{word}} yet.</p>
+{% endif %}

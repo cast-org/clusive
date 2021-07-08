@@ -1,0 +1,11 @@
+<div class="box box-mascot-tipped-offset">
+    <h2>Your students&rsquo; reactions <span class="icon-thought" aria-hidden="true"></span></h2>
+    <div class="box-divider"></div>
+    {% if data.empty %}
+        Your class hasn’t reacted, yet.
+        Encourage them to add reactions to their readings.
+    {% else %}
+        See what your students and Clusive readers feel about what they've read.
+    {% endif %}
+    {% include 'shared/partial/affect_wheel_display.html' with data=data.totals %}
+</div>

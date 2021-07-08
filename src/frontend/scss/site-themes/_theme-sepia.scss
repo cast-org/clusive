@@ -249,6 +249,17 @@ $box-bg:                                #e4dacb;
 $box-color:                             $body-color;
 $box-divider-color:                     #d4c8b7;
 
+// Box tabs
+$box-tab-bg:                            transparent;
+$box-tab-color:                         #333;
+$box-tab-border-color:                  transparent;
+$box-tab-hover-bg:                      #6268ad;
+$box-tab-hover-color:                   #fbfbfb;
+$box-tab-hover-border-color:            transparent;
+$box-tab-active-bg:                     transparent;
+$box-tab-active-color:                  #333;
+$box-tab-active-border-color:           #ff554d;
+
 // Cards
 $card-bg:                               #ebe3d5;
 $card-color:                            inherit;
@@ -260,6 +271,8 @@ $card-login-bg:                         #e4dacb; //rgba(#b09f88, .3);
 $card-login-color:                      inherit;
 $card-special-bg:                       #d4c8b7;
 $card-special-color:                    inherit;
+$card-divider-color:                    #d3cfc9;
+$card-progress-bar-bg:                  #636b82;
 
 // Tables
 $table-active-bg:                       #f6efe3;

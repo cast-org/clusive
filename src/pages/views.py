@@ -1,8 +1,11 @@
 import logging
 from datetime import timedelta
 
+import math
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -11,7 +14,7 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
 from assessment.forms import ClusiveRatingForm
-from assessment.models import ClusiveRatingResponse, StarRatingScale
+from assessment.models import ClusiveRatingResponse, AffectiveUserTotal
 from eventlog.models import Event
 from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
@@ -49,25 +52,32 @@ class PeriodChoiceMixin(ContextMixin):
     periods = None
     current_period = None
 
+    def get_current_period(self, request, **kwargs):
+        """Return the current period for this user, setting it if necessary."""
+        if not self.current_period:
+            clusive_user = request.clusive_user
+            if self.periods is None:
+                self.periods = clusive_user.periods.all()
+            if kwargs.get('period_id'):
+                # User is setting a new period
+                self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
+                if self.current_period not in self.periods:
+                    self.handle_no_permission()   # attempted to access a Period the user is not in
+                logger.debug('Set current period to %s', self.current_period)
+            if self.current_period is None:
+                # Set user's default Period
+                if clusive_user.current_period:
+                    self.current_period = clusive_user.current_period
+                elif self.periods:
+                    self.current_period = self.periods[0]
+            if self.current_period != clusive_user.current_period and self.current_period != None:
+                # Update user's default period to current
+                clusive_user.current_period = self.current_period
+                clusive_user.save()
+        return self.current_period
+
     def get(self, request, *args, **kwargs):
-        clusive_user = request.clusive_user
-        if self.periods is None:
-            self.periods = clusive_user.periods.all()
-        if kwargs.get('period_id'):
-            # User is setting a new period
-            self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
-            if self.current_period not in self.periods:
-                self.handle_no_permission()   # attempted to access a Period the user is not in
-        if self.current_period is None:
-            # Set user's default Period
-            if clusive_user.current_period:
-                self.current_period = clusive_user.current_period
-            elif self.periods:
-                self.current_period = self.periods[0]
-        if self.current_period != clusive_user.current_period and self.current_period != None:
-            # Update user's default period to current
-            clusive_user.current_period = self.current_period
-            clusive_user.save()
+        self.get_current_period(request, **kwargs)
         result = super().get(request, *args, **kwargs)
         return result
 
@@ -86,51 +96,100 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+        self.teacher = self.clusive_user.can_manage_periods
+        self.current_period = self.get_current_period(request, **kwargs)
+        self.panels = {} # This will hold info on which panels are to be displayed.
+        self.data = {} # This will hold panel-specific data
 
-        # Data for star rating panel
+        # Decision-making data
+        user_stats = UserStats.objects.get(user=request.clusive_user)
+
+        # Welcome panel
+        self.panels['welcome'] = user_stats.reading_views == 0
+
+        # Summer reading challenge - currently only notifies guests
+        self.panels['challenge'] = not self.clusive_user.is_registered
+
+        # Affect panel (for student)
+        self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
+        if self.panels['affect']:
+            totals = AffectiveUserTotal.objects.filter(user=request.clusive_user).first()
+            self.data['affect'] = {
+                'totals':  AffectiveUserTotal.scale_values(totals),
+                'empty': totals is None,
+            }
+
+        # Class Affect panel (for parent/teacher)
+        self.panels['class_affect'] = self.teacher and self.current_period
+        if self.panels['class_affect']:
+            sa = AffectiveUserTotal.objects.filter(user__periods=self.current_period, user__role=Roles.STUDENT)
+            scaled = AffectiveUserTotal.aggregate_and_scale(sa)
+            logger.debug('scaled: %s', scaled)
+            self.data['class_affect'] = {
+                'totals': scaled,
+                'empty': not any([item['value'] for item in scaled]),
+            }
+            logger.debug("Scaled: %s", scaled)
+
+        # Star rating panel
         self.star_rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
-        self.show_star_rating = self.should_show_star_rating(request)
-        self.show_star_results = self.should_show_star_results(request)
-        if self.show_star_rating:
-            self.star_form = ClusiveRatingForm(initial={'star_rating': 0})
-            self.star_results = None
-        elif self.show_star_results:
-            self.star_results = ClusiveRatingResponse.get_graphable_results()
-            self.star_form = ClusiveRatingForm(initial={'star_rating': self.star_rating.star_rating})
-        else:
-            self.star_results = None
-            self.star_form = None
+        self.panels['star_rating'] = self.should_show_star_rating(request, user_stats)
+        if self.panels['star_rating']:
+            self.data['star_rating'] = {
+                'form' : ClusiveRatingForm(initial={'star_rating': 0}),
+            }
 
-        # Data for "recent reads" panel
-        self.last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
-        if not self.last_reads or len(self.last_reads) < 3:
-            # Add featured books to the list
-            features = list(Book.get_featured_books()[:3])
-            # Remove any featured books that are in the user's last-read list.
-            for para in self.last_reads:
-                if para.book in features:
-                    features.remove(para.book)
-            self.featured = features
-        else:
-            self.featured = []
+        # Star results panel
+        self.panels['star_results'] = self.should_show_star_results(request)
+        if self.panels['star_results']:
+            self.data['star_results'] = {
+                'form': ClusiveRatingForm(initial={'star_rating': self.star_rating.star_rating}),
+                'results': ClusiveRatingResponse.get_graphable_results(),
+            }
+
+        # Getting Started panel
+        last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
+        self.panels['getting_started'] = not last_reads or len(last_reads) == 0
+        if self.panels['getting_started']:
+            self.data['getting_started'] = {
+                'featured': list(Book.get_featured_books()[:2])
+            }
+
+        # Recent Reads panale
+        self.panels['recent_reads'] = len(last_reads) > 0
+        if self.panels['recent_reads']:
+            if len(last_reads) < 3:
+                # Add featured books to the list
+                features = list(Book.get_featured_books()[:3])
+                # Remove any featured books that are in the user's last-read list.
+                for para in last_reads:
+                    if para.book in features:
+                        features.remove(para.book)
+            else:
+                features = []
+            self.data['recent_reads'] = {
+                'last_reads': last_reads,
+                'featured': features,
+            }
+
+        # Student Activity panel
+        self.panels['student_activity'] = self.teacher
+        if self.panels['student_activity']:
+            self.data['student_activity'] = {
+                'days': 0,
+                'reading_data': Paradata.reading_data_for_period(self.current_period, days=0) if self.current_period else None
+            }
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['show_star_rating'] = self.show_star_rating
-        data['star_form'] = self.star_form
-        data['show_star_results'] = self.show_star_results
-        data['star_results'] = self.star_results
-        data['last_reads'] = self.last_reads
-        data['featured'] = self.featured
-        data['query'] = None
-        if self.clusive_user.can_manage_periods:
-            data['days'] = 0
-            if self.current_period != None:
-                data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=0)
-        return data
+        context = super().get_context_data(**kwargs)
+        context['query'] = None
+        context['panels'] = self.panels
+        context['data'] = self.data
+        return context
 
-    def should_show_star_rating(self, request):
+    def should_show_star_rating(self, request, user_stats):
         # Put 'starpanel=1' in URL for debugging
         if request.GET.get('starpanel'):
             return True
@@ -144,7 +203,6 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
             return False
 
         # Otherwise, show if user has 3+ logins or 1+ hours active use.
-        user_stats = UserStats.objects.get(user=request.clusive_user)
         if user_stats.logins > 3:
             logger.debug('Requesting star rating: logins=%d', user_stats.logins)
             return True
@@ -166,6 +224,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
 
 
 class DashboardActivityPanelView(TemplateView):
+    """Shows just the activity panel, for AJAX updates"""
     template_name = 'pages/partial/dashboard_panel_student_activity.html'
 
     def get(self, request, *args, **kwargs):
@@ -174,10 +233,12 @@ class DashboardActivityPanelView(TemplateView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['days'] = self.days
-        data['reading_data'] = Paradata.reading_data_for_period(self.current_period, days=self.days)
-        return data
+        context = super().get_context_data(**kwargs)
+        context['data'] = {
+            'days': self.days,
+            'reading_data': Paradata.reading_data_for_period(self.current_period, days=self.days),
+        }
+        return context
 
 
 class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
@@ -212,12 +273,13 @@ class StarRatingResultsView(LoginRequiredMixin,TemplateView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         initial = {'star_rating': self.rating.star_rating} if self.rating else None
-        self.star_form = ClusiveRatingForm(initial=initial)
-        data['star_form'] = self.star_form
-        data['star_results'] = self.results
-        return data
+        context['data'] = {
+            'form': ClusiveRatingForm(initial=initial),
+            'results': self.results,
+        }
+        return context
 
 
 class ReaderIndexView(LoginRequiredMixin,RedirectView):
