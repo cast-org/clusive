@@ -13,7 +13,7 @@ dawn==0.11.0
 python-dateutil==2.8.1
 marisa-trie==0.7.5
 wordfreq==2.3.2
-textstat==0.6.2
+textstat==0.7.1
 django-multiselectfield==0.1.12
 django-debug-toolbar==3.2.1
 mailchimp-marketing==3.0.42
