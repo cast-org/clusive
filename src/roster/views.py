@@ -2,6 +2,7 @@ import csv
 import json
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model, logout
@@ -20,6 +21,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView
 
+
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
@@ -31,6 +33,13 @@ from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserReg
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
+
+from allauth.socialaccount.models import SocialToken, SocialApp
+from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from django.utils.crypto import get_random_string
+from datetime import timedelta
+import requests
+from urllib.parse import urlencode
 
 logger = logging.getLogger(__name__)
 
@@ -470,6 +479,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
         return data
 
     def form_valid(self, form):
+        self.check_access_token()
         # Create User
         form.save()
         target : User
@@ -490,13 +500,13 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
                                         role=Roles.STUDENT,
                                         anon_id=ClusiveUser.next_anon_id(),
                                         permission=perm)
+        
         # Add user to the Period
         self.period.users.add(cu)
         return super().form_valid(form)
 
     def configure_event(self, event: Event):
         event.page = 'ManageCreateStudent'
-
 
 class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
     model = User
@@ -657,10 +667,97 @@ def logout_sso(request, student=''):
     else:
         logger.debug("Unregistered user, nothing to delete")
 
-
 class SyncMailingListView(View):
 
     def get(self, request):
         logger.debug('Sync mailing list request received')
         MailingListMember.synchronize_user_emails()
         return JsonResponse({'success': 1})
+
+########################################
+#
+# Functions for adding scope(s) workflow
+# TODO: turn into a View?
+
+class OAuth2Database(object):
+
+    def retrieve_client_info(self, provider):
+        client_info = SocialApp.objects.filter(provider=provider).first()
+        return client_info
+
+    def retrieve_access_token(self, user, provider):
+        # TODO: Check whether use of first() is always correct.  It assumes
+        # there is only ever one access token per user/provider combo.
+        access_token = SocialToken.objects.filter(
+            account__user=user, account__provider=provider
+        ).first()
+        return access_token
+
+    def update_access_token(self, access_token_json, user, provider):
+        db_token = self.retrieve_access_token(user, provider)
+        db_token.token = access_token_json.get('access_token')
+        db_token.expires_at = timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in')))
+
+        # Update the refresh token only if a new one was provided.  OAuth2
+        # providers don't always send a refresh token.
+        if access_token_json.get('refresh_token') != None:
+            db_token.token_secret = access_token_json['refresh_token']
+
+        db_token.save()
+
+def add_scope_access(request):
+    """First step for the request-additional-scope-access workflow.  Sets a new 
+    `state` query parameter (the anti-forgery token) for the workflow, and
+    stores it in the session as `oauth2_state`.  Redirects to provider's
+    authorization end point."""
+    provider = request.GET.get('provider')
+    new_scopes = request.GET.get('scopes')
+    authorization_uri = request.GET.get('authorization')
+    state = get_random_string(12)
+    request.session['oauth2_state'] = state
+
+    client_info = OAuth2Database().retrieve_client_info(provider)
+    parameters = urlencode({
+        'client_id': client_info.client_id,
+        'response_type': 'code',
+        'scope': new_scopes,
+        'include_granted_scopes': 'true',
+        'state': state,
+        'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
+    })
+    return HttpResponseRedirect(authorization_uri + parameters)
+
+def add_scope_callback(request):
+    """Handles callback from OAuth2 provider where access tokens are given for
+    the requested scopes."""
+    request_state = request.GET.get('state')
+    session_state = request.session.get('oauth2_state')
+    if request_state != session_state:
+        raise OAuth2Error("Mismatched state in request: %s" % request_state)
+
+    code = request.GET.get('code')
+    dbAccess = OAuth2Database()
+    # TODO: the provider is hard coded here -- how to parameterize?  Note that
+    # this function is specific to google, so perhaps okay.
+    # Note: for production, replace the `redirect_uri` with the official uri
+    client_info = dbAccess.retrieve_client_info('google')
+    resp = requests.request(
+        'POST',
+        'https://accounts.google.com/o/oauth2/token',
+        data={
+            'redirect_uri': 'http://localhost:8000/account/add_scope_callback/',
+            'grant_type': 'authorization_code',
+            'code': code,
+            'client_id': client_info.client_id,
+            'client_secret': client_info.secret,
+            'state': request_state
+        }
+    )
+    access_token = None
+    if resp.status_code == 200 or resp.status_code == 201:
+        access_token = resp.json()
+    if not access_token or access_token.get('access_token') == None:
+        raise OAuth2Error("Error retrieving access token: none given, status: %d" % resp.status_code)
+    dbAccess.update_access_token(access_token, request.user, 'google')
+    return HttpResponseRedirect(reverse('manage'))
+
