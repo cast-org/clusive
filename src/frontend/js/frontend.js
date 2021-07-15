@@ -97,6 +97,9 @@ function libraryMasonryEnable() {
     'use strict';
 
     var elem = document.querySelector('.library-grid');
+
+    if (elem === null) { return; }
+
     elem.classList.add('has-masonry');
 
     libraryMasonryApi = new Masonry(elem, {
