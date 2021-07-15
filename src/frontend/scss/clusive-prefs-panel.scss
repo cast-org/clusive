@@ -1,11 +1,11 @@
-// disable linting for now - this file is most likely going away
 // stylelint-disable
 
 .flc-prefsEditor-separatedPanel {
-    margin-top: -0.625rem;
-}
-@media screen and (min-width: 40em) {
-    .flc-prefsEditor-separatedPanel {
+    height: 0;
+    margin-top: 0;
+    //margin-top: -0.625rem;
+
+    @media screen and (min-width: 40em) {
         position: absolute;
         top: 0;
         left: 0;
