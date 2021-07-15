@@ -1,7 +1,7 @@
 django==2.2.24
 django-allauth==0.44.0
 psycopg2==2.8.3
-pytz==2019.2
+pytz==2021.1
 whitenoise==4.1.3
 gunicorn==20.1.0
 nltk==3.4.5
@@ -16,7 +16,7 @@ wordfreq==2.3.2
 textstat==0.6.2
 django-multiselectfield==0.1.12
 django-debug-toolbar==3.2.1
-mailchimp-marketing==3.0.42
+mailchimp-marketing==3.0.54
 -e git+https://github.com/IMSGlobal/caliper-python@1.1.0.2#egg=imsglobal_caliper
 -e git+https://github.com/ouhouhsami/django-progressbarupload#egg=django-progressbarupload
 -e git+https://github.com/cast-org/django-session-timeout#egg=django-session-timeout
