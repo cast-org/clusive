@@ -21,7 +21,7 @@ from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import unpack_epub_file, scan_book
 from pages.views import ThemedPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
@@ -654,3 +654,10 @@ class SwitchModalContentView(LoginRequiredMixin, TemplateView):
             'bv': versions[version],
         }
         return super().get(request, *args, **kwargs)
+
+
+class UpdateTrendsView(View):
+
+    def get(self, request, *args, **kwargs):
+        BookTrend.update_all_trends()
+        return JsonResponse({'status': 'ok'})

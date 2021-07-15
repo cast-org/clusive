@@ -248,9 +248,14 @@ class Paradata(models.Model):
             para.last_version = bv
         para.save()
 
-        parad, created = ParadataDaily.objects.get_or_create(paradata=para, date=date.today())
+        parad, pd_created = ParadataDaily.objects.get_or_create(paradata=para, date=date.today())
         parad.view_count += 1
         parad.save()
+        if pd_created:
+            # A new view today -> the BookTrend should be boosted.
+            for p in clusive_user.periods.all():
+                bt, bt_created = BookTrend.objects.get_or_create(book=book, period=p)
+                bt.record_new_view()
 
         return para
 
