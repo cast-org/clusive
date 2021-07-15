@@ -278,7 +278,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             }
         }
 
-        var newText = preceding + '<span class=\'tts-currentWord\'>' + middle + '</span>' + following;
+        var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
         clusiveTTS.copiedElement.html(newText);
 
         // Keep current word being read in view
