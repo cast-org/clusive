@@ -223,6 +223,62 @@ class BookAssignment(models.Model):
         ]
 
 
+class BookTrend(models.Model):
+    """How popular a Book is for each Period where it has been used."""
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
+    period = models.ForeignKey(to=Period, on_delete=models.CASCADE, db_index=True)
+    popularity = models.IntegerField(default=0)
+
+    def record_new_view(self):
+        # Popularity points for a single user view are from 1 (14 days ago) to 2**14 = 16384 (today)
+        self.popularity += 2**14
+        self.save()
+
+    def __str__(self):
+        return '<BookTrend %s/%s>' % (self.book, self.period)
+
+    @classmethod
+    def update_all_trends(cls):
+        for period in Period.objects.all():
+            logger.debug('Updating trends for %s', period)
+            cls.update_trends_for_period(period)
+
+    @classmethod
+    def update_trends_for_period(cls, period):
+        # All trends for this period will be updated.
+        trends = BookTrend.objects.filter(period=period)
+        # This should return a record for each user in the period for each book they've visited.
+        paras = Paradata.objects.filter(user__periods=period)
+        # Get daily activity on these items for the last 14 days.
+        today = date.today()
+        earliest = today - timedelta(days=14)
+        dailies = ParadataDaily.objects.filter(paradata__in=paras, date__gt=earliest)
+        # Sum up activity of all Period users
+        scores = {}
+        for d in dailies:
+            days_ago = (today - d.date).days
+            points = 2 ** (14-days_ago)
+            if d.paradata.book in scores:
+                scores[d.paradata.book] += points
+            else:
+                scores[d.paradata.book] = points
+        # Update existing BookTrend objects
+        for t in trends:
+            if t.book in scores:
+                logger.debug('  %s pop was %d now %d', t, t.popularity, scores[t.book])
+                t.popularity = scores[t.book]
+                del scores[t.book]
+            else:
+                logger.debug('  %s pop was %d now none', t, t.popularity)
+                t.popularity = 0
+            t.save()
+        # Create any new BookTrend objects
+        for book in scores:
+            logger.debug('  New trend for book %s score %d', book, scores[book])
+            b = BookTrend(book=book, period=period, popularity=scores[book])
+            b.save()
+
+
 class Paradata(models.Model):
     """Information about a User's interactions with a Book."""
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
@@ -378,7 +434,8 @@ class Paradata(models.Model):
 
 class ParadataDaily(models.Model):
     """
-    Slice of Paradata for a particular date. Used for efficiently constructing dashboard views.
+    Slice of Paradata for a particular date.
+    Used for efficiently constructing dashboard views and calculating trends.
     """
     paradata = models.ForeignKey(to=Paradata, on_delete=models.CASCADE, db_index=True)
     date = models.DateField(default=date.today, db_index=True)
