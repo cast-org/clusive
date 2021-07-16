@@ -1,14 +1,11 @@
-import json
 import logging
-import os
 
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import path
 
-from glossary.util import base_form
-from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily
-from library.parsing import TextExtractor, scan_all_books
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend
+from library.parsing import scan_all_books
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +53,12 @@ class BookVersionAdmin(admin.ModelAdmin):
 class BookAssignmentAdmin(admin.ModelAdmin):
     list_display = ('book', 'period', 'dateAssigned')
     list_filter = ('book', 'period' )
+
+
+@admin.register(BookTrend)
+class BookTrendAdmin(admin.ModelAdmin):
+    list_display = ('book', 'period', 'popularity')
+    list_filter = ('book', 'period')
 
 
 @admin.register(Paradata)

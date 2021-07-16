@@ -23,28 +23,42 @@
         {% endif %}
     </div>
     <div class="row">
-        <div class="col-md-4">
-            {% if panels.welcome %}
-                {% include "pages/partial/dashboard_panel_welcome.html" %}
-            {% endif %}
-            {% if panels.challenge %}
-                {% include "pages/partial/dashboard_panel_challenge.html" %}
-            {% endif %}
-            {% if panels.affect %}
-                {% include "pages/partial/dashboard_panel_affect.html" with data=data.affect %}
-            {% endif %}
-            {% if panels.class_affect %}
-                {% include "pages/partial/dashboard_panel_class_affect.html" with data=data.class_affect %}
-            {% endif %}
-            {% if panels.star_rating %}
-                {% include "pages/partial/dashboard_panel_star_rating.html" with data=data.star_rating %}
-            {% endif %}
-            {% if panels.star_results %}
-                {% include "pages/partial/dashboard_panel_star_rating_results.html" with data=data.star_results %}
-            {% endif %}
+        <div class="col-lg-4 box-mascot-tipped-offset">
+            <div class="row">
+                {% if panels.welcome %}
+                    <div class="col-md-6 col-lg-12">
+                    {% include "pages/partial/dashboard_panel_welcome.html" %}
+                    </div>
+                {% endif %}
+                {% if panels.challenge %}
+                    <div class="col-md-6 col-lg-12">
+                    {% include "pages/partial/dashboard_panel_challenge.html" %}
+                    </div>
+                {% endif %}
+                {% if panels.affect %}
+                    <div class="col-md-6 col-lg-12">
+                    {% include "pages/partial/dashboard_panel_affect.html" with data=data.affect %}
+                    </div>
+                {% endif %}
+                {% if panels.class_affect %}
+                    <div class="col-md-6 col-lg-12">
+                        {% include "pages/partial/dashboard_panel_class_affect.html" with data=data.class_affect %}
+                    </div>
+                {% endif %}
+                {% if panels.star_rating %}
+                    <div class="col-md-6 col-lg-12">
+                    {% include "pages/partial/dashboard_panel_star_rating.html" with data=data.star_rating %}
+                    </div>
+                {% endif %}
+                {% if panels.star_results %}
+                    <div class="col-md-6 col-lg-12">
+                    {% include "pages/partial/dashboard_panel_star_rating_results.html" with data=data.star_results %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
-        <div class="col-md-8 pt-1 mt-1 pt-md-0 mt-md-0">
+        <div class="col-lg-8 pt-1 mt-1 pt-lg-0 mt-lg-0">
             {% if panels.getting_started %}
                 {% include "pages/partial/dashboard_panel_getting_started.html" with data=data.getting_started %}
             {% endif %}
@@ -55,7 +69,7 @@
     </div>
 
     {% if panels.student_activity %}
-    <div class="row">
+    <div class="row pt-1">
         {% include "pages/partial/dashboard_panel_student_activity.html" with data=data.student_activity %}
     </div>
     {% endif %}

@@ -251,20 +251,10 @@ var manifest_path = "{{ manifest_path }}";
                     var currentResource = D2Reader.currentResource();
                     var firstResource = (currentResource===0);
                     var lastResource = (currentResource===D2Reader.totalResources()-1);
-                    if (firstResource) {
-                        D2Reader.atStart().then((edge)=>{
-                            document.getElementById('prevResourceButton').disabled = edge;
-                        });
-                    } else {
-                        document.getElementById('prevResourceButton').disabled = false;
-                    }
-                    if (lastResource) {
-                        D2Reader.atEnd().then((edge)=>{
-                            document.getElementById('nextResourceButton').disabled = edge;
-                        });
-                    } else {
-                        document.getElementById('nextResourceButton').disabled = false;
-                    }
+                    var atBeginning = firstResource && D2Reader.atStart();
+                    var atEnd = lastResource && D2Reader.atEnd();
+                    document.getElementById('prevResourceButton').disabled = atBeginning;
+                    document.getElementById('nextResourceButton').disabled = atEnd;
                     return trackReadingLocation(pub_id, pub_version, locator);
                 },
                 updateUserSettings: function (userSettings) {

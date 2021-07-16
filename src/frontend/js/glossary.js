@@ -107,8 +107,9 @@ window.wordBank.updateColumnCounts = function() {
         }
     }
     if (wordCount === 0) {
-        document.querySelector('#wordbankEmptyMsg').classList.remove('d-none');
-        document.querySelector('#wordbankTable').classList.add('d-none');
+        if (document.querySelector('#wordbankEmptyMsg') !== null) {
+            document.querySelector('#wordbankEmptyMsg').classList.remove('d-none');
+        }
     }
 };
 

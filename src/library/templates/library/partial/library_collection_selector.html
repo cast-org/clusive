@@ -2,33 +2,37 @@
     <div class="library-filter" role="region" aria-label="View options">
         <ul class="nav">
             <li class="nav-item">
-                <span class="library-filter-label">View:</span>
-                <button type="button" class="link-btn" data-cfw="dropdown">{{ current_view_name }} <span class="caret aria-hidden="true"></span></button>
-                <ul class="dropdown-menu">
-                    {% for p in clusive_user.periods.all %}
-                    <li>
-                        <a href="{% url 'library' style=style sort=sort view='period' period_id=p.id %}"
-                         {% if p == period %}class="active" aria-current="true"{% endif %}>
-                            {{ p.name }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                    <li>
-                        <a href="{% url 'library' style=style sort=sort view='public' %}"
-                           {% if current_view == 'public' %}class="active" aria-current="true"{% endif %}>
-                        {{view_names.public}}</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'library' style=style sort=sort view='mine' %}"
-                           {% if current_view == 'mine' %}class="active" aria-current="true"{% endif %}>
-                        {{view_names.mine}}</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'library' style=style sort=sort view='all' %}"
-                           {% if current_view == 'all' %}class="active" aria-current="true"{% endif %}>
-                        {{view_names.all}}</a>
-                    </li>
-                </ul>
+                <div class="dropdown">
+                    <div class="d-flex">
+                        <span class="library-filter-label">View:</span>
+                        <button type="button" class="link-btn text-wrap ms-0_25" data-cfw="dropdown" data-cfw-dropdown-target="#libraryView">{{ current_view_name }} <span class="caret aria-hidden="true"></span></button>
+                    </div>
+                    <ul id="libraryView" class="dropdown-menu">
+                        {% for p in clusive_user.periods.all %}
+                        <li>
+                            <a href="{% url 'library' style=style sort=sort view='period' period_id=p.id %}"
+                             {% if p == period %}class="active" aria-current="true"{% endif %}>
+                                {{ p.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        <li>
+                            <a href="{% url 'library' style=style sort=sort view='public' %}"
+                               {% if current_view == 'public' %}class="active" aria-current="true"{% endif %}>
+                            {{view_names.public}}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'library' style=style sort=sort view='mine' %}"
+                               {% if current_view == 'mine' %}class="active" aria-current="true"{% endif %}>
+                            {{view_names.mine}}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'library' style=style sort=sort view='all' %}"
+                               {% if current_view == 'all' %}class="active" aria-current="true"{% endif %}>
+                            {{view_names.all}}</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </div>

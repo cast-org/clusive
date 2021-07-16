@@ -9,6 +9,8 @@ from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView, RedirectView, CreateView
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
@@ -375,6 +377,7 @@ class ReaderChooseVersionView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
+@method_decorator(never_cache, name='dispatch')
 class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'

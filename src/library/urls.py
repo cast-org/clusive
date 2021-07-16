@@ -3,6 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('update_trends', views.UpdateTrendsView.as_view(),
+         name='update_trends'),
     path('setlocation', views.UpdateLastLocationView.as_view(),
          name='setlocation'),
     path('annotation/<int:id>', views.AnnotationView.as_view(),
@@ -50,4 +52,5 @@ urlpatterns = [
 
     path('<str:view>', views.LibraryStyleRedirectView.as_view(),
          name='library_style_redirect'),
+
 ]
