@@ -120,7 +120,7 @@ $enable-utility-spacing-margin:         true;
 $enable-utility-spacing-margin-auto:    false;
 $enable-utility-spacing-margin-negative:    true;
 $enable-utility-text-justify:           false;
-$enable-utility-text-wrap:              false;
+$enable-utility-text-wrap:              true;
 $enable-utility-text-nowrap:            false;
 $enable-utility-text-align:             true;
 $enable-utility-text-transform:         false;
@@ -143,7 +143,7 @@ $enable-utility-visibility:             false;
 // Default Figuration setting overrides
 // =====
 
-$utility-display:                       block, none;
+$utility-display:                       block, flex, none;
 
 // Disable some default box-shadows
 $thumbnail-box-shadow:                  0 0 transparent;
