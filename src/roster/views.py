@@ -41,6 +41,13 @@ from datetime import timedelta
 import requests
 from urllib.parse import urlencode
 
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+import pdb
+
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -674,6 +681,49 @@ class SyncMailingListView(View):
         MailingListMember.synchronize_user_emails()
         return JsonResponse({'success': 1})
 
+class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
+    template_name = 'roster/manage_create_period.html'
+    model = Period
+    form_class = PeriodForm
+    provider = 'google'
+    classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly'
+    auth_parameters = urlencode({
+        'provider': provider,
+        'scopes': classroom_scopes,
+        'authorization': 'http://accounts.google.com/o/oauth2/v2/auth?'
+    })
+
+    def get(self, request, *args, **kwargs):
+        db_access = OAuth2Database()
+        user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
+        service = build('classroom', 'v1', credentials=user_credentials)
+        try:
+            results = service.courses().list(pageSize=10).execute()
+            courses = results.get('courses', []);
+        except HttpError as e:
+            pdb.set_trace()
+            if e.status_code == 403:
+                url = reverse('add_scope_access') + '?' + self.auth_parameters
+                request.session['classroom_scope_flow'] = 'get_google_courses'
+                pdb.set_trace()
+                return HttpResponseRedirect(url)
+            else:
+                raise
+
+        pdb.set_trace()
+        request.session['classroom_scope_flow'] = None
+        return HttpResponseRedirect(reverse('manage_create_period'))
+#        return super().get(request, *args, **kwargs)
+
+    def make_credentials(self, user, scopes, db_access):
+        client_info = db_access.retrieve_client_info(self.provider)
+        access_token = db_access.retrieve_access_token(user, self.provider)
+        return Credentials(access_token.token,
+                            refresh_token=access_token.token_secret,
+                            client_id=client_info.client_id,
+                            client_secret=client_info.secret,
+                            token_uri='https://accounts.google.com/o/oauth2/token')
+
 ########################################
 #
 # Functions for adding scope(s) workflow
@@ -702,7 +752,6 @@ class OAuth2Database(object):
         # providers don't always send a refresh token.
         if access_token_json.get('refresh_token') != None:
             db_token.token_secret = access_token_json['refresh_token']
-
         db_token.save()
 
 def add_scope_access(request):
@@ -710,6 +759,7 @@ def add_scope_access(request):
     `state` query parameter (the anti-forgery token) for the workflow, and
     stores it in the session as `oauth2_state`.  Redirects to provider's
     authorization end point."""
+    pdb.set_trace()
     provider = request.GET.get('provider')
     new_scopes = request.GET.get('scopes')
     authorization_uri = request.GET.get('authorization')
@@ -759,5 +809,10 @@ def add_scope_callback(request):
     if not access_token or access_token.get('access_token') == None:
         raise OAuth2Error("Error retrieving access token: none given, status: %d" % resp.status_code)
     dbAccess.update_access_token(access_token, request.user, 'google')
-    return HttpResponseRedirect(reverse('manage'))
 
+    next_flow = request.session.get('classroom_scope_flow', None)
+    if next_flow:
+        next = reverse(next_flow)
+    else:
+        next = reverse('manage')
+    return HttpResponseRedirect(next)

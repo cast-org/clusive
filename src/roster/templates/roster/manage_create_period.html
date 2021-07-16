@@ -25,6 +25,15 @@
                 </form>
             </div>
         </div>
+        <form action="/account/get_google_courses">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Google Courses</legend>
+                <p>
+                    <input type="submit" class="btn btn-secondary" value="Get Courses"/>
+                </p>
+            </fieldset>
+        </form>
     </main>
 </div>
 {% endblock %}
