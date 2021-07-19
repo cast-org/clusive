@@ -579,6 +579,7 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Cr
     template_name = 'roster/manage_create_period.html'
 
     def get_form(self, form_class=None):
+        pdb.set_trace()
         instance=Period(site=self.clusive_user.get_site())
         kwargs = self.get_form_kwargs()
         kwargs['instance'] = instance
@@ -699,9 +700,7 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         service = build('classroom', 'v1', credentials=user_credentials)
         try:
             results = service.courses().list(pageSize=10).execute()
-            courses = results.get('courses', []);
         except HttpError as e:
-            pdb.set_trace()
             if e.status_code == 403:
                 url = reverse('add_scope_access') + '?' + self.auth_parameters
                 request.session['classroom_scope_flow'] = 'get_google_courses'
@@ -709,8 +708,10 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                 return HttpResponseRedirect(url)
             else:
                 raise
-
-        pdb.set_trace()
+        courses = results.get('courses', []);
+        logger.debug('Google courses (%s)', len(courses))
+        for course in courses:
+            logger.debug('- %s', course.name)
         request.session['classroom_scope_flow'] = None
         return HttpResponseRedirect(reverse('manage_create_period'))
 #        return super().get(request, *args, **kwargs)
