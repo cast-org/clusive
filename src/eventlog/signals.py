@@ -38,6 +38,19 @@ def log_page_timing(sender, **kwargs):
     Collects and stores page timing information, which the client may send at the end of a page view.
     The extra information will be added in to the original VIEWED event representing the page view.
     """
+
+    # update the active time of relevant paradata based on a supplied event and 
+    # time
+    def update_active_times(event, added_time):
+        # Page view events are used to calculate various totals.
+        if event.type == 'VIEW_EVENT' and event.action == 'VIEWED':
+            UserStats.add_active_time(event.actor, added_time)
+            if event.session is not None:
+                event.session.add_active_time(added_time)
+            # For book page views, increment time spent in Book
+            if event.book_id is not None:
+                Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=added_time)
+
     event_id = kwargs['event_id']
     times = kwargs['times']
     if event_id:
@@ -52,21 +65,15 @@ def log_page_timing(sender, **kwargs):
                 added_duration = times.get('duration')
                 added_active_duration = times.get('activeDuration')
                 if added_duration:
-                    logger.debug('Adding %s added_duration to existing duration of %s', added_duration, event.duration)
+                    logger.debug('Adding %sms to existing duration of %s', added_duration, event.duration)
                     event.duration = event.duration + timedelta(milliseconds=added_duration)
                     logger.debug('Updated duration: %s', event.duration)
                 if added_active_duration:
-                    logger.debug('Adding %s added_active_duration to existing active_duration of %s', added_active_duration, event.active_duration)
-                    event.active_duration = event.active_duration + timedelta(milliseconds=added_active_duration)
+                    logger.debug('Adding %sms to existing active_duration of %s', added_active_duration, event.active_duration)
+                    added_time = timedelta(milliseconds=added_active_duration)
+                    event.active_duration = event.active_duration + added_time
                     logger.debug('Updated active_duration: %s', event.active_duration)
-                    # Page view events are used to calculate various totals.
-                    if event.type == 'VIEW_EVENT' and event.action == 'VIEWED':
-                        UserStats.add_active_time(event.actor, timedelta(milliseconds=added_active_duration))
-                        if event.session is not None:
-                            event.session.add_active_time(timedelta(milliseconds=added_active_duration))
-                        # For book page views, increment time spent in Book
-                        if event.book_id is not None:
-                            Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=timedelta(milliseconds=added_active_duration))
+                    update_active_times(event, added_time)                    
                 event.save()   
             else:
                 logger.debug('Adding new page timing to %s: %s', event, times)
@@ -79,14 +86,7 @@ def log_page_timing(sender, **kwargs):
                     event.duration = timedelta(milliseconds=duration)
                 if active_duration:
                     event.active_duration = timedelta(milliseconds=active_duration)
-                    # Page view events are used to calculate various totals.
-                    if event.type == 'VIEW_EVENT' and event.action == 'VIEWED':
-                        UserStats.add_active_time(event.actor, event.active_duration)
-                        if event.session is not None:
-                            event.session.add_active_time(event.active_duration)
-                        # For book page views, increment time spent in Book
-                        if event.book_id is not None:
-                            Paradata.record_additional_time(book_id=event.book_id, user=event.actor, time=event.active_duration)
+                    update_active_times(event, event.active_duration)                    
                 event.save()
         except Event.DoesNotExist:
             logger.error('Received page timing for a non-existent event %s', event_id)
