@@ -376,8 +376,7 @@ class ReaderChooseVersionView(RedirectView):
         kwargs['version'] = v
         return super().get_redirect_url(*args, **kwargs)
 
-
-@method_decorator(never_cache, name='dispatch')
+# @method_decorator(never_cache, name='dispatch')
 class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
