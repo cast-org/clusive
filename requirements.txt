@@ -7,7 +7,7 @@ gunicorn==20.1.0
 nltk==3.4.5
 lemminflect==0.2.2
 future==0.18.2
-numpy==1.17.4
+numpy==1.21.1
 django-settings-export==1.2.1
 dawn==0.11.0
 python-dateutil==2.8.1
