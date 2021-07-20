@@ -9,8 +9,12 @@ from eventlog.models import Event
 from library.models import BookVersion
 from roster.models import ResearchPermissions
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+
 logger = logging.getLogger(__name__)
 
+@method_decorator(never_cache, name='get')
 class EventMixin(ContextMixin):
     """
     Creates a VIEW_EVENT for this view, and includes the event ID in the context for client-side use.
