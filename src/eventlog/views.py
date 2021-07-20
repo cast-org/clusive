@@ -14,6 +14,8 @@ from django.views.decorators.cache import never_cache
 
 logger = logging.getLogger(__name__)
 
+# All views using EventMixin should never browser cache, so that
+# statistics are accurate
 @method_decorator(never_cache, name='get')
 class EventMixin(ContextMixin):
     """
