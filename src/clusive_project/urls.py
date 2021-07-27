@@ -15,22 +15,23 @@ Including another URLconf
 """
 import debug_toolbar
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
-from django.conf.urls import url
 from django.http import HttpResponse
+from django.urls import include, path
 
-urlpatterns = [        
+urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
-    url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow: /account", content_type="text/plain"), name="robots_file"),    
+    url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow: /account", content_type="text/plain"), name="robots_file"),
     path('account/', include('roster.urls')),
     path('assessment/', include('assessment.urls')),
     path('author/', include('authoring.urls')),
     path('sessions/', include('django_session_timeout.urls')),
     path('glossary/', include('glossary.urls')),
     path('library/', include('library.urls')),
+    path('tips/', include('tips.urls')),
     path('messagequeue/', include('messagequeue.urls')),
     path('progressbarupload/', include('progressbarupload.urls')),
     path('accounts/', include('allauth.socialaccount.providers.google.urls')),

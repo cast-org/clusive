@@ -79,7 +79,7 @@ The local development configuration uses sqlite, so no database setup is require
 
 To initialize the schema and initial data, run in the Clusive\target directory:
 * `python manage.py migrate`
-* `python manage.py loaddata preferencesets tiptypes subjects` 
+* `python manage.py loaddata preferencesets tiptypes callstoaction subjects` 
 
 ### Import public content
 There are a number of learning materials ready for import in the Clusive\content directory.

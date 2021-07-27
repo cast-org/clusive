@@ -1,0 +1,43 @@
+{% load static %}
+<div class="box">
+    {% if data.type == 'welcome' %}
+        <h2>Welcome!</h2>
+        <p>Clusive&mdash;a personalized reading environment that adapts to every learner.</p>
+        {% if request.clusive_user.role == 'GU' %}
+        <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
+            Or dive into the Library and see what you discover!</p>
+        <p>Tip: As a guest, you cannot save settings or highlights, get recommendations,
+            or explore the parent and teacher features of Clusive. To get more out of Clusive,
+            <a href="{% url 'sign_up_role' %}">create your own account</a>.</p>
+        {% endif %}
+        {% if request.clusive_user.role == 'ST' %}
+        <p>Check out <em>Clues to Clusive</em> to get an overview of Clusive tools and features.
+            Or dive into the Library and see what you discover!</p>
+        {% endif %}
+        {% if request.clusive_user.role == 'PA' %}
+        <p>Create accounts for your child(ren) by clicking the "Manage" link in the navigation bar.</p>
+        {% endif %}
+        {% if request.clusive_user.role == 'TE' %}
+        <p>Create your classes and student accounts by clicking the "Manage" link in the navigation bar.</p>
+        {% endif %}
+    {% elif data.type == 'summer_reading_st' %}
+        <h2>Congrats, {{ user.first_name }}! <span class="icon-star"></span></h2>
+        <p>You read for 100 minutes! You can now enter a raffle for the chance to win a $10 Visa gift card.</p>
+        <a href="{% url 'take_cta' cta=data.type %}" class="btn btn-primary mb-1">Enter the raffle</a>
+        <a href="{% url 'decline_cta' cta=data.type %}" class="btn btn-link mb-1">No, thanks</a><br/>
+        <a href="https://cisl.cast.org/products/clusive-summer-reading-challenge-2021"><strong>Terms and conditions</strong></a>
+    {% elif data.type == 'summer_reading_gu' %}
+        <h2>New! Summer reading challenge</h2>
+        <p>Create a Clusive account today, use it for your summer reading, and enter to win a prize!</p>
+        <div class="mx-n1 pb-0_25 mb-0_5">
+            <img src="{% static "shared/images/summer-reading-hammock.jpg" %}" alt="Photo of a youth relaxing in a hammock and reading from a tablet" class="img-fluid"/>
+        </div>
+        <a href="{% url 'take_cta' cta=data.type %}" class="btn btn-primary">Sign me up</a>
+        <a href="https://cisl.cast.org/products/clusive-summer-reading-challenge-2021" class="btn btn-link">Learn more</a>
+    {% elif data.type == 'star_rating' %}
+        (TODO star rating)
+    {% elif data.type == 'demographics' %}
+    <h2>Demographics</h2>
+        (TODO Demographic survey link with anon_id = {{ request.clusive_user.anon_id }})
+    {% endif %}
+</div>
