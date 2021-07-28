@@ -46,7 +46,6 @@ from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -579,7 +578,6 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Cr
     template_name = 'roster/manage_create_period.html'
 
     def get_form(self, form_class=None):
-        pdb.set_trace()
         instance=Period(site=self.clusive_user.get_site())
         kwargs = self.get_form_kwargs()
         kwargs['instance'] = instance
@@ -683,6 +681,9 @@ class SyncMailingListView(View):
         return JsonResponse({'success': 1})
 
 class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
+    # TODO Move the parts that have to do with getting greater scope access
+    # to ManageCreatePeriodView, and have that oauth2 sequence trigger from
+    # there.  This should be for displaying the Google course list response
     template_name = 'roster/manage_create_period.html'
     model = Period
     form_class = PeriodForm
@@ -703,18 +704,14 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         except HttpError as e:
             if e.status_code == 403:
                 url = reverse('add_scope_access') + '?' + self.auth_parameters
-                request.session['classroom_scope_flow'] = 'get_google_courses'
-                pdb.set_trace()
                 return HttpResponseRedirect(url)
             else:
                 raise
         courses = results.get('courses', []);
-        logger.debug('Google courses (%s)', len(courses))
+        logger.debug('There are (%s) Google courses', len(courses))
         for course in courses:
-            logger.debug('- %s', course.name)
-        request.session['classroom_scope_flow'] = None
+            logger.debug('- %s', course['name'])
         return HttpResponseRedirect(reverse('manage_create_period'))
-#        return super().get(request, *args, **kwargs)
 
     def make_credentials(self, user, scopes, db_access):
         client_info = db_access.retrieve_client_info(self.provider)
@@ -760,7 +757,6 @@ def add_scope_access(request):
     `state` query parameter (the anti-forgery token) for the workflow, and
     stores it in the session as `oauth2_state`.  Redirects to provider's
     authorization end point."""
-    pdb.set_trace()
     provider = request.GET.get('provider')
     new_scopes = request.GET.get('scopes')
     authorization_uri = request.GET.get('authorization')
@@ -776,6 +772,7 @@ def add_scope_access(request):
         'state': state,
         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
     })
+    logger.debug('Authorization request to provider for larger scope access')
     return HttpResponseRedirect(authorization_uri + parameters)
 
 def add_scope_callback(request):
@@ -792,6 +789,7 @@ def add_scope_callback(request):
     # this function is specific to google, so perhaps okay.
     # Note: for production, replace the `redirect_uri` with the official uri
     client_info = dbAccess.retrieve_client_info('google')
+    logger.debug('Token request to provider for larger scope access')
     resp = requests.request(
         'POST',
         'https://accounts.google.com/o/oauth2/token',
@@ -811,9 +809,9 @@ def add_scope_callback(request):
         raise OAuth2Error("Error retrieving access token: none given, status: %d" % resp.status_code)
     dbAccess.update_access_token(access_token, request.user, 'google')
 
-    next_flow = request.session.get('classroom_scope_flow', None)
-    if next_flow:
-        next = reverse(next_flow)
-    else:
-        next = reverse('manage')
-    return HttpResponseRedirect(next)
+    # Current assumption is that the request for additional scope access
+    # originated from a "get google courses" request, so return to that
+    # workflow.  Where to go from here should be more flexible (future
+    # work).
+    logger.debug('Larger scope access request complete, returning to get_google_courses')
+    return HttpResponseRedirect(reverse('get_google_courses'))
