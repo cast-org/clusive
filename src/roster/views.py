@@ -41,6 +41,12 @@ from datetime import timedelta
 import requests
 from urllib.parse import urlencode
 
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -674,6 +680,48 @@ class SyncMailingListView(View):
         MailingListMember.synchronize_user_emails()
         return JsonResponse({'success': 1})
 
+class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
+    # TODO Move the parts that have to do with getting greater scope access
+    # to ManageCreatePeriodView, and have that oauth2 sequence trigger from
+    # there.  This should be for displaying the Google course list response
+    template_name = 'roster/manage_create_period.html'
+    model = Period
+    form_class = PeriodForm
+    provider = 'google'
+    classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly'
+    auth_parameters = urlencode({
+        'provider': provider,
+        'scopes': classroom_scopes,
+        'authorization': 'http://accounts.google.com/o/oauth2/v2/auth?'
+    })
+
+    def get(self, request, *args, **kwargs):
+        db_access = OAuth2Database()
+        user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
+        service = build('classroom', 'v1', credentials=user_credentials)
+        try:
+            results = service.courses().list(pageSize=10).execute()
+        except HttpError as e:
+            if e.status_code == 403:
+                url = reverse('add_scope_access') + '?' + self.auth_parameters
+                return HttpResponseRedirect(url)
+            else:
+                raise
+        courses = results.get('courses', []);
+        logger.debug('There are (%s) Google courses', len(courses))
+        for course in courses:
+            logger.debug('- %s', course['name'])
+        return HttpResponseRedirect(reverse('manage_create_period'))
+
+    def make_credentials(self, user, scopes, db_access):
+        client_info = db_access.retrieve_client_info(self.provider)
+        access_token = db_access.retrieve_access_token(user, self.provider)
+        return Credentials(access_token.token,
+                            refresh_token=access_token.token_secret,
+                            client_id=client_info.client_id,
+                            client_secret=client_info.secret,
+                            token_uri='https://accounts.google.com/o/oauth2/token')
+
 ########################################
 #
 # Functions for adding scope(s) workflow
@@ -702,7 +750,6 @@ class OAuth2Database(object):
         # providers don't always send a refresh token.
         if access_token_json.get('refresh_token') != None:
             db_token.token_secret = access_token_json['refresh_token']
-
         db_token.save()
 
 def add_scope_access(request):
@@ -725,6 +772,7 @@ def add_scope_access(request):
         'state': state,
         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
     })
+    logger.debug('Authorization request to provider for larger scope access')
     return HttpResponseRedirect(authorization_uri + parameters)
 
 def add_scope_callback(request):
@@ -741,6 +789,7 @@ def add_scope_callback(request):
     # this function is specific to google, so perhaps okay.
     # Note: for production, replace the `redirect_uri` with the official uri
     client_info = dbAccess.retrieve_client_info('google')
+    logger.debug('Token request to provider for larger scope access')
     resp = requests.request(
         'POST',
         'https://accounts.google.com/o/oauth2/token',
@@ -759,5 +808,10 @@ def add_scope_callback(request):
     if not access_token or access_token.get('access_token') == None:
         raise OAuth2Error("Error retrieving access token: none given, status: %d" % resp.status_code)
     dbAccess.update_access_token(access_token, request.user, 'google')
-    return HttpResponseRedirect(reverse('manage'))
 
+    # Current assumption is that the request for additional scope access
+    # originated from a "get google courses" request, so return to that
+    # workflow.  Where to go from here should be more flexible (future
+    # work).
+    logger.debug('Larger scope access request complete, returning to get_google_courses')
+    return HttpResponseRedirect(reverse('get_google_courses'))

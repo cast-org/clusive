@@ -80,17 +80,6 @@
             </a>
         </p>
         {% endif %}
-        <form action="/account/add_scope_access">
-            <fieldset>
-                <legend>Google Classroom</legend>
-                <p>
-                    <button>Add Classroom Scopes</button>
-                    <input type="hidden" name="provider" value="google">
-                    <input type="hidden" name="scopes" value="https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly">
-                    <input type="hidden" name="authorization" value="http://accounts.google.com/o/oauth2/v2/auth?">
-                </p>
-            </fieldset>
-        </form>
     </main>
 
 {% endblock %}
