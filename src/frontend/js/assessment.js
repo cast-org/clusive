@@ -4,19 +4,18 @@
 
 var clusiveAssessment = {
     tooEarly: true, // auto-show of popover is blocked for a few seconds after page load
-    affectCheckDone: false,
-    compCheckDone: false
+    checkDone: false // don't auto-show the popover if user has already interacted with it
 };
 
 clusiveAssessment.showCompCheck = function() {
     'use strict';
 
-    if (!clusiveAssessment.compCheckDone && !clusiveAssessment.tooEarly) {
+    if (!clusiveAssessment.checkDone && !clusiveAssessment.tooEarly) {
         // Set timer. Don't show comp check if user immediately moves away from the bottom.
         window.setTimeout(function() {
             if (D2Reader.atEnd()) {
                 $('#compPop').CFW_Popover('show');
-                clusiveAssessment.compCheckDone = true;
+                clusiveAssessment.checkDone = true;
             } else {
                 console.debug('Was no longer at end of resource after time delay');
             }
@@ -27,6 +26,7 @@ clusiveAssessment.showCompCheck = function() {
 clusiveAssessment.setAffectCheck = function(data) {
     'use strict';
 
+    clusiveAssessment.checkDone = true;
     Object.keys(data).forEach(function(key) {
         if (key.includes('affect-option')) {
             var affectOptionName = key;
@@ -48,7 +48,7 @@ clusiveAssessment.setAffectCheck = function(data) {
 clusiveAssessment.setComprehensionCheck = function(data) {
     'use strict';
 
-    clusiveAssessment.compCheckDone = true;
+    clusiveAssessment.checkDone = true;
     var scaleResponse = data.scaleResponse;
     var freeResponse = data.freeResponse;
     $('textarea[name="comprehension-free"]').val(freeResponse);
