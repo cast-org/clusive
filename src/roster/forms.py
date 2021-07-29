@@ -164,12 +164,18 @@ class AgeCheckForm(Form):
 
 class PeriodForm(ModelForm):
 
+    create_type = forms.ChoiceField(
+        choices=[('manual', "Create manually"),
+                 ('import', "Import class from Google Classroom (NOT FUNCTIONAL)")],
+        required=True,
+        widget=forms.RadioSelect)
+
     class Meta:
         model = Period
-        fields = ['name']
+        fields = ['create_type', 'name']
         widgets = {
             'name': forms.TextInput(attrs={
-                'aria-label': 'Class name',
+                'aria-label': 'Enter class name',
                 'class': 'form-control',
             })
         }

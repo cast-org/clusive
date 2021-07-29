@@ -16,27 +16,23 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        {{ form.create_type }}
-                        <div class="form-group">
-                            <label for="manual">
-                                <input id="manual" type="radio" name="create_type" value="manually" required="">
-                                Create manually
-                            </label><br>
-                            {{ form.name.label_tag | formlabel }}
-                            {{ form.name.errors }}
-                            {{ form.name }}
-                        </div>
-                        <p></p>
-                        <div class="form-group">
-                            <label for="import">
-                                <input id="import" type="radio" name="create_type" value="import" required="">
-                                Import from Google Classroom (NOT FUNCTIONAL)
-                            </label>
-                        </div>
+                        {% for radio in form.create_type %}
+                        <p>
+                            {{ radio }}
+                            {% if radio.choice_label == 'Create manually' %}
+                                <div style="margin-left: 1em; margin-top: -1em;">
+                                {{ form.name.label_tag | formlabel }}
+                                {{ form.name.errors }}
+                                {{ form.name }}
+                                </div>
+                            {% endif %}
+                        </p>
+                        {% endfor %}
                     </div>
-                    <input type="submit" class="btn btn-secondary" value="Save and continue"/>
+                    <input type="submit" class="btn btn-secondary" value="Next"/>
                     <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
                 </form>
+                <hr width=100%>
                 <form action="/account/get_google_courses">
                     {% csrf_token %}
                     <fieldset>
