@@ -274,6 +274,11 @@ var manifest_path = "{{ manifest_path }}";
             D2Reader.load(readerOptions).then(instance => {
                     console.debug("D2Reader began loading resource at: " +  new Date());
                     clusiveTTS.readerReady = true;
+                    var applyUserSettingsTimeout = 2000;
+                    setTimeout(function() {
+                        console.debug("calling appply user settings after " + applyUserSettingsTimeout + "ms delay");
+                        D2Reader.applyUserSettings(mergedUserSettings);
+                    }, applyUserSettingsTimeout);
                 }).catch(error => {
                     console.error("error loading: ", error);
                 });
