@@ -34,8 +34,8 @@
     "pk": 4,
     "fields": {
       "name": "star_rating",
-      "priority": 4,
-      "enabled": false,
+      "priority": 6,
+      "enabled": true,
       "max": 10
     }
   },
@@ -45,7 +45,7 @@
     "fields": {
       "name": "demographics",
       "priority": 5,
-      "enabled": false,
+      "enabled": true,
       "max": 10
     }
   }
