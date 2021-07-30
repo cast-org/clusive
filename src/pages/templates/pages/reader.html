@@ -215,7 +215,7 @@ var manifest_path = "{{ manifest_path }}";
 
             api: {
                 resourceReady: function() {
-                    console.debug("D2Reader finished loading the resource at: " + new Date());
+                    console.debug("CSL-1081: D2Reader.resourceReady callback at: " + new Date());
                     $(document).ready(function () {
                         // Do things that only need to be done once
                         if(!firstResourceLoaded) {
@@ -272,8 +272,35 @@ var manifest_path = "{{ manifest_path }}";
             readerOptions.userSettings = mergedUserSettings;
             console.log("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
-                    console.debug("D2Reader began loading resource at: " +  new Date());
-                    clusiveTTS.readerReady = true;
+                    console.debug("CSL-1081: D2Reader.load(readerOptions).then callback at: " +  new Date());
+                    console.debug("CSL-1081: reader markup 'style'  attribute: ", $('#D2Reader-Container').find('iframe')[0].contentWindow.document.
+documentElement.attributes.style);
+                    clusiveTTS.readerReady = true;                    
+
+                    setTimeout(function() {
+                        console.debug("CSL-1081: Calling applyUserSettings on reader after 100ms at: " + new Date());
+                        D2Reader.applyUserSettings(mergedUserSettings).then(function () {
+                            console.debug("CSL-1081: reader markup 'style'  attribute: ", $('#D2Reader-Container').find('iframe')[0].contentWindow.document.
+documentElement.attributes.style);
+                        });
+                    }, 100);
+
+                    setTimeout(function() {
+                        console.debug("CSL-1081: Calling applyUserSettings on reader after 1000ms at: " + new Date());
+                        D2Reader.applyUserSettings(mergedUserSettings).then(function () {
+                            console.debug("CSL-1081: reader markup 'style'  attribute: ", $('#D2Reader-Container').find('iframe')[0].contentWindow.document.
+documentElement.attributes.style);
+                        });
+                    }, 1000);
+
+                    setTimeout(function() {
+                        console.debug("CSL-1081: Calling applyUserSettings on reader after 5000ms at: " + new Date());
+                        D2Reader.applyUserSettings(mergedUserSettings).then(function () {
+                            console.debug("CSL-1081: reader markup 'style'  attribute: ", $('#D2Reader-Container').find('iframe')[0].contentWindow.document.
+documentElement.attributes.style);
+                        });
+                    }, 5000);
+                    
                 }).catch(error => {
                     console.error("error loading: ", error);
                 });
