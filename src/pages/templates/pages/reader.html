@@ -257,7 +257,7 @@ var manifest_path = "{{ manifest_path }}";
                     document.getElementById('nextResourceButton').disabled = atEnd;
                     return trackReadingLocation(pub_id, pub_version, locator);
                 },
-                updateUserSettings: function (userSettings) {
+                updateUserSettings: function (userSettings) {                    
                     return Promise.resolve();
                 }
             }
@@ -273,7 +273,7 @@ var manifest_path = "{{ manifest_path }}";
             console.log("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
                     console.debug("D2Reader began loading resource at: " +  new Date());
-                    clusiveTTS.readerReady = true;
+                    clusiveTTS.readerReady = true;                    
                 }).catch(error => {
                     console.error("error loading: ", error);
                 });
