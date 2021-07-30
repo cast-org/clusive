@@ -207,8 +207,8 @@
         }        
     };
 
-    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(ttsSettingName, settingValue) {
-        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", ttsSettingName, settingValue)
+    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(scrollSettingName, settingValue) {
+        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", scrollSettingName, settingValue)
         var reader = clusiveContext.reader.instance;
         if (reader && reader.applyUserSettings) {
             reader.scroll(settingValue);
