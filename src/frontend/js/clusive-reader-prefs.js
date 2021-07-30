@@ -210,7 +210,7 @@
     cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(ttsSettingName, settingValue) {
         console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", ttsSettingName, settingValue)
         var reader = clusiveContext.reader.instance;
-        if (reader) {
+        if (reader && reader.applyUserSettings) {
             reader.scroll(settingValue);
         }
     };
