@@ -15,20 +15,18 @@
                 <h1>Add Class</h1>
                 <form method="post">
                     {% csrf_token %}
-                    <div class="form-group">
-                        {% for radio in form.create_type %}
-                        <p>
-                            {{ radio }}
-                            {% if radio.choice_label == 'Create manually' %}
-                                <div style="margin-left: 1em; margin-top: -1em;">
-                                {{ form.name.label_tag | formlabel }}
-                                {{ form.name.errors }}
-                                {{ form.name }}
-                                </div>
-                            {% endif %}
-                        </p>
-                        {% endfor %}
+                    {% for radio in form.create_type %}
+                    <div class="form-group mb-1">
+                        {{ radio }}
+                        {% if radio.choice_label == 'Create manually' %}
+                            <div class="mt-n0_5 ms-1">
+                            {{ form.name.label_tag | formlabel }}
+                            {{ form.name.errors }}
+                            {{ form.name }}
+                            </div>
+                        {% endif %}
                     </div>
+                    {% endfor %}
                     <input type="submit" class="btn btn-secondary" value="Next"/>
                     <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
                 </form>
@@ -46,5 +44,36 @@
         </div>
     </main>
 </div>
+
+<script>
+(function () {
+    'use strict';
+
+    // Toggle of 'required' attribute for name text input based on radio selection
+    const inputName = document.querySelector('#id_name');
+    const inputRadios = document.querySelectorAll('[id^="id_create_type_"]');
+
+    function updateNameRequired(input) {
+        const formGroup = input.closest('.form-group');
+
+        if (formGroup.contains(inputName)) {
+            inputName.setAttribute('required', "");
+        } else {
+            inputName.removeAttribute('required');
+        }
+    }
+
+    inputRadios.forEach(function(item) {
+        item.addEventListener('click', function(event) {
+            updateNameRequired(event.currentTarget);
+        });
+        // Handle Firefox autocomplete/auto-fill
+        if (item.checked) {
+            updateNameRequired(item);
+        }
+    });
+})();
+</script>
+
 {% endblock %}
 
