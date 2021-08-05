@@ -15,7 +15,7 @@
                 <h1>Add Class</h1>
                 <form method="post">
                     {% csrf_token %}
-                    {% for radio in form.create_type %}
+                    {% for radio in form.create_or_import %}
                     <div class="form-group mb-1">
                         {{ radio }}
                         {% if radio.choice_label == 'Create manually' %}
@@ -51,7 +51,7 @@
 
     // Toggle of 'required' attribute for name text input based on radio selection
     const inputName = document.querySelector('#id_name');
-    const inputRadios = document.querySelectorAll('[id^="id_create_type_"]');
+    const inputRadios = document.querySelectorAll('[id^="id_create_or_import_"]');
 
     function updateNameRequired(input) {
         const formGroup = input.closest('.form-group');

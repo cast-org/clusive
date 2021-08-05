@@ -164,44 +164,38 @@ class AgeCheckForm(Form):
 
 class PeriodForm(ModelForm):
 
-    create_type = forms.ChoiceField(
+    create_or_import = forms.ChoiceField(
         choices=[('manual', "Create manually"),
-                 ('import', "Import class from Google Classroom (NOT FUNCTIONAL)")],
+                 ('import', "Import class from Google Classroom")],
         required=True,
         widget=forms.RadioSelect)
     # Set the name input to not required for now.  In is_valid(), check the
     # choice:  if manual creation, then set the name as required
     name = forms.CharField(required=False)
 
-    # TODO: the following almost works, but fails when switching the radio
-    # button from the manual choice to the import choice.  The "This field is
-    # required" pop-up appears on the (empty) name text input.  Is the pop-up
-    # triggered by JavaScript on the page?
-#     def is_valid(self):
-#         valid = super().is_valid()
-#         if valid:
-#             name_field = self.fields['name']
-#             if self.cleaned_data.get('create_type') == 'manual':
-#                 # TODO: This logic works to re-set the name field and its widget
-#                 # as required, and the whole form being refreshed when the user
-#                 # clicks "submit", but no pop-up on the name field saying it is
-#                 # required.  The commented out code setting the error for the
-#                 # name field doesn't work.
-#                 name_field.required = True
-#                 name_field.widget.is_required = True
-#                 if self.cleaned_data.get('name') == '':
-#                     #self.errors['name'] = ['This field is required']
-#                     return False
-#                 else:
-#                     return True
-#             else:
-#                 name_field.required = False
-#                 name_field.widget.is_required = False
-#         return valid
+    def is_valid(self):
+        valid = super().is_valid()
+        if valid:
+            name_field = self.fields['name']
+            if self.cleaned_data.get('create_or_import') == 'manual':
+                # If the user chose to create a period manually, the 'name' text
+                # input field is required.
+                name_field.required = True
+                name_field.widget.is_required = True
+                if self.cleaned_data.get('name') == '':
+                    return False
+                else:
+                    return True
+            else:
+                # If importing from Google classroom, the 'name' test input is
+                # not required
+                name_field.required = False
+                name_field.widget.is_required = False
+        return valid
 
     class Meta:
         model = Period
-        fields = ['create_type', 'name']
+        fields = ['create_or_import', 'name']
         widgets = {
             'name': forms.TextInput(attrs={
                 'aria-label': 'Enter class name',
