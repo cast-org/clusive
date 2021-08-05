@@ -185,7 +185,7 @@
     cisl.prefs.readerPreferencesBridge.applyUserSetting = function(settingName, settingValue) {
         console.debug('applyUserSetting: ', settingName, settingValue);
         var reader = clusiveContext.reader.instance;
-        if (reader.applyUserSettings) {
+        if (reader && reader.applyUserSettings) {
             var settingsObj =
             {
                 [settingName]:settingValue
@@ -198,7 +198,7 @@
     cisl.prefs.readerPreferencesBridge.applyUserTTSSetting = function(ttsSettingName, settingValue) {
         console.debug("cisl.prefs.readerPreferencesBridge.applyUserTTSSetting", ttsSettingName, settingValue)
         var reader = clusiveContext.reader.instance;
-        if (reader) {
+        if (reader && reader.applyUserSettings) {
             var settingsObj =
             {
                 [ttsSettingName]:settingValue
@@ -207,10 +207,10 @@
         }        
     };
 
-    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(ttsSettingName, settingValue) {
-        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", ttsSettingName, settingValue)
+    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(scrollSettingName, settingValue) {
+        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", scrollSettingName, settingValue)
         var reader = clusiveContext.reader.instance;
-        if (reader) {
+        if (reader && reader.applyUserSettings) {
             reader.scroll(settingValue);
         }
     };

@@ -1,17 +1,12 @@
 import logging
 from datetime import timedelta
 
-import math
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
-from django.views.generic import TemplateView, RedirectView, CreateView
+from django.views.generic import TemplateView, RedirectView
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
@@ -23,7 +18,7 @@ from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
-from tips.models import TipHistory
+from tips.models import TipHistory, CTAHistory
 
 logger = logging.getLogger(__name__)
 
@@ -97,6 +92,10 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
         super().__init__()
 
     def get(self, request, *args, **kwargs):
+        # Redirect administrators who mistakenly logged in with a link that goes here.
+        if request.user.is_staff:
+            return HttpResponseRedirect('/admin')
+
         self.clusive_user = request.clusive_user
         self.teacher = self.clusive_user.can_manage_periods
         self.current_period = self.get_current_period(request, **kwargs)
@@ -109,8 +108,24 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
         # Welcome panel
         self.panels['welcome'] = user_stats.reading_views == 0
 
-        # Summer reading challenge - currently only notifies guests
-        self.panels['challenge'] = not self.clusive_user.is_registered
+        # Calls to Action
+        cta_name = None
+        if request.GET.get('cta'):
+            # Manual override, for testing. Named CTA will be shown, but not recorded in history.
+            cta_name = request.GET.get('cta')
+        else:
+            histories = CTAHistory.available_ctas(user=self.clusive_user, page='Dashboard')
+            if histories:
+                logger.debug('CTAs: %s', repr(histories))
+                histories[0].show()  # Record the fact that it was displayed.
+                cta_name = histories[0].type.name
+        if cta_name:
+            self.panels['cta'] = True
+            self.data['cta'] = {
+                'type': cta_name
+            }
+        else:
+            self.panels['cta'] = False
 
         # Affect panel (for student)
         self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
@@ -377,7 +392,6 @@ class ReaderChooseVersionView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-@method_decorator(never_cache, name='dispatch')
 class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
@@ -441,8 +455,6 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView
 
 class DebugView(TemplateView):
     template_name = 'pages/debug.html'
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 
 class PrivacyView(TemplateView):
