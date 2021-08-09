@@ -30,7 +30,7 @@ from pages.views import ThemedPageMixin
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
-    AccountRoleForm, AgeCheckForm, ClusiveLoginForm
+    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
 
@@ -696,10 +696,47 @@ class SyncMailingListView(View):
         MailingListMember.synchronize_user_emails()
         return JsonResponse({'success': 1})
 
-class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, CreateView):
-    template_name = 'roster/manage_import_google_courses.html'
-    periods = None
-    current_period = None
+class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):
+    form_class = GoogleCoursesForm
+    fields = ['course_select']
+    courses = []
+    template_name = 'roster/manage_show_google_courses.html'
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(FormView, self).get_initial(**kwargs)
+        self.courses = self.request.session.get('google_courses', [])
+        tuples = []
+        for course in self.courses:
+            tuples.append((course['id'], course['name']))
+        pdb.set_trace()
+        initial['courses'] = tuples
+        return initial
+
+    def get_form(self, form_class=None):
+        kwargs = self.get_form_kwargs()
+        pdb.set_trace()
+        return GoogleCoursesForm(**kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        cu = request.clusive_user
+        if not cu.can_manage_periods:
+            self.handle_no_permission()
+        self.clusive_user = cu
+        pdb.set_trace()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        pdb.set_trace()
+        selected_course_id = self.request.POST.get('course_select')
+        selected_course = None
+        for course in self.courses:
+            if course['id'] == selected_course_id:
+                selected_course = course
+                break
+
+        return reverse('manage', kwargs={'google_course': selected_course})
+
+class GetGoogleCourses(LoginRequiredMixin, View):
     provider = 'google'
     classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly'
     auth_parameters = urlencode({
@@ -716,6 +753,15 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, Creat
         service = build('classroom', 'v1', credentials=user_credentials)
         try:
             results = service.courses().list(pageSize=10).execute()
+            # For debugging:  To avoid multiple trips to Google, comment out
+            # above line and uncomment following line that gives a mock list
+            # of Google courses that can be used for testing the workflow;
+            # hoowever, these courses won't necessarily return a roster from
+            # Google.
+#             results = {'courses': [
+#                 {'id': '374482549473', 'name': 'Clusive I', 'section': 'Section I', 'descriptionHeading': 'Clusive I Section I', 'room': 'TLC-201', 'ownerId': '110080685778429079941', 'creationTime': '2021-07-26T21:49:39.246Z', 'updateTime': '2021-07-26T21:49:39.246Z', 'enrollmentCode': '556p2bg', 'courseState': 'ACTIVE', 'alternateLink': 'https://classroom.google.com/c/Mzc0NDgyNTQ5NDcz', 'teacherGroupEmail': 'Clusive_I_Section_I_teachers_2cf97afc@classroom.google.com', 'courseGroupEmail': 'Clusive_I_Section_I_46aff155@classroom.google.com', 'teacherFolder': {'id': '1pZaPA1zUhFuPBh_H8vk6ML1klTZ4_Q6DwgWHVkMKK1KG9J5y0Cjg65SCw9C9h71qEZ22ZWU9', 'title': 'Clusive I Section I', 'alternateLink': 'https://drive.google.com/drive/folders/1pZaPA1zUhFuPBh_H8vk6ML1klTZ4_Q6DwgWHVkMKK1KG9J5y0Cjg65SCw9C9h71qEZ22ZWU9'}, 'guardiansEnabled': False, 'calendarId': 'classroom101992241531414538876@group.calendar.google.com'},
+#                 {'id': '999999999999', 'name': 'English (Google)', 'section': 'Section I', 'descriptionHeading': 'English (Google) Section I', 'room': 'TLC-202', 'ownerId': '110080685778429079941', 'creationTime': '2021-07-26T21:49:39.246Z', 'updateTime': '2021-07-26T21:49:39.246Z', 'enrollmentCode': '556p2bg', 'courseState': 'ACTIVE', 'alternateLink': 'https://classroom.google.com/c/Mzc0NDgyNTQ5NDcz', 'teacherGroupEmail': 'Clusive_I_Section_I_teachers_2cf97afc@classroom.google.com', 'courseGroupEmail': 'Clusive_I_Section_I_46aff155@classroom.google.com', 'teacherFolder': {'id': '1pZaPA1zUhFuPBh_H8vk6ML1klTZ4_Q6DwgWHVkMKK1KG9J5y0Cjg65SCw9C9h71qEZ22ZWU9', 'title': 'Clusive I Section I', 'alternateLink': 'https://drive.google.com/drive/folders/1pZaPA1zUhFuPBh_H8vk6ML1klTZ4_Q6DwgWHVkMKK1KG9J5y0Cjg65SCw9C9h71qEZ22ZWU9'}, 'guardiansEnabled': False, 'calendarId': 'classroom101992241531414538876@group.calendar.google.com'}
+#             ]}
         except HttpError as e:
             if e.status_code == 403:
                 url = reverse('add_scope_access') + '?' + self.auth_parameters
@@ -726,7 +772,9 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, Creat
         logger.debug('There are (%s) Google courses', len(courses))
         for course in courses:
             logger.debug('- %s', course['name'])
-        return HttpResponseRedirect(reverse('get_google_courses'))
+        # Put the courses into the response, somehow
+        request.session['google_courses'] = courses
+        return HttpResponseRedirect(reverse('manage_google_courses'));
 
     def make_credentials(self, user, scopes, db_access):
         client_info = db_access.retrieve_client_info(self.provider)

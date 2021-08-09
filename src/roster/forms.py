@@ -7,6 +7,8 @@ from multiselectfield import MultiSelectFormField
 
 from roster.models import Period, Roles, ClusiveUser, EducationLevels
 
+import pdb
+
 class ClusiveLoginForm(AuthenticationForm):
 
     def confirm_login_allowed(self, user: User):
@@ -202,3 +204,15 @@ class PeriodForm(ModelForm):
                 'class': 'form-control',
             })
         }
+
+class GoogleCoursesForm(Form):
+
+    def __init__(self, *args, **kwargs):
+        pdb.set_trace()
+        super().__init__(*args, **kwargs)
+        self.courses = kwargs['initial'].get('courses', [])
+        self.fields['course_select'] = forms.ChoiceField(
+            choices=self.courses,
+            required=True,
+            widget=forms.RadioSelect
+        )
