@@ -177,6 +177,9 @@ class CTAHistory(models.Model):
         # Summer reading promo for Guest users - shown to all guests
         if self.type.name == 'summer_reading_gu':
             return self.user.role == Roles.GUEST
+        # Demographics, shown right away, for parent & teacher.
+        if self.type.name == 'demographics':
+            return self.user.role == Roles.PARENT or self.user.role == Roles.TEACHER
         # Star Rating: any registered user, > 60 minutes active or > 3 logins.
         if self.type.name == 'star_rating':
             if self.user.role == Roles.GUEST:
@@ -184,9 +187,6 @@ class CTAHistory(models.Model):
             if user_stats.logins > 3:
                 return True
             return user_stats.active_duration and user_stats.active_duration > timedelta(minutes=60)
-        # FIXME Demographics, shown right away, and for all user types except Guest.
-        if self.type.name == 'demographics':
-            return self.user.role != Roles.GUEST
         # Unknown type
         logger.warning('Unimplemented CTA type: %s', self)
         return False

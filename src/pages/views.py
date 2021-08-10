@@ -1,5 +1,4 @@
 import logging
-from datetime import timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -18,7 +17,7 @@ from eventlog.views import EventMixin
 from glossary.models import WordModel
 from library.models import Book, BookVersion, Paradata, Annotation
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
-from tips.models import TipHistory, CTAHistory
+from tips.models import TipHistory, CTAHistory, CompletionType
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +123,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
             self.data['cta'] = {
                 'type': cta_name
             }
+            if cta_name == 'star_rating':
+                self.data['cta']['form'] = ClusiveRatingForm(initial={'star_rating': 0})
         else:
             self.panels['cta'] = False
 
@@ -147,14 +148,6 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
                 'empty': not any([item['value'] for item in scaled]),
             }
             logger.debug("Scaled: %s", scaled)
-
-        # Star rating panel
-        self.star_rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
-        self.panels['star_rating'] = self.should_show_star_rating(request, user_stats)
-        if self.panels['star_rating']:
-            self.data['star_rating'] = {
-                'form' : ClusiveRatingForm(initial={'star_rating': 0}),
-            }
 
         # Star results panel
         self.panels['star_results'] = self.should_show_star_results(request)
@@ -206,28 +199,6 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
         context['data'] = self.data
         return context
 
-    def should_show_star_rating(self, request, user_stats):
-        # Put 'starpanel=1' in URL for debugging
-        if request.GET.get('starpanel'):
-            return True
-
-        # If already rated, don't show again.
-        if self.star_rating:
-            return False
-
-        # Guests can't vote
-        if request.clusive_user.role == Roles.GUEST:
-            return False
-
-        # Otherwise, show if user has 3+ logins or 1+ hours active use.
-        if user_stats.logins > 3:
-            logger.debug('Requesting star rating: logins=%d', user_stats.logins)
-            return True
-        if user_stats.active_duration and user_stats.active_duration > timedelta(hours=1):
-            logger.debug('Requesting star rating: active_duration=%d', user_stats.active_duration)
-            return True
-        return False
-
     def should_show_star_results(self, request):
         # Put 'starresults=1' in URL for debugging
         if request.GET.get('starresults'):
@@ -260,16 +231,20 @@ class DashboardActivityPanelView(TemplateView):
 
 class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
     form_class = ClusiveRatingForm
-    template_name = 'pages/partial/dashboard_panel_star_rating.html'
     success_url = reverse_lazy('star_rating_results')
 
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
+        # Save rating
         self.object = form.save(commit=False)
         self.object.user = self.request.clusive_user
         self.object.save()
+        # Update Call To Action
+        CTAHistory.register_action(user=self.request.clusive_user,
+                                   cta_name='star_rating', completion_type=CompletionType.TAKEN)
+        # Log event
         question = 'How would you rate your experience with Clusive so far?'
         star_rating_completed.send(SetStarRatingView.__class__, request=self.request,
                                    question=question, answer=self.object.star_rating)
