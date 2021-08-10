@@ -583,7 +583,6 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Cr
         instance=Period(site=self.clusive_user.get_site())
         kwargs = self.get_form_kwargs()
         kwargs['instance'] = instance
-        pdb.set_trace()
         return PeriodForm(**kwargs)
 
     def dispatch(self, request, *args, **kwargs):
@@ -591,28 +590,24 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Cr
         if not cu.can_manage_periods:
             self.handle_no_permission()
         self.clusive_user = cu
-        pdb.set_trace()
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         # Check request for type of class creation. If 'import'
         # (not manual creation), redirect to GET Google course list
         logger.debug('Value of create_or_import: %s', request.POST.get('create_or_import'))
-        pdb.set_trace()
         if request.POST.get('create_or_import') == 'import':
             return(HttpResponseRedirect(reverse('get_google_courses')))
         else:
             return super().post(self, request, *args, **kwargs)
 
     def get_success_url(self):
-        pdb.set_trace()
         return reverse('manage', kwargs={'period_id': self.object.id})
 
     def form_valid(self, form):
         result = super().form_valid(form)
         # Add current user to the new Period
         self.object.users.add(self.clusive_user)
-        pdb.set_trace()
         return result
 
     def configure_event(self, event: Event):
@@ -708,13 +703,11 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormV
         tuples = []
         for course in self.courses:
             tuples.append((course['id'], course['name']))
-        pdb.set_trace()
         initial['courses'] = tuples
         return initial
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
-        pdb.set_trace()
         return GoogleCoursesForm(**kwargs)
 
     def dispatch(self, request, *args, **kwargs):
@@ -747,7 +740,6 @@ class GetGoogleCourses(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         logger.debug("GetGoogleCourses")
-        pdb.set_trace()
         db_access = OAuth2Database()
         user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
         service = build('classroom', 'v1', credentials=user_credentials)
