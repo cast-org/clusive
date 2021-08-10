@@ -47,8 +47,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -693,7 +691,6 @@ class SyncMailingListView(View):
 
 class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):
     form_class = GoogleCoursesForm
-    fields = ['course_select']
     courses = []
     template_name = 'roster/manage_show_google_courses.html'
 
@@ -715,23 +712,15 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormV
         if not cu.can_manage_periods:
             self.handle_no_permission()
         self.clusive_user = cu
-        pdb.set_trace()
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        pdb.set_trace()
         selected_course_id = self.request.POST.get('course_select')
-        selected_course = None
-        for course in self.courses:
-            if course['id'] == selected_course_id:
-                selected_course = course
-                break
-
-        return reverse('manage', kwargs={'google_course': selected_course})
+        return reverse('get_google_roster', kwargs={'course_id': selected_course_id})
 
 class GetGoogleCourses(LoginRequiredMixin, View):
     provider = 'google'
-    classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly'
+    classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.profile.emails'
     auth_parameters = urlencode({
         'provider': provider,
         'scopes': classroom_scopes,
@@ -763,8 +752,7 @@ class GetGoogleCourses(LoginRequiredMixin, View):
         courses = results.get('courses', []);
         logger.debug('There are (%s) Google courses', len(courses))
         for course in courses:
-            logger.debug('- %s', course['name'])
-        # Put the courses into the response, somehow
+            logger.debug('- %s, id = %s', course['name'], course['id'])
         request.session['google_courses'] = courses
         return HttpResponseRedirect(reverse('manage_google_courses'));
 
@@ -776,6 +764,26 @@ class GetGoogleCourses(LoginRequiredMixin, View):
                             client_id=client_info.client_id,
                             client_secret=client_info.secret,
                             token_uri='https://accounts.google.com/o/oauth2/token')
+
+class GetGoogleRoster(GetGoogleCourses):
+
+    def get(self, request, *args, **kwargs):
+        course_id = kwargs.get('course_id')
+        db_access = OAuth2Database()
+        user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
+        service = build('classroom', 'v1', credentials=user_credentials)
+
+        # Proper scope/credentials should have been set up by
+        # /get_google_courses in GetGoogleCourses.get()
+        # TODO: is error handling (Http authorization error) needed?
+        results = service.courses().students().list(courseId=course_id).execute()
+        students = results.get('students', [])
+        for student in students:
+            logger.debug('- %s, email = %s', student['profile']['name']['givenName'], student['profile']['emailAddress'])
+        request.session['google_roster'] = students
+        # TODO: create view/form for 'manage_google_roster'
+        return HttpResponseRedirect(reverse('manage_google_roster'));
+
 
 ########################################
 #
