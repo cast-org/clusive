@@ -1,3 +1,7 @@
+@function color-to-rgb($value) {
+    @return red($value), green($value), blue($value);
+}
+
 // stylelint-disable custom-property-empty-line-before
 @mixin site-theme($theme-name: unquote(":root")) {
     #{$theme-name} {
@@ -10,7 +14,7 @@
         --CT_linkHoverColor: #{$link-hover-color};
 
         --CT_focusRingColor: #{$focus-ring-color};
-        --CT_focusRingRGB: #{red($focus-ring-color), green($focus-ring-color), blue($focus-ring-color)};
+        --CT_focusRingRGB: #{color-to-rgb($focus-ring-color)};
 
         --CT_selectionBg: #{$selection-bg};
         --CT_selectionColor: #{$selection-color};
@@ -124,7 +128,7 @@
 
         --CT_tableRosterHeadColor: #{$table-roster-head-color};
 
-        --CT_btnPrimaryFocusRingRGB: #{red($btn-primary-focus-ring), green($btn-primary-focus-ring), blue($btn-primary-focus-ring)};
+        --CT_btnPrimaryFocusRingRGB: #{color-to-rgb($btn-primary-focus-ring)};
         --CT_btnPrimaryBg: #{$btn-primary-bg};
         --CT_btnPrimaryColor: #{$btn-primary-color};
         --CT_btnPrimaryBorderColor: #{$btn-primary-border-color};
@@ -135,7 +139,7 @@
         --CT_btnPrimaryActiveColor: #{$btn-primary-active-color};
         --CT_btnPrimaryActiveBorderColor: #{$btn-primary-active-border-color};
 
-        --CT_btnSecondaryFocusRingRGB: #{red($btn-secondary-focus-ring), green($btn-secondary-focus-ring), blue($btn-secondary-focus-ring)};
+        --CT_btnSecondaryFocusRingRGB: #{color-to-rgb($btn-secondary-focus-ring)};
         --CT_btnSecondaryBg: #{$btn-secondary-bg};
         --CT_btnSecondaryColor: #{$btn-secondary-color};
         --CT_btnSecondaryBorderColor: #{$btn-secondary-border-color};
@@ -146,7 +150,7 @@
         --CT_btnSecondaryActiveColor: #{$btn-secondary-active-color};
         --CT_btnSecondaryActiveBorderColor: #{$btn-secondary-active-border-color};
 
-        --CT_btnNavFocusRingRGB: #{red($btn-nav-focus-ring), green($btn-nav-focus-ring), blue($btn-nav-focus-ring)};
+        --CT_btnNavFocusRingRGB: #{color-to-rgb($btn-nav-focus-ring)};
         --CT_btnNavBg: #{$btn-nav-bg};
         --CT_btnNavColor: #{$btn-nav-color};
         --CT_btnNavBorderColor: #{$btn-nav-border-color};
@@ -161,7 +165,7 @@
         --CT_btnNavDisabledBorderColor: #{$btn-nav-disabled-border-color};
         --CT_btnNavDisabledOpacity: #{$btn-nav-disabled-opacity};
 
-        --CT_btnSettingFocusRingRGB: #{red($btn-setting-focus-ring), green($btn-setting-focus-ring), blue($btn-setting-focus-ring)};
+        --CT_btnSettingFocusRingRGB: #{color-to-rgb($btn-setting-focus-ring)};
         --CT_btnSettingBg: #{$btn-setting-bg};
         --CT_btnSettingColor: #{$btn-setting-color};
         --CT_btnSettingBorderColor: #{$btn-setting-border-color};
@@ -173,7 +177,7 @@
         --CT_btnSettingActiveBorderColor: #{$btn-setting-active-border-color};
         --CT_btnSettingTextShadow: #{$btn-setting-text-shadow};
 
-        --CT_btnToolFocusRingRGB: #{red($btn-tool-focus-ring), green($btn-tool-focus-ring), blue($btn-tool-focus-ring)};
+        --CT_btnToolFocusRingRGB: #{color-to-rgb($btn-tool-focus-ring)};
         --CT_btnToolBg: #{$btn-tool-bg};
         --CT_btnToolColor: #{$btn-tool-color};
         --CT_btnToolBorderColor: #{$btn-tool-border-color};
@@ -184,7 +188,7 @@
         --CT_btnToolActiveColor: #{$btn-tool-active-color};
         --CT_btnToolActiveBorderColor: #{$btn-tool-active-border-color};
 
-        --CT_btnOptionFocusRingRGB: #{red($btn-option-focus-ring), green($btn-option-focus-ring), blue($btn-option-focus-ring)};
+        --CT_btnOptionFocusRingRGB: #{color-to-rgb($btn-option-focus-ring)};
         --CT_btnOptionBg: #{$btn-option-bg};
         --CT_btnOptionColor: #{$btn-option-color};
         --CT_btnOptionBorderColor: #{$btn-option-border-color};
@@ -194,11 +198,11 @@
         --CT_btnOptionActiveBg: #{$btn-option-active-bg};
         --CT_btnOptionActiveColor: #{$btn-option-active-color};
         --CT_btnOptionActiveBorderColor: #{$btn-option-active-border-color};
-        --CT_btnOptionActiveBoxShadowRGB: #{red($btn-option-active-box-shadow-color), green($btn-option-active-box-shadow-color), blue($btn-option-active-box-shadow-color)};
+        --CT_btnOptionActiveBoxShadowRGB: #{color-to-rgb($btn-option-active-box-shadow-color)};
         --CT_btnOptionActiveBoxShadowOpacity: #{$btn-option-active-box-shadow-opacity};
         --CT_btnOptionActiveHoverBorderColor: #{$btn-option-active-hover-border-color};
 
-        --CT_btnTtsFocusRingRGB: #{red($btn-tts-focus-ring), green($btn-tts-focus-ring), blue($btn-tts-focus-ring)};
+        --CT_btnTtsFocusRingRGB: #{color-to-rgb($btn-tts-focus-ring)};
         --CT_btnTtsBg: #{$btn-tts-bg};
         --CT_btnTtsColor: #{$btn-tts-color};
         --CT_btnTtsBorderColor: #{$btn-tts-border-color};
@@ -209,7 +213,7 @@
         --CT_btnTtsActiveColor: #{$btn-tts-active-color};
         --CT_btnTtsActiveBorderColor: #{$btn-tts-active-border-color};
 
-        --CT_btnFlagFocusRingRGB: #{red($btn-flag-focus-ring), green($btn-flag-focus-ring), blue($btn-flag-focus-ring)};
+        --CT_btnFlagFocusRingRGB: #{color-to-rgb($btn-flag-focus-ring)};
         --CT_btnFlagBg: #{$btn-flag-bg};
         --CT_btnFlagColor: #{$btn-flag-color};
         --CT_btnFlagBorderColor: #{$btn-flag-border-color};
@@ -220,7 +224,7 @@
         --CT_btnFlagActiveColor: #{$btn-flag-active-color};
         --CT_btnFlagActiveBorderColor: #{$btn-flag-active-border-color};
 
-        --CT_btnTagFocusRingRGB: #{red($btn-tag-focus-ring), green($btn-tag-focus-ring), blue($btn-tag-focus-ring)};
+        --CT_btnTagFocusRingRGB: #{color-to-rgb($btn-tag-focus-ring)};
         --CT_btnTagBg: #{$btn-tag-bg};
         --CT_btnTagColor: #{$btn-tag-color};
         --CT_btnTagBorderColor: #{$btn-tag-border-color};
@@ -231,7 +235,7 @@
         --CT_btnTagActiveColor: #{$btn-tag-active-color};
         --CT_btnTagActiveBorderColor: #{$btn-tag-active-border-color};
 
-        --CT_btnFavoriteFocusRingRGB: #{red($btn-favorite-focus-ring), green($btn-favorite-focus-ring), blue($btn-favorite-focus-ring)};
+        --CT_btnFavoriteFocusRingRGB: #{color-to-rgb($btn-favorite-focus-ring)};
         --CT_btnFavoriteBg: #{$btn-favorite-bg};
         --CT_btnFavoriteColor: #{$btn-favorite-color};
         --CT_btnFavoriteBorderColor: #{$btn-favorite-border-color};
@@ -242,7 +246,7 @@
         --CT_btnFavoriteActiveColor: #{$btn-favorite-active-color};
         --CT_btnFavoriteActiveBorderColor: #{$btn-favorite-active-border-color};
 
-        --CT_btnReactFocusRingRGB: #{red($btn-react-focus-ring), green($btn-react-focus-ring), blue($btn-react-focus-ring)};
+        --CT_btnReactFocusRingRGB: #{color-to-rgb($btn-react-focus-ring)};
         --CT_btnReactBg: #{$btn-react-bg};
         --CT_btnReactColor: #{$btn-react-color};
         --CT_btnReactBorderColor: #{$btn-react-border-color};
@@ -369,7 +373,7 @@
         --CT_whyIconColor: #{$why-icon-color};
         --CT_whyIconActiveColor: #{$why-icon-active-color};
         --CT_whyIconActiveTextShadowColor: #{$why-icon-active-text-shadow-color};
-        --CT_whyIconActiveTextShadowColorRGB: #{red($why-icon-active-text-shadow-color), green($why-icon-active-text-shadow-color), blue($why-icon-active-text-shadow-color)};
+        --CT_whyIconActiveTextShadowColorRGB: #{color-to-rgb($why-icon-active-text-shadow-color)};
         --CT_whyIconActiveTextShadowOpacity: #{$why-icon-active-text-shadow-opacity};
 
         --CT_switchColBorderColor: #{$switch-col-border-color};
@@ -383,16 +387,16 @@
         --CT_formCheckradioCheckedBg: #{$form-checkradio-checked-bg};
         --CT_formCheckradioCheckedBorderColor: #{$form-checkradio-checked-border-color};
         --CT_formCheckradioFocusBorderColor: #{$form-checkradio-focus-border-color};
-        --CT_formCheckradioFocusBoxShadowRGB: #{red($form-checkradio-focus-box-shadow-color), green($form-checkradio-focus-box-shadow-color), blue($form-checkradio-focus-box-shadow-color)};
+        --CT_formCheckradioFocusBoxShadowRGB: #{color-to-rgb($form-checkradio-focus-box-shadow-color)};
         --CT_formCheckradioFocusBoxShadowOpacity: #{$form-checkradio-focus-box-shadow-opacity};
-        --CT_formCheckradioCheckedBoxShadowRGB: #{red($form-checkradio-checked-box-shadow-color), green($form-checkradio-checked-box-shadow-color), blue($form-checkradio-checked-box-shadow-color)};
+        --CT_formCheckradioCheckedBoxShadowRGB: #{color-to-rgb($form-checkradio-checked-box-shadow-color)};
         --CT_formCheckradioCheckedBoxShadowOpacity: #{$form-checkradio-checked-box-shadow-opacity};
 
         --CT_formRangeTrackBg: #{$form-range-track-bg};
         --CT_formRangeThumbBg: #{$form-range-thumb-bg};
-        --CT_formRangeThumbBoxShadowRGB: #{red($form-range-thumb-box-shadow-color), green($form-range-thumb-box-shadow-color), blue($form-range-thumb-box-shadow-color)};
+        --CT_formRangeThumbBoxShadowRGB: #{color-to-rgb($form-range-thumb-box-shadow-color)};
         --CT_formRangeThumbBoxShadowOpacity: #{$form-range-thumb-box-shadow-opacity};
-        --CT_formRangeThumbFocusBoxShadowRGB: #{red($form-range-thumb-focus-box-shadow-color), green($form-range-thumb-focus-box-shadow-color), blue($form-range-thumb-focus-box-shadow-color)};
+        --CT_formRangeThumbFocusBoxShadowRGB: #{color-to-rgb($form-range-thumb-focus-box-shadow-color)};
         --CT_formRangeThumbFocusBoxShadowOpacity: #{$form-range-thumb-focus-box-shadow-opacity};
         --CT_formRangeThumbActiveBg: #{$form-range-thumb-active-bg};
         --CT_formRangeTipColor: #{$form-range-tip-color};
@@ -400,18 +404,18 @@
         --CT_formSwitchTrackBg: #{$form-switch-track-bg};
         --CT_formSwitchTrackBorderColor: #{$form-switch-track-border-color};
         --CT_formSwitchTrackFocusBorderColor: #{$form-switch-track-focus-border-color};
-        --CT_formSwitchTrackFocusBoxShadowRGB: #{red($form-switch-track-focus-box-shadow-color), green($form-switch-track-focus-box-shadow-color), blue($form-switch-track-focus-box-shadow-color)};
+        --CT_formSwitchTrackFocusBoxShadowRGB: #{color-to-rgb($form-switch-track-focus-box-shadow-color)};
         --CT_formSwitchTrackFocusBoxShadowOpacity: #{$form-switch-track-focus-box-shadow-opacity};
         --CT_formSwitchTrackCheckedBg: #{$form-switch-track-checked-bg};
         --CT_formSwitchTrackCheckedBorderColor: #{$form-switch-track-checked-border-color};
 
         --CT_formSwitchThumbBg: #{$form-switch-thumb-bg};
-        --CT_formSwitchThumbBoxShadowRGB: #{red($form-switch-thumb-box-shadow-color), green($form-switch-thumb-box-shadow-color), blue($form-switch-thumb-box-shadow-color)};
+        --CT_formSwitchThumbBoxShadowRGB: #{color-to-rgb($form-switch-thumb-box-shadow-color)};
         --CT_formSwitchThumbBoxShadowOpacity: #{$form-switch-thumb-box-shadow-opacity};
         --CT_formSwitchThumbFocusBg: #{$form-switch-thumb-focus-bg};
         --CT_formSwitchThumbCheckedBg: #{$form-switch-thumb-checked-bg};
         --CT_formSwitchThumbCheckedBorderColor: #{$form-switch-thumb-checked-border-color};
-        --CT_formSwitchThumbCheckedBoxShadowRGB: #{red($form-switch-thumb-checked-box-shadow-color), green($form-switch-thumb-checked-box-shadow-color), blue($form-switch-thumb-checked-box-shadow-color)};
+        --CT_formSwitchThumbCheckedBoxShadowRGB: #{color-to-rgb($form-switch-thumb-checked-box-shadow-color)};
         --CT_formSwitchThumbCheckedBoxShadowOpacity: #{$form-switch-thumb-checked-box-shadow-opacity};
 
         --CT_progressBarBg: #{$progress-bar-bg};
