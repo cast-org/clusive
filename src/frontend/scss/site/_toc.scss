@@ -2,9 +2,7 @@
     background-color: transparent !important;   // stylelint-disable-line declaration-no-important
 
     .modal-dialog {
-        @include media-breakpoint-up(#{$modal-breakpoint}) {
-            max-width: $toc-modal-dialoag-max-width;
-        }
+        max-width: $toc-modal-dialog-max-width;
     }
 
     .modal-content {
