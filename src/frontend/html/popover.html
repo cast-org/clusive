@@ -22,6 +22,17 @@
 <script src="../js/frontend.js"></script>
 <script src="./js/theme-test.js"></script>
 
+<style>
+.popover {
+    position: relative;
+    display: block;
+    flex: 1 1 auto;
+}
+.popover-scrollable > [role="document"] {
+    height: 100%;
+</style>
+
+
 </head>
 <body class="library">
 
@@ -32,9 +43,11 @@
         <div class="row">
             <div class="col content">
 
+<div class="row pb-1">
+    <div class="col">
 
-<div class="popover popover-glossary popover-scrollable" style="position: relative; display: block; flex: 1 1 auto;">
-    <div role="document" style="height: 100%;">
+<div class="popover popover-glossary popover-scrollable">
+    <div role="document">
         <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
         <div class="popover-header">
             <strong id="glossaryTitle">
@@ -88,10 +101,38 @@
     </div>
 </div>
 
-<br />
+    </div>
+    <div class="col">
 
-<div class="popover popover-glossary popover-scrollable" style="position: relative; display: block; flex: 1 1 auto; width: 22rem; max-width: 22rem;">
-    <div role="document" style="height: 100%;">
+<div class="popover popover-translate popover-scrollable" id="translatePop">
+    <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
+    <div class="popover-header">
+        <strong>Translator</strong>
+    </div>
+    <div class="popover-body">
+        <div id="translateource" class="translate-source">
+            <p>
+                source content&hellip;
+                Tenderloin bresaola bacon meatloaf beef ribs, pancetta ribeye burgdoggen pork loin jerky doner spare ribs alcatra biltong ground round. Short loin fatback meatloaf beef ribs leberkas corned beef jerky salami.
+            </p>
+        </div>
+        <div id="translateOutput" class="translate-output popover-section">
+            <p>
+                translated content&hellip;
+                Crunchy apples soy milk udon noodles soba noodles cocoa edamame shaved almonds Thai curry bruschetta kung pao pepper almond milk. Cauliflower blackberries sweet potato black bean burrito green tea.
+            </p>
+        </div>
+    </div>
+    <div class="popover-footer">
+    </div>
+</div>
+
+    </div>
+</div>
+
+<div class="popover popover-scrollable" style="width: 22rem; max-width: 22rem;">
+    <div role="document">
         <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
         <div class="popover-header">
             <span class="h3">
