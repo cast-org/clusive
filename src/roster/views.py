@@ -47,6 +47,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
+import pdb
+
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -745,8 +747,9 @@ class GetGoogleCourses(LoginRequiredMixin, View):
 #             ]}
         except HttpError as e:
             if e.status_code == 403:
-                url = reverse('add_scope_access') + '?' + self.auth_parameters
-                return HttpResponseRedirect(url)
+                request.session['add_scopes_return_uri'] = 'get_google_courses'
+                request.session['add_scopes_course_id'] = None
+                return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
             else:
                 raise
         courses = results.get('courses', []);
@@ -773,17 +776,29 @@ class GetGoogleRoster(GetGoogleCourses):
         user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
         service = build('classroom', 'v1', credentials=user_credentials)
 
-        # Proper scope/credentials should have been set up by
-        # /get_google_courses in GetGoogleCourses.get()
-        # TODO: is error handling (Http authorization error) needed?
-        results = service.courses().students().list(courseId=course_id).execute()
+        # TODO:  could get a permission error, not because of lack of scope, but
+        # because the access_token has expired, and need a new one.  Should use
+        # the `refresh` workflow instead of the `code` workflow -- the latter
+        # will always work, however.  Question is, can you tell from the
+        # authorization error (HttpError) if it's lack of scope or expired
+        # token?
+        try:
+            results = service.courses().students().list(courseId=course_id).execute()
+        except HttpError as e:
+            if e.status_code == 403:
+                request.session['add_scopes_return_uri'] = 'get_google_roster'
+                request.session['add_scopes_course_id'] = course_id
+                return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
+            else:
+                raise
         students = results.get('students', [])
+        logger.debug('There are (%s) students', len(students))
         for student in students:
-            logger.debug('- %s, email = %s', student['profile']['name']['givenName'], student['profile']['emailAddress'])
+            logger.debug('- %s, %s', student['profile']['name']['givenName'], student['profile']['emailAddress'])
+
         request.session['google_roster'] = students
         # TODO: create view/form for 'manage_google_roster'
         return HttpResponseRedirect(reverse('manage_google_roster'));
-
 
 ########################################
 #
@@ -822,8 +837,8 @@ def add_scope_access(request):
     provider = request.GET.get('provider')
     new_scopes = request.GET.get('scopes')
     authorization_uri = request.GET.get('authorization')
-    state = get_random_string(12)
-    request.session['oauth2_state'] = state
+    oauth2_state = get_random_string(12)
+    request.session['oauth2_state'] = oauth2_state
 
     client_info = OAuth2Database().retrieve_client_info(provider)
     parameters = urlencode({
@@ -831,7 +846,7 @@ def add_scope_access(request):
         'response_type': 'code',
         'scope': new_scopes,
         'include_granted_scopes': 'true',
-        'state': state,
+        'state': oauth2_state,
         'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
     })
     logger.debug('Authorization request to provider for larger scope access')
@@ -871,9 +886,11 @@ def add_scope_callback(request):
         raise OAuth2Error("Error retrieving access token: none given, status: %d" % resp.status_code)
     dbAccess.update_access_token(access_token, request.user, 'google')
 
-    # Current assumption is that the request for additional scope access
-    # originated from a "get google courses" request, so return to that
-    # workflow.  Where to go from here should be more flexible (future
-    # work).
-    logger.debug('Larger scope access request complete, returning to get_google_courses')
-    return HttpResponseRedirect(reverse('get_google_courses'))
+    # TODO:  There has to be a better way.
+    return_uri = request.session['add_scopes_return_uri']
+    course_id = request.session['add_scopes_course_id']
+    logger.debug('Larger scope access request complete, returning to %s, with course id %s', return_uri, course_id)
+    if course_id:
+        return HttpResponseRedirect(reverse(return_uri, kwargs={'course_id': course_id}))
+    else:
+        return HttpResponseRedirect(reverse(return_uri))
