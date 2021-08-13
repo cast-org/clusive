@@ -734,6 +734,7 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVi
 
     def make_student_tuples(self, roster):
         tuples = []
+        student_role = [item[1] for item in Roles.ROLE_CHOICES if item[0] == Roles.STUDENT][0]
         for student in roster:
             email = student['profile']['emailAddress']
             user_with_that_email = User.objects.filter(email=email)
@@ -742,13 +743,13 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVi
                 a_student = (
                     user_with_that_email.username,
                     email,
-                    clusive_user.role,
+                    [item[1] for item in Roles.ROLE_CHOICES if item[0] == clusive_user.role][0],
                     'Existing account')
             else:
                 a_student = (
                     student['profile']['name']['givenName'],
                     email,
-                    Roles.STUDENT,
+                    student_role,
                     'New to Clusive')
             tuples.append(a_student)
         return tuples
