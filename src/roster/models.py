@@ -424,7 +424,7 @@ class Preference (models.Model):
             return []
 
         # Array of strings stored as string
-        if val[0] == "[" and val[-1] == "]":
+        if len(val)>1 and val[0] == "[" and val[-1] == "]":
             return [x.strip()[1:-1] for x in val[1:-1].split(',')]
 
         # Booleans
