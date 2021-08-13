@@ -65,7 +65,8 @@ function load_definition(cued, word) {
 
 function load_translation(text) {
     $('#translateSource').text(text);
-    $('#translateOutput').text('Loading...');
+    var $translateOutput = $('#translateOutput');
+    $translateOutput.text('Loading...');
     $('#translateLocator').CFW_Popover('show');
     $.ajax('/translation/translate', {
         method: 'POST',
@@ -78,11 +79,12 @@ function load_translation(text) {
         }
     })
         .done(function(data) {
-            $('#translateOutput').text(data.result);
+            $translateOutput.html(data.result);
+            $translateOutput.css('direction', data.direction);
         })
         .fail(function(err) {
             console.error(err);
-            $('#translateOutput').html(err.responseText);
+            $translateOutput.html(err.responseText);
         })
         .always(function() {
             var $translatePop = $('#translatePop');

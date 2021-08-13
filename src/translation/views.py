@@ -38,7 +38,16 @@ class TranslateTextView(LoginRequiredMixin, View):
             else:
                 result = 'Sorry, translation feature is unavailable'
 
-        return JsonResponse({'result': result})
+        return JsonResponse({'result': result,
+                             'direction': self.direction_for_language(lang)})
+
+    # All languages that are written right-to-left, according to https://lingohub.com/academy/best-practices/rtl-language-list
+    rtl_languages = ['ar', 'arc', 'dv', 'fa', 'ha', 'iw', 'khw', 'ks', 'ku', 'ps', 'ur', 'yi']
+
+    def direction_for_language(self, lang):
+        if lang in self.rtl_languages:
+            return 'rtl'
+        return 'ltr'
 
 
 class GoogleApiManager:
