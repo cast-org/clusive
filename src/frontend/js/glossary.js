@@ -75,7 +75,7 @@ function load_translation(text) {
         },
         data: {
             text: text,
-            language: clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translation_language
+            language: clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage
         }
     })
         .done(function(data) {

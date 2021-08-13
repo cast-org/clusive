@@ -23,7 +23,7 @@ class TranslateTextView(LoginRequiredMixin, View):
                                 request=request,
                                 language=lang,
                                 text=text)
-        if lang == 'default':
+        if not lang or lang == 'default':
             result = 'What language do you want to translate to? Choose one in Settings under Reading Tools'
         else:
             client = GoogleApiManager.get_google_translate_client()
