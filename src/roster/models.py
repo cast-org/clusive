@@ -180,7 +180,7 @@ class ClusiveUser(models.Model):
 
     education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
                                         verbose_name='Education levels',
-                                        default=[])
+                                        blank=True, default=[])
 
     # Site that this user is connected to. Although users can have multiple Periods,
     # these are generally assumed to be all part of one Site.
