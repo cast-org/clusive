@@ -24,8 +24,9 @@ var manifest_path = "{{ manifest_path }}";
 {% endblock %}
 
 {% block sidebar_end %}
-<!-- Item needed to anchor the definition popover -->
+<!-- Items needed to anchor the definition and translate popovers -->
 <button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
+<button id="translateLocator" class="sr-only" aria-hidden="true" tabindex="-1">Translate</button>
 
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}
@@ -95,19 +96,12 @@ var manifest_path = "{{ manifest_path }}";
 
         var selectionMenuItems = [
             {
+                id: 'translateIcon',
+                callback: function(selection) { contextTranslate(selection); }
+            },
+            {
                 id: 'lookupIcon',
-                callback: function (selection) {
-                    var match = selection.match('\\w+');
-                    if (match) {
-                        word = match[0];
-                    } else {
-                        console.info('Did not find any word in selection: %s', text);
-                    }
-                    console.debug('looking up: ', word);
-                    window.parent.load_definition(0, word);
-                    window.parent.$('#glossaryLocator').CFW_Popover('show');
-                    window.parent.glossaryPop_focus($('#lookupIcon'));
-                }
+                callback: function(selection) { contextLookup(selection); }
             }
         ];
 
@@ -257,7 +251,7 @@ var manifest_path = "{{ manifest_path }}";
                     document.getElementById('nextResourceButton').disabled = atEnd;
                     return trackReadingLocation(pub_id, pub_version, locator);
                 },
-                updateUserSettings: function (userSettings) {                    
+                updateUserSettings: function (userSettings) {
                     return Promise.resolve();
                 }
             }
@@ -273,7 +267,7 @@ var manifest_path = "{{ manifest_path }}";
             console.debug("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
                     console.debug("D2Reader began loading resource at: " +  new Date());
-                    clusiveTTS.readerReady = true;                    
+                    clusiveTTS.readerReady = true;
                 }).catch(error => {
                     console.error("error loading: ", error);
                 });
