@@ -86,6 +86,11 @@
                 args: ['{change}.value', 'preferences.cisl_prefs_readSpeed', '{that}'],
                 excludeSource: 'init'
             },
+            'modalSettings.translationLanguage': {
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
+                args: ['{change}.value', 'preferences.cisl_prefs_translation_language', '{that}'],
+                excludeSource: 'init'
+            },            
             'modalSettings.readVoice': {
                 funcName: 'cisl.prefs.modalSettings.handleChosenVoiceSetting',
                 args: ['{change}.value', '{that}'],
@@ -113,6 +118,7 @@
             readSpeed: '.cislc-modalSettings-readSpeed',
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
+            translationLanguageButton: '.translation-lang-button',
             voiceButton: '.voice-button'
         },
         bindings: {
@@ -178,13 +184,34 @@
 
         cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);                
 
+        cisl.prefs.modalSettings.handleTranslationLanguagePreferences(fluid.get(preferences, 'cisl_prefs_translation_language'), that);                
+
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
+    cisl.prefs.modalSettings.handleTranslationLanguagePreferences = function (translationLanguageCode, that) {
+        console.debug("handleTranslationLanguagePreferences started; translation_language: " + translationLanguageCode);
+        var langButtons = that.locate('translationLanguageButton');
+        langButtons.each(function (idx) {
+            console.debug("checking for current translation language code: " + translationLanguageCode);
+            var buttonLanguageCode = $(this).attr("value");
+            var match = buttonLanguageCode===translationLanguageCode;
+            console.debug("translation: comparing button code and language code", match);
+            if(buttonLanguageCode===translationLanguageCode) {
+                var langButton = $(this);    
+                // Currently necessary to avoid clicking button before Reader is ready                
+                setTimeout(function() {
+                    console.debug("clicking matching language button", langButton);
+                    $(langButton).click();               
+                }, 500, langButton);   
+            }
+        });
+    }
+
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
-        console.log("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
+        console.debug("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
         var currentReadVoices = fluid.get(that.model.preferences, 'cisl_prefs_readVoices');
-        console.log("currentReadVoices preference:", currentReadVoices);
+        console.debug("currentReadVoices preference:", currentReadVoices);
         
         // Remove the voice if it's already in the list
         var filteredReadVoices;

@@ -482,6 +482,26 @@ function setupVoiceListing() {
     });
 }
 
+function setupTranslationLanguageListing() {
+    var container = $('#langListing');
+    if (container.length) {
+        console.debug("Generating translation language list");
+        // TODO: This is where we'd generate the translation language listing dynamically        
+    }
+    container.on('click', '.translation-lang-button', function() {
+        var language = this.textContent;
+        console.debug('Translation language choice: ', language);
+        // Show language as dropdown label
+        $('#currentLang').html(language);
+        // Mark the dropdown item as active.
+        container.find('.translation-lang-button').removeClass('active');
+        $(this).addClass('active');        
+        var languageCode = $(this).attr("value");
+        // Set on the modal's model of preferences
+        clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.translationLanguage', languageCode);
+    });
+}
+
 function clearVoiceListing() {
     'use strict';
 
@@ -723,6 +743,8 @@ $(window).ready(function() {
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
+
+    setupTranslationLanguageListing();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
