@@ -1,13 +1,13 @@
 import logging
 from datetime import timedelta
-
-from django.db import models
 from uuid import uuid4
-from roster.models import Period, ClusiveUser, Roles
-from django.utils import timezone
-from library.models import BookVersion
-import caliper
 
+import caliper
+from django.db import models
+from django.utils import timezone
+
+from library.models import BookVersion
+from roster.models import Period, ClusiveUser, Roles
 from tips.models import TipType
 
 logger = logging.getLogger(__name__)
@@ -75,9 +75,9 @@ class Event(models.Model):
     page = models.CharField(max_length=128, null=True)
     # for TOOL_USE_EVENT, records what tool was used; for preferences, which preference
     control = models.CharField(max_length=64, null=True)
-    # For assessment events, the question being answered.
+    # For assessment events, the question being answered. For translation, the language.
     object = models.CharField(max_length=128, null=True)
-    # For events that operate on text (lookup, highlight), the actual text looked up or highlighted
+    # For events that operate on text (lookup, highlight, translate), the actual text looked up or highlighted
     # For preferences, the new value chosen for the preference
     value = models.CharField(max_length=128, null=True)
     # If this is a page-view event that included a Tip, that is recorded here.
@@ -150,4 +150,3 @@ class Event(models.Model):
     def __str__(self):
         anon_id = "noactor" if not self.actor else self.actor.anon_id
         return '%s:%s (%s)' % (anon_id, self.action, self.id)
- 

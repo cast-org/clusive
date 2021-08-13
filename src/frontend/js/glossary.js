@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents, DJANGO_CSRF_TOKEN */
+/* global vocabCheck, clusiveEvents, clusivePrefs, DJANGO_CSRF_TOKEN */
 /* exported load_translation */
 
 // Glossary-related functionality
@@ -72,7 +72,8 @@ function load_translation(text) {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
         },
         data: {
-            text: text
+            text: text,
+            language: clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translation_language
         }
     })
         .done(function(data) {
