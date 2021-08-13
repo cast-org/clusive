@@ -65,6 +65,7 @@ function load_definition(cued, word) {
 
 function load_translation(text) {
     $('#translateSource').text(text);
+    $('#translateOutput').text('Loading...');
     $('#translateLocator').CFW_Popover('show');
     $.ajax('/translation/translate', {
         method: 'POST',
