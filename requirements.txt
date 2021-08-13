@@ -5,6 +5,7 @@ django-debug-toolbar==3.2.1
 django-multiselectfield==0.1.12
 django-settings-export==1.2.1
 future==0.18.2
+google-cloud-translate==2.0.1
 gunicorn==20.1.0
 lemminflect==0.2.2
 mailchimp-marketing==3.0.42
