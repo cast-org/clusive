@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents */
+/* global vocabCheck, clusiveEvents, DJANGO_CSRF_TOKEN */
 /* exported load_translation */
 
 // Glossary-related functionality
@@ -66,10 +66,28 @@ function load_definition(cued, word) {
 function load_translation(text) {
     $('#translateSource').text(text);
     $('#translateLocator').CFW_Popover('show');
-    // TODO ajax load the translated text.
-    if ($('#translatePop').is(':visible') && !translateBeenDragged) {
-        $('#translatePop').CFW_Popover('locateUpdate');
-    }
+    $.ajax('/translation/translate', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            text: text
+        }
+    })
+        .done(function(data) {
+            $('#translateOutput').text(data.result);
+        })
+        .fail(function(err) {
+            console.error(err);
+            $('#translateOutput').html(err.responseText);
+        })
+        .always(function() {
+            var $translatePop = $('#translatePop');
+            if ($translatePop.is(':visible') && !translateBeenDragged) {
+                $translatePop.CFW_Popover('locateUpdate');
+            }
+        });
 }
 
 // Methods related to the wordbank page

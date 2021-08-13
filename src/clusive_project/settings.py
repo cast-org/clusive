@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import os
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'authoring.apps.AuthoringConfig',
     'tips.apps.TipsConfig',
     'assessment.apps.AssessmentConfig',
+    'translation.apps.TranslationConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
     # added for django-allauth:
