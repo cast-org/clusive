@@ -30,7 +30,7 @@ from pages.views import ThemedPageMixin
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
-    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm
+    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm, GoogleRosterForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
 
@@ -720,6 +720,58 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormV
         selected_course_id = self.request.POST.get('course_select')
         return reverse('get_google_roster', kwargs={'course_id': selected_course_id})
 
+class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):
+    form_class = GoogleRosterForm
+    course = {'name': 'Unkonwn'}
+    roster = []
+    template_name = 'roster/manage_show_google_roster.html'
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(FormView, self).get_initial(**kwargs)
+        tuples = self.make_student_tuples(self.roster)
+        initial['students'] = tuples
+        initial['google_roster'] = self.roster
+        initial['course'] = self.course
+        return initial
+
+    def make_student_tuples(self, roster):
+        tuples = []
+        for student in roster:
+            email = student['profile']['emailAddress']
+            user_with_that_email = User.objects.filter(email=email)
+            if user_with_that_email.exists():
+                clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
+                a_student = (
+                    user_with_that_email.username,
+                    email,
+                    clusive_user.role,
+                    'Existing account')
+            else:
+                a_student = (
+                    student['profile']['name']['givenName'],
+                    email,
+                    Roles.STUDENT,
+                    'New to Clusive')
+            tuples.append(a_student)
+        return tuples
+
+    def get_form(self, form_class=None):
+        kwargs = self.get_form_kwargs()
+        return GoogleRosterForm(**kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        cu = request.clusive_user
+        if not cu.can_manage_periods:
+            self.handle_no_permission()
+        self.clusive_user = cu
+        google_courses = self.request.session.get('google_courses', [])
+        for course in google_courses:
+            if course['id'] == kwargs['course_id']:
+                self.course = course
+                break
+        self.roster = self.request.session.get('google_roster', [])
+        return super().dispatch(request, *args, **kwargs)
+
 class GetGoogleCourses(LoginRequiredMixin, View):
     provider = 'google'
     classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.profile.emails'
@@ -798,7 +850,7 @@ class GetGoogleRoster(GetGoogleCourses):
 
         request.session['google_roster'] = students
         # TODO: create view/form for 'manage_google_roster'
-        return HttpResponseRedirect(reverse('manage_google_roster'));
+        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
 
 ########################################
 #

@@ -204,7 +204,6 @@ class PeriodForm(ModelForm):
         }
 
 class GoogleCoursesForm(Form):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.courses = kwargs['initial'].get('courses', [])
@@ -213,3 +212,9 @@ class GoogleCoursesForm(Form):
             required=True,
             widget=forms.RadioSelect
         )
+
+class GoogleRosterForm(Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.course_name = kwargs['initial'].get('course').get('name')
+        self.student_tuples = kwargs['initial'].get('students')
