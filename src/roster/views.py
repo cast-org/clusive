@@ -47,8 +47,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -849,7 +847,6 @@ class GetGoogleRoster(GetGoogleCourses):
             logger.debug('- %s, %s', student['profile']['name']['givenName'], student['profile']['emailAddress'])
 
         request.session['google_roster'] = students
-        # TODO: create view/form for 'manage_google_roster'
         return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
 
 ########################################

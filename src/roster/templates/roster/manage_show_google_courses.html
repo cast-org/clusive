@@ -1,0 +1,32 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block title %}Import Google Course{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="manage" %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <main id="content" tabindex="-1">
+        <div class="row">
+            <div class="col">
+                <h1>Import class</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <legend>Select Google Classroom class:</legend>
+                    {% for radio in form.course_select %}
+                    <div class="form-group mb-1">
+                        {{ radio }}
+                    </div>
+                    {% endfor %}
+                    <input type="submit" class="btn btn-secondary" value="Next"/>
+                    <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
