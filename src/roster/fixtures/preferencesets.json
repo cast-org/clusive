@@ -14,7 +14,7 @@
         "fields": {
             "name": "default_reading_tools",
             "description": "Default Clusive reading tools preference set",
-            "prefs_json": "{\"cisl_prefs_readSpeed\":1.0,\"cisl_prefs_readVoices\":[]}"
+            "prefs_json": "{\"cisl_prefs_readSpeed\":1.0,\"cisl_prefs_readVoices\":[],\"cisl_prefs_translation_language\":\"default\"}"
         }
     }    
 ]
