@@ -737,8 +737,9 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVi
         student_role = [item[1] for item in Roles.ROLE_CHOICES if item[0] == Roles.STUDENT][0]
         for student in roster:
             email = student['profile']['emailAddress']
-            user_with_that_email = User.objects.filter(email=email)
-            if user_with_that_email.exists():
+            users = User.objects.filter(email=email)
+            if users.exists():
+                user_with_that_email = users[0]
                 clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
                 a_student = (
                     user_with_that_email.username,
