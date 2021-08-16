@@ -62,6 +62,10 @@
             readVoices: {
                 type: 'cisl.prefs.readVoices',
                 panel: null
+            },
+            translationLanguage: {
+                type: 'cisl.prefs.translation.language',
+                panel: null
             }
 
         }
@@ -164,6 +168,17 @@
             'cisl.prefs.glossary': {
                 type: 'boolean',
                 default: true
+            }
+        }
+    });
+
+    // Add a language preference for the translation functionality
+    fluid.defaults('cisl.prefs.schemas.translation.language', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.translation.language': {
+                type: 'string',
+                default: 'default'
             }
         }
     });

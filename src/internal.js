@@ -1,3 +1,5 @@
+// This is the Javascript file that is injected into all R2D2BC frames.
+
 // Reference from within the iframe to the clusivePrefs global in the parent window
 var clusivePrefs = window.parent.window.clusivePrefs;
 
@@ -65,7 +67,6 @@ function openGlossaryForCue(elt) {
     window.parent.$('#glossaryLocator').CFW_Popover('show');
     window.parent.glossaryPop_focus($(elt));
 }
-
 
 $(function() {
     var $body = $('body');

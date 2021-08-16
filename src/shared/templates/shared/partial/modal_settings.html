@@ -227,6 +227,23 @@
                                 <span class="icon-stop" aria-hidden="true"></span>
                             </button>
                         </div>
+                        <div class="setting">
+                            <fieldset>
+                                <legend class="setting-title">Translate</legend>
+                                <div>
+                                    Language:
+                                    <button id="langMenu" type="button" class="mb-1 link-btn" data-cfw="dropdown">
+                                        <span id="currentLang">Choose...</span>
+                                        <span class="caret" aria-hidden="true"></span>
+                                    </button>
+                                    <ul id="langListing" class="dropdown-menu dropreverse">
+                                        {% for lang in translation_languages %}
+                                        <li><button type="button" class="dropdown-item translation-lang-button" value="{{lang.language}}">{{lang.name}}</button></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </div>
                         <div class="setting setting-btn-right">
                             <button class="btn btn-primary btn-small cislc-modalSettings-reset-reading" type="button">Reset reading settings</button>
                         </div>

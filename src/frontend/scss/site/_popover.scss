@@ -131,3 +131,9 @@
         max-width: calc(100vw - 7.625rem);
     }
 }
+
+.popover-translate {
+    .gt-icon .svg-icon-primary {
+        fill: var(--CT_translateLogoColor);
+    }
+}

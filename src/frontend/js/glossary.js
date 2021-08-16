@@ -1,10 +1,12 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents */
+/* global vocabCheck, clusiveEvents, clusivePrefs, DJANGO_CSRF_TOKEN */
+/* exported load_translation */
 
 // Glossary-related functionality
 
 var glossaryCurrentWord = null;
 var glossaryBeenDragged = false;
+var translateBeenDragged = false;
 
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
@@ -59,6 +61,37 @@ function load_definition(cued, word) {
     }
     $('#glossaryTitle').html(title);
     $('#glossaryBody').html(body);
+}
+
+function load_translation(text) {
+    $('#translateSource').text(text);
+    var $translateOutput = $('#translateOutput');
+    $translateOutput.text('Loading...');
+    $('#translateLocator').CFW_Popover('show');
+    $.ajax('/translation/translate', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            text: text,
+            language: clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage
+        }
+    })
+        .done(function(data) {
+            $translateOutput.html(data.result);
+            $translateOutput.css('direction', data.direction);
+        })
+        .fail(function(err) {
+            console.error(err);
+            $translateOutput.html(err.responseText);
+        })
+        .always(function() {
+            var $translatePop = $('#translatePop');
+            if ($translatePop.is(':visible') && !translateBeenDragged) {
+                $translatePop.CFW_Popover('locateUpdate');
+            }
+        });
 }
 
 // Methods related to the wordbank page
@@ -207,7 +240,6 @@ vocabCheck.done = function() {
     return false;
 };
 
-
 // Set up listener functions after page is loaded
 
 $(function() {
@@ -234,6 +266,31 @@ $(function() {
         })
         .on('dragStart.cfw.popover', function() {
             glossaryBeenDragged = true;
+        });
+
+    $('#translateLocator').CFW_Popover({
+        target: '#translatePop',
+        trigger: 'manual',
+        placement: 'reverse',
+        drag: true,
+        popperConfig: {
+            positionFixed: true,
+            eventsEnabled: false,
+            modifiers: {
+                preventOverflow: {
+                    boundariesElement: 'viewport'
+                },
+                computeStyle: {
+                    gpuAcceleration: false
+                }
+            }
+        }
+    })
+        .on('afterHide.cfw.popover', function() {
+            translateBeenDragged = false;
+        })
+        .on('dragStart.cfw.popover', function() {
+            translateBeenDragged = true;
         });
 
     // When ranking in the glossary popup is selected, notify server
