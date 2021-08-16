@@ -45,6 +45,16 @@
         }
     }
 
+    .modal-dialog {
+        @include media-breakpoint-down(xs) {
+            padding-left: 1.25rem;
+
+            &.modal-sm {
+                max-width: calc(#{$modal-sm} + 1.25rem);
+            }
+        }
+    }
+
     .modal-content {
         overflow: visible;  // Hopefully does not break the 'magic' - needed for floating logo
         color: var(--CT_settingModalContentColor);

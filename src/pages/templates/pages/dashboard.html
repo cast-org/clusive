@@ -40,11 +40,6 @@
                         {% include "pages/partial/dashboard_panel_class_affect.html" with data=data.class_affect %}
                     </div>
                 {% endif %}
-                {% if panels.star_rating %}
-                    <div class="col-md-6 col-lg-12">
-                    {% include "pages/partial/dashboard_panel_star_rating.html" with data=data.star_rating %}
-                    </div>
-                {% endif %}
                 {% if panels.star_results %}
                     <div class="col-md-6 col-lg-12">
                     {% include "pages/partial/dashboard_panel_star_rating_results.html" with data=data.star_results %}

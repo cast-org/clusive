@@ -1,0 +1,22 @@
+<div class="popover popover-translate popover-scrollable" id="translatePop">
+    <div role="document">
+        <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+        <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
+        <div class="popover-header">
+            <strong id="translateTitle">
+                Translator
+            </strong>
+        </div>
+        <div class="popover-body">
+            <div class="translate-source">
+                <p id="translateSource">Loading...</p>
+            </div>
+            <div class="translate-output popover-section">
+                <p id="translateOutput">Loading...</p>
+            </div>
+        </div>
+        <div class="popover-footer">
+            {% include "shared/partial/icons/translated-by-google.svg" with class="gt-icon" %}
+        </div>
+    </div>
+</div>

@@ -33,6 +33,7 @@ urlpatterns = [
     path('library/', include('library.urls')),
     path('tips/', include('tips.urls')),
     path('messagequeue/', include('messagequeue.urls')),
+    path('translation/', include('translation.urls')),
     path('progressbarupload/', include('progressbarupload.urls')),
     path('accounts/', include('allauth.socialaccount.providers.google.urls')),
     path('__debug__/', include(debug_toolbar.urls)),

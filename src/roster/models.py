@@ -180,7 +180,7 @@ class ClusiveUser(models.Model):
 
     education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
                                         verbose_name='Education levels',
-                                        default=[])
+                                        blank=True, default=[])
 
     # Site that this user is connected to. Although users can have multiple Periods,
     # these are generally assumed to be all part of one Site.
@@ -424,7 +424,7 @@ class Preference (models.Model):
             return []
 
         # Array of strings stored as string
-        if val[0] == "[" and val[-1] == "]":
+        if len(val)>1 and val[0] == "[" and val[-1] == "]":
             return [x.strip()[1:-1] for x in val[1:-1].split(',')]
 
         # Booleans

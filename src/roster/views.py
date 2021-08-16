@@ -26,7 +26,7 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
-from pages.views import ThemedPageMixin
+from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
@@ -412,7 +412,7 @@ def upload_csv(request):
     return render(request, template, context)
 
 
-class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
+class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     template_name = 'roster/manage.html'
     periods = None
     current_period = None
@@ -461,7 +461,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
         event.page = 'Manage'
 
 
-class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, CreateView):
+class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, CreateView):
     model = User
     form_class = SimpleUserCreateForm
     template_name = 'roster/manage_create_user.html'
@@ -514,7 +514,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
     def configure_event(self, event: Event):
         event.page = 'ManageCreateStudent'
 
-class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
+class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
     model = User
     form_class = UserEditForm
     template_name = 'roster/manage_edit_user.html'
@@ -554,7 +554,7 @@ class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Update
         event.page = 'ManageEditStudent'
 
 
-class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
+class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
     model = Period
     form_class = PeriodForm
     template_name = 'roster/manage_edit_period.html'
@@ -572,7 +572,7 @@ class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Upda
         event.page = 'ManageEditPeriod'
 
 
-class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, CreateView):
+class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, CreateView):
     model = Period
     form_class = PeriodForm
     template_name = 'roster/manage_create_period.html'

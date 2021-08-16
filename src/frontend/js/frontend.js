@@ -1,5 +1,5 @@
-/* global clusiveContext, PAGE_EVENT_ID, fluid */
-/* exported updateLibraryData */
+/* global Masonry, clusiveTTS, clusivePrefs, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate */
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options) {
@@ -19,9 +19,6 @@ $.ajaxPrefilter(function(options) {
         }
     };
 });
-
-/* global Masonry, clusiveTTS, clusivePrefs, TOOLTIP_NAME */
-/* exported getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
 
 var clusiveBreakpoints = ['xs', 'sm', 'md', 'lg', 'xl'];
 var libraryMasonryApi = null;
@@ -482,6 +479,26 @@ function setupVoiceListing() {
     });
 }
 
+function setupTranslationLanguageListing() {
+    var container = $('#langListing');
+    if (container.length) {
+        console.debug("Generating translation language list");
+        // TODO: This is where we'd generate the translation language listing dynamically        
+    }
+    container.on('click', '.translation-lang-button', function() {
+        var language = this.textContent;
+        console.debug('Translation language choice: ', language);
+        // Show language as dropdown label
+        $('#currentLang').html(language);
+        // Mark the dropdown item as active.
+        container.find('.translation-lang-button').removeClass('active');
+        $(this).addClass('active');        
+        var languageCode = $(this).attr("value");
+        // Set on the modal's model of preferences
+        clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.translationLanguage', languageCode);
+    });
+}
+
 function clearVoiceListing() {
     'use strict';
 
@@ -701,6 +718,31 @@ function dashboardSetup() {
     });
 }
 
+// Context (selection) menu methods
+
+function contextLookup(selection) {
+    'use strict';
+
+    var match = selection.match('\\w+');
+    var word = '';
+    if (match) {
+        word = match[0];
+    } else {
+        console.info('Did not find any word in selection: %s', selection);
+    }
+    console.debug('looking up: ', word);
+    window.parent.load_definition(0, word);
+    window.parent.$('#glossaryLocator').CFW_Popover('show');
+    window.parent.glossaryPop_focus($('#lookupIcon'));
+}
+
+function contextTranslate(selection) {
+    'use strict';
+
+    console.info('translate: ' + selection);
+    load_translation(selection);
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -723,6 +765,8 @@ $(window).ready(function() {
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
+
+    setupTranslationLanguageListing();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

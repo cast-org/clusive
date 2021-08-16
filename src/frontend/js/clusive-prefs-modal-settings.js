@@ -80,10 +80,15 @@
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_glossary', '{that}'],
                 excludeSource: 'init'
-            },     
+            },
             'modalSettings.readSpeed': {
-                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',                
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_readSpeed', '{that}'],
+                excludeSource: 'init'
+            },
+            'modalSettings.translationLanguage': {
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
+                args: ['{change}.value', 'preferences.cisl_prefs_translationLanguage', '{that}'],
                 excludeSource: 'init'
             },
             'modalSettings.readVoice': {
@@ -113,6 +118,7 @@
             readSpeed: '.cislc-modalSettings-readSpeed',
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
+            translationLanguageButton: '.translation-lang-button',
             voiceButton: '.voice-button'
         },
         bindings: {
@@ -154,11 +160,11 @@
     };
 
     cisl.prefs.modalSettings.applyModalSettingToPreference = function(changedValue, path, that) {
-        that.applier.change(path, changedValue, "ADD", "applyModalSettingToPreference");                
+        that.applier.change(path, changedValue, "ADD", "applyModalSettingToPreference");
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
-    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {        
+    cisl.prefs.modalSettings.setModalSettingsByPreferences = function(preferences, that) {
 
         that.applier.change('modalSettings.textSize', fluid.get(preferences, 'fluid_prefs_textSize'));
 
@@ -176,16 +182,37 @@
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
 
-        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);                
+        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);
+
+        cisl.prefs.modalSettings.handleTranslationLanguagePreferences(fluid.get(preferences, 'cisl_prefs_translationLanguage'), that);
 
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
+    cisl.prefs.modalSettings.handleTranslationLanguagePreferences = function (translationLanguageCode, that) {
+        console.debug("handleTranslationLanguagePreferences started; translation_language: " + translationLanguageCode);
+        var langButtons = that.locate('translationLanguageButton');
+        langButtons.each(function (idx) {
+            console.debug("checking for current translation language code: " + translationLanguageCode);
+            var buttonLanguageCode = $(this).attr("value");
+            var match = buttonLanguageCode===translationLanguageCode;
+            console.debug("translation: comparing button code and language code", match);
+            if(buttonLanguageCode===translationLanguageCode) {
+                var langButton = $(this);
+                // Currently necessary to avoid clicking button before Reader is ready
+                setTimeout(function() {
+                    console.debug("clicking matching language button", langButton);
+                    $(langButton).click();
+                }, 500, langButton);
+            }
+        });
+    }
+
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
-        console.log("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
+        console.debug("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
         var currentReadVoices = fluid.get(that.model.preferences, 'cisl_prefs_readVoices');
-        console.log("currentReadVoices preference:", currentReadVoices);
-        
+        console.debug("currentReadVoices preference:", currentReadVoices);
+
         // Remove the voice if it's already in the list
         var filteredReadVoices;
         if(Array.isArray(currentReadVoices)) {
@@ -200,7 +227,7 @@
 
         console.log("new read voices: ", newReadVoices);
         that.applier.change('preferences.cisl_prefs_readVoices', newReadVoices);
-        
+
     }
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
@@ -216,21 +243,21 @@
                 return;
             }
             console.log("Checking for preferred voice: " + preferredVoice);
-            voiceButtons.each(function(idx) {                                
+            voiceButtons.each(function(idx) {
                 if(voiceFound) {
                     return;
                 }
                 var voiceName = $(this).text();
                 console.log("Current voice button being checked: " + voiceName);
-                if(voiceName === preferredVoice) {                    
+                if(voiceName === preferredVoice) {
                     voiceFound = true;
-                    var voiceButton = $(this);    
-                    // Currently necessary to avoid clicking button before Reader is ready                
+                    var voiceButton = $(this);
+                    // Currently necessary to avoid clicking button before Reader is ready
                     setTimeout(function() {
                         console.debug("clicking voice button", voiceButton);
-                        $(voiceButton).click();               
+                        $(voiceButton).click();
                     }, 500, voiceButton);
-                                                            
+
                 }
             });
         });
@@ -250,7 +277,7 @@
     fluid.binder.transforms.checkToBoolean = function(value) {
         return Boolean(fluid.get(value, 0));
     };
- 
+
     fluid.binder.transforms.checkToBoolean.invert = function(transformSpec) {
         transformSpec.type = 'fluid.binder.transforms.booleanToCheck';
         return transformSpec;
