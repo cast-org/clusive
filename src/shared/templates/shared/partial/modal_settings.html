@@ -229,19 +229,13 @@
                         </div>
                         <div class="setting">
                             <fieldset>
-                                <legend class="setting-title">Translate</legend>
-                                <div>
-                                    Language:
-                                    <button id="langMenu" type="button" class="mb-1 link-btn" data-cfw="dropdown">
-                                        <span id="currentLang">Choose...</span>
-                                        <span class="caret" aria-hidden="true"></span>
-                                    </button>
-                                    <ul id="langListing" class="dropdown-menu dropreverse">
-                                        {% for lang in translation_languages %}
-                                        <li><button type="button" class="dropdown-item translation-lang-button" value="{{lang.language}}">{{lang.name}}</button></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                                <legend class="setting-title">Translation language</legend>
+                                <select id="language-select">
+                                    <option value="default">Choose...</option>
+                                    {% for lang in translation_languages %}
+                                    <option value="{{lang.language}}">{{lang.name}}</option>
+                                    {% endfor %}
+                                </select>
                             </fieldset>
                         </div>
                         <div class="setting setting-btn-right">
