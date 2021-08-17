@@ -15,9 +15,9 @@
                 <h1>Add Class</h1>
                 <form method="post">
                     {% csrf_token %}
-                    <div class="form-group mb-1">
+                    <div class="form-group">
                         {% for radio in form.create_or_import %}
-                            <div class="form-check form-checkradio">
+                            <div class="form-check form-checkradio mb-1">
                                 {{ radio.tag | formcontrol }}
                                 <label class="form-check-label" for="{{ radio.id_for_label }}">
                                     <strong>{{ radio.choice_label }}</strong>
@@ -26,7 +26,7 @@
                                     <div class="mt-n0_5 ms-1">
                                     {{ form.name.label_tag | formlabel }}
                                     {{ form.name.errors }}
-                                    {{ form.name | formcontrol}}
+                                    {{ form.name | formcontrol }}
                                     </div>
                                 {% endif %}
                             </div>
@@ -49,7 +49,7 @@
     const inputRadios = document.querySelectorAll('[id^="id_create_or_import_"]');
 
     function updateNameRequired(input) {
-        const formGroup = input.closest('.form-group');
+        const formGroup = input.closest('.form-check');
 
         if (formGroup.contains(inputName)) {
             inputName.setAttribute('required', "");
