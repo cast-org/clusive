@@ -30,16 +30,6 @@
                     <input type="submit" class="btn btn-secondary" value="Next"/>
                     <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
                 </form>
-                <hr width=100%>
-                <form action="/account/get_google_courses">
-                    {% csrf_token %}
-                    <fieldset>
-                        <legend>Google Courses</legend>
-                        <p>
-                            <input type="submit" class="btn btn-secondary" value="Import from Google Classroom"/>
-                        </p>
-                    </fieldset>
-                </form>
             </div>
         </div>
     </main>
