@@ -479,16 +479,6 @@ function setupVoiceListing() {
     });
 }
 
-function setupTranslationLanguageListing() {
-    'use strict';
-
-    $('#language-select').on('change', function() {
-        var language = $(this).val();
-        console.debug('Translation language choice: ', language);
-        clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.translationLanguage', language);
-    });
-}
-
 function clearVoiceListing() {
     'use strict';
 
@@ -755,8 +745,6 @@ $(window).ready(function() {
 
     setupVoiceListing();
     window.speechSynthesis.onvoiceschanged = setupVoiceListing;
-
-    setupTranslationLanguageListing();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
