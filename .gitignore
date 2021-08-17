@@ -160,4 +160,5 @@ src/pip-delete-this-directory.txt
 
 /staticfiles
 
-win-fresh-local-install.ps1
+# Any secrets used for local development
+/secrets
