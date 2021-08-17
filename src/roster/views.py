@@ -506,7 +506,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Sett
                                         role=Roles.STUDENT,
                                         anon_id=ClusiveUser.next_anon_id(),
                                         permission=perm)
-        
+
         # Add user to the Period
         self.period.users.add(cu)
         return super().form_valid(form)
@@ -590,17 +590,11 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
         self.clusive_user = cu
         return super().dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        # Check request for type of class creation. If 'import'
-        # (not manual creation), redirect to GET Google course list
-        logger.debug('Value of create_or_import: %s', request.POST.get('create_or_import'))
-        if request.POST.get('create_or_import') == 'import':
-            return(HttpResponseRedirect(reverse('get_google_courses')))
-        else:
-            return super().post(self, request, *args, **kwargs)
-
     def get_success_url(self):
-        return reverse('manage', kwargs={'period_id': self.object.id})
+        if self.request.POST.get('create_or_import') == 'import':
+            return reverse('get_google_courses')
+        else:
+            return reverse('manage', kwargs={'period_id': self.object.id})
 
     def form_valid(self, form):
         result = super().form_valid(form)
@@ -788,15 +782,6 @@ class GetGoogleCourses(LoginRequiredMixin, View):
         service = build('classroom', 'v1', credentials=user_credentials)
         try:
             results = service.courses().list(pageSize=10).execute()
-            # For debugging:  To avoid multiple trips to Google, comment out
-            # above line and uncomment following line that gives a mock list
-            # of Google courses that can be used for testing the workflow;
-            # hoowever, these courses won't necessarily return a roster from
-            # Google.
-#             results = {'courses': [
-#                {'id': '377782792452', 'name': 'English (Google)', 'section': 'Section II', 'descriptionHeading': 'English (Google) Section II', 'room': 'E10-104', 'ownerId': '110080685778429079941', 'creationTime': '2021-08-10T15:50:18.848Z', 'updateTime': '2021-08-10T15:50:18.848Z', 'enrollmentCode': 'vyvucup', 'courseState': 'ACTIVE', 'alternateLink': 'https://classroom.google.com/c/Mzc3NzgyNzkyNDUy', 'teacherGroupEmail': 'English_Google_Section_II_teachers_489054a6@classroom.google.com', 'courseGroupEmail': 'English_Google_Section_II_83d777a6@classroom.google.com', 'teacherFolder': {'id': '173iM1knZcx1KE47ICs4w99s5WGOyTH6xQMobqL6_kXJKbAxJm_zk9OTL2doHm6H_7Q03xHHs', 'title': 'English (Google) Section II', 'alternateLink': 'https://drive.google.com/drive/folders/173iM1knZcx1KE47ICs4w99s5WGOyTH6xQMobqL6_kXJKbAxJm_zk9OTL2doHm6H_7Q03xHHs'}, 'guardiansEnabled': False, 'calendarId': 'classroom104239231972910390941@group.calendar.google.com'},
-#                {'id': '374482549473', 'name': 'Clusive I (Google)', 'section': 'Section I', 'descriptionHeading': 'Clusive I Section I', 'room': 'TLC-201', 'ownerId': '110080685778429079941', 'creationTime': '2021-07-26T21:49:39.246Z', 'updateTime': '2021-08-10T15:20:57.775Z', 'enrollmentCode': '556p2bg', 'courseState': 'ACTIVE', 'alternateLink': 'https://classroom.google.com/c/Mzc0NDgyNTQ5NDcz', 'teacherGroupEmail': 'Clusive_I_Section_I_teachers_2cf97afc@classroom.google.com', 'courseGroupEmail': 'Clusive_I_Section_I_46aff155@classroom.google.com', 'teacherFolder': {'id': '1pZaPA1zUhFuPBh_H8vk6ML1klTZ4_Q6DwgWHVkMKK1KG9J5y0Cjg65SCw9C9h71qEZ22ZWU9', 'title': 'Clusive I Section I', 'alternateLink': 'https://drive.google.com/drive/folders/1pZaPA1zUhFuPBh_H8vk6ML1klTZ4_Q6DwgWHVkMKK1KG9J5y0Cjg65SCw9C9h71qEZ22ZWU9'}, 'guardiansEnabled': False, 'calendarId': 'classroom101992241531414538876@group.calendar.google.com'}
-#             ]}
         except HttpError as e:
             if e.status_code == 403:
                 request.session['add_scopes_return_uri'] = 'get_google_courses'
