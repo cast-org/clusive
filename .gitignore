@@ -160,6 +160,7 @@ src/pip-delete-this-directory.txt
 
 /staticfiles
 
+# Any secrets used for local development
 /secrets
 
 # Cypress
