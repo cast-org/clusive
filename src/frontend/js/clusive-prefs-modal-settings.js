@@ -190,23 +190,9 @@
     };
 
     cisl.prefs.modalSettings.handleTranslationLanguagePreferences = function (translationLanguageCode, that) {
-        console.debug("handleTranslationLanguagePreferences started; translation_language: " + translationLanguageCode);
-        var langButtons = that.locate('translationLanguageButton');
-        langButtons.each(function (idx) {
-            console.debug("checking for current translation language code: " + translationLanguageCode);
-            var buttonLanguageCode = $(this).attr("value");
-            var match = buttonLanguageCode===translationLanguageCode;
-            console.debug("translation: comparing button code and language code", match);
-            if(buttonLanguageCode===translationLanguageCode) {
-                var langButton = $(this);
-                // Currently necessary to avoid clicking button before Reader is ready
-                setTimeout(function() {
-                    console.debug("clicking matching language button", langButton);
-                    $(langButton).click();
-                }, 500, langButton);
-            }
-        });
-    }
+        console.debug('handleTranslationLanguagePreferences started; translation_language: ' + translationLanguageCode);
+        $('#language-select').val(translationLanguageCode);
+    };
 
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
         console.debug("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
