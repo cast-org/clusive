@@ -118,7 +118,7 @@
             readSpeed: '.cislc-modalSettings-readSpeed',
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
-            translationLanguageButton: '.translation-lang-button',
+            languageSelect: '.cislc-modalSettings-languageSelect',            
             voiceButton: '.voice-button'
         },
         bindings: {
@@ -129,6 +129,7 @@
             color: 'modalSettings.color',
             readSpeed: 'modalSettings.readSpeed',
             scroll: 'modalSettings.scroll',
+            languageSelect: 'modalSettings.translationLanguage',
             glossaryCheckbox: {
                 selector: 'glossary',
                 path: 'modalSettings.glossary',
@@ -184,14 +185,9 @@
 
         cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);
 
-        cisl.prefs.modalSettings.handleTranslationLanguagePreferences(fluid.get(preferences, 'cisl_prefs_translationLanguage'), that);
+        that.applier.change('modalSettings.translationLanguage', fluid.get(preferences, 'cisl_prefs_translationLanguage'));
 
         cisl.prefs.dispatchPreferenceUpdateEvent();
-    };
-
-    cisl.prefs.modalSettings.handleTranslationLanguagePreferences = function (translationLanguageCode, that) {
-        console.debug('handleTranslationLanguagePreferences started; translation_language: ' + translationLanguageCode);
-        $('#language-select').val(translationLanguageCode);
     };
 
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
