@@ -15,12 +15,19 @@
                 <h1>Import class</h1>
                 <form method="post">
                     {% csrf_token %}
-                    <legend>Select Google Classroom class:</legend>
-                    {% for radio in form.course_select %}
-                    <div class="form-group mb-1">
-                        {{ radio }}
-                    </div>
-                    {% endfor %}
+                    <fieldset>
+                        <legend>Select Google Classroom class:</legend>
+                        <div class="form-group">
+                            {% for radio in form.course_select %}
+                                <div class="form-check form-checkradio mb-1">
+                                    {{ radio.tag | formcontrol }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
                     <input type="submit" class="btn btn-secondary" value="Next"/>
                     <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
                 </form>
