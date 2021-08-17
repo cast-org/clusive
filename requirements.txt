@@ -8,7 +8,7 @@ future==0.18.2
 google-cloud-translate==2.0.1
 gunicorn==20.1.0
 lemminflect==0.2.2
-mailchimp-marketing==3.0.42
+mailchimp-marketing==3.0.58
 marisa-trie==0.7.5
 nltk==3.4.5
 numpy==1.17.4
