@@ -7,6 +7,7 @@ from multiselectfield import MultiSelectFormField
 
 from roster.models import Period, Roles, ClusiveUser, EducationLevels
 
+
 class ClusiveLoginForm(AuthenticationForm):
 
     def confirm_login_allowed(self, user: User):
@@ -165,13 +166,23 @@ class AgeCheckForm(Form):
 class PeriodForm(ModelForm):
 
     create_or_import = forms.ChoiceField(
-        choices=[('manual', "Create manually"),
-                 ('import', "Import class from Google Classroom")],
         required=True,
         widget=forms.RadioSelect)
     # Set the name input to not required for now.  In is_valid(), check the
     # choice:  if manual creation, then set the name as required
     name = forms.CharField(required=False)
+
+    def __init__(self, **kwargs):
+        self.allow_google = kwargs.pop('allow_google', False)
+        super().__init__(**kwargs)
+        self.fields['create_or_import'].choices = self.get_choices
+
+    def get_choices(self):
+        if self.allow_google:
+            return [('manual', "Create manually"),
+                    ('import', "Import class from Google Classroom")]
+        else:
+            return [('manual', "Create manually")]
 
     def is_valid(self):
         valid = super().is_valid()
@@ -202,6 +213,7 @@ class PeriodForm(ModelForm):
                 'class': 'form-control',
             })
         }
+
 
 class GoogleCoursesForm(Form):
     def __init__(self, *args, **kwargs):

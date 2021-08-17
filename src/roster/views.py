@@ -1,8 +1,12 @@
 import csv
 import json
 import logging
+from datetime import timedelta
+from urllib.parse import urlencode
 
-from django.conf import settings
+import requests
+from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
+from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model, logout
@@ -18,9 +22,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView
-
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 from eventlog.models import Event
 from eventlog.signals import preference_changed
@@ -33,19 +40,6 @@ from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserReg
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm, GoogleRosterForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
-
-from allauth.socialaccount.models import SocialToken, SocialApp
-from allauth.socialaccount.providers.oauth2.client import OAuth2Error
-from django.utils.crypto import get_random_string
-from datetime import timedelta
-import requests
-from urllib.parse import urlencode
-
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 
 logger = logging.getLogger(__name__)
 
@@ -581,6 +575,8 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
         instance=Period(site=self.clusive_user.get_site())
         kwargs = self.get_form_kwargs()
         kwargs['instance'] = instance
+        google_user = SocialAccount.objects.filter(user=self.clusive_user.user, provider='google').exists()
+        kwargs['allow_google'] = google_user
         return PeriodForm(**kwargs)
 
     def dispatch(self, request, *args, **kwargs):
@@ -866,7 +862,7 @@ class OAuth2Database(object):
         db_token.save()
 
 def add_scope_access(request):
-    """First step for the request-additional-scope-access workflow.  Sets a new 
+    """First step for the request-additional-scope-access workflow.  Sets a new
     `state` query parameter (the anti-forgery token) for the workflow, and
     stores it in the session as `oauth2_state`.  Redirects to provider's
     authorization end point."""
