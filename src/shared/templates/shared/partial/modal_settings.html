@@ -194,15 +194,15 @@
                             <a href="{% url 'sign_up_role' %}" class="btn btn-primary btn-small">Create an account to save your settings</a>
                         </div>
                         {% endif %}
-                        <form>                         
+                        <form>
                             <div class="setting">
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
-                                    <select class="cislc-modalSettings-readVoice">
-                                        <option value="default">Choose...</option>                                        
+                                    <select class="cislc-modalSettings-readVoice form-control">
+                                        <option value="default">Choose...</option>
                                     </select>
                                 </fieldset>
-                            </div>                            
+                            </div>
                             <div class="setting">
                                 <fieldset>
                                     <legend class="setting-title mb-0">Speed</legend>
@@ -225,8 +225,8 @@
                         <div class="setting">
                             <fieldset>
                                 <legend class="setting-title">Translation language</legend>
-                                <select class="cislc-modalSettings-languageSelect">
-                                    <option value="default">Choose...</option>                                    
+                                <select class="cislc-modalSettings-languageSelect form-control">
+                                    <option value="default">Choose...</option>
                                     {% for lang in translation_languages %}
                                     <option value="{{lang.language}}">{{lang.name}}</option>
                                     {% endfor %}
