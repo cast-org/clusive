@@ -50,6 +50,12 @@
                 args: ['{that}.model.preferences', '{that}']
             }
         },
+        listeners: {
+            'onCreate.setupVoiceListing': {
+                funcName: 'cisl.prefs.modalSettings.setupVoiceListing',
+                args: ['{that}']
+            }
+        },
         modelListeners: {
             'modalSettings.textSize': {
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
@@ -157,6 +163,15 @@
 
         }
     });
+
+    cisl.prefs.modalSettings.setupVoiceListing = function (that) {
+        console.log("cisl.prefs.modalSettings.setupVoiceListing");
+        clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
+            console.log("setupVoiceListing for ", voice);
+            var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`            
+            that.locate("readVoices").append(optionMarkup);
+        });
+    };
 
     cisl.prefs.modalSettings.getMappedValue = function(changedValue, map) {
         return map[changedValue];
