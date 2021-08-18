@@ -194,27 +194,12 @@
                             <a href="{% url 'sign_up_role' %}" class="btn btn-primary btn-small">Create an account to save your settings</a>
                         </div>
                         {% endif %}
-                        <form>
-                            <div class="setting">
-                                <fieldset>
-                                    <legend class="setting-title">Voice</legend>
-                                    <div class="option-read-voice">
-                                        <button id="voiceMenu" type="button" class="link-btn" data-cfw="dropdown">
-                                            <span id="currentVoice">Choose...</span>
-                                            <span class="caret" aria-hidden="true"></span>
-                                        </button>
-                                        <ul id="voiceListing" class="dropdown-menu dropreverse">
-                                        </ul>
-                                    </div>
-                                </fieldset>
-                            </div>
+                        <form>                         
                             <div class="setting">
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
                                     <select class="cislc-modalSettings-readVoice">
-                                        <option value="default">Choose...</option>
-                                        {# <option value="Microsoft Zira Desktop - English (United States)">Microsoft Zira Desktop - English (United States)</option>
-                                        <option value="Microsoft David Desktop - English (United States)">Microsoft David Desktop - English (United States)</option> #}
+                                        <option value="default">Choose...</option>                                        
                                     </select>
                                 </fieldset>
                             </div>                            

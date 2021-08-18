@@ -226,6 +226,7 @@
 
         console.log("new read voices: ", newReadVoices);
         that.applier.change('preferences.cisl_prefs_readVoices', newReadVoices);
+        clusiveTTS.setCurrentVoice(chosenVoice);
 
     }
 
