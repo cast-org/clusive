@@ -35,6 +35,10 @@
                             <td>{{ student.1 }}</td>
                             <td>{{ student.2 }}</td>
                             <td>{{ student.3 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td><p>There are no students in this class.</p></td>
                         {% endfor %}
                     </tbody>
                 </table>

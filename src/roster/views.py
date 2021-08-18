@@ -729,7 +729,7 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVi
             email = student['profile']['emailAddress']
             users = User.objects.filter(email=email)
             if users.exists():
-                user_with_that_email = users[0]
+                user_with_that_email = users.first()
                 clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
                 a_student = (
                     user_with_that_email.username,
@@ -815,7 +815,7 @@ class GetGoogleCourses(LoginRequiredMixin, View):
             google_user = SocialAccount.objects.get(user=user, provider='google')
             return google_user.uid
         except SocialAccount.DoesNotExist:
-            logger.debug('User %s is not a an SSO user', user.username)
+            logger.debug('User %s is not an SSO user', user.username)
             return None
 
 class GetGoogleRoster(GetGoogleCourses):
