@@ -164,16 +164,6 @@
         }
     });
 
-    cisl.prefs.modalSettings.setupVoiceListing = function (that) {
-        console.log("cisl.prefs.modalSettings.setupVoiceListing");
-        clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
-            console.debug("setupVoiceListing for ", voice);
-            var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`                        
-            var readVoiceSelect = that.locate("readVoice");            
-            readVoiceSelect.append(optionMarkup);
-        });
-    };
-
     cisl.prefs.modalSettings.getMappedValue = function(changedValue, map) {
         return map[changedValue];
     };
@@ -208,6 +198,18 @@
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
+
+    cisl.prefs.modalSettings.setupVoiceListing = function (that) {
+        console.log("cisl.prefs.modalSettings.setupVoiceListing");
+        clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
+            console.debug("setupVoiceListing for ", voice);
+            var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`                        
+            var readVoiceSelect = that.locate("readVoice");            
+            readVoiceSelect.append(optionMarkup);
+        });
+        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(that.model.preferences, "cisl_prefs_readVoices"), that);
+    };
+
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
         console.debug("handleChosenVoiceSetting started; chosen voice: " + chosenVoice);
         var currentReadVoices = fluid.get(that.model.preferences, 'cisl_prefs_readVoices');
@@ -235,35 +237,33 @@
     }
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
+        console.debug("handleReadVoicesPreference", readVoices, that);
         if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {            
             return;
         }
 
-        console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
+        console.debug("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
         var voiceFound = false;
-        var voiceButtons = that.locate('voiceButton');
+        var voiceOptions = that.locate('readVoice').find('option');
+        console.debug("handleReadVoicesPreference:voiceOptions", voiceOptions);
         readVoices.forEach(function (preferredVoice) {
             if(voiceFound) {
                 return;
             }
-            console.log("Checking for preferred voice: " + preferredVoice);
-            voiceButtons.each(function(idx) {
+            console.debug("handleReadVoicesPreference:Checking for preferred voice: " + preferredVoice);     
+
+            voiceOptions.each(function(idx) {
                 if(voiceFound) {
                     return;
                 }
-                var voiceName = $(this).text();
-                console.log("Current voice button being checked: " + voiceName);
-                if(voiceName === preferredVoice) {
+                var voiceName = $(this).val();
+                console.debug("handleReadVoicesPreference:Current voice option being checked: ", voiceName, $(this));
+                if(voiceName === preferredVoice && voiceName !== "default") {
+                    console.debug("handleReadVoicesPreference:Preferred voice found ", voiceName, preferredVoice);
+                    that.locate('readVoice').val(preferredVoice);
                     voiceFound = true;
-                    var voiceButton = $(this);
-                    // Currently necessary to avoid clicking button before Reader is ready
-                    setTimeout(function() {
-                        console.debug("clicking voice button", voiceButton);
-                        $(voiceButton).click();
-                    }, 500, voiceButton);
-
                 }
-            });
+            });                   
         });
 
     }
