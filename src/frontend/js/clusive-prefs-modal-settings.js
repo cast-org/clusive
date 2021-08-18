@@ -167,9 +167,10 @@
     cisl.prefs.modalSettings.setupVoiceListing = function (that) {
         console.log("cisl.prefs.modalSettings.setupVoiceListing");
         clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
-            console.log("setupVoiceListing for ", voice);
-            var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`            
-            that.locate("readVoices").append(optionMarkup);
+            console.debug("setupVoiceListing for ", voice);
+            var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`                        
+            var readVoiceSelect = that.locate("readVoice");            
+            readVoiceSelect.append(optionMarkup);
         });
     };
 
@@ -220,21 +221,24 @@
             });
         } else filteredReadVoices = [];
 
-        // Create a new array
-
+        // Create a new array with the chosen voice at the front 
         var newReadVoices = [chosenVoice].concat(filteredReadVoices);
 
-        console.log("new read voices: ", newReadVoices);
+        console.debug("new read voices: ", newReadVoices);
+
+        // Set array on the preference model
         that.applier.change('preferences.cisl_prefs_readVoices', newReadVoices);
+
+        // Set chosen voice in the TTS module
         clusiveTTS.setCurrentVoice(chosenVoice);
 
     }
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
-        if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {
-            // clearVoiceListing();
+        if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {            
             return;
         }
+
         console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
         var voiceFound = false;
         var voiceButtons = that.locate('voiceButton');
