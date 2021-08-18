@@ -48,12 +48,21 @@
             setModalSettingsByPreferences: {
                 funcName: 'cisl.prefs.modalSettings.setModalSettingsByPreferences',
                 args: ['{that}.model.preferences', '{that}']
+            },
+            setupVoiceListing: {
+                funcName: 'cisl.prefs.modalSettings.setupVoiceListing',
+                args: ['{that}']
             }
         },
         listeners: {
             'onCreate.setupVoiceListing': {
                 funcName: 'cisl.prefs.modalSettings.setupVoiceListing',
                 args: ['{that}']
+            },
+            'onCreate.setupVoicesChangedListener': {
+                funcName: 'cisl.prefs.modalSettings.setupVoicesChangedListener',
+                args: ['{that'],                
+                "after": "setupVoiceListing"
             }
         },
         modelListeners: {
@@ -200,7 +209,7 @@
 
 
     cisl.prefs.modalSettings.setupVoiceListing = function (that) {
-        console.log("cisl.prefs.modalSettings.setupVoiceListing");
+        console.debug("cisl.prefs.modalSettings.setupVoiceListing");
         clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
             console.debug("setupVoiceListing for ", voice);
             var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`                        
@@ -208,6 +217,11 @@
             readVoiceSelect.append(optionMarkup);
         });
         cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(that.model.preferences, "cisl_prefs_readVoices"), that);
+    };
+
+    cisl.prefs.modalSettings.setupVoicesChangedListener = function (that) {
+        console.debug("setting up window.speechSynthesis.onvoiceschanged listener to refresh voice listing");
+        window.speechSynthesis.onvoiceschanged = that.setupVoiceListing;
     };
 
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
