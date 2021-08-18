@@ -43,7 +43,11 @@
                     </tbody>
                 </table>
             </div>
+            {% if form.student_tuples %}
+            <input type="submit" class="btn btn-secondary" value="Import class"/>
+            {% else %}
             <input type="submit" class="btn btn-secondary" value="Import class" disabled/>
+            {% endif %}
             <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
             </div>
         </div>
