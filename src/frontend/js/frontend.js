@@ -451,41 +451,41 @@ function formUseThisLinks() {
     });
 }
 
-function setupVoiceListing() {
-    'use strict';
+// function setupVoiceListing() {
+//     'use strict';
 
-    var container = $('#voiceListing');
-    if (container.length) {
-        var html = '';
-        clusiveTTS.getVoicesForLanguage('en').forEach(function(voice) {
-            html += '<li><button type="button" class="dropdown-item voice-button">' + voice.name + '</button></li>';
-        });
-        container.html(html);
-    } else {
-        console.debug('No voice listing element');
-    }
-    container.on('click', '.voice-button', function() {
-        var name = this.textContent;
-        console.debug('Voice choice: ', name);
-        // Show voice name as dropdown label
-        $('#currentVoice').html(name);
-        // Mark the dropdown item as active.
-        container.find('.voice-button').removeClass('active');
-        $(this).addClass('active');
-        // Tell ClusiveTTS to use this voice
-        clusiveTTS.setCurrentVoice(name);
-        // Set on the modal's model of preferences
-        clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.readVoice', name);
-    });
-}
+//     var container = $('#voiceListing');
+//     if (container.length) {
+//         var html = '';
+//         clusiveTTS.getVoicesForLanguage('en').forEach(function(voice) {
+//             html += '<li><button type="button" class="dropdown-item voice-button">' + voice.name + '</button></li>';
+//         });
+//         container.html(html);
+//     } else {
+//         console.debug('No voice listing element');
+//     }
+//     container.on('click', '.voice-button', function() {
+//         var name = this.textContent;
+//         console.debug('Voice choice: ', name);
+//         // Show voice name as dropdown label
+//         $('#currentVoice').html(name);
+//         // Mark the dropdown item as active.
+//         container.find('.voice-button').removeClass('active');
+//         $(this).addClass('active');
+//         // Tell ClusiveTTS to use this voice
+//         clusiveTTS.setCurrentVoice(name);
+//         // Set on the modal's model of preferences
+//         clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.readVoice', name);
+//     });
+// }
 
-function clearVoiceListing() {
-    'use strict';
+// function clearVoiceListing() {
+//     'use strict';
 
-    $('.voice-button').removeClass('active');
-    $('#currentVoice').html('Choose...');
-    clusiveTTS.setCurrentVoice(null);
-}
+//     $('.voice-button').removeClass('active');
+//     $('#currentVoice').html('Choose...');
+//     clusiveTTS.setCurrentVoice(null);
+// }
 
 function showTooltip(name) {
     'use strict';
@@ -743,8 +743,8 @@ $(window).ready(function() {
     libraryStyleSortLinkSetup();
     dashboardSetup();
 
-    setupVoiceListing();
-    window.speechSynthesis.onvoiceschanged = setupVoiceListing;
+    // setupVoiceListing();
+    // window.speechSynthesis.onvoiceschanged = setupVoiceListing;
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
