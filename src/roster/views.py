@@ -773,19 +773,23 @@ class GetGoogleCourses(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         logger.debug("GetGoogleCourses")
-        db_access = OAuth2Database()
-        user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
-        service = build('classroom', 'v1', credentials=user_credentials)
-        try:
-            results = service.courses().list(pageSize=10).execute()
-        except HttpError as e:
-            if e.status_code == 403:
-                request.session['add_scopes_return_uri'] = 'get_google_courses'
-                request.session['add_scopes_course_id'] = None
-                return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
-            else:
-                raise
-        courses = results.get('courses', []);
+        teacher_id = self.google_teacher_id(request.user)
+        if teacher_id:
+            db_access = OAuth2Database()
+            user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
+            service = build('classroom', 'v1', credentials=user_credentials)
+            try:
+                results = service.courses().list(teacherId=teacher_id, pageSize=30).execute()
+            except HttpError as e:
+                if e.status_code == 403:
+                    request.session['add_scopes_return_uri'] = 'get_google_courses'
+                    request.session['add_scopes_course_id'] = None
+                    return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
+                else:
+                    raise
+            courses = results.get('courses', []);
+        else:
+            courses = []
         logger.debug('There are (%s) Google courses', len(courses))
         for course in courses:
             logger.debug('- %s, id = %s', course['name'], course['id'])
@@ -800,6 +804,19 @@ class GetGoogleCourses(LoginRequiredMixin, View):
                             client_id=client_info.client_id,
                             client_secret=client_info.secret,
                             token_uri='https://accounts.google.com/o/oauth2/token')
+
+    def google_teacher_id(self, user):
+        # Rationale: Google teacher identifer can be the special key 'me', the
+        # user's Google account email address, or their Google identifier.  Only
+        # the latter is guaranteed to match a Google course's teacher
+        # identifier.
+        # https://developers.google.com/classroom/reference/rest/v1/courses/list
+        try:
+            google_user = SocialAccount.objects.get(user=user, provider='google')
+            return google_user.uid
+        except SocialAccount.DoesNotExist:
+            logger.debug('User %s is not a an SSO user', user.username)
+            return None
 
 class GetGoogleRoster(GetGoogleCourses):
 
@@ -843,8 +860,6 @@ class OAuth2Database(object):
         return client_info
 
     def retrieve_access_token(self, user, provider):
-        # TODO: Check whether use of first() is always correct.  It assumes
-        # there is only ever one access token per user/provider combo.
         access_token = SocialToken.objects.filter(
             account__user=user, account__provider=provider
         ).first()

@@ -25,6 +25,8 @@
                                         {{ radio.choice_label }}
                                     </label>
                                 </div>
+                            {% empty %}
+                                <p>You have no Google courses</p>
                             {% endfor %}
                         </div>
                     </fieldset>
