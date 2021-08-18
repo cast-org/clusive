@@ -1,5 +1,5 @@
-from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
 from . import views
 
@@ -55,6 +55,7 @@ urlpatterns = [
     path('manage_google_courses', views.GoogleCoursesView.as_view(), name='manage_google_courses'),
     path('manage_google_roster/<course_id>', views.GoogleRosterView.as_view(), name='manage_google_roster'),
     path('get_google_roster/<course_id>', views.GetGoogleRoster.as_view(), name='get_google_roster'),
+    path('google_import_confirm/<course_id>', views.GooglePeriodImport.as_view(), name='google_import_confirm'),
     path('add_scope_access', views.add_scope_access, name='add_scope_access'),
     path('add_scope_callback/', views.add_scope_callback, name='add_scope_callback'),
     path('sync_mailing_list', views.SyncMailingListView.as_view(), name='sync_mailing_list'),

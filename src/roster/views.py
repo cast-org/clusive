@@ -15,6 +15,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
@@ -24,7 +25,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.views import View
-from django.views.generic import TemplateView, UpdateView, CreateView, FormView
+from django.views.generic import TemplateView, UpdateView, CreateView, FormView, RedirectView
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -37,7 +38,7 @@ from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
-    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm, GoogleRosterForm
+    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
 from roster.signals import user_registered
 
@@ -567,6 +568,11 @@ class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Sett
 
 
 class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, CreateView):
+    """
+    Displays a choice for the user between the various supported methods for creating a new Period.
+    Options are manual (always available) and importing from Google Classroom (if user has a connected Google acct).
+    Redirects to manage page for manual creation, or to GetGoogleCourses.
+    """
     model = Period
     form_class = PeriodForm
     template_name = 'roster/manage_create_period.html'
@@ -672,14 +678,24 @@ def logout_sso(request, student=''):
     else:
         logger.debug("Unregistered user, nothing to delete")
 
+
 class SyncMailingListView(View):
+    """
+    Called by script to periodically send new member info to the mailing list software.
+    """
 
     def get(self, request):
         logger.debug('Sync mailing list request received')
         MailingListMember.synchronize_user_emails()
         return JsonResponse({'success': 1})
 
+
 class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):
+    """
+    Displays the list of Google Classroom courses and allows user to choose one to import.
+    Expects to receive a 'google_courses' parameter in the session.  See GetGoogleCourses, which sets this.
+    After choice, redirects to GetGoogleRoster.
+    """
     form_class = GoogleCoursesForm
     courses = []
     template_name = 'roster/manage_show_google_courses.html'
@@ -708,19 +724,14 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormV
         selected_course_id = self.request.POST.get('course_select')
         return reverse('get_google_roster', kwargs={'course_id': selected_course_id})
 
-class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):
-    form_class = GoogleRosterForm
-    course = {'name': 'Unkonwn'}
-    roster = []
-    template_name = 'roster/manage_show_google_roster.html'
 
-    def get_initial(self, *args, **kwargs):
-        initial = super(FormView, self).get_initial(**kwargs)
-        tuples = self.make_student_tuples(self.roster)
-        initial['students'] = tuples
-        initial['google_roster'] = self.roster
-        initial['course'] = self.course
-        return initial
+class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
+    """
+    Display the roster of a google class, allow user to confirm whether it should be imported.
+    Expects google_courses and google_roster parameters in the session: see GetGoogleRoster method.
+    The roster is saved in the session for use if the user confirms creation.
+    """
+    template_name = 'roster/manage_show_google_roster.html'
 
     def make_student_tuples(self, roster):
         tuples = []
@@ -732,37 +743,88 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVi
                 user_with_that_email = users.first()
                 clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
                 a_student = (
-                    user_with_that_email.username,
+                    user_with_that_email.firstName,
                     email,
                     [item[1] for item in Roles.ROLE_CHOICES if item[0] == clusive_user.role][0],
-                    'Existing account')
+                    'EXISTING')
             else:
                 a_student = (
                     student['profile']['name']['givenName'],
                     email,
                     student_role,
-                    'New to Clusive')
+                    'NEW')
             tuples.append(a_student)
         return tuples
-
-    def get_form(self, form_class=None):
-        kwargs = self.get_form_kwargs()
-        return GoogleRosterForm(**kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         cu = request.clusive_user
         if not cu.can_manage_periods:
             self.handle_no_permission()
         self.clusive_user = cu
+
+        # API returns all courses, we need to search for the one we're importing.
         google_courses = self.request.session.get('google_courses', [])
+        self.course = None
         for course in google_courses:
             if course['id'] == kwargs['course_id']:
                 self.course = course
                 break
-        self.roster = self.request.session.get('google_roster', [])
+        if not self.course:
+            raise PermissionDenied('Course not found')
+
+        # Period name for Clusive is a composite of Google's "name" and (optional) "section"
+        self.period_name = self.course['name']
+        if 'section' in self.course:
+            self.period_name += ' ' + self.course['section']
+
+        # Extract interesting data from the roster.
+        roster = self.request.session.get('google_roster', [])
+        self.students = self.make_student_tuples(roster)
+        # Data stored in session until user confirms addition (or cancels).
+        # Consider also keeping:  course descriptionHeading, updateTime, courseState
+        course_data = {
+            'id': self.course['id'],
+            'name': self.period_name,
+            'students': self.students,
+        }
+        request.session['google_period_import'] = course_data
+        logger.debug('Session data stored: %s', course_data)
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'course_id': self.course['id'],
+            'period_name': self.period_name,
+            'students': self.students,
+        })
+        return context
+
+
+class GooglePeriodImport(LoginRequiredMixin, RedirectView):
+    """
+    Import new Period data that was just confirmed, then redirect to manage page.
+    """
+
+    def get(self, request, *args, **kwargs):
+        course_id = kwargs['course_id']
+        session_data = request.session.get('google_period_import', None)
+        logger.debug('import %s; session data retrieved: %s', course_id, session_data)
+        if not session_data or session_data['id'] != course_id:
+            raise PermissionDenied('Import data is out of date')
+        # TODO Actually create Period and users here.
+        return super().get(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        # TODO redirect to newly created period:   manage/<int:period_id>
+        return reverse('manage')
+
+
 class GetGoogleCourses(LoginRequiredMixin, View):
+    """
+    Calls the Google Classroom API to get a list of courses for this user, then redirects to GoogleCoursesView.
+    Requests additional Google permissions if necessary.
+    """
     provider = 'google'
     classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.profile.emails'
     auth_parameters = urlencode({
@@ -794,7 +856,7 @@ class GetGoogleCourses(LoginRequiredMixin, View):
         for course in courses:
             logger.debug('- %s, id = %s', course['name'], course['id'])
         request.session['google_courses'] = courses
-        return HttpResponseRedirect(reverse('manage_google_courses'));
+        return HttpResponseRedirect(reverse('manage_google_courses'))
 
     def make_credentials(self, user, scopes, db_access):
         client_info = db_access.retrieve_client_info(self.provider)
@@ -804,6 +866,7 @@ class GetGoogleCourses(LoginRequiredMixin, View):
                             client_id=client_info.client_id,
                             client_secret=client_info.secret,
                             token_uri='https://accounts.google.com/o/oauth2/token')
+
 
     def google_teacher_id(self, user):
         # Rationale: Google teacher identifer can be the special key 'me', the
@@ -819,6 +882,9 @@ class GetGoogleCourses(LoginRequiredMixin, View):
             return None
 
 class GetGoogleRoster(GetGoogleCourses):
+    """
+    Calls Google Classroom API to get the roster of a given course, then redirects to GoogleRosterView.
+    """
 
     def get(self, request, *args, **kwargs):
         course_id = kwargs.get('course_id')
@@ -849,7 +915,7 @@ class GetGoogleRoster(GetGoogleCourses):
             logger.debug('- %s, %s', student['profile']['name']['givenName'], student['profile']['emailAddress'])
 
         request.session['google_roster'] = students
-        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
+        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}))
 
 ########################################
 #
