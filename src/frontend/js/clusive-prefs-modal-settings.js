@@ -116,6 +116,7 @@
             glossary: '.cislc-modalSettings-glossary',
             scroll: '.cislc-modalSettings-scroll',
             readSpeed: '.cislc-modalSettings-readSpeed',
+            readVoice: '.cislc-modalSettings-readVoice',
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
             languageSelect: '.cislc-modalSettings-languageSelect',            
@@ -127,6 +128,7 @@
             letterSpacing: 'modalSettings.letterSpacing',
             font: 'modalSettings.font',
             color: 'modalSettings.color',
+            readVoice: 'modalSettings.readVoice',
             readSpeed: 'modalSettings.readSpeed',
             scroll: 'modalSettings.scroll',
             languageSelect: 'modalSettings.translationLanguage',
@@ -214,7 +216,7 @@
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
         if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {
-            clearVoiceListing();
+            // clearVoiceListing();
             return;
         }
         console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
