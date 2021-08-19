@@ -26,14 +26,14 @@
                                     </label>
                                 </div>
                             {% empty %}
-                                <p>You have no Google courses</p>
+                                <p>You have no Google courses.</p>
                             {% endfor %}
                         </div>
                     </fieldset>
                     {% if form.courses %}
                     <input type="submit" class="btn btn-secondary" value="Next"/>
                     {% else %}
-                    <input type="submit" class="btn btn-secondary" disabled value="Next"/>
+                    <input type="submit" class="btn btn-secondary" value="Next" disabled/>
                     {% endif %}
                     <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
                 </form>

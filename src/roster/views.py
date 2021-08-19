@@ -832,8 +832,10 @@ class GetGoogleRoster(GetGoogleCourses):
         # will always work, however.  Question is, can you tell from the
         # authorization error (HttpError) if it's lack of scope or expired
         # token?
+        # Note: documentation for `pageSize` query parameter:
+        # https://developers.google.com/classroom/reference/rest/v1/courses.students/list
         try:
-            results = service.courses().students().list(courseId=course_id).execute()
+            results = service.courses().students().list(courseId=course_id, pageSize=100).execute()
         except HttpError as e:
             if e.status_code == 403:
                 request.session['add_scopes_return_uri'] = 'get_google_roster'
