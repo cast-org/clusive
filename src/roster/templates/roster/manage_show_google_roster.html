@@ -27,22 +27,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for student in students %}
+                        {% for person in people %}
                         <tr>
-                            <td>{{ student.name }}</td>
-                            <td>{{ student.email }}</td>
-                            <td>{{ student.role_display }}</td>
-                            <td>{% if student.exists %}Existing account{% else %}New to Clusive{% endif %}</td>
+                            <td>{{ person.name }}</td>
+                            <td>{{ person.email }}</td>
+                            <td>{{ person.role_display }}</td>
+                            <td>{% if person.exists %}Existing account{% else %}New to Clusive{% endif %}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td><p>There are no students in this class.</p></td>
+                            <td><p>There is no one in this class.</p></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {% if students %}
+            {% if people %}
             <a href="{% url 'google_import_confirm' course_id=course_id %}" class="btn btn-secondary">Import class</a>
             {% else %}
             <button type="button" class="btn btn-secondary" disabled>Import class</button>

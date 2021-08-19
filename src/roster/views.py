@@ -738,14 +738,17 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         'teachers': { 'role': Roles.TEACHER, 'display_name': 'Teacher' }
     }
 
-    def make_roster_tuples(self, roster):
+    def make_roster_tuples(self, google_roster):
         tuples = []
-        for group in roster:
-            for person in roster[group]:
+        for group in google_roster:
+            for person in google_roster[group]:
                 email = person['profile']['emailAddress']
                 users = User.objects.filter(email=email)
                 if users.exists():
                     user_with_that_email = users.first()
+                    # Exclude the current user from the roster.
+                    if self.request.user == user_with_that_email:
+                        continue
                     clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
                     a_person = {
                         'name': user_with_that_email.first_name,
@@ -758,8 +761,8 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                     a_person = {
                         'name': person['profile']['name']['givenName'],
                         'email': email,
-                        'role': self.role_info[group]['role'], #Roles.STUDENT,
-                        'role_display': self.role_info[group]['display_name'], #'Student',
+                        'role': self.role_info[group]['role'],
+                        'role_display': self.role_info[group]['display_name'],
                         'exists': False
                     }
                 tuples.append(a_person)
@@ -786,15 +789,15 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         if 'section' in self.course:
             self.period_name += ' ' + self.course['section']
 
-        # Extract interesting data from the roster.
-        roster = self.request.session.get('google_roster', {})
-        self.students = self.make_roster_tuples(roster)
+        # Extract interesting data from the Google roster.
+        google_roster = self.request.session.get('google_roster', {})
+        self.people = self.make_roster_tuples(google_roster)
         # Data stored in session until user confirms addition (or cancels).
         # Consider also keeping:  course descriptionHeading, updateTime, courseState
         course_data = {
             'id': self.course['id'],
             'name': self.period_name,
-            'students': self.students,
+            'people': self.people,
         }
         request.session['google_period_import'] = course_data
         logger.debug('Session data stored: %s', course_data)
@@ -805,7 +808,7 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         context.update({
             'course_id': self.course['id'],
             'period_name': self.period_name,
-            'students': self.students,
+            'people': self.people,
         })
         return context
 
@@ -825,15 +828,15 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
         user_list = [creator]
         creating_permission = ResearchPermissions.TEACHER_CREATED if creator.role == Roles.TEACHER \
             else ResearchPermissions.PARENT_CREATED
-        for student in session_data['students']:
-            if student['exists']:
-                user_list.append(ClusiveUser.objects.get(user__email=student['email']))
+        for person in session_data['people']:
+            if person['exists']:
+                user_list.append(ClusiveUser.objects.get(user__email=person['email']))
             else:
                 properties = {
-                    'username': student['email'],
-                    'email': student['email'],
-                    'first_name': student['name'],
-                    'role': student['role'],
+                    'username': person['email'],
+                    'email': person['email'],
+                    'first_name': person['name'],
+                    'role': person['role'],
                     'permission': creating_permission,
                     'anon_id': ClusiveUser.next_anon_id(),
                 }
