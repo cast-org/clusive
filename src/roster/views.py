@@ -39,7 +39,7 @@ from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm
-from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
+from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, PeriodTypes
 from roster.signals import user_registered
 
 logger = logging.getLogger(__name__)
@@ -813,7 +813,6 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
     def get(self, request, *args, **kwargs):
         course_id = kwargs['course_id']
         session_data = request.session.get('google_period_import', None)
-        logger.debug('import %s; session data retrieved: %s', course_id, session_data)
         if not session_data or session_data['id'] != course_id:
             raise PermissionDenied('Import data is out of date')
         creator = request.clusive_user
@@ -837,8 +836,10 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
                 user_list.append(ClusiveUser.create_from_properties(properties))
 
         # Create Period
-        period = Period.objects.create(name=session_data['name'], site=creator.get_site())
-        # Site? AnonID?  Google ID?
+        period = Period.objects.create(name=session_data['name'],
+                                       site=creator.get_site(),
+                                       type=PeriodTypes.GOOGLE,
+                                       external_id=session_data['id'])
         period.users.set(user_list)
         period.save()
         self.period = period

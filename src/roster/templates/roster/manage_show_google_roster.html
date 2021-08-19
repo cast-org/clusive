@@ -44,7 +44,7 @@
             {% if students %}
             <a href="{% url 'google_import_confirm' course_id=course_id %}" class="btn btn-secondary">Import class</a>
             {% else %}
-            <button type="button" class="btn btn-secondary" value="Import class" disabled/>
+            <button type="button" class="btn btn-secondary" disabled>Import class</button>
             {% endif %}
             <a href="{% url 'manage' %}" class="btn btn-link">Cancel</a>
         </div>

@@ -40,10 +40,22 @@ class Site(models.Model):
         return '%s (%s)' % (self.name, self.anon_id)
 
 
+class PeriodTypes:
+    CLUSIVE = 'C'
+    GOOGLE = 'G'
+
+    CHOICES = [
+        (CLUSIVE, "Created in Clusive"),
+        (GOOGLE, "Google Classroom"),
+    ]
+
+
 class Period(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name='Class name')
     anon_id = models.CharField(max_length=30, unique=True, null=True, verbose_name='Anonymous identifier')
+    type = models.CharField(max_length=4, choices=PeriodTypes.CHOICES, default=PeriodTypes.CLUSIVE)
+    external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
