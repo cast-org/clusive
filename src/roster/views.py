@@ -593,16 +593,17 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        if self.request.POST.get('create_or_import') == 'import':
-            return reverse('get_google_courses')
-        else:
-            return reverse('manage', kwargs={'period_id': self.object.id})
+        return reverse('manage', kwargs={'period_id': self.object.id})
 
     def form_valid(self, form):
-        result = super().form_valid(form)
-        # Add current user to the new Period
-        self.object.users.add(self.clusive_user)
-        return result
+        if form.cleaned_data.get('create_or_import') == 'import':
+            # Do not save the period, just redirect.
+            return HttpResponseRedirect(reverse('get_google_courses'))
+        else:
+            # Save Period and add current user
+            result = super().form_valid(form)
+            self.object.users.add(self.clusive_user)
+            return result
 
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
@@ -735,24 +736,27 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
 
     def make_student_tuples(self, roster):
         tuples = []
-        student_role = [item[1] for item in Roles.ROLE_CHOICES if item[0] == Roles.STUDENT][0]
         for student in roster:
             email = student['profile']['emailAddress']
             users = User.objects.filter(email=email)
             if users.exists():
                 user_with_that_email = users.first()
                 clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
-                a_student = (
-                    user_with_that_email.firstName,
-                    email,
-                    [item[1] for item in Roles.ROLE_CHOICES if item[0] == clusive_user.role][0],
-                    'EXISTING')
+                a_student = {
+                    'name': user_with_that_email.first_name,
+                    'email': email,
+                    'role': clusive_user.role,
+                    'role_display': Roles.display_name(clusive_user.role),
+                    'exists': True
+                }
             else:
-                a_student = (
-                    student['profile']['name']['givenName'],
-                    email,
-                    student_role,
-                    'NEW')
+                a_student = {
+                    'name': student['profile']['name']['givenName'],
+                    'email': email,
+                    'role': Roles.STUDENT,
+                    'role_display': 'Student',
+                    'exists': False
+                }
             tuples.append(a_student)
         return tuples
 
@@ -812,12 +816,38 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
         logger.debug('import %s; session data retrieved: %s', course_id, session_data)
         if not session_data or session_data['id'] != course_id:
             raise PermissionDenied('Import data is out of date')
-        # TODO Actually create Period and users here.
+        creator = request.clusive_user
+
+        # Find or create user accounts
+        user_list = [creator]
+        creating_permission = ResearchPermissions.TEACHER_CREATED if creator.role == Roles.TEACHER \
+            else ResearchPermissions.PARENT_CREATED
+        for student in session_data['students']:
+            if student['exists']:
+                user_list.append(ClusiveUser.objects.get(user__email=student['email']))
+            else:
+                properties = {
+                    'username': student['email'],
+                    'email': student['email'],
+                    'first_name': student['name'],
+                    'role': student['role'],
+                    'permission': creating_permission,
+                    'anon_id': ClusiveUser.next_anon_id(),
+                }
+                user_list.append(ClusiveUser.create_from_properties(properties))
+
+        # Create Period
+        period = Period.objects.create(name=session_data['name'], site=creator.get_site())
+        # Site? AnonID?  Google ID?
+        period.users.set(user_list)
+        period.save()
+        self.period = period
+
         return super().get(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        # TODO redirect to newly created period:   manage/<int:period_id>
-        return reverse('manage')
+        # Redirect to newly created period
+        return reverse('manage', kwargs={'period_id': self.period.id})
 
 
 class GetGoogleCourses(LoginRequiredMixin, View):
@@ -866,7 +896,6 @@ class GetGoogleCourses(LoginRequiredMixin, View):
                             client_id=client_info.client_id,
                             client_secret=client_info.secret,
                             token_uri='https://accounts.google.com/o/oauth2/token')
-
 
     def google_teacher_id(self, user):
         # Rationale: Google teacher identifer can be the special key 'me', the

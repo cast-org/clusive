@@ -68,6 +68,10 @@ class Roles:
         (UNKNOWN, 'Unknown')
     ]
 
+    @classmethod
+    def display_name(cls, role):
+        return [item[1] for item in Roles.ROLE_CHOICES if item[0] == role][0]
+
 
 class ResearchPermissions:
     PERMISSIONED = 'PE'
@@ -336,7 +340,6 @@ class ClusiveUser(models.Model):
 
     @classmethod
     def create_from_properties(cls, props):
-        period = Period.objects.get(site__name=props.get('site'), name=props.get('period'))
         django_user = User.objects.create_user(username=props.get('username'),
                                                first_name=props.get('first_name'),
                                                password=props.get('password'),
@@ -345,8 +348,10 @@ class ClusiveUser(models.Model):
                                                   role=props.get('role'),
                                                   permission=props.get('permission'),
                                                   anon_id=props.get('anon_id'))
-        p = props.get('period')
-        if p:
+        site_name = props.get('site', None)
+        period_name = props.get('period', None)
+        if site_name and period_name:
+            period = Period.objects.get(site__name=site_name, name=period_name)
             clusive_user.periods.set([period])
         clusive_user.save()
         return clusive_user

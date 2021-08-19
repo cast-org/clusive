@@ -29,10 +29,10 @@
                     <tbody>
                         {% for student in students %}
                         <tr>
-                            <td>{{ student.0 }}</td>
-                            <td>{{ student.1 }}</td>
-                            <td>{{ student.2 }}</td>
-                            <td>{% if student.3 == 'NEW' %}New to Clusive{% else %}Existing account{% endif %}</td>
+                            <td>{{ student.name }}</td>
+                            <td>{{ student.email }}</td>
+                            <td>{{ student.role_display }}</td>
+                            <td>{% if student.exists %}Existing account{% else %}New to Clusive{% endif %}</td>
                         </tr>
                         {% empty %}
                         <tr>
