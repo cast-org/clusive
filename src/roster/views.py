@@ -733,31 +733,36 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
     The roster is saved in the session for use if the user confirms creation.
     """
     template_name = 'roster/manage_show_google_roster.html'
+    role_info = { 
+        'students': { 'role': Roles.STUDENT, 'display_name': 'Student' },
+        'teachers': { 'role': Roles.TEACHER, 'display_name': 'Teacher' }
+    }
 
-    def make_student_tuples(self, roster):
+    def make_roster_tuples(self, roster):
         tuples = []
-        for student in roster:
-            email = student['profile']['emailAddress']
-            users = User.objects.filter(email=email)
-            if users.exists():
-                user_with_that_email = users.first()
-                clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
-                a_student = {
-                    'name': user_with_that_email.first_name,
-                    'email': email,
-                    'role': clusive_user.role,
-                    'role_display': Roles.display_name(clusive_user.role),
-                    'exists': True
-                }
-            else:
-                a_student = {
-                    'name': student['profile']['name']['givenName'],
-                    'email': email,
-                    'role': Roles.STUDENT,
-                    'role_display': 'Student',
-                    'exists': False
-                }
-            tuples.append(a_student)
+        for group in roster:
+            for person in roster[group]:
+                email = person['profile']['emailAddress']
+                users = User.objects.filter(email=email)
+                if users.exists():
+                    user_with_that_email = users.first()
+                    clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
+                    a_person = {
+                        'name': user_with_that_email.first_name,
+                        'email': email,
+                        'role': clusive_user.role,
+                        'role_display': Roles.display_name(clusive_user.role),
+                        'exists': True
+                    }
+                else:
+                    a_person = {
+                        'name': person['profile']['name']['givenName'],
+                        'email': email,
+                        'role': self.role_info[group]['role'], #Roles.STUDENT,
+                        'role_display': self.role_info[group]['display_name'], #'Student',
+                        'exists': False
+                    }
+                tuples.append(a_person)
         return tuples
 
     def dispatch(self, request, *args, **kwargs):
@@ -782,8 +787,8 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
             self.period_name += ' ' + self.course['section']
 
         # Extract interesting data from the roster.
-        roster = self.request.session.get('google_roster', [])
-        self.students = self.make_student_tuples(roster)
+        roster = self.request.session.get('google_roster', {})
+        self.students = self.make_roster_tuples(roster)
         # Data stored in session until user confirms addition (or cancels).
         # Consider also keeping:  course descriptionHeading, updateTime, courseState
         course_data = {
@@ -803,7 +808,6 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
             'students': self.students,
         })
         return context
-
 
 class GooglePeriodImport(LoginRequiredMixin, RedirectView):
     """
@@ -928,10 +932,12 @@ class GetGoogleRoster(GetGoogleCourses):
         # will always work, however.  Question is, can you tell from the
         # authorization error (HttpError) if it's lack of scope or expired
         # token?
-        # Note: documentation for `pageSize` query parameter:
+        # Note: documentation for `pageSize` query parameter (defaults to 30):
         # https://developers.google.com/classroom/reference/rest/v1/courses.students/list
+        # https://developers.google.com/classroom/reference/rest/v1/courses.teachers/list
         try:
-            results = service.courses().students().list(courseId=course_id, pageSize=100).execute()
+            studentResponse = service.courses().students().list(courseId=course_id, pageSize=100).execute()
+            teacherResponse = service.courses().teachers().list(courseId=course_id).execute()
         except HttpError as e:
             if e.status_code == 403:
                 request.session['add_scopes_return_uri'] = 'get_google_roster'
@@ -939,13 +945,18 @@ class GetGoogleRoster(GetGoogleCourses):
                 return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
             else:
                 raise
-        students = results.get('students', [])
-        logger.debug('There are (%s) students', len(students))
-        for student in students:
-            logger.debug('- %s, %s', student['profile']['name']['givenName'], student['profile']['emailAddress'])
-
-        request.session['google_roster'] = students
-        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}))
+        students = studentResponse.get('students', [])
+        teachers = teacherResponse.get('teachers', [])
+        self.log_results(students, 'students')
+        self.log_results(teachers, 'teachers')
+        
+        request.session['google_roster'] = { 'students': students, 'teachers': teachers }
+        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
+    
+    def log_results(self, group, role):
+        logger.debug('Get Google roster: there are (%s) %s', len(group), role)
+        for person in group:
+            logger.debug('- %s, %s', person['profile']['name']['givenName'], person['profile']['emailAddress'])
 
 ########################################
 #
