@@ -74,11 +74,13 @@
                 </tbody>
             </table>
         </div>
+        {% if allow_add_student %}
         <p>
             <a href="{% url 'manage_create_user' period_id=current_period.pk %}" class="btn btn-primary">
                 + Add Student
             </a>
         </p>
+        {% endif %}
         {% endif %}
     </main>
 

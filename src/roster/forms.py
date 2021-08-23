@@ -1,3 +1,5 @@
+import logging
+
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -7,6 +9,7 @@ from multiselectfield import MultiSelectFormField
 
 from roster.models import Period, Roles, ClusiveUser, EducationLevels
 
+logger = logging.getLogger(__name__)
 
 class ClusiveLoginForm(AuthenticationForm):
 
@@ -215,18 +218,37 @@ class PeriodForm(ModelForm):
         }
 
 
-class GoogleCoursesForm(Form):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.courses = kwargs['initial'].get('courses', [])
-        self.fields['course_select'] = forms.ChoiceField(
-            choices=self.courses,
-            required=True,
-            widget=forms.RadioSelect
-        )
+class DisableableRadioSelect(forms.RadioSelect):
+    """
+    Like RadioSelect widget, but some of the radio buttons can be disabled.
+    If a disabled_choices list is provided, any choices whose value matches one of them
+    will not be selectable. In addition, the disabled_suffix string will be appended to the label of each
+    of the disabled choices.
+    """
 
-class GoogleRosterForm(Form):
+    def __init__(self, attrs=None, choices=(), disabled_choices=(), disabled_suffix=''):
+        self.disabled_choices = disabled_choices
+        self.disabled_suffix = disabled_suffix
+        super().__init__(attrs, choices)
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        opt = super().create_option(name, value, label, selected, index, subindex, attrs)
+        if value in self.disabled_choices:
+            opt['attrs'].update({ 'disabled': 'disabled' })
+            opt['label'] += self.disabled_suffix
+        return opt
+
+
+class GoogleCoursesForm(Form):
+
     def __init__(self, *args, **kwargs):
+        self.courses = kwargs.pop('courses')
         super().__init__(*args, **kwargs)
-        self.course_name = kwargs['initial'].get('course').get('name')
-        self.student_tuples = kwargs['initial'].get('students')
+        choices = [(c['id'], c['name']) for c in self.courses]
+        disabled_choices = [c['id'] for c in self.courses if c['imported']]
+        logger.debug('courses: %s, disab: %s', self.courses, disabled_choices)
+        self.fields['course_select'] = forms.ChoiceField(
+            choices=choices,
+            required=True,
+            widget=DisableableRadioSelect(disabled_choices=disabled_choices, disabled_suffix=' (already imported)'),
+        )

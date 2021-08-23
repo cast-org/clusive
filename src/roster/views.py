@@ -444,6 +444,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             context['students'] = self.make_student_info_list()
             context['period_name_form'] = PeriodForm(instance=self.current_period)
             logger.debug('Students: %s', context['students'])
+            context['allow_add_student'] = (self.current_period.type == PeriodTypes.CLUSIVE)
         return context
 
     def make_student_info_list(self):
@@ -694,25 +695,18 @@ class SyncMailingListView(View):
 class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):
     """
     Displays the list of Google Classroom courses and allows user to choose one to import.
-    Expects to receive a 'google_courses' parameter in the session.  See GetGoogleCourses, which sets this.
-    After choice, redirects to GetGoogleRoster.
+    Expects to receive a 'google_courses' parameter in the session, which is a list of dicts
+    each of which has at least 'name', 'id', and 'imported' (aka already exists in Clusive).
+    See GetGoogleCourses, which sets this.
+    After choice is made, redirects to GetGoogleRoster.
     """
     form_class = GoogleCoursesForm
     courses = []
     template_name = 'roster/manage_show_google_courses.html'
 
-    def get_initial(self, *args, **kwargs):
-        initial = super(FormView, self).get_initial(**kwargs)
-        self.courses = self.request.session.get('google_courses', [])
-        tuples = []
-        for course in self.courses:
-            tuples.append((course['id'], course['name']))
-        initial['courses'] = tuples
-        return initial
-
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
-        return GoogleCoursesForm(**kwargs)
+        return GoogleCoursesForm(**kwargs, courses = self.request.session.get('google_courses', []))
 
     def dispatch(self, request, *args, **kwargs):
         cu = request.clusive_user
@@ -733,7 +727,7 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
     The roster is saved in the session for use if the user confirms creation.
     """
     template_name = 'roster/manage_show_google_roster.html'
-    role_info = { 
+    role_info = {
         'students': { 'role': Roles.STUDENT, 'display_name': 'Student' },
         'teachers': { 'role': Roles.TEACHER, 'display_name': 'Teacher' }
     }
@@ -887,12 +881,13 @@ class GetGoogleCourses(LoginRequiredMixin, View):
                     return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
                 else:
                     raise
-            courses = results.get('courses', []);
+            courses = results.get('courses', [])
         else:
             courses = []
         logger.debug('There are (%s) Google courses', len(courses))
         for course in courses:
-            logger.debug('- %s, id = %s', course['name'], course['id'])
+            course['imported'] = Period.objects.filter(type=PeriodTypes.GOOGLE, external_id=course['id']).exists()
+            logger.debug('- %s, id = %s. Imported=%s', course['name'], course['id'], course['imported'])
         request.session['google_courses'] = courses
         return HttpResponseRedirect(reverse('manage_google_courses'))
 
@@ -952,10 +947,10 @@ class GetGoogleRoster(GetGoogleCourses):
         teachers = teacherResponse.get('teachers', [])
         self.log_results(students, 'students')
         self.log_results(teachers, 'teachers')
-        
+
         request.session['google_roster'] = { 'students': students, 'teachers': teachers }
         return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
-    
+
     def log_results(self, group, role):
         logger.debug('Get Google roster: there are (%s) %s', len(group), role)
         for person in group:
