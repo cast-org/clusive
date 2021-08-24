@@ -1,13 +1,5 @@
 // Relies on user accounts created by `python manage.py createrostersamples`
 
-var readerIframeDocument = function () {
-    return cy.get('main#iframe-wrapper').find('iframe').its('0.contentDocument');
-}
-
-var readerIframeBody = function () {
-    return cy.get('main#iframe-wrapper').find('iframe').its('0.contentDocument').get('body');
-}
-
 describe('Student user samstudent...', () => {    
     
     it('Visits the home page and logs in', () => {
@@ -30,9 +22,7 @@ describe('Student user samstudent...', () => {
         
         cy.visit('http://localhost:8000/reader/6/2')                                
         
-        cy.wrap(readerIframeDocument).get('html').should('exist')
-        cy.wrap(readerIframeBody).should('exist')
-
+        cy.frameLoaded('iframe[data-cy="reader-frame"]').find('h1').contains('Clues to Clusive')
       })     
   })
   
