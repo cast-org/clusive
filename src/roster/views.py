@@ -37,8 +37,8 @@ from messagequeue.models import Message, client_side_prefs_change
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
-    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm
+from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
+    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm, PeriodCreateForm, PeriodNameForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, PeriodTypes
 from roster.signals import user_registered
 
@@ -442,7 +442,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         context['current_period'] = self.current_period
         if self.current_period != None:
             context['students'] = self.make_student_info_list()
-            context['period_name_form'] = PeriodForm(instance=self.current_period)
+            context['period_name_form'] = PeriodNameForm(instance=self.current_period)
             logger.debug('Students: %s', context['students'])
             context['allow_add_student'] = (self.current_period.type == PeriodTypes.CLUSIVE)
         return context
@@ -552,7 +552,7 @@ class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settin
 
 class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
     model = Period
-    form_class = PeriodForm
+    form_class = PeriodNameForm
     template_name = 'roster/manage_edit_period.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -575,7 +575,7 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
     Redirects to manage page for manual creation, or to GetGoogleCourses.
     """
     model = Period
-    form_class = PeriodForm
+    form_class = PeriodCreateForm
     template_name = 'roster/manage_create_period.html'
 
     def get_form(self, form_class=None):
@@ -584,7 +584,8 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
         kwargs['instance'] = instance
         google_user = SocialAccount.objects.filter(user=self.clusive_user.user, provider='google').exists()
         kwargs['allow_google'] = google_user
-        return PeriodForm(**kwargs)
+        logger.debug('kwargs %s', kwargs)
+        return PeriodCreateForm(**kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         cu = request.clusive_user
@@ -597,7 +598,7 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
         return reverse('manage', kwargs={'period_id': self.object.id})
 
     def form_valid(self, form):
-        if form.cleaned_data.get('create_or_import') == 'import':
+        if form.cleaned_data.get('create_or_import') == 'google':
             # Do not save the period, just redirect.
             return HttpResponseRedirect(reverse('get_google_courses'))
         else:

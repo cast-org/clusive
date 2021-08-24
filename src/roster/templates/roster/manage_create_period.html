@@ -44,6 +44,11 @@
 (function () {
     'use strict';
 
+    // Select radio button if user types into name field
+    $('#id_name').on('focus', function() {
+        $(this).closest('.form-check').find('input[type="radio"]').prop("checked", true).trigger('click');
+    });
+
     // Toggle of 'required' attribute for name text input based on radio selection
     const inputName = document.querySelector('#id_name');
     const inputRadios = document.querySelectorAll('[id^="id_create_or_import_"]');

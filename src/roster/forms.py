@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Form
 from multiselectfield import MultiSelectFormField
 
@@ -166,58 +167,6 @@ class AgeCheckForm(Form):
         widget=forms.RadioSelect)
 
 
-class PeriodForm(ModelForm):
-
-    create_or_import = forms.ChoiceField(
-        required=True,
-        widget=forms.RadioSelect)
-    # Set the name input to not required for now.  In is_valid(), check the
-    # choice:  if manual creation, then set the name as required
-    name = forms.CharField(required=False)
-
-    def __init__(self, **kwargs):
-        self.allow_google = kwargs.pop('allow_google', False)
-        super().__init__(**kwargs)
-        self.fields['create_or_import'].choices = self.get_choices
-
-    def get_choices(self):
-        if self.allow_google:
-            return [('manual', "Create manually"),
-                    ('import', "Import class from Google Classroom")]
-        else:
-            return [('manual', "Create manually")]
-
-    def is_valid(self):
-        valid = super().is_valid()
-        if valid:
-            name_field = self.fields['name']
-            if self.cleaned_data.get('create_or_import') == 'manual':
-                # If the user chose to create a period manually, the 'name' text
-                # input field is required.
-                name_field.required = True
-                name_field.widget.is_required = True
-                if self.cleaned_data.get('name') == '':
-                    return False
-                else:
-                    return True
-            else:
-                # If importing from Google classroom, the 'name' test input is
-                # not required
-                name_field.required = False
-                name_field.widget.is_required = False
-        return valid
-
-    class Meta:
-        model = Period
-        fields = ['create_or_import', 'name']
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'aria-label': 'Enter class name',
-                'class': 'form-control',
-            })
-        }
-
-
 class DisableableRadioSelect(forms.RadioSelect):
     """
     Like RadioSelect widget, but some of the radio buttons can be disabled.
@@ -229,14 +178,57 @@ class DisableableRadioSelect(forms.RadioSelect):
     def __init__(self, attrs=None, choices=(), disabled_choices=(), disabled_suffix=''):
         self.disabled_choices = disabled_choices
         self.disabled_suffix = disabled_suffix
+        logger.debug('choices = %s', choices)
         super().__init__(attrs, choices)
 
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         opt = super().create_option(name, value, label, selected, index, subindex, attrs)
         if value in self.disabled_choices:
-            opt['attrs'].update({ 'disabled': 'disabled' })
+            opt['attrs'].update({'disabled': 'disabled'})
             opt['label'] += self.disabled_suffix
         return opt
+
+
+class PeriodNameForm(ModelForm):
+    """
+    Allows editing the name of a Period.
+    """
+    name = forms.CharField(required=True)
+
+    class Meta:
+        model = Period
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'aria-label': 'Enter class name',
+                'class': 'form-control',
+            })
+        }
+
+
+class PeriodCreateForm(PeriodNameForm):
+    """
+    Allows creating a Period, either directly or requesting that it be imported.
+    """
+
+    def __init__(self, **kwargs):
+        allow_google = kwargs.pop('allow_google', False)
+        super().__init__(**kwargs)
+        self.fields['name'].required = False
+        disable = ['google'] if not allow_google else []
+        logger.debug('disable %s', disable)
+        self.fields['create_or_import'] = \
+            forms.ChoiceField(choices=[('manual', "Create manually"),
+                                       ('google', "Import class from Google Classroom")],
+                              required=True,
+                              widget=DisableableRadioSelect(disabled_choices=disable,
+                                                            disabled_suffix=' (Only available if you log in with a Google account)'))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.cleaned_data.get('create_or_import') == 'manual' and self.cleaned_data.get('name') == '':
+            self.add_error('name', ValidationError('Name must be supplied', 'manual_name_required'))
+        return cleaned_data
 
 
 class GoogleCoursesForm(Form):
