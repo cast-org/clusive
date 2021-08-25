@@ -693,7 +693,7 @@ class SyncMailingListView(View):
         return JsonResponse({'success': 1})
 
 
-class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):
+class GoogleCoursesView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):
     """
     Displays the list of Google Classroom courses and allows user to choose one to import.
     Expects to receive a 'google_courses' parameter in the session, which is a list of dicts
@@ -720,8 +720,11 @@ class GoogleCoursesView(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormV
         selected_course_id = self.request.POST.get('course_select')
         return reverse('get_google_roster', kwargs={'course_id': selected_course_id})
 
+    def configure_event(self, event: Event):
+        event.page = 'ManageImportPeriodChoice'
 
-class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
+
+class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, TemplateView):
     """
     Display the roster of a google class, allow user to confirm whether it should be imported.
     Expects google_courses and google_roster parameters in the session: see GetGoogleRoster method.
@@ -806,6 +809,10 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
             'people': self.people,
         })
         return context
+
+    def configure_event(self, event: Event):
+        event.page = 'ManageImportPeriodConfirm'
+
 
 class GooglePeriodImport(LoginRequiredMixin, RedirectView):
     """
