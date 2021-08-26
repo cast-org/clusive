@@ -1,6 +1,6 @@
 // Relies on user accounts created by `python manage.py createrostersamples`
 
-describe('Preferences', () => {    
+describe('While logged in as user samstudent', () => {    
 
     var readerSelector = 'iframe[data-cy="reader-frame"]'
 
@@ -15,6 +15,31 @@ describe('Preferences', () => {
         cy.get('input#id_password').type(password)
         cy.get('button').contains('Log in').click()        
     }
+
+    var preferenceControls = {
+        fontFamily: {            
+            setAction: function (selector) {
+                cy.get(selector).click({force: true})
+            },
+            options: {
+                comic: 'input[value=comic]'
+            }         
+        },
+        theme: {
+            setAction: function (selector) {
+                cy.get(selector).click({force: true})
+            },
+            options: {
+                night: 'input[value=night]',
+                sepia: 'input[value=sepia]'
+            }            
+        }
+    }
+
+var setPref = function (pref, value) {
+    var selector = preferenceControls[pref].options[value];
+    preferenceControls[pref].setAction(selector);
+}
 
     var preferenceExpects = {
         fontFamily: {
@@ -75,7 +100,7 @@ describe('Preferences', () => {
         cy.saveLocalStorage();
     })
 
-    // Clear the cookies at the end of the whole test suite
+    // Clear the cookies and local storage at the end of the whole test suite
     after(() => {
         cy.clearCookies()
         cy.clearLocalStorage()
@@ -89,8 +114,10 @@ describe('Preferences', () => {
         cy.iframe(readerSelector).contains('Clusive is a learning environment')
 
         openPanel();
-        cy.get('input[value=comic').click({force: true})        
-        cy.get('input[value=night').click({force: true})
+        
+        setPref('fontFamily', 'comic')        
+        setPref('theme', 'night')
+
         checkPref('fontFamily', 'comic')
         checkPref('theme', 'night')        
     })              
@@ -102,7 +129,7 @@ describe('Preferences', () => {
     })
 
     it('Changes theme to sepia', () => {
-        cy.get('input[value=sepia').click({force: true})  
+        setPref('theme', 'sepia')
         checkPref('theme', 'sepia')
     })    
 
