@@ -16,17 +16,17 @@ describe('Preferences', () => {
         cy.get('button').contains('Log in').click()        
     }
 
-    var verifyClusiveUIPreferences = function() {
-        cy.get('body').should('have.class', 'fl-font-comic-sans')        
-        cy.get('body').should('have.class', 'clusive-theme-night')        
-    }
-
     var preferenceExpects = {
         fontFamily: {
             reader: {
                 prop: '--USER__fontFamily',
                 values: {
                     comic: 'Comic Sans MS, sans-serif'                
+                }
+            },
+            ui: {
+                values: {
+                    comic: 'fl-font-comic-sans'
                 }
             }
         },
@@ -36,8 +36,22 @@ describe('Preferences', () => {
                 values: {
                     night: 'clusive-night'
                 }
+            },
+            ui: {
+                values: {
+                    night: 'clusive-theme-night'
+                }
             }
         },        
+    }
+
+    var checkClusiveUIPreferenceClass = function(pref, expectedValue) {
+        cy.get('body').should('have.class', preferenceExpects[pref].ui.values[expectedValue])   
+    }
+
+    var verifyClusiveUIPreferences = function() {
+        checkClusiveUIPreferenceClass('fontFamily', 'comic')
+        checkClusiveUIPreferenceClass('theme', 'night')
     }
 
     var checkReaderPreferenceProp = function(pref, expectedValue) {
