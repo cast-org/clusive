@@ -113,6 +113,7 @@ describe('While logged in as user samstudent', () => {
     })
 
     // Preserve the session cookie so we don't have to log in multiple times, 
+    // the csrftoken for form submission and other communication,
     // and the local storage for the message queue
     beforeEach(() => {        
         Cypress.Cookies.preserveOnce('sessionid', 'csrftoken')
@@ -185,6 +186,7 @@ describe('While logged in as user samstudent', () => {
 
     it('Resets the display settings', () => {
         cy.get('button.cislc-modalSettings-reset-display').click({force: true})
+        // Wait 2 secs so the reset games applied to both UI and Reader
         cy.wait(2000)
         checkPref('theme', 'default')        
         checkPref('fontFamily', 'default')        
