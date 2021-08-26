@@ -9,22 +9,57 @@ describe('Preferences', () => {
         cy.get('span.icon-settings').first().click()   
     }
 
-    var logIn = function() {
+    var logIn = function(username, password) {
         cy.visit('http://localhost:8000')                
-        cy.get('input#id_username').type('samstudent')
-        cy.get('input#id_password').type('samstudent_pass')
+        cy.get('input#id_username').type(username)
+        cy.get('input#id_password').type(password)
         cy.get('button').contains('Log in').click()        
     }
 
+    var verifyClusiveUIPreferences = function() {
+        cy.get('body').should('have.class', 'fl-font-comic-sans')        
+        cy.get('body').should('have.class', 'clusive-theme-night')        
+    }
+
+    var preferenceExpects = {
+        fontFamily: {
+            reader: {
+                prop: '--USER__fontFamily',
+                values: {
+                    comic: 'Comic Sans MS, sans-serif'                
+                }
+            }
+        },
+        theme: {
+            reader: {
+                prop: '--USER__appearance',
+                values: {
+                    night: 'clusive-night'
+                }
+            }
+        },        
+    }
+
+    var checkReaderPreferenceProp = function(pref, expectedValue) {
+        cy.iframe(readerSelector).should('have.css', preferenceExpects[pref].reader.prop, preferenceExpects[pref].reader.values[expectedValue])        
+    }
+
+    var verifyReaderPreferences = function() {
+        checkReaderPreferenceProp("fontFamily", "comic")        
+        checkReaderPreferenceProp("theme", "night")            
+    }
+
+    // Logs in as the samstudent user
     before(() => {
-        logIn()
+        logIn('samstudent', 'samstudent_pass')
     })
 
-    beforeEach(() => {
-        // Preserve the session cookie so we don't have to log in multiple times
+    // Preserve the session cookie so we don't have to log in multiple times
+    beforeEach(() => {        
         Cypress.Cookies.preserveOnce('sessionid')
       })
 
+    // Clear the cookies at the end of the whole test suite
     after(() => {
         cy.clearCookies()
     })
@@ -39,18 +74,14 @@ describe('Preferences', () => {
         openPanel();
         cy.get('input[value=comic').click({force: true})        
         cy.get('input[value=night').click({force: true})
-        cy.get('body').should('have.class', 'fl-font-comic-sans')        
-        cy.get('body').should('have.class', 'clusive-theme-night')        
-        cy.iframe(readerSelector).should('have.css', '--USER__fontFamily', 'Comic Sans MS, sans-serif')        
-        cy.iframe(readerSelector).should('have.css', '--USER__appearance', 'clusive-night')                
+        verifyClusiveUIPreferences();
+        verifyReaderPreferences();
     })              
 
     it('Reloads the page; the font is still set to comic sans, the page theme is still dark', () => {
         cy.reload()
-        cy.get('body').should('have.class', 'fl-font-comic-sans')        
-        cy.get('body').should('have.class', 'clusive-theme-night')
-        cy.iframe(readerSelector).should('have.css', '--USER__fontFamily', 'Comic Sans MS, sans-serif')   
-        cy.iframe(readerSelector).should('have.css', '--USER__appearance', 'clusive-night')                     
+        verifyClusiveUIPreferences();
+        verifyReaderPreferences();
     })
   })
   
