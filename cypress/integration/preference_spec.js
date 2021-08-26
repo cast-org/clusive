@@ -186,7 +186,7 @@ describe('While logged in as user samstudent', () => {
 
     it('Resets the display settings', () => {
         cy.get('button.cislc-modalSettings-reset-display').click({force: true})
-        // Wait 2 secs so the reset games applied to both UI and Reader
+        // Wait 2 secs so the reset is applied to both UI and Reader
         cy.wait(2000)
         checkPref('theme', 'default')        
         checkPref('fontFamily', 'default')        
