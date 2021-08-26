@@ -28,18 +28,20 @@ describe('Preferences', () => {
                 values: {
                     comic: 'fl-font-comic-sans'
                 }
-            }
+            },    
         },
         theme: {
             reader: {
                 prop: '--USER__appearance',
                 values: {
-                    night: 'clusive-night'
+                    night: 'clusive-night',
+                    sepia: 'clusive-sepia'
                 }
             },
             ui: {
                 values: {
-                    night: 'clusive-theme-night'
+                    night: 'clusive-theme-night',
+                    sepia: 'clusive-theme-sepia'
                 }
             }
         },        
@@ -49,18 +51,13 @@ describe('Preferences', () => {
         cy.get('body').should('have.class', preferenceExpects[pref].ui.values[expectedValue])   
     }
 
-    var verifyClusiveUIPreferences = function() {
-        checkClusiveUIPreferenceClass('fontFamily', 'comic')
-        checkClusiveUIPreferenceClass('theme', 'night')
-    }
-
     var checkReaderPreferenceProp = function(pref, expectedValue) {
         cy.iframe(readerSelector).should('have.css', preferenceExpects[pref].reader.prop, preferenceExpects[pref].reader.values[expectedValue])        
     }
 
-    var verifyReaderPreferences = function() {
-        checkReaderPreferenceProp("fontFamily", "comic")        
-        checkReaderPreferenceProp("theme", "night")            
+    var checkPref = function(pref, expectedValue) {
+        checkClusiveUIPreferenceClass(pref, expectedValue);
+        checkReaderPreferenceProp(pref, expectedValue);
     }
 
     // Logs in as the samstudent user
@@ -71,11 +68,17 @@ describe('Preferences', () => {
     // Preserve the session cookie so we don't have to log in multiple times
     beforeEach(() => {        
         Cypress.Cookies.preserveOnce('sessionid')
+        cy.restoreLocalStorage();
       })
+
+    afterEach(() => {
+        cy.saveLocalStorage();
+    })
 
     // Clear the cookies at the end of the whole test suite
     after(() => {
         cy.clearCookies()
+        cy.clearLocalStorage()
     })
 
     it('Visits the Clues to Clusive article, and sets the font to comic sans and the theme to dark', () => {   
@@ -88,14 +91,20 @@ describe('Preferences', () => {
         openPanel();
         cy.get('input[value=comic').click({force: true})        
         cy.get('input[value=night').click({force: true})
-        verifyClusiveUIPreferences();
-        verifyReaderPreferences();
+        checkPref('fontFamily', 'comic')
+        checkPref('theme', 'night')        
     })              
 
     it('Reloads the page; the font is still set to comic sans, the page theme is still dark', () => {
         cy.reload()
-        verifyClusiveUIPreferences();
-        verifyReaderPreferences();
+        checkPref('fontFamily', 'comic')
+        checkPref('theme', 'night')
     })
+
+    it('Changes theme to sepia', () => {
+        cy.get('input[value=sepia').click({force: true})  
+        checkPref('theme', 'sepia')
+    })    
+
   })
   
