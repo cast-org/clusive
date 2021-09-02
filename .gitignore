@@ -161,3 +161,7 @@ src/pip-delete-this-directory.txt
 /staticfiles
 
 /secrets
+
+# Cypress
+/cypress/screenshots/
+/cypress/videos/
