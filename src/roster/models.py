@@ -40,7 +40,7 @@ class Site(models.Model):
         return '%s (%s)' % (self.name, self.anon_id)
 
 
-class PeriodTypes:
+class RosterDataSource:
     CLUSIVE = 'C'
     GOOGLE = 'G'
 
@@ -54,7 +54,7 @@ class Period(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name='Class name')
     anon_id = models.CharField(max_length=30, unique=True, null=True, verbose_name='Anonymous identifier')
-    type = models.CharField(max_length=4, choices=PeriodTypes.CHOICES, default=PeriodTypes.CLUSIVE)
+    data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
     external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
 
     def __str__(self):
@@ -230,6 +230,17 @@ class ClusiveUser(models.Model):
     )
 
     @property
+    def data_source(self):
+        return self.data_source_of_user(self.user)
+
+    @classmethod
+    def data_source_of_user(cls, user: User):
+        if SocialAccount.objects.filter(user=user).exists():
+            return RosterDataSource.GOOGLE
+        else:
+            return RosterDataSource.CLUSIVE
+
+    @property
     def is_permissioned(self):
         return self.permission in ResearchPermissions.RESEARCHABLE
 
@@ -240,8 +251,7 @@ class ClusiveUser(models.Model):
     @property
     def can_set_password(self):
         """True if this user can change their own password."""
-        social_account = SocialAccount.objects.filter(user=self.user).exists()
-        return self.role and self.role != Roles.GUEST and not social_account
+        return self.role and self.role != Roles.GUEST and self.data_source == RosterDataSource.CLUSIVE
 
     @property
     def can_upload(self):

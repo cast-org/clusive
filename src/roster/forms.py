@@ -33,6 +33,7 @@ class UserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].required = True
+        self.fields['first_name'].label = 'Display name'
         self.fields['username'].required = True
 
     def _post_clean(self):
@@ -63,6 +64,23 @@ class UserEditForm(UserForm):
                                    'autocomplete': 'new-password',
                                    'class': 'form-control',
                                }))
+
+    # Consider something like this to prevent changing email address of a Google user.
+    # However, google identity is stored separately by allauth, and users can have both a username/password
+    # AND a google login, so it's not clear if this is necessary.
+    # Also, there is a class of "invited" google users who have been imported from Classroom but have never logged
+    # in; the data_source_of_user will not return GOOGLE for them.
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # Google-sourced users can't have their username, email etc changed from Clusive.
+    #     if ClusiveUser.data_source_of_user(self.instance) == RosterDataSource.GOOGLE:
+    #         logger.debug('this is a google user %s', self.instance)
+    #         del self.fields['email']
+    #         del self.fields['username']
+    #     else:
+    #         logger.debug('this is not a google user %s', self.instance)
+
 
 
 # Used for simple cases where entering the password twice is not required.

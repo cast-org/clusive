@@ -39,7 +39,8 @@ from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm, PeriodCreateForm, PeriodNameForm
-from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, PeriodTypes
+from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, \
+    RosterDataSource
 from roster.signals import user_registered
 
 logger = logging.getLogger(__name__)
@@ -431,7 +432,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             # else:
             #     # No periods.  If this case actually happens, should have a better error message.
             #     self.handle_no_permission()
-        if self.current_period != user.current_period and self.current_period != None:
+        if self.current_period != user.current_period and self.current_period is not None:
             user.current_period = self.current_period
             user.save()
         return super().get(request, *args, **kwargs)
@@ -440,11 +441,10 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         context = super().get_context_data(**kwargs)
         context['periods'] = self.periods
         context['current_period'] = self.current_period
-        if self.current_period != None:
+        if self.current_period is not None:
             context['students'] = self.make_student_info_list()
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
-            logger.debug('Students: %s', context['students'])
-            context['allow_add_student'] = (self.current_period.type == PeriodTypes.CLUSIVE)
+            context['allow_add_student'] = (self.current_period.data_source == RosterDataSource.CLUSIVE)
         return context
 
     def make_student_info_list(self):
@@ -582,8 +582,7 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
         instance=Period(site=self.clusive_user.get_site())
         kwargs = self.get_form_kwargs()
         kwargs['instance'] = instance
-        google_user = SocialAccount.objects.filter(user=self.clusive_user.user, provider='google').exists()
-        kwargs['allow_google'] = google_user
+        kwargs['allow_google'] = (self.clusive_user.data_source == RosterDataSource.GOOGLE)
         logger.debug('kwargs %s', kwargs)
         return PeriodCreateForm(**kwargs)
 
@@ -609,6 +608,7 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
 
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
+
 
 def finish_login(request):
     if request.user.is_staff:
@@ -847,7 +847,7 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
         # Create Period
         period = Period.objects.create(name=session_data['name'],
                                        site=creator.get_site(),
-                                       type=PeriodTypes.GOOGLE,
+                                       data_source=RosterDataSource.GOOGLE,
                                        external_id=session_data['id'])
         period.users.set(user_list)
         period.save()
@@ -894,7 +894,7 @@ class GetGoogleCourses(LoginRequiredMixin, View):
             courses = []
         logger.debug('There are (%s) Google courses', len(courses))
         for course in courses:
-            course['imported'] = Period.objects.filter(type=PeriodTypes.GOOGLE, external_id=course['id']).exists()
+            course['imported'] = Period.objects.filter(data_source=RosterDataSource.GOOGLE, external_id=course['id']).exists()
             logger.debug('- %s, id = %s. Imported=%s', course['name'], course['id'], course['imported'])
         request.session['google_courses'] = courses
         return HttpResponseRedirect(reverse('manage_google_courses'))
