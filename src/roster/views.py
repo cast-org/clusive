@@ -1009,7 +1009,7 @@ def add_scope_access(request):
         'scope': new_scopes,
         'include_granted_scopes': 'true',
         'state': oauth2_state,
-        'redirect_uri': 'http://localhost:8000/account/add_scope_callback/'
+        'redirect_uri': get_add_scope_redirect_uri(request),
     })
     logger.debug('Authorization request to provider for larger scope access')
     return HttpResponseRedirect(authorization_uri + parameters)
@@ -1033,7 +1033,7 @@ def add_scope_callback(request):
         'POST',
         'https://accounts.google.com/o/oauth2/token',
         data={
-            'redirect_uri': 'http://localhost:8000/account/add_scope_callback/',
+            'redirect_uri': get_add_scope_redirect_uri(request),
             'grant_type': 'authorization_code',
             'code': code,
             'client_id': client_info.client_id,
@@ -1056,3 +1056,14 @@ def add_scope_callback(request):
         return HttpResponseRedirect(reverse(return_uri, kwargs={'course_id': course_id}))
     else:
         return HttpResponseRedirect(reverse(return_uri))
+
+
+def get_add_scope_redirect_uri(request):
+    # Determine if we are using HTTPS - outside any reverse proxy.
+    # Would be better to do this by setting SECURE_PROXY_SSL_HEADER but I am not 100% sure that will not cause other
+    # problems, so trying this first and will attempt to set that as a smaller update later.
+    # See: https://ubuntu.com/blog/django-behind-a-proxy-fixing-absolute-urls
+    scheme = request.scheme
+    if scheme == 'http' and request.META.get('HTTP_X_FORWARDED_PROTO') == 'https':
+        scheme = 'https'
+    return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'
