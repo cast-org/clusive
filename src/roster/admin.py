@@ -51,7 +51,7 @@ class PreferenceAdmin(admin.ModelAdmin):
 @admin.register(Period)
 class PeriodAdmin(admin.ModelAdmin):
     model = Period
-    list_display = ('name', 'site', 'id', 'anon_id')
+    list_display = ('name', 'site', 'id', 'anon_id', 'data_source')
 
 
 @admin.register(PreferenceSet)
