@@ -130,6 +130,16 @@ function libraryListCollapse() {
     $('.card-toggle-btn').CFW_Collapse('hide');
 }
 
+function getLoadingMsg() {
+    'use strict';
+
+    return '' +
+    '<div class="text-center py-0_5">' +
+    '    <strong>Loading...</strong>' +
+    '    <div class="loader-circle" role="status" aria-hidden="true"></div>' +
+    '</div>';
+}
+
 // Return focus to the menu toggle control in place of the now visually hidden
 // menu item in a dropdown when the confirmation modal is closed.
 function confirmationRefocus($trigger, $modal) {
@@ -149,6 +159,12 @@ function confirmationPublicationDelete() {
         var $trigger = $(e.currentTarget);
         var $modal = $('#modalConfirm');
         var article = $trigger.data('clusive-book-id');
+
+        // Replace modal body and footer after hide
+        $modal.on('afterHide.cfw.modal', function() {
+            $modal.find('.modal-body').replaceWith(getLoadingMsg());
+            $modal.find('.modal-footer').remove();
+        });
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();
@@ -176,6 +192,11 @@ function confirmationSharing() {
         var $trigger = $(e.currentTarget);
         var $modal = $('#modalConfirm');
         var book = $trigger.data('clusive-book-id');
+
+        // Replace form after hide
+        $modal.on('afterHide.cfw.modal', function() {
+            $modal.find('form').replaceWith(getLoadingMsg());
+        });
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();

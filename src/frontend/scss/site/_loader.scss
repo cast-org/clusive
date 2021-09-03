@@ -1,0 +1,25 @@
+@keyframes loader-spin-cw {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loader-circle {
+    display: inline-block;
+    width: $loader-width;
+    height: $loader-height;
+    vertical-align: $loader-circle-vertical-align;
+    border: $loader-circle-border-width solid currentColor;
+    border-left-color: transparent;
+    // stylelint-disable-next-line property-disallowed-list
+    border-radius: 50%;
+    animation: $loader-animation-speed linear infinite loader-spin-cw;
+}
+
+@if $enable-transitions-reduced {
+    @media (prefers-reduced-motion: reduce) {
+        .loader-spin-cw {
+            animation-duration: $loader-animation-speed * 2;
+        }
+    }
+}
