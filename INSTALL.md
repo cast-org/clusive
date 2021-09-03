@@ -158,8 +158,10 @@ there are several additional steps.
      "APIs and Services" section of the Console.
      * Application type is "Web application"
      * Authorized JavaScript origins should be the URL of your instance, eg `https://clusive.cast.org`.
-     * Authorized redirect URIs should be the URL of your instance plus accounts/google/login/callback/,
-       eg `https://clusive.cast.org/accounts/google/login/callback/`
+     * Authorized redirect URIs should list two URIs: your instance with the paths '/accounts/google/login/callback/' and '/account/add_scope_callback/',
+       eg 
+       * `https://clusive.cast.org/accounts/google/login/callback/`
+       * `https://clusive.cast.org/account/add_scope_callback/`
      * When created, take note of the Client ID and Client Secret.
 6. Add the Google "provider" to Clusive as [documented](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration) for the Django-allauth module. There are a few different ways to do this. The manual method is as follows:
     * Log in to your instance as an administrator.
