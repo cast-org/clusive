@@ -211,6 +211,11 @@
     //margin-top: -.5rem;
     margin-left: 0;
     @include font-size(.875rem);
+
+    .note-add-button[hidden] + .list-item {
+        padding-left: 0;
+        border-left-width: 0;
+    }
 }
 
 .highlight {

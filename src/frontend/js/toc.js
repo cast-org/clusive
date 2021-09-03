@@ -408,7 +408,7 @@ function setUpNotes() {
         var $container = $(this).closest('.annotation-container');
         $container.find('.note-display').hide();
         $container.find('.note-edit').show();
-        $container.find('.note-add-button').hide();
+        $container.find('.note-add-button').attr('hidden', 'true');
     });
 
     // Hide edit area and show static display
@@ -418,6 +418,13 @@ function setUpNotes() {
         var $container = $(this).closest('.annotation-container');
         $container.find('.note-display').show();
         $container.find('.note-edit').hide();
+
+        var text = $container.find('textarea').val();
+        if (text === "") {
+            $container.find('.note-title').hide();
+            $container.find('.note-add-button').removeAttr('hidden');
+            $container.find('.note-display').hide();
+        }
     });
 
     // Delete note by setting it to empty, but stash previous value for use by undo.

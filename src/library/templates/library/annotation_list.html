@@ -7,9 +7,7 @@
                data-cle-handler="click" data-cle-control="reader-navigation-annotation" data-cle-value="annotation-nav-link:{{a.id}}"
                class="goto-highlight highlight">{{ a.clean_text_limited }}</a>
             <ul class="list list-divided list-horizontal list-highlight-action">
-                {% if not a.note %}
-                <li class="list-item note-add-button"><a href="#" role="button" class="note-edit-button">Add a note</a></li>
-                {% endif %}
+                <li class="list-item note-add-button" {% if a.note %} hidden{% endif %}><a href="#" role="button" class="note-edit-button">Add a note</a></li>
                 <li class="list-item"><a href="#" role="button" class="delete-highlight">Delete highlight</a></li>
             </ul>
             <div class="note note-edit" style="display:none;">
@@ -18,7 +16,7 @@
                 </div>
                 <form>
                     <div class="form-group">
-                        <textarea type="text" class="form-control form-control-small" placeholder="Add a note..." aria-label="Add a note">{{ a.note|default_if_none:'' }}</textarea>
+                        <textarea class="form-control form-control-small" placeholder="Add a note..." aria-label="Add a note">{{ a.note|default_if_none:'' }}</textarea>
                     </div>
                     <div>
                         <button type="submit" class="btn btn-primary btn-small">Done</button>
