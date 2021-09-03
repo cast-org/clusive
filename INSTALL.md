@@ -174,3 +174,10 @@ there are several additional steps.
       But its ID must match what is in `settings.py`; the provided settings file includes `SITE_ID = 1`.
   
 
+## Running Cypress tests
+
+ * Run the standard local install. This will install Cypress as a dev dependency.
+ * In the Clusive\target directory, run `python manage.py createrostersamples` if you have not already. 
+   The tests depend on logging in as one of these test users.
+ * Run `npx cypress open` from the root to interactively run the tests.
+ * For IntelliJ users, the "Cypress Support" plugin is helpful.
