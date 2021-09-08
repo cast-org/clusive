@@ -11,7 +11,7 @@ google-auth-oauthlib==0.4.4
 google-cloud-translate==2.0.1
 gunicorn==20.1.0
 lemminflect==0.2.2
-mailchimp-marketing==3.0.42
+mailchimp-marketing==3.0.61
 marisa-trie==0.7.5
 nltk==3.4.5
 numpy==1.17.4
