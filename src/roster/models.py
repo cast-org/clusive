@@ -3,7 +3,6 @@ import logging
 from datetime import timedelta
 
 from allauth.account.signals import user_signed_up
-from allauth.socialaccount.models import SocialAccount
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -177,7 +176,9 @@ class ClusiveUser(models.Model):
     # Anonymous ID for privacy protection when logging activities for research
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    # If True, user cannot log in until they have confirmed their email.
+    data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
+
+# If True, user cannot log in until they have confirmed their email.
     unconfirmed_email = models.BooleanField(default=False)
 
     # List of all class periods the user is part of
@@ -228,17 +229,6 @@ class ClusiveUser(models.Model):
         choices=Roles.ROLE_CHOICES,
         default=Roles.GUEST
     )
-
-    @property
-    def data_source(self):
-        return self.data_source_of_user(self.user)
-
-    @classmethod
-    def data_source_of_user(cls, user: User):
-        if SocialAccount.objects.filter(user=user).exists():
-            return RosterDataSource.GOOGLE
-        else:
-            return RosterDataSource.CLUSIVE
 
     @property
     def is_permissioned(self):
@@ -369,7 +359,8 @@ class ClusiveUser(models.Model):
         clusive_user = ClusiveUser.objects.create(user=django_user,
                                                   role=props.get('role'),
                                                   permission=props.get('permission'),
-                                                  anon_id=props.get('anon_id'))
+                                                  anon_id=props.get('anon_id'),
+                                                  data_source=props.get('data_source', RosterDataSource.CLUSIVE))
         site_name = props.get('site', None)
         period_name = props.get('period', None)
         if site_name and period_name:

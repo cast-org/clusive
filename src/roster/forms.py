@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Form
 from multiselectfield import MultiSelectFormField
 
-from roster.models import Period, Roles, ClusiveUser, EducationLevels
+from roster.models import Period, Roles, ClusiveUser, EducationLevels, RosterDataSource
 
 logger = logging.getLogger(__name__)
 
@@ -65,22 +65,14 @@ class UserEditForm(UserForm):
                                    'class': 'form-control',
                                }))
 
-    # Consider something like this to prevent changing email address of a Google user.
-    # However, google identity is stored separately by allauth, and users can have both a username/password
-    # AND a google login, so it's not clear if this is necessary.
-    # Also, there is a class of "invited" google users who have been imported from Classroom but have never logged
-    # in; the data_source_of_user will not return GOOGLE for them.
-    #
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     # Google-sourced users can't have their username, email etc changed from Clusive.
-    #     if ClusiveUser.data_source_of_user(self.instance) == RosterDataSource.GOOGLE:
-    #         logger.debug('this is a google user %s', self.instance)
-    #         del self.fields['email']
-    #         del self.fields['username']
-    #     else:
-    #         logger.debug('this is not a google user %s', self.instance)
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Google-sourced users can't have their username, email etc changed from Clusive.
+        clusive_user = ClusiveUser.objects.get(user=self.instance)
+        if clusive_user.data_source == RosterDataSource.GOOGLE:
+            del self.fields['email']
+            del self.fields['password']
+            del self.fields['username']
 
 
 # Used for simple cases where entering the password twice is not required.

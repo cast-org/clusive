@@ -611,9 +611,18 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
 
 
 def finish_login(request):
+    """
+    Called as the redirect after Google Oauth SSO login.
+    Checks if we need to ask user for their role and privacy policy agreement, or if that's already done.
+    """
     if request.user.is_staff:
         return HttpResponseRedirect('/admin')
     clusive_user = ClusiveUser.from_request(request)
+    # If you're logging in via Google, then you are marked as a Google user from now on.
+    if clusive_user.data_source != RosterDataSource.GOOGLE:
+        clusive_user.data_source = RosterDataSource.GOOGLE
+        clusive_user.save()
+    # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
         request.session['sso'] = True
         return HttpResponseRedirect(reverse('sign_up_role'))
@@ -841,6 +850,7 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
                     'role': person['role'],
                     'permission': creating_permission,
                     'anon_id': ClusiveUser.next_anon_id(),
+                    'data_source': RosterDataSource.GOOGLE,
                 }
                 user_list.append(ClusiveUser.create_from_properties(properties))
 
