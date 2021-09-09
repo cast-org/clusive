@@ -22,7 +22,8 @@ urlpatterns = [
          name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
         template_name='roster/password_reset_confirm.html',
-        post_reset_login=True),
+        post_reset_login=True,
+        post_reset_login_backend='django.contrib.auth.backends.ModelBackend'),
          name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='roster/password_reset_complete.html'),
