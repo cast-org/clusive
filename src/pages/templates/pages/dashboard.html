@@ -55,6 +55,9 @@
             {% if panels.recent_reads %}
                 {% include "pages/partial/dashboard_panel_recent_reads.html" with data=data.recent_reads %}
             {% endif %}
+            {% if panels.popular_reads %}
+                {% include "pages/partial/dashboard_panel_popular_reads.html" with data=data.popular_reads %}
+            {% endif %}
         </div>
     </div>
 

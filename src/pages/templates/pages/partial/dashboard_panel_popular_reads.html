@@ -1,0 +1,54 @@
+<div class="box box-mascot-tipped">
+    <h2>Student reading</h2>
+    <p>See what your students are reading and what they said they learned.</p>
+
+    {% if periods.count == 0 %}
+
+    <div class="box-divider"></div>
+    <p>
+        You haven't created any student accounts, yet.
+        Set up your classes by clicking the "Manage" link in the navigation bar.
+    </p>
+    <a href="{% url 'manage' %}" class="btn btn-primary">Manage</a>
+
+    {% else %}
+
+    <ul class="nav box-tabs mb-0">
+        <li class="nav-item"><button type="button" class="nav-link" data-cfw="tab" data-cfw-tab-target="#popularTab0">Popular reads</button></li>
+        <li class="nav-item"><button type="button" class="nav-link" data-cfw="tab" data-cfw-tab-target="#popularTab1">Assigned reads</button></li>
+    </ul>
+
+    <div class="box-divider"></div>
+    <div class="tab-content">
+        <div class="tab-pane" id="popularTab0">
+            <div class="library-grid dashboard-grid">
+                {% for trend in data.all %}
+                    {% include "library/partial/library_card.html" with book=trend.book show_menu=False show_topics=False %}
+                {% empty %}
+                <p class="mx-1">
+                    Your students haven't done any reading, yet.
+                    Assign them something to read by clicking the <span class="icon-ellipsis-vert"></span>
+                    (more actions) icon in the lower right of any reading panel in the library.
+                </p>
+                <a href="{% url 'reader_index' %}" class="btn btn-primary mx-1">Go to library</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="tab-pane" id="popularTab1">
+            <div class="library-grid dashboard-grid">
+                {% for trend in data.assigned %}
+                {% include "library/partial/library_card.html" with book=trend.book show_menu=False show_topics=False %}
+                {% empty %}
+                <p class="mx-1">
+                    Your students haven't done any assigned reading, yet.
+                    Assign them something to read by clicking the <span class="icon-ellipsis-vert"></span>
+                    (more actions) icon in the lower right of any reading panel in the library.
+                </p>
+                <a href="{% url 'reader_index' %}" class="btn btn-primary mx-1">Go to library</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+</div>

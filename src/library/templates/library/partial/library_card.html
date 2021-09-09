@@ -10,7 +10,7 @@
     </div>
     {% endif %}
     <div class="card-body">
-        {% if book.description %}<p>{{ book.description|highlight:query }}</p>{% endif %}
+        {% if book.description %}<p class="card-text">{{ book.description|highlight:query }}</p>{% endif %}
     </div>
         <div class="card-footer">
             <div class="row">
