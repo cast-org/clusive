@@ -238,6 +238,14 @@ class BookTrend(models.Model):
         return '<BookTrend %s/%s>' % (self.book, self.period)
 
     @classmethod
+    def top_trends(cls, period):
+        return cls.objects.filter(period=period).order_by('-popularity')
+
+    @classmethod
+    def top_assigned(cls, period):
+        return cls.objects.filter(period=period, book__assignments__period=period).order_by('-popularity')
+
+    @classmethod
     def update_all_trends(cls):
         for period in Period.objects.all():
             logger.debug('Updating trends for %s', period)

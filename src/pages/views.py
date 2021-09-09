@@ -15,7 +15,7 @@ from eventlog.models import Event
 from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
-from library.models import Book, BookVersion, Paradata, Annotation
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.views import TranslateApiManager
@@ -170,30 +170,39 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 'results': ClusiveRatingResponse.get_graphable_results(),
             }
 
-        # Getting Started panel
-        last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
-        self.panels['getting_started'] = not last_reads or len(last_reads) == 0
-        if self.panels['getting_started']:
-            self.data['getting_started'] = {
-                'featured': list(Book.get_featured_books()[:2])
+        # Popular Reads panel (teacher)
+        self.panels['popular_reads'] = self.teacher
+        if self.panels['popular_reads']:
+            self.data['popular_reads'] = {
+                'all': BookTrend.top_trends(self.current_period)[:3],
+                'assigned': BookTrend.top_assigned(self.current_period)[:3],
             }
 
-        # Recent Reads panale
-        self.panels['recent_reads'] = len(last_reads) > 0
-        if self.panels['recent_reads']:
-            if len(last_reads) < 3:
-                # Add featured books to the list
-                features = list(Book.get_featured_books()[:3])
-                # Remove any featured books that are in the user's last-read list.
-                for para in last_reads:
-                    if para.book in features:
-                        features.remove(para.book)
-            else:
-                features = []
-            self.data['recent_reads'] = {
-                'last_reads': last_reads,
-                'featured': features,
-            }
+        # Getting Started panel
+        if not self.teacher:
+            last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
+            self.panels['getting_started'] = not last_reads or len(last_reads) == 0
+            if self.panels['getting_started']:
+                self.data['getting_started'] = {
+                    'featured': list(Book.get_featured_books()[:2])
+                }
+
+            # Recent Reads panel
+            self.panels['recent_reads'] = len(last_reads) > 0
+            if self.panels['recent_reads']:
+                if len(last_reads) < 3:
+                    # Add featured books to the list
+                    features = list(Book.get_featured_books()[:3])
+                    # Remove any featured books that are in the user's last-read list.
+                    for para in last_reads:
+                        if para.book in features:
+                            features.remove(para.book)
+                else:
+                    features = []
+                self.data['recent_reads'] = {
+                    'last_reads': last_reads,
+                    'featured': features,
+                }
 
         # Student Activity panel
         self.panels['student_activity'] = self.teacher
