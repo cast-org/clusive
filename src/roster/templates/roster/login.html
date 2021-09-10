@@ -40,13 +40,13 @@
                             <li>
                             {% endfor %}
                         </ul>
-                        {% if messages %}
-                        <div class="errorlist">
-                            {% for message in messages %}
-                            <p>{{ message }}</p>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
+                        {% for message in messages %}
+                            {% if message.level >= DEFAULT_MESSAGE_LEVELS.WARNING %}
+                                <div class="errorlist">
+                                    <p>{{ message }}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
 
                     <div class="rule-text">or</div>
