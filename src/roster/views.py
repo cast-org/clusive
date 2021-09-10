@@ -481,7 +481,6 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Sett
         return data
 
     def form_valid(self, form):
-        self.check_access_token()
         # Create User
         form.save()
         target : User
