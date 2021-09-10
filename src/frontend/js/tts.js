@@ -438,7 +438,7 @@ clusiveTTS.readSelection = function(elements, selection) {
     selectionTexts = selectionTexts.filter(function(selectionText) {
         var trimmed = selectionText.trim();
         var found = false;
-        $.each(filteredElements, function(elem) {
+        $.each(filteredElements, function(i, elem) {
             var elemText = $(elem).text();
             if (elemText.includes(trimmed)) {
                 found = true;
