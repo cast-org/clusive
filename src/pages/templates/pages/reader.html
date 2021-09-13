@@ -216,6 +216,10 @@ var manifest_path = "{{ manifest_path }}";
                             console.debug("Performing UI tasks on first Reader resource load");
                             buildTableOfContents();
                             buildAnnotationList();
+                            // Handle initial TTS setting
+                            console.debug('doing initial tts setting');
+                            var availablePreferredVoices = cisl.prefs.modalSettings.getAvailablePreferredVoices(clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_readVoices);
+                            clusiveTTS.setCurrentVoice(availablePreferredVoices[0]);
                             firstResourceLoaded = true;
                         }
                     });
@@ -260,7 +264,7 @@ var manifest_path = "{{ manifest_path }}";
         // Wait for the reader preferences bridge to be created, then create the Reader
         document.addEventListener("cisl.prefs.readerPreferencesBridge.onCreate", function (e) {
             console.debug("cisl.prefs.readerPreferencesBridge.created event fired", e);
-                        
+
             var readerPreferences = e.detail.readerPreferences;
 
             var mergedUserSettings = $.extend({}, readerOptions.userSettings, readerPreferences);
@@ -269,10 +273,7 @@ var manifest_path = "{{ manifest_path }}";
             console.debug("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
                     console.debug("D2Reader began loading resource at: " +  new Date());
-                    clusiveTTS.readerReady = true;                    
-                    // Handle initial TTS setting
-                    var availablePreferredVoices = cisl.prefs.modalSettings.getAvailablePreferredVoices(clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_readVoices);
-                    clusiveTTS.setCurrentVoice(availablePreferredVoices[0]);
+                    clusiveTTS.readerReady = true;
                 }).catch(error => {
                     console.error("error loading: ", error);
                 });
