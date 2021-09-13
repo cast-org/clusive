@@ -499,9 +499,14 @@ clusiveTTS.setCurrentVoice = function(name) {
             if (voice.name === name) {
                 clusiveTTS.currentVoice = voice;
                 if (clusiveTTS.readerReady) {
-                    console.debug('setting D2Reader voice to ', voice);
+                    var voiceSpecs = {
+                        usePublication: true,
+                        lang: voice.lang,
+                        name: voice.name
+                    };
+                    console.debug('setting D2Reader voice to ', voiceSpecs);
                     D2Reader.applyTTSSettings({
-                        voice: voice
+                        voice: voiceSpecs
                     });
                 }
             }
@@ -511,7 +516,7 @@ clusiveTTS.setCurrentVoice = function(name) {
         if (clusiveTTS.readerReady) {
             console.debug('Unsetting D2Reader voice');
             D2Reader.applyTTSSettings({
-                voice: 'none'
+                voice: null
             });
         }
     }
