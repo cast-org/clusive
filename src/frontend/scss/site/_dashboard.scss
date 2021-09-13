@@ -105,7 +105,7 @@
     overflow: hidden;
 
     .tooltip-body {
-        display: inline-flex;
+        //display: inline-flex;
 
         .tooltip-truncate {
             max-width: 12rem;
@@ -121,7 +121,9 @@
     display: flex;
     margin-left: 4px;
     //overflow: hidden;
+    user-select: none;
     background-color: var(--CT_readTimeBarBg);
+    border: 0;
     @include border-radius($progress-border-radius);
 
     &:focus {
