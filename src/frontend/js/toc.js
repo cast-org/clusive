@@ -420,7 +420,7 @@ function setUpNotes() {
         $container.find('.note-edit').hide();
 
         var text = $container.find('textarea').val();
-        if (text === "") {
+        if (text === '') {
             $container.find('.note-title').hide();
             $container.find('.note-add-button').removeAttr('hidden');
             $container.find('.note-display').hide();

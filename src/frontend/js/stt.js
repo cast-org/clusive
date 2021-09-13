@@ -27,7 +27,6 @@
             STT_SUPPORT = true;
             STT_RECOGNITION = SpeechRecognition;
         } else {
-            /* eslint-disable-next-line no-console */
             console.warn('SpeechRecognition is not supported by this browser.');
             $(document.body).trigger('nosupport.cast.stt');
         }
