@@ -15,19 +15,29 @@ var SessionExpireWarning = {
     lastStatus: 'ACTIVE',                  // status as of previous check.
     timer: null,                           // Timer for periodic checks
     ignoreDialogClose: false,              // Set temporarily to true when we're programmatically closing the dialog
+    lastFocus: null,                       // Store last focused element (if any) when modal is shown
 
     init: function() {
         'use strict';
 
         // If there's no warning dialog on this page, then don't do anything.
-        if ($(SessionExpireWarning.dialogTrigger).length > 0) {
-            // We use an interval timer since one-shot timers might never fire if, say, laptop is closed for a while.
-            SessionExpireWarning.timer = setInterval(SessionExpireWarning.checkSessionAge, SessionExpireWarning.tickPeriod);
-            console.debug('SEW Starting Timer = ', SessionExpireWarning.timer);
-            $(SessionExpireWarning.dialog).on('afterHide.cfw.modal', SessionExpireWarning.dialogClosed);
-        } else {
+        if (!$(SessionExpireWarning.dialogTrigger).length > 0) {
             console.debug('SEW not starting, no dialog on this page');
+            return;
         }
+
+        // We use an interval timer since one-shot timers might never fire if, say, laptop is closed for a while.
+        SessionExpireWarning.timer = setInterval(SessionExpireWarning.checkSessionAge, SessionExpireWarning.tickPeriod);
+        console.debug('SEW Starting Timer = ', SessionExpireWarning.timer);
+        $(SessionExpireWarning.dialog).on('afterHide.cfw.modal', SessionExpireWarning.dialogClosed);
+
+        // Restore focus to previous item after dialog is hidden
+        $(SessionExpireWarning.dialog).on('afterHide.cfw.modal', function() {
+            if (SessionExpireWarning.lastFocus !== null) {
+                SessionExpireWarning.lastFocus.focus();
+            }
+            SessionExpireWarning.lastFocus = null;
+        });
     },
 
     // Sends request to the server if necessary; returns a promise that will resolve after this check.
@@ -138,6 +148,7 @@ var SessionExpireWarning = {
         'use strict';
 
         PageTiming.blocked(true);
+        SessionExpireWarning.lastFocus = document.activeElement;
         $(SessionExpireWarning.dialogTrigger).CFW_Modal('show');
     },
 
