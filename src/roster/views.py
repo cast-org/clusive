@@ -1075,4 +1075,10 @@ def get_add_scope_redirect_uri(request):
     scheme = request.scheme
     if scheme == 'http' and request.META.get('HTTP_X_FORWARDED_PROTO') == 'https':
         scheme = 'https'
-    return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'
+    port = request.get_port()
+    if port is None or port == '':
+        port = ''
+    else:
+        port = ':' + port
+
+    return scheme + '://' + get_current_site(request).domain + port + '/account/add_scope_callback/'
