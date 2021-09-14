@@ -198,14 +198,9 @@
                             <div class="setting">
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
-                                    <div class="option-read-voice">
-                                        <button id="voiceMenu" type="button" class="link-btn" data-cfw="dropdown">
-                                            <span id="currentVoice">Choose...</span>
-                                            <span class="caret" aria-hidden="true"></span>
-                                        </button>
-                                        <ul id="voiceListing" class="dropdown-menu dropreverse">
-                                        </ul>
-                                    </div>
+                                    <select class="cislc-modalSettings-readVoice form-control">
+                                        <option value="default">Choose...</option>
+                                    </select>
                                 </fieldset>
                             </div>
                             <div class="setting">
@@ -230,7 +225,7 @@
                         <div class="setting">
                             <fieldset>
                                 <legend class="setting-title">Translation language</legend>
-                                <select id="language-select" class="form-control">
+                                <select class="cislc-modalSettings-languageSelect form-control">
                                     <option value="default">Choose...</option>
                                     {% for lang in translation_languages %}
                                     <option value="{{lang.language}}">{{lang.name}}</option>

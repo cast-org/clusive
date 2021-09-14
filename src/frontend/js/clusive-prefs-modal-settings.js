@@ -48,6 +48,21 @@
             setModalSettingsByPreferences: {
                 funcName: 'cisl.prefs.modalSettings.setModalSettingsByPreferences',
                 args: ['{that}.model.preferences', '{that}']
+            },
+            setupVoiceListing: {
+                funcName: 'cisl.prefs.modalSettings.setupVoiceListing',
+                args: ['{that}']
+            }
+        },
+        listeners: {
+            'onCreate.setupVoiceListing': {
+                funcName: 'cisl.prefs.modalSettings.setupVoiceListing',
+                args: ['{that}']
+            },
+            'onCreate.setupVoicesChangedListener': {
+                funcName: 'cisl.prefs.modalSettings.setupVoicesChangedListener',
+                args: ['{that'],                
+                "after": "setupVoiceListing"
             }
         },
         modelListeners: {
@@ -116,9 +131,10 @@
             glossary: '.cislc-modalSettings-glossary',
             scroll: '.cislc-modalSettings-scroll',
             readSpeed: '.cislc-modalSettings-readSpeed',
+            readVoice: '.cislc-modalSettings-readVoice',
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
-            translationLanguageButton: '.translation-lang-button',
+            languageSelect: '.cislc-modalSettings-languageSelect',            
             voiceButton: '.voice-button'
         },
         bindings: {
@@ -127,8 +143,10 @@
             letterSpacing: 'modalSettings.letterSpacing',
             font: 'modalSettings.font',
             color: 'modalSettings.color',
+            readVoice: 'modalSettings.readVoice',
             readSpeed: 'modalSettings.readSpeed',
             scroll: 'modalSettings.scroll',
+            languageSelect: 'modalSettings.translationLanguage',
             glossaryCheckbox: {
                 selector: 'glossary',
                 path: 'modalSettings.glossary',
@@ -184,14 +202,26 @@
 
         cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);
 
-        cisl.prefs.modalSettings.handleTranslationLanguagePreferences(fluid.get(preferences, 'cisl_prefs_translationLanguage'), that);
+        that.applier.change('modalSettings.translationLanguage', fluid.get(preferences, 'cisl_prefs_translationLanguage'));
 
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
-    cisl.prefs.modalSettings.handleTranslationLanguagePreferences = function (translationLanguageCode, that) {
-        console.debug('handleTranslationLanguagePreferences started; translation_language: ' + translationLanguageCode);
-        $('#language-select').val(translationLanguageCode);
+
+    cisl.prefs.modalSettings.setupVoiceListing = function (that) {
+        console.debug("cisl.prefs.modalSettings.setupVoiceListing");
+        clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
+            console.debug("setupVoiceListing for ", voice);
+            var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`                        
+            var readVoiceSelect = that.locate("readVoice");            
+            readVoiceSelect.append(optionMarkup);
+        });
+        cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(that.model.preferences, "cisl_prefs_readVoices"), that);
+    };
+
+    cisl.prefs.modalSettings.setupVoicesChangedListener = function (that) {
+        console.debug("setting up window.speechSynthesis.onvoiceschanged listener to refresh voice listing");
+        window.speechSynthesis.onvoiceschanged = that.setupVoiceListing;
     };
 
     cisl.prefs.modalSettings.handleChosenVoiceSetting = function(chosenVoice, that) {
@@ -207,48 +237,55 @@
             });
         } else filteredReadVoices = [];
 
-        // Create a new array
-
+        // Create a new array with the chosen voice at the front 
         var newReadVoices = [chosenVoice].concat(filteredReadVoices);
 
-        console.log("new read voices: ", newReadVoices);
+        console.debug("new read voices: ", newReadVoices);
+
+        // Set array on the preference model
         that.applier.change('preferences.cisl_prefs_readVoices', newReadVoices);
 
-    }
+        // Set chosen voice in the TTS module
+        clusiveTTS.setCurrentVoice(chosenVoice);
+    };
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
-        if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {
-            clearVoiceListing();
+        console.debug("handleReadVoicesPreference", readVoices, that);
+        if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {            
             return;
         }
-        console.log("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
-        var voiceFound = false;
-        var voiceButtons = that.locate('voiceButton');
-        readVoices.forEach(function (preferredVoice) {
-            if(voiceFound) {
-                return;
-            }
-            console.log("Checking for preferred voice: " + preferredVoice);
-            voiceButtons.each(function(idx) {
-                if(voiceFound) {
-                    return;
-                }
-                var voiceName = $(this).text();
-                console.log("Current voice button being checked: " + voiceName);
-                if(voiceName === preferredVoice) {
-                    voiceFound = true;
-                    var voiceButton = $(this);
-                    // Currently necessary to avoid clicking button before Reader is ready
-                    setTimeout(function() {
-                        console.debug("clicking voice button", voiceButton);
-                        $(voiceButton).click();
-                    }, 500, voiceButton);
 
-                }
-            });
+        console.debug("cisl.prefs.modalSettings.handleReadVoicesPreference started; readVoices: ", readVoices);
+
+        var availablePreferredVoices = cisl.prefs.modalSettings.getAvailablePreferredVoices(readVoices);
+        console.debug("handleReadVoicesPreference:availablePreferredVoices", availablePreferredVoices);
+
+        if(availablePreferredVoices.length > 0) {
+            var preferredVoice = availablePreferredVoices[0];
+            that.locate('readVoice').val(preferredVoice).change();
+            clusiveTTS.setCurrentVoice(preferredVoice);
+        }
+    };
+
+    // Given an array of preferred voices, return it filtered by the 
+    // available voices in the current browser
+    cisl.prefs.modalSettings.getAvailablePreferredVoices = function(preferredVoices) {
+        console.debug("getAvailablePreferredVoices:preferredVoices", preferredVoices);
+
+        var browserVoices = clusiveTTS.getVoicesForLanguage('en').map(voice => voice.name);
+
+        console.debug("getAvailablePreferredVoices:browserVoices", preferredVoices);
+
+        var availablePreferredVoices = [];
+
+        preferredVoices.forEach(function (preferredVoice) {
+            if(browserVoices.includes(preferredVoice)) {
+                availablePreferredVoices.push(preferredVoice);
+            }
         });
 
-    }
+        return availablePreferredVoices;
+    };
 
     fluid.registerNamespace('fluid.binder.transforms');
 

@@ -18,6 +18,7 @@
 .toolbox-menu-group {
     line-height: 1;
     color: var(--CT_toolboxMenuColor);
+    white-space: nowrap;
     background: var(--CT_toolboxMenuBg);
     border: $toolbox-menu-border-width solid var(--CT_toolboxMenuBorderColor);
     @include border-radius($toolbox-menu-border-radius);
