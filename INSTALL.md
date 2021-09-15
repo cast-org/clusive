@@ -153,6 +153,9 @@ there are several additional steps.
 4. Required scopes (step 2 of the "Edit app registration"):
      * `auth/userinfo.email`
      * `auth/userinfo.profile`
+     * `auth/classroom.courses.readonly`
+     * `auth/classroom.rosters.readonly`
+     * `auth/classroom.profile.emails`
 5. Create an "OAuth client ID" on the "Credentials" page, which is also in the
      "APIs and Services" section of the Console.
      * Application type is "Web application"
