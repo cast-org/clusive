@@ -115,6 +115,11 @@
             white-space: nowrap;
         }
     }
+
+    .tooltip-link {
+        color: inherit;
+        text-decoration: underline;
+    }
 }
 .readtime-bar {
     position: relative;

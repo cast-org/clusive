@@ -61,13 +61,23 @@
                     <td class="d-xs-down-none">
                         <div class="readtime-progress">
                             {% for p in info.books %}
-                            <div class="readtime-bar{% if p.is_other %} striped{% endif %}"
+                            <button class="readtime-bar{% if p.is_other %} striped{% endif %}"
                                  style="width:{{p.percent_time}}%;"
-                                 tabindex="0"
                                  data-cfw="tooltip"
-                                 data-clusive-book-id="{{ p.book_id }}"
-                                 title="{{ p.title }}, {{ p.hours|floatformat:1}} hours">
-                                {% if p.is_assigned %}<span class="readtime-mark-shared"></span>{% endif %}
+                                 data-cfw-tooltip-target="#tooltipReadTime{{ info.clusive_user.user.id }}_{{ p.book_id }}"
+                                 data-cfw-tooltip-trigger="click hover"
+                                 data-cfw-tooltip-placement="top auto"
+                                 aria-expanded="false"
+                                 data-clusive-book-id="{{ p.book_id }}">
+                                <span class="sr-only">{{ p.title }}, {{ p.hours|floatformat:1}} hours</span>
+                                {% if p.is_assigned %}<span class="readtime-mark-shared" aria-label="Assigned"></span>{% endif %}
+                            </button>
+                            <div id="tooltipReadTime{{ info.clusive_user.user.id }}_{{ p.book_id }}" class="tooltip readtime-tooltip">
+                                <div class="tooltip-body">
+                                    <div aria-hidden="true">{{ p.title }}, {{ p.hours|floatformat:1}} hours</div>
+                                    <!--<a href="#" role="button" data-cfw="modal">More details</a>-->
+                                </div>
+                                <div class="tooltip-arrow"></div>
                             </div>
                             {% endfor %}
                         </div>
