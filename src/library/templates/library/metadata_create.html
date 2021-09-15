@@ -15,7 +15,7 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
-    <h1>Add New Content</h1>
+    <h1>Add New Reading</h1>
     <div class="row">
         <div class="col-md-9 col-lg-6">
             <div class="box">
@@ -25,7 +25,7 @@
                     {% include "library/partial/metadata_form.html" %}
                     <hr />
                     <div class="form-group">
-                        <input type="submit" class="btn btn-primary" value="Add to My Content" />
+                        <input type="submit" class="btn btn-primary" value="Add to My Readings" />
                         &nbsp;<a href="{% url 'remove' pk=object.pk %}">Cancel</a>
                     </div>
                 </form>
