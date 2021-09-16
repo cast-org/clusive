@@ -43,6 +43,8 @@ from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPer
     RosterDataSource
 from roster.signals import user_registered
 
+import pdb
+
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -442,16 +444,22 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         context['periods'] = self.periods
         context['current_period'] = self.current_period
         if self.current_period is not None:
-            context['students'] = self.make_student_info_list()
+            context['people'] = self.make_people_info_list(self.request.user)
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
-            context['allow_add_student'] = (self.current_period.data_source == RosterDataSource.CLUSIVE)
         return context
 
-    def make_student_info_list(self):
-        students = self.current_period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+    def make_people_info_list(self, current_user):
+        co_teachers = self.current_period.users.filter(role=Roles.TEACHER).exclude(user=current_user)
+        students = self.current_period.users.filter(role=Roles.STUDENT)
+        people = (co_teachers | students).order_by('user__first_name')
         return [{
-            'info': s.user,
-        } for s in students]
+            'info': {
+                'first_name': p.user.first_name,
+                'email': p.user.email,
+                'role' : Roles.display_name(p.role),
+                'id': p.user.id
+            }
+        } for p in people]
 
     def configure_event(self, event: Event):
         event.page = 'Manage'
