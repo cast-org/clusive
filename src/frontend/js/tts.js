@@ -214,6 +214,22 @@ clusiveTTS.isVisible = function(elem) {
         || elem.getClientRects().length && window.getComputedStyle(elem).visibility !== 'hidden');
 };
 
+clusiveTTS.isVisuallyVisible = function(elem) {
+    'use strict';
+
+    return Boolean(elem.offsetWidth && elem.offsetHeight && $(elem).outerWidth(true) > 0 && $(elem).outerHeight(true) > 0 && window.getComputedStyle(elem).visibility !== 'hidden');
+};
+
+clusiveTTS.isReadable = function(node) {
+    'use strict';
+
+    if (!clusiveTTS.isVisuallyVisible(node.parentElement)) { return false; }
+    if (!node.data.trim().length > 0) { return false; }
+    if (/script|style|button|input|optgroup|option|select|textarea/i.test(node.parentElement.tagName)) { return false; }
+
+    return true;
+};
+
 clusiveTTS.readQueuedElements = function() {
     'use strict';
 
@@ -372,17 +388,72 @@ clusiveTTS.getAllTextElements = function(documentBody) {
     return textElements;
 };
 
+clusiveTTS.getReadableTextElements = function(elem) {
+    'use strict';
+
+    var textNodes =  clusiveTTS.getTextNodes(elem, clusiveTTS.isReadable);
+    var parents = [];
+
+    textNodes.forEach(function(item) {
+        parents.push(item.parentElement);
+    });
+    return clusiveTTS.uniqueNodeList(parents);
+};
+
+/**
+ * Gets an array of the matching text nodes contained by the specified element.
+ * @param  {!Element} elem - DOM element to be traversed.
+ * @param  {function(!Node,!Element):boolean} [filter]
+ *     Optional function that if a true-ish value is returned will cause the
+ *     text node in question to be added to the array to be returned from
+ *     getTextNodes().  The first argument passed will be the text node in
+ *     question while the second will be the parent of the text node.
+ * @return {!Array.<!Node>} - Text nodes contained by the specified element.
+ *
+ * References:
+ *  - https://cwestblog.com/2014/03/14/javascript-getting-all-text-nodes/
+ *      - Updated to return proper DOM order.
+ *  - https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+ */
+clusiveTTS.getTextNodes = function(elem, filter) {
+    'use strict';
+
+    var textNodes = [];
+    if (elem) {
+        for (var nodes = elem.childNodes, i = nodes.length; i--;) {
+            var node = nodes[i], nodeType = node.nodeType;
+            if (nodeType == Node.TEXT_NODE) {
+                if (!filter || filter(node, elem)) {
+                    textNodes.push(node);
+                }
+            } else if (nodeType == Node.ELEMENT_NODE || Node.DOCUMENT_NODE || nodeType == Node.DOCUMENT_FRAGMENT_NODE) {
+                textNodes = textNodes.concat(clusiveTTS.getTextNodes(node, filter).reverse());
+            }
+        }
+    }
+    return textNodes.reverse();
+}
+
+clusiveTTS.uniqueNodeList = function(list) {
+    'use strict';
+
+    var listLen = list.length;
+    var unique = [];
+
+    for (var i = 0; i < listLen; i++) {
+        if (unique.indexOf(list[i]) === -1) {
+            unique.push(list[i]);
+        }
+    }
+
+    return unique;
+};
+
 clusiveTTS.getReaderIFrameBody = function() {
     'use strict';
 
     var readerIframe = $('#D2Reader-Container').find('iframe');
     return readerIframe.contents().find('body');
-};
-
-clusiveTTS.getReaderIframeSelection = function() {
-    'use strict';
-
-    return $('#D2Reader-Container').find('iframe')[0].contentWindow.getSelection();
 };
 
 clusiveTTS.filterReaderTextElementsBySelection = function(textElements, userSelection) {
@@ -408,13 +479,9 @@ clusiveTTS.read = function() {
     var isSelection;
     var selection;
 
-    if (isReader) {
-        elementsToRead = clusiveTTS.getAllTextElements(clusiveTTS.getReaderIFrameBody());
-        selection = clusiveTTS.getReaderIframeSelection();
-    } else {
-        elementsToRead = clusiveTTS.getAllTextElements($('body'));
-        selection = window.getSelection();
-    }
+    //elementsToRead = clusiveTTS.getAllTextElements($('body'));
+    elementsToRead = clusiveTTS.getReadableTextElements(document.querySelector('main'));
+    selection = window.getSelection();
 
     isSelection = clusiveTTS.isSelection(selection);
 
@@ -437,7 +504,7 @@ clusiveTTS.readAll = function(elements) {
         };
         toRead.push(elementToRead);
     });
-
+console.log(toRead)
     clusiveTTS.readElements(toRead);
 };
 
