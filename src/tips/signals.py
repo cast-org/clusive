@@ -1,11 +1,11 @@
 import logging
 
+from dateutil.parser import parse as dateutil_parse
 from django.contrib.auth import user_logged_in
 from django.dispatch import receiver, Signal
 
 from roster.models import ClusiveUser
-from tips.models import TipHistory
-from dateutil.parser import parse as dateutil_parse
+from tips.models import TipHistory, CTAHistory
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +18,7 @@ def initialize_at_login(sender, **kwargs):
     try:
         clusive_user = ClusiveUser.objects.get(user=kwargs['user'])
         TipHistory.initialize_histories(clusive_user)
+        CTAHistory.initialize_histories(clusive_user)
     except ClusiveUser.DoesNotExist:
         logger.debug('User logging in is not a ClusiveUser')
 

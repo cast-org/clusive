@@ -19,7 +19,7 @@ echo "Applying any pending migrations..."
 gosu app:app python manage.py migrate
 
 echo "Loading database fixtures..."
-gosu app:app python manage.py loaddata preferencesets subjects tiptypes
+gosu app:app python manage.py loaddata preferencesets subjects tiptypes callstoaction
 
 echo "Loading default content..."
 gosu app:app python manage.py importdir /content

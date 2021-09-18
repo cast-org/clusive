@@ -1,7 +1,7 @@
 {% load static figuration %}
 <div class="modal-header">
     <div class="modal-header-block">
-        <h2 id="modalConfirmTitle" class="modal-title">Select classes or groups to share</h2>
+        <h2 id="modalConfirmTitle" class="modal-title">Select classes or groups to assign or share</h2>
     </div>
     <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
         <span class="icon-cancel-circled2" aria-hidden="true"></span>
@@ -9,7 +9,7 @@
 </div>
 <form method="post" action="{% url 'share' pk=book.pk %}" class="form-inline">{% csrf_token %}
     <div class="modal-body">
-        <p><strong>Add or remove this content from student library pages using the checkboxes below.</strong></p>
+        <p><strong>Add or remove this reading from student library pages using the checkboxes below.</strong></p>
         <div class="media">
             {% if book.cover_path %}
             <div class="media-img">

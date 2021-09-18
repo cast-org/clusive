@@ -118,9 +118,9 @@ $enable-utility-spacing-gap:            false;
 $enable-utility-spacing-padding:        true;
 $enable-utility-spacing-margin:         true;
 $enable-utility-spacing-margin-auto:    false;
-$enable-utility-spacing-margin-negative:    false;
+$enable-utility-spacing-margin-negative:    true;
 $enable-utility-text-justify:           false;
-$enable-utility-text-wrap:              false;
+$enable-utility-text-wrap:              true;
 $enable-utility-text-nowrap:            false;
 $enable-utility-text-align:             true;
 $enable-utility-text-transform:         false;
@@ -143,7 +143,7 @@ $enable-utility-visibility:             false;
 // Default Figuration setting overrides
 // =====
 
-$utility-display:                       none;
+$utility-display:                       block, flex, none;
 
 // Disable some default box-shadows
 $thumbnail-box-shadow:                  0 0 transparent;
@@ -463,7 +463,7 @@ $ranking-font-size:                     1.5rem;
 $ranking-border-width:                  4px;
 $ranking-label-font-size:               .875rem;
 
-$toc-modal-dialoag-max-width:           22rem;
+$toc-modal-dialog-max-width:            22rem;
 $toc-modal-header-border-width:         7px;
 
 $goal-modal-title-font-family:          $font-family-sans-serif;
@@ -510,3 +510,9 @@ $tag-font-size:                         .875rem;
 $tag-font-weight:                       400;
 
 $sort-border-width:                     .3125rem;
+
+$loader-width:                          2em;
+$loader-height:                         $loader-width;
+$loader-animation-speed:                1s;
+$loader-circle-border-width:            .25em;
+$loader-circle-vertical-align:          middle;

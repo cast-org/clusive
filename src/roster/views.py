@@ -1,7 +1,12 @@
 import csv
 import json
 import logging
+from datetime import timedelta
+from urllib.parse import urlencode
 
+import requests
+from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
+from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model, logout
@@ -10,6 +15,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
@@ -17,19 +23,24 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.views import View
-from django.views.generic import TemplateView, UpdateView, CreateView, FormView
+from django.views.generic import TemplateView, UpdateView, CreateView, FormView, RedirectView
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
-from pages.views import ThemedPageMixin
+from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster import csvparser
 from roster.csvparser import parse_file
-from roster.forms import PeriodForm, SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
-    AccountRoleForm, AgeCheckForm, ClusiveLoginForm
-from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember
+from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
+    AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm, PeriodCreateForm, PeriodNameForm
+from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, \
+    RosterDataSource
 from roster.signals import user_registered
 
 logger = logging.getLogger(__name__)
@@ -397,7 +408,7 @@ def upload_csv(request):
     return render(request, template, context)
 
 
-class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
+class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     template_name = 'roster/manage.html'
     periods = None
     current_period = None
@@ -421,7 +432,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
             # else:
             #     # No periods.  If this case actually happens, should have a better error message.
             #     self.handle_no_permission()
-        if self.current_period != user.current_period and self.current_period != None:
+        if self.current_period != user.current_period and self.current_period is not None:
             user.current_period = self.current_period
             user.save()
         return super().get(request, *args, **kwargs)
@@ -430,10 +441,10 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['periods'] = self.periods
         context['current_period'] = self.current_period
-        if self.current_period != None:
+        if self.current_period is not None:
             context['students'] = self.make_student_info_list()
-            context['period_name_form'] = PeriodForm(instance=self.current_period)
-            logger.debug('Students: %s', context['students'])
+            context['period_name_form'] = PeriodNameForm(instance=self.current_period)
+            context['allow_add_student'] = (self.current_period.data_source == RosterDataSource.CLUSIVE)
         return context
 
     def make_student_info_list(self):
@@ -446,7 +457,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
         event.page = 'Manage'
 
 
-class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, CreateView):
+class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, CreateView):
     model = User
     form_class = SimpleUserCreateForm
     template_name = 'roster/manage_create_user.html'
@@ -490,6 +501,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
                                         role=Roles.STUDENT,
                                         anon_id=ClusiveUser.next_anon_id(),
                                         permission=perm)
+
         # Add user to the Period
         self.period.users.add(cu)
         return super().form_valid(form)
@@ -497,8 +509,7 @@ class ManageCreateUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Crea
     def configure_event(self, event: Event):
         event.page = 'ManageCreateStudent'
 
-
-class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
+class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
     model = User
     form_class = UserEditForm
     template_name = 'roster/manage_edit_user.html'
@@ -538,9 +549,9 @@ class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Update
         event.page = 'ManageEditStudent'
 
 
-class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
+class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
     model = Period
-    form_class = PeriodForm
+    form_class = PeriodNameForm
     template_name = 'roster/manage_edit_period.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -556,16 +567,23 @@ class ManageEditPeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Upda
         event.page = 'ManageEditPeriod'
 
 
-class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, CreateView):
+class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, CreateView):
+    """
+    Displays a choice for the user between the various supported methods for creating a new Period.
+    Options are manual (always available) and importing from Google Classroom (if user has a connected Google acct).
+    Redirects to manage page for manual creation, or to GetGoogleCourses.
+    """
     model = Period
-    form_class = PeriodForm
+    form_class = PeriodCreateForm
     template_name = 'roster/manage_create_period.html'
 
     def get_form(self, form_class=None):
         instance=Period(site=self.clusive_user.get_site())
         kwargs = self.get_form_kwargs()
         kwargs['instance'] = instance
-        return PeriodForm(**kwargs)
+        kwargs['allow_google'] = (self.clusive_user.data_source == RosterDataSource.GOOGLE)
+        logger.debug('kwargs %s', kwargs)
+        return PeriodCreateForm(**kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         cu = request.clusive_user
@@ -578,18 +596,32 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Cr
         return reverse('manage', kwargs={'period_id': self.object.id})
 
     def form_valid(self, form):
-        result = super().form_valid(form)
-        # Add current user to the new Period
-        self.object.users.add(self.clusive_user)
-        return result
+        if form.cleaned_data.get('create_or_import') == 'google':
+            # Do not save the period, just redirect.
+            return HttpResponseRedirect(reverse('get_google_courses'))
+        else:
+            # Save Period and add current user
+            result = super().form_valid(form)
+            self.object.users.add(self.clusive_user)
+            return result
 
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
 
+
 def finish_login(request):
+    """
+    Called as the redirect after Google Oauth SSO login.
+    Checks if we need to ask user for their role and privacy policy agreement, or if that's already done.
+    """
     if request.user.is_staff:
         return HttpResponseRedirect('/admin')
     clusive_user = ClusiveUser.from_request(request)
+    # If you're logging in via Google, then you are marked as a Google user from now on.
+    if clusive_user.data_source != RosterDataSource.GOOGLE:
+        clusive_user.data_source = RosterDataSource.GOOGLE
+        clusive_user.save()
+    # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
         request.session['sso'] = True
         return HttpResponseRedirect(reverse('sign_up_role'))
@@ -659,8 +691,388 @@ def logout_sso(request, student=''):
 
 
 class SyncMailingListView(View):
+    """
+    Called by script to periodically send new member info to the mailing list software.
+    """
 
     def get(self, request):
         logger.debug('Sync mailing list request received')
         MailingListMember.synchronize_user_emails()
         return JsonResponse({'success': 1})
+
+
+class GoogleCoursesView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):
+    """
+    Displays the list of Google Classroom courses and allows user to choose one to import.
+    Expects to receive a 'google_courses' parameter in the session, which is a list of dicts
+    each of which has at least 'name', 'id', and 'imported' (aka already exists in Clusive).
+    See GetGoogleCourses, which sets this.
+    After choice is made, redirects to GetGoogleRoster.
+    """
+    form_class = GoogleCoursesForm
+    courses = []
+    template_name = 'roster/manage_show_google_courses.html'
+
+    def get_form(self, form_class=None):
+        kwargs = self.get_form_kwargs()
+        return GoogleCoursesForm(**kwargs, courses = self.request.session.get('google_courses', []))
+
+    def dispatch(self, request, *args, **kwargs):
+        cu = request.clusive_user
+        if not cu.can_manage_periods:
+            self.handle_no_permission()
+        self.clusive_user = cu
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        selected_course_id = self.request.POST.get('course_select')
+        return reverse('get_google_roster', kwargs={'course_id': selected_course_id})
+
+    def configure_event(self, event: Event):
+        event.page = 'ManageImportPeriodChoice'
+
+
+class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, TemplateView):
+    """
+    Display the roster of a google class, allow user to confirm whether it should be imported.
+    Expects google_courses and google_roster parameters in the session: see GetGoogleRoster method.
+    The roster is saved in the session for use if the user confirms creation.
+    """
+    template_name = 'roster/manage_show_google_roster.html'
+    role_info = {
+        'students': { 'role': Roles.STUDENT, 'display_name': 'Student' },
+        'teachers': { 'role': Roles.TEACHER, 'display_name': 'Teacher' }
+    }
+
+    def make_roster_tuples(self, google_roster):
+        tuples = []
+        for group in google_roster:
+            for person in google_roster[group]:
+                email = person['profile']['emailAddress']
+                users = User.objects.filter(email=email)
+                if users.exists():
+                    user_with_that_email = users.first()
+                    # Exclude the current user from the roster.
+                    if self.request.user == user_with_that_email:
+                        continue
+                    clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
+                    a_person = {
+                        'name': user_with_that_email.first_name,
+                        'email': email,
+                        'role': clusive_user.role,
+                        'role_display': Roles.display_name(clusive_user.role),
+                        'exists': True
+                    }
+                else:
+                    a_person = {
+                        'name': person['profile']['name']['givenName'],
+                        'email': email,
+                        'role': self.role_info[group]['role'],
+                        'role_display': self.role_info[group]['display_name'],
+                        'exists': False
+                    }
+                tuples.append(a_person)
+        return tuples
+
+    def dispatch(self, request, *args, **kwargs):
+        cu = request.clusive_user
+        if not cu.can_manage_periods:
+            self.handle_no_permission()
+        self.clusive_user = cu
+
+        # API returns all courses, we need to search for the one we're importing.
+        google_courses = self.request.session.get('google_courses', [])
+        self.course = None
+        for course in google_courses:
+            if course['id'] == kwargs['course_id']:
+                self.course = course
+                break
+        if not self.course:
+            raise PermissionDenied('Course not found')
+
+        # Period name for Clusive is a composite of Google's "name" and (optional) "section"
+        self.period_name = self.course['name']
+        if 'section' in self.course:
+            self.period_name += ' ' + self.course['section']
+
+        # Extract interesting data from the Google roster.
+        google_roster = self.request.session.get('google_roster', {})
+        self.people = self.make_roster_tuples(google_roster)
+        # Data stored in session until user confirms addition (or cancels).
+        # Consider also keeping:  course descriptionHeading, updateTime, courseState
+        course_data = {
+            'id': self.course['id'],
+            'name': self.period_name,
+            'people': self.people,
+        }
+        request.session['google_period_import'] = course_data
+        logger.debug('Session data stored: %s', course_data)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'course_id': self.course['id'],
+            'period_name': self.period_name,
+            'people': self.people,
+        })
+        return context
+
+    def configure_event(self, event: Event):
+        event.page = 'ManageImportPeriodConfirm'
+
+
+class GooglePeriodImport(LoginRequiredMixin, RedirectView):
+    """
+    Import new Period data that was just confirmed, then redirect to manage page.
+    """
+
+    def get(self, request, *args, **kwargs):
+        course_id = kwargs['course_id']
+        session_data = request.session.get('google_period_import', None)
+        if not session_data or session_data['id'] != course_id:
+            raise PermissionDenied('Import data is out of date')
+        creator = request.clusive_user
+
+        # Find or create user accounts
+        user_list = [creator]
+        creating_permission = ResearchPermissions.TEACHER_CREATED if creator.role == Roles.TEACHER \
+            else ResearchPermissions.PARENT_CREATED
+        for person in session_data['people']:
+            if person['exists']:
+                user_list.append(ClusiveUser.objects.get(user__email=person['email']))
+            else:
+                properties = {
+                    'username': person['email'],
+                    'email': person['email'],
+                    'first_name': person['name'],
+                    'role': person['role'],
+                    'permission': creating_permission,
+                    'anon_id': ClusiveUser.next_anon_id(),
+                    'data_source': RosterDataSource.GOOGLE,
+                }
+                user_list.append(ClusiveUser.create_from_properties(properties))
+
+        # Create Period
+        period = Period.objects.create(name=session_data['name'],
+                                       site=creator.get_site(),
+                                       data_source=RosterDataSource.GOOGLE,
+                                       external_id=session_data['id'])
+        period.users.set(user_list)
+        period.save()
+        self.period = period
+
+        return super().get(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        # Redirect to newly created period
+        return reverse('manage', kwargs={'period_id': self.period.id})
+
+
+class GetGoogleCourses(LoginRequiredMixin, View):
+    """
+    Calls the Google Classroom API to get a list of courses for this user, then redirects to GoogleCoursesView.
+    Requests additional Google permissions if necessary.
+    """
+    provider = 'google'
+    classroom_scopes = 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.profile.emails'
+    auth_parameters = urlencode({
+        'provider': provider,
+        'scopes': classroom_scopes,
+        'authorization': 'http://accounts.google.com/o/oauth2/v2/auth?'
+    })
+
+    def get(self, request, *args, **kwargs):
+        logger.debug("GetGoogleCourses")
+        teacher_id = self.google_teacher_id(request.user)
+        if teacher_id:
+            db_access = OAuth2Database()
+            user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
+            service = build('classroom', 'v1', credentials=user_credentials)
+            try:
+                results = service.courses().list(teacherId=teacher_id, pageSize=30).execute()
+            except HttpError as e:
+                if e.status_code == 403:
+                    request.session['add_scopes_return_uri'] = 'get_google_courses'
+                    request.session['add_scopes_course_id'] = None
+                    return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
+                else:
+                    raise
+            courses = results.get('courses', [])
+        else:
+            courses = []
+        logger.debug('There are (%s) Google courses', len(courses))
+        for course in courses:
+            course['imported'] = Period.objects.filter(data_source=RosterDataSource.GOOGLE, external_id=course['id']).exists()
+            logger.debug('- %s, id = %s. Imported=%s', course['name'], course['id'], course['imported'])
+        request.session['google_courses'] = courses
+        return HttpResponseRedirect(reverse('manage_google_courses'))
+
+    def make_credentials(self, user, scopes, db_access):
+        client_info = db_access.retrieve_client_info(self.provider)
+        access_token = db_access.retrieve_access_token(user, self.provider)
+        return Credentials(access_token.token,
+                            refresh_token=access_token.token_secret,
+                            client_id=client_info.client_id,
+                            client_secret=client_info.secret,
+                            token_uri='https://accounts.google.com/o/oauth2/token')
+
+    def google_teacher_id(self, user):
+        # Rationale: Google teacher identifer can be the special key 'me', the
+        # user's Google account email address, or their Google identifier.  Only
+        # the latter is guaranteed to match a Google course's teacher
+        # identifier.
+        # https://developers.google.com/classroom/reference/rest/v1/courses/list
+        try:
+            google_user = SocialAccount.objects.get(user=user, provider='google')
+            return google_user.uid
+        except SocialAccount.DoesNotExist:
+            logger.debug('User %s is not an SSO user', user.username)
+            return None
+
+class GetGoogleRoster(GetGoogleCourses):
+    """
+    Calls Google Classroom API to get the roster of a given course, then redirects to GoogleRosterView.
+    """
+
+    def get(self, request, *args, **kwargs):
+        course_id = kwargs.get('course_id')
+        db_access = OAuth2Database()
+        user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
+        service = build('classroom', 'v1', credentials=user_credentials)
+
+        # TODO:  could get a permission error, not because of lack of scope, but
+        # because the access_token has expired, and need a new one.  Should use
+        # the `refresh` workflow instead of the `code` workflow -- the latter
+        # will always work, however.  Question is, can you tell from the
+        # authorization error (HttpError) if it's lack of scope or expired
+        # token?
+        # Note: documentation for `pageSize` query parameter (defaults to 30):
+        # https://developers.google.com/classroom/reference/rest/v1/courses.students/list
+        # https://developers.google.com/classroom/reference/rest/v1/courses.teachers/list
+        try:
+            studentResponse = service.courses().students().list(courseId=course_id, pageSize=100).execute()
+            teacherResponse = service.courses().teachers().list(courseId=course_id).execute()
+        except HttpError as e:
+            if e.status_code == 403:
+                request.session['add_scopes_return_uri'] = 'get_google_roster'
+                request.session['add_scopes_course_id'] = course_id
+                return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
+            else:
+                raise
+        students = studentResponse.get('students', [])
+        teachers = teacherResponse.get('teachers', [])
+        self.log_results(students, 'students')
+        self.log_results(teachers, 'teachers')
+
+        request.session['google_roster'] = { 'students': students, 'teachers': teachers }
+        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
+
+    def log_results(self, group, role):
+        logger.debug('Get Google roster: there are (%s) %s', len(group), role)
+        for person in group:
+            logger.debug('- %s, %s', person['profile']['name']['givenName'], person['profile']['emailAddress'])
+
+########################################
+#
+# Functions for adding scope(s) workflow
+
+class OAuth2Database(object):
+
+    def retrieve_client_info(self, provider):
+        client_info = SocialApp.objects.filter(provider=provider).first()
+        return client_info
+
+    def retrieve_access_token(self, user, provider):
+        access_token = SocialToken.objects.filter(
+            account__user=user, account__provider=provider
+        ).first()
+        return access_token
+
+    def update_access_token(self, access_token_json, user, provider):
+        db_token = self.retrieve_access_token(user, provider)
+        db_token.token = access_token_json.get('access_token')
+        db_token.expires_at = timezone.now() + timedelta(seconds=int(access_token_json.get('expires_in')))
+
+        # Update the refresh token only if a new one was provided.  OAuth2
+        # providers don't always send a refresh token.
+        if access_token_json.get('refresh_token') != None:
+            db_token.token_secret = access_token_json['refresh_token']
+        db_token.save()
+
+def add_scope_access(request):
+    """First step for the request-additional-scope-access workflow.  Sets a new
+    `state` query parameter (the anti-forgery token) for the workflow, and
+    stores it in the session as `oauth2_state`.  Redirects to provider's
+    authorization end point."""
+    provider = request.GET.get('provider')
+    new_scopes = request.GET.get('scopes')
+    authorization_uri = request.GET.get('authorization')
+    oauth2_state = get_random_string(12)
+    request.session['oauth2_state'] = oauth2_state
+
+    client_info = OAuth2Database().retrieve_client_info(provider)
+    parameters = urlencode({
+        'client_id': client_info.client_id,
+        'response_type': 'code',
+        'scope': new_scopes,
+        'include_granted_scopes': 'true',
+        'state': oauth2_state,
+        'redirect_uri': get_add_scope_redirect_uri(request),
+    })
+    logger.debug('Authorization request to provider for larger scope access')
+    return HttpResponseRedirect(authorization_uri + parameters)
+
+def add_scope_callback(request):
+    """Handles callback from OAuth2 provider where access tokens are given for
+    the requested scopes."""
+    request_state = request.GET.get('state')
+    session_state = request.session.get('oauth2_state')
+    if request_state != session_state:
+        raise OAuth2Error("Mismatched state in request: %s" % request_state)
+
+    code = request.GET.get('code')
+    dbAccess = OAuth2Database()
+    # TODO: the provider is hard coded here -- how to parameterize?  Note that
+    # this function is specific to google, so perhaps okay.
+    # Note: for production, replace the `redirect_uri` with the official uri
+    client_info = dbAccess.retrieve_client_info('google')
+    logger.debug('Token request to provider for larger scope access')
+    resp = requests.request(
+        'POST',
+        'https://accounts.google.com/o/oauth2/token',
+        data={
+            'redirect_uri': get_add_scope_redirect_uri(request),
+            'grant_type': 'authorization_code',
+            'code': code,
+            'client_id': client_info.client_id,
+            'client_secret': client_info.secret,
+            'state': request_state
+        }
+    )
+    access_token = None
+    if resp.status_code == 200 or resp.status_code == 201:
+        access_token = resp.json()
+    if not access_token or access_token.get('access_token') == None:
+        raise OAuth2Error("Error retrieving access token: none given, status: %d" % resp.status_code)
+    dbAccess.update_access_token(access_token, request.user, 'google')
+
+    # TODO:  There has to be a better way.
+    return_uri = request.session['add_scopes_return_uri']
+    course_id = request.session['add_scopes_course_id']
+    logger.debug('Larger scope access request complete, returning to %s, with course id %s', return_uri, course_id)
+    if course_id:
+        return HttpResponseRedirect(reverse(return_uri, kwargs={'course_id': course_id}))
+    else:
+        return HttpResponseRedirect(reverse(return_uri))
+
+
+def get_add_scope_redirect_uri(request):
+    # Determine if we are using HTTPS - outside any reverse proxy.
+    # Would be better to do this by setting SECURE_PROXY_SSL_HEADER but I am not 100% sure that will not cause other
+    # problems, so trying this first and will attempt to set that as a smaller update later.
+    # See: https://ubuntu.com/blog/django-behind-a-proxy-fixing-absolute-urls
+    scheme = request.scheme
+    if scheme == 'http' and request.META.get('HTTP_X_FORWARDED_PROTO') == 'https':
+        scheme = 'https'
+    return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'

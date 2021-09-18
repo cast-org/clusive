@@ -91,7 +91,7 @@
                                 </fieldset>
                             </div>
                             <div class="setting">
-                                <fieldset>
+                                <fieldset data-cy="preference-fontFamily">
                                     <legend class="setting-title">Font</legend>
                                     <div class="form-check form-checkradio">
                                         <input id="option-font-family-0" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="default" type="radio" checked>
@@ -120,7 +120,7 @@
                                 </fieldset>
                             </div>
                             <div class="setting">
-                                <fieldset>
+                                <fieldset data-cy="preference-theme">
                                     <legend class="setting-title">Color</legend>
                                     <div class="setting-btn-row option-color-theme">
                                         <div class="form-check form-checkradio">
@@ -198,14 +198,9 @@
                             <div class="setting">
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
-                                    <div class="option-read-voice">
-                                        <button id="voiceMenu" type="button" class="link-btn" data-cfw="dropdown">
-                                            <span id="currentVoice">Choose...</span>
-                                            <span class="caret" aria-hidden="true"></span>
-                                        </button>
-                                        <ul id="voiceListing" class="dropdown-menu dropreverse">
-                                        </ul>
-                                    </div>
+                                    <select class="cislc-modalSettings-readVoice form-control">
+                                        <option value="default">Choose...</option>
+                                    </select>
                                 </fieldset>
                             </div>
                             <div class="setting">
@@ -226,6 +221,17 @@
                             <button onclick="clusiveTTS.stopReading()" type="button" class="btn btn-flag" aria-label="Stop sample">
                                 <span class="icon-stop" aria-hidden="true"></span>
                             </button>
+                        </div>
+                        <div class="setting">
+                            <fieldset>
+                                <legend class="setting-title">Translation language</legend>
+                                <select class="cislc-modalSettings-languageSelect form-control">
+                                    <option value="default">Choose...</option>
+                                    {% for lang in translation_languages %}
+                                    <option value="{{lang.language}}">{{lang.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </fieldset>
                         </div>
                         <div class="setting setting-btn-right">
                             <button class="btn btn-primary btn-small cislc-modalSettings-reset-reading" type="button">Reset reading settings</button>

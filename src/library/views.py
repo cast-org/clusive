@@ -21,9 +21,9 @@ from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import unpack_epub_file, scan_book
-from pages.views import ThemedPageMixin
+from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
 
 logger = logging.getLogger(__name__)
@@ -206,7 +206,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         return context
 
 
-class LibraryView(EventMixin, ThemedPageMixin, LibraryDataView):
+class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataView):
     """
     Full library page showing the controls at the top and the list of cards.
     """
@@ -239,7 +239,7 @@ class LibraryStyleRedirectView(View):
         }))
 
 
-class UploadFormView(LoginRequiredMixin, ThemedPageMixin, EventMixin, FormView):
+class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):
     """Parent class for several pages that allow uploading of EPUBs."""
     form_class = UploadForm
 
@@ -306,7 +306,7 @@ class UploadReplaceFormView(UploadFormView):
         event.page = 'UploadReplacement'
 
 
-class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, UpdateView):
+class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
     """Parent class for several metadata-editing pages."""
     model = Book
     form_class = MetadataForm
@@ -654,3 +654,10 @@ class SwitchModalContentView(LoginRequiredMixin, TemplateView):
             'bv': versions[version],
         }
         return super().get(request, *args, **kwargs)
+
+
+class UpdateTrendsView(View):
+
+    def get(self, request, *args, **kwargs):
+        BookTrend.update_all_trends()
+        return JsonResponse({'status': 'ok'})

@@ -79,7 +79,7 @@ The local development configuration uses sqlite, so no database setup is require
 
 To initialize the schema and initial data, run in the Clusive\target directory:
 * `python manage.py migrate`
-* `python manage.py loaddata preferencesets tiptypes subjects` 
+* `python manage.py loaddata preferencesets tiptypes callstoaction subjects` 
 
 ### Import public content
 There are a number of learning materials ready for import in the Clusive\content directory.
@@ -153,13 +153,17 @@ there are several additional steps.
 4. Required scopes (step 2 of the "Edit app registration"):
      * `auth/userinfo.email`
      * `auth/userinfo.profile`
+     * `auth/classroom.courses.readonly`
      * `auth/classroom.rosters.readonly`
+     * `auth/classroom.profile.emails`
 5. Create an "OAuth client ID" on the "Credentials" page, which is also in the
      "APIs and Services" section of the Console.
      * Application type is "Web application"
      * Authorized JavaScript origins should be the URL of your instance, eg `https://clusive.cast.org`.
-     * Authorized redirect URIs should be the URL of your instance plus accounts/google/login/callback/,
-       eg `https://clusive.cast.org/accounts/google/login/callback/`
+     * Authorized redirect URIs should list two URIs: your instance with the paths '/accounts/google/login/callback/' and '/account/add_scope_callback/',
+       eg 
+       * `https://clusive.cast.org/accounts/google/login/callback/`
+       * `https://clusive.cast.org/account/add_scope_callback/`
      * When created, take note of the Client ID and Client Secret.
 6. Add the Google "provider" to Clusive as [documented](https://django-allauth.readthedocs.io/en/latest/providers.html#django-configuration) for the Django-allauth module. There are a few different ways to do this. The manual method is as follows:
     * Log in to your instance as an administrator.
@@ -170,7 +174,22 @@ there are several additional steps.
       * Secret key: "Client Secret" from step 5.
       * Key: leave blank.
       * Chosen sites: add the default site (if you haven't changed anything, this will be called "example.com" and have ID=1).
-    * You can rename the default site from "example.com" if you want, it does not really matter. 
-      But its ID must match what is in `settings.py`; the provided settings file includes `SITE_ID = 1`.
-  
+    * Set up the "Sites" record
+      * This is the record for the default site chosen in the previous step, initially called "example.com".
+      * Go to the top-level "Sites" and choose "example.com".
+      * Set the `Domain Name` field to:
+        * "localhost:8000", if this setup is for local development, and you are running Clusive on "localhost" and using port 8000.
+          Note that the domain name must match the actual domain name exactly.  That is, if the server is using "localhost", do
+          not specify "127.0.0.1" for the domain name in the Sites record.
+        * In general, the `Domain Name` must match the host and port of your Clusive server.  For example, if the server
+          is running on "clusive.abcxyz.org" (no port), then use that for the `Domain Name`.
+      * You can change the `Display Name` from "example.com" to something more meaningful to your situation, but it
+        does not really matter.
 
+## Running Cypress tests
+
+ * Run the standard local install. This will install Cypress as a dev dependency.
+ * In the Clusive\target directory, run `python manage.py createrostersamples` if you have not already. 
+   The tests depend on logging in as one of these test users.
+ * Run `npx cypress open` from the root to interactively run the tests.
+ * For IntelliJ users, the "Cypress Support" plugin is helpful.

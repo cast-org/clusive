@@ -89,6 +89,12 @@ class AffectCheckView(LoginRequiredMixin, View):
 
 
 class AffectDetailView(LoginRequiredMixin, TemplateView):
+    """
+    Show a list of what readings inspired particular affective responses.
+    Slightly different for teachers and students:
+    Students see: my own responses / global responses
+    Parents/teachers see: my class responses / global responses
+    """
     student_template_name = 'shared/partial/modal_affect_detail.html'
     teacher_template_name = 'shared/partial/modal_class_affect_detail.html'
 
@@ -124,7 +130,8 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
             } for votes in top_books]
         else:
             self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
-        self.popular = AffectiveBookTotal.most_with_word(self.word)[0:5]
+        # Globally-ranked books with particular ratings (public library only):
+        self.popular = AffectiveBookTotal.most_with_word(self.word).filter(book__owner=None)[0:5]
         # Make it easier to access the correct count from template.
         for abt in self.popular:
             abt.count = getattr(abt, self.word)

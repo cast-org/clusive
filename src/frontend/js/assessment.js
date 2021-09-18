@@ -1,61 +1,66 @@
 /* Code for comprehension and affect assessments */
-/* global clusive, clusiveContext, PAGE_EVENT_ID, DJANGO_CSRF_TOKEN, fluid, D2Reader */
+/* global clusiveContext, PAGE_EVENT_ID, fluid, D2Reader, clusiveAutosave, reactDimAnimate */
 /* exported clusiveAssessment */
 
 var clusiveAssessment = {
     tooEarly: true, // auto-show of popover is blocked for a few seconds after page load
-    affectCheckDone: false,
-    compCheckDone: false
+    checkDone: false // don't auto-show the popover if user has already interacted with it
 };
 
 clusiveAssessment.showCompCheck = function() {
     'use strict';
 
-    if (!clusiveAssessment.compCheckDone && !clusiveAssessment.tooEarly) {
+    if (!clusiveAssessment.checkDone && !clusiveAssessment.tooEarly) {
         // Set timer. Don't show comp check if user immediately moves away from the bottom.
         window.setTimeout(function() {
-            D2Reader.atEnd().then(function(edge) {
-                if (edge) {
-                    $('#compPop').CFW_Popover('show');
-                } else {
-                    console.debug('Was no longer at end of resource after time delay');
-                }
-            });
+            if (D2Reader.atEnd()) {
+                $('#compPop').CFW_Popover('show');
+                clusiveAssessment.checkDone = true;
+            } else {
+                console.debug('Was no longer at end of resource after time delay');
+            }
         }, 2000);
     }
 };
 
-clusiveAssessment.setAffectCheck = function(data) {    
-    Object.keys(data).forEach(function (key) {
-        if(key.includes("affect-option")) {
-            var affectOptionName = key                
+clusiveAssessment.setAffectCheck = function(data) {
+    'use strict';
+
+    clusiveAssessment.checkDone = true;
+    Object.keys(data).forEach(function(key) {
+        if (key.includes('affect-option')) {
+            var affectOptionName = key;
             var shouldCheck = data[affectOptionName];
             var affectInput = $('input[name="' + affectOptionName + '"]');
-            affectInput.prop("checked", shouldCheck);
-            var idx = affectInput.attr("data-react-index");
+            affectInput.prop('checked', shouldCheck);
+            var idx = affectInput.attr('data-react-index');
             var wedge = document.querySelector('.react-wedge-' + idx);
-    
-            if(shouldCheck) {
+
+            if (shouldCheck) {
                 reactDimAnimate(wedge, 100);
             } else {
                 reactDimAnimate(wedge, 0);
-            }            
             }
-    })
-}
+        }
+    });
+};
 
-clusiveAssessment.setComprehensionCheck = function(data) {    
-    clusiveAssessment.compCheckDone = true;
+clusiveAssessment.setComprehensionCheck = function(data) {
+    'use strict';
+
+    clusiveAssessment.checkDone = true;
     var scaleResponse = data.scaleResponse;
     var freeResponse = data.freeResponse;
     $('textarea[name="comprehension-free"]').val(freeResponse);
     $('input[name="comprehension-scale"]').val([scaleResponse]);
-    if(freeResponse.length > 0) {
+    if (freeResponse.length > 0) {
         $('#comprehensionFreeResponseArea').show();
-    }    
-}
+    }
+};
 
-clusiveAssessment.saveAffectCheck = function () {    
+clusiveAssessment.saveAffectCheck = function() {
+    'use strict';
+
     var bookId = clusiveContext.reader.info.publication.id;
     // Create basic affect response structure
     var affectResponse = {
@@ -67,14 +72,16 @@ clusiveAssessment.saveAffectCheck = function () {
     // Get all affect inputs
     var checkedAffectInputs = $('input[name^="affect-option"]');
     // Add to data object
-    checkedAffectInputs.each(function (i, elem) {
-        affectResponse[elem.name] = elem.checked
-    });        
+    checkedAffectInputs.each(function(i, elem) {
+        affectResponse[elem.name] = elem.checked;
+    });
 
-    clusiveAutosave.save("/assessment/affect_check/" + bookId, affectResponse);        
-}
+    clusiveAutosave.save('/assessment/affect_check/' + bookId, affectResponse);
+};
 
-clusiveAssessment.saveComprehensionCheck = function () {        
+clusiveAssessment.saveComprehensionCheck = function() {
+    'use strict';
+
     var bookId = clusiveContext.reader.info.publication.id;
     var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
     var freeResponse = $('textarea[name="comprehension-free"]').val();
@@ -87,11 +94,12 @@ clusiveAssessment.saveComprehensionCheck = function () {
         bookId: clusiveContext.reader.info.publication.id,
         eventId: PAGE_EVENT_ID
     };
-    clusiveAutosave.save("/assessment/comprehension_check/" + bookId, comprehensionResponse);
-}
+    clusiveAutosave.save('/assessment/comprehension_check/' + bookId, comprehensionResponse);
+};
 
 clusiveAssessment.setupAssessments = function() {
     'use strict';
+
     var bookId = clusiveContext.reader.info.publication.id;
 
     // Block auto-show for at least 10 seconds after page load, to prevent it erroneously getting shown.
@@ -102,10 +110,10 @@ clusiveAssessment.setupAssessments = function() {
     clusiveAutosave.retrieve('/assessment/affect_check/' + bookId, clusiveAssessment.setAffectCheck);
 
     clusiveAutosave.retrieve('/assessment/comprehension_check/' + bookId, clusiveAssessment.setComprehensionCheck);
-    
+
     // Set up autosave calls for change events on relevant inputs
-    
-    $('input[name^="affect-option"]').change(function () {
+
+    $('input[name^="affect-option"]').change(function() {
         clusiveAssessment.saveAffectCheck();
     });
 
@@ -130,7 +138,7 @@ clusiveAssessment.setupAssessments = function() {
                 $('#comprehensionFreeResponseArea').show();
             }
         }
-    );  
+    );
 };
 
 $(function() {

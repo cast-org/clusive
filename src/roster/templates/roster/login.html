@@ -40,13 +40,13 @@
                             <li>
                             {% endfor %}
                         </ul>
-                        {% if messages %}
-                        <div class="errorlist">
-                            {% for message in messages %}
-                            <p>{{ message }}</p>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
+                        {% for message in messages %}
+                            {% if message.level >= DEFAULT_MESSAGE_LEVELS.WARNING %}
+                                <div class="errorlist">
+                                    <p>{{ message }}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
 
                     <div class="rule-text">or</div>
@@ -114,13 +114,6 @@
                             <div class="media-body">Customizable reader preferences</div>
                         </li>
                     </ul>
-                </div>
-            </div>
-            <div class="card card-login">
-                <div class="card-body login-section">
-                    <h2><em>New!</em><br/> Summer reading challenge</h2>
-                    <p>Use Clusive for your summer reading, and enter to win a prize!</p>
-                    <a href="https://cisl.cast.org/products/clusive-summer-reading-challenge-2021" class="btn btn-primary">Learn more</a>
                 </div>
             </div>
         </div>

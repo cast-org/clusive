@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.contrib.auth import user_logged_in, user_logged_out
 from django.dispatch import receiver, Signal
@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
+translation_action = Signal(providing_args=['request', 'language', 'text'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'control', 'object', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
@@ -219,6 +220,13 @@ def log_vocab_lookup(sender, **kwargs):
     control = 'lookup:%s' % ("cued" if kwargs.get('cued') else "uncued")
     value = kwargs['word']
     create_event(kwargs, control=control, value=value)
+
+
+@receiver(translation_action)
+def log_translation_action(sender, **kwargs):
+    """User requests translation of some text"""
+    # provides: 'request', 'language', 'text'
+    create_event(kwargs, control='translation', object=kwargs['language'], value=kwargs['text'])
 
 
 @receiver(control_used)

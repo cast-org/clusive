@@ -3,7 +3,6 @@ import logging
 from datetime import timedelta
 
 from allauth.account.signals import user_signed_up
-from allauth.socialaccount.models import SocialAccount
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -40,10 +39,22 @@ class Site(models.Model):
         return '%s (%s)' % (self.name, self.anon_id)
 
 
+class RosterDataSource:
+    CLUSIVE = 'C'
+    GOOGLE = 'G'
+
+    CHOICES = [
+        (CLUSIVE, "Created in Clusive"),
+        (GOOGLE, "Google Classroom"),
+    ]
+
+
 class Period(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name='Class name')
     anon_id = models.CharField(max_length=30, unique=True, null=True, verbose_name='Anonymous identifier')
+    data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
+    external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
@@ -67,6 +78,10 @@ class Roles:
         (ADMIN, 'Admin'),
         (UNKNOWN, 'Unknown')
     ]
+
+    @classmethod
+    def display_name(cls, role):
+        return [item[1] for item in Roles.ROLE_CHOICES if item[0] == role][0]
 
 
 class ResearchPermissions:
@@ -120,9 +135,9 @@ class LibraryViews:
     PERIOD = 'period'
 
     CHOICES = [
-        (ALL, 'All content'),
-        (PUBLIC, 'Public content'),
-        (MINE, 'My content'),
+        (ALL, 'All readings'),
+        (PUBLIC, 'Public readings'),
+        (MINE, 'My readings'),
         (PERIOD, 'Period assignments')
     ]
 
@@ -161,7 +176,9 @@ class ClusiveUser(models.Model):
     # Anonymous ID for privacy protection when logging activities for research
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
-    # If True, user cannot log in until they have confirmed their email.
+    data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
+
+# If True, user cannot log in until they have confirmed their email.
     unconfirmed_email = models.BooleanField(default=False)
 
     # List of all class periods the user is part of
@@ -180,7 +197,7 @@ class ClusiveUser(models.Model):
 
     education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
                                         verbose_name='Education levels',
-                                        default=[])
+                                        blank=True, default=[])
 
     # Site that this user is connected to. Although users can have multiple Periods,
     # these are generally assumed to be all part of one Site.
@@ -224,8 +241,7 @@ class ClusiveUser(models.Model):
     @property
     def can_set_password(self):
         """True if this user can change their own password."""
-        social_account = SocialAccount.objects.filter(user=self.user).exists()
-        return self.role and self.role != Roles.GUEST and not social_account
+        return self.role and self.role != Roles.GUEST and self.data_source == RosterDataSource.CLUSIVE
 
     @property
     def can_upload(self):
@@ -336,7 +352,6 @@ class ClusiveUser(models.Model):
 
     @classmethod
     def create_from_properties(cls, props):
-        period = Period.objects.get(site__name=props.get('site'), name=props.get('period'))
         django_user = User.objects.create_user(username=props.get('username'),
                                                first_name=props.get('first_name'),
                                                password=props.get('password'),
@@ -344,9 +359,12 @@ class ClusiveUser(models.Model):
         clusive_user = ClusiveUser.objects.create(user=django_user,
                                                   role=props.get('role'),
                                                   permission=props.get('permission'),
-                                                  anon_id=props.get('anon_id'))
-        p = props.get('period')
-        if p:
+                                                  anon_id=props.get('anon_id'),
+                                                  data_source=props.get('data_source', RosterDataSource.CLUSIVE))
+        site_name = props.get('site', None)
+        period_name = props.get('period', None)
+        if site_name and period_name:
+            period = Period.objects.get(site__name=site_name, name=period_name)
             clusive_user.periods.set([period])
         clusive_user.save()
         return clusive_user
@@ -424,7 +442,7 @@ class Preference (models.Model):
             return []
 
         # Array of strings stored as string
-        if val[0] == "[" and val[-1] == "]":
+        if len(val)>1 and val[0] == "[" and val[-1] == "]":
             return [x.strip()[1:-1] for x in val[1:-1].split(',')]
 
         # Booleans

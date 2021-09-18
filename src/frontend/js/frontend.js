@@ -1,5 +1,5 @@
-/* global clusiveContext, PAGE_EVENT_ID, fluid */
-/* exported updateLibraryData */
+/* global Masonry, clusiveTTS, clusivePrefs, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate */
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options) {
@@ -19,9 +19,6 @@ $.ajaxPrefilter(function(options) {
         }
     };
 });
-
-/* global Masonry, clusiveTTS, clusivePrefs, TOOLTIP_NAME */
-/* exported getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing */
 
 var clusiveBreakpoints = ['xs', 'sm', 'md', 'lg', 'xl'];
 var libraryMasonryApi = null;
@@ -97,6 +94,9 @@ function libraryMasonryEnable() {
     'use strict';
 
     var elem = document.querySelector('.library-grid');
+
+    if (elem === null) { return; }
+
     elem.classList.add('has-masonry');
 
     libraryMasonryApi = new Masonry(elem, {
@@ -130,6 +130,16 @@ function libraryListCollapse() {
     $('.card-toggle-btn').CFW_Collapse('hide');
 }
 
+function getLoadingMsg() {
+    'use strict';
+
+    return '' +
+    '<div class="text-center py-0_5">' +
+    '    <strong>Loading...</strong>' +
+    '    <div class="loader-circle" role="status" aria-hidden="true"></div>' +
+    '</div>';
+}
+
 // Return focus to the menu toggle control in place of the now visually hidden
 // menu item in a dropdown when the confirmation modal is closed.
 function confirmationRefocus($trigger, $modal) {
@@ -149,6 +159,12 @@ function confirmationPublicationDelete() {
         var $trigger = $(e.currentTarget);
         var $modal = $('#modalConfirm');
         var article = $trigger.data('clusive-book-id');
+
+        // Replace modal body and footer after hide
+        $modal.on('afterHide.cfw.modal', function() {
+            $modal.find('.modal-body').replaceWith(getLoadingMsg());
+            $modal.find('.modal-footer').remove();
+        });
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();
@@ -176,6 +192,11 @@ function confirmationSharing() {
         var $trigger = $(e.currentTarget);
         var $modal = $('#modalConfirm');
         var book = $trigger.data('clusive-book-id');
+
+        // Replace form after hide
+        $modal.on('afterHide.cfw.modal', function() {
+            $modal.find('form').replaceWith(getLoadingMsg());
+        });
 
         if ($trigger.data('cfw') !== 'modal') {
             e.preventDefault();
@@ -451,42 +472,6 @@ function formUseThisLinks() {
     });
 }
 
-function setupVoiceListing() {
-    'use strict';
-
-    var container = $('#voiceListing');
-    if (container.length) {
-        var html = '';
-        clusiveTTS.getVoicesForLanguage('en').forEach(function(voice) {
-            html += '<li><button type="button" class="dropdown-item voice-button">' + voice.name + '</button></li>';
-        });
-        container.html(html);
-    } else {
-        console.debug('No voice listing element');
-    }
-    container.on('click', '.voice-button', function() {
-        var name = this.textContent;
-        console.debug('Voice choice: ', name);
-        // Show voice name as dropdown label
-        $('#currentVoice').html(name);
-        // Mark the dropdown item as active.
-        container.find('.voice-button').removeClass('active');
-        $(this).addClass('active');
-        // Tell ClusiveTTS to use this voice
-        clusiveTTS.setCurrentVoice(name);
-        // Set on the modal's model of preferences
-        clusivePrefs.prefsEditorLoader.modalSettings.applier.change('modalSettings.readVoice', name);
-    });
-}
-
-function clearVoiceListing() {
-    'use strict';
-
-    $('.voice-button').removeClass('active');
-    $('#currentVoice').html('Choose...');
-    clusiveTTS.setCurrentVoice(null);
-}
-
 function showTooltip(name) {
     'use strict';
 
@@ -698,6 +683,31 @@ function dashboardSetup() {
     });
 }
 
+// Context (selection) menu methods
+
+function contextLookup(selection) {
+    'use strict';
+
+    var match = selection.match('\\w+');
+    var word = '';
+    if (match) {
+        word = match[0];
+    } else {
+        console.info('Did not find any word in selection: %s', selection);
+    }
+    console.debug('looking up: ', word);
+    window.parent.load_definition(0, word);
+    window.parent.$('#glossaryLocator').CFW_Popover('show');
+    window.parent.glossaryPop_focus($('#lookupIcon'));
+}
+
+function contextTranslate(selection) {
+    'use strict';
+
+    console.info('translate: ' + selection);
+    load_translation(selection);
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -717,9 +727,6 @@ $(window).ready(function() {
     libraryPageLinkSetup();
     libraryStyleSortLinkSetup();
     dashboardSetup();
-
-    setupVoiceListing();
-    window.speechSynthesis.onvoiceschanged = setupVoiceListing;
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

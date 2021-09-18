@@ -2,9 +2,7 @@
     background-color: transparent !important;   // stylelint-disable-line declaration-no-important
 
     .modal-dialog {
-        @include media-breakpoint-up(#{$modal-breakpoint}) {
-            max-width: $toc-modal-dialoag-max-width;
-        }
+        max-width: $toc-modal-dialog-max-width;
     }
 
     .modal-content {
@@ -213,6 +211,11 @@
     //margin-top: -.5rem;
     margin-left: 0;
     @include font-size(.875rem);
+
+    .note-add-button[hidden] + .list-item {
+        padding-left: 0;
+        border-left-width: 0;
+    }
 }
 
 .highlight {

@@ -1,0 +1,52 @@
+[
+  {
+    "model": "tips.calltoaction",
+    "pk": 1,
+    "fields": {
+      "name": "welcome",
+      "priority": 1,
+      "enabled": true,
+      "max": 3
+    }
+  },
+  {
+    "model": "tips.calltoaction",
+    "pk": 2,
+    "fields": {
+      "name": "summer_reading_st",
+      "priority": 2,
+      "enabled": false,
+      "max": 10
+    }
+  },
+  {
+    "model": "tips.calltoaction",
+    "pk": 3,
+    "fields": {
+      "name": "summer_reading_gu",
+      "priority": 3,
+      "enabled": false,
+      "max": 10
+    }
+  },
+  {
+    "model": "tips.calltoaction",
+    "pk": 4,
+    "fields": {
+      "name": "star_rating",
+      "priority": 6,
+      "enabled": true,
+      "max": 10
+    }
+  },
+  {
+    "model": "tips.calltoaction",
+    "pk": 5,
+    "fields": {
+      "name": "demographics",
+      "priority": 5,
+      "enabled": true,
+      "max": 10
+    }
+  }
+]

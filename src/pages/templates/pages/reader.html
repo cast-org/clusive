@@ -24,8 +24,9 @@ var manifest_path = "{{ manifest_path }}";
 {% endblock %}
 
 {% block sidebar_end %}
-<!-- Item needed to anchor the definition popover -->
+<!-- Items needed to anchor the definition and translate popovers -->
 <button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
+<button id="translateLocator" class="sr-only" aria-hidden="true" tabindex="-1">Translate</button>
 
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}
@@ -43,7 +44,7 @@ var manifest_path = "{{ manifest_path }}";
         <div id="reader-info-top" class="info top">
             <span class="book-title"></span>
         </div>
-        <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
+        <iframe data-cy="reader-frame" sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
     </main>
 
     {% include "shared/partial/toolbox_menu.html" %}
@@ -95,19 +96,12 @@ var manifest_path = "{{ manifest_path }}";
 
         var selectionMenuItems = [
             {
+                id: 'translateIcon',
+                callback: function(selection) { contextTranslate(selection); }
+            },
+            {
                 id: 'lookupIcon',
-                callback: function (selection) {
-                    var match = selection.match('\\w+');
-                    if (match) {
-                        word = match[0];
-                    } else {
-                        console.info('Did not find any word in selection: %s', text);
-                    }
-                    console.debug('looking up: ', word);
-                    window.parent.load_definition(0, word);
-                    window.parent.$('#glossaryLocator').CFW_Popover('show');
-                    window.parent.glossaryPop_focus($('#lookupIcon'));
-                }
+                callback: function(selection) { contextLookup(selection); }
             }
         ];
 
@@ -222,6 +216,12 @@ var manifest_path = "{{ manifest_path }}";
                             console.debug("Performing UI tasks on first Reader resource load");
                             buildTableOfContents();
                             buildAnnotationList();
+                            // Handle initial TTS setting
+                            console.debug('doing initial tts setting');
+                            var availablePreferredVoices = cisl.prefs.modalSettings.getAvailablePreferredVoices(clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_readVoices);
+                            clusiveTTS.setCurrentVoice(availablePreferredVoices[0]);
+                            // Update additional TTS settings - such as rate
+                            D2Reader.applyTTSSettings(readerOptions.userSettings.tts);
                             firstResourceLoaded = true;
                         }
                     });
@@ -251,20 +251,10 @@ var manifest_path = "{{ manifest_path }}";
                     var currentResource = D2Reader.currentResource();
                     var firstResource = (currentResource===0);
                     var lastResource = (currentResource===D2Reader.totalResources()-1);
-                    if (firstResource) {
-                        D2Reader.atStart().then((edge)=>{
-                            document.getElementById('prevResourceButton').disabled = edge;
-                        });
-                    } else {
-                        document.getElementById('prevResourceButton').disabled = false;
-                    }
-                    if (lastResource) {
-                        D2Reader.atEnd().then((edge)=>{
-                            document.getElementById('nextResourceButton').disabled = edge;
-                        });
-                    } else {
-                        document.getElementById('nextResourceButton').disabled = false;
-                    }
+                    var atBeginning = firstResource && D2Reader.atStart();
+                    var atEnd = lastResource && D2Reader.atEnd();
+                    document.getElementById('prevResourceButton').disabled = atBeginning;
+                    document.getElementById('nextResourceButton').disabled = atEnd;
                     return trackReadingLocation(pub_id, pub_version, locator);
                 },
                 updateUserSettings: function (userSettings) {
@@ -276,11 +266,13 @@ var manifest_path = "{{ manifest_path }}";
         // Wait for the reader preferences bridge to be created, then create the Reader
         document.addEventListener("cisl.prefs.readerPreferencesBridge.onCreate", function (e) {
             console.debug("cisl.prefs.readerPreferencesBridge.created event fired", e);
+
             var readerPreferences = e.detail.readerPreferences;
+
             var mergedUserSettings = $.extend({}, readerOptions.userSettings, readerPreferences);
-            console.log("mergedUserSettings", mergedUserSettings);
+            console.debug("mergedUserSettings", mergedUserSettings);
             readerOptions.userSettings = mergedUserSettings;
-            console.log("readerOptions", readerOptions);
+            console.debug("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
                     console.debug("D2Reader began loading resource at: " +  new Date());
                     clusiveTTS.readerReady = true;

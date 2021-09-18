@@ -1,10 +1,12 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents */
+/* global vocabCheck, clusiveEvents, clusivePrefs, DJANGO_CSRF_TOKEN */
+/* exported load_translation */
 
 // Glossary-related functionality
 
 var glossaryCurrentWord = null;
 var glossaryBeenDragged = false;
+var translateBeenDragged = false;
 
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
@@ -61,6 +63,37 @@ function load_definition(cued, word) {
     $('#glossaryBody').html(body);
 }
 
+function load_translation(text) {
+    $('#translateSource').text(text);
+    var $translateOutput = $('#translateOutput');
+    $translateOutput.text('Loading...');
+    $('#translateLocator').CFW_Popover('show');
+    $.ajax('/translation/translate', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            text: text,
+            language: clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage
+        }
+    })
+        .done(function(data) {
+            $translateOutput.html(data.result);
+            $translateOutput.css('direction', data.direction);
+        })
+        .fail(function(err) {
+            console.error(err);
+            $translateOutput.html(err.responseText);
+        })
+        .always(function() {
+            var $translatePop = $('#translatePop');
+            if ($translatePop.is(':visible') && !translateBeenDragged) {
+                $translatePop.CFW_Popover('locateUpdate');
+            }
+        });
+}
+
 // Methods related to the wordbank page
 
 window.wordBank = {};
@@ -77,7 +110,7 @@ window.wordBank.moveRating = function(elt, delta) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word');
     var rating = Number(item.data('rating'));
-    var control = delta>0 ? 'wb_shift_right' : 'wb_shift_left';
+    var control = delta > 0 ? 'wb_shift_right' : 'wb_shift_left';
     var newrating = rating + delta;
     if (newrating >= 0 && newrating <= 3) {
         $.get('/glossary/rating/' + control + '/' + word.text() + '/' + newrating);
@@ -94,14 +127,21 @@ window.wordBank.displayNewWordRating = function(item, newrating) {
 };
 
 window.wordBank.updateColumnCounts = function() {
+    var wordCount = 0;
     for (var rank = 0; rank <= 3; rank++) {
         var n = $('.wordbank-item.offset' + rank).length;
         var indicator = $('#count' + rank);
         indicator.text(n);
+        wordCount += n;
         if (n === 0) {
             indicator.closest('.wordbank-count').addClass('wordbank-count-empty');
         } else {
             indicator.closest('.wordbank-count').removeClass('wordbank-count-empty');
+        }
+    }
+    if (wordCount === 0) {
+        if (document.querySelector('#wordbankEmptyMsg') !== null) {
+            document.querySelector('#wordbankEmptyMsg').classList.remove('d-none');
         }
     }
 };
@@ -200,7 +240,6 @@ vocabCheck.done = function() {
     return false;
 };
 
-
 // Set up listener functions after page is loaded
 
 $(function() {
@@ -227,6 +266,31 @@ $(function() {
         })
         .on('dragStart.cfw.popover', function() {
             glossaryBeenDragged = true;
+        });
+
+    $('#translateLocator').CFW_Popover({
+        target: '#translatePop',
+        trigger: 'manual',
+        placement: 'reverse',
+        drag: true,
+        popperConfig: {
+            positionFixed: true,
+            eventsEnabled: false,
+            modifiers: {
+                preventOverflow: {
+                    boundariesElement: 'viewport'
+                },
+                computeStyle: {
+                    gpuAcceleration: false
+                }
+            }
+        }
+    })
+        .on('afterHide.cfw.popover', function() {
+            translateBeenDragged = false;
+        })
+        .on('dragStart.cfw.popover', function() {
+            translateBeenDragged = true;
         });
 
     // When ranking in the glossary popup is selected, notify server

@@ -1,11 +1,16 @@
+import logging
+
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Form
 from multiselectfield import MultiSelectFormField
 
-from roster.models import Period, Roles, ClusiveUser, EducationLevels
+from roster.models import Period, Roles, ClusiveUser, EducationLevels, RosterDataSource
+
+logger = logging.getLogger(__name__)
 
 class ClusiveLoginForm(AuthenticationForm):
 
@@ -28,6 +33,7 @@ class UserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].required = True
+        self.fields['first_name'].label = 'Display name'
         self.fields['username'].required = True
 
     def _post_clean(self):
@@ -58,6 +64,15 @@ class UserEditForm(UserForm):
                                    'autocomplete': 'new-password',
                                    'class': 'form-control',
                                }))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Google-sourced users can't have their username, email etc changed from Clusive.
+        clusive_user = ClusiveUser.objects.get(user=self.instance)
+        if clusive_user.data_source == RosterDataSource.GOOGLE:
+            del self.fields['email']
+            del self.fields['password']
+            del self.fields['username']
 
 
 # Used for simple cases where entering the password twice is not required.
@@ -162,14 +177,80 @@ class AgeCheckForm(Form):
         widget=forms.RadioSelect)
 
 
-class PeriodForm(ModelForm):
+class DisableableRadioSelect(forms.RadioSelect):
+    """
+    Like RadioSelect widget, but some of the radio buttons can be disabled.
+    If a disabled_choices list is provided, any choices whose value matches one of them
+    will not be selectable. In addition, the disabled_suffix string will be appended to the label of each
+    of the disabled choices.
+    """
+
+    def __init__(self, attrs=None, choices=(), disabled_choices=(), disabled_suffix=''):
+        self.disabled_choices = disabled_choices
+        self.disabled_suffix = disabled_suffix
+        logger.debug('choices = %s', choices)
+        super().__init__(attrs, choices)
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        opt = super().create_option(name, value, label, selected, index, subindex, attrs)
+        if value in self.disabled_choices:
+            opt['attrs'].update({'disabled': 'disabled'})
+            opt['label'] += self.disabled_suffix
+        return opt
+
+
+class PeriodNameForm(ModelForm):
+    """
+    Allows editing the name of a Period.
+    """
+    name = forms.CharField(required=True)
 
     class Meta:
         model = Period
         fields = ['name']
         widgets = {
             'name': forms.TextInput(attrs={
-                'aria-label': 'Class name',
+                'aria-label': 'Enter class name',
                 'class': 'form-control',
             })
         }
+
+
+class PeriodCreateForm(PeriodNameForm):
+    """
+    Allows creating a Period, either directly or requesting that it be imported.
+    """
+
+    def __init__(self, **kwargs):
+        allow_google = kwargs.pop('allow_google', False)
+        super().__init__(**kwargs)
+        self.fields['name'].required = False
+        disable = ['google'] if not allow_google else []
+        logger.debug('disable %s', disable)
+        self.fields['create_or_import'] = \
+            forms.ChoiceField(choices=[('manual', "Create manually"),
+                                       ('google', "Import class from Google Classroom")],
+                              required=True,
+                              widget=DisableableRadioSelect(disabled_choices=disable,
+                                                            disabled_suffix=' (Only available if you log in with a Google account)'))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.cleaned_data.get('create_or_import') == 'manual' and self.cleaned_data.get('name') == '':
+            self.add_error('name', ValidationError('Name must be supplied', 'manual_name_required'))
+        return cleaned_data
+
+
+class GoogleCoursesForm(Form):
+
+    def __init__(self, *args, **kwargs):
+        self.courses = kwargs.pop('courses')
+        super().__init__(*args, **kwargs)
+        choices = [(c['id'], c['name']) for c in self.courses]
+        disabled_choices = [c['id'] for c in self.courses if c['imported']]
+        logger.debug('courses: %s, disab: %s', self.courses, disabled_choices)
+        self.fields['course_select'] = forms.ChoiceField(
+            choices=choices,
+            required=True,
+            widget=DisableableRadioSelect(disabled_choices=disabled_choices, disabled_suffix=' (already imported)'),
+        )

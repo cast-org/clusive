@@ -1,6 +1,6 @@
 <div id="libraryData">
 {% if object_list|length == 0 %}
-    No content found with current search and filters.
+    <p class="my-1">No readings found with current search and filters.</p>
 {% else %}
     {% if style == 'list' %}
         {% include "library/partial/library_list_content.html" %}

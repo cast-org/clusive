@@ -14,7 +14,9 @@ var clusiveTTS = {
     copiedElement: null,
     autoScroll: true,
     userScrolled: false,
-    readerReady: false
+    readerReady: false,
+    isPaused: false,
+    utterance: null
 };
 
 // Bind controls
@@ -37,6 +39,7 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
+                clusiveTTS.resetState();
                 clusiveTTS.read();
                 clusiveTTS.updateUI('play');
             } else {
@@ -70,6 +73,7 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud pause button clicked');
             // Don't reset `userScrolled` here, otherwise page might jump due to async reading
+            clusiveTTS.isPaused = true;
             clusiveTTS.synth.pause();
         }
         clusiveTTS.updateUI('pause');
@@ -84,7 +88,14 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud resume button clicked');
             clusiveTTS.userScrolled = false;
+
+            // Resume by speaking utterance if one is queued
+            if (clusiveTTS.utterance) {
+                clusiveTTS.synth.speak(clusiveTTS.utterance);
+                clusiveTTS.utterance = null;
+            }
             clusiveTTS.synth.resume();
+            clusiveTTS.isPaused = false;
         }
         clusiveTTS.updateUI('resume');
     });
@@ -160,6 +171,7 @@ clusiveTTS.stopReading = function(reset) {
         clusiveTTS.scrollWatchStop();
     }
     clusiveTTS.synth.cancel();
+    clusiveTTS.resetState();
     clusiveTTS.updateUI();
 };
 
@@ -278,7 +290,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             }
         }
 
-        var newText = preceding + '<span class=\'tts-currentWord\'>' + middle + '</span>' + following;
+        var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
         clusiveTTS.copiedElement.html(newText);
 
         // Keep current word being read in view
@@ -286,10 +298,12 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             // TODO: Investigate why can't hook into copiedElement
             // var wordCurr = clusiveTTS.copiedElement.querySelector('.tts-currentWord');
             var wordCurr = document.querySelector('.tts-currentWord');
-            wordCurr.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+            if (wordCurr) {
+                wordCurr.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
         }
     };
 
@@ -298,7 +312,18 @@ clusiveTTS.readElement = function(textElement, offset, end) {
         clusiveTTS.resetElements();
     };
 
-    synth.speak(utterance);
+    if (!clusiveTTS.isPaused) {
+        synth.speak(utterance);
+    } else {
+        clusiveTTS.utterance = utterance;
+    }
+};
+
+clusiveTTS.resetState = function() {
+    'use strict';
+
+    clusiveTTS.utterance = null;
+    clusiveTTS.isPaused = false;
 };
 
 clusiveTTS.resetElements = function() {
@@ -380,7 +405,8 @@ clusiveTTS.read = function() {
 
     var isReader = $('#D2Reader-Container').length > 0;
     var elementsToRead;
-    var isSelection; var selection;
+    var isSelection;
+    var selection;
 
     if (isReader) {
         elementsToRead = clusiveTTS.getAllTextElements(clusiveTTS.getReaderIFrameBody());
@@ -438,7 +464,7 @@ clusiveTTS.readSelection = function(elements, selection) {
     selectionTexts = selectionTexts.filter(function(selectionText) {
         var trimmed = selectionText.trim();
         var found = false;
-        $.each(filteredElements, function(elem) {
+        $.each(filteredElements, function(i, elem) {
             var elemText = $(elem).text();
             if (elemText.includes(trimmed)) {
                 found = true;
@@ -499,9 +525,14 @@ clusiveTTS.setCurrentVoice = function(name) {
             if (voice.name === name) {
                 clusiveTTS.currentVoice = voice;
                 if (clusiveTTS.readerReady) {
-                    console.debug('setting D2Reader voice to ', voice);
+                    var voiceSpecs = {
+                        usePublication: true,
+                        lang: voice.lang,
+                        name: voice.name
+                    };
+                    console.debug('setting D2Reader voice to ', voiceSpecs);
                     D2Reader.applyTTSSettings({
-                        voice: voice
+                        voice: voiceSpecs
                     });
                 }
             }
@@ -511,7 +542,7 @@ clusiveTTS.setCurrentVoice = function(name) {
         if (clusiveTTS.readerReady) {
             console.debug('Unsetting D2Reader voice');
             D2Reader.applyTTSSettings({
-                voice: 'none'
+                voice: null
             });
         }
     }

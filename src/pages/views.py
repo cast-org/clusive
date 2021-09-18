@@ -1,17 +1,11 @@
 import logging
-from datetime import timedelta
-
-import math
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
-from django.views.generic import TemplateView, RedirectView, CreateView
+from django.views.generic import TemplateView, RedirectView
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
@@ -21,9 +15,10 @@ from eventlog.models import Event
 from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
-from library.models import Book, BookVersion, Paradata, Annotation
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
-from tips.models import TipHistory
+from tips.models import TipHistory, CTAHistory, CompletionType
+from translation.views import TranslateApiManager
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +37,18 @@ class ThemedPageMixin(ContextMixin):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['theme_class'] = 'clusive-theme-' + Preference.get_theme_for_user(self.clusive_user)
+        return data
+
+
+class SettingsPageMixin(ContextMixin):
+    """
+    Set up context variables needed by the settings panel.
+    This mixin should be added to all page views that include settings.
+    """
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['translation_languages'] = TranslateApiManager.get_translate_language_list()
         return data
 
 
@@ -90,13 +97,17 @@ class PeriodChoiceMixin(ContextMixin):
         return context
 
 
-class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoiceMixin, TemplateView):
+class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, PeriodChoiceMixin, TemplateView):
     template_name='pages/dashboard.html'
 
     def __init__(self):
         super().__init__()
 
     def get(self, request, *args, **kwargs):
+        # Redirect administrators who mistakenly logged in with a link that goes here.
+        if request.user.is_staff:
+            return HttpResponseRedirect('/admin')
+
         self.clusive_user = request.clusive_user
         self.teacher = self.clusive_user.can_manage_periods
         self.current_period = self.get_current_period(request, **kwargs)
@@ -109,8 +120,26 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
         # Welcome panel
         self.panels['welcome'] = user_stats.reading_views == 0
 
-        # Summer reading challenge - currently only notifies guests
-        self.panels['challenge'] = not self.clusive_user.is_registered
+        # Calls to Action
+        cta_name = None
+        if request.GET.get('cta'):
+            # Manual override, for testing. Named CTA will be shown, but not recorded in history.
+            cta_name = request.GET.get('cta')
+        else:
+            histories = CTAHistory.available_ctas(user=self.clusive_user, page='Dashboard')
+            if histories:
+                logger.debug('CTAs: %s', repr(histories))
+                histories[0].show()  # Record the fact that it was displayed.
+                cta_name = histories[0].type.name
+        if cta_name:
+            self.panels['cta'] = True
+            self.data['cta'] = {
+                'type': cta_name
+            }
+            if cta_name == 'star_rating':
+                self.data['cta']['form'] = ClusiveRatingForm(initial={'star_rating': 0})
+        else:
+            self.panels['cta'] = False
 
         # Affect panel (for student)
         self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
@@ -133,14 +162,6 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
             }
             logger.debug("Scaled: %s", scaled)
 
-        # Star rating panel
-        self.star_rating = ClusiveRatingResponse.objects.filter(user=request.clusive_user).order_by('-created').first()
-        self.panels['star_rating'] = self.should_show_star_rating(request, user_stats)
-        if self.panels['star_rating']:
-            self.data['star_rating'] = {
-                'form' : ClusiveRatingForm(initial={'star_rating': 0}),
-            }
-
         # Star results panel
         self.panels['star_results'] = self.should_show_star_results(request)
         if self.panels['star_results']:
@@ -149,30 +170,39 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
                 'results': ClusiveRatingResponse.get_graphable_results(),
             }
 
-        # Getting Started panel
-        last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
-        self.panels['getting_started'] = not last_reads or len(last_reads) == 0
-        if self.panels['getting_started']:
-            self.data['getting_started'] = {
-                'featured': list(Book.get_featured_books()[:2])
+        # Popular Reads panel (teacher)
+        self.panels['popular_reads'] = self.teacher
+        if self.panels['popular_reads']:
+            self.data['popular_reads'] = {
+                'all': BookTrend.top_trends(self.current_period)[:3],
+                'assigned': BookTrend.top_assigned(self.current_period)[:3],
             }
 
-        # Recent Reads panale
-        self.panels['recent_reads'] = len(last_reads) > 0
-        if self.panels['recent_reads']:
-            if len(last_reads) < 3:
-                # Add featured books to the list
-                features = list(Book.get_featured_books()[:3])
-                # Remove any featured books that are in the user's last-read list.
-                for para in last_reads:
-                    if para.book in features:
-                        features.remove(para.book)
-            else:
-                features = []
-            self.data['recent_reads'] = {
-                'last_reads': last_reads,
-                'featured': features,
-            }
+        # Getting Started panel
+        if not self.teacher:
+            last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
+            self.panels['getting_started'] = not last_reads or len(last_reads) == 0
+            if self.panels['getting_started']:
+                self.data['getting_started'] = {
+                    'featured': list(Book.get_featured_books()[:2])
+                }
+
+            # Recent Reads panel
+            self.panels['recent_reads'] = len(last_reads) > 0
+            if self.panels['recent_reads']:
+                if len(last_reads) < 3:
+                    # Add featured books to the list
+                    features = list(Book.get_featured_books()[:3])
+                    # Remove any featured books that are in the user's last-read list.
+                    for para in last_reads:
+                        if para.book in features:
+                            features.remove(para.book)
+                else:
+                    features = []
+                self.data['recent_reads'] = {
+                    'last_reads': last_reads,
+                    'featured': features,
+                }
 
         # Student Activity panel
         self.panels['student_activity'] = self.teacher
@@ -190,28 +220,6 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, EventMixin, PeriodChoic
         context['panels'] = self.panels
         context['data'] = self.data
         return context
-
-    def should_show_star_rating(self, request, user_stats):
-        # Put 'starpanel=1' in URL for debugging
-        if request.GET.get('starpanel'):
-            return True
-
-        # If already rated, don't show again.
-        if self.star_rating:
-            return False
-
-        # Guests can't vote
-        if request.clusive_user.role == Roles.GUEST:
-            return False
-
-        # Otherwise, show if user has 3+ logins or 1+ hours active use.
-        if user_stats.logins > 3:
-            logger.debug('Requesting star rating: logins=%d', user_stats.logins)
-            return True
-        if user_stats.active_duration and user_stats.active_duration > timedelta(hours=1):
-            logger.debug('Requesting star rating: active_duration=%d', user_stats.active_duration)
-            return True
-        return False
 
     def should_show_star_results(self, request):
         # Put 'starresults=1' in URL for debugging
@@ -245,16 +253,20 @@ class DashboardActivityPanelView(TemplateView):
 
 class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
     form_class = ClusiveRatingForm
-    template_name = 'pages/partial/dashboard_panel_star_rating.html'
     success_url = reverse_lazy('star_rating_results')
 
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
+        # Save rating
         self.object = form.save(commit=False)
         self.object.user = self.request.clusive_user
         self.object.save()
+        # Update Call To Action
+        CTAHistory.register_action(user=self.request.clusive_user,
+                                   cta_name='star_rating', completion_type=CompletionType.TAKEN)
+        # Log event
         question = 'How would you rate your experience with Clusive so far?'
         star_rating_completed.send(SetStarRatingView.__class__, request=self.request,
                                    question=question, answer=self.object.star_rating)
@@ -377,8 +389,7 @@ class ReaderChooseVersionView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-@method_decorator(never_cache, name='dispatch')
-class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
+class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
     page_name = 'Reading'
@@ -426,7 +437,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
         event.tip_type = self.tip_shown
 
 
-class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
+class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     template_name = 'pages/wordbank.html'
 
     def get(self, request, *args, **kwargs):
@@ -441,8 +452,6 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView
 
 class DebugView(TemplateView):
     template_name = 'pages/debug.html'
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 
 class PrivacyView(TemplateView):

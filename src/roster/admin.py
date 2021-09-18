@@ -51,7 +51,7 @@ class PreferenceAdmin(admin.ModelAdmin):
 @admin.register(Period)
 class PeriodAdmin(admin.ModelAdmin):
     model = Period
-    list_display = ('name', 'site', 'id', 'anon_id')
+    list_display = ('name', 'site', 'id', 'anon_id', 'data_source')
 
 
 @admin.register(PreferenceSet)
@@ -62,7 +62,7 @@ class PreferenceSetAdmin(admin.ModelAdmin):
 @admin.register(UserStats)
 class UserStatsAdmin(admin.ModelAdmin):
     model = UserStats
-    list_display = ('user', 'logins', 'reading_views')
+    list_display = ('user', 'logins', 'reading_views', 'active_duration')
     ordering = ('user',)
 
 

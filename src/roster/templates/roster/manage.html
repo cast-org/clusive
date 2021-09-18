@@ -25,61 +25,61 @@
 {% endblock %}
 
 {% block content %}
-<div class="content">
-    <main id="content" tabindex="-1">
-        <div class="row" style="align-items: baseline;">
-        {% if current_period %}
-            <div class="col-md-auto pe-md-0_5">
-                <h1>
-                    Manage:
-                </h1>
-            </div>
-            <div class="col ps-md-0 mb-0_5 mb-md-0">
-                <span id="period-name">{{ current_period.name }}</span>
-                <button id="period-edit-button" class="btn btn-primary btn-small ms-0_25">Edit</button>
-                <form method="post" action="{% url 'manage_edit_period' pk=current_period.pk  %}" id="period-form" class="form-inline" style="display:none;">
-                    {% csrf_token %}
-                    <label class="sr-only" for="{{ period_name_form.name.id_for_label }}">Class name</label>
-                    {{ period_name_form.name }}
-                    <button type="submit" class="btn btn-primary btn-small ms-0_25">Save</button>
-                    <button type="button" id="period-edit-cancel" class="btn btn-link btn-small" href="#">Cancel</button>
-                </form>
-            </div>
-            {% include "shared/partial/period_selector.html" with target='manage' add_link=True %}
-            {% else %}
-            <div class="col-md-auto pe-md-0_5">
-                <h1>
-                    No Classes
-                </h1>
-                <p><a href="{% url 'manage_create_period' %}">Add a Class</a> to get started using Clusive with your students or children.</p>
-            </div>
-            {% endif %}
+<main id="content" tabindex="-1">
+    <div class="row" style="align-items: baseline;">
+    {% if current_period %}
+        <div class="col-md-auto pe-md-0_5">
+            <h1>
+                Manage:
+            </h1>
         </div>
-        {% if current_period %}
-        <div class="table-scroll">
-            <table class="table table-divided table-roster">
-                <thead>
-                <tr>
-                    <th scope="col">Display name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Password</th>
-                    <th scope="col">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for s in students %}
-                  {% include 'roster/partial/manage_row.html' with info=s.info form=s.form %}
-                {% endfor %}
-                </tbody>
-            </table>
+        <div class="col ps-md-0 mb-0_5 mb-md-0">
+            <span id="period-name">{{ current_period.name }}</span>
+            <button id="period-edit-button" class="btn btn-primary btn-small ms-0_25">Edit</button>
+            <form method="post" action="{% url 'manage_edit_period' pk=current_period.pk  %}" id="period-form" class="form-inline" style="display:none;">
+                {% csrf_token %}
+                <label class="sr-only" for="{{ period_name_form.name.id_for_label }}">Class name</label>
+                {{ period_name_form.name }}
+                <button type="submit" class="btn btn-primary btn-small ms-0_25">Save</button>
+                <button type="button" id="period-edit-cancel" class="btn btn-link btn-small" href="#">Cancel</button>
+            </form>
         </div>
-        <p>
-            <a href="{% url 'manage_create_user' period_id=current_period.pk %}" class="btn btn-primary">
-                + Add Student
-            </a>
-        </p>
+        {% include "shared/partial/period_selector.html" with target='manage' add_link=True %}
+        {% else %}
+        <div class="col-md-auto pe-md-0_5">
+            <h1>
+                No Classes
+            </h1>
+            <p><a href="{% url 'manage_create_period' %}">Add a Class</a> to get started using Clusive with your students or children.</p>
+        </div>
         {% endif %}
-    </main>
-
+    </div>
+    {% if current_period %}
+    <div class="table-scroll">
+        <table class="table table-divided table-roster">
+            <thead>
+            <tr>
+                <th scope="col">Display name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for s in students %}
+              {% include 'roster/partial/manage_row.html' with info=s.info form=s.form %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if allow_add_student %}
+    <p>
+        <a href="{% url 'manage_create_user' period_id=current_period.pk %}" class="btn btn-primary">
+            + Add Student
+        </a>
+    </p>
+    {% endif %}
+    {% endif %}
+</main>
 {% endblock %}

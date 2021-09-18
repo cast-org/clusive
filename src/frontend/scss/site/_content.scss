@@ -203,7 +203,7 @@ h2,
 
 .link-back {
     margin-bottom: .75rem;
-    @include font-size(.875rem);
+    //@include font-size(.875rem);
 
     @include media-breakpoint-up(md) {
         margin-left: -1rem;
@@ -261,6 +261,15 @@ h2,
     @include font-size(.875rem);
     font-style: italic;
     color: var(--CT_definitionSpeechColor);
+}
+
+.translate-source {
+    font-weight: $font-weight-bold;
+    color: var(--CT_translateSourceColor);
+}
+.translate-ouput {
+    font-weight: $font-weight-normal;
+    color: var(--CT_translateOutputColor);
 }
 
 // Django error list
