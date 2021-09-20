@@ -207,23 +207,36 @@ clusiveTTS.scrollWatchStop = function() {
     $(document).off('wheel keydown touchmove', clusiveTTS.scrollWatch);
 };
 
-clusiveTTS.isVisible = function(elem) {
+clusiveTTS.outerWidthMargin = function(el) {
     'use strict';
 
-    return Boolean(elem.offsetWidth || elem.offsetHeight
-        || elem.getClientRects().length && window.getComputedStyle(elem).visibility !== 'hidden');
+    var width = el.offsetWidth;
+    var style = getComputedStyle(el);
+
+    width += parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10);
+    return width;
+};
+
+clusiveTTS.outerHeightMargin = function(el) {
+    'use strict';
+
+    var height = el.offsetHeight;
+    var style = getComputedStyle(el);
+
+    height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
+    return height;
 };
 
 clusiveTTS.isVisuallyVisible = function(elem) {
     'use strict';
 
-    return Boolean(elem.offsetWidth && elem.offsetHeight && $(elem).outerWidth(true) > 0 && $(elem).outerHeight(true) > 0 && window.getComputedStyle(elem).visibility !== 'hidden');
+    return Boolean(clusiveTTS.outerWidthMargin(elem) > 0 && clusiveTTS.outerHeightMargin(elem) > 0 && elem.getClientRects().length && $(elem).outerHeight(true) > 0 && window.getComputedStyle(elem).visibility !== 'hidden');
 };
 
 clusiveTTS.isReadable = function(node) {
     'use strict';
 
-    if (!clusiveTTS.isVisuallyVisible(node.parentElement)) { return false; }
+    // if (!clusiveTTS.isVisuallyVisible(node.parentElement)) { return false; }
     if (!node.data.trim().length > 0) { return false; }
     if (/script|style|button|input|optgroup|option|select|textarea/i.test(node.parentElement.tagName)) { return false; }
 
@@ -237,7 +250,7 @@ clusiveTTS.readQueuedElements = function() {
 
     while (clusiveTTS.elementsToRead.length && toRead === null) {
         toRead = clusiveTTS.elementsToRead.shift();
-        if (!clusiveTTS.isVisible(toRead.element)) {
+        if (!clusiveTTS.isVisuallyVisible(toRead.element.parentElement)) {
             toRead = null;
         }
     }
@@ -255,16 +268,12 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     'use strict';
 
     var synth = clusiveTTS.synth;
-    clusiveTTS.textElement = $(textElement);
-    var elementText = clusiveTTS.textElement.text();
+    var elementText = textElement.textContent;
     var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
-    // Preserve and hide the original element so we can handle the highlighting in an
-    // element without markup
-    // TODO: this needs improved implementation longer term
-    clusiveTTS.copiedElement = clusiveTTS.textElement.clone(false);
-    clusiveTTS.textElement.after(clusiveTTS.copiedElement);
-    clusiveTTS.textElement.hide();
+    // Create element that will be used to replace the textnode
+    var wrapperActive = document.createElement('cttsActive');
+    clusiveTTS.copiedElement = wrapperActive;
 
     var utterance = clusiveTTS.makeUtterance(contentText);
 
@@ -307,12 +316,16 @@ clusiveTTS.readElement = function(textElement, offset, end) {
         }
 
         var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
-        clusiveTTS.copiedElement.html(newText);
+        clusiveTTS.copiedElement.innerHTML = newText;
+
+        // Save and replace the the current textnode
+        if (clusiveTTS.textElement === null) {
+            clusiveTTS.textElement = textElement;
+            textElement.replaceWith(clusiveTTS.copiedElement);
+        }
 
         // Keep current word being read in view
         if (clusiveTTS.autoScroll && !clusiveTTS.userScrolled) {
-            // TODO: Investigate why can't hook into copiedElement
-            // var wordCurr = clusiveTTS.copiedElement.querySelector('.tts-currentWord');
             var wordCurr = document.querySelector('.tts-currentWord');
             if (wordCurr) {
                 wordCurr.scrollIntoView({
@@ -346,8 +359,9 @@ clusiveTTS.resetElements = function() {
     'use strict';
 
     console.debug('read aloud reset elements');
-    clusiveTTS.copiedElement.remove();
-    clusiveTTS.textElement.show();
+    // Replace current active text with stored textnode, and reset store
+    clusiveTTS.copiedElement.replaceWith(clusiveTTS.textElement);
+    clusiveTTS.textElement = null;
     clusiveTTS.readQueuedElements();
 };
 
@@ -374,7 +388,7 @@ clusiveTTS.readElements = function(textElements) {
     // Cancel any active reading
     clusiveTTS.stopReading(false);
 
-    $.each(textElements, function(i, e) {
+    textElements.forEach(function(e) {
         clusiveTTS.elementsToRead.push(e);
     });
 
@@ -388,16 +402,10 @@ clusiveTTS.getAllTextElements = function(documentBody) {
     return textElements;
 };
 
-clusiveTTS.getReadableTextElements = function(elem) {
+clusiveTTS.getReadableTextNodes = function(elem) {
     'use strict';
 
-    var textNodes =  clusiveTTS.getTextNodes(elem, clusiveTTS.isReadable);
-    var parents = [];
-
-    textNodes.forEach(function(item) {
-        parents.push(item.parentElement);
-    });
-    return clusiveTTS.uniqueNodeList(parents);
+    return clusiveTTS.getTextNodes(elem, clusiveTTS.isReadable);
 };
 
 /**
@@ -420,19 +428,22 @@ clusiveTTS.getTextNodes = function(elem, filter) {
 
     var textNodes = [];
     if (elem) {
-        for (var nodes = elem.childNodes, i = nodes.length; i--;) {
-            var node = nodes[i], nodeType = node.nodeType;
-            if (nodeType == Node.TEXT_NODE) {
+        var nodes = elem.childNodes;
+        for (var i = nodes.length; i--;) {
+            var node = nodes[i];
+            var nodeType = node.nodeType;
+
+            if (nodeType === Node.TEXT_NODE) {
                 if (!filter || filter(node, elem)) {
                     textNodes.push(node);
                 }
-            } else if (nodeType == Node.ELEMENT_NODE || Node.DOCUMENT_NODE || nodeType == Node.DOCUMENT_FRAGMENT_NODE) {
+            } else if (nodeType === Node.ELEMENT_NODE || nodeType === Node.DOCUMENT_NODE || nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
                 textNodes = textNodes.concat(clusiveTTS.getTextNodes(node, filter).reverse());
             }
         }
     }
     return textNodes.reverse();
-}
+};
 
 clusiveTTS.uniqueNodeList = function(list) {
     'use strict';
@@ -459,7 +470,7 @@ clusiveTTS.getReaderIFrameBody = function() {
 clusiveTTS.filterReaderTextElementsBySelection = function(textElements, userSelection) {
     'use strict';
 
-    var filteredElements = textElements.filter(function(i, elem) {
+    var filteredElements = textElements.filter(function(elem) {
         return userSelection.containsNode(elem, true);
     });
     return filteredElements;
@@ -474,22 +485,15 @@ clusiveTTS.isSelection = function(selection) {
 clusiveTTS.read = function() {
     'use strict';
 
-    var isReader = $('#D2Reader-Container').length > 0;
-    var elementsToRead;
-    var isSelection;
-    var selection;
-
-    //elementsToRead = clusiveTTS.getAllTextElements($('body'));
-    elementsToRead = clusiveTTS.getReadableTextElements(document.querySelector('main'));
-    selection = window.getSelection();
-
-    isSelection = clusiveTTS.isSelection(selection);
+    var nodesToRead = clusiveTTS.getReadableTextNodes(document.querySelector('main'));
+    var selection = window.getSelection();
+    var isSelection = clusiveTTS.isSelection(selection);
 
     clusiveTTS.scrollWatchStart();
     if (isSelection) {
-        clusiveTTS.readSelection(elementsToRead, selection);
+        clusiveTTS.readSelection(nodesToRead, selection);
     } else {
-        clusiveTTS.readAll(elementsToRead);
+        clusiveTTS.readAll(nodesToRead);
     }
 };
 
@@ -497,14 +501,14 @@ clusiveTTS.readAll = function(elements) {
     'use strict';
 
     var toRead = [];
-    $.each(elements, function(i, elem) {
+    elements.forEach(function(elem) {
         var elementToRead = {
             element: elem,
             offset: 0
         };
         toRead.push(elementToRead);
     });
-console.log(toRead)
+
     clusiveTTS.readElements(toRead);
 };
 
@@ -531,8 +535,8 @@ clusiveTTS.readSelection = function(elements, selection) {
     selectionTexts = selectionTexts.filter(function(selectionText) {
         var trimmed = selectionText.trim();
         var found = false;
-        $.each(filteredElements, function(i, elem) {
-            var elemText = $(elem).text();
+        filteredElements.forEach(function(elem) {
+            var elemText = elem.textContent;
             if (elemText.includes(trimmed)) {
                 found = true;
             }
@@ -541,11 +545,11 @@ clusiveTTS.readSelection = function(elements, selection) {
     });
 
     var toRead = [];
-    $.each(filteredElements, function(i, elem) {
+    filteredElements.forEach(function(elem, i) {
         var fromIndex = i === 0 ? firstNodeOffSet : 0;
         var selText = selectionTexts[i].trim();
 
-        var textOffset = $(elem).text().indexOf(selText, fromIndex);
+        var textOffset = elem.textContent.indexOf(selText, fromIndex);
 
         var textEnd = selText.length;
 
