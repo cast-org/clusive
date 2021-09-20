@@ -1,10 +1,10 @@
 from django.urls import path
-from django.views.generic import TemplateView, RedirectView
 
+from roster.views import LoginView
 from . import views
 
 urlpatterns = [
-    path('', RedirectView.as_view(pattern_name='dashboard'), name='index'),
+    path('', LoginView.as_view(), name='index'),
     path('dashboard/<int:period_id>', views.DashboardView.as_view(), name='dashboard'),
     path('dashboard', views.DashboardView.as_view(), name='dashboard'),
     path('dashboard-activity-panel/<int:days>', views.DashboardActivityPanelView.as_view(), name='dashboard_activity_panel'),
