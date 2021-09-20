@@ -317,7 +317,7 @@ class PageTestCases(TestCase):
         def test_logged_in_message(self):
             login = self.client.login(username='user1', password='password1')
             self.assertTrue(login)
-            url = reverse('index')
+            url = reverse('dashboard')
             response = self.client.get(url, follow=True)
             html = response.content.decode('utf8')
             self.assertIn('user1', html)
