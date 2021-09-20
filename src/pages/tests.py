@@ -24,7 +24,8 @@ class PageTestCases(TestCase):
 
     def test_index_page(self):
         response = self.client.get(reverse('index'))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Welcome to Clusive')
 
     def test_word_bank_page(self):
         login = self.client.login(username='user1', password='password1')
