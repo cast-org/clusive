@@ -264,6 +264,60 @@ clusiveTTS.readQueuedElements = function() {
     }
 };
 
+clusiveTTS.wrap = function(toWrap, wrapper) {
+    'use strict';
+
+    wrapper = wrapper || document.createElement('div');
+    toWrap.after(wrapper);
+    wrapper.appendChild(toWrap);
+};
+
+clusiveTTS.createActive = function(textElement) {
+    'use strict';
+
+    var wrapperActive = document.createElement('cttsActive');
+    clusiveTTS.wrap(textElement, wrapperActive);
+    clusiveTTS.copiedElement = wrapperActive;
+};
+
+clusiveTTS.updateActive = function(preceding, middle, following) {
+    'use strict';
+
+    if (clusiveTTS.copiedElement === null) {
+        return;
+    }
+
+    if (!preceding.length > 0 && !middle.length > 0 && !following.length > 0) {
+        return;
+    }
+
+    // Short method for reference - Research indicates using documentFragment should be faster
+    // var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
+    // clusiveTTS.copiedElement.innerHTML = newText;
+
+    var newText = document.createDocumentFragment();
+    var newPrefix = document.createDocumentFragment();
+    var newMiddle = document.createElement('span');
+    var newFollowing = document.createDocumentFragment();
+
+    newPrefix.textContent = preceding;
+    newMiddle.classList.add('tts-currentWord');
+    if (typeof middle === 'object') {
+        newMiddle = middle;
+    } else {
+        newMiddle.textContent = middle;
+    }
+    newFollowing.textContent = following;
+    newText.append(newPrefix);
+    newText.append(newMiddle);
+    newText.append(newFollowing);
+
+    while (clusiveTTS.copiedElement.firstChild) {
+        clusiveTTS.copiedElement.removeChild(clusiveTTS.copiedElement.firstChild);
+    }
+    clusiveTTS.copiedElement.append(newText);
+};
+
 clusiveTTS.readElement = function(textElement, offset, end) {
     'use strict';
 
@@ -271,9 +325,9 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     var elementText = textElement.textContent;
     var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
-    // Create element that will be used to replace the textnode
-    var wrapperActive = document.createElement('cttsActive');
-    clusiveTTS.copiedElement = wrapperActive;
+    // Store then wrap text node so content can be replaced
+    clusiveTTS.textElement = textElement;
+    clusiveTTS.createActive(textElement);
 
     var utterance = clusiveTTS.makeUtterance(contentText);
 
@@ -315,14 +369,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             }
         }
 
-        var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
-        clusiveTTS.copiedElement.innerHTML = newText;
-
-        // Save and replace the the current textnode
-        if (clusiveTTS.textElement === null) {
-            clusiveTTS.textElement = textElement;
-            textElement.replaceWith(clusiveTTS.copiedElement);
-        }
+        clusiveTTS.updateActive(preceding, middle, following);
 
         // Keep current word being read in view
         if (clusiveTTS.autoScroll && !clusiveTTS.userScrolled) {
@@ -360,7 +407,10 @@ clusiveTTS.resetElements = function() {
 
     console.debug('read aloud reset elements');
     // Replace current active text with stored textnode, and reset store
-    clusiveTTS.copiedElement.replaceWith(clusiveTTS.textElement);
+    if (clusiveTTS.copiedElement && clusiveTTS.textElement) {
+        clusiveTTS.copiedElement.replaceWith(clusiveTTS.textElement);
+    }
+    clusiveTTS.copiedElement = null;
     clusiveTTS.textElement = null;
     clusiveTTS.readQueuedElements();
 };
