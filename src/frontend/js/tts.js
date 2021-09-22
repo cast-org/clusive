@@ -568,7 +568,7 @@ clusiveTTS.readSelection = function(elements, selection) {
     'use strict';
 
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
-    var selectionDirection = clusiveSelection.getSelectionDirection(selection, selectionTexts);
+    var selectionDirection = clusiveSelection.getSelectionDirection(elements, selection);
     var firstNodeOffSet;
 
     if (selectionDirection === clusiveSelection.directions.FORWARD) {
@@ -581,6 +581,9 @@ clusiveTTS.readSelection = function(elements, selection) {
 
     // Check the selectionTexts against the filteredElements text, eliminate
     // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
+    filteredElements = filteredElements.filter(function(elem) {
+        return clusiveTTS.isVisuallyVisible(elem.parentElement);
+    });
 
     selectionTexts = selectionTexts.filter(function(selectionText) {
         var trimmed = selectionText.trim();
@@ -610,8 +613,11 @@ clusiveTTS.readSelection = function(elements, selection) {
             offset: textOffset,
             end: textOffset + textEnd
         };
-        toRead.push(elementToRead);
+        if (textOffset !==  textEnd) {
+            toRead.push(elementToRead);
+        }
     });
+
     // TODO: how to preserve ranges, while not selecting the substituted ones?
     selection.removeAllRanges();
     clusiveTTS.readElements(toRead);
@@ -679,12 +685,11 @@ clusiveTTS.readAloudSample = function() {
 var clusiveSelection = {
     directions: {
         FORWARD: 'Forward',
-        BACKWARD: 'Backward',
-        UNCERTAIN: 'Uncertain'
+        BACKWARD: 'Backward'
     }
 };
 
-clusiveSelection.getSelectionDirection = function(selection) {
+clusiveSelection.getSelectionDirection = function(elements, selection) {
     'use strict';
 
     var selectionDirection;
@@ -697,7 +702,7 @@ clusiveSelection.getSelectionDirection = function(selection) {
     var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
 
     // Selection within a single element, direction can be determined by comparing anchor and focus offset
-    if (anchorNode.textContent === focusNode.textContent) {
+    if (anchorNode === focusNode) {
         selectionDirection = selection.anchorOffset < selection.focusOffset ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
     // The first block of selection text is matched in the anchor element; forward selection
     } else if (selectedAnchorText === selectionTexts[0].trim()) {
@@ -705,9 +710,10 @@ clusiveSelection.getSelectionDirection = function(selection) {
     // The first block of selection text is matched in the focus element; backward selection
     } else if (selectedFocusText === selectionTexts[0].trim()) {
         selectionDirection = clusiveSelection.directions.BACKWARD;
-    // This should eventually be eliminated as other scenarios get covered
-    // TODO: check for anchorText / focusText within larger elements - might be divided by inline tags, etc
-    } else { selectionDirection = clusiveSelection.directions.UNCERTAIN; }
+    // Check for anchorNode / focusNode within larger elements
+    } else {
+        selectionDirection = elements.indexOf(anchorNode) < elements.indexOf(focusNode) ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
+    }
 
     return selectionDirection;
 };
@@ -716,7 +722,7 @@ clusiveSelection.getSelectionDirection = function(selection) {
 clusiveSelection.getSelectionTextAsArray = function(selection) {
     'use strict';
 
-    return selection.toString().split('\n').filter(function(text) {
+    return selection.toString().split(/[\n\r\t]/).filter(function(text) {
         return text.length > 1;
     });
 };
