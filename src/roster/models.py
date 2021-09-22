@@ -177,6 +177,7 @@ class ClusiveUser(models.Model):
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
     data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
+    external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
 
 # If True, user cannot log in until they have confirmed their email.
     unconfirmed_email = models.BooleanField(default=False)

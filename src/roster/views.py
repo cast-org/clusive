@@ -43,8 +43,6 @@ from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPer
     RosterDataSource
 from roster.signals import user_registered
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 def guest_login(request):
@@ -764,12 +762,14 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
                     if self.request.user == user_with_that_email:
                         continue
                     clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
+                    google_id = person['profile']['id']
                     a_person = {
                         'name': user_with_that_email.first_name,
                         'email': email,
                         'role': clusive_user.role,
                         'role_display': Roles.display_name(clusive_user.role),
-                        'exists': True
+                        'exists': True,
+                        'external_id': google_id
                     }
                 else:
                     a_person = {
@@ -777,7 +777,8 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
                         'email': email,
                         'role': self.role_info[group]['role'],
                         'role_display': self.role_info[group]['display_name'],
-                        'exists': False
+                        'exists': False,
+                        'external_id': google_id
                     }
                 tuples.append(a_person)
         return tuples
@@ -829,7 +830,6 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
     def configure_event(self, event: Event):
         event.page = 'ManageImportPeriodConfirm'
 
-
 class GooglePeriodImport(LoginRequiredMixin, RedirectView):
     """
     Import new Period data that was just confirmed, then redirect to manage page.
@@ -858,6 +858,7 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
                     'permission': creating_permission,
                     'anon_id': ClusiveUser.next_anon_id(),
                     'data_source': RosterDataSource.GOOGLE,
+                    'external_id': person['external_id'],
                 }
                 user_list.append(ClusiveUser.create_from_properties(properties))
 
@@ -974,7 +975,7 @@ class GetGoogleRoster(GetGoogleCourses):
         self.log_results(teachers, 'teachers')
 
         request.session['google_roster'] = { 'students': students, 'teachers': teachers }
-        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
+        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}))
 
     def log_results(self, group, role):
         logger.debug('Get Google roster: there are (%s) %s', len(group), role)
