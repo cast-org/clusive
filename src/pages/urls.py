@@ -12,8 +12,9 @@ urlpatterns = [
     path('reader/<int:book_id>/<int:version>', views.ReaderView.as_view(), name='reader'),
     path('reader/<int:book_id>', views.ReaderChooseVersionView.as_view(pattern_name='reader'), name='reader_default'),
     path('wordbank', views.WordBankView.as_view(), name='word_bank'),
-    path('debug', views.DebugView.as_view(), name='debug'),
+    path('about', views.AboutView.as_view(), name='about'),
     path('privacy', views.PrivacyView.as_view(), name='privacy'),
+    path('debug', views.DebugView.as_view(), name='debug'),
     path('set_star_rating', views.SetStarRatingView.as_view(), name='set_star_rating'),
     path('star_rating_results', views.StarRatingResultsView.as_view(), name='star_rating_results'),
 ]
