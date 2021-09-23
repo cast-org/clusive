@@ -447,9 +447,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         return context
 
     def make_people_info_list(self, current_user):
-        co_teachers = self.current_period.users.filter(role=Roles.TEACHER).exclude(user=current_user)
-        students = self.current_period.users.filter(role=Roles.STUDENT)
-        people = (co_teachers | students).order_by('user__first_name')
+        people = self.current_period.users.exclude(user=current_user).order_by('user__first_name')
         return [{
             'info': {
                 'first_name': p.user.first_name,
