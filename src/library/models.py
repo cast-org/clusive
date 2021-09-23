@@ -94,6 +94,22 @@ class Book(models.Model):
             return None
 
     @property
+    def cover_filename(self):
+        return os.path.basename(self.cover)
+
+    def set_cover_file(self, filename):
+        """
+        Updates book, setting the cover to be a given filename; returns the full path to this location.
+        Caller is responsible for actually putting a cover image in that location.
+        :param filename: name of the cover image file with no path
+        :return: full path to where the cover should be stored
+        """
+        path = os.path.join(self.storage_dir, filename)
+        self.cover = filename
+        self.save()
+        return path
+
+    @property
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
