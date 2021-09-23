@@ -450,9 +450,13 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPage
         event.page = 'Wordbank'
 
 
-class DebugView(TemplateView):
-    template_name = 'pages/debug.html'
+class AboutView(TemplateView):
+    template_name = 'pages/about.html'
 
 
 class PrivacyView(TemplateView):
     template_name = 'pages/privacy.html'
+
+
+class DebugView(TemplateView):
+    template_name = 'pages/debug.html'
