@@ -78,15 +78,6 @@
             + Add Student
         </a>
     </p>
-    {% elif current_period.data_source == 'G' %}
-    <p>
-        <a href="{% url 'manage' period_id=current_period.pk %}" class="btn btn-secondary">
-            Sync with Google Classroom
-        </a>
-    </p>
-    <p>
-        If you have made changes to your Google Classroom class roster (e.g., you added or removed a student), use this option to update your class list in Clusive.
-    </p>
     {% endif %}    
     {% endif %}
 </main>
