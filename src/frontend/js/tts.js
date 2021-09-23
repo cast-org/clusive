@@ -250,6 +250,7 @@ clusiveTTS.readQueuedElements = function() {
 
     while (clusiveTTS.elementsToRead.length && toRead === null) {
         toRead = clusiveTTS.elementsToRead.shift();
+        // Check for hidden - allows items shown mid-read to be included
         if (!clusiveTTS.isVisuallyVisible(toRead.element.parentElement)) {
             toRead = null;
         }
@@ -569,58 +570,62 @@ clusiveTTS.readSelection = function(elements, selection) {
 
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
     var selectionDirection = clusiveSelection.getSelectionDirection(elements, selection);
-    var firstNodeOffSet;
+    var firstNodeOffset;
+    var lastNodeOffset;
+    var toRead = [];
 
     if (selectionDirection === clusiveSelection.directions.FORWARD) {
-        firstNodeOffSet = selection.anchorOffset;
+        firstNodeOffset = selection.anchorOffset;
+        lastNodeOffset = selection.focusOffset;
     } else if (selectionDirection === clusiveSelection.directions.BACKWARD) {
-        firstNodeOffSet = selection.focusOffset;
+        firstNodeOffset = selection.focusOffset;
+        lastNodeOffset = selection.anchorOffset;
     }
-
-    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
-
-    // Check the selectionTexts against the filteredElements text, eliminate
-    // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
-    filteredElements = filteredElements.filter(function(elem) {
-        return clusiveTTS.isVisuallyVisible(elem.parentElement);
-    });
-
-    selectionTexts = selectionTexts.filter(function(selectionText) {
-        var trimmed = selectionText.trim();
-        var found = false;
-        filteredElements.forEach(function(elem) {
-            var elemText = elem.textContent;
-            if (elemText.includes(trimmed)) {
-                found = true;
-            }
-        });
-        return found;
-    });
-
-    var toRead = [];
-    filteredElements.forEach(function(elem, i) {
-        var fromIndex = i === 0 ? firstNodeOffSet : 0;
-        var selText = selectionTexts[i].trim();
-
-        var textOffset = elem.textContent.indexOf(selText, fromIndex);
-
-        var textEnd = selText.length;
-
-        console.debug('textOffset/textEnd', textOffset, textEnd);
-
-        var elementToRead = {
-            element: elem,
-            offset: textOffset,
-            end: textOffset + textEnd
-        };
-        if (textOffset !==  textEnd) {
-            toRead.push(elementToRead);
-        }
-    });
 
     // TODO: how to preserve ranges, while not selecting the substituted ones?
     selection.removeAllRanges();
-    clusiveTTS.readElements(toRead);
+
+console.log('PRE', filteredElements);
+console.log('OFFSET', firstNodeOffset, lastNodeOffset);
+
+    if (filteredElements.length) {
+        // Check first and last elements to see if they are hidden and reset offsets accordingly
+        if (!clusiveTTS.isVisuallyVisible(filteredElements[0].parentElement)) {
+            firstNodeOffset = 0;
+        }
+        if (!clusiveTTS.isVisuallyVisible(filteredElements[filteredElements.length - 1].parentElement)) {
+            lastNodeOffset = null;
+        }
+        // Remove hidden text elements
+        filteredElements = filteredElements.filter(function(elem) {
+            return clusiveTTS.isVisuallyVisible(elem.parentElement);
+        });
+    }
+
+console.log('POST', filteredElements);
+
+    // Still have items after filter?
+    if (filteredElements.length) {
+        filteredElements.forEach(function(elem, i) {
+            var textOffset = i === 0 ? firstNodeOffset : 0;
+            var textEnd = i === filteredElements.length - 1 ? lastNodeOffset : null;
+
+            console.debug('textOffset/textEnd', textOffset, textEnd);
+
+            var elementToRead = {
+                element: elem,
+                offset: textOffset,
+                end: textEnd
+            };
+            if (textOffset !== textEnd) {
+                toRead.push(elementToRead);
+            }
+        });
+
+        clusiveTTS.readElements(toRead);
+    } else {
+        clusiveTTS.stopReading();
+    }
 };
 
 // Return all voices known to the system for the given language.
@@ -693,36 +698,22 @@ clusiveSelection.getSelectionDirection = function(elements, selection) {
     'use strict';
 
     var selectionDirection;
-    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
-
     var anchorNode = selection.anchorNode;
-    var selectedAnchorText = selection.anchorNode.textContent.slice(selection.anchorOffset);
-
     var focusNode = selection.focusNode;
-    var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
 
     // Selection within a single element, direction can be determined by comparing anchor and focus offset
     if (anchorNode === focusNode) {
         selectionDirection = selection.anchorOffset < selection.focusOffset ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
-    // The first block of selection text is matched in the anchor element; forward selection
-    } else if (selectedAnchorText === selectionTexts[0].trim()) {
-        selectionDirection = clusiveSelection.directions.FORWARD;
-    // The first block of selection text is matched in the focus element; backward selection
-    } else if (selectedFocusText === selectionTexts[0].trim()) {
+    // Nested nodes
+    } else if (anchorNode.contains(focusNode)) {
         selectionDirection = clusiveSelection.directions.BACKWARD;
-    // Check for anchorNode / focusNode within larger elements
+    } else if (focusNode.contains(anchorNode)) {
+        selectionDirection = clusiveSelection.directions.FORWARD;
+    // Order of anchorNode/focusNode within larger element set
     } else {
         selectionDirection = elements.indexOf(anchorNode) < elements.indexOf(focusNode) ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
     }
 
+    console.debug('selectionDirection', selectionDirection);
     return selectionDirection;
-};
-
-// Get the selection text as an array, splitting by the newline character
-clusiveSelection.getSelectionTextAsArray = function(selection) {
-    'use strict';
-
-    return selection.toString().split(/[\n\r\t]/).filter(function(text) {
-        return text.length > 1;
-    });
 };
