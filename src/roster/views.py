@@ -625,6 +625,11 @@ def finish_login(request):
     if clusive_user.data_source != RosterDataSource.GOOGLE:
         clusive_user.data_source = RosterDataSource.GOOGLE
         clusive_user.save()
+    google_user = SocialAccount.objects.get(user=request.user, provider='google')
+    if google_user is not None:
+        clusive_user.external_id = google_user.uid
+        clusive_user.save()
+
     # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
         request.session['sso'] = True
