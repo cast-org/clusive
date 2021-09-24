@@ -113,10 +113,12 @@ window.addEventListener('unload', function() {
 });
 
 clusiveTTS.getSelectorFromElement = function(element) {
+    'use strict';
+
     var selector = element.getAttribute('data-ctts-target');
 
     if (!selector || selector === '#') {
-        var hrefAttr = element.getAttribute('href')
+        var hrefAttr = element.getAttribute('href');
 
         // Valid selector could be ID or class
         if (!hrefAttr || (!hrefAttr.includes('#') && !hrefAttr.startsWith('.'))) {
