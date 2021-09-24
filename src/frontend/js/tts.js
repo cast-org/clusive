@@ -578,7 +578,7 @@ clusiveTTS.readSelection = function(elements, selection) {
     if (selectionDirection === clusiveSelection.directions.FORWARD) {
         firstNodeOffset = selection.anchorOffset;
         lastNodeOffset = selection.focusOffset;
-    } else if (selectionDirection === clusiveSelection.directions.BACKWARD) {
+    } else {
         firstNodeOffset = selection.focusOffset;
         lastNodeOffset = selection.anchorOffset;
     }
@@ -588,7 +588,7 @@ clusiveTTS.readSelection = function(elements, selection) {
 
     if (filteredElements.length) {
         // Check first and last elements to see if they are hidden and reset offsets accordingly
-        if (!clusiveTTS.isVisuallyVisible(filteredElements[0].parentElement)) {
+        if (!clusiveTTS.isVisuallyVisible(filteredElements[0].parentElement) && filteredElements.length > 1) {
             firstNodeOffset = 0;
         }
         if (!clusiveTTS.isVisuallyVisible(filteredElements[filteredElements.length - 1].parentElement)) {
@@ -717,7 +717,7 @@ clusiveSelection.getSelectionDirection = function(elements, selection) {
         selectionDirection = clusiveSelection.directions.FORWARD;
     // Order of anchorNode/focusNode within larger set
     } else {
-        selectionDirection = elements.indexOf(anchorNode) < elements.indexOf(focusNode) ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
+        selectionDirection = anchorNode.compareDocumentPosition(focusNode) === Node.DOCUMENT_POSITION_FOLLOWING ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
     }
 
     console.debug('selectionDirection', selectionDirection);
