@@ -39,8 +39,9 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
+                var selector = clusiveTTS.getSelectorFromElement(e.currentTarget);
                 clusiveTTS.resetState();
-                clusiveTTS.read();
+                clusiveTTS.read(selector);
                 clusiveTTS.updateUI('play');
             } else {
                 clusiveTTS.stopReading();
@@ -110,6 +111,32 @@ window.addEventListener('unload', function() {
         clusiveTTS.stopReading();
     }
 });
+
+clusiveTTS.getSelectorFromElement = function(element) {
+    var selector = element.getAttribute('data-ctts-target');
+
+    if (!selector || selector === '#') {
+        var hrefAttr = element.getAttribute('href')
+
+        // Valid selector could be ID or class
+        if (!hrefAttr || (!hrefAttr.includes('#') && !hrefAttr.startsWith('.'))) {
+            return null;
+        }
+
+        // Just in case of a full URL with the anchor appended
+        if (hrefAttr.includes('#') && !hrefAttr.startsWith('#')) {
+            hrefAttr = '#' + hrefAttr.split('#')[1];
+        }
+
+        selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : null;
+    }
+
+    try {
+        return document.querySelector(selector) ? selector : null;
+    } catch (error) {
+        return null;
+    }
+};
 
 clusiveTTS.setRegion = function(ctl) {
     'use strict';
@@ -533,10 +560,14 @@ clusiveTTS.isSelection = function(selection) {
     return !(selection.type === 'None' || selection.type === 'Caret');
 };
 
-clusiveTTS.read = function() {
+clusiveTTS.read = function(selector) {
     'use strict';
 
-    var nodesToRead = clusiveTTS.getReadableTextNodes(document.querySelector('main'));
+    if (typeof selector === 'undefined' || selector === null) {
+        selector = 'main';
+    }
+
+    var nodesToRead = clusiveTTS.getReadableTextNodes(document.querySelector(selector));
     var selection = window.getSelection();
     var isSelection = clusiveTTS.isSelection(selection);
 
@@ -715,7 +746,7 @@ clusiveSelection.getSelectionDirection = function(elements, selection) {
         selectionDirection = clusiveSelection.directions.BACKWARD;
     } else if (focusElement.contains(anchorNode) || focusParent.contains(anchorNode)) {
         selectionDirection = clusiveSelection.directions.FORWARD;
-    // Order of anchorNode/focusNode within larger set
+    // Order of anchorNode/focusNode within document
     } else {
         selectionDirection = anchorNode.compareDocumentPosition(focusNode) === Node.DOCUMENT_POSITION_FOLLOWING ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
     }
