@@ -585,9 +585,6 @@ clusiveTTS.readSelection = function(elements, selection) {
     // TODO: how to preserve ranges, while not selecting the substituted ones?
     selection.removeAllRanges();
 
-console.log('PRE', filteredElements);
-console.log('OFFSET', firstNodeOffset, lastNodeOffset);
-
     if (filteredElements.length) {
         // Check first and last elements to see if they are hidden and reset offsets accordingly
         if (!clusiveTTS.isVisuallyVisible(filteredElements[0].parentElement)) {
@@ -602,13 +599,17 @@ console.log('OFFSET', firstNodeOffset, lastNodeOffset);
         });
     }
 
-console.log('POST', filteredElements);
-
     // Still have items after filter?
     if (filteredElements.length) {
         filteredElements.forEach(function(elem, i) {
             var textOffset = i === 0 ? firstNodeOffset : 0;
             var textEnd = i === filteredElements.length - 1 ? lastNodeOffset : null;
+
+            // Reported last selected node (focusNode) might not be within filteredElements
+            // so we will need to adjust the focusOffset for the last readable filteredElement
+            if (elem != focusNode) {
+                textEnd = null;
+            }
 
             console.debug('textOffset/textEnd', textOffset, textEnd);
 
@@ -700,16 +701,20 @@ clusiveSelection.getSelectionDirection = function(elements, selection) {
     var selectionDirection;
     var anchorNode = selection.anchorNode;
     var focusNode = selection.focusNode;
+    var anchorElement = selection.anchorNode.nodeType === Node.TEXT_NODE ? selection.anchorNode.parentElement : selection.anchorNode;
+    var focusElement = selection.focusNode.nodeType === Node.TEXT_NODE ? selection.focusNode.parentElement : selection.focusNode;
+    var anchorParent = selection.anchorNode.parentElement;
+    var focusParent = selection.focusNode.parentElement;
 
     // Selection within a single element, direction can be determined by comparing anchor and focus offset
     if (anchorNode === focusNode) {
         selectionDirection = selection.anchorOffset < selection.focusOffset ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
-    // Nested nodes
-    } else if (anchorNode.contains(focusNode)) {
+    // Nested node (test against parentElement due to Firefox)
+    } else if (anchorElement.contains(focusNode) || anchorParent.contains(focusNode)) {
         selectionDirection = clusiveSelection.directions.BACKWARD;
-    } else if (focusNode.contains(anchorNode)) {
+    } else if (focusElement.contains(anchorNode) || focusParent.contains(anchorNode)) {
         selectionDirection = clusiveSelection.directions.FORWARD;
-    // Order of anchorNode/focusNode within larger element set
+    // Order of anchorNode/focusNode within larger set
     } else {
         selectionDirection = elements.indexOf(anchorNode) < elements.indexOf(focusNode) ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
     }
