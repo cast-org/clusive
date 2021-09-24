@@ -570,6 +570,7 @@ clusiveTTS.readSelection = function(elements, selection) {
 
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
     var selectionDirection = clusiveSelection.getSelectionDirection(elements, selection);
+    var focusNode = selection.focusNode;
     var firstNodeOffset;
     var lastNodeOffset;
     var toRead = [];
@@ -607,7 +608,7 @@ clusiveTTS.readSelection = function(elements, selection) {
 
             // Reported last selected node (focusNode) might not be within filteredElements
             // so we will need to adjust the focusOffset for the last readable filteredElement
-            if (elem != focusNode) {
+            if (elem !== focusNode) {
                 textEnd = null;
             }
 
