@@ -20,7 +20,6 @@ class AffectCheckView(LoginRequiredMixin, View):
     @staticmethod
     def create_from_request(request, affect_check_data, book_id):
         clusive_user = request.clusive_user
-        logger.debug("create with data: %s", affect_check_data)
         book = Book.objects.get(id=book_id)
 
         with transaction.atomic():
@@ -38,6 +37,9 @@ class AffectCheckView(LoginRequiredMixin, View):
             acr.okay_option_response = affect_check_data.get('affect-option-okay')
             acr.sad_option_response = affect_check_data.get('affect-option-sad')
             acr.surprised_option_response = affect_check_data.get('affect-option-surprised')
+
+            free_question = affect_check_data.get('freeQuestion')
+            acr.affect_free_response = affect_check_data.get('freeResponse')
             acr.save()
 
             new_values = acr.to_list()
@@ -54,6 +56,12 @@ class AffectCheckView(LoginRequiredMixin, View):
                                   request=request, event_id=page_event_id,
                                   affect_check_response_id=acr.id,
                                   answer=acr.to_answer_string())
+
+        affect_check_completed.send(sender=AffectCheckView,
+                                    request=request, event_id=page_event_id,
+                                    affect_check_response_id=acr.id,
+                                    question=free_question,
+                                    answer=acr.affect_free_response)
 
     def post(self, request, book_id):
         try:
@@ -84,6 +92,7 @@ class AffectCheckView(LoginRequiredMixin, View):
             "affect-option-okay": acr.okay_option_response,
             "affect-option-sad": acr.sad_option_response,
             "affect-option-surprised": acr.surprised_option_response,
+            "freeResponse": acr.affect_free_response,
         }
         return JsonResponse(response_value)
 

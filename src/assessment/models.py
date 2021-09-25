@@ -96,6 +96,8 @@ class AffectiveCheckResponse(CheckResponse):
     sad_option_response = models.BooleanField(null=False, default=False)
     surprised_option_response = models.BooleanField(null=False, default=False)
 
+    affect_free_response = models.TextField(null=True)
+
     def get_by_name(self, name):
         return getattr(self, name + '_option_response')
 
