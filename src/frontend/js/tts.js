@@ -39,8 +39,9 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
+                var selector = clusiveTTS.getSelectorFromElement(e.currentTarget);
                 clusiveTTS.resetState();
-                clusiveTTS.read();
+                clusiveTTS.read(selector);
                 clusiveTTS.updateUI('play');
             } else {
                 clusiveTTS.stopReading();
@@ -110,6 +111,34 @@ window.addEventListener('unload', function() {
         clusiveTTS.stopReading();
     }
 });
+
+clusiveTTS.getSelectorFromElement = function(element) {
+    'use strict';
+
+    var selector = element.getAttribute('data-ctts-target');
+
+    if (!selector || selector === '#') {
+        var hrefAttr = element.getAttribute('href');
+
+        // Valid selector could be ID or class
+        if (!hrefAttr || (!hrefAttr.includes('#') && !hrefAttr.startsWith('.'))) {
+            return null;
+        }
+
+        // Just in case of a full URL with the anchor appended
+        if (hrefAttr.includes('#') && !hrefAttr.startsWith('#')) {
+            hrefAttr = '#' + hrefAttr.split('#')[1];
+        }
+
+        selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : null;
+    }
+
+    try {
+        return document.querySelector(selector) ? selector : null;
+    } catch (error) {
+        return null;
+    }
+};
 
 clusiveTTS.setRegion = function(ctl) {
     'use strict';
@@ -207,11 +236,40 @@ clusiveTTS.scrollWatchStop = function() {
     $(document).off('wheel keydown touchmove', clusiveTTS.scrollWatch);
 };
 
-clusiveTTS.isVisible = function(elem) {
+clusiveTTS.outerWidthMargin = function(el) {
     'use strict';
 
-    return Boolean(elem.offsetWidth || elem.offsetHeight
-        || elem.getClientRects().length && window.getComputedStyle(elem).visibility !== 'hidden');
+    var width = el.offsetWidth;
+    var style = getComputedStyle(el);
+
+    width += parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10);
+    return width;
+};
+
+clusiveTTS.outerHeightMargin = function(el) {
+    'use strict';
+
+    var height = el.offsetHeight;
+    var style = getComputedStyle(el);
+
+    height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
+    return height;
+};
+
+clusiveTTS.isVisuallyVisible = function(elem) {
+    'use strict';
+
+    return Boolean(clusiveTTS.outerWidthMargin(elem) > 0 && clusiveTTS.outerHeightMargin(elem) > 0 && elem.getClientRects().length && $(elem).outerHeight(true) > 0 && window.getComputedStyle(elem).visibility !== 'hidden');
+};
+
+clusiveTTS.isReadable = function(node) {
+    'use strict';
+
+    // if (!clusiveTTS.isVisuallyVisible(node.parentElement)) { return false; }
+    if (!node.data.trim().length > 0) { return false; }
+    if (/script|style|button|input|optgroup|option|select|textarea/i.test(node.parentElement.tagName)) { return false; }
+
+    return true;
 };
 
 clusiveTTS.readQueuedElements = function() {
@@ -221,7 +279,8 @@ clusiveTTS.readQueuedElements = function() {
 
     while (clusiveTTS.elementsToRead.length && toRead === null) {
         toRead = clusiveTTS.elementsToRead.shift();
-        if (!clusiveTTS.isVisible(toRead.element)) {
+        // Check for hidden - allows items shown mid-read to be included
+        if (!clusiveTTS.isVisuallyVisible(toRead.element.parentElement)) {
             toRead = null;
         }
     }
@@ -235,20 +294,70 @@ clusiveTTS.readQueuedElements = function() {
     }
 };
 
+clusiveTTS.wrap = function(toWrap, wrapper) {
+    'use strict';
+
+    wrapper = wrapper || document.createElement('div');
+    toWrap.after(wrapper);
+    wrapper.appendChild(toWrap);
+};
+
+clusiveTTS.createActive = function(textElement) {
+    'use strict';
+
+    var wrapperActive = document.createElement('cttsActive');
+    clusiveTTS.wrap(textElement, wrapperActive);
+    clusiveTTS.copiedElement = wrapperActive;
+};
+
+clusiveTTS.updateActive = function(preceding, middle, following) {
+    'use strict';
+
+    if (clusiveTTS.copiedElement === null) {
+        return;
+    }
+
+    if (!preceding.length > 0 && !middle.length > 0 && !following.length > 0) {
+        return;
+    }
+
+    // Short method for reference - Research indicates using documentFragment should be faster
+    // var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
+    // clusiveTTS.copiedElement.innerHTML = newText;
+
+    var newText = document.createDocumentFragment();
+    var newPrefix = document.createDocumentFragment();
+    var newMiddle = document.createElement('span');
+    var newFollowing = document.createDocumentFragment();
+
+    newPrefix.textContent = preceding;
+    newMiddle.classList.add('tts-currentWord');
+    if (typeof middle === 'object') {
+        newMiddle = middle;
+    } else {
+        newMiddle.textContent = middle;
+    }
+    newFollowing.textContent = following;
+    newText.append(newPrefix);
+    newText.append(newMiddle);
+    newText.append(newFollowing);
+
+    while (clusiveTTS.copiedElement.firstChild) {
+        clusiveTTS.copiedElement.removeChild(clusiveTTS.copiedElement.firstChild);
+    }
+    clusiveTTS.copiedElement.append(newText);
+};
+
 clusiveTTS.readElement = function(textElement, offset, end) {
     'use strict';
 
     var synth = clusiveTTS.synth;
-    clusiveTTS.textElement = $(textElement);
-    var elementText = clusiveTTS.textElement.text();
+    var elementText = textElement.textContent;
     var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
-    // Preserve and hide the original element so we can handle the highlighting in an
-    // element without markup
-    // TODO: this needs improved implementation longer term
-    clusiveTTS.copiedElement = clusiveTTS.textElement.clone(false);
-    clusiveTTS.textElement.after(clusiveTTS.copiedElement);
-    clusiveTTS.textElement.hide();
+    // Store then wrap text node so content can be replaced
+    clusiveTTS.textElement = textElement;
+    clusiveTTS.createActive(textElement);
 
     var utterance = clusiveTTS.makeUtterance(contentText);
 
@@ -290,13 +399,10 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             }
         }
 
-        var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
-        clusiveTTS.copiedElement.html(newText);
+        clusiveTTS.updateActive(preceding, middle, following);
 
         // Keep current word being read in view
         if (clusiveTTS.autoScroll && !clusiveTTS.userScrolled) {
-            // TODO: Investigate why can't hook into copiedElement
-            // var wordCurr = clusiveTTS.copiedElement.querySelector('.tts-currentWord');
             var wordCurr = document.querySelector('.tts-currentWord');
             if (wordCurr) {
                 wordCurr.scrollIntoView({
@@ -330,8 +436,12 @@ clusiveTTS.resetElements = function() {
     'use strict';
 
     console.debug('read aloud reset elements');
-    clusiveTTS.copiedElement.remove();
-    clusiveTTS.textElement.show();
+    // Replace current active text with stored textnode, and reset store
+    if (clusiveTTS.copiedElement && clusiveTTS.textElement) {
+        clusiveTTS.copiedElement.replaceWith(clusiveTTS.textElement);
+    }
+    clusiveTTS.copiedElement = null;
+    clusiveTTS.textElement = null;
     clusiveTTS.readQueuedElements();
 };
 
@@ -358,7 +468,7 @@ clusiveTTS.readElements = function(textElements) {
     // Cancel any active reading
     clusiveTTS.stopReading(false);
 
-    $.each(textElements, function(i, e) {
+    textElements.forEach(function(e) {
         clusiveTTS.elementsToRead.push(e);
     });
 
@@ -372,6 +482,64 @@ clusiveTTS.getAllTextElements = function(documentBody) {
     return textElements;
 };
 
+clusiveTTS.getReadableTextNodes = function(elem) {
+    'use strict';
+
+    return clusiveTTS.getTextNodes(elem, clusiveTTS.isReadable);
+};
+
+/**
+ * Gets an array of the matching text nodes contained by the specified element.
+ * @param  {!Element} elem - DOM element to be traversed.
+ * @param  {function(!Node,!Element):boolean} [filter]
+ *     Optional function that if a true-ish value is returned will cause the
+ *     text node in question to be added to the array to be returned from
+ *     getTextNodes().  The first argument passed will be the text node in
+ *     question while the second will be the parent of the text node.
+ * @return {!Array.<!Node>} - Text nodes contained by the specified element.
+ *
+ * References:
+ *  - https://cwestblog.com/2014/03/14/javascript-getting-all-text-nodes/
+ *      - Updated to return proper DOM order.
+ *  - https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+ */
+clusiveTTS.getTextNodes = function(elem, filter) {
+    'use strict';
+
+    var textNodes = [];
+    if (elem) {
+        var nodes = elem.childNodes;
+        for (var i = nodes.length; i--;) {
+            var node = nodes[i];
+            var nodeType = node.nodeType;
+
+            if (nodeType === Node.TEXT_NODE) {
+                if (!filter || filter(node, elem)) {
+                    textNodes.push(node);
+                }
+            } else if (nodeType === Node.ELEMENT_NODE || nodeType === Node.DOCUMENT_NODE || nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+                textNodes = textNodes.concat(clusiveTTS.getTextNodes(node, filter).reverse());
+            }
+        }
+    }
+    return textNodes.reverse();
+};
+
+clusiveTTS.uniqueNodeList = function(list) {
+    'use strict';
+
+    var listLen = list.length;
+    var unique = [];
+
+    for (var i = 0; i < listLen; i++) {
+        if (unique.indexOf(list[i]) === -1) {
+            unique.push(list[i]);
+        }
+    }
+
+    return unique;
+};
+
 clusiveTTS.getReaderIFrameBody = function() {
     'use strict';
 
@@ -379,16 +547,10 @@ clusiveTTS.getReaderIFrameBody = function() {
     return readerIframe.contents().find('body');
 };
 
-clusiveTTS.getReaderIframeSelection = function() {
-    'use strict';
-
-    return $('#D2Reader-Container').find('iframe')[0].contentWindow.getSelection();
-};
-
 clusiveTTS.filterReaderTextElementsBySelection = function(textElements, userSelection) {
     'use strict';
 
-    var filteredElements = textElements.filter(function(i, elem) {
+    var filteredElements = textElements.filter(function(elem) {
         return userSelection.containsNode(elem, true);
     });
     return filteredElements;
@@ -400,29 +562,22 @@ clusiveTTS.isSelection = function(selection) {
     return !(selection.type === 'None' || selection.type === 'Caret');
 };
 
-clusiveTTS.read = function() {
+clusiveTTS.read = function(selector) {
     'use strict';
 
-    var isReader = $('#D2Reader-Container').length > 0;
-    var elementsToRead;
-    var isSelection;
-    var selection;
-
-    if (isReader) {
-        elementsToRead = clusiveTTS.getAllTextElements(clusiveTTS.getReaderIFrameBody());
-        selection = clusiveTTS.getReaderIframeSelection();
-    } else {
-        elementsToRead = clusiveTTS.getAllTextElements($('body'));
-        selection = window.getSelection();
+    if (typeof selector === 'undefined' || selector === null) {
+        selector = 'main';
     }
 
-    isSelection = clusiveTTS.isSelection(selection);
+    var nodesToRead = clusiveTTS.getReadableTextNodes(document.querySelector(selector));
+    var selection = window.getSelection();
+    var isSelection = clusiveTTS.isSelection(selection);
 
     clusiveTTS.scrollWatchStart();
     if (isSelection) {
-        clusiveTTS.readSelection(elementsToRead, selection);
+        clusiveTTS.readSelection(nodesToRead, selection);
     } else {
-        clusiveTTS.readAll(elementsToRead);
+        clusiveTTS.readAll(nodesToRead);
     }
 };
 
@@ -430,7 +585,7 @@ clusiveTTS.readAll = function(elements) {
     'use strict';
 
     var toRead = [];
-    $.each(elements, function(i, elem) {
+    elements.forEach(function(elem) {
         var elementToRead = {
             element: elem,
             offset: 0
@@ -447,53 +602,65 @@ clusiveTTS.readSelection = function(elements, selection) {
     'use strict';
 
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
-    var selectionDirection = clusiveSelection.getSelectionDirection(selection, selectionTexts);
-    var firstNodeOffSet;
+    var selectionDirection = clusiveSelection.getSelectionDirection(elements, selection);
+    var focusNode = selection.focusNode;
+    var firstNodeOffset;
+    var lastNodeOffset;
+    var toRead = [];
 
     if (selectionDirection === clusiveSelection.directions.FORWARD) {
-        firstNodeOffSet = selection.anchorOffset;
-    } else if (selectionDirection === clusiveSelection.directions.BACKWARD) {
-        firstNodeOffSet = selection.focusOffset;
+        firstNodeOffset = selection.anchorOffset;
+        lastNodeOffset = selection.focusOffset;
+    } else {
+        firstNodeOffset = selection.focusOffset;
+        lastNodeOffset = selection.anchorOffset;
     }
 
-    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
-
-    // Check the selectionTexts against the filteredElements text, eliminate
-    // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
-
-    selectionTexts = selectionTexts.filter(function(selectionText) {
-        var trimmed = selectionText.trim();
-        var found = false;
-        $.each(filteredElements, function(i, elem) {
-            var elemText = $(elem).text();
-            if (elemText.includes(trimmed)) {
-                found = true;
-            }
-        });
-        return found;
-    });
-
-    var toRead = [];
-    $.each(filteredElements, function(i, elem) {
-        var fromIndex = i === 0 ? firstNodeOffSet : 0;
-        var selText = selectionTexts[i].trim();
-
-        var textOffset = $(elem).text().indexOf(selText, fromIndex);
-
-        var textEnd = selText.length;
-
-        console.debug('textOffset/textEnd', textOffset, textEnd);
-
-        var elementToRead = {
-            element: elem,
-            offset: textOffset,
-            end: textOffset + textEnd
-        };
-        toRead.push(elementToRead);
-    });
     // TODO: how to preserve ranges, while not selecting the substituted ones?
     selection.removeAllRanges();
-    clusiveTTS.readElements(toRead);
+
+    if (filteredElements.length) {
+        // Check first and last elements to see if they are hidden and reset offsets accordingly
+        if (!clusiveTTS.isVisuallyVisible(filteredElements[0].parentElement) && filteredElements.length > 1) {
+            firstNodeOffset = 0;
+        }
+        if (!clusiveTTS.isVisuallyVisible(filteredElements[filteredElements.length - 1].parentElement)) {
+            lastNodeOffset = null;
+        }
+        // Remove hidden text elements
+        filteredElements = filteredElements.filter(function(elem) {
+            return clusiveTTS.isVisuallyVisible(elem.parentElement);
+        });
+    }
+
+    // Still have items after filter?
+    if (filteredElements.length) {
+        filteredElements.forEach(function(elem, i) {
+            var textOffset = i === 0 ? firstNodeOffset : 0;
+            var textEnd = i === filteredElements.length - 1 ? lastNodeOffset : null;
+
+            // Reported last selected node (focusNode) might not be within filteredElements
+            // so we will need to adjust the focusOffset for the last readable filteredElement
+            if (elem !== focusNode) {
+                textEnd = null;
+            }
+
+            console.debug('textOffset/textEnd', textOffset, textEnd);
+
+            var elementToRead = {
+                element: elem,
+                offset: textOffset,
+                end: textEnd
+            };
+            if (textOffset !== textEnd) {
+                toRead.push(elementToRead);
+            }
+        });
+
+        clusiveTTS.readElements(toRead);
+    } else {
+        clusiveTTS.stopReading();
+    }
 };
 
 // Return all voices known to the system for the given language.
@@ -558,44 +725,34 @@ clusiveTTS.readAloudSample = function() {
 var clusiveSelection = {
     directions: {
         FORWARD: 'Forward',
-        BACKWARD: 'Backward',
-        UNCERTAIN: 'Uncertain'
+        BACKWARD: 'Backward'
     }
 };
 
-clusiveSelection.getSelectionDirection = function(selection) {
+clusiveSelection.getSelectionDirection = function(elements, selection) {
     'use strict';
 
     var selectionDirection;
-    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
-
     var anchorNode = selection.anchorNode;
-    var selectedAnchorText = selection.anchorNode.textContent.slice(selection.anchorOffset);
-
     var focusNode = selection.focusNode;
-    var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
+    var anchorElement = selection.anchorNode.nodeType === Node.TEXT_NODE ? selection.anchorNode.parentElement : selection.anchorNode;
+    var focusElement = selection.focusNode.nodeType === Node.TEXT_NODE ? selection.focusNode.parentElement : selection.focusNode;
+    var anchorParent = selection.anchorNode.parentElement;
+    var focusParent = selection.focusNode.parentElement;
 
     // Selection within a single element, direction can be determined by comparing anchor and focus offset
-    if (anchorNode.textContent === focusNode.textContent) {
+    if (anchorNode === focusNode) {
         selectionDirection = selection.anchorOffset < selection.focusOffset ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
-    // The first block of selection text is matched in the anchor element; forward selection
-    } else if (selectedAnchorText === selectionTexts[0].trim()) {
-        selectionDirection = clusiveSelection.directions.FORWARD;
-    // The first block of selection text is matched in the focus element; backward selection
-    } else if (selectedFocusText === selectionTexts[0].trim()) {
+    // Nested node (test against parentElement due to Firefox)
+    } else if (anchorElement.contains(focusNode) || anchorParent.contains(focusNode)) {
         selectionDirection = clusiveSelection.directions.BACKWARD;
-    // This should eventually be eliminated as other scenarios get covered
-    // TODO: check for anchorText / focusText within larger elements - might be divided by inline tags, etc
-    } else { selectionDirection = clusiveSelection.directions.UNCERTAIN; }
+    } else if (focusElement.contains(anchorNode) || focusParent.contains(anchorNode)) {
+        selectionDirection = clusiveSelection.directions.FORWARD;
+    // Order of anchorNode/focusNode within document
+    } else {
+        selectionDirection = anchorNode.compareDocumentPosition(focusNode) === Node.DOCUMENT_POSITION_FOLLOWING ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
+    }
 
+    console.debug('selectionDirection', selectionDirection);
     return selectionDirection;
-};
-
-// Get the selection text as an array, splitting by the newline character
-clusiveSelection.getSelectionTextAsArray = function(selection) {
-    'use strict';
-
-    return selection.toString().split('\n').filter(function(text) {
-        return text.length > 1;
-    });
 };
