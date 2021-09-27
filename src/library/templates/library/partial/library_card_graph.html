@@ -1,0 +1,25 @@
+<div class="card-divider"></div>
+
+{% if graph_data.max == 0 %}
+These readers haven't yet reported what they learned.
+Encourage them to note what they've learned at the bottom
+left of the reading page.
+{% else %}
+<div class="card-graph">
+    <strong>Student learning</strong> (<a href="#" class="link-stretch" data-cfw="modal" data-cfw-modal-target="#{{graph_link_prefix}}-{{graph_link_serial}}">see details</a>)
+    <div class="stars-chart">
+        {% for item in graph_data.items %}
+        <div class="stars-chart-item">
+            <div class="progress" aria-hidden="true">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="{{graph_data.max}}"
+                     aria-valuenow="{{item.value}}"
+                     style="--progressSize: {{item.value}}; --progressMax: {{graph_data.max}};"></div>
+            </div>
+            <div class="stars-chart-result">
+                {{item.label}}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

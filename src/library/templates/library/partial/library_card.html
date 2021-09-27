@@ -11,6 +11,7 @@
     {% endif %}
     <div class="card-body">
         {% if book.description %}<p class="card-text">{{ book.description|highlight:query }}</p>{% endif %}
+        {% if graph_data %}{% include 'library/partial/library_card_graph.html' %}{% endif %}
     </div>
         <div class="card-footer">
             <div class="row">
