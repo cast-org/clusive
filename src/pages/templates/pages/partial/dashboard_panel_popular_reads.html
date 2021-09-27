@@ -22,8 +22,8 @@
     <div class="tab-content">
         <div class="tab-pane" id="popularTab0">
             <div class="library-grid dashboard-grid">
-                {% for trend in data.all %}
-                    {% include "library/partial/library_card.html" with book=trend.book show_menu=False show_topics=False %}
+                {% for item in data.all %}
+                    {% include "library/partial/library_card.html" with book=item.trend.book graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter show_menu=False show_topics=False %}
                 {% empty %}
                 <p class="mx-1">
                     Your students haven't done any reading, yet.
@@ -36,8 +36,8 @@
         </div>
         <div class="tab-pane" id="popularTab1">
             <div class="library-grid dashboard-grid">
-                {% for trend in data.assigned %}
-                {% include "library/partial/library_card.html" with book=trend.book show_menu=False show_topics=False %}
+                {% for item in data.assigned %}
+                {% include "library/partial/library_card.html" with book=item.trend.book graph_data=item.comp_check graph_link_prefix="comp-detail-assigned" graph_link_serial=forloop.counter show_menu=False show_topics=False %}
                 {% empty %}
                 <p class="mx-1">
                     Your students haven't done any assigned reading, yet.
@@ -52,3 +52,52 @@
 
     {% endif %}
 </div>
+
+{% for item in data.all %}
+<div id="comp-detail-all-{{forloop.counter}}" class="modal why-modal modal-comp-detail" data-clusive-book-id="{{item.trend.book.id}}">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Student learning: {{item.trend.book.title}}</h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% for item in data.assigned %}
+<div id="comp-detail-assigned-{{forloop.counter}}" class="modal why-modal modal-comp-detail" data-clusive-book-id="{{item.trend.book.id}}">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Student learning: {{item.trend.book.title}}</h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<script>
+    $('.modal-comp-detail').one('beforeShow.cfw.modal', function(e) {
+        var book = $(this).data('clusive-book-id');
+        var target = $(this).find('.modal-body');
+        $.get('/assessment/comprehension_detail/'+ book)
+            .done(function(data, status) {
+                target.html(data);
+            })
+            .fail(function(err) {
+                console.error(err);
+                target.html('Sorry, there was an error getting the data.');
+            });
+    });
+</script>

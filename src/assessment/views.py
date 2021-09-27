@@ -2,6 +2,7 @@ import json
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -95,6 +96,25 @@ class AffectCheckView(LoginRequiredMixin, View):
             "freeResponse": acr.affect_free_response,
         }
         return JsonResponse(response_value)
+
+
+class ComprehensionDetailView(LoginRequiredMixin, TemplateView):
+    """
+    Show a list of comprehension prompt responses for a teacher's current period.
+    """
+    template_name = 'shared/partial/modal_class_comp_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, id=kwargs['book_id'])
+        clusive_user = request.clusive_user
+        if clusive_user.can_manage_periods and clusive_user.current_period:
+            period = clusive_user.current_period
+            self.extra_context = {
+                'details': ComprehensionCheckResponse.get_class_details(book=book, period=period),
+            }
+            return super().get(request, *args, **kwargs)
+        else:
+            raise PermissionDenied()
 
 
 class AffectDetailView(LoginRequiredMixin, TemplateView):
