@@ -179,8 +179,9 @@ def log_affect_check_completed(sender, **kwargs):
     action = 'COMPLETED'
     event_type = 'ASSESSMENT_ITEM_EVENT'
     control = 'affect_check'
+    question = kwargs.get('question')
     answer = kwargs.get('answer')
-    create_event(kwargs, control=control, value=answer, action=action, event_type=event_type)
+    create_event(kwargs, control=control, object=question, value=answer, action=action, event_type=event_type)
 
 @receiver(star_rating_completed)
 def log_star_rating_completed(sender, **kwargs):

@@ -299,6 +299,13 @@ class UploadReplaceFormView(UploadFormView):
         context['orig_book'] = self.orig_book
         return context
 
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        book = self.bv.book
+        book.subjects.set(self.orig_book.subjects.all())
+        book.save()
+        return result
+
     def get_success_url(self):
         return reverse('metadata_replace', kwargs={'orig': self.orig_book.pk, 'pk': self.bv.book.pk})
 
@@ -333,7 +340,7 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
             else:
                 logger.debug('Cover=%s, type is %s', cover, filetype)
                 filename = 'cover.' + filetype
-                path = os.path.join(self.object.storage_dir, filename)
+                path = self.object.set_cover_file(filename)
                 try:
                     with open(path, 'wb') as f:
                         for chunk in cover.chunks():
@@ -343,7 +350,6 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
                                str(cover), str(e))
                     form.add_error('cover', 'Could not process uploaded cover image.')
                     return super().form_invalid(form)
-                self.object.cover = filename
 
         else:
             logger.debug('Form valid, no cover image')
@@ -383,8 +389,13 @@ class MetadataReplaceFormView(MetadataFormView):
         valid = super().form_valid(form)
         # The replacement is confirmed, so orig_book gets updated from the new temp book, which is deleted.
         self.orig_book.title = self.object.title
+        self.orig_book.sort_title = self.object.sort_title
         self.orig_book.author = self.object.author
+        self.orig_book.sort_author = self.object.sort_author
         self.orig_book.description = self.object.description
+        self.orig_book.word_count = self.object.word_count
+        self.orig_book.picture_count = self.object.picture_count
+        self.orig_book.subjects.set(self.object.subjects.all())
 
         # Check which cover to use
         if form.cleaned_data['use_orig_cover']:
@@ -393,17 +404,21 @@ class MetadataReplaceFormView(MetadataFormView):
             # Remove old cover, move the new file in place, update DB
             if self.orig_book.cover:
                 os.remove(self.orig_book.cover_storage)
-            self.orig_book.cover = self.object.cover
+                self.orig_book.cover = None
             if self.object.cover:
-                os.rename(self.object.cover_storage, self.orig_book.cover_storage)
+                path = self.orig_book.set_cover_file(self.object.cover_filename)
+                logger.debug('Moving old cover %s to new location %s', self.object.cover_storage, path)
+                os.rename(self.object.cover_storage, path)
         self.orig_book.save()
 
         orig_bv = self.orig_book.versions.get()
         bv = self.object.versions.get()
+        orig_bv.word_count = bv.word_count
+        orig_bv.picture_count = bv.picture_count
         orig_bv.glossary_words = bv.glossary_words
         orig_bv.all_words = bv.all_words
-        orig_bv.non_dict_words = bv.non_dict_words
         orig_bv.new_words = bv.new_words
+        orig_bv.non_dict_words = bv.non_dict_words
         orig_bv.mod_date = bv.mod_date
         orig_bv.language = bv.language
         orig_bv.filename = bv.filename
