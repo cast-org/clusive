@@ -27,6 +27,10 @@ clusiveAssessment.setAffectCheck = function(data) {
     'use strict';
 
     clusiveAssessment.checkDone = true;
+
+    $('textarea[name="affect-free"]').val(data.freeResponse);
+
+    var hasResponse = false;
     Object.keys(data).forEach(function(key) {
         if (key.includes('affect-option')) {
             var affectOptionName = key;
@@ -38,11 +42,16 @@ clusiveAssessment.setAffectCheck = function(data) {
 
             if (shouldCheck) {
                 reactDimAnimate(wedge, 100);
+                hasResponse = true;
             } else {
                 reactDimAnimate(wedge, 0);
             }
         }
     });
+    if (hasResponse) {
+        $('#affectFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
+    }
 };
 
 clusiveAssessment.setComprehensionCheck = function(data) {
@@ -55,6 +64,7 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     $('input[name="comprehension-scale"]').val([scaleResponse]);
     if (freeResponse.length > 0) {
         $('#comprehensionFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
     }
 };
 
@@ -66,7 +76,9 @@ clusiveAssessment.saveAffectCheck = function() {
     var affectResponse = {
         bookVersionId: clusiveContext.reader.info.publication.version_id,
         bookId: clusiveContext.reader.info.publication.id,
-        eventId: PAGE_EVENT_ID
+        eventId: PAGE_EVENT_ID,
+        freeQuestion: $('#affectFreeQuestion').text(),
+        freeResponse: $('textarea[name="affect-free"]').val()
     };
 
     // Get all affect inputs
@@ -114,6 +126,11 @@ clusiveAssessment.setupAssessments = function() {
     // Set up autosave calls for change events on relevant inputs
 
     $('input[name^="affect-option"]').change(function() {
+        $('#affectFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
+        clusiveAssessment.saveAffectCheck();
+    });
+    $('textarea[name="affect-free"]').change(function() {
         clusiveAssessment.saveAffectCheck();
     });
 
@@ -136,6 +153,7 @@ clusiveAssessment.setupAssessments = function() {
                     $('#compTextPromptNo').hide();
                 }
                 $('#comprehensionFreeResponseArea').show();
+                $('#compPop').CFW_Popover('locateUpdate');
             }
         }
     );

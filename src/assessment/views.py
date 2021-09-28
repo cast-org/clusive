@@ -2,6 +2,7 @@ import json
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -20,7 +21,6 @@ class AffectCheckView(LoginRequiredMixin, View):
     @staticmethod
     def create_from_request(request, affect_check_data, book_id):
         clusive_user = request.clusive_user
-        logger.debug("create with data: %s", affect_check_data)
         book = Book.objects.get(id=book_id)
 
         with transaction.atomic():
@@ -38,6 +38,9 @@ class AffectCheckView(LoginRequiredMixin, View):
             acr.okay_option_response = affect_check_data.get('affect-option-okay')
             acr.sad_option_response = affect_check_data.get('affect-option-sad')
             acr.surprised_option_response = affect_check_data.get('affect-option-surprised')
+
+            free_question = affect_check_data.get('freeQuestion')
+            acr.affect_free_response = affect_check_data.get('freeResponse')
             acr.save()
 
             new_values = acr.to_list()
@@ -54,6 +57,12 @@ class AffectCheckView(LoginRequiredMixin, View):
                                   request=request, event_id=page_event_id,
                                   affect_check_response_id=acr.id,
                                   answer=acr.to_answer_string())
+
+        affect_check_completed.send(sender=AffectCheckView,
+                                    request=request, event_id=page_event_id,
+                                    affect_check_response_id=acr.id,
+                                    question=free_question,
+                                    answer=acr.affect_free_response)
 
     def post(self, request, book_id):
         try:
@@ -84,8 +93,28 @@ class AffectCheckView(LoginRequiredMixin, View):
             "affect-option-okay": acr.okay_option_response,
             "affect-option-sad": acr.sad_option_response,
             "affect-option-surprised": acr.surprised_option_response,
+            "freeResponse": acr.affect_free_response,
         }
         return JsonResponse(response_value)
+
+
+class ComprehensionDetailView(LoginRequiredMixin, TemplateView):
+    """
+    Show a list of comprehension prompt responses for a teacher's current period.
+    """
+    template_name = 'shared/partial/modal_class_comp_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, id=kwargs['book_id'])
+        clusive_user = request.clusive_user
+        if clusive_user.can_manage_periods and clusive_user.current_period:
+            period = clusive_user.current_period
+            self.extra_context = {
+                'details': ComprehensionCheckResponse.get_class_details(book=book, period=period),
+            }
+            return super().get(request, *args, **kwargs)
+        else:
+            raise PermissionDenied()
 
 
 class AffectDetailView(LoginRequiredMixin, TemplateView):

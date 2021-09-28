@@ -10,7 +10,7 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
 from assessment.forms import ClusiveRatingForm
-from assessment.models import ClusiveRatingResponse, AffectiveUserTotal
+from assessment.models import ClusiveRatingResponse, AffectiveUserTotal, ComprehensionCheckResponse
 from eventlog.models import Event
 from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
@@ -173,9 +173,27 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # Popular Reads panel (teacher)
         self.panels['popular_reads'] = self.teacher
         if self.panels['popular_reads']:
+            # Find books that are trending out of full library & out of just assigned readings.
+            top_trends = BookTrend.top_trends(self.current_period)[:3]
+            top_trend_data = [{'trend': t} for t in top_trends]
+            assigned_trends = BookTrend.top_assigned(self.current_period)[:3]
+            assigned_trend_data = [{'trend': t} for t in assigned_trends]
+            # Get comp check statistics for each distinct book, avoid querying twice.
+            reads_data = {}
+            comp_data = {}
+            for tdata in top_trend_data:
+                t = tdata['trend']
+                comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
+                tdata['comp_check'] = comp_data[t.book.id]
+            for tdata in assigned_trend_data:
+                t = tdata['trend']
+                if t.book.id not in comp_data:
+                    comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
+                tdata['comp_check'] = comp_data[t.book.id]
+
             self.data['popular_reads'] = {
-                'all': BookTrend.top_trends(self.current_period)[:3],
-                'assigned': BookTrend.top_assigned(self.current_period)[:3],
+                'all': top_trend_data,
+                'assigned': assigned_trend_data,
             }
 
         # Getting Started panel

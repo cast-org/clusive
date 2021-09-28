@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Count, Sum
 
 from library.models import Book
-from roster.models import ClusiveUser, ResearchPermissions
+from roster.models import ClusiveUser, ResearchPermissions, Roles
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +72,49 @@ class ComprehensionCheckResponse(CheckResponse):
     )
     comprehension_free_response = models.TextField(null=True)
 
-    def __str__(self):
+    @classmethod
+    def get_counts(cls, book, period):
+        """
+        Get comprehension check stats for the given book and period.
+        :return:
+        """
+        comp_check_counts = list(cls.objects \
+            .filter(book=book, user__periods=period, user__role=Roles.STUDENT) \
+            .values('comprehension_scale_response').annotate(count=Count('id')))
+        max = 0
+        for c in comp_check_counts:
+            if c['count'] > max:
+                max = c['count']
+        data = []
+        for option in ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES:
+            count_item = [c['count'] for c in comp_check_counts if c['comprehension_scale_response'] == option[0]]
+            count = count_item[0] if count_item else 0
+            data.append({
+                'label': option[1],
+                'value': count,
+            })
+        return { 'max': max,
+                 'items': data }
+
+    @classmethod
+    def get_class_details(cls, book, period):
+        """
+        Get a list of all comp check responses for the given book and students in the given period.
+        :param book:
+        :param period:
+        :return: list of lists with the related information.
+        """
+        responses = cls.objects.filter(book=book, user__periods=period, user__role=Roles.STUDENT)\
+            .order_by('user__user__first_name')
+        details = []
+        for option in ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES:
+            details.append({
+                'label': option[1],
+                'items': [c for c in responses if c.comprehension_scale_response == option[0]]
+            })
+        return details
+
+def __str__(self):
         return '<CCResp %s/%d>' % (self.user.anon_id, self.book.id)
 
 
@@ -95,6 +137,8 @@ class AffectiveCheckResponse(CheckResponse):
     okay_option_response = models.BooleanField(null=False, default=False)
     sad_option_response = models.BooleanField(null=False, default=False)
     surprised_option_response = models.BooleanField(null=False, default=False)
+
+    affect_free_response = models.TextField(null=True)
 
     def get_by_name(self, name):
         return getattr(self, name + '_option_response')
