@@ -50,6 +50,7 @@ clusiveAssessment.setAffectCheck = function(data) {
     });
     if (hasResponse) {
         $('#affectFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
     }
 };
 
@@ -63,6 +64,7 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     $('input[name="comprehension-scale"]').val([scaleResponse]);
     if (freeResponse.length > 0) {
         $('#comprehensionFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
     }
 };
 
@@ -125,6 +127,7 @@ clusiveAssessment.setupAssessments = function() {
 
     $('input[name^="affect-option"]').change(function() {
         $('#affectFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
         clusiveAssessment.saveAffectCheck();
     });
     $('textarea[name="affect-free"]').change(function() {
@@ -150,6 +153,7 @@ clusiveAssessment.setupAssessments = function() {
                     $('#compTextPromptNo').hide();
                 }
                 $('#comprehensionFreeResponseArea').show();
+                $('#compPop').CFW_Popover('locateUpdate');
             }
         }
     );
