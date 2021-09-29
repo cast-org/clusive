@@ -853,6 +853,7 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
             else ResearchPermissions.PARENT_CREATED
         for person in session_data['people']:
             if person['exists']:
+                #TODO ...get(external_id = person['external_id'])
                 user_list.append(ClusiveUser.objects.get(user__email=person['email']))
             else:
                 properties = {
@@ -1145,7 +1146,6 @@ class GooglePeriodRosterUpdate(LoginRequiredMixin, RedirectView):
         logger.debug('period_roster: %s', period_roster)
 
         # Find or create user accounts, "remove" users from Period
-        user_list = [creator]
         creating_permission = ResearchPermissions.TEACHER_CREATED if creator.role == Roles.TEACHER \
             else ResearchPermissions.PARENT_CREATED
         for person in session_data['roster_updates']:
@@ -1160,28 +1160,31 @@ class GooglePeriodRosterUpdate(LoginRequiredMixin, RedirectView):
                     'data_source': RosterDataSource.GOOGLE,
                     'external_id': person['google_id'],
                 }
-                user_list.append(ClusiveUser.create_from_properties(properties))
+                clusive_user = ClusiveUser.create_from_properties(properties)
+                period.users.add(clusive_user)
+                clusive_user.save()
 
             elif person.get('in_period', False) == False:
-                user_list.append(ClusiveUser.objects.get(external_id=person['google_id']))
+                clusive_user = ClusiveUser.objects.get(external_id=person['google_id'])
+                period.users.add(clusive_user)
+                clusive_user.save()
 
             elif person.get('remove', False):
-                # don't add to `user_list` -- removal by omission
+                user_to_remove = ClusiveUser.objects.get(external_id=person['google_id'])
                 logger.debug("Removing %s from %s", person['email'], period.name)
+                period.users.remove(user_to_remove)
+                user_to_remove.save()
 
             elif person.get('new_email', False):
                 clusive_user = ClusiveUser.objects.get(external_id=person['google_id'])
                 clusive_user.user.email = person['email']
                 clusive_user.user.save()
-                user_list.append(clusive_user)
 
             else:
-                # Person already in period, with no changes -- keep them.
-                user_list.append(ClusiveUser.objects.get(external_id=person['google_id']))
+                # Person already in period, with no changes -- nothing to add(),
+                # remove(), nor update.
+                logger.debug("User %s already in period %s", person['email'], period.name)
 
-        # Update Period
-        logger.debug('Updating Period Roster to: %s', user_list)
-        period.users.set(user_list)
         period.save()
         self.period = period
 
