@@ -1,11 +1,14 @@
 {% for category in details reversed %}
     {% if category.items %}
     <h3>These students said they learned {{category.label|lower}}:</h3>
-    <ul>
+    <ul class="list list-ruled">
         {% for c in category.items %}
-            <li><strong>{{c.user.user.first_name}}:</strong> {{c.comprehension_free_response}}</li>
+            <li class="list-item py-0_25">
+                <strong>{{c.user.user.first_name}}</strong></div>
+                <div class="font-italic">{{c.comprehension_free_response}}</div>
+            </li>
         {% empty %}
-            <p>(no students)</p>
+            <li class="list-item py-0_25">(no students)</li>
         {% endfor %}
     </ul>
     {% endif %}

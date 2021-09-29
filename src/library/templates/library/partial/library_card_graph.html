@@ -5,7 +5,7 @@ No learning data. Have your readers add their thoughts at the bottom left of the
 {% else %}
 <div class="card-graph">
     <strong>Student learning</strong>
-    (<a href="#" class="link-stretch" data-cfw="modal" data-cfw-modal-target="#{{graph_link_prefix}}-{{graph_link_serial}}"
+    (<a href="#" role="button" class="link-stretch" data-cfw="modal" data-cfw-modal-target="#{{graph_link_prefix}}-{{graph_link_serial}}"
         data-cle-handler="click" data-cle-control="dash_comprehension_detail" data-cle-value="{{book.id}}">see details</a>)
     <div class="stars-chart">
         {% for item in graph_data.items %}
