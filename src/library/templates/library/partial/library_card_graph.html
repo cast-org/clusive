@@ -1,12 +1,12 @@
 <div class="card-divider"></div>
 
 {% if graph_data.max == 0 %}
-These readers haven't yet reported what they learned.
-Encourage them to note what they've learned at the bottom
-left of the reading page.
+No learning data. Have your readers add their thoughts at the bottom left of the reading page.
 {% else %}
 <div class="card-graph">
-    <strong>Student learning</strong> (<a href="#" class="link-stretch" data-cfw="modal" data-cfw-modal-target="#{{graph_link_prefix}}-{{graph_link_serial}}">see details</a>)
+    <strong>Student learning</strong>
+    (<a href="#" class="link-stretch" data-cfw="modal" data-cfw-modal-target="#{{graph_link_prefix}}-{{graph_link_serial}}"
+        data-cle-handler="click" data-cle-control="dash_comprehension_detail" data-cle-value="{{book.id}}">see details</a>)
     <div class="stars-chart">
         {% for item in graph_data.items %}
         <div class="stars-chart-item">

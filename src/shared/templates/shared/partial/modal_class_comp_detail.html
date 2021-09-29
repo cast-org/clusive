@@ -1,5 +1,6 @@
 {% for category in details reversed %}
-    <h3>These students said they learned {{category.label|lower}}</h3>
+    {% if category.items %}
+    <h3>These students said they learned {{category.label|lower}}:</h3>
     <ul>
         {% for c in category.items %}
             <li><strong>{{c.user.user.first_name}}:</strong> {{c.comprehension_free_response}}</li>
@@ -7,4 +8,5 @@
             <p>(no students)</p>
         {% endfor %}
     </ul>
+    {% endif %}
 {% endfor %}
