@@ -1051,7 +1051,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
             if google_user is not None:
                 # Found clusive_user in the google_roster.
                 an_update = {}
-                an_update['new_to_clusive'] = False
+                an_update['exists'] = True
                 an_update['in_period'] = True
                 an_update['name'] = clusive_user.user.first_name
                 an_update['role'] = clusive_user.role
@@ -1065,7 +1065,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                 # left the google classroom.  The update shows that the
                 # corrsponding clusive_user is to be removed from the Period.
                 an_update = {}
-                an_update['new_to_clusive'] = False
+                an_update['exists'] = True
                 an_update['in_period'] = True
                 an_update['remove'] = True
                 an_update['name'] = clusive_user.user.first_name
@@ -1091,7 +1091,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                         # Google person in google class has a Clusive account,
                         # but is not in Period, add them.
                         an_update = {}
-                        an_update['new_to_clusive'] = False
+                        an_update['exists'] = True
                         an_update['in_period'] = False
                         an_update['name'] = clusive_user.user.first_name
                         an_update['role'] = clusive_user.role
@@ -1105,7 +1105,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                     # Google person in google class not does not even have a
                     # Clusive account.
                     an_update = {}
-                    an_update['new_to_clusive'] = True
+                    an_update['exists'] = False
                     an_update['in_period'] = False
                     an_update['name'] = google_user['profile']['name']['givenName']
                     an_update['email'] = google_user['profile']['emailAddress']
@@ -1149,7 +1149,7 @@ class GooglePeriodRosterUpdate(LoginRequiredMixin, RedirectView):
         creating_permission = ResearchPermissions.TEACHER_CREATED if creator.role == Roles.TEACHER \
             else ResearchPermissions.PARENT_CREATED
         for person in session_data['roster_updates']:
-            if person.get('new_to_clusive', False):
+            if not person.get('exists', False):
                 properties = {
                     'username': person['email'],
                     'email': person['email'],
@@ -1171,7 +1171,6 @@ class GooglePeriodRosterUpdate(LoginRequiredMixin, RedirectView):
 
             elif person.get('remove', False):
                 user_to_remove = ClusiveUser.objects.get(external_id=person['google_id'])
-                logger.debug("Removing %s from %s", person['email'], period.name)
                 period.users.remove(user_to_remove)
                 user_to_remove.save()
 

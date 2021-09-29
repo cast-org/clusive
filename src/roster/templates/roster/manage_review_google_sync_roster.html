@@ -35,20 +35,20 @@
                             <td>
 
                                 {% comment %}
-                                Logic: new_to_clusive entails that in_period is
-                                False, and remove and email_changed are both
-                                n/a.
-                                Else, if not new_to_clusive, but not in_period
+                                Logic: not an existing user entails that
+                                in_period is  False, and remove and
+                                email_changed are both n/a,
+                                Else, if exists, but not in_period
                                 then remove and email_changed are n/a.
                                 Else, if in_period but is marked for removal,
-                                email_changed is n/a.
+                                email_changed is n/a,
                                 Else, if email_changed, then note that,
                                 Else no change for this person
                                 {% endcomment %}
 
-                                {% if person.new_to_clusive %}
+                                {% if not person.exists %}
                                      Add to this class (new to Clusive)
-                                {% elif person.in_period == False %}
+                                {% elif not person.in_period %}
                                     Add to this class
                                 {% elif person.remove %}
                                     Remove from this class
