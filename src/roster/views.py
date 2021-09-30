@@ -1049,7 +1049,8 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                     break
 
             if google_user is not None:
-                # Found clusive_user in the google_roster.
+                # Found clusive_user in the Period that is also in the
+                # google_roster.
                 an_update = {}
                 an_update['exists'] = True
                 an_update['in_period'] = True
@@ -1061,9 +1062,10 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                 updates.append(an_update)
 
             else:
-                # clusive_user not in google classroom implies the google person
-                # left the google classroom.  The update shows that the
-                # corrsponding clusive_user is to be removed from the Period.
+                # clusive_user in Period but not in google classroom implies the
+                # google person left the google classroom.  The update is that
+                # the corrsponding clusive_user is to be removed from the
+                # Period.
                 an_update = {}
                 an_update['exists'] = True
                 an_update['in_period'] = True
@@ -1085,9 +1087,14 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                     # Google user already in Clusive?
                     clusive_user = ClusiveUser.objects.get(external_id=google_id)
                     if clusive_user == teacher:
-                        break
+                        continue
 
-                    if self.period_roster.get(external_id=google_id) is None:
+                    try:
+                        self.period_roster.get(id=clusive_user.id)
+                        # Google person has a Clusive account and is in the
+                        # period.  Already dealt with in Loop #1
+                        continue
+                    except:
                         # Google person in google class has a Clusive account,
                         # but is not in Period, add them.
                         an_update = {}
@@ -1102,7 +1109,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                         updates.append(an_update)
 
                 except ClusiveUser.DoesNotExist:
-                    # Google person in google class not does not even have a
+                    # Google person in google class but does not even have a
                     # Clusive account.
                     an_update = {}
                     an_update['exists'] = False
