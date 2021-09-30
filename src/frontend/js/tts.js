@@ -8,7 +8,8 @@ var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
     region: {},
-    currentVoice: null,
+    voiceCurrent: null,
+    voiceLocal: null,
     voiceRate: 1,
     textElement: null,
     copiedElement: null,
@@ -16,6 +17,7 @@ var clusiveTTS = {
     userScrolled: false,
     readerReady: false,
     isPaused: false,
+    hasSettingUpdate: false,
     utterance: null
 };
 
@@ -90,13 +92,12 @@ $(document).ready(function() {
             console.debug('read aloud resume button clicked');
             clusiveTTS.userScrolled = false;
 
-            // Resume by speaking utterance if one is queued
-            if (clusiveTTS.utterance) {
-                clusiveTTS.synth.speak(clusiveTTS.utterance);
-                clusiveTTS.utterance = null;
+            // Resume by speaking utterance if one is active
+            clusiveTTS.isPaused = false;
+            if (!clusiveTTS.utterance) {
+                clusiveTTS.readQueuedElements();
             }
             clusiveTTS.synth.resume();
-            clusiveTTS.isPaused = false;
         }
         clusiveTTS.updateUI('resume');
     });
@@ -351,13 +352,17 @@ clusiveTTS.updateActive = function(preceding, middle, following) {
 clusiveTTS.readElement = function(textElement, offset, end) {
     'use strict';
 
-    var synth = clusiveTTS.synth;
     var elementText = textElement.textContent;
     var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
     // Store then wrap text node so content can be replaced
+    clusiveTTS.resetElements();
     clusiveTTS.textElement = textElement;
     clusiveTTS.createActive(textElement);
+
+    // Determine any localized voice
+    var langIso = clusiveTTS.getLangAttribute(textElement);
+    clusiveTTS.voiceLocal = langIso ? clusiveTTS.getVoicesForLanguage(langIso) : null;
 
     var utterance = clusiveTTS.makeUtterance(contentText);
 
@@ -399,6 +404,23 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             }
         }
 
+        if (clusiveTTS.hasSettingUpdate) {
+            // Store queue and stop reading
+            clusiveTTS.synth.cancel();
+            clusiveTTS.utterance = null;
+            var queue = clusiveTTS.elementsToRead;
+            clusiveTTS.elementsToRead = [];
+            // Adjust current element and prepend back onto to reading queue
+            var updatedElementToRead = {
+                element: textElement,
+                offset: offset + e.charIndex,
+                end: end
+            };
+            queue.unshift(updatedElementToRead);
+            clusiveTTS.elementsToRead = queue;
+            return;
+        }
+
         clusiveTTS.updateActive(preceding, middle, following);
 
         // Keep current word being read in view
@@ -415,14 +437,15 @@ clusiveTTS.readElement = function(textElement, offset, end) {
 
     utterance.onend = function() {
         console.debug('utterance ended');
-        clusiveTTS.resetElements();
+        clusiveTTS.utterance = null;
+        if (!clusiveTTS.isPaused) {
+            clusiveTTS.resetElements();
+            clusiveTTS.readQueuedElements();
+        }
     };
 
-    if (!clusiveTTS.isPaused) {
-        synth.speak(utterance);
-    } else {
-        clusiveTTS.utterance = utterance;
-    }
+    clusiveTTS.synth.speak(utterance);
+    clusiveTTS.utterance = utterance;
 };
 
 clusiveTTS.resetState = function() {
@@ -442,7 +465,6 @@ clusiveTTS.resetElements = function() {
     }
     clusiveTTS.copiedElement = null;
     clusiveTTS.textElement = null;
-    clusiveTTS.readQueuedElements();
 };
 
 clusiveTTS.makeUtterance = function(text) {
@@ -450,12 +472,15 @@ clusiveTTS.makeUtterance = function(text) {
 
     if (typeof SpeechSynthesisUtterance === 'function') {
         var utt = new SpeechSynthesisUtterance(text);
-        if (clusiveTTS.currentVoice) {
-            utt.voice = clusiveTTS.currentVoice;
+        if (clusiveTTS.voiceLocal) {
+            utt.voice = clusiveTTS.voiceLocal;
+        } else if (clusiveTTS.voiceCurrent) {
+            utt.voice = clusiveTTS.voiceCurrent;
         }
         if (clusiveTTS.voiceRate) {
             utt.rate = clusiveTTS.voiceRate;
         }
+        clusiveTTS.hasSettingUpdate = false;
         return utt;
     }
     console.warn('Speech synthesis unsupported by this browser');
@@ -685,12 +710,11 @@ clusiveTTS.getVoicesForLanguage = function(language) {
 clusiveTTS.setCurrentVoice = function(name) {
     'use strict';
 
-    // Eventually we may be able to switch voices mid-utterance, but for now have to stop speech
-    clusiveTTS.stopReading();
+    clusiveTTS.hasSettingUpdate = true;
     if (name) {
         window.speechSynthesis.getVoices().forEach(function(voice) {
             if (voice.name === name) {
-                clusiveTTS.currentVoice = voice;
+                clusiveTTS.voiceCurrent = voice;
                 if (clusiveTTS.readerReady) {
                     var voiceSpecs = {
                         usePublication: true,
@@ -705,7 +729,7 @@ clusiveTTS.setCurrentVoice = function(name) {
             }
         });
     } else {
-        clusiveTTS.currentVoice = null;
+        clusiveTTS.voiceCurrent = null;
         if (clusiveTTS.readerReady) {
             console.debug('Unsetting D2Reader voice');
             D2Reader.applyTTSSettings({
@@ -713,6 +737,17 @@ clusiveTTS.setCurrentVoice = function(name) {
             });
         }
     }
+};
+
+clusiveTTS.getLangAttribute = function(node) {
+    'use strict';
+
+    var element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    element = element.closest('[lang]');
+    if (element && element.nodeName !== 'HTML') {
+        return element.getAttribute('lang');
+    }
+    return null;
 };
 
 clusiveTTS.readAloudSample = function() {
