@@ -22,7 +22,7 @@ from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
-from library.parsing import unpack_epub_file, scan_book
+from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
 
@@ -245,12 +245,15 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
 
     def form_valid(self, form):
         upload = self.request.FILES['file']
-        fd, tempfile = mkstemp()
+        fd, tempfile = mkstemp(suffix=upload.name)
         try:
             with os.fdopen(fd, 'wb') as f:
                 for chunk in upload.chunks():
                     f.write(chunk)
-            (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
+            if upload.name.endswith('.docx'):
+                (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile)
+            else:
+                (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
             if changed:
                 logger.debug('Uploaded file name = %s', upload.name)
                 self.bv.filename = upload.name

@@ -5,9 +5,11 @@ import posixpath
 import shutil
 from html.parser import HTMLParser
 from os.path import basename
+from tempfile import mkstemp
 from zipfile import ZipFile
 
 import dawn
+import pypandoc
 import wordfreq as wf
 from dawn.epub import Epub
 from django.utils import timezone
@@ -29,6 +31,20 @@ class BookNotUnique(Exception):
 
 class BookMalformed(Exception):
     pass
+
+
+def convert_and_unpack_docx_file(clusive_user, file):
+    """
+    Process an uploaded Word (docx) file. Converts to EPUB and then calls unpack_epub_file.
+    :param clusive_user: user that will own the resulting Book.
+    :param file: File, which should be a .docx.
+    :return: a new BookVersion
+    """
+    fd, tempfile = mkstemp()
+    output = pypandoc.convert_file(file, 'epub', outputfile=tempfile)
+    if output:
+        raise RuntimeError(output)
+    return unpack_epub_file(clusive_user, tempfile)
 
 
 def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
@@ -284,7 +300,7 @@ def set_sort_fields(book):
                 # TODO: should make some simple default assumptions, like removing 'The'/'A'
                 logger.debug('Setting sort title to the title: %s', title)
                 sort_title = title
-            book.sort_title = sort_title
+            book.sort_title = sort_title or ''
 
             author_list = manifest['metadata'].get('author')
             if author_list:
@@ -295,7 +311,7 @@ def set_sort_fields(book):
                     # TODO: maybe should make some default assumptions, First Last -> Last first
                     logger.debug('Setting sort author to the author: %s', author )
                     sort_author = author
-                book.sort_author = sort_author
+                book.sort_author = sort_author or ''
 
 def set_subjects(book):
     # Get all valid subjects
