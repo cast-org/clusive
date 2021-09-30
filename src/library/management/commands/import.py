@@ -1,12 +1,14 @@
 import logging
 import os
-import pypandoc
 import shutil
 from distutils import dir_util
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from zipfile import BadZipFile
 
+import pypandoc
 from django.core.management.base import BaseCommand, CommandError
+
 from glossary.util import test_glossary_file
 from library.parsing import unpack_epub_file, scan_book, BookMismatch
 
@@ -98,12 +100,13 @@ class Command(BaseCommand):
     def handle_docx(self, label: str):
         try:
             logger.debug('handling A DOCX FILE')
-            output = pypandoc.convert_file(label, 'epub', outputfile='somefile.epub')
+            epubfile = NamedTemporaryFile()
+            output = pypandoc.convert_file(label, 'epub', outputfile=epubfile.name)
             # if output is not "" there is an error in the docx
             assert output == ""
             logger.debug('converted A DOCX FILE to epub')
             # new epub created to process as input
-            self.handle_epub('somefile.epub')
+            self.handle_epub(epubfile.name)
             logger.debug('HANDLED THE EPUB')
         except BadZipFile:
             raise CommandError('Not a valid docx file')
