@@ -3,14 +3,12 @@ import os
 import shutil
 from distutils import dir_util
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 from zipfile import BadZipFile
 
-import pypandoc
 from django.core.management.base import BaseCommand, CommandError
 
 from glossary.util import test_glossary_file
-from library.parsing import unpack_epub_file, scan_book, BookMismatch
+from library.parsing import unpack_epub_file, scan_book, BookMismatch, convert_and_unpack_docx_file
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +34,6 @@ class Command(BaseCommand):
         self.check_args(*labels)
         # convert docx files first
         for label in [l for l in labels if self.looks_like_docx(l)]:
-            logger.debug("FOUND A DOCX IN HANDLE")
             self.handle_docx(label)
         # Unpack EPUB files
         for label in [l for l in labels if self.looks_like_an_epub(l)]:
@@ -99,17 +96,15 @@ class Command(BaseCommand):
 
     def handle_docx(self, label: str):
         try:
-            logger.debug('handling A DOCX FILE')
-            epubfile = NamedTemporaryFile()
-            output = pypandoc.convert_file(label, 'epub', outputfile=epubfile.name)
-            # if output is not "" there is an error in the docx
-            assert output == ""
-            logger.debug('converted A DOCX FILE to epub')
-            # new epub created to process as input
-            self.handle_epub(epubfile.name)
-            logger.debug('HANDLED THE EPUB')
-        except BadZipFile:
-            raise CommandError('Not a valid docx file')
+            logger.debug('handling A DOCX FILE: %s' % label)
+            (bv, changed) = convert_and_unpack_docx_file(None, label)
+            # Can't really check for newness in Word docs. Just assume it's new.
+            self.found_new_content = True
+            if bv and not self.book:
+                self.book = bv.book
+            self.version += 1
+        except FileNotFoundError:
+            raise CommandError('File not found')
         except BookMismatch:
             raise CommandError('Mismatched titles, stopping import')
 
