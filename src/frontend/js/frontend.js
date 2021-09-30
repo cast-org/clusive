@@ -492,13 +492,15 @@ function showTooltip(name) {
                 }
             });
             setTimeout(function() {
-                tip_popover.attr({
-                    'role': 'status',
-                    'aria-live': 'assertive',
-                    'aria-atomic': 'true'
-                });
-                tip_control.CFW_Tooltip('show');
-                tip_popover.trigger('focus');
+                if (tip_control.is(':visible')) {
+                    tip_popover.attr({
+                        'role': 'status',
+                        'aria-live': 'assertive',
+                        'aria-atomic': 'true'
+                    });
+                    tip_control.CFW_Tooltip('show');
+                    tip_popover.trigger('focus');
+                }
             }, 2000);
             tip_control.one('afterHide.cfw.tooltip', function() {
                 $(this).CFW_Tooltip('dispose');
