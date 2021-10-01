@@ -4,6 +4,12 @@
 /* eslint-disable no-use-before-define */
 /* global D2Reader */
 
+// Initialize voices to trigger async update, so when it is called later
+// a list is returned (re: Chrome/Android)
+if (typeof window.speechSynthesis === 'object') {
+    window.speechSynthesis.getVoices();
+}
+
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
@@ -688,6 +694,14 @@ clusiveTTS.readSelection = function(elements, selection) {
     }
 };
 
+clusiveTTS.getVoices = function() {
+    var voices =  window.speechSynthesis.getVoices();
+    voices = window.speechSynthesis.getVoices().filter(function(voice) {
+        return voice.localService === true;
+    });
+    return voices;
+};
+
 // Return all voices known to the system for the given language.
 // Language argument can be of the form "en" or "en-GB".
 // If system default voice is on this list, it will be listed first.
@@ -695,7 +709,7 @@ clusiveTTS.getVoicesForLanguage = function(language) {
     'use strict';
 
     var voices = [];
-    window.speechSynthesis.getVoices().forEach(function(voice) {
+    clusiveTTS.getVoices().forEach(function(voice) {
         if (voice.lang.startsWith(language)) {
             if (voice.default) {
                 voices.unshift(voice); // Put system default voice at the beginning of the list
