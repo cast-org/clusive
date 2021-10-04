@@ -177,6 +177,7 @@ class ClusiveUser(models.Model):
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
     data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
+    external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
 
 # If True, user cannot log in until they have confirmed their email.
     unconfirmed_email = models.BooleanField(default=False)
@@ -360,7 +361,8 @@ class ClusiveUser(models.Model):
                                                   role=props.get('role'),
                                                   permission=props.get('permission'),
                                                   anon_id=props.get('anon_id'),
-                                                  data_source=props.get('data_source', RosterDataSource.CLUSIVE))
+                                                  data_source=props.get('data_source', RosterDataSource.CLUSIVE),
+                                                  external_id=props.get('external_id', ''))
         site_name = props.get('site', None)
         period_name = props.get('period', None)
         if site_name and period_name:

@@ -442,16 +442,20 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         context['periods'] = self.periods
         context['current_period'] = self.current_period
         if self.current_period is not None:
-            context['students'] = self.make_student_info_list()
+            context['people'] = self.make_people_info_list(self.request.user)
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
-            context['allow_add_student'] = (self.current_period.data_source == RosterDataSource.CLUSIVE)
         return context
 
-    def make_student_info_list(self):
-        students = self.current_period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+    def make_people_info_list(self, current_user):
+        people = self.current_period.users.exclude(user=current_user).order_by('user__first_name')
         return [{
-            'info': s.user,
-        } for s in students]
+            'info': {
+                'first_name': p.user.first_name,
+                'email': p.user.email,
+                'role' : Roles.display_name(p.role),
+                'id': p.user.id
+            }
+        } for p in people]
 
     def configure_event(self, event: Event):
         event.page = 'Manage'
@@ -621,6 +625,14 @@ def finish_login(request):
     if clusive_user.data_source != RosterDataSource.GOOGLE:
         clusive_user.data_source = RosterDataSource.GOOGLE
         clusive_user.save()
+        try:
+            external_user = SocialAccount.objects.get(user=request.user, provider='google')
+            clusive_user.external_id = external_user.uid
+            clusive_user.save()
+        except SocialAccount.DoesNotExist:
+            # Should be impossible
+            logger.debug('ClusiveUser SSO with no SocialAccount')
+
     # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
         request.session['sso'] = True
@@ -756,12 +768,14 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
                     if self.request.user == user_with_that_email:
                         continue
                     clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
+                    google_id = person['profile']['id']
                     a_person = {
                         'name': user_with_that_email.first_name,
                         'email': email,
                         'role': clusive_user.role,
                         'role_display': Roles.display_name(clusive_user.role),
-                        'exists': True
+                        'exists': True,
+                        'external_id': google_id
                     }
                 else:
                     a_person = {
@@ -769,7 +783,8 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
                         'email': email,
                         'role': self.role_info[group]['role'],
                         'role_display': self.role_info[group]['display_name'],
-                        'exists': False
+                        'exists': False,
+                        'external_id': google_id
                     }
                 tuples.append(a_person)
         return tuples
@@ -821,7 +836,6 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
     def configure_event(self, event: Event):
         event.page = 'ManageImportPeriodConfirm'
 
-
 class GooglePeriodImport(LoginRequiredMixin, RedirectView):
     """
     Import new Period data that was just confirmed, then redirect to manage page.
@@ -850,6 +864,7 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
                     'permission': creating_permission,
                     'anon_id': ClusiveUser.next_anon_id(),
                     'data_source': RosterDataSource.GOOGLE,
+                    'external_id': person['external_id'],
                 }
                 user_list.append(ClusiveUser.create_from_properties(properties))
 
@@ -966,7 +981,7 @@ class GetGoogleRoster(GetGoogleCourses):
         self.log_results(teachers, 'teachers')
 
         request.session['google_roster'] = { 'students': students, 'teachers': teachers }
-        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
+        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}))
 
     def log_results(self, group, role):
         logger.debug('Get Google roster: there are (%s) %s', len(group), role)
