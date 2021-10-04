@@ -4,11 +4,18 @@
 /* eslint-disable no-use-before-define */
 /* global D2Reader */
 
+// Initialize voices to trigger async update, so when it is called later
+// a list is returned (re: Chrome/Android)
+if (typeof window.speechSynthesis === 'object') {
+    window.speechSynthesis.getVoices();
+}
+
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
     region: {},
-    currentVoice: null,
+    voiceCurrent: null,
+    voiceLocal: null,
     voiceRate: 1,
     textElement: null,
     copiedElement: null,
@@ -359,6 +366,11 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     clusiveTTS.textElement = textElement;
     clusiveTTS.createActive(textElement);
 
+    // Determine any localized voice
+    var langIso = clusiveTTS.getLangAttribute(textElement);
+    console.debug('langIso', langIso);
+    var langVoices = clusiveTTS.getVoicesForLanguage(langIso);
+    clusiveTTS.voiceLocal = langVoices.length > 0 ? langVoices[0] : null;
     var utterance = clusiveTTS.makeUtterance(contentText);
 
     utterance.onboundary = function(e) {
@@ -450,8 +462,10 @@ clusiveTTS.makeUtterance = function(text) {
 
     if (typeof SpeechSynthesisUtterance === 'function') {
         var utt = new SpeechSynthesisUtterance(text);
-        if (clusiveTTS.currentVoice) {
-            utt.voice = clusiveTTS.currentVoice;
+        if (clusiveTTS.voiceLocal) {
+            utt.voice = clusiveTTS.voiceLocal;
+        } else if (clusiveTTS.voiceCurrent) {
+            utt.voice = clusiveTTS.voiceCurrent;
         }
         if (clusiveTTS.voiceRate) {
             utt.rate = clusiveTTS.voiceRate;
@@ -663,6 +677,27 @@ clusiveTTS.readSelection = function(elements, selection) {
     }
 };
 
+clusiveTTS.getLangAttribute = function(node) {
+    'use strict';
+
+    var element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    element = element.closest('[lang]');
+    if (element && element.nodeName !== 'HTML') {
+        return element.getAttribute('lang');
+    }
+    return null;
+};
+
+clusiveTTS.getVoices = function() {
+    'use strict';
+
+    var voices =  window.speechSynthesis.getVoices();
+    voices = window.speechSynthesis.getVoices().filter(function(voice) {
+        return voice.localService === true;
+    });
+    return voices;
+};
+
 // Return all voices known to the system for the given language.
 // Language argument can be of the form "en" or "en-GB".
 // If system default voice is on this list, it will be listed first.
@@ -670,8 +705,13 @@ clusiveTTS.getVoicesForLanguage = function(language) {
     'use strict';
 
     var voices = [];
-    window.speechSynthesis.getVoices().forEach(function(voice) {
-        if (voice.lang.startsWith(language)) {
+    if (!language) {
+        return voices;
+    }
+    clusiveTTS.getVoices().forEach(function(voice) {
+        // Handle inconsistent voice locale syntax on Android
+        var voiceLang = voice.lang.replace('_', '-').substring(0, language.length);
+        if (voiceLang === language) {
             if (voice.default) {
                 voices.unshift(voice); // Put system default voice at the beginning of the list
             } else {
@@ -690,7 +730,7 @@ clusiveTTS.setCurrentVoice = function(name) {
     if (name) {
         window.speechSynthesis.getVoices().forEach(function(voice) {
             if (voice.name === name) {
-                clusiveTTS.currentVoice = voice;
+                clusiveTTS.voiceCurrent = voice;
                 if (clusiveTTS.readerReady) {
                     var voiceSpecs = {
                         usePublication: true,
@@ -705,7 +745,7 @@ clusiveTTS.setCurrentVoice = function(name) {
             }
         });
     } else {
-        clusiveTTS.currentVoice = null;
+        clusiveTTS.voiceCurrent = null;
         if (clusiveTTS.readerReady) {
             console.debug('Unsetting D2Reader voice');
             D2Reader.applyTTSSettings({
