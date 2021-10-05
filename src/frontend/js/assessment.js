@@ -64,6 +64,7 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     $('input[name="comprehension-scale"]').val([scaleResponse]);
     if (freeResponse.length > 0) {
         $('#comprehensionFreeResponseArea').show();
+        clusiveAssessment.showAppropriateCompQuestion();
         $('#compPop').CFW_Popover('locateUpdate');
     }
 };
@@ -109,6 +110,19 @@ clusiveAssessment.saveComprehensionCheck = function() {
     clusiveAutosave.save('/assessment/comprehension_check/' + bookId, comprehensionResponse);
 };
 
+clusiveAssessment.showAppropriateCompQuestion = function() {
+    'use strict';
+
+    var curVal = $('input[name="comprehension-scale"]:checked').val();
+    if (curVal === '0') {
+        $('#compTextPromptYes').hide();
+        $('#compTextPromptNo').show();
+    } else {
+        $('#compTextPromptYes').show();
+        $('#compTextPromptNo').hide();
+    }
+};
+
 clusiveAssessment.setupAssessments = function() {
     'use strict';
 
@@ -134,9 +148,6 @@ clusiveAssessment.setupAssessments = function() {
         clusiveAssessment.saveAffectCheck();
     });
 
-    $('input[name="comprehension-scale"]').change(function() {
-        clusiveAssessment.saveComprehensionCheck();
-    });
     $('textarea[name="comprehension-free"]').change(function() {
         clusiveAssessment.saveComprehensionCheck();
     });
@@ -144,15 +155,10 @@ clusiveAssessment.setupAssessments = function() {
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
         function() {
+            clusiveAssessment.saveComprehensionCheck();
             if ($(this).is(':checked')) {
-                if ($(this).val() === '0') {
-                    $('#compTextPromptYes').hide();
-                    $('#compTextPromptNo').show();
-                } else {
-                    $('#compTextPromptYes').show();
-                    $('#compTextPromptNo').hide();
-                }
                 $('#comprehensionFreeResponseArea').show();
+                clusiveAssessment.showAppropriateCompQuestion();
                 $('#compPop').CFW_Popover('locateUpdate');
             }
         }
