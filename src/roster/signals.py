@@ -14,8 +14,6 @@ from django.urls import reverse
 from eventlog.models import Event
 from roster.models import UserStats, ClusiveUser, ResearchPermissions, MailingListMember
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 
@@ -123,10 +121,11 @@ def update_social_email(sender, **kwargs):
         logger.info('While checking update email for %s, no other Clusive user has that email', social_email)
 
     # Update
-    pdb.set_trace()
     if clusive_user.user.email.lower() != social_email:
-        email_address = EmailAddress.objects.get(user_id=clusive_user.user.id)
         clusive_user.user.email = social_email
         clusive_user.user.save()
+
+    email_address = EmailAddress.objects.get(user_id=clusive_user.user.id)
+    if email_address.primary:
         email_address.email = social_email
         email_address.save()
