@@ -1,6 +1,7 @@
 import logging
 
 from allauth.exceptions import ImmediateHttpResponse
+from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.signals import pre_social_login, social_account_updated
 from django.contrib import messages
@@ -12,6 +13,8 @@ from django.urls import reverse
 
 from eventlog.models import Event
 from roster.models import UserStats, ClusiveUser, ResearchPermissions, MailingListMember
+
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -84,10 +87,10 @@ def auto_connect_google_login(sender, **kwargs):
 @receiver(social_account_updated, sender=SocialLogin)
 def update_social_email(sender, **kwargs):
     """
-    Used to update SSO user's email if their social account's is updated.
-    One of the updates may be to their social provider's email address, which
-    is stored when they first registered with Clusive.  If the email has been
-    changed, Clusive's User email value is synchronized.
+    Used to update SSO User's email if their SocialAccount is updated.
+    One of the updates may be the SocialAccount's email address.  That email is
+    stored when they first registered with Clusive.  If it has changed Clusive's
+    User email and allauth's EmailAddress is synchronized.
     """
     request = kwargs['request']
     social_login = kwargs['sociallogin']
@@ -120,6 +123,10 @@ def update_social_email(sender, **kwargs):
         logger.info('While checking update email for %s, no other Clusive user has that email', social_email)
 
     # Update
+    pdb.set_trace()
     if clusive_user.user.email.lower() != social_email:
+        email_address = EmailAddress.objects.get(user_id=clusive_user.user.id)
         clusive_user.user.email = social_email
         clusive_user.user.save()
+        email_address.email = social_email
+        email_address.save()
