@@ -61,25 +61,24 @@
             <tr>
                 <th scope="col">Display name</th>
                 <th scope="col">Email</th>
-                <th scope="col">Username</th>
-                <th scope="col">Password</th>
+                <th scope="col">Role</th>
                 <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
-            {% for s in students %}
-              {% include 'roster/partial/manage_row.html' with info=s.info form=s.form %}
+            {% for p in people %}
+              {% include 'roster/partial/manage_row.html' with info=p.info form=p.form %}
             {% endfor %}
             </tbody>
         </table>
     </div>
-    {% if allow_add_student %}
+    {% if current_period.data_source == 'C' %}
     <p>
         <a href="{% url 'manage_create_user' period_id=current_period.pk %}" class="btn btn-primary">
             + Add Student
         </a>
     </p>
-    {% endif %}
+    {% endif %}    
     {% endif %}
 </main>
 {% endblock %}
