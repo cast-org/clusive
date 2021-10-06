@@ -44,10 +44,10 @@ def convert_and_unpack_docx_file(clusive_user, file):
     output = pypandoc.convert_file(file, 'epub', outputfile=tempfile)
     if output:
         raise RuntimeError(output)
-    return unpack_epub_file(clusive_user, tempfile)
+    return unpack_epub_file(clusive_user, tempfile, omit_filename='title_page.xhtml')
 
 
-def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
+def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
@@ -76,7 +76,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     If there are any errors (such as a non-EPUB file), an exception will be raised.
     """
     with open(file, 'rb') as f, dawn.open(f) as upload:
-        manifest = make_manifest(upload)
+        manifest = make_manifest(upload, omit_filename)
         title = get_metadata_item(upload, 'titles') or ''
         author = get_metadata_item(upload, 'creators') or ''
         description = get_metadata_item(upload, 'description') or ''
@@ -170,7 +170,14 @@ def get_metadata_item(book, name):
     return None
 
 
-def make_manifest(epub: Epub):
+def make_manifest(epub: Epub, omit_filename: str):
+    """
+    Create Readium manifest based on the given EPUB.
+    :param epub: EPUB file as parsed by Dawn.
+    :param omit_filename: If supplied, any file in the spine with the given name
+        will be omitted from the reading order in the manifest.
+    :return: object that can be written as JSON to form the manifest file.
+    """
     data = {
             '@context': 'https://readium.org/webpub-manifest/context.jsonld',
             'metadata': {
@@ -205,13 +212,13 @@ def make_manifest(epub: Epub):
 
     # READING ORDER
     ro = data['readingOrder']
-
     for s in epub.spine:
-        ro.append({
-            'href': adjust_href(epub, s.href),
-            'type': s.mimetype
-            # TODO properties.contains = ['svg']
-        })
+        if not (omit_filename and s.href.endswith('/'+omit_filename)):
+            ro.append({
+                'href': adjust_href(epub, s.href),
+                'type': s.mimetype
+                # TODO properties.contains = ['svg']
+            })
 
     # RESOURCES
     resources = data['resources']

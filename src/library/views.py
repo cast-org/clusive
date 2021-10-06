@@ -267,7 +267,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
         except Exception as e:
             logger.warning('Could not process uploaded file, filename=%s, error=%s',
                            str(upload), e)
-            form.add_error('file', 'Could not process uploaded file. Are you sure it is an EPUB file?')
+            form.add_error('file', 'Could not process uploaded file. Only DOCX and EPUB are allowed.')
             return super().form_invalid(form)
 
         finally:
