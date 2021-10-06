@@ -174,9 +174,21 @@ clusiveTTS.setRegion = function(ctl) {
 clusiveTTS.updateUI = function(mode) {
     'use strict';
 
-    if (!Object.keys(clusiveTTS.region).length) { return; }
+    var region = null;
+    if (Object.keys(clusiveTTS.region).length) {
+        region = clusiveTTS.region.elm;
+        clusiveTTS.updateUIRegion(mode, region);
+    }
 
-    var region = clusiveTTS.region.elm;
+    // Always update sidebar controls
+    var regionSidebar = document.querySelector('.sidebar-tts');
+    if (region !== regionSidebar) {
+        clusiveTTS.updateUIRegion(mode, regionSidebar);
+    }
+};
+
+clusiveTTS.updateUIRegion = function(mode, region) {
+    'use strict';
 
     switch (mode) {
         case 'resume':
