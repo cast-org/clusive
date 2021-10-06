@@ -764,6 +764,7 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
         for group in google_roster:
             for person in google_roster[group]:
                 email = person['profile']['emailAddress']
+                google_id = person['profile']['id']
                 users = User.objects.filter(email=email)
                 if users.exists():
                     user_with_that_email = users.first()
@@ -771,7 +772,6 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
                     if self.request.user == user_with_that_email:
                         continue
                     clusive_user = ClusiveUser.objects.get(user=user_with_that_email)
-                    google_id = person['profile']['id']
                     a_person = {
                         'name': user_with_that_email.first_name,
                         'email': email,
@@ -857,8 +857,10 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
             else ResearchPermissions.PARENT_CREATED
         for person in session_data['people']:
             if person['exists']:
-                #TODO ...get(external_id = person['external_id'])
-                user_list.append(ClusiveUser.objects.get(user__email=person['email']))
+                clusive_user = ClusiveUser.objects.get(user__email=person['email'])
+                clusive_user.external_id = person['external_id']
+                clusive_user.save()
+                user_list.append(clusive_user)
             else:
                 properties = {
                     'username': person['email'],
