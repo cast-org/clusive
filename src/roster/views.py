@@ -6,6 +6,7 @@ from urllib.parse import urlencode
 
 import requests
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
+from allauth.account.models import EmailAddress
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -1185,10 +1186,19 @@ class GooglePeriodRosterUpdate(LoginRequiredMixin, RedirectView):
                 user_to_remove.save()
 
             elif person.get('new_email', False):
+                # (Google) SSO users have an associated EmailAddress -- update
+                # both their User.email and their EmailAddress, if any.  There
+                # is no EmailAddress if `person` has yet to register with
+                # Clusive.
                 clusive_user = ClusiveUser.objects.get(external_id=person['google_id'])
                 clusive_user.user.email = person['email']
                 clusive_user.user.save()
-
+                try:
+                    email_address = EmailAddress.objects.get(user_id=clusive_user.user.id)
+                    email_address.email = person['email']
+                    email_address.save()
+                except EmailAddress.DoesNotExist:
+                    pass
             else:
                 # Person already in period, with no changes -- nothing to add(),
                 # remove(), nor update.
@@ -1196,11 +1206,10 @@ class GooglePeriodRosterUpdate(LoginRequiredMixin, RedirectView):
 
         period.save()
         self.period = period
-
         return super().get(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        # Redirect to newly created period
+        # Redirect to newly updated period
         return reverse('manage', kwargs={'period_id': self.period.id})
 
 ########################################
