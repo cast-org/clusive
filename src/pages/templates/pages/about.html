@@ -1,16 +1,18 @@
 {% extends "shared/base.html" %}
 {% load i18n static figuration %}
 
-{% block bodyClass %}home sidebar-no-start sidebar-no-end{% endblock %}
+{% comment %}{% block bodyClass %}home sidebar-no-start sidebar-no-end{% endblock %} {% endcomment %}
 
 {% block header %}
-{% include "shared/partial/site_header_home.html" with home_link=True %}
+{% comment %} {% include "shared/partial/site_header_home.html" with home_link=True %} {% endcomment %}
+{% include "shared/partial/site_header.html" with home_link=True %}
 {% endblock %}
 
 {% block sidebar_start %}
 {% endblock %}
 
 {% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=False %}
 {% endblock %}
 
 {% block content %}
@@ -22,6 +24,11 @@
             Clusive scaffolds the development of reading skills for students in grades 5 through 12.
             Think of Clusive as a digital backpack of technology-supported reading materials
             that students can take with them wherever they go.</p>
+
+        <p lang="es">
+            Buenos días. ¿Cómo estás? La casa es grande.
+        </p>
+
         <h2>Features</h2>
         <ul>
             <li>

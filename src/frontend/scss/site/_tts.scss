@@ -3,3 +3,60 @@ span.tts-currentWord {
     color: var(--CT_ttsTextColor) !important;
     background-color: var(--CT_ttsBackgroundColor) !important;
 }
+
+.dialog-tts {
+    display: inline-block;
+    width: 4.125rem;
+    height: 2rem;
+    margin-top: -.25rem;
+    margin-left: auto;
+    @include border-radius(2.5rem);
+
+    .btn {
+        width: 2rem;
+        height: 2rem;
+        padding: .25rem;
+        @include font-size(1.5rem);
+        @include border-radius(10rem);
+    }
+
+    & + .close {
+        margin-top: -.25rem;
+        margin-left: .25rem;
+    }
+
+    .tts-stop {
+        margin-left: .125rem;
+    }
+
+    .tts-inactive {
+        margin-right: 2rem;
+    }
+    .tts-active {
+        display: flex;
+    }
+
+    &.active {
+        background-color: var(--CT_ttsActiveBg);
+
+        .tts-inactive {
+            display: none;
+        }
+    }
+    &:not(.active) {
+        .tts-active {
+            display: none;
+        }
+    }
+
+    &.paused {
+        .tts-pause {
+            display: none;
+        }
+    }
+    &:not(.paused) {
+        .tts-resume {
+            display: none;
+        }
+    }
+}
