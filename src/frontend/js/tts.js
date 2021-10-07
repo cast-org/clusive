@@ -31,7 +31,7 @@ $(document).ready(function() {
     'use strict';
 
     // Allow play button to have toggle behavior
-    $('.tts-play').on('click', function(e) {
+    $(document).on('click', '.tts-play', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -60,7 +60,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.tts-stop').on('click', function(e) {
+    $(document).on('click', '.tts-stop', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -75,7 +75,7 @@ $(document).ready(function() {
         clusiveTTS.updateUI('stop');
     });
 
-    $('.tts-pause').on('click', function(e) {
+    $(document).on('click', '.tts-pause', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -90,7 +90,7 @@ $(document).ready(function() {
         clusiveTTS.updateUI('pause');
     });
 
-    $('.tts-resume').on('click', function(e) {
+    $(document).on('click', '.tts-resume', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
