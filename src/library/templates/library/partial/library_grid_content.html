@@ -2,6 +2,6 @@
 
 <div class="library-grid">
     {% for book in object_list %}
-        {% include "library/partial/library_card.html" with show_menu=True show_topics=True %}
+        {% include "library/partial/library_card.html" with show_menu=True show_description=True show_topics=True %}
     {% endfor %}
 </div>
