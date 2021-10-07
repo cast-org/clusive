@@ -1049,9 +1049,21 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         for clusive_user in self.period_roster:
             google_user = None
             google_id = clusive_user.external_id
+            clusive_email = clusive_user.user.email
             for group in self.google_roster:
-                google_user = next((person for person in self.google_roster[group] if person['profile']['id'] == google_id), None)
-                if google_user is not None:     # google_user is a clusive_user
+                if google_id:
+                    google_user = next((person for person in self.google_roster[group] if person['profile']['id'] == google_id), None)
+                else:
+                    # In case an external_id was not stored in the clusive_user
+                    # when it was created, then use its email.  Also, take the
+                    # time to record the external_id now.
+                    google_user = next((person for person in self.google_roster[group] if person['profile']['emailAddress'] == clusive_email), None)
+                    if google_user:
+                        google_id = google_user['profile']['id']
+                        clusive_user.external_id = google_id
+                        clusive_user.save()
+
+                if google_user:     # google_user is a clusive_user
                     break
 
             if google_user is not None:
@@ -1068,7 +1080,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                 updates.append(an_update)
 
             else:
-                # clusive_user in Period but not in google classroom implies the
+                # clusive_user in Period but not in google_roster implies the
                 # google person left the google classroom.  The update is that
                 # the corrsponding clusive_user is to be removed from the
                 # Period.
@@ -1089,12 +1101,22 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         for group in self.google_roster:
             for google_user in self.google_roster[group]:
                 google_id = google_user['profile']['id']
-                try:
-                    # Google user already in Clusive?
+                google_email = google_user['profile']['emailAddress']
+                clusive_user = None
+                if ClusiveUser.objects.filter(external_id=google_id).exists():
                     clusive_user = ClusiveUser.objects.get(external_id=google_id)
+                elif User.objects.filter(email=google_email).exists():
+                    # In case an external_id was not stored in the clusive_user
+                    # when it was created, then use its email.  Also, record
+                    # the external_id for future use.
+                    user_via_email = User.objects.get(email=google_email)
+                    clusive_user = ClusiveUser.objects.get(user=user_via_email)
+                    clusive_user.external_id = google_id
+                    clusive_user.save()
+
+                if clusive_user:
                     if clusive_user == teacher:
                         continue
-
                     try:
                         self.period_roster.get(id=clusive_user.id)
                         # Google person has a Clusive account and is in the
@@ -1113,8 +1135,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                         an_update['google_id'] = google_id
                         self.any_changes = True
                         updates.append(an_update)
-
-                except ClusiveUser.DoesNotExist:
+                else:
                     # Google person in google class but does not even have a
                     # Clusive account.
                     an_update = {}
@@ -1276,7 +1297,6 @@ def add_scope_callback(request):
     dbAccess = OAuth2Database()
     # TODO: the provider is hard coded here -- how to parameterize?  Note that
     # this function is specific to google, so perhaps okay.
-    # Note: for production, replace the `redirect_uri` with the official uri
     client_info = dbAccess.retrieve_client_info('google')
     logger.debug('Token request to provider for larger scope access')
     resp = requests.request(
@@ -1300,8 +1320,8 @@ def add_scope_callback(request):
 
     # TODO:  There has to be a better way.
     return_uri = request.session['add_scopes_return_uri']
-    course_id = request.session['add_scopes_course_id']
-    period_id = request.session['add_scopes_period_id']
+    course_id = request.session.get('add_scopes_course_id')
+    period_id = request.session.get('add_scopes_period_id')
     logger.debug('Larger scope access request complete, returning to %s, with course id %s', return_uri, course_id)
     if course_id:
         return HttpResponseRedirect(reverse(return_uri, kwargs={'course_id': course_id, 'period_id': period_id}))
