@@ -87,8 +87,8 @@ def update_social_email(sender, **kwargs):
     """
     Used to update SSO User's email if their SocialAccount is updated.
     One of the updates may be the SocialAccount's email address.  That email is
-    stored when they first registered with Clusive.  If it has changed Clusive's
-    User email and allauth's EmailAddress is synchronized.
+    stored when they first registered with Clusive.  If it has changed, 
+    Clusive's User email and allauth's EmailAddress are also updated.
     """
     request = kwargs['request']
     social_login = kwargs['sociallogin']
