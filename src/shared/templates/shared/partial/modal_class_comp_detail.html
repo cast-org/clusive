@@ -4,7 +4,7 @@
     <ul class="list list-ruled">
         {% for c in category.items %}
             <li class="list-item py-0_25">
-                <strong>{{c.user.user.first_name}}</strong></div>
+                {{c.user.user.first_name}}
                 <div class="font-italic">{{c.comprehension_free_response}}</div>
             </li>
         {% empty %}
