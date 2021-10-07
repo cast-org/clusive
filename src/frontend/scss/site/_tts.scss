@@ -10,6 +10,7 @@ span.tts-currentWord {
     height: 2rem;
     margin-top: -.25rem;
     margin-left: auto;
+    text-align: right;
     @include border-radius(2.5rem);
 
     .btn {
@@ -30,7 +31,7 @@ span.tts-currentWord {
     }
 
     .tts-inactive {
-        margin-right: 2rem;
+        //margin-right: 2rem;
     }
     .tts-active {
         display: flex;
