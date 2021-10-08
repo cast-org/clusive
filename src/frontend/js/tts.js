@@ -316,9 +316,12 @@ clusiveTTS.isVisuallyVisible = function(elem) {
 clusiveTTS.isReadable = function(node) {
     'use strict';
 
-    // if (!clusiveTTS.isVisuallyVisible(node.parentElement)) { return false; }
+    var element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+
+    // if (!clusiveTTS.isVisuallyVisible(element)) { return false; }
     if (!node.data.trim().length > 0) { return false; }
-    if (/script|style|button|input|optgroup|option|select|textarea/i.test(node.parentElement.tagName)) { return false; }
+    if (/script|style|button|input|optgroup|option|select|textarea/i.test(element.tagName)) { return false; }
+    if (element.closest('[aria-hidden="true"]')) { return false; }
 
     return true;
 };
