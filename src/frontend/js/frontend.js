@@ -656,11 +656,11 @@ function libraryStyleSortLinkSetup() {
     });
 }
 
-// Clicking one of the bars in the dashboard reading-time visualization highlights other bars for the same book.
 function dashboardSetup() {
     'use strict';
 
     var $body = $('body');
+    // Clicking one of the bars in the dashboard activity panel highlights other bars for the same book.
     $body.on('focus', '.readtime-bar', function() {
         var id = $(this).data('clusive-book-id');
         if (id) {
@@ -672,12 +672,28 @@ function dashboardSetup() {
         $('.readtime-bar.active').removeClass('active');
     });
 
+    // Timescale links in the dashboard activity panel
     $body.on('click', 'a.activity-panel-days', function(e) {
         e.preventDefault();
         $.get('/dashboard-activity-panel/' + $(this).data('days'))
             .done(function(result) {
-                $('#StudentActivityPanel').replaceWith(result);
-                $('#StudentActivityPanel').CFW_Init();
+                var $studentActivityPanel = $('#StudentActivityPanel');
+                $studentActivityPanel.replaceWith(result);
+                $studentActivityPanel.CFW_Init();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
+    });
+
+    // Sort links in the dashboard activity panel
+    $body.on('click', 'a.activity-panel-sort', function(e) {
+        e.preventDefault();
+        $.get('/dashboard-activity-panel-sort/' + $(this).data('sort'))
+            .done(function(result) {
+                var $studentActivityPanel = $('#StudentActivityPanel');
+                $studentActivityPanel.replaceWith(result);
+                $studentActivityPanel.CFW_Init();
             })
             .fail(function(err) {
                 console.error('Failed fetching replacement dashboard panel: ', err);

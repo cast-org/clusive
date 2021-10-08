@@ -224,10 +224,15 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
         # Student Activity panel
         self.panels['student_activity'] = self.teacher
+        sa_days = self.clusive_user.student_activity_days
+        sa_sort = self.clusive_user.student_activity_sort
         if self.panels['student_activity']:
             self.data['student_activity'] = {
-                'days': 0,
-                'reading_data': Paradata.reading_data_for_period(self.current_period, days=0) if self.current_period else None
+                'days': sa_days,
+                'sort': sa_sort,
+                'reading_data':
+                    Paradata.reading_data_for_period(self.current_period, days=sa_days, sort=sa_sort)
+                    if self.current_period else None
             }
 
         return super().get(request, *args, **kwargs)
@@ -256,15 +261,33 @@ class DashboardActivityPanelView(TemplateView):
     template_name = 'pages/partial/dashboard_panel_student_activity.html'
 
     def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
         self.current_period = request.clusive_user.current_period
-        self.days = kwargs['days']
+
+        if 'days' in kwargs:
+            self.days = kwargs.get('days')
+            logger.debug('Setting student activity days = %d', self.days)
+            self.clusive_user.student_activity_days = self.days
+            self.clusive_user.save()
+        else:
+            self.days = self.clusive_user.student_activity_days
+
+        if 'sort' in kwargs:
+            self.sort = kwargs.get('sort')
+            logger.debug('Setting student activity sort = %s', self.sort)
+            self.clusive_user.student_activity_sort = self.sort
+            self.clusive_user.save()
+        else:
+            self.sort = self.clusive_user.student_activity_sort
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['data'] = {
             'days': self.days,
-            'reading_data': Paradata.reading_data_for_period(self.current_period, days=self.days),
+            'sort': self.sort,
+            'reading_data': Paradata.reading_data_for_period(self.current_period, days=self.days, sort=self.sort),
         }
         return context
 

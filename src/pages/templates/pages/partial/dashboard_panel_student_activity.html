@@ -48,10 +48,28 @@
             <table class="table readtime-table">
                 <thead>
                 <tr>
-                    <th>Student</th>
-                    <th class="d-xs-down-none"><span class="sr-only">Reading time for books</span></th>
-                    <th>Hours</th>
-                    <th><span class="sr-only">Number of different </span>Reads</th>
+                    <th>
+                        {% if data.sort == 'name' %}
+                        Student
+                        {% else %}
+                        <a class="activity-panel-sort" data-sort="name" href="#">Student</a>
+                        {% endif %}
+                    </th>
+                    <th class="d-xs-down-none"><a href="#"><span class="sr-only">Reading time for books</span></a></th>
+                    <th>
+                        {% if data.sort == 'time' %}
+                        Hours
+                        {% else %}
+                        <a class="activity-panel-sort" data-sort="time" href="#">Hours</a>
+                        {% endif %}
+                    </th>
+                    <th>
+                        {% if data.sort == 'count' %}
+                        <span class="sr-only">Number of different </span>Reads
+                        {% else %}
+                        <a class="activity-panel-sort" data-sort="count" href="#"><span class="sr-only">Number of different </span>Reads</a>
+                        {% endif %}
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
