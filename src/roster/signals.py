@@ -1,8 +1,9 @@
 import logging
 
 from allauth.exceptions import ImmediateHttpResponse
+from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialLogin
-from allauth.socialaccount.signals import pre_social_login
+from allauth.socialaccount.signals import pre_social_login, social_account_updated
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -80,3 +81,51 @@ def auto_connect_google_login(sender, **kwargs):
     # All tests passed; connect this new social login to the existing user
     logger.info('Connecting google user to existing account: %s', existing_user)
     sociallogin.connect(request, existing_user)
+
+@receiver(social_account_updated, sender=SocialLogin)
+def update_social_email(sender, **kwargs):
+    """
+    Used to update SSO User's email if their SocialAccount is updated.
+    One of the updates may be the SocialAccount's email address.  That email is
+    stored when they first registered with Clusive.  If it has changed, 
+    Clusive's User email and allauth's EmailAddress are also updated.
+    """
+    request = kwargs['request']
+    social_login = kwargs['sociallogin']
+
+    # If SocialAccount has no email, nothing to update with.
+    if 'email' not in social_login.account.extra_data:
+        return
+    else:
+        social_email = social_login.account.extra_data['email'].lower()
+
+    # If no User with the given ID, nothing to synchronize
+    try:
+        clusive_user = ClusiveUser.objects.get(external_id=social_login.account.uid)
+    except ClusiveUser.DoesNotExist:
+        return
+
+    # There should not be another User with the new email, unless it's
+    # the same User as retrieved via ID.
+    try:
+        another_user = User.objects.get(email__iexact=social_email)
+        if another_user != clusive_user.user:
+            logger.debug('Attempt to update email for %s to %s, but %s already has that email',
+                clusive_user.user.first_name,
+                social_email,
+                another_user.first_name
+            )
+            return
+    except User.DoesNotExist:
+        # No other User has `social_email` as their email -- good.
+        logger.info('While checking update email for %s, no other Clusive user has that email', social_email)
+
+    # Update
+    if clusive_user.user.email.lower() != social_email:
+        clusive_user.user.email = social_email
+        clusive_user.user.save()
+
+    email_address = EmailAddress.objects.get(user_id=clusive_user.user.id)
+    if email_address.primary:
+        email_address.email = social_email
+        email_address.save()
