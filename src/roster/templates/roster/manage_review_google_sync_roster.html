@@ -1,0 +1,74 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block title %}Manage{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="manage" %}
+{% endblock %}
+
+{% block content %}
+    <main id="content" tabindex="-1">
+        <div class="row">
+            <div class="col">
+                <h1>Review changes: {{ current_period.name }}</h1>
+            </div>
+        </div>
+        <div class="form-group mb-1">
+            <div class="table-scroll">
+                <table class="table table-divided table-roster">
+                    <thead>
+                        <tr>
+                            <th>Display name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Updates</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for person in roster_updates %}
+                        <tr>
+                            <td>{{ person.name }}</td>
+                            <td>{{ person.email }}</td>
+                            <td>{{ person.role_display }}</td>
+                            <td>
+
+                                {% comment %}
+                                Logic: not an existing user entails that
+                                in_period is  False, and remove and
+                                email_changed are both n/a,
+                                Else, if exists, but not in_period
+                                then remove and email_changed are n/a.
+                                Else, if in_period but is marked for removal,
+                                email_changed is n/a,
+                                Else, if email_changed, then note that,
+                                Else no change for this person
+                                {% endcomment %}
+
+                                {% if not person.exists %}
+                                     Add to this class (new to Clusive)
+                                {% elif not person.in_period %}
+                                    Add to this class
+                                {% elif person.remove %}
+                                    Remove from this class
+                                {% elif person.email_changed %}
+                                    Email changed
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if any_changes %}
+            <a href="{% url 'google_roster_update' course_id=course_id period_id=current_period.pk %}" class="btn btn-secondary">Save changes</a>
+            {% else %}
+            <button type="button" class="btn btn-secondary" disabled>Save changes</button>
+            {% endif %}
+            <a href="{% url 'manage' period_id=current_period.pk %}" class="btn btn-link">Cancel</a>
+        </div>
+    </main>
+{% endblock %}
+
