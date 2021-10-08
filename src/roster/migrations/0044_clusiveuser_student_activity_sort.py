@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('roster', '0041_clusiveuser_external_id'),
+        ('roster', '0043_clusiveuser_student_activity_days'),
     ]
 
     operations = [

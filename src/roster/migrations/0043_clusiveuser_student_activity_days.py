@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('roster', '0042_clusiveuser_student_activity_sort'),
+        ('roster', '0042_auto_20211006_1910'),
     ]
 
     operations = [
