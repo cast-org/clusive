@@ -64,6 +64,7 @@ function load_definition(cued, word) {
 }
 
 function load_translation(text) {
+    var lang = clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage;
     $('#translateSource').text(text);
     var $translateOutput = $('#translateOutput');
     $translateOutput.text('Loading...');
@@ -75,11 +76,12 @@ function load_translation(text) {
         },
         data: {
             text: text,
-            language: clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage
+            language: lang
         }
     })
         .done(function(data) {
             $translateOutput.html(data.result);
+            $translateOutput.attr('lang', data.lang);
             $translateOutput.css('direction', data.direction);
         })
         .fail(function(err) {

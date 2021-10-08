@@ -146,14 +146,14 @@
     }
 
     &.active {
-        background-color: var(--CT_sidebarTtsActiveBg);
+        background-color: var(--CT_ttsActiveBg);
 
-        .sidebar-tts-inactive {
+        .tts-inactive {
             display: none;
         }
     }
     &:not(.active) {
-        .sidebar-tts-active {
+        .tts-active {
             display: none;
         }
     }

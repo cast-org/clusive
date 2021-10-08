@@ -5,6 +5,7 @@
         <div class="popover-header">
             <strong>Your thoughts?</strong>
             <span class="icon-thought" aria-hidden="true"></span>
+            {% include "shared/partial/dialog_tts.html" %}
         </div>
         <div class="popover-body">
             <p id="affectScaleQuestion">How did this reading make you feel?</p>
@@ -128,7 +129,7 @@
                 </div>
             </div>
             <hr/>
-            
+
             <form id="comprehensionCheckForm">
                 <p id="compScaleQuestion">How much did you learn from this reading?</p>
                 <div class="form-inline">

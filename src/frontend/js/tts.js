@@ -31,7 +31,7 @@ $(document).ready(function() {
     'use strict';
 
     // Allow play button to have toggle behavior
-    $('.tts-play').on('click', function(e) {
+    $(document).on('click', '.tts-play', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -47,6 +47,9 @@ $(document).ready(function() {
             console.debug('read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
                 var selector = clusiveTTS.getSelectorFromElement(e.currentTarget);
+                if (clusiveTTS.region.mode === 'dialog') {
+                    selector = e.currentTarget.closest('.modal, .popover');
+                }
                 clusiveTTS.resetState();
                 clusiveTTS.read(selector);
                 clusiveTTS.updateUI('play');
@@ -57,7 +60,7 @@ $(document).ready(function() {
         }
     });
 
-    $('.tts-stop').on('click', function(e) {
+    $(document).on('click', '.tts-stop', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -72,7 +75,7 @@ $(document).ready(function() {
         clusiveTTS.updateUI('stop');
     });
 
-    $('.tts-pause').on('click', function(e) {
+    $(document).on('click', '.tts-pause', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -87,7 +90,7 @@ $(document).ready(function() {
         clusiveTTS.updateUI('pause');
     });
 
-    $('.tts-resume').on('click', function(e) {
+    $(document).on('click', '.tts-resume', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -147,12 +150,41 @@ clusiveTTS.getSelectorFromElement = function(element) {
     }
 };
 
+clusiveTTS.isElement = function(item) {
+    'use strict';
+
+    if (!item || typeof item !== 'object') {
+        return false;
+    }
+
+    if (typeof item.jquery !== 'undefined') {
+        item = item[0];
+    }
+
+    return typeof item.nodeType !== 'undefined';
+};
+
+clusiveTTS.getElement = function(item) {
+    'use strict';
+
+    // it's a jQuery object or a node element
+    if (clusiveTTS.isElement(item)) {
+        return item.jquery ? item[0] : item;
+    }
+
+    if (typeof item === 'string' && item.length > 0) {
+        return document.querySelector(item);
+    }
+
+    return null;
+};
+
 clusiveTTS.setRegion = function(ctl) {
     'use strict';
 
     var newRegion = {};
-    newRegion.elm = ctl.closest('.tts-region');
-    newRegion.mode = Object.prototype.hasOwnProperty.call(newRegion.elm.dataset, 'mode') ? newRegion.elm.dataset.mode : null;
+    newRegion.elm = ctl.closest('[role="region"]');
+    newRegion.mode = Object.prototype.hasOwnProperty.call(newRegion.elm.dataset, 'ttsMode') ? newRegion.elm.dataset.ttsMode : null;
 
     // Stop any previous region from reading
     if (Object.keys(clusiveTTS.region).length && (clusiveTTS.region.elm !== newRegion.elm)) {
@@ -284,9 +316,12 @@ clusiveTTS.isVisuallyVisible = function(elem) {
 clusiveTTS.isReadable = function(node) {
     'use strict';
 
-    // if (!clusiveTTS.isVisuallyVisible(node.parentElement)) { return false; }
+    var element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+
+    // if (!clusiveTTS.isVisuallyVisible(element)) { return false; }
     if (!node.data.trim().length > 0) { return false; }
-    if (/script|style|button|input|optgroup|option|select|textarea/i.test(node.parentElement.tagName)) { return false; }
+    if (/script|style|button|input|optgroup|option|select|textarea/i.test(element.tagName)) { return false; }
+    if (element.closest('[aria-hidden="true"]')) { return false; }
 
     return true;
 };
@@ -595,7 +630,9 @@ clusiveTTS.read = function(selector) {
         selector = 'main';
     }
 
-    var nodesToRead = clusiveTTS.getReadableTextNodes(document.querySelector(selector));
+    var elem = clusiveTTS.getElement(selector);
+
+    var nodesToRead = clusiveTTS.getReadableTextNodes(elem);
     var selection = window.getSelection();
     var isSelection = clusiveTTS.isSelection(selection);
 

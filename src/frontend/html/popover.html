@@ -53,6 +53,24 @@
             <strong id="glossaryTitle">
                 renewable
             </strong>
+            <div class="dialog-tts" role="region" aria-label="Text to speech controls">
+                <div class="tts-inactive">
+                    <button type="button" data-clusive-tip-id="readaloud" data-clusive-tip-action="readaloud" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+                        <span class="icon-play" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="tts-active">
+                    <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud" data-cle-handler="click" data-cle-control="tts-pause" data-cle-value="clicked">
+                        <span class="icon-pause" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud" data-cle-handler="click" data-cle-control="tts-resume" data-cle-value="clicked">
+                        <span class="icon-play" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud" data-cle-handler="click" data-cle-control="tts-stop" data-cle-value="clicked">
+                        <span class="icon-stop" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="popover-body">
             <div id="glossaryBody">
@@ -104,27 +122,47 @@
     </div>
     <div class="col">
 
-<div class="popover popover-translate popover-scrollable" id="translatePop">
-    <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
-    <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
-    <div class="popover-header">
-        <strong>Translator</strong>
-    </div>
-    <div class="popover-body">
-        <div id="translateource" class="translate-source">
-            <p>
-                source content&hellip;
-                Tenderloin bresaola bacon meatloaf beef ribs, pancetta ribeye burgdoggen pork loin jerky doner spare ribs alcatra biltong ground round. Short loin fatback meatloaf beef ribs leberkas corned beef jerky salami.
-            </p>
+<div class="popover popover-translate popover-scrollable draggable" id="translatePop">
+    <div role="document">
+        <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+        <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
+        <div class="popover-header">
+            <strong>Translator</strong>
+            <div class="dialog-tts" role="region" aria-label="Text to speech controls">
+                <div class="tts-inactive">
+                    <button type="button" data-clusive-tip-id="readaloud" data-clusive-tip-action="readaloud" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+                        <span class="icon-play" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="tts-active">
+                    <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud" data-cle-handler="click" data-cle-control="tts-pause" data-cle-value="clicked">
+                        <span class="icon-pause" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud" data-cle-handler="click" data-cle-control="tts-resume" data-cle-value="clicked">
+                        <span class="icon-play" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud" data-cle-handler="click" data-cle-control="tts-stop" data-cle-value="clicked">
+                        <span class="icon-stop" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div id="translateOutput" class="translate-output popover-section">
-            <p>
-                translated content&hellip;
-                Crunchy apples soy milk udon noodles soba noodles cocoa edamame shaved almonds Thai curry bruschetta kung pao pepper almond milk. Cauliflower blackberries sweet potato black bean burrito green tea.
-            </p>
+        <div class="popover-body">
+            <div id="translateource" class="translate-source">
+                <p>
+                    source content&hellip;
+                    Tenderloin bresaola bacon meatloaf beef ribs, pancetta ribeye burgdoggen pork loin jerky doner spare ribs alcatra biltong ground round. Short loin fatback meatloaf beef ribs leberkas corned beef jerky salami.
+                </p>
+            </div>
+            <div id="translateOutput" class="translate-output popover-section">
+                <p>
+                    translated content&hellip;
+                    Crunchy apples soy milk udon noodles soba noodles cocoa edamame shaved almonds Thai curry bruschetta kung pao pepper almond milk. Cauliflower blackberries sweet potato black bean burrito green tea.
+                </p>
+            </div>
         </div>
-    </div>
-    <div class="popover-footer">
+        <div class="popover-footer">
+        </div>
     </div>
 </div>
 
