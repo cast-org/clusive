@@ -162,6 +162,18 @@ class LibraryStyles:
     ]
 
 
+class StudentActivitySort:
+    NAME = 'name'
+    TIME = 'time'
+    COUNT = 'count'
+
+    CHOICES = [
+        (NAME, 'name'),
+        (TIME, 'time'),
+        (COUNT, 'count'),
+    ]
+
+
 class ClusiveUser(models.Model):
     guest_serial_number = 0
     anon_id_serial_number = 0
@@ -179,7 +191,7 @@ class ClusiveUser(models.Model):
     data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
     external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
 
-# If True, user cannot log in until they have confirmed their email.
+    # If True, user cannot log in until they have confirmed their email.
     unconfirmed_email = models.BooleanField(default=False)
 
     # List of all class periods the user is part of
@@ -196,6 +208,14 @@ class ClusiveUser(models.Model):
     library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
                                      choices=LibraryStyles.CHOICES)
 
+    # How many days worth of data are shown in the 'Student activity' display. 0 means no limit.
+    student_activity_days = models.SmallIntegerField(default=0)
+
+    # How the user has chosen to sort the 'Student activity' display. This choice is persistent.
+    student_activity_sort = models.CharField(max_length=10, default=StudentActivitySort.NAME,
+                                             choices=StudentActivitySort.CHOICES)
+
+    # Levels taught. Asked of teachers at registration.
     education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
                                         verbose_name='Education levels',
                                         blank=True, default=[])

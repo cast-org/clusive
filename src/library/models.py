@@ -11,7 +11,7 @@ from django.db import models
 from django.db.models import Sum, Q
 from django.utils import timezone
 
-from roster.models import ClusiveUser, Period, Roles
+from roster.models import ClusiveUser, Period, Roles, StudentActivitySort
 
 logger = logging.getLogger(__name__)
 
@@ -378,7 +378,7 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def reading_data_for_period(cls, period: Period, days=0):
+    def reading_data_for_period(cls, period: Period, days=0, sort='name'):
         """
         Calculate time, number of books, and individual book stats for each user in the given Period.
         :param period: group of students to consider
@@ -445,9 +445,16 @@ class Paradata(models.Model):
                             'is_assigned': False,
                             'is_other': True,
                         })
+
+        # Return value is a sorted list for display.
         result = list(map.values())
-        # TODO handle other sort options
+        # First sort by name, even if something else is the primary sort, so that zeros are alphabetical
         result.sort(key=lambda item: item['clusive_user'].user.first_name)
+        if sort == StudentActivitySort.COUNT:
+            result.sort(reverse=True, key=lambda item: item['book_count'])
+        elif sort == StudentActivitySort.TIME:
+            result.sort(reverse=True, key=lambda item: item['hours'])
+
         return result
 
     class Meta:
