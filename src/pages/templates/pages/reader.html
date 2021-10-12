@@ -223,7 +223,9 @@ var manifest_path = "{{ manifest_path }}";
                             // Handle initial TTS setting
                             console.debug('doing initial tts setting');
                             var availablePreferredVoices = cisl.prefs.modalSettings.getAvailablePreferredVoices(clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_readVoices);
-                            clusiveTTS.setCurrentVoice(availablePreferredVoices[0]);
+                            clusiveTTS.updateSettings({
+                                voice: availablePreferredVoices[0]
+                            });
                             // Update additional TTS settings - such as rate
                             D2Reader.applyTTSSettings(readerOptions.userSettings.tts);
                             firstResourceLoaded = true;

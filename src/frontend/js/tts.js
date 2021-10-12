@@ -23,6 +23,7 @@ var clusiveTTS = {
     userScrolled: false,
     readerReady: false,
     isPaused: false,
+    currentQueueItem: null,
     utterance: null
 };
 
@@ -69,8 +70,8 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud stop button clicked');
             clusiveTTS.stopReading();
-            // Call resetElements since some browsers do not always get the `utterance.onend` event
-            clusiveTTS.resetElements();
+            // Call resetHighlight since some browsers do not always get the `utterance.onend` event
+            clusiveTTS.resetHighlight();
         }
         clusiveTTS.updateUI('stop');
     });
@@ -100,6 +101,7 @@ $(document).ready(function() {
             console.debug('read aloud resume button clicked');
             clusiveTTS.userScrolled = false;
 
+/*
             // Resume by speaking utterance if one is queued
             if (clusiveTTS.utterance) {
                 clusiveTTS.synth.speak(clusiveTTS.utterance);
@@ -107,6 +109,17 @@ $(document).ready(function() {
             }
             clusiveTTS.synth.resume();
             clusiveTTS.isPaused = false;
+*/
+
+            // Resume by speaking utterance if one is active
+            clusiveTTS.isPaused = false;
+console.log(clusiveTTS.utterance, clusiveTTS.currentQueueItem);
+            if (!clusiveTTS.utterance) {
+                //clusiveTTS.readQueuedElements();
+                clusiveTTS.onEnd();
+            }
+            window.speechSynthesis.resume();
+
         }
         clusiveTTS.updateUI('resume');
     });
@@ -326,10 +339,12 @@ clusiveTTS.isReadable = function(node) {
     return true;
 };
 
-clusiveTTS.readQueuedElements = function() {
+clusiveTTS.readQueuedElements = clusiveDebounce(function() {
     'use strict';
 
     var toRead = null;
+
+console.log('readQueuedElements', clusiveTTS.elementsToRead.length, clusiveTTS.elementsToRead[0]);
 
     while (clusiveTTS.elementsToRead.length && toRead === null) {
         toRead = clusiveTTS.elementsToRead.shift();
@@ -346,7 +361,7 @@ clusiveTTS.readQueuedElements = function() {
         console.debug('Done reading elements');
         clusiveTTS.updateUI('stop');
     }
-};
+}, 150);
 
 clusiveTTS.wrap = function(toWrap, wrapper) {
     'use strict';
@@ -402,6 +417,18 @@ clusiveTTS.updateActive = function(preceding, middle, following) {
     clusiveTTS.copiedElement.append(newText);
 };
 
+clusiveTTS.onEnd = function() {
+    'use strict';
+
+console.log('ONEND', clusiveTTS.isPaused);
+
+    clusiveTTS.utterance = null;
+    if (!clusiveTTS.isPaused) {
+        clusiveTTS.resetHighlight();
+        clusiveTTS.readQueuedElements();
+    }
+};
+
 clusiveTTS.readElement = function(textElement, offset, end) {
     'use strict';
 
@@ -410,6 +437,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
     // Store then wrap text node so content can be replaced
+clusiveTTS.resetHighlight();
     clusiveTTS.textElement = textElement;
     clusiveTTS.createActive(textElement);
 
@@ -458,6 +486,12 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             }
         }
 
+        clusiveTTS.currentQueueItem = {
+            element: textElement,
+            offset: offset + e.charIndex,
+            end: end
+        };
+
         clusiveTTS.updateActive(preceding, middle, following);
 
         // Keep current word being read in view
@@ -474,11 +508,12 @@ clusiveTTS.readElement = function(textElement, offset, end) {
 
     utterance.onend = function() {
         console.debug('utterance ended');
-        clusiveTTS.resetElements();
+        clusiveTTS.onEnd();
     };
 
     if (!clusiveTTS.isPaused) {
         synth.speak(utterance);
+        clusiveTTS.updateUI('play');
     } else {
         clusiveTTS.utterance = utterance;
     }
@@ -487,11 +522,12 @@ clusiveTTS.readElement = function(textElement, offset, end) {
 clusiveTTS.resetState = function() {
     'use strict';
 
+    clusiveTTS.currentQueueItem = null;
     clusiveTTS.utterance = null;
     clusiveTTS.isPaused = false;
 };
 
-clusiveTTS.resetElements = function() {
+clusiveTTS.resetHighlight = function() {
     'use strict';
 
     console.debug('read aloud reset elements');
@@ -501,7 +537,6 @@ clusiveTTS.resetElements = function() {
     }
     clusiveTTS.copiedElement = null;
     clusiveTTS.textElement = null;
-    clusiveTTS.readQueuedElements();
 };
 
 clusiveTTS.makeUtterance = function(text) {
@@ -775,7 +810,7 @@ clusiveTTS.setCurrentVoice = function(name) {
     'use strict';
 
     // Eventually we may be able to switch voices mid-utterance, but for now have to stop speech
-    clusiveTTS.stopReading();
+    //clusiveTTS.stopReading();
     if (name) {
         window.speechSynthesis.getVoices().forEach(function(voice) {
             if (voice.name === name) {
@@ -802,6 +837,39 @@ clusiveTTS.setCurrentVoice = function(name) {
             });
         }
     }
+};
+
+clusiveTTS.updateSettings = function(settings) {
+    'use strict';
+
+    console.debug('updateSettings begin');
+
+    // Store queue and stop reading
+    var queue = clusiveTTS.elementsToRead;
+    clusiveTTS.elementsToRead = [];
+console.log(queue);
+    if (settings.hasOwnProperty('rate')) {
+        clusiveTTS.voiceRate = settings.rate;
+    }
+    if (settings.hasOwnProperty('voice')) {
+        clusiveTTS.setCurrentVoice(settings.voice);
+    }
+
+    // Prepend any current queue item back onto to reading queue if it does not match
+    // the first item in the queue already, to reduce some potential repetition.
+console.log('upate queueItem', clusiveTTS.currentQueueItem);
+    if (clusiveTTS.currentQueueItem) {
+        if (clusiveTTS.currentQueueItem.element != queue.element && clusiveTTS.currentQueueItem.offset != queue.offset) {
+            queue.unshift(clusiveTTS.currentQueueItem);
+        }
+    }
+    clusiveTTS.elementsToRead = queue;
+console.log(queue);
+    window.speechSynthesis.cancel();
+    clusiveTTS.utterance == null;
+    clusiveTTS.onEnd();
+
+    console.debug('updateSettings end');
 };
 
 clusiveTTS.readAloudSample = function() {
