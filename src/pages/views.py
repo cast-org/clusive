@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -66,7 +67,7 @@ class PeriodChoiceMixin(ContextMixin):
         if not self.current_period:
             clusive_user = request.clusive_user
             if self.periods is None:
-                self.periods = clusive_user.periods.all()
+                self.periods = clusive_user.periods.all().order_by(Lower('name'))
             if kwargs.get('period_id'):
                 # User is setting a new period
                 self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))

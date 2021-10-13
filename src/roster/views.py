@@ -5,8 +5,8 @@ from datetime import timedelta
 from urllib.parse import urlencode
 
 import requests
-from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.account.models import EmailAddress
+from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -35,7 +35,7 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
-from pages.views import ThemedPageMixin, SettingsPageMixin
+from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
@@ -409,39 +409,17 @@ def upload_csv(request):
     return render(request, template, context)
 
 
-class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin, TemplateView):
     template_name = 'roster/manage.html'
-    periods = None
-    current_period = None
 
     def get(self, request, *args, **kwargs):
         user = request.clusive_user
         if not user.can_manage_periods:
             self.handle_no_permission()
-        if self.periods is None:
-            self.periods = user.periods.all()
-        if kwargs.get('period_id'):
-            self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
-            # Make sure you can only edit a Period you are in.
-            if self.current_period not in self.periods:
-                self.handle_no_permission()
-        if self.current_period is None:
-            if user.current_period:
-                self.current_period = user.current_period
-            elif self.periods:
-                self.current_period = self.periods[0]
-            # else:
-            #     # No periods.  If this case actually happens, should have a better error message.
-            #     self.handle_no_permission()
-        if self.current_period != user.current_period and self.current_period is not None:
-            user.current_period = self.current_period
-            user.save()
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['periods'] = self.periods
-        context['current_period'] = self.current_period
         if self.current_period is not None:
             context['people'] = self.make_people_info_list(self.request.user)
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
@@ -1044,7 +1022,7 @@ class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
     def make_roster_updates(self, teacher):
         updates = []
         # 1. Loop to find clusive_users in the Period that are either (1) in the
-        # google_roster whose email may have changed or (2) no longer in the 
+        # google_roster whose email may have changed or (2) no longer in the
         # google_roster
         for clusive_user in self.period_roster:
             google_user = None
