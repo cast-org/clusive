@@ -522,7 +522,7 @@ class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settin
         form.save()
         target : User
         target = form.instance
-        new_pw = form.cleaned_data['password']
+        new_pw = form.cleaned_data.get('password')
         if new_pw:
             target.set_password(new_pw)
             target.save()
