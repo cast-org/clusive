@@ -862,6 +862,7 @@ console.log('upate queueItem', clusiveTTS.currentQueueItem);
         if (clusiveTTS.currentQueueItem.element != queue.element && clusiveTTS.currentQueueItem.offset != queue.offset) {
             queue.unshift(clusiveTTS.currentQueueItem);
         }
+        clusiveTTS.currentQueueItem = null;
     }
     clusiveTTS.elementsToRead = queue;
 console.log(queue);
