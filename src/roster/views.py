@@ -18,6 +18,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
+from django.db.models.functions import Lower
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -426,7 +427,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         return context
 
     def make_people_info_list(self, current_user):
-        people = self.current_period.users.exclude(user=current_user).order_by('user__first_name')
+        people = self.current_period.users.exclude(user=current_user).order_by(Lower('user__first_name'))
         return [{
             'info': {
                 'first_name': p.user.first_name,

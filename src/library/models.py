@@ -449,7 +449,7 @@ class Paradata(models.Model):
         # Return value is a sorted list for display.
         result = list(map.values())
         # First sort by name, even if something else is the primary sort, so that zeros are alphabetical
-        result.sort(key=lambda item: item['clusive_user'].user.first_name)
+        result.sort(key=lambda item: item['clusive_user'].user.first_name.lower())
         if sort == StudentActivitySort.COUNT:
             result.sort(reverse=True, key=lambda item: item['book_count'])
         elif sort == StudentActivitySort.TIME:
