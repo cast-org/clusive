@@ -2,7 +2,7 @@
 // and the more basic clusiveTTS defined here for other pages.
 //
 /* eslint-disable no-use-before-define */
-/* global D2Reader */
+/* global clusiveDebounce, D2Reader */
 
 // Initialize voices to trigger async update, so when it is called later
 // a list is returned (re: Chrome/Android)
@@ -101,25 +101,12 @@ $(document).ready(function() {
             console.debug('read aloud resume button clicked');
             clusiveTTS.userScrolled = false;
 
-/*
-            // Resume by speaking utterance if one is queued
-            if (clusiveTTS.utterance) {
-                clusiveTTS.synth.speak(clusiveTTS.utterance);
-                clusiveTTS.utterance = null;
-            }
-            clusiveTTS.synth.resume();
-            clusiveTTS.isPaused = false;
-*/
-
             // Resume by speaking utterance if one is active
             clusiveTTS.isPaused = false;
-console.log(clusiveTTS.utterance, clusiveTTS.currentQueueItem);
             if (!clusiveTTS.utterance) {
-                //clusiveTTS.readQueuedElements();
                 clusiveTTS.onEnd();
             }
             window.speechSynthesis.resume();
-
         }
         clusiveTTS.updateUI('resume');
     });
@@ -344,8 +331,6 @@ clusiveTTS.readQueuedElements = clusiveDebounce(function() {
 
     var toRead = null;
 
-console.log('readQueuedElements', clusiveTTS.elementsToRead.length, clusiveTTS.elementsToRead[0]);
-
     while (clusiveTTS.elementsToRead.length && toRead === null) {
         toRead = clusiveTTS.elementsToRead.shift();
         // Check for hidden - allows items shown mid-read to be included
@@ -420,8 +405,6 @@ clusiveTTS.updateActive = function(preceding, middle, following) {
 clusiveTTS.onEnd = function() {
     'use strict';
 
-console.log('ONEND', clusiveTTS.isPaused);
-
     clusiveTTS.utterance = null;
     if (!clusiveTTS.isPaused) {
         clusiveTTS.resetHighlight();
@@ -437,7 +420,7 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
     // Store then wrap text node so content can be replaced
-clusiveTTS.resetHighlight();
+    clusiveTTS.resetHighlight();
     clusiveTTS.textElement = textElement;
     clusiveTTS.createActive(textElement);
 
@@ -809,8 +792,6 @@ clusiveTTS.getVoicesForLanguage = function(language) {
 clusiveTTS.setCurrentVoice = function(name) {
     'use strict';
 
-    // Eventually we may be able to switch voices mid-utterance, but for now have to stop speech
-    //clusiveTTS.stopReading();
     if (name) {
         window.speechSynthesis.getVoices().forEach(function(voice) {
             if (voice.name === name) {
@@ -847,27 +828,24 @@ clusiveTTS.updateSettings = function(settings) {
     // Store queue and stop reading
     var queue = clusiveTTS.elementsToRead;
     clusiveTTS.elementsToRead = [];
-console.log(queue);
-    if (settings.hasOwnProperty('rate')) {
+    if (Object.prototype.hasOwnProperty.call(settings, 'rate')) {
         clusiveTTS.voiceRate = settings.rate;
     }
-    if (settings.hasOwnProperty('voice')) {
+    if (Object.prototype.hasOwnProperty.call(settings, 'voice')) {
         clusiveTTS.setCurrentVoice(settings.voice);
     }
 
     // Prepend any current queue item back onto to reading queue if it does not match
     // the first item in the queue already, to reduce some potential repetition.
-console.log('upate queueItem', clusiveTTS.currentQueueItem);
     if (clusiveTTS.currentQueueItem) {
-        if (clusiveTTS.currentQueueItem.element != queue.element && clusiveTTS.currentQueueItem.offset != queue.offset) {
+        if (clusiveTTS.currentQueueItem.element !== queue.element && clusiveTTS.currentQueueItem.offset !== queue.offset) {
             queue.unshift(clusiveTTS.currentQueueItem);
         }
         clusiveTTS.currentQueueItem = null;
     }
     clusiveTTS.elementsToRead = queue;
-console.log(queue);
     window.speechSynthesis.cancel();
-    clusiveTTS.utterance == null;
+    clusiveTTS.utterance = null;
     clusiveTTS.onEnd();
 
     console.debug('updateSettings end');
