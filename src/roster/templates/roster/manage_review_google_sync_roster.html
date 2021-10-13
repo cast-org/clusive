@@ -15,6 +15,7 @@
             </div>
         </div>
         <div class="form-group mb-1">
+            {% if any_changes %}
             <div class="table-scroll">
                 <table class="table table-divided table-roster">
                     <thead>
@@ -35,7 +36,7 @@
 
                                 {% comment %}
                                 Logic: not an existing user entails that
-                                in_period is  False, and remove and
+                                in_period is False, and remove and
                                 email_changed are both n/a,
                                 Else, if exists, but not in_period
                                 then remove and email_changed are n/a.
@@ -62,12 +63,12 @@
                     </tbody>
                 </table>
             </div>
-            {% if any_changes %}
             <a href="{% url 'google_roster_update' course_id=course_id period_id=current_period.pk %}" class="btn btn-secondary">Save changes</a>
-            {% else %}
-            <button type="button" class="btn btn-secondary" disabled>Save changes</button>
-            {% endif %}
             <a href="{% url 'manage' period_id=current_period.pk %}" class="btn btn-link">Cancel</a>
+            {% else %}
+            <p>Everything is up to date.</p>
+            <a href="{% url 'manage' period_id=current_period.pk %}" class="btn btn-secondary">OK</a>
+            {% endif %}
         </div>
     </main>
 {% endblock %}
