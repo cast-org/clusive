@@ -136,7 +136,9 @@
 
     cisl.prefs.enactor.readSpeed.enactReadSpeed = function (readSpeed) {
         console.log("cisl.prefs.enactor.readSpeed.enactReadSpeed", readSpeed);
-        clusiveTTS.voiceRate = readSpeed;
+        clusiveTTS.updateSettings({
+            rate: readSpeed
+        });
     }
 
     // Add a preferred voices preference for TTS
