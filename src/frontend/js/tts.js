@@ -61,20 +61,11 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', '.tts-stop', function(e) {
-        if (clusiveTTS.region.mode === 'Readium') {
-            console.debug('Readium read aloud stop button clicked');
-            D2Reader.stopReadAloud();
-        } else {
-            console.debug('read aloud stop button clicked');
-            clusiveTTS.stopReading();
-            // Call resetHighlight since some browsers do not always get the `utterance.onend` event
-            clusiveTTS.resetHighlight();
-        }
-        clusiveTTS.updateUI('stop');
+    $(document).on('click', '.tts-stop', function() {
+        clusiveTTS.stopReadingDetermineApi();
     });
 
-    $(document).on('click', '.tts-pause', function(e) {
+    $(document).on('click', '.tts-pause', function() {
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud pause button clicked');
             D2Reader.pauseReadAloud();
@@ -87,7 +78,7 @@ $(document).ready(function() {
         clusiveTTS.updateUI('pause');
     });
 
-    $(document).on('click', '.tts-resume', function(e) {
+    $(document).on('click', '.tts-resume', function() {
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud resume button clicked');
             D2Reader.resumeReadAloud();
@@ -109,10 +100,24 @@ $(document).ready(function() {
 window.addEventListener('unload', function() {
     'use strict';
 
-    if (clusiveTTS.region.mode === 'Readium') {
-        D2Reader.stopReadAloud();
+    clusiveTTS.stopReadingDetermineApi();
+});
+
+// Stop reading if active region is in dialog being closed
+$(document).on('beforeHide.cfw.modal beforeHide.cfw.popover', function(event) {
+    'use strict';
+
+    var dialogElem = null;
+
+    if (event.isDefaultPrevented()) { return; }
+    if (event.namespace === 'cfw.popover') {
+        dialogElem = $(event.target).data('cfw.popover').$target[0];
     } else {
-        clusiveTTS.stopReading();
+        dialogElem = event.target;
+    }
+
+    if (dialogElem && dialogElem.contains(clusiveTTS.region.elm)) {
+        clusiveTTS.stopReadingDetermineApi();
     }
 });
 
@@ -182,13 +187,7 @@ clusiveTTS.setRegion = function(ctl) {
 
     // Stop any previous region from reading
     if (Object.keys(clusiveTTS.region).length && (clusiveTTS.region.elm !== newRegion.elm)) {
-        if (clusiveTTS.region.mode === 'Readium') {
-            console.debug('Readium read aloud stop on region change');
-            D2Reader.stopReadAloud();
-        } else {
-            console.debug('read aloud stop on region change');
-            clusiveTTS.stopReading();
-        }
+        clusiveTTS.stopReadingDetermineApi();
         clusiveTTS.updateUI('stop');
     }
 
@@ -229,6 +228,18 @@ clusiveTTS.updateUIRegion = function(mode, region) {
     }
 };
 
+clusiveTTS.stopReadingDetermineApi = function() {
+    'use strict';
+
+    if (clusiveTTS.region.mode === 'Readium') {
+        console.debug('Readium read aloud stop called');
+        D2Reader.stopReadAloud();
+    } else {
+        console.debug('read aloud stop called');
+        clusiveTTS.stopReading();
+    }
+};
+
 // Stop an in-process reading
 clusiveTTS.stopReading = function(reset) {
     'use strict';
@@ -240,6 +251,7 @@ clusiveTTS.stopReading = function(reset) {
     }
     clusiveTTS.synth.cancel();
     clusiveTTS.resetState();
+    clusiveTTS.resetHighlight();
     clusiveTTS.updateUI();
 };
 
