@@ -62,8 +62,6 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.tts-stop', function(e) {
-        clusiveTTS.setRegion(e.currentTarget);
-
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud stop button clicked');
             D2Reader.stopReadAloud();
@@ -77,8 +75,6 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.tts-pause', function(e) {
-        clusiveTTS.setRegion(e.currentTarget);
-
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud pause button clicked');
             D2Reader.pauseReadAloud();
@@ -92,8 +88,6 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.tts-resume', function(e) {
-        clusiveTTS.setRegion(e.currentTarget);
-
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud resume button clicked');
             D2Reader.resumeReadAloud();
@@ -206,17 +200,11 @@ clusiveTTS.setRegion = function(ctl) {
 clusiveTTS.updateUI = function(mode) {
     'use strict';
 
-    var region = null;
-    if (Object.keys(clusiveTTS.region).length) {
-        region = clusiveTTS.region.elm;
+    // Update sidebar and dialog controls
+    var controls = document.querySelectorAll('.sidebar-tts, .dialog-tts');
+    controls.forEach(function(region) {
         clusiveTTS.updateUIRegion(mode, region);
-    }
-
-    // Always update sidebar controls
-    var regionSidebar = document.querySelector('.sidebar-tts');
-    if (region !== regionSidebar) {
-        clusiveTTS.updateUIRegion(mode, regionSidebar);
-    }
+    });
 };
 
 clusiveTTS.updateUIRegion = function(mode, region) {
