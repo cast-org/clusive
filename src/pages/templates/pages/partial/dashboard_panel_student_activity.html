@@ -93,6 +93,11 @@
                     <td>{{ info.hours|floatformat:1 }}</td>
                     <td>{{ info.book_count }}</td>
                 </tr>
+                {% empty %}
+                <tr class="py-2">
+                    <td colspan="2">This panel will show how much time your students are spending on each reading.</td>
+                    <td colspan="2"></td>
+                </tr>
                 {% endfor %}
                 </tbody>
             </table>
