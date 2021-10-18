@@ -347,6 +347,7 @@ clusiveTTS.readQueuedElements = function() {
         clusiveTTS.readElement(toRead.element, toRead.offset, end);
     } else {
         console.debug('Done reading elements');
+        clusiveTTS.resetState();
         clusiveTTS.updateUI('stop');
     }
 };
