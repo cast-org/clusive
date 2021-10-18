@@ -91,7 +91,9 @@ $(document).ready(function() {
             if (!clusiveTTS.utterance) {
                 clusiveTTS.onEnd();
             }
-            window.speechSynthesis.resume();
+            setTimeout(function() {
+                window.speechSynthesis.resume();
+            }, 110);
         }
         clusiveTTS.updateUI('resume');
     });
@@ -326,7 +328,7 @@ clusiveTTS.isReadable = function(node) {
     return true;
 };
 
-clusiveTTS.readQueuedElements = clusiveDebounce(function() {
+clusiveTTS.readQueuedElements = function() {
     'use strict';
 
     var toRead = null;
@@ -346,7 +348,7 @@ clusiveTTS.readQueuedElements = clusiveDebounce(function() {
         console.debug('Done reading elements');
         clusiveTTS.updateUI('stop');
     }
-}, 150);
+};
 
 clusiveTTS.wrap = function(toWrap, wrapper) {
     'use strict';
@@ -412,7 +414,7 @@ clusiveTTS.onEnd = function() {
     }
 };
 
-clusiveTTS.readElement = function(textElement, offset, end) {
+clusiveTTS.readElement = clusiveDebounce(function(textElement, offset, end) {
     'use strict';
 
     var synth = clusiveTTS.synth;
@@ -429,9 +431,9 @@ clusiveTTS.readElement = function(textElement, offset, end) {
     console.debug('langIso', langIso);
     var langVoices = clusiveTTS.getVoicesForLanguage(langIso);
     clusiveTTS.voiceLocal = langVoices.length > 0 ? langVoices[0] : null;
-    var utterance = clusiveTTS.makeUtterance(contentText);
+    clusiveTTS.utterance = clusiveTTS.makeUtterance(contentText);
 
-    utterance.onboundary = function(e) {
+    clusiveTTS.utterance.onboundary = function(e) {
         var preceding = '';
         var middle = '';
         var following = '';
@@ -489,18 +491,21 @@ clusiveTTS.readElement = function(textElement, offset, end) {
         }
     };
 
-    utterance.onend = function() {
+    clusiveTTS.utterance.onend = function() {
         console.debug('utterance ended');
         clusiveTTS.onEnd();
     };
 
     if (!clusiveTTS.isPaused) {
-        synth.speak(utterance);
+        synth.speak(clusiveTTS.utterance);
         clusiveTTS.updateUI('play');
-    } else {
-        clusiveTTS.utterance = utterance;
     }
-};
+
+    if (!synth.speaking) {
+        synth.resume();
+        clusiveTTS.updateUI('resume');
+    }
+}, 100);
 
 clusiveTTS.resetState = function() {
     'use strict';
@@ -513,7 +518,7 @@ clusiveTTS.resetState = function() {
 clusiveTTS.resetHighlight = function() {
     'use strict';
 
-    console.debug('read aloud reset elements');
+    console.debug('read aloud reset highlight');
     // Replace current active text with stored textnode, and reset store
     if (clusiveTTS.copiedElement && clusiveTTS.textElement) {
         clusiveTTS.copiedElement.replaceWith(clusiveTTS.textElement);

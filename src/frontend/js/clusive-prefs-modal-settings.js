@@ -247,8 +247,8 @@
 
         // Set chosen voice in the TTS module
         clusiveTTS.updateSettings({
-                voice: chosenVoice
-            });
+            voice: chosenVoice
+        });
     };
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
