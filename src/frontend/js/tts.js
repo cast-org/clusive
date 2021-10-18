@@ -63,6 +63,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.tts-stop', function() {
         clusiveTTS.stopReadingDetermineApi();
+        clusiveTTS.updateUI('stop');
     });
 
     $(document).on('click', '.tts-pause', function() {
