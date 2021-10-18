@@ -313,6 +313,9 @@ clusiveTTS.outerHeightMargin = function(el) {
 clusiveTTS.isVisuallyVisible = function(elem) {
     'use strict';
 
+    if (!elem) {
+        return false;
+    }
     return Boolean(clusiveTTS.outerWidthMargin(elem) > 0 && clusiveTTS.outerHeightMargin(elem) > 0 && elem.getClientRects().length && $(elem).outerHeight(true) > 0 && window.getComputedStyle(elem).visibility !== 'hidden');
 };
 
