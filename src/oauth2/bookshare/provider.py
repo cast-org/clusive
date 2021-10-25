@@ -1,6 +1,9 @@
 from allauth.socialaccount import providers
 from allauth.socialaccount.providers.base import ProviderAccount
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
+from allauth.account.models import EmailAddress
+
+import pdb
 
 # A ProviderAccount gets a number of pieces of info stored in the User's
 # SocialAccount associated with a Provider, including (using Google as example)
@@ -22,27 +25,13 @@ class BookshareAccount(ProviderAccount):
 
 
 # An OAuth2Provider gets information about the SSO provider
-# - login url:                  get_login_url(self, request, kwargs)
-# -- this is the "local" server url that kicks off the SSO authorization
-# -- workflow that ends with receiving an access token from the provider.
-# -- for Bookshare, it's Clusive's '/accounts/bookshare/login'
-#
+# TODO (?):
 # - authorization parameters:    get_auth_params(self, request, action)
 # -- gets the AUTH_PARAMS from settings.py for this provider and other optional
 # -- params given in the current GET request's 'auth_params' entry.  It combines
 # -- the two and returns the combination of authorization parameters.
-# -- unclear if this is needed by Bookshare implementation
-#
-# - scope of authorization:      get_sope(self, request)
-# -- get the SCOPE from the settings.py for this provider and other optional
-# -- scopes in the current GET request's 'scope' entry.  It combines the two
-# -- and returns the combination
-#
-# - default scope:               get_default_scope(self)
-# -- return the default scope for this provider
-# -- for Google SSO, returns 'profile' and sometimes 'profile email'
-# -- Bookshare OAuth2 documentation lists 'basic' as the only scope.
-# -- https://www.bookshare.org/cms/api-v2-oauth
+# -- unclear if this is needed by Bookshare implementation.  It may be needed
+# -- for the refresh token workflow
 class BookshareProvider(OAuth2Provider):
     id = 'bookshare'
     name = 'Bookshare'
@@ -50,5 +39,32 @@ class BookshareProvider(OAuth2Provider):
     
     def get_default_scope(self):
         return 'basic'
+
+    def extract_uid(self, data):
+        pdb.set_trace()
+        return str(data.get('username'))
+
+    def extract_common_fields(self, data):
+        name = data.get('name')
+        pdb.set_trace()
+        if name:
+            firstName = name.get('firstName')
+            lastName = name.get('lastName')
+        else:
+            firstName = ''
+            lastName = ''
+
+        return dict(
+            email=data.get("username"),
+            last_name=lastName,
+            first_name=firstName,
+        )
+
+    def extract_email_addresses(self, data):
+        ret = []
+        email = data.get("username")
+        pdb.set_trace()
+        ret.append(EmailAddress(email=email, verified=True, primary=True))
+        return ret
 
 provider_classes = [BookshareProvider]
