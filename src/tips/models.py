@@ -37,7 +37,12 @@ class TipHistory(models.Model):
     type = models.ForeignKey(to=TipType, on_delete=models.CASCADE)
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     show_count = models.PositiveSmallIntegerField(default=0)
+    # An "attempt" is when we send this tip to the browser to be displayed. However, it may be off-screen or hidden.
+    last_attempt = models.DateTimeField(null=True)
+    # A "show" is when the user actually saw the tip.
     last_show = models.DateTimeField(null=True)
+    # This is when the use took some related action.
+    # Tips should not be shown if the user recently did the action so doesn't need reminding.
     last_action = models.DateTimeField(null=True)
 
     class Meta:
@@ -53,6 +58,9 @@ class TipHistory(models.Model):
         if self.show_count >= self.type.max:
             return False
         now = timezone.now()
+        # Last attempt was very recent, may still be waiting to get the confirmation?
+        if self.last_attempt and (self.last_attempt + timedelta(minutes=5)) > now:
+            return False
         # Shown too recently?
         if self.last_show and (self.last_show + self.type.interval) > now:
             return False
@@ -61,9 +69,8 @@ class TipHistory(models.Model):
             return False
         return True
 
-    def show(self):
-        self.show_count += 1
-        self.last_show = timezone.now()
+    def register_attempt(self):
+        self.last_attempt = timezone.now()
         self.save()
 
     @classmethod
@@ -75,6 +82,20 @@ class TipHistory(models.Model):
         for type in types:
             if not type in have_history:
                 TipHistory(user=user, type=type).save()
+
+    @classmethod
+    def register_show(cls, user: ClusiveUser, tip: str, timestamp):
+        try:
+            type = TipType.objects.get(name=tip)
+            history = TipHistory.objects.get(user=user, type=type)
+            history.show_count += 1
+            if not history.last_show or timestamp > history.last_show:
+                history.last_show = timezone.now()
+            history.save()
+        except TipType.DoesNotExist:
+            logger.error('Tip-related action received with non-existent TipType: %s', tip)
+        except TipHistory.DoesNotExist:
+            logger.error('Could not find TipHistory object for user %s, type %s', user, tip)
 
     @classmethod
     def register_action(cls, user: ClusiveUser, action: str, timestamp):

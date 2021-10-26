@@ -454,7 +454,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         if available:
             first_available = available[0]
             logger.debug('Displaying tip: %s', first_available)
-            first_available.show()
+            first_available.register_attempt()
             self.tip_shown = first_available.type
             tip_name = self.tip_shown.name
         else:
