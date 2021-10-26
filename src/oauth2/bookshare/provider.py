@@ -23,7 +23,6 @@ class BookshareAccount(ProviderAccount):
         basic = super(BookshareAccount, self).to_str()
         return self.account.extra_data.get("name", basic)
 
-
 # An OAuth2Provider gets information about the SSO provider
 # TODO (?):
 # - authorization parameters:    get_auth_params(self, request, action)
