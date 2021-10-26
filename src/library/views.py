@@ -182,11 +182,15 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         return q
 
     def query_for_length(self, size):
-        if size=='S':
-            return Q(word_count__lt=500)
-        if size=='M':
-            return Q(word_count__gte=500) & Q(word_count__lte=30000)
-        if size=='L':
+        if size=='XS':
+            return Q(word_count__lte=500)
+        elif size=='S':
+            return Q(word_count__gt=500) & Q(word_count__lte=1000)
+        elif size=='M':
+            return Q(word_count__gt=1000) & Q(word_count__lte=5000)
+        elif size=='L':
+            return Q(word_count__gt=5000) & Q(word_count__lte=30000)
+        if size=='XL':
             return Q(word_count__gt=30000)
         raise Exception('invalid input')
 
