@@ -125,7 +125,9 @@ def update_social_email(sender, **kwargs):
         clusive_user.user.email = social_email
         clusive_user.user.save()
 
-    email_address = EmailAddress.objects.get(user_id=clusive_user.user.id)
-    if email_address.primary:
-        email_address.email = social_email
-        email_address.save()
+    # Update only the primary email
+    email_addresses = EmailAddress.objects.filter(user_id=clusive_user.user.id)
+    for email_address in email_addresses:
+        if email_address.primary:
+            email_address.email = social_email
+            email_address.save()
