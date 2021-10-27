@@ -13,8 +13,9 @@ class TipTypeAdmin(admin.ModelAdmin):
 @admin.register(TipHistory)
 class TipHistoryAdmin(admin.ModelAdmin):
     model = TipHistory
-    list_display = ('type', 'user', 'show_count', 'last_show', 'last_action',)
+    list_display = ('type', 'user', 'show_count', 'last_attempt', 'last_show', 'last_action',)
     ordering = ('-last_show', 'user',)
+    list_filter = ('type', 'user')
 
 
 @admin.register(CallToAction)

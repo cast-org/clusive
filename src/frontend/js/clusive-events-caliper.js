@@ -84,9 +84,9 @@ $(document).ready(function() {
         }
     });
 
-    $body.on('click', '*[data-clusive-tip-action]', function(event) {
+    $body.on('click', '*[data-clusive-tip-action]', function() {
         var action = $(this).attr('data-clusive-tip-action');
-        console.debug('data-clusive-tip-action', action, event);
+        $('[data-clusive-tip-id="' + action + '"]').CFW_Tooltip('hide'); // If tooltip currently open, close it
         addTipRelatedActionToQueue(action);
     });
 });

@@ -21,12 +21,22 @@ class TipType(models.Model):
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
 
-    def can_show(self, page: str, version_count: int):
+    def can_show(self, page: str, version_count: int, user: ClusiveUser):
         """Test whether this tip can be shown on a particular page"""
+        # Teacher/parent-only tips
+        if user.role == Roles.STUDENT and self.name in ['book_actions', 'activity']:
+            return False
+        # Switch tooltip requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1
+        # Most tooltips need to check if on correct page
+        if self.name == 'activity':
+            return page == 'Dashboard'
+        if self.name in ['view', 'book_actions']:
+            return page == 'Library'
         if self.name in ['context', 'settings', 'readaloud', 'wordbank']:
             return page == 'Reading'
+        # Unknown tip never shown
         return False
 
     def __str__(self):
@@ -119,14 +129,24 @@ class TipHistory(models.Model):
             stats: UserStats
             stats = UserStats.for_clusive_user(user)
             if stats.reading_views < 1:
-                logger.debug('First reading page view. No tips')
                 return []
 
         # Check tip history to see which are ready to be shown
         histories = TipHistory.objects.filter(user=user).order_by('type__priority')
         return [h for h in histories
-                if h.type.can_show(page, version_count)
+                if h.type.can_show(page=page, version_count=version_count, user=user)
                 and h.ready_to_show()]
+
+    @classmethod
+    def get_tip_to_show(cls, clusive_user: ClusiveUser, page: str, version_count=0):
+        available = TipHistory.available_tips(clusive_user, page, version_count)
+        if available:
+            first_available = available[0]
+            logger.debug('Displaying tip: %s', first_available)
+            first_available.register_attempt()
+            return first_available.type
+        else:
+            return None
 
 
 class CallToAction(models.Model):

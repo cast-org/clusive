@@ -25,6 +25,7 @@ from library.models import Paradata, Book, Annotation, BookVersion, BookAssignme
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
+from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
@@ -218,14 +219,20 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
 
     def configure_event(self, event):
         event.page = 'Library'
+        event.tip_type = self.tip_shown
 
     def dispatch(self, request, *args, **kwargs):
         self.search_form = SearchForm(request.GET)
         return super().dispatch(request, *args, **kwargs)
 
+    def get(self, request, *args, **kwargs):
+        self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, 'Library')
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
+        context['tip_name'] = self.tip_shown.name if self.tip_shown else None
         return context
 
 
