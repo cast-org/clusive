@@ -568,10 +568,12 @@ function updateLibraryData(page) {
     uri = addFilterArgs(uri);
 
     return $.get(uri).done(function(data) {
-        $('#libraryData').html(data);
+        var $libraryData = $('#libraryData');
+        $libraryData.html(data);
         if (hasBricksLayout()) {
             libraryMasonryEnable();
         }
+        $libraryData.CFW_Init();
     });
 }
 
