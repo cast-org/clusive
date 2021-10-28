@@ -50,24 +50,24 @@
                 <tr>
                     <th>
                         {% if data.sort == 'name' %}
-                        Student
+                        <span class="active">Student</span>
                         {% else %}
                         <a class="activity-panel-sort" data-sort="name" href="#" data-clusive-tip-action="activity">Student</a>
                         {% endif %}
                     </th>
                     <th class="d-xs-down-none text-center">
-                        <a href="#" {% if data.reading_data %}data-clusive-tip-id="activity" data-cfw-tooltip-placement="top auto"{% endif %}><span class="sr-only">Reading time for books</span></a>
+                        <a href="#" tabindex="-1" {% if data.reading_data %}data-clusive-tip-id="activity" data-cfw-tooltip-placement="top auto"{% endif %}><span class="sr-only">Reading time for books</span></a>
                     </th>
                     <th>
                         {% if data.sort == 'time' %}
-                        Hours
+                        <span class="active">Hours</span>
                         {% else %}
                         <a class="activity-panel-sort" data-sort="time" href="#" data-clusive-tip-action="activity">Hours</a>
                         {% endif %}
                     </th>
                     <th>
                         {% if data.sort == 'count' %}
-                        <span class="sr-only">Number of different </span>Reads
+                        <span class="active"><span class="sr-only">Number of different </span>Reads</span>
                         {% else %}
                         <a class="activity-panel-sort" data-sort="count" href="#" data-clusive-tip-action="activity"><span class="sr-only">Number of different </span>Reads</a>
                         {% endif %}
