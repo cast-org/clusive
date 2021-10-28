@@ -678,9 +678,11 @@ function dashboardSetup() {
     // Timescale links in the dashboard activity panel
     $body.on('click', 'a.activity-panel-days', function(e) {
         e.preventDefault();
+        var $studentActivityPanel = $('#StudentActivityPanel');
+        $studentActivityPanel.find('table tr.loading').show();
+        $studentActivityPanel.find('table tr.real-data').hide();
         $.get('/dashboard-activity-panel/' + $(this).data('days'))
             .done(function(result) {
-                var $studentActivityPanel = $('#StudentActivityPanel');
                 $studentActivityPanel.replaceWith(result);
                 $studentActivityPanel.CFW_Init();
             })
@@ -692,9 +694,11 @@ function dashboardSetup() {
     // Sort links in the dashboard activity panel
     $body.on('click', 'a.activity-panel-sort', function(e) {
         e.preventDefault();
+        var $studentActivityPanel = $('#StudentActivityPanel');
+        $studentActivityPanel.find('table tr.loading').show();
+        $studentActivityPanel.find('table tr.real-data').hide();
         $.get('/dashboard-activity-panel-sort/' + $(this).data('sort'))
             .done(function(result) {
-                var $studentActivityPanel = $('#StudentActivityPanel');
                 $studentActivityPanel.replaceWith(result);
                 $studentActivityPanel.CFW_Init();
             })

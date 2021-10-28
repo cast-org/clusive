@@ -75,8 +75,13 @@
                 </tr>
                 </thead>
                 <tbody>
+                <tr class="loading" style="display:none;">
+                    <td colspan="3" class="text-center">
+                        <strong>Loading...</strong> <div class="ms-2 loader-circle" role="status" aria-hidden="true"></div>
+                    </td>
+                </tr>
                 {% for info in data.reading_data %}
-                <tr>
+                <tr class="real-data">
                     <td>{{ info.clusive_user.user.first_name }}</td>
                     <td class="d-xs-down-none">
                         <div class="readtime-progress">
