@@ -122,6 +122,7 @@ var manifest_path = "{{ manifest_path }}";
             },
             rights: {
                 enableAnnotations: true,
+                enableDefinitions: true,
                 enableTTS: true,
                 enableBookmarks: false,
                 enableMaterial: false,
@@ -131,7 +132,7 @@ var manifest_path = "{{ manifest_path }}";
                 autoGeneratePositions: false
             },
             tts: {
-                enableSplitter: true,
+                enableSplitter: false,
                 highlight: "words",
                 autoScroll: true,
                 rate: 1.0,
@@ -188,15 +189,49 @@ var manifest_path = "{{ manifest_path }}";
                         return addNewAnnotation(annotation, pub_id, pub_version);
                     },
                     selectedAnnotation: function (annotation) {
-                        console.debug('Selected annotation: ', annotation.id);
-                        showExistingAnnotation(annotation);
-                        return Promise.resolve();
+                        if (annotation) {
+                            console.debug('Selected annotation: ', annotation.id);
+                            showExistingAnnotation(annotation);
+                            return Promise.resolve();
+                        } else {
+                            console.debug('selectedAnnotation called with no annotation');
+                            return Promise.resolve();
+                        }
                     },
                     deleteAnnotation: function (annotation) {
                         console.warn('Not implemented: Delete annotation: ', annotation.id);
                         return Promise.reject();
                     }
                 }
+            },
+            define: {
+                color: "#40E0D0",
+                api: {
+                    click: function (item, element) {
+                        console.log("define click", item, element);
+                    },
+                    success: function (item, element) {
+                        console.log("definition success callback", item, element);
+                        console.log("  definition item " + item.terms + " was found " + element.length + " times");
+                    },
+                    visible: function (item, element) {
+                        console.log("define visible", item, element);
+                    },
+                },
+                definitions: [
+                    {
+                        order: 0,
+                        result: 1, // 1 = first, 2 = random, 0 = all
+                        terms: ["coyote", "coyotes", "coy ote"],
+                        definition: "A coyote is a fancy dog"
+                    },
+                    {
+                        order: 1,
+                        result: 0,
+                        terms: ["foobar"],
+                        definition: "I don't think so"
+                    }
+                ]
             },
             bookmarks: {
                 api: {
