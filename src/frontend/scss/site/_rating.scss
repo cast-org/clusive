@@ -256,6 +256,7 @@
     transform-origin: center center;
 }
 .react-line-0 {
+    // stylelint-disable-next-line function-name-case
     width: Max(calc(100% + 2rem), calc(100% + 56.25%));
     transform: translate3d(-50%, -50%, 0) rotate(0);
 }
@@ -338,29 +339,30 @@
     position: absolute;
     z-index: 1;
     display: block;
+    // stylelint-disable-next-line function-name-case
     width: Max(calc(50% + 1rem), calc(50% + 28.125%));
     height: calc(50% + (var(--reactPad) * .75));
     content: "";
 }
 .react-quad-0 {
-    left: 50%;
     bottom: 50%;
+    left: 50%;
+    background: var(--CT_reactQ0Bg);
 }
 .react-quad-1 {
     top: 50%;
     left: 50%;
-    background: radial-gradient(ellipse at top left, rgba(191, 198, 205, 0.65), transparent 65%);
-    //background: linear-gradient(135deg, rgba(191, 198, 205, 0.5), transparent 65%);
+    background: var(--CT_reactQ1Bg);
 }
 .react-quad-2 {
     top: 50%;
     right: 50%;
+    background: var(--CT_reactQ2Bg);
 }
 .react-quad-3 {
-    bottom: 50%;
     right: 50%;
-    background: radial-gradient(ellipse at right bottom, rgba(191, 198, 205, 0.65), transparent 65%);
-    //background: linear-gradient(315deg, rgba(191, 198, 205, 0.5), transparent 65%);
+    bottom: 50%;
+    background: var(--CT_reactQ3Bg);
 }
 
 .react-item {

@@ -536,6 +536,12 @@ $stars-icon-disabled-color-after:       #636b82;
 // Reaction chart
 $react-line:                            #bfc6cd;
 $react-icon:                            #bfc6cd;
+$react-quad-0-bg:                       transparent;
+$react-quad-1-bg:                       radial-gradient(ellipse at top left, rgba($react-line, .65), transparent 65%);
+//$react-quad-1-bg:                     linear-gradient(135deg, rgba($react-line, .5), transparent 65%);
+$react-quad-2-bg:                       transparent;
+$react-quad-3-bg:                       radial-gradient(ellipse at right bottom, rgba($react-line, .65), transparent 65%);
+//$react-quad-3-bg:                     linear-gradient(315deg, rgba($react-line, .5), transparent 65%);
 $react-wedge-0:                         #dc0492;
 $react-wedge-1:                         #733cf1;
 $react-wedge-2:                         #004eff;
