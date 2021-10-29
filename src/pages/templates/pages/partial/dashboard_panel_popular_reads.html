@@ -44,9 +44,11 @@
                     Assign them something to read by clicking the <span class="icon-ellipsis-vert"></span>
                     (more actions) icon in the lower right of any reading panel in the library.
                 </p>
-                <a href="{% url 'reader_index' %}" class="btn btn-primary mx-1">Go to library</a>
+                <p><a href="{% url 'reader_index' %}" class="btn btn-primary mx-1">Go to library</a></p>
                 {% endfor %}
             </div>
+            <div class="box-divider"></div>
+            <p><a href="{% url 'library_style_redirect' view='period' %}">See all assigned readings</a> for this class in the library.</p>
         </div>
     </div>
 

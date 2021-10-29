@@ -69,8 +69,8 @@ PageTiming.checkAwakeness = function() {
     PageTiming.lastSeenAwakeTime = curTime;
     if (lastAwake === null || curTime - lastAwake < PageTiming.awakeCheckInterval * 2) {
         // Looks like we're getting regular pings, no action needed
-        console.debug('Browser is awake at ', PageTiming.fmt(curTime),
-            ' blocked? ', PageTiming.pageBlocked, '; blurred? ', !document.hasFocus());
+        // console.debug('Browser is awake at ', PageTiming.fmt(curTime),
+        //     ' blocked? ', PageTiming.pageBlocked, '; blurred? ', !document.hasFocus());
     } else {
         // Last awake time was too long ago, record preceding interval as having been asleep.
         console.debug('Computer woke up from sleep that started around ' + PageTiming.fmt(lastAwake));
