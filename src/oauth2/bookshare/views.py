@@ -9,8 +9,6 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 
 from .provider import BookshareProvider
 
-import pdb
-
 class BookshareOAuth2Adapter(OAuth2Adapter):
     provider_id = BookshareProvider.id
     basic_auth = True   # Use basic Authorization in access token request
@@ -19,7 +17,6 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
     profile_url = 'https://api.bookshare.org/v2/me'
 
     def complete_login(self, request, app, token, **kwargs):
-        pdb.set_trace()
         resp = requests.get(
             self.profile_url,
             headers = { "Authorization": "Bearer " + token.token },
