@@ -247,13 +247,14 @@
 
         // Set chosen voice in the TTS module
         clusiveTTS.updateSettings({
-                voice: chosenVoice
-            });
+            voice: chosenVoice
+        });
     };
 
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
         console.debug("handleReadVoicesPreference", readVoices, that);
         if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {
+            that.locate('readVoice').val('default').change();
             return;
         }
 
@@ -265,9 +266,9 @@
         if(availablePreferredVoices.length > 0) {
             var preferredVoice = availablePreferredVoices[0];
             that.locate('readVoice').val(preferredVoice).change();
-            clusiveTTS.updateSettings({
-                voice: preferredVoice
-            });
+            //clusiveTTS.updateSettings({
+            //    voice: preferredVoice
+            //});
         }
     };
 

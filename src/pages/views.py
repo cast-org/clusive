@@ -115,7 +115,9 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.panels = {} # This will hold info on which panels are to be displayed.
         self.data = {} # This will hold panel-specific data
 
-        # Decision-making data
+        self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
+
+    # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
 
         # Welcome panel
@@ -243,6 +245,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['query'] = None
         context['panels'] = self.panels
         context['data'] = self.data
+        context['tip_name'] = self.tip_shown.name if self.tip_shown else None
         return context
 
     def should_show_star_results(self, request):
@@ -255,6 +258,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
+        event.tip_type = self.tip_shown
 
 
 class DashboardActivityPanelView(TemplateView):
@@ -450,16 +454,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         pdata = Paradata.record_view(book, version, clusive_user)
 
         # See if there's a Tip that should be shown
-        available = TipHistory.available_tips(clusive_user, page=self.page_name, version_count=len(versions))
-        if available:
-            first_available = available[0]
-            logger.debug('Displaying tip: %s', first_available)
-            first_available.show()
-            self.tip_shown = first_available.type
-            tip_name = self.tip_shown.name
-        else:
-            self.tip_shown = None
-            tip_name = None
+        self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
 
         self.extra_context = {
             'pub': book,
@@ -468,7 +463,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'manifest_path': self.book_version.manifest_path,
             'last_position': pdata.last_location or "null",
             'annotations': annotationList,
-            'tip_name': tip_name,
+            'tip_name': self.tip_shown.name if self.tip_shown else None,
         }
         return super().get(request, *args, **kwargs)
 

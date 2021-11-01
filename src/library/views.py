@@ -25,6 +25,7 @@ from library.models import Paradata, Book, Annotation, BookVersion, BookAssignme
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
+from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
@@ -182,11 +183,15 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         return q
 
     def query_for_length(self, size):
-        if size=='S':
-            return Q(word_count__lt=500)
-        if size=='M':
-            return Q(word_count__gte=500) & Q(word_count__lte=30000)
-        if size=='L':
+        if size=='XS':
+            return Q(word_count__lte=500)
+        elif size=='S':
+            return Q(word_count__gt=500) & Q(word_count__lte=1000)
+        elif size=='M':
+            return Q(word_count__gt=1000) & Q(word_count__lte=5000)
+        elif size=='L':
+            return Q(word_count__gt=5000) & Q(word_count__lte=30000)
+        if size=='XL':
             return Q(word_count__gt=30000)
         raise Exception('invalid input')
 
@@ -214,14 +219,20 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
 
     def configure_event(self, event):
         event.page = 'Library'
+        event.tip_type = self.tip_shown
 
     def dispatch(self, request, *args, **kwargs):
         self.search_form = SearchForm(request.GET)
         return super().dispatch(request, *args, **kwargs)
 
+    def get(self, request, *args, **kwargs):
+        self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, 'Library')
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
+        context['tip_name'] = self.tip_shown.name if self.tip_shown else None
         return context
 
 
@@ -232,11 +243,14 @@ class LibraryStyleRedirectView(View):
     def dispatch(self, request, *args, **kwargs):
         view = kwargs.get('view')
         style = request.clusive_user.library_style
-        return HttpResponseRedirect(redirect_to=reverse('library', kwargs={
+        kwargs = {
             'view': view,
             'sort': 'title',  # FIXME
             'style': style,
-        }))
+        }
+        if request.clusive_user and request.clusive_user.current_period:
+            kwargs['period_id'] = request.clusive_user.current_period.id
+        return HttpResponseRedirect(redirect_to=reverse('library', kwargs=kwargs))
 
 
 class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):

@@ -44,9 +44,37 @@
                 <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#contextFeature0" data-cfw-collapse-animate="false">Previous</span>
             </div>
         </div>
+        {% elif tip_name == "view" %}
+        <p>Change your view to see different sets of readings.</p>
+        <div class="tooltip-action">
+            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        </div>
+        {% elif tip_name == "book_actions" %}
+        <p>Select to assign a reading to a class, and more.</p>
+        <div class="tooltip-action">
+            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        </div>
+        {% elif tip_name == "activity" %}
+        <div data-cfw="accordion">
+            <div id="activityFeature0" class="collapse">
+                <p>Hover for titles and reading time. Click for readings students have in common. Triangles show assigned readings.</p>
+                <div class="tooltip-action">
+                    <div class="tooltip-step">1/2</div>
+                    <button type="button" class="btn btn-primary" data-cfw="collapse" data-cfw-collapse-target="#activityFeature1" data-cfw-collapse-animate="false">Next</button>
+                </div>
+            </div>
+            <div id="activityFeature1" class="collapse">
+                <p>Select timeframe and sort by hours, books, or student name.</p>
+                <div class="tooltip-action">
+                    <div class="tooltip-step">2/2</div>
+                    <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+                </div>
+                <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#activityFeature0" data-cfw-collapse-animate="false">Previous</span>
+            </div>
+        </div>
         {% endif %}
     </div>
-    {% if tip_name != "context" %}
+    {% if tip_name != "context" and tip_name != "activity" %}
     <div class="tooltip-arrow"></div>
     {% endif %}
 </div>

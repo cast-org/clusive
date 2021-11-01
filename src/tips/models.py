@@ -21,12 +21,22 @@ class TipType(models.Model):
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
 
-    def can_show(self, page: str, version_count: int):
+    def can_show(self, page: str, version_count: int, user: ClusiveUser):
         """Test whether this tip can be shown on a particular page"""
+        # Teacher/parent-only tips
+        if user.role == Roles.STUDENT and self.name in ['book_actions', 'activity']:
+            return False
+        # Switch tooltip requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1
+        # Most tooltips need to check if on correct page
+        if self.name == 'activity':
+            return page == 'Dashboard'
+        if self.name in ['view', 'book_actions']:
+            return page == 'Library'
         if self.name in ['context', 'settings', 'readaloud', 'wordbank']:
             return page == 'Reading'
+        # Unknown tip never shown
         return False
 
     def __str__(self):
@@ -37,7 +47,12 @@ class TipHistory(models.Model):
     type = models.ForeignKey(to=TipType, on_delete=models.CASCADE)
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     show_count = models.PositiveSmallIntegerField(default=0)
+    # An "attempt" is when we send this tip to the browser to be displayed. However, it may be off-screen or hidden.
+    last_attempt = models.DateTimeField(null=True)
+    # A "show" is when the user actually saw the tip.
     last_show = models.DateTimeField(null=True)
+    # This is when the use took some related action.
+    # Tips should not be shown if the user recently did the action so doesn't need reminding.
     last_action = models.DateTimeField(null=True)
 
     class Meta:
@@ -53,6 +68,9 @@ class TipHistory(models.Model):
         if self.show_count >= self.type.max:
             return False
         now = timezone.now()
+        # Last attempt was very recent, may still be waiting to get the confirmation?
+        if self.last_attempt and (self.last_attempt + timedelta(minutes=5)) > now:
+            return False
         # Shown too recently?
         if self.last_show and (self.last_show + self.type.interval) > now:
             return False
@@ -61,9 +79,8 @@ class TipHistory(models.Model):
             return False
         return True
 
-    def show(self):
-        self.show_count += 1
-        self.last_show = timezone.now()
+    def register_attempt(self):
+        self.last_attempt = timezone.now()
         self.save()
 
     @classmethod
@@ -75,6 +92,20 @@ class TipHistory(models.Model):
         for type in types:
             if not type in have_history:
                 TipHistory(user=user, type=type).save()
+
+    @classmethod
+    def register_show(cls, user: ClusiveUser, tip: str, timestamp):
+        try:
+            type = TipType.objects.get(name=tip)
+            history = TipHistory.objects.get(user=user, type=type)
+            history.show_count += 1
+            if not history.last_show or timestamp > history.last_show:
+                history.last_show = timezone.now()
+            history.save()
+        except TipType.DoesNotExist:
+            logger.error('Tip-related action received with non-existent TipType: %s', tip)
+        except TipHistory.DoesNotExist:
+            logger.error('Could not find TipHistory object for user %s, type %s', user, tip)
 
     @classmethod
     def register_action(cls, user: ClusiveUser, action: str, timestamp):
@@ -98,14 +129,24 @@ class TipHistory(models.Model):
             stats: UserStats
             stats = UserStats.for_clusive_user(user)
             if stats.reading_views < 1:
-                logger.debug('First reading page view. No tips')
                 return []
 
         # Check tip history to see which are ready to be shown
         histories = TipHistory.objects.filter(user=user).order_by('type__priority')
         return [h for h in histories
-                if h.type.can_show(page, version_count)
+                if h.type.can_show(page=page, version_count=version_count, user=user)
                 and h.ready_to_show()]
+
+    @classmethod
+    def get_tip_to_show(cls, clusive_user: ClusiveUser, page: str, version_count=0):
+        available = TipHistory.available_tips(clusive_user, page, version_count)
+        if available:
+            first_available = available[0]
+            logger.debug('Displaying tip: %s', first_available)
+            first_available.register_attempt()
+            return first_available.type
+        else:
+            return None
 
 
 class CallToAction(models.Model):

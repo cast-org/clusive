@@ -6,6 +6,7 @@
 
     .active {
         font-weight: 700;
+        border-bottom: 4px solid var(--CT_readTimeFilterActiveBorderColor);
     }
 
     &.list-horizontal > .list-item {
@@ -53,6 +54,10 @@
         @include font-size(1rem);
         font-weight: 600;
         border-bottom: 3px solid var(--CT_boxDivderColor);
+
+        .active {
+            border-bottom: 4px solid var(--CT_readTimeFilterActiveBorderColor);
+        }
     }
     td {
         vertical-align: middle;

@@ -32,6 +32,15 @@ $(document).ready(function() {
         });
     };
 
+    var addTipViewToQueue = function(tip) {
+        window.clusiveEvents.messageQueue.add({
+            type: 'TV',
+            tip: tip,
+            readerInfo: clusiveContext.reader_info,
+            eventId: PAGE_EVENT_ID
+        });
+    };
+
     window.clusiveEvents = {
         messageQueue: clusive.djangoMessageQueue({
             config: {
@@ -56,8 +65,8 @@ $(document).ready(function() {
 
         addCaliperEventToQueue: addCaliperEventToQueue,
         addTipRelatedActionToQueue: addTipRelatedActionToQueue,
+        addTipViewToQueue: addTipViewToQueue,
         addVocabCheckSkippedEventToQueue: addVocabCheckSkippedEventToQueue
-
     };
 
     // Listen for 'click' events on elements with the data-cle attributes.
@@ -75,9 +84,9 @@ $(document).ready(function() {
         }
     });
 
-    $body.on('click', '*[data-clusive-tip-action]', function(event) {
+    $body.on('click', '*[data-clusive-tip-action]', function() {
         var action = $(this).attr('data-clusive-tip-action');
-        console.debug('data-clusive-tip-action', action, event);
+        $('[data-clusive-tip-id="' + action + '"]').CFW_Tooltip('hide'); // If tooltip currently open, close it
         addTipRelatedActionToQueue(action);
     });
 });

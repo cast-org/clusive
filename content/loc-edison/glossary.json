@@ -1,0 +1,358 @@
+[
+    {
+        "headword": "invention",
+        "alternateForms": ["inventions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "Something new created as a result of study and experiment." ,
+                "examples": [ "Through many years of thinking and experiments, Edison came up with many inventions." ]
+            }
+        ]
+    },
+    {
+        "headword": "license",
+        "alternateForms": ["licenses"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An official permission to have or do something. " ,
+                "examples": [ "I have a license to drive a car." ],
+                "images": [
+                    {
+                        "src": "glossimages/license1.jpg",
+                        "alt": "Photo of a driver's license.",
+                        "description": "A driver's license from the state of Virginia. A person's name and other information are shown on the license.",
+                        "caption": "A person needs to have a license to use a car or motorcycle.",
+                        "source": {
+                            "url": "https://search.creativecommons.org/photos/56b0e5b9-77ef-4542-8375-2809bb0ffc31",
+                            "title": "",
+                            "author": "joelogon",
+                            "author_url": "https://www.flickr.com/photos/87957708@N00",
+                            "license": "CC BY-SA 2.0",
+                            "license_url": "https://creativecommons.org/licenses/by-sa/2.0/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "phonograph",
+        "alternateForms": ["phonographs"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A machine for reproducing sounds by means of the vibration of a stylus or needle following a spiral groove on a revolving disc or cylinder." ,
+                "examples": [ "We listened to music using the old phonograph. My grandmother calls the phonograph a record player." ],
+                "images": [
+                    {
+                        "src": "glossimages/phonograph.jpg",
+                        "alt": "A vinyl record on a record player.",
+                        "description": "A flat plastic disk with grooves in its surface. A plastic arm extends onto the grooves. A hole is in the center of the disk, allowing the disk to spin in a circle.",
+                        "caption": "You need a phonograph (or record player) to hear the sound stored on the vinyl record.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-vinyl-record-on-vinyl-record-player-3959994/",
+                            "title": "Black Vinyl Record On Vinyl Record Player",
+                            "author": "Wendy Wei",
+                            "author_url": "https://www.pexels.com/@wendywei",
+                            "license": "Free to use.",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "headword": "stock",
+        "alternateForms": ["stocks"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "A share of the value of a company which can be bought, sold, or traded as an investment." ,
+                "examples": [ "Most of her money is invested in stocks." ],
+                "images": [
+                    {
+                        "src": "glossimages/stock.jpg",
+                        "alt": "Photo of a crowd of people around a stage.",
+                        "description": "A large number are shown, gathered around a stage. ",
+                        "caption": "This audience looks ready to hear a debate!",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/text-102152/",
+                            "title": "Text",
+                            "author": "Markus Spiske",
+                            "author_url": "https://www.pexels.com/@markusspiske",
+                            "license": "Free to use.",
+                            "license_url": "https://www.pexels.com/license/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "industrial",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Of or relating to an organized system of making products. " ,
+                "examples": [ "America's economy changed from agriculture to industry during the 1800s." ],
+                "images": [
+                    {
+                        "src": "glossimages/industrial.jpg",
+                        "alt": "Photo Of An Industrial Factory Emitting Smoke",
+                        "description": "A group of buildings with tall smoke stacks. Smoke is coming out of the smoke stacks.",
+                        "caption": "Industrial pollution is a problem that needs to be solved.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/photo-of-an-industrial-factory-emitting-smoke-247763/",
+                            "title": "Photo Of An Industrial Factory Emitting Smoke",
+                            "author": "Pixabay",
+                            "author_url": "https://www.pexels.com/@pixabay",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "demand",
+        "alternateForms": ["demands","demanded","demanding"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To ask for forcefully; to order" ,
+                "examples": [ "The protesters gathered to demand action on climate change." ],
+                "images": [
+                    {
+                        "src": "glossimages/demand1.jpg",
+                        "alt": "Photo of protesters and protest signs",
+                        "description": "Photo of protester holding sign. Sign says, 'Fight today for a Better Tomorrow.' ",
+                        "caption": "People demand action on climate change.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/climate-sign-outside-blur-2990644/",
+                            "title": "",
+                            "author": "Markus Spiske",
+                            "author_url": "https://www.pexels.com/@markusspiske",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "influence",
+        "alternateForms": ["influences"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An effect on something, such as feeling, sense, or mind." ,
+                "examples": [ "Have you turned on a light today? You've already felt the influence of one of Edison's inventions!" ]
+            }
+        ]
+    },
+
+    {
+        "headword": "basic",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Forming, or at the basis of; main." ,
+                "examples": [ "The basic version of the car did not have extra things like air conditioning or power windows." ]
+            }
+        ]
+    },
+
+    {
+        "headword": "purchase",
+        "alternateForms": ["purchases","purchased","purchasing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get or obtain something by paying money." ,
+                "examples": [ "When you purchase something, you are buying it." ],
+                "images": [
+                    {
+                        "src": "glossimages/purchase1.jpg",
+                        "alt": "Photo of one person handing a credit card to another person",
+                        "description": "One person holds a credit card. Another person reaches for the credit card. The person reaching for the card holds a small black machine used to take credit card payments.",
+                        "caption": "A credit card is one way to purchase something. Cash is another way. ",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-payment-terminal-2988232/",
+                            "title": "Black Payment Terminal",
+                            "author": "energepic.com",
+                            "author_url": "https://www.pexels.com/@energepic-com-27411",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "extract",
+        "alternateForms": ["extracts","extracted","extracting"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To take out; to separate; to remove." ,
+                "examples": [ "Dentists use special tools to extract a tooth that is causing problems." ]
+            }
+        ]
+    },
+
+    {
+        "headword": "simple",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Uncomplicated." ,
+                "examples": [ "The simple version of the car does not have extra things like air conditioning or power windows." ]
+            }
+        ]
+    },
+
+    {
+        "headword": "buy",
+        "alternateForms": ["buys","bought","buying"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get something by paying money." ,
+                "examples": [ "When you purchase something, you are buying it." ],
+                "images": [
+                    {
+                        "src": "glossimages/purchase1.jpg",
+                        "alt": "Photo of one person handing a credit card to another person",
+                        "description": "One person holds a credit card. Another person reaches for the credit card. The person reaching for the card holds a small black machine used to take credit card payments.",
+                        "caption": "A credit card is one way to purchase something. Cash is another way. ",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-payment-terminal-2988232/",
+                            "title": "Black Payment Terminal",
+                            "author": "energepic.com",
+                            "author_url": "https://www.pexels.com/@energepic-com-27411",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "remove",
+        "alternateForms": ["removes","removed","removing"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To take out or change location of." ,
+                "examples": [ "Dentists use special tools to remove a tooth that is causing problems." ]
+            }
+        ]
+    },
+
+    {
+        "headword": "desire",
+        "alternateForms": ["desires","desired","desiring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To long or hope for." ,
+                "examples": [ "The protesters desire action on climate change." ],
+                "images": [
+                    {
+                        "src": "glossimages/demand1.jpg",
+                        "alt": "Photo of protesters and protest signs",
+                        "description": "Photo of protester holding sign. Sign says, 'Fight today for a Better Tomorrow.' ",
+                        "caption": "People demand action on climate change.",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/climate-sign-outside-blur-2990644/",
+                            "title": "",
+                            "author": "Markus Spiske",
+                            "author_url": "https://www.pexels.com/@markusspiske",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "impression",
+        "alternateForms": ["impressions"],
+        "meanings": [
+            {
+                "pos": "noun",
+                "definition": "An effect on something, such as feeling, sense, or mind." ,
+                "examples": [ "Have you turned on a light today? If yes, one of Edison's inventions has already made an impression on you!" ]
+            }
+        ]
+    },
+
+    {
+        "headword": "rudimentary",
+        "alternateForms": [],
+        "meanings": [
+            {
+                "pos": "adjective",
+                "definition": "Forming, or at the basis of; main." ,
+                "examples": [ "The rudimentary version of the car did not have extra things like air conditioning or power windows." ]
+            }
+        ]
+    },
+
+    {
+        "headword": "procure",
+        "alternateForms": ["procures","procured","procuring"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To get or obtain something. " ,
+                "examples": [ "When you buy something, you are procuring it." ],
+                "images": [
+                    {
+                        "src": "glossimages/purchase1.jpg",
+                        "alt": "Photo of one person handing a credit card to another person",
+                        "description": "One person holds a credit card. Another person reaches for the credit card. The person reaching for the card holds a small black machine used to take credit card payments.",
+                        "caption": "A credit card is one way to procure something. Cash is another way. ",
+                        "source": {
+                            "url": "https://www.pexels.com/photo/black-payment-terminal-2988232/",
+                            "title": "Black Payment Terminal",
+                            "author": "energepic.com",
+                            "author_url": "https://www.pexels.com/@energepic-com-27411",
+                            "license": "Free to use (CC0)",
+                            "license_url": "https://www.pexels.com/creative-commons-images/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "headword": "extricate",
+        "alternateForms": ["extricates","extricated","extricating"],
+        "meanings": [
+            {
+                "pos": "verb",
+                "definition": "To take out, free, or remove." ,
+                "examples": [ "Dentists use special tools to extricate a tooth that is causing problems." ]
+            }
+        ]
+    }
+]

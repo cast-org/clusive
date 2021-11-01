@@ -1,7 +1,7 @@
 import logging
 
-from allauth.exceptions import ImmediateHttpResponse
 from allauth.account.models import EmailAddress
+from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.signals import pre_social_login, social_account_updated
 from django.contrib import messages
@@ -87,7 +87,7 @@ def update_social_email(sender, **kwargs):
     """
     Used to update SSO User's email if their SocialAccount is updated.
     One of the updates may be the SocialAccount's email address.  That email is
-    stored when they first registered with Clusive.  If it has changed, 
+    stored when they first registered with Clusive.  If it has changed,
     Clusive's User email and allauth's EmailAddress are also updated.
     """
     request = kwargs['request']
@@ -118,16 +118,16 @@ def update_social_email(sender, **kwargs):
             return
     except User.DoesNotExist:
         # No other User has `social_email` as their email -- good.
-        logger.info('While checking update email for %s, no other Clusive user has that email', social_email)
+        logger.debug('While checking update email for %s, no other Clusive user has that email', social_email)
 
-    # Update
+    # Update clusive user record's email
     if clusive_user.user.email.lower() != social_email:
         clusive_user.user.email = social_email
         clusive_user.user.save()
 
-    # Update only the primary email
+    # Update only the primary email address record for this clusive user
     email_addresses = EmailAddress.objects.filter(user_id=clusive_user.user.id)
     for email_address in email_addresses:
-        if email_address.primary:
+        if email_address.primary and email_address.email.lower() != social_email:
             email_address.email = social_email
             email_address.save()
