@@ -348,21 +348,37 @@
     bottom: 50%;
     left: 50%;
     background: var(--CT_reactQ0Bg);
+
+    .box & {
+        background: var(--CT_reactBoxQ0Bg);
+    }
 }
 .react-quad-1 {
     top: 50%;
     left: 50%;
     background: var(--CT_reactQ1Bg);
+
+    .box & {
+        background: var(--CT_reactBoxQ1Bg);
+    }
 }
 .react-quad-2 {
     top: 50%;
     right: 50%;
     background: var(--CT_reactQ2Bg);
+
+    .box & {
+        background: var(--CT_reactBoxQ2Bg);
+    }
 }
 .react-quad-3 {
     right: 50%;
     bottom: 50%;
     background: var(--CT_reactQ3Bg);
+
+    .box & {
+        background: var(--CT_reactBoxQ3Bg);
+    }
 }
 
 .react-item {
