@@ -9,6 +9,8 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 
 from .provider import BookshareProvider
 
+import pdb
+
 class BookshareOAuth2Adapter(OAuth2Adapter):
     provider_id = BookshareProvider.id
     basic_auth = True   # Use basic Authorization in access token request
@@ -27,6 +29,20 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
         return login
+
+    def is_connected(self, request):
+        provider = self.get_provider()  # need some other way of getting the provider
+
+       try:
+            access_token = SocialToken.objects.get(
+                account_user=request.user, account__provider=provider
+            )
+            # check for expiry?
+            return True
+
+        except SocialToken.DoesNotExist:
+            return False
+
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
 oauth2_callback = OAuth2CallbackView.adapter_view(BookshareOAuth2Adapter)
