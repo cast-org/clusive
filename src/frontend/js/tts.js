@@ -782,6 +782,7 @@ clusiveTTS.getVoicesForLanguage = function(language) {
     'use strict';
 
     var voices = [];
+    var defaultVoices = [];
     if (!language) {
         return voices;
     }
@@ -790,12 +791,16 @@ clusiveTTS.getVoicesForLanguage = function(language) {
         var voiceLang = voice.lang.replace('_', '-').substring(0, language.length);
         if (voiceLang === language) {
             if (voice.default) {
-                voices.unshift(voice); // Put system default voice at the beginning of the list
+                defaultVoices.push(voice);
             } else {
                 voices.push(voice);
             }
         }
     });
+
+    // Put system default voice at the beginning of the list
+    voices = defaultVoices.concat(voices);
+
     return voices;
 };
 
@@ -828,6 +833,46 @@ clusiveTTS.setCurrentVoice = function(name) {
             });
         }
     }
+};
+
+// Force a 'default' voice
+// Assume base language of `en`
+// Check user languages for region specific `en` variant - otherwise default to `en-US`
+// Use first matching voice in list
+clusiveTTS.getDefaultVoice = function() {
+    'use strict';
+
+    // Reference: https://stackoverflow.com/questions/1043339/
+    // Possibly useful in future? - https://stackoverflow.com/a/29106129
+    // eslint-disable-next-line compat/compat
+    var userLanguages = window.navigator.languages || [window.navigator.language || window.navigator.userLanguage];
+    var defaultVoice = null;
+    var langVoices = [];
+
+    userLanguages.some(function(lang) {
+        if (lang.substring(0, 1) === 'en' && lang.length > 3) {
+            langVoices = clusiveTTS.getVoicesForLanguage(lang);
+            defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
+            if (defaultVoice !== null) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    if (defaultVoice === null) {
+        langVoices = clusiveTTS.getVoicesForLanguage('en-US');
+        defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
+    }
+
+    if (defaultVoice === null) {
+        langVoices = clusiveTTS.getVoicesForLanguage('en');
+        defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
+    }
+
+    console.debug('setDefaultVoice', defaultVoice.name);
+
+    return defaultVoice.name;
 };
 
 clusiveTTS.updateSettings = function(settings) {

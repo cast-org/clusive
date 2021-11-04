@@ -200,7 +200,10 @@
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
                                     <select class="cislc-modalSettings-readVoice form-control">
+                                        {% comment %}
+                                        <!-- Hide 'default' value from user since we are forcing one -->
                                         <option value="default">Choose...</option>
+                                        {% endcomment %}
                                     </select>
                                 </fieldset>
                             </div>
