@@ -1,11 +1,13 @@
 import requests
 from urllib.parse import urlencode
+from django.utils import timezone
 
 from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
                                                           OAuth2LoginView,
                                                           OAuth2CallbackView)
 
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from allauth.socialaccount.models import SocialToken
 
 from .provider import BookshareProvider
 
@@ -28,21 +30,25 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         extra_data = resp.json()
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
+        pdb.set_trace()
         return login
 
-    def is_connected(self, request):
-        provider = self.get_provider()  # need some other way of getting the provider
-
-       try:
+    def is_connected(self, user):
+        provider = self.get_provider()
+        try:
             access_token = SocialToken.objects.get(
-                account_user=request.user, account__provider=provider
+                account__user=user, account__provider=provider
             )
-            # check for expiry?
-            return True
+            if is_token_expired(access_token):
+                return False
+            else:
+                return True
 
         except SocialToken.DoesNotExist:
             return False
 
+def is_token_expired(token):
+    return token.expires_at < timezone.now()
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
 oauth2_callback = OAuth2CallbackView.adapter_view(BookshareOAuth2Adapter)
