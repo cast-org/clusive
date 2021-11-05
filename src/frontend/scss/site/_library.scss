@@ -119,11 +119,15 @@
         display: flex;
     }
     .library-filter-box {
-        flex: 1;
+        flex: 1 0 auto;
     }
     .form-check {
         margin-bottom: .125rem;
     }
+}
+
+.library-filter-sub-row {
+    flex: 1;
 }
 
 .library-filter-columns {
