@@ -850,7 +850,7 @@ clusiveTTS.getDefaultVoice = function() {
     var langVoices = [];
 
     userLanguages.some(function(lang) {
-        if (lang.substring(0, 3) === 'en-') {
+        if (lang.startsWith('en-')) {
             langVoices = clusiveTTS.getVoicesForLanguage(lang);
             defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
             if (defaultVoice !== null) {
