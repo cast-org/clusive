@@ -319,17 +319,12 @@
                                         6 <span class="sr-only">images</span>
                                     </span>
                                 </span>
+
+                                <button type="button" class="btn btn-icon btn-starred link-above" aria-label="Not starred" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+                                    <span class="icon-starred" aria-hidden="true"></span>
+                                </button>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-auto card-library-action">
-                                <span class="btn-check link-above">
-                                    <input id="fav0" type="checkbox" class="btn-check-input">
-                                    <label for="fav0" class="btn btn-favorite">
-                                        <span class="icon-star-empty" aria-hidden="true"></span>
-                                        <span class="sr-only">Favorite</span>
-                                    </label>
-                                </span>
                                 <span class="dropdown link-above">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
@@ -360,9 +355,11 @@
                     </div>
                     <div class="card-footer">
                         <div class="row">
-                            <div class="col card-library-tag"></div>
-                        </div>
-                        <div class="row">
+                            <div class="col card-library-tag">
+                                <button type="button" class="btn btn-icon btn-starred link-above active" aria-label="Starred" data-cfw="tooltip" data-cfw-tooltip-title="Starred">
+                                    <span class="icon-starred" aria-hidden="true"></span>
+                                </button>
+                            </div>
                             <div class="col-auto card-library-action">
                                 <span class="dropdown link-above">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">

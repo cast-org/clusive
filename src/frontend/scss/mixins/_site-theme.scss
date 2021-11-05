@@ -257,6 +257,17 @@
         --CT_btnReactActiveColor: #{$btn-react-active-color};
         --CT_btnReactActiveBorderColor: #{$btn-react-active-border-color};
 
+        --CT_btnStarredFocusRingRGB: #{color-to-rgb($btn-starred-focus-ring)};
+        --CT_btnStarredBg: #{$btn-starred-bg};
+        --CT_btnStarredColor: #{$btn-starred-color};
+        --CT_btnStarredBorderColor: #{$btn-starred-border-color};
+        --CT_btnStarredHoverBg: #{$btn-starred-hover-bg};
+        --CT_btnStarredHoverColor: #{$btn-starred-hover-color};
+        --CT_btnStarredHoverBorderColor: #{$btn-starred-hover-border-color};
+        --CT_btnStarredActiveBg: #{$btn-starred-active-bg};
+        --CT_btnStarredActiveColor: #{$btn-starred-active-color};
+        --CT_btnStarredActiveBorderColor: #{$btn-starred-active-border-color};
+
         --CT_badgeCountBg: #{$badge-count-bg};
         --CT_badgeCountColor: #{$badge-count-color};
         --CT_badgeCountBorderColor: #{$badge-count-border-color};

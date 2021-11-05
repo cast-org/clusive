@@ -30,6 +30,23 @@ body {
     font-family: OpenDyslexicRegular, sans-serif !important;
 }
 
+// Special icon cases
+.icon-starred {
+    &::before {
+         // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+        font-family: fontello;
+        @include font-size(1em);
+        line-height: 1;
+        color: inherit;
+        content: "\e826";
+    }
+
+    .active > &::before,
+    :active > &::before {
+        content: "\e825";
+    }
+}
+
 // Readium's default forced height on this container can cause added scrollheight
 // in `scroll` view mode causing 'short' pages causing navigation to prev/next page
 // to incur a scroll instead of page change.

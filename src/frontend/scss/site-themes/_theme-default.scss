@@ -150,6 +150,17 @@ $btn-react-active-bg:                   #636b82;
 $btn-react-active-color:                #fff;
 $btn-react-active-border-color:         #636b82;
 
+$btn-starred-focus-ring:                #636b82;
+$btn-starred-bg:                        transparent;
+$btn-starred-color:                     #636b82;
+$btn-starred-border-color:              #d3cfc9;
+$btn-starred-hover-bg:                  #aaa;
+$btn-starred-hover-color:               palette($btn-starred-color, 850);
+$btn-starred-hover-border-color:        transparent;
+$btn-starred-active-bg:                 rgba(#fff, .95);
+$btn-starred-active-color:              #ff554d;
+$btn-starred-active-border-color:       transparent;
+
 // Badges
 $badge-count-bg:                        transparent;
 $badge-count-color:                     #636b82;

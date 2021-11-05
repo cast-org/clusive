@@ -1,4 +1,4 @@
-/* global Masonry, clusiveTTS, clusivePrefs, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
+/* global Masonry, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
 /* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate */
 
 // Set up common headers for Ajax requests for Clusive's event logging
@@ -708,6 +708,35 @@ function dashboardSetup() {
     });
 }
 
+// Starred button functionality
+function starredButtons() {
+    'use strict';
+
+    var txtDefault = 'Not Starred';
+    var txtActive = 'Starred';
+
+    $(document).on('click', '.btn-starred', function(e) {
+        var $trigger = $(e.currentTarget);
+        $trigger.toggleClass('active');
+        var isActive = $trigger.hasClass('active');
+        var textMsg = isActive ? txtActive : txtDefault;
+
+        $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
+                $trigger
+                    .attr('aria-label', textMsg)
+                    .removeAttr('data-cfw-tooltip-title')
+                    .CFW_Tooltip({
+                        title: textMsg
+                    })
+                    .CFW_Tooltip('show');
+        });
+
+        $trigger.CFW_Tooltip('dispose');
+
+        // TODO: Callback to event logging?
+    });
+}
+
 // Context (selection) menu methods
 
 function contextLookup(selection) {
@@ -752,6 +781,7 @@ $(window).ready(function() {
     libraryPageLinkSetup();
     libraryStyleSortLinkSetup();
     dashboardSetup();
+    starredButtons();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
