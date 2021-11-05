@@ -44,6 +44,7 @@ from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationFor
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, \
     RosterDataSource
 from roster.signals import user_registered
+from oauth2.bookshare.views import is_bookshare_connected
 
 logger = logging.getLogger(__name__)
 
@@ -612,6 +613,12 @@ def finish_login(request):
         except SocialAccount.DoesNotExist:
             # Should be impossible
             logger.debug('ClusiveUser SSO with no SocialAccount')
+
+    # Check for valid Bookshare access token for this user.
+    if is_bookshare_connected(request):
+        request.session['bookshare_connected'] = True
+    else:
+        request.session['bookshare_connected'] = False
 
     # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:

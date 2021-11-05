@@ -26,6 +26,7 @@ from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
 from tips.models import TipHistory
+from oauth2.bookshare.views import is_bookshare_connected
 
 logger = logging.getLogger(__name__)
 
@@ -693,3 +694,15 @@ class UpdateTrendsView(View):
     def get(self, request, *args, **kwargs):
         BookTrend.update_all_trends()
         return JsonResponse({'status': 'ok'})
+
+class BookshareConnect(LoginRequiredMixin, TemplateView):
+    template_name = 'library/partial/connect_to_bookshare.html'
+
+    def get(self, request, *args, **kwargs):
+        if is_bookshare_connected(request):
+            request.session['bookshare_connected'] = True
+            return HttpResponseRedirect(redirect_to=reverse('upload'))
+        else:
+            request.session['bookshare_connected'] = False
+            return HttpResponseRedirect(redirect_to=reverse('bookshare_login'))
+

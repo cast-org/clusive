@@ -28,13 +28,6 @@ class BookshareAccount(ProviderAccount):
             return name.get("firstName", basic)
 
 # An OAuth2Provider extracts information about the SSO user
-# TODO (?):
-# - authorization parameters:    get_auth_params(self, request, action)
-#   gets the AUTH_PARAMS from settings.py for this provider and other optional
-#   params given in the current GET request's 'auth_params' entry.  It combines
-#   the two and returns the combination of authorization parameters.
-#   unclear if this is needed by Bookshare implementation.  It may be needed
-#   for the refresh token workflow
 class BookshareProvider(OAuth2Provider):
     id = 'bookshare'
     name = 'Bookshare'

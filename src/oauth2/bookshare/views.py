@@ -7,7 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
                                                           OAuth2CallbackView)
 
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
-from allauth.socialaccount.models import SocialToken
+from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
 
 from .provider import BookshareProvider
 
@@ -30,25 +30,27 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         extra_data = resp.json()
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
-        pdb.set_trace()
         return login
 
-    def is_connected(self, user):
+    def is_connected(self):
         provider = self.get_provider()
         try:
-            access_token = SocialToken.objects.get(
-                account__user=user, account__provider=provider
-            )
-            if is_token_expired(access_token):
-                return False
-            else:
-                return True
+            social_app = SocialApp.objects.get(provider=provider.id)
+            social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
+            access_token = SocialToken.objects.get(account=social_account, app_id=social_app.id)
+            return not is_token_expired(access_token)
 
-        except SocialToken.DoesNotExist:
+        except (SocialAccount.DoesNotExist, SocialToken.DoesNotExist):
             return False
 
+# NOTE:  (JS) Intutions is that there is an allauth utility to check access
+# token expiration, but a quick search does not reveal one.
 def is_token_expired(token):
     return token.expires_at < timezone.now()
+
+def is_bookshare_connected(request):
+    bookshare_adapter = BookshareOAuth2Adapter(request)
+    return bookshare_adapter.is_connected()
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
 oauth2_callback = OAuth2CallbackView.adapter_view(BookshareOAuth2Adapter)

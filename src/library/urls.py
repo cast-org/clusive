@@ -53,4 +53,5 @@ urlpatterns = [
     path('<str:view>', views.LibraryStyleRedirectView.as_view(),
          name='library_style_redirect'),
 
+    path('bookshare/connect/', views.BookshareConnect.as_view(), name='bookshare_connect'),
 ]
