@@ -850,7 +850,7 @@ clusiveTTS.getDefaultVoice = function() {
     var langVoices = [];
 
     userLanguages.some(function(lang) {
-        if (lang.substring(0, 1) === 'en' && lang.length > 3) {
+        if (lang.substring(0, 3) === 'en-') {
             langVoices = clusiveTTS.getVoicesForLanguage(lang);
             defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
             if (defaultVoice !== null) {
@@ -870,7 +870,7 @@ clusiveTTS.getDefaultVoice = function() {
         defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
     }
 
-    console.debug('setDefaultVoice', defaultVoice.name);
+    console.debug('getDefaultVoice', defaultVoice.name);
 
     return defaultVoice.name;
 };
