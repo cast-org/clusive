@@ -6,9 +6,13 @@
     <ul class="list-unstyled">
     {% for item in class_popular %}
         <li class="mb-0_5">
-            <a href="#" onclick="vocabCheck.start(this, '{{book.id}}'); return false;">
+            {% if item.visible %}
+            <a href="#" onclick="vocabCheck.start(this, '{{item.book.id}}'); return false;">
                 <strong>{{ item.book.title }}</strong>
             </a>
+            {% else %}
+            <span class="icon-block" title="Not authorized to view"></span>{{ item.book.title }}
+            {% endif %}
             ({{ item.count }})
             <p>{{ item.names }}</p>
         </li>

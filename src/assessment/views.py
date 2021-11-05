@@ -155,6 +155,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
             self.class_popular = [{
                 'count': len(votes),
                 'book': votes[0].book,
+                'visible': votes[0].book.is_visible_to(clusive_user),
                 'names': ', '.join([v.user.user.first_name for v in votes]),
             } for votes in top_books]
         else:
