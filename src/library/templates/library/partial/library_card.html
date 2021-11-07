@@ -1,7 +1,19 @@
 {% load static library %}
 <div class="card card-library">
     <div class="card-header">
-        <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title|highlight:query }}</h2></a>
+        <a href="#" class="link-stretch"
+           {% if unauthorized %}
+           data-cfw="tooltip" title="Not authorized to view"
+           {% else %}
+           onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"
+           {% endif %}
+           ><h2 class="card-title">
+            {% if unauthorized %}
+            <span class="icon-block" title="Not authorized to view"></span>
+            {% endif %}
+            {{ book.title|highlight:query }}
+            </h2>
+        </a>
         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
     </div>
     {% if book.cover %}

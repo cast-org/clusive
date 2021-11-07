@@ -6,18 +6,24 @@
     <ul class="list-unstyled">
     {% for item in class_popular %}
         <li class="mb-0_5">
-            {% if item.visible %}
+            {% if item.unauthorized %}
+            <a href="#" data-cfw="tooltip" title="Not authorized to view">
+                <span class="icon-block" title="Not authorized to view"></span>
+                {{ item.book.title }}
+            </a>
+            {% else %}
             <a href="#" onclick="vocabCheck.start(this, '{{item.book.id}}'); return false;">
                 <strong>{{ item.book.title }}</strong>
             </a>
-            {% else %}
-            <span class="icon-block" title="Not authorized to view"></span>{{ item.book.title }}
             {% endif %}
             ({{ item.count }})
             <p>{{ item.names }}</p>
         </li>
     {% endfor %}
     </ul>
+    {% if any_unauthorized_book %}
+    <p><em>Readings with the symbol <span class="icon-block" title="Not authorized to view"></span> were uploaded by the student.</em></p>
+    {% endif %}
 {% else %}
     <p>No readings have made students feel {{word}} yet.</p>
 {% endif %}
