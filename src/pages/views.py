@@ -117,7 +117,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
 
-    # Decision-making data
+        # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
 
         # Welcome panel
@@ -188,6 +188,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 t = tdata['trend']
                 comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
                 tdata['comp_check'] = comp_data[t.book.id]
+                tdata['unauthorized'] = not t.book.is_visible_to(self.clusive_user)
             for tdata in assigned_trend_data:
                 t = tdata['trend']
                 if t.book.id not in comp_data:

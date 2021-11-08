@@ -53,6 +53,7 @@ $('.modal-react-detail').one('beforeShow.cfw.modal', function(e) {
     $.get('/assessment/affect_detail/'+ word)
         .done(function(data, status) {
             target.html(data);
+            target.CFW_Init();
         })
         .fail(function(err) {
             console.error(err);
