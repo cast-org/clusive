@@ -126,8 +126,13 @@ def update_social_email(sender, **kwargs):
         clusive_user.user.save()
 
     # Update only the primary email address record for this clusive user
-    email_addresses = EmailAddress.objects.filter(user_id=clusive_user.user.id)
-    for email_address in email_addresses:
-        if email_address.primary and email_address.email.lower() != social_email:
+    try:
+        email_address = EmailAddress.objects.get(user_id=clusive_user.user.id, primary=True)
+        if email_address.email.lower() != social_email:
             email_address.email = social_email
             email_address.save()
+    except EmailAddress.DoesNotExist:
+        logger.info('Did not find expected EmailAddress record for %s', social_email)
+    except EmailAddress.MultiplieObjectsReturned as multi_err:
+        logger.info('Found multiple primary EmailAddress records for %s', social_email)
+        raise multi_err
