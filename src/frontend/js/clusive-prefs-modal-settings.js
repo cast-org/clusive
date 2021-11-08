@@ -254,7 +254,9 @@
     cisl.prefs.modalSettings.handleReadVoicesPreference = function(readVoices, that) {
         console.debug("handleReadVoicesPreference", readVoices, that);
         if(! readVoices || ! readVoices.forEach || readVoices.length === 0) {
-            that.locate('readVoice').val('default').change();
+            //that.locate('readVoice').val('default').change();
+            var defaultVoice = clusiveTTS.getDefaultVoice();
+            that.locate('readVoice').val(defaultVoice).change();
             return;
         }
 
@@ -269,6 +271,9 @@
             //clusiveTTS.updateSettings({
             //    voice: preferredVoice
             //});
+        } else {
+            var defaultVoice = clusiveTTS.getDefaultVoice();
+            that.locate('readVoice').val(defaultVoice).change();
         }
     };
 
