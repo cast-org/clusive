@@ -43,8 +43,6 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         except (SocialAccount.DoesNotExist, SocialToken.DoesNotExist):
             return False
 
-# NOTE:  (JS) Intutions is that there is an allauth utility to check access
-# token expiration, but a quick search does not reveal one.
 def is_token_expired(token):
     return token.expires_at < timezone.now()
 
