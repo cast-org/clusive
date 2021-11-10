@@ -1,6 +1,8 @@
 import requests
 from urllib.parse import urlencode
 from django.utils import timezone
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
                                                           OAuth2LoginView,
@@ -49,6 +51,10 @@ def is_token_expired(token):
 def is_bookshare_connected(request):
     bookshare_adapter = BookshareOAuth2Adapter(request)
     return bookshare_adapter.is_connected()
+
+def bookshare_connected(request, *args, **kwargs):
+    request.session['bookshare_connected'] = True
+    return HttpResponseRedirect(reverse('reader_index'))
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
 oauth2_callback = OAuth2CallbackView.adapter_view(BookshareOAuth2Adapter)
