@@ -1,5 +1,7 @@
 import requests
 from urllib.parse import urlencode
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
                                                           OAuth2LoginView,
@@ -27,6 +29,10 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
         return login
+
+def bookshare_connected(request, *args, **kwargs):
+    request.session['bookshare_connected'] = True
+    return HttpResponseRedirect(reverse('reader_index'))
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
 oauth2_callback = OAuth2CallbackView.adapter_view(BookshareOAuth2Adapter)
