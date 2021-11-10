@@ -74,6 +74,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+SOCIALACCOUNT_ADAPTER='oauth2.adapter.ClusiveSocialAccountAdapter'
+
 # 1. Out-of-the-box, the `allauth` redirect URI is set to '/accounts/profile',
 # 2. SSO will 404 since `allauth` does not implement a handler for that end point,
 # 3. Advice: set a `LOGIN_REDIRECT_URL` to override allauth's default behaviour.
