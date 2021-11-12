@@ -71,7 +71,9 @@
 
 .clusive-reduced-motion {
     .box-mascot-tipped {
-        background-image: var(--CT_imgMascotTipped);
+        &::before {
+            background-image: var(--CT_imgMascotTipped);
+        }
     }
 }
 @media (prefers-reduced-motion: reduce) {
