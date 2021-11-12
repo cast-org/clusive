@@ -55,7 +55,7 @@
     position: relative;
     margin-top: calc(var(--CT_boxMascotSize) * .25);
 
-    &::before{
+    &::before {
         position: absolute;
         top: calc(var(--CT_boxMascotSize) * -.75);
         left: 1rem;
@@ -76,7 +76,9 @@
 }
 @media (prefers-reduced-motion: reduce) {
     .box-mascot-tipped {
-        background-image: var(--CT_imgMascotTipped);
+        &::before {
+            background-image: var(--CT_imgMascotTipped);
+        }
     }
 }
 
