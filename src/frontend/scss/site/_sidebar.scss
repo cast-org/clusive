@@ -108,9 +108,9 @@
     }
 
     .btn-starred {
-        padding: 0;
         width: 2.25rem;
         height: 2.25rem;
+        padding: 0;
         @include border-radius(2.25rem);
     }
 }

@@ -33,7 +33,7 @@ body {
 // Special icon cases
 .icon-starred {
     &::before {
-         // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+        // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
         font-family: fontello;
         @include font-size(1em);
         line-height: 1;

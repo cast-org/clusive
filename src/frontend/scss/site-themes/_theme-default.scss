@@ -536,7 +536,7 @@ $stars-icon-disabled-color-after:       #75c0b2;
 
 // Reaction chart
 $react-line:                            #d3cfca;
-$react-icon:                            #bfc6cd;
+$react-icon:                            #c8d1d7;
 $react-quad-0-bg-image:                 encode-svg(url("data:image/svg+xml, <svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path style='fill:#{$react-icon}' d='M7.6 18.3a.5.5 0 0 0-.461.694C8.329 21.808 11.424 23.7 15 23.7c3.576 0 6.67-1.89 7.861-4.705a.5.5 0 0 0-.46-.693zm.906 1h12.988c-1.211 1.997-3.61 3.4-6.494 3.4-2.883 0-5.283-1.403-6.494-3.4zM21.3 11.8a1.2 1.9 0 0 1-1.2 1.9 1.2 1.9 0 0 1-1.2-1.9 1.2 1.9 0 0 1 1.2-1.9 1.2 1.9 0 0 1 1.2 1.9Zm-10.3 0a1.2 1.9 0 0 1-1.2 1.9 1.2 1.9 0 0 1-1.2-1.9 1.2 1.9 0 0 1 1.2-1.9 1.2 1.9 0 0 1 1.2 1.9ZM15 .2C6.832.2.2 6.831.2 15c0 8.168 6.632 14.8 14.8 14.8 8.168 0 14.8-6.632 14.8-14.8C29.8 6.832 23.169.2 15 .2Zm0 1c7.627 0 13.8 6.173 13.8 13.8 0 7.627-6.173 13.8-13.8 13.8-7.627 0-13.8-6.173-13.8-13.8C1.2 7.373 7.372 1.2 15 1.2Z'/></svg>"));
 $react-quad-0-bg-gradient:              transparent;
 $react-quad-0-bg:                       $react-quad-0-bg-image, $react-quad-0-bg-gradient;
@@ -562,7 +562,7 @@ $react-wedge-9:                         #ef9977;
 $react-wedge-10:                        #f55423;
 $react-wedge-11:                        #ff3500;
 $react-box-line:                        #75c0b2;
-$react-box-icon:                        #6db3a6;
+$react-box-icon:                        #70b8ab;
 $react-box-quad-0-bg-image:             encode-svg(url("data:image/svg+xml, <svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path style='fill:#{$react-box-icon}' d='M7.6 18.3a.5.5 0 0 0-.461.694C8.329 21.808 11.424 23.7 15 23.7c3.576 0 6.67-1.89 7.861-4.705a.5.5 0 0 0-.46-.693zm.906 1h12.988c-1.211 1.997-3.61 3.4-6.494 3.4-2.883 0-5.283-1.403-6.494-3.4zM21.3 11.8a1.2 1.9 0 0 1-1.2 1.9 1.2 1.9 0 0 1-1.2-1.9 1.2 1.9 0 0 1 1.2-1.9 1.2 1.9 0 0 1 1.2 1.9Zm-10.3 0a1.2 1.9 0 0 1-1.2 1.9 1.2 1.9 0 0 1-1.2-1.9 1.2 1.9 0 0 1 1.2-1.9 1.2 1.9 0 0 1 1.2 1.9ZM15 .2C6.832.2.2 6.831.2 15c0 8.168 6.632 14.8 14.8 14.8 8.168 0 14.8-6.632 14.8-14.8C29.8 6.832 23.169.2 15 .2Zm0 1c7.627 0 13.8 6.173 13.8 13.8 0 7.627-6.173 13.8-13.8 13.8-7.627 0-13.8-6.173-13.8-13.8C1.2 7.373 7.372 1.2 15 1.2Z'/></svg>"));
 $react-box-quad-0-bg-gradient:          transparent;
 $react-box-quad-0-bg:                   $react-box-quad-0-bg-image, $react-box-quad-0-bg-gradient;

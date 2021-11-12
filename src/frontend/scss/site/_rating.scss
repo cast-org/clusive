@@ -291,14 +291,14 @@
     left: 50%;
     background: var(--CT_reactQ0Bg);
     background-repeat: no-repeat, no-repeat;
-    background-size: 1.625rem 1.625rem, auto;
     background-position: top right;
+    background-size: 1.625rem 1.625rem, auto;
 
     .box & {
         background: var(--CT_reactBoxQ0Bg);
         background-repeat: no-repeat, no-repeat;
-        background-size: 1.625rem 1.625rem, auto;
         background-position: top right;
+        background-size: 1.625rem 1.625rem, auto;
     }
 }
 .react-quad-1 {
@@ -306,14 +306,14 @@
     left: 50%;
     background: var(--CT_reactQ1Bg);
     background-repeat: no-repeat, no-repeat;
-    background-size: 1.625rem 1.625rem, auto;
     background-position: bottom right;
+    background-size: 1.625rem 1.625rem, auto;
 
     .box & {
         background: var(--CT_reactBoxQ1Bg);
         background-repeat: no-repeat, no-repeat;
-        background-size: 1.625rem 1.625rem, auto;
         background-position: bottom right;
+        background-size: 1.625rem 1.625rem, auto;
     }
 }
 .react-quad-2 {
@@ -321,14 +321,14 @@
     right: 50%;
     background: var(--CT_reactQ2Bg);
     background-repeat: no-repeat, no-repeat;
-    background-size: 1.625rem 1.625rem, auto;
     background-position: bottom left;
+    background-size: 1.625rem 1.625rem, auto;
 
     .box & {
         background: var(--CT_reactBoxQ2Bg);
         background-repeat: no-repeat, no-repeat;
-        background-size: 1.625rem 1.625rem, auto;
         background-position: bottom left;
+        background-size: 1.625rem 1.625rem, auto;
     }
 }
 .react-quad-3 {
@@ -336,14 +336,14 @@
     bottom: 50%;
     background: var(--CT_reactQ3Bg);
     background-repeat: no-repeat, no-repeat;
-    background-size: 1.625rem 1.625rem, auto;
     background-position: top left;
+    background-size: 1.625rem 1.625rem, auto;
 
     .box & {
         background: var(--CT_reactBoxQ3Bg);
         background-repeat: no-repeat, no-repeat;
-        background-size: 1.625rem 1.625rem, auto;
         background-position: top left;
+        background-size: 1.625rem 1.625rem, auto;
     }
 }
 
