@@ -1,6 +1,6 @@
 /* eslint-disable strict */
 /* global vocabCheck, clusiveEvents, clusivePrefs, DJANGO_CSRF_TOKEN */
-/* exported load_translation */
+/* exported openGlossaryForWord, load_translation */
 
 // Glossary-related functionality
 
@@ -19,6 +19,14 @@ function glossaryPop_focus($elm) {
             }
         });
     $('#glossaryPop').trigger('focus');
+}
+
+function openGlossaryForWord(word) {
+    'use strict';
+
+    window.parent.load_definition(1, word);
+    window.parent.$('#glossaryLocator').CFW_Popover('show');
+    // window.parent.glossaryPop_focus($(elt));
 }
 
 function load_definition(cued, word) {

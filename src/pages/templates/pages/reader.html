@@ -93,6 +93,8 @@ var manifest_path = "{{ manifest_path }}";
         {% for a in annotations %}
             annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
         {% endfor %}
+        var definitions = JSON.parse('{{cuelist|safe}}');
+        var definitionsSeen = {};
         var lastReadingPosition = {{ last_position|safe }};
 
         var selectionMenuItems = [
@@ -205,33 +207,29 @@ var manifest_path = "{{ manifest_path }}";
                 }
             },
             define: {
-                color: "#40E0D0",
+                // color: "#40E0D0",
+                color: "var(--CRT_glossaryUnderline)",
                 api: {
                     click: function (item, element) {
-                        console.log("define click", item, element);
+                        window.openGlossaryForWord(item.terms[0]);
                     },
                     success: function (item, element) {
-                        console.log("define success callback", item, element);
                         console.log("  define item " + item.terms + " was found " + element.length + " times");
                     },
                     visible: function (item, element) {
-                        console.log("define visible", item, element);
+                        var word = item.terms[0];
+                        if (!definitionsSeen[word]) {
+                            definitionsSeen[word] = 1;
+                            console.log("first time define visible: ", word);
+                            var message = {
+                                type: 'CV',
+                                word: word
+                            }
+                            clusiveEvents.messageQueue.add(message);
+                        }
                     },
                 },
-                definitions: [
-                    {
-                        order: 0,
-                        result: 1, // 1 = first, 2 = random, 0 = all
-                        terms: ["coyote", "coyotes", "coy ote"],
-                        definition: "A coyote is a fancy dog"
-                    },
-                    {
-                        order: 1,
-                        result: 0,
-                        terms: ["foobar"],
-                        definition: "I don't think so"
-                    }
-                ]
+                definitions: definitions
             },
             bookmarks: {
                 api: {
