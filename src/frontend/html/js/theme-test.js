@@ -29,7 +29,7 @@ function themeControls() {
         if (themeIncludes.includes('confetti')) {
             html += '</br>';
             html += 'Extras: ';
-            html += '<a href="#" style="color: #009 !important;" onclick="return confettiCannon(1.2);">Confetti';
+            html += '<a href="#" style="color: #009 !important;" onclick="confettiCannon(); return false;">Confetti';
         }
     }
     html += '</div>';
