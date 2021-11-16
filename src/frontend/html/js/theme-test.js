@@ -1,6 +1,17 @@
 /* exported themeCSS */
 var TOOLTIP_NAME = null;
 
+// Reduced motion interactions
+window.cisl = new Object;
+window.cisl.prefs = new Object;
+cisl.prefs.userPrefersReducedMotion = function() {
+    // Clusive setting - check class
+    var setting = document.body.classList.contains('clusive-reduced-motion');
+    // System preference - check CSS media query
+    var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return system || setting;
+};
+
 function themeControls() {
     'use strict';
 
@@ -14,6 +25,13 @@ function themeControls() {
     html += '<a href="#" style="color: #009 !important;" onclick="return themeLH(1.2);">Short</a> |';
     html += '<a href="#" style="color: #009 !important;" onclick="return themeLH(1.6);">Default</a> |';
     html += '<a href="#" style="color: #009 !important;" onclick="return themeLH(2);">Tall</a>';
+    if (typeof themeIncludes !== 'undefined') {
+        if (themeIncludes.includes('confetti')) {
+            html += '</br>';
+            html += 'Extras: ';
+            html += '<a href="#" style="color: #009 !important;" onclick="return confettiCannon(1.2);">Confetti';
+        }
+    }
     html += '</div>';
     $(document.body).append(html);
     $(document.body).trigger('themeControls');

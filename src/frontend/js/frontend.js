@@ -1,5 +1,5 @@
-/* global Masonry, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
-/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate */
+/* global Masonry, cisl, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation, confetti */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate, confettiCannon */
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options) {
@@ -722,13 +722,13 @@ function starredButtons() {
         var textMsg = isActive ? txtActive : txtDefault;
 
         $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
-                $trigger
-                    .attr('aria-label', textMsg)
-                    .removeAttr('data-cfw-tooltip-title')
-                    .CFW_Tooltip({
-                        title: textMsg
-                    })
-                    .CFW_Tooltip('show');
+            $trigger
+                .attr('aria-label', textMsg)
+                .removeAttr('data-cfw-tooltip-title')
+                .CFW_Tooltip({
+                    title: textMsg
+                })
+                .CFW_Tooltip('show');
         });
 
         $trigger.CFW_Tooltip('dispose');
@@ -760,6 +760,53 @@ function contextTranslate(selection) {
 
     console.info('translate: ' + selection);
     load_translation(selection);
+}
+
+// See: https://github.com/catdad/canvas-confetti
+function confettiCannon() {
+    'use strict';
+
+    if (cisl.prefs.userPrefersReducedMotion()) {
+        return;
+    }
+
+    var count = 300;
+    var defaults = {
+        origin: {
+            y: 1
+        },
+        zIndex: 1100
+    };
+
+    function fire(particleRatio, opts) {
+        // eslint-disable-next-line compat/compat
+        confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+        }));
+    }
+
+    fire(0.25, {
+        spread: 26,
+        startVelocity: 55
+    });
+    fire(0.2, {
+        spread: 60
+    });
+    fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8
+    });
+    fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2
+    });
+    fire(0.1, {
+        spread: 120,
+        startVelocity: 45
+    });
 }
 
 $(window).ready(function() {
