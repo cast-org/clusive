@@ -306,6 +306,7 @@ function starsSelectedText() {
         }).done(function(html) {
             $('#star_rating_panel').replaceWith(html);
             starsSelectedTextUpdate($('#star_rating_panel .stars')[0]);
+            confettiCannon();
         }).fail(function(err) {
             console.error('Failed sending star rating results: ', err);
         });
