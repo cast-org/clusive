@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import shutil
+import requests
 from tempfile import mkstemp
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,13 +21,13 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, BookshareListResourcesForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
 from tips.models import TipHistory
-from oauth2.bookshare.views import is_bookshare_connected
+from oauth2.bookshare.views import is_bookshare_connected, BookshareOAuth2Adapter
 
 logger = logging.getLogger(__name__)
 
@@ -695,14 +696,98 @@ class UpdateTrendsView(View):
         BookTrend.update_all_trends()
         return JsonResponse({'status': 'ok'})
 
+import pdb
 class BookshareConnect(LoginRequiredMixin, TemplateView):
     template_name = 'library/partial/connect_to_bookshare.html'
 
     def get(self, request, *args, **kwargs):
+        pdb.set_trace()
         if is_bookshare_connected(request):
             request.session['bookshare_connected'] = True
             return HttpResponseRedirect(redirect_to=reverse('upload'))
         else:
             request.session['bookshare_connected'] = False
-            return HttpResponseRedirect(redirect_to=reverse('bookshare_login'))
+            return HttpResponseRedirect(redirect_to='/accounts/bookshare/login?process=connect&next=/library/upload/create')
 
+class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #EventMixin
+    template_name = 'library/library_search_bookshare.html'
+    form_class = BookshareSearchForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.clusive_user.can_upload:
+            self.search_form = BookshareSearchForm(request.POST)
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            self.handle_no_permission()
+        
+    def get_success_url(self):
+        keyword = self.search_form.clean_keyword()
+        return reverse('bookshare_search_results', kwargs={'keyword': keyword})
+    
+    def post(self, request, *args, **kwargs):
+        keyword = self.search_form.clean_keyword()
+        if keyword == '':
+            # endless loop
+            return HttpResponseRedirect(redirect_to=reverse('bookshare_search'))
+        else:
+            return HttpResponseRedirect(redirect_to=self.get_success_url())
+
+class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #EventMixin
+    template_name = 'library/library_bookshare_search_results.html'
+    form_class = BookshareListResourcesForm
+    access_keys = None
+    query_key = ''
+    bookshare_titles = []
+    formats_array="formats%5B0%5D=EPUB3"
+    
+    def get_form(self, form_class=None):
+        kwargs = self.get_form_kwargs()
+        return BookshareListResourcesForm(**kwargs, titles=self.bookshare_titles)
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.clusive_user.can_upload:
+            self.query_key = kwargs.get('keyword', '')
+            self.bookshare_titles = self.get_bookshare_titles(self.request)
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            self.handle_no_permission()
+
+    def get_success_url(self):
+        bookshare_id = self.request.POST.get('title_select')
+        return reverse('bookshare_search') + bookshare_id
+        
+    def get_bookshare_titles(self, request):
+        if self.query_key == '':
+            return {}
+        else:
+            bookshare_adapter = BookshareOAuth2Adapter(request)
+            try:
+                access_keys = bookshare_adapter.get_access_keys()
+                logger.debug('Access token = %s', access_keys.get('access_token').token)
+                resp = requests.request(
+                    'GET',
+                    'https://api.bookshare.org/v2/titles',
+                    headers = {
+                        'Authorization': 'Bearer ' + access_keys.get('access_token').token
+                    },
+                    params = {
+                        'keyword': self.query_key,
+                        'api_key': access_keys.get('api_key'),
+                        'formats[0]': 'EPUB3',
+                        'formats[1]': 'DOCX'
+                    },
+                )
+                # Handle 404 or no results
+                pdb.set_trace()
+                logger.debug(resp.url)
+                return resp.json()
+            except Exception as e:
+                logger.debug("BookshareSearch exception: ", e)
+                raise e
+    
+
+def trace_count(method, view):
+    logger.debug("Calling %s at %s", method, view.call_count)
+    view.call_count += 1
+
+        

@@ -5,6 +5,8 @@ from django import forms
 from library.models import Book
 from roster.models import Period, ClusiveUser
 
+import pdb
+
 logger = logging.getLogger(__name__)
 
 
@@ -67,4 +69,47 @@ class ShareForm(forms.Form):
         super().__init__(*args, **kwargs)
         periods = clusive_user.periods.all()
         self.fields['periods'].queryset = periods
+
+class BookshareSearchForm(forms.Form):
+    keyword = forms.CharField(
+        required = False,
+        initial = '',
+        widget = forms.TextInput(attrs={
+            'placeholder': 'Title, Author, or ISBN',
+            'aria-label': 'Search by title, author, or ISBN',
+            'class': 'form-control',
+        })
+    )
+    
+    def clean_keyword(self):
+        if self.is_valid():
+            data = self.cleaned_data.get('keyword', '')
+            return data.strip()
+        else:
+            raise ValidationError(_('Invalid format for keyword'))
+
+class BookshareListResourcesForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        titles = kwargs.pop('titles')
+        super().__init__(*args, **kwargs)
+        title_choices = []
+        for book in titles.get('titles', []):
+            title = book['title']
+            authors = []
+            for contributor in book['contributors']:
+                if contributor['type'] == 'author':
+                    authors.append(contributor['name']['displayName'])
+            by = ', '.join(authors)
+            isbn = book['isbn13']
+            bookshare_id = book['bookshareId']
+            label = title + ' ' + by + ' ISBN: ' + isbn
+            title_choices.append((bookshare_id, label))
+            logger.debug('title: %s', label)
+        
+        self.fields['title_select'] = forms.ChoiceField(
+            choices=title_choices,
+            required=True,
+            widget=forms.RadioSelect
+        )
 

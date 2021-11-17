@@ -54,4 +54,8 @@ urlpatterns = [
          name='library_style_redirect'),
 
     path('bookshare/connect/', views.BookshareConnect.as_view(), name='bookshare_connect'),
+    path('bookshare/search/', views.BookshareSearch.as_view(), name='bookshare_search'),
+    path('bookshare/search/<keyword>', views.BookshareSearch.as_view(), name='bookshare_search'),
+    path('bookshare/search_results/', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),
+    path('bookshare/search_results/<keyword>', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),
 ]
