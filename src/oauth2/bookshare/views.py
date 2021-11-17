@@ -35,15 +35,18 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         return login
 
     def is_connected(self):
-        provider = self.get_provider()
         try:
-            social_app = SocialApp.objects.get(provider=provider.id)
-            social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
-            access_token = SocialToken.objects.get(account=social_account, app_id=social_app.id)
-            return not is_token_expired(access_token)
-
+            access_keys = self.get_access_keys()
+            return not is_token_expired(access_keys.get('access_token'))
         except (SocialAccount.DoesNotExist, SocialToken.DoesNotExist):
             return False
+
+    def get_access_keys(self):
+        provider = self.get_provider()
+        social_app = SocialApp.objects.get(provider=provider.id)
+        social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
+        access_token = SocialToken.objects.get(account=social_account, app_id=social_app.id)
+        return {'access_token': access_token, 'api_key': social_app.client_id }
 
 def is_token_expired(token):
     return token.expires_at < timezone.now()
