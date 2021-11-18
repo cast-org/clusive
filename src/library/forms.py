@@ -89,6 +89,8 @@ class BookshareSearchForm(forms.Form):
             raise ValidationError(_('Invalid format for keyword'))
 
 class BookshareListResourcesForm(forms.Form):
+    # title, authors, isbn, availability
+    label_placeholder = '{}   By {}, ISBN: {} ({})'
 
     def __init__(self, *args, **kwargs):
         titles = kwargs.pop('titles')
@@ -101,9 +103,11 @@ class BookshareListResourcesForm(forms.Form):
                 if contributor['type'] == 'author':
                     authors.append(contributor['name']['displayName'])
             by = ', '.join(authors)
-            isbn = book['isbn13']
+            # a None value for isbn13 is possible (!)
+            isbn = book.get('isbn13') or '-'
+            available = 'available' if book.get('available', False) else 'not available'
             bookshare_id = book['bookshareId']
-            label = title + ' ' + by + ' ISBN: ' + isbn
+            label = self.label_placeholder.format(title, by, isbn, available)
             title_choices.append((bookshare_id, label))
             logger.debug('title: %s', label)
         
