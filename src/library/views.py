@@ -716,7 +716,12 @@ class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
     formlabel ='Step 1: Search by title, author, or ISBN'
 
     def dispatch(self, request, *args, **kwargs):
-        if request.clusive_user.can_upload:
+        if not is_bookshare_connected(request):
+            # Log into Bookshare and then come back here.
+            return HttpResponseRedirect(
+                redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_search')
+            )
+        elif request.clusive_user.can_upload:
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
