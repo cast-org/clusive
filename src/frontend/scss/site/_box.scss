@@ -5,6 +5,15 @@
     color: var(--CT_boxColor);
     background: var(--CT_boxBg);
     @include border-radius($box-border-radius);
+
+    .list {
+        border-color: var(--CT_boxDivderColor);
+    }
+    hr {
+        background-color: var(--CT_boxDivderColor);
+        opacity: 0;
+    }
+
 }
 
 .box-divider {
