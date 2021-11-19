@@ -1,0 +1,39 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block title %}Add via Bookshare{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <main id="content" tabindex="-1">
+        <div class="row">
+            <div class="col">
+                <h1>Add via Bookshare</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Step 2: Select from results</legend>
+                        <div class="form-group">
+                            {% for radio in form.title_select %}
+                                <div class="form-check form-checkradio mb-1">
+                                    {{ radio.tag | formcontrol }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                    <input type="submit" class="btn btn-secondary" value="Upload reading" diabled/>
+                    <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+

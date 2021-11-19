@@ -49,13 +49,12 @@
         {% include "library/partial/library_grid_options.html" %}
     {% endif %}
 
-    {% if current_view == 'mine' %}
     <div class="row">
         <div class="col">
-            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add reading</a>
+            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add reading</a>&nbsp;
+            <a href="{% url 'bookshare_search' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add from Bookshare</a>
         </div>
     </div>
-    {% endif %}
 
     {% include 'library/partial/library_data.html' %}
 </main>

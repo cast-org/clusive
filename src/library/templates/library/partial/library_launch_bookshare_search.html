@@ -1,0 +1,9 @@
+{% load static figuration %}
+{% csrf_token %}
+<div class="form-group">
+    {% if request.session.bookshare_connected %}
+    <a href="{% url 'bookshare_search' %}" class="btn btn-night">Add from Bookshare</a>
+    {% else %}
+    <span class=" btn btn-night disabled">Add from Bookshare</span>
+    {% endif %}
+</div>
