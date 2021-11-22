@@ -41,6 +41,14 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         except (SocialAccount.DoesNotExist, SocialToken.DoesNotExist):
             return False
 
+    def has_account(self):
+        try:
+            provider = self.get_provider()
+            social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
+            return True
+        except SocialAccount.DoesNotExist:
+            return False
+
     def get_access_keys(self):
         provider = self.get_provider()
         social_app = SocialApp.objects.get(provider=provider.id)
@@ -54,6 +62,10 @@ def is_token_expired(token):
 def is_bookshare_connected(request):
     bookshare_adapter = BookshareOAuth2Adapter(request)
     return bookshare_adapter.is_connected()
+
+def has_bookshare_account(request):
+    bookshare_adapter = BookshareOAuth2Adapter(request)
+    return bookshare_adapter.has_account()
 
 def bookshare_connected(request, *args, **kwargs):
     request.session['bookshare_connected'] = True
