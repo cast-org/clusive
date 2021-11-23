@@ -40,7 +40,8 @@ $enable-form-validation-tooltip:        false;
 $enable-form-validation-icon:           false;
 
 // Components
-$enable-alert:                          false;
+$enable-alert-heading:                  false;
+$enable-alert-link:                     false;
 $enable-badge:                          true;
 $enable-badge-close:                    false;
 $enable-badge-group:                    false;
@@ -387,6 +388,10 @@ $modal-footer-bg:                       var(--CT_modalFooterBg);
 $modal-footer-color:                    var(--CT_modalFooterColor);
 $modal-footer-border-color:             var(--CT_modalFooterBorderColor);
 $modal-footer-border-width:             1px;
+
+$alert-padding-x:                       .5rem;
+$alert-padding-y:                       .25rem;
+$alert-border-width:                    2px;
 
 // Clusive specific items
 // =====
