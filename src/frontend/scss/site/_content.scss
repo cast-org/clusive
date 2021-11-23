@@ -469,6 +469,7 @@ h2,
 .result-list {
     .card-author {
         margin-top: -.25rem;
+        color: var(--CT_formTextColor);
     }
     .card-img {
         flex: 1 0 auto;
@@ -490,5 +491,8 @@ h2,
                 max-height: 10rem;
             }
         }
+    }
+    .result-muted {
+        color: var(--CT_formTextColor);
     }
 }
