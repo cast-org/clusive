@@ -465,3 +465,30 @@ h2,
         border-top: 1px solid var(--CT_modalContentBorderColor);
     }
 }
+
+.result-list {
+    .card-author {
+        margin-top: -.25rem;
+    }
+    .card-img {
+        flex: 1 0 auto;
+        text-align: center;
+        background: var(--CT_cardImgBg);
+
+        img {
+            max-height: 40vw;
+
+            @include media-breakpoint-up(sm) {
+                max-height: 8vw;
+            }
+
+            @include media-breakpoint-up(md) {
+                max-height: 10vw;
+            }
+
+            @include media-breakpoint-up(xl) {
+                max-height: 10rem;
+            }
+        }
+    }
+}

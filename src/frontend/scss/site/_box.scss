@@ -9,7 +9,15 @@
     .list {
         border-color: var(--CT_boxDivderColor);
     }
+    //.list-divided > .list-item, .list-ruled > .list-item {
+    //    border-top-width: 2px;
+    //    border-bottom-width: 2px;
+    //}
+    //.list-divided > .list-item + .list-item, .list-ruled > .list-item + .list-item {
+    //    border-top-width: 0;
+    //}
     hr {
+        //height: 2px;
         background-color: var(--CT_boxDivderColor);
         opacity: 1;
     }
