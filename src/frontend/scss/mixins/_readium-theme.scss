@@ -75,7 +75,7 @@
 
         // stylelint-disable declaration-no-important
         // stylelint-disable-next-line selector-class-pattern
-        .R2_CLASS_HIGHLIGHT_AREA {
+        #R2_ID_HIGHLIGHTS_CONTAINER .R2_CLASS_HIGHLIGHT_AREA {
             background-color: var(--CRT_highlightOverlayBg) !important;
             mix-blend-mode: var(--CRT_highlightOverlayMixBlendMode) !important;
 
@@ -83,6 +83,11 @@
             &.hover {
                 background-color: var(--CRT_highlightOverlayHoverBg) !important;
             }
+        }
+
+        #R2_ID_POPUP_CONTAINER .R2_CLASS_HIGHLIGHT_AREA {
+            //box-shadow: 0 .0625em 0 0 var(--CRT_glossaryUnderline), inset 0 -.125em 0 0 var(--CRT_glossaryUnderline);
+            border-bottom: .1875em solid var(--CRT_glossaryUnderline);
         }
         // stylelint-enable declaration-no-important
     }
