@@ -5,7 +5,7 @@
         "fields": {
             "name": "default_display",
             "description": "Default Clusive display preference set",
-            "prefs_json": "{\"fluid_prefs_contrast\":\"default\",\"fluid_prefs_textFont\":\"default\",\"fluid_prefs_textSize\":1,\"fluid_prefs_lineSpace\":1.6,\"fluid_prefs_letterSpace\":1,\"cisl_prefs_glossary\":true,\"cisl_prefs_scroll\":true}"
+            "prefs_json": "{\"fluid_prefs_contrast\":\"default\",\"fluid_prefs_textFont\":\"default\",\"fluid_prefs_textSize\":1,\"fluid_prefs_lineSpace\":1.6,\"fluid_prefs_letterSpace\":1,\"cisl_prefs_glossary\":true,\"cisl_prefs_reduceMotion\":false,\"cisl_prefs_scroll\":true}"
         }
     },
     {

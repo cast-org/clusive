@@ -48,6 +48,10 @@
                 },
                 panel: null
             },
+            reduceMotion: {
+                type: 'cisl.prefs.reduceMotion',
+                panel: null
+            },
             scroll: {
                 type: 'cisl.prefs.scroll',
                 panel: null
@@ -223,6 +227,17 @@
             }
         }
     };
+
+    // Add a boolean preference for reducing motion effects
+    fluid.defaults('cisl.prefs.schemas.reduceMotion', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.reduceMotion': {
+                type: 'boolean',
+                default: false
+            }
+        }
+    });
 
     fluid.defaults('cisl.prefs.composite.separatedPanel', {
         gradeNames: ['fluid.prefs.separatedPanel'],
