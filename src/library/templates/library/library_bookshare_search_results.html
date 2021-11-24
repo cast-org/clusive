@@ -16,7 +16,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <fieldset>
-                        <legend>Step 2: Select from results</legend>
+                        <legend>Step 2: Select from results ({{ form.title_select|length }} titles)</legend>
                         <div class="form-group">
                             {% for radio in form.title_select %}
                                 <div class="form-check form-checkradio mb-1">

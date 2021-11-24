@@ -91,7 +91,7 @@ class BookshareSearchForm(forms.Form):
 
 class BookshareListResourcesForm(forms.Form):
     # title, authors, isbn
-    label_formatter = '{}   By {}, ISBN: {}'
+    label_formatter = '{}   By {}, ISBN: {}, Format: {}'
 
     def __init__(self, *args, **kwargs):
         titles = kwargs.pop('titles')
@@ -107,7 +107,10 @@ class BookshareListResourcesForm(forms.Form):
             # a None value for isbn13 is possible (!)
             isbn = book.get('isbn13', '-')
             bookshare_id = book['bookshareId']
-            label = self.label_formatter.format(title, by, isbn)
+            book_format = book.get('formats', 'unknown')
+            if book_format is not 'unknown':
+                book_format = next((x['formatId'] for x in book_format if x['formatId'] == 'EPUB3'), 'unknown')
+            label = self.label_formatter.format(title, by, isbn, book_format)
             title_choices.append((bookshare_id, label))
             logger.debug('title: %s', label)
         
