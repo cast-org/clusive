@@ -50,6 +50,9 @@
             },
             reduceMotion: {
                 type: 'cisl.prefs.reduceMotion',
+                enactor: {
+                    type: 'cisl.prefs.enactor.reduceMotion'
+                },
                 panel: null
             },
             scroll: {
@@ -238,6 +241,45 @@
             }
         }
     });
+
+    fluid.defaults('cisl.prefs.enactor.reduceMotion', {
+        gradeNames: ['fluid.prefs.enactor', 'fluid.viewComponent'],
+        preferenceMap: {
+            'cisl.prefs.reduceMotion': {
+                'model.reduceMotion': 'value'
+            }
+        },
+        selectors: {
+            reduceMotionElement: '.clusive-theme-default' // TOD: what element on the page needs to change?
+        },
+        invokers: {
+            enactReduceMotion: {
+                funcName: 'cisl.prefs.enactor.reduceMotion.enactReduceMotion',
+                args: ['{arguments}.0', '{that}']   // {that} includes '{that}.dom.reduceMotionElement' ?
+            }
+        },
+        modelListeners: {
+            reduceMotion: {
+                listener: '{that}.enactReduceMotion',
+                args: ['{that}.model.reduceMotion'],
+                namespace: 'enactReduceMotion'
+            }
+        }
+    });
+
+    cisl.prefs.enactor.reduceMotion.enactReduceMotion = function (reduceMotion, that) {
+        console.debug('enact reduceMotion', reduceMotion, that);
+        var jqEl = that.locate('reduceMotionElement')
+        console.debug('enact reduceMotion elemenst is ', jqEl);
+        if (jqEl) {
+            if (reduceMotion) {
+                jqEl.context.css('background-color', 'blue');
+            }
+            else {
+                jqEl.context.css('background-color', '');
+            }
+        }
+    };
 
     fluid.defaults('cisl.prefs.composite.separatedPanel', {
         gradeNames: ['fluid.prefs.separatedPanel'],
