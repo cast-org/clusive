@@ -8,7 +8,7 @@
 }
 
 .box-divider {
-    padding-top: calc(3px + #{$box-padding-y});
+    padding-top: $box-padding-y;
     margin: 0 #{-$box-padding-x};
     line-height: 1;
     border-top: 3px solid var(--CT_boxDivderColor);
@@ -19,7 +19,7 @@
 }
 
 .box-divider-thin {
-    padding-top: calc(1px + #{$box-padding-y});
+    padding-top: $box-padding-y;
     margin: 0 #{-$box-padding-x};
     line-height: 1;
     border-top: 1px solid var(--CT_boxDivderColor);
@@ -55,7 +55,7 @@
     position: relative;
     margin-top: calc(var(--CT_boxMascotSize) * .25);
 
-    &::before{
+    &::before {
         position: absolute;
         top: calc(var(--CT_boxMascotSize) * -.75);
         left: 1rem;
@@ -63,9 +63,24 @@
         width: var(--CT_boxMascotSize);
         height: calc(var(--CT_boxMascotSize) * #{$img-ratio-mascot-tipped});
         content: "";
-        background-image: var(--CT_imgMascotTipped);
+        background-image: var(--CT_imgMascotTippedAnimated);
         background-repeat: no-repeat;
         background-size: contain;
+    }
+}
+
+.clusive-reduced-motion {
+    .box-mascot-tipped {
+        &::before {
+            background-image: var(--CT_imgMascotTipped);
+        }
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .box-mascot-tipped {
+        &::before {
+            background-image: var(--CT_imgMascotTipped);
+        }
     }
 }
 

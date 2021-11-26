@@ -102,6 +102,17 @@
     .btn + .btn {
         margin-top: .75rem;
     }
+
+    .btn + .btn-starred {
+        margin-top: .25rem;
+    }
+
+    .btn-starred {
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        @include border-radius(2.25rem);
+    }
 }
 
 .sidebar-end {

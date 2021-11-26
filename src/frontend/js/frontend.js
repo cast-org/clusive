@@ -1,5 +1,5 @@
-/* global Masonry, clusiveTTS, clusivePrefs, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
-/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate */
+/* global Masonry, cisl, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation, confetti */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate, confettiCannon */
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options) {
@@ -306,6 +306,7 @@ function starsSelectedText() {
         }).done(function(html) {
             $('#star_rating_panel').replaceWith(html);
             starsSelectedTextUpdate($('#star_rating_panel .stars')[0]);
+            confettiCannon();
         }).fail(function(err) {
             console.error('Failed sending star rating results: ', err);
         });
@@ -708,6 +709,35 @@ function dashboardSetup() {
     });
 }
 
+// Starred button functionality
+function starredButtons() {
+    'use strict';
+
+    var txtDefault = 'Not Starred';
+    var txtActive = 'Starred';
+
+    $(document).on('click', '.btn-starred', function(e) {
+        var $trigger = $(e.currentTarget);
+        $trigger.toggleClass('active');
+        var isActive = $trigger.hasClass('active');
+        var textMsg = isActive ? txtActive : txtDefault;
+
+        $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
+            $trigger
+                .attr('aria-label', textMsg)
+                .removeAttr('data-cfw-tooltip-title')
+                .CFW_Tooltip({
+                    title: textMsg
+                })
+                .CFW_Tooltip('show');
+        });
+
+        $trigger.CFW_Tooltip('dispose');
+
+        // TODO: Callback to event logging?
+    });
+}
+
 // Context (selection) menu methods
 
 function contextLookup(selection) {
@@ -733,6 +763,53 @@ function contextTranslate(selection) {
     load_translation(selection);
 }
 
+// See: https://github.com/catdad/canvas-confetti
+function confettiCannon() {
+    'use strict';
+
+    if (cisl.prefs.userPrefersReducedMotion()) {
+        return;
+    }
+
+    var count = 300;
+    var defaults = {
+        origin: {
+            y: 1
+        },
+        zIndex: 1100
+    };
+
+    function fire(particleRatio, opts) {
+        // eslint-disable-next-line compat/compat
+        confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+        }));
+    }
+
+    fire(0.25, {
+        spread: 26,
+        startVelocity: 55
+    });
+    fire(0.2, {
+        spread: 60
+    });
+    fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8
+    });
+    fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2
+    });
+    fire(0.1, {
+        spread: 120,
+        startVelocity: 45
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -752,6 +829,7 @@ $(window).ready(function() {
     libraryPageLinkSetup();
     libraryStyleSortLinkSetup();
     dashboardSetup();
+    starredButtons();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
