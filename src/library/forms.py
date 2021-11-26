@@ -75,7 +75,6 @@ class BookshareSearchForm(forms.Form):
     keyword = forms.CharField(
         required = True,
         initial = '',
-        label = 'Step 1: Search by Title, Author, or ISBN',
         widget = forms.TextInput(attrs={
             'aria-label': 'Step 1: Search by title, author, or ISBN',
             'class': 'form-control',

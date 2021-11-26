@@ -11,24 +11,33 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
+    <h1>Add from Bookshare</h1>
     <div class="row">
-        <div class="col-md-6">
-            <h1>Add from Bookshare</h1>
+        <div class="col-md-9 col-lg-6">
             <div class="box">
-                <form method="post" class="box">
-                    <fieldset>
-                        <div class="form-group">
-                            {% csrf_token %}
-                            {{ form.keyword.label_tag | formlabel }}
-                            {{ form.keyword.errors }}
-                            {{ form.keyword }}
-                        </div>
-                        <input type="submit" class="btn btn-primary" value="Search"/>
-                        <a href="{% url 'upload' %}" class="btn btn-link">Cancel</a>
-                        <hr>
-                        <p class="note">Not finding the reading you're looking for? Here are some search tips...</p>
-                    </fieldset>
+                <h2>Step 1: Search Title, Author, or ISBN:</h2>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label class="sr-only" for="{{ form.keyword.id_for_label }}">Step 1: Search by title, author, or ISBN:</label>
+                        {{ form.keyword.errors }}
+                        {{ form.keyword }}
+                        <p class="form-text">
+                            For title search, use "title:&lt;title&gt;"<br>
+                            For author search, use "author:&lt;author name&gt;"
+                        </p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-secondary btn-small" value="Search"/>
+                        <a href="{% url 'upload' %}" class="btn btn-link btn-small">Cancel</a>
+                    </div>
                 </form>
+                <hr>
+                <div class="form-text">
+                    Not finding the reading you're looking for? Here are some
+                    search tips&hellip;
+                </div>
             </div>
         </div>
     </div>
