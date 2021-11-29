@@ -311,4 +311,21 @@
         document.dispatchEvent(event);
     };
 
+    // Reduced motion interactions
+    cisl.prefs.userPrefersReducedMotion = function() {
+        // Clusive setting - check class
+        var setting = document.body.classList.contains('clusive-reduced-motion');
+        // System preference - check CSS media query
+        var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        return system || setting;
+    };
+
+    cisl.prefs.setReducedMotion = function() {
+        document.body.classList.add('clusive-reduced-motion');
+    };
+
+    cisl.prefs.unsetReducedMotion = function() {
+        document.body.classList.remove('clusive-reduced-motion');
+    };
+
 }(fluid_3_0_0));

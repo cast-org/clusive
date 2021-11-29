@@ -158,7 +158,7 @@
                             <span class="not-open">Show filters</span>
                             <span class="is-open">Hide filters</span>
                         </button>
-                        <a href="#" role="button" class="ms-0_5">Clear filters</a>
+                        <a id="clearFilters" href="#" role="button" class="ms-0_5">Clear filters</a>
                     </div>
                 </div>
                 <div class="col-12 order-md-4">
@@ -168,7 +168,7 @@
                                 <fieldset data-clusive="filterAllUpdate">
                                     <legend class="form-label lh-1 pt-0"><strong>Topic</strong></legend>
                                     <div class="form-check form-checkradio">
-                                        <input class="form-check-input" type="checkbox" id="topicAll" data-clusive="filterAll" value="" checked>
+                                        <input class="form-check-input" type="checkbox" id="topicAll" data-clusive="filterAll" value="">
                                         <label class="form-check-label" for="topicAll">All topics and genres</label>
                                     </div>
                                     <div class="box-divider-thin"></div>
@@ -214,27 +214,46 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="box library-filter-box">
-                                <fieldset data-clusive="filterAllUpdate">
-                                    <legend class="form-label lh-1 pt-0"><strong>Word Count</strong></legend>
-                                    <div class="form-check form-checkradio">
-                                        <input class="form-check-input" type="checkbox" id="countAll" data-clusive="filterAll" value="" checked>
-                                        <label class="form-check-label" for="countAll">All word counts</label>
+                            <div class="row library-filter-sub-row">
+                                <div class="col-sm-6 col-md-12">
+                                    <div class="box library-filter-box">
+                                        <fieldset data-clusive="filterAllUpdate">
+                                            <legend class="form-label lh-1 pt-0"><strong>Starred</strong><span class=" icon-star-empty ms-0_25" aria-hidden="true"></span></legend>
+                                            <div class="d-block">
+                                                <!-- Use hidden inpout so 'clear filters' shows/hides as expected -->
+                                                <input class="form-check-input" type="hidden" id="starredNone" data-clusive="filterAll" value="">
+                                            </div>
+                                            <div class="form-check form-checkradio">
+                                                <input class="form-check-input" type="checkbox" id="starred" value="starred">
+                                                <label class="form-check-label" for="starred">Show starred</label>
+                                            </div>
+                                        </fieldset>
                                     </div>
-                                    <div class="box-divider-thin"></div>
-                                    <div class="form-check form-checkradio">
-                                        <input class="form-check-input" type="checkbox" id="count0" value="0">
-                                        <label class="form-check-label" for="count0"><500 words</label>
+                                </div>
+                                <div class="col-sm-6 col-md-12">
+                                    <div class="box library-filter-box">
+                                        <fieldset data-clusive="filterAllUpdate">
+                                            <legend class="form-label lh-1 pt-0"><strong>Word Count</strong></legend>
+                                            <div class="form-check form-checkradio">
+                                                <input class="form-check-input" type="checkbox" id="countAll" data-clusive="filterAll" value="">
+                                                <label class="form-check-label" for="countAll">All word counts</label>
+                                            </div>
+                                            <div class="box-divider-thin"></div>
+                                            <div class="form-check form-checkradio">
+                                                <input class="form-check-input" type="checkbox" id="count0" value="0">
+                                                <label class="form-check-label" for="count0"><500 words</label>
+                                            </div>
+                                            <div class="form-check form-checkradio">
+                                                <input class="form-check-input" type="checkbox" id="count1" value="1">
+                                                <label class="form-check-label" for="count1">500 &ndash; 30,000 words</label>
+                                            </div>
+                                            <div class="form-check form-checkradio">
+                                                <input class="form-check-input" type="checkbox" id="count2" value="2">
+                                                <label class="form-check-label" for="count2">30,000+ words</label>
+                                            </div>
+                                        </fieldset>
                                     </div>
-                                    <div class="form-check form-checkradio">
-                                        <input class="form-check-input" type="checkbox" id="count1" value="1">
-                                        <label class="form-check-label" for="count1">500 &ndash; 30,000 words</label>
-                                    </div>
-                                    <div class="form-check form-checkradio">
-                                        <input class="form-check-input" type="checkbox" id="count2" value="2">
-                                        <label class="form-check-label" for="count2">30,000+ words</label>
-                                    </div>
-                                </fieldset>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -300,17 +319,12 @@
                                         6 <span class="sr-only">images</span>
                                     </span>
                                 </span>
+
+                                <button type="button" class="btn btn-icon btn-starred link-above" aria-label="Not starred" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+                                    <span class="icon-starred" aria-hidden="true"></span>
+                                </button>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-auto card-library-action">
-                                <span class="btn-check link-above">
-                                    <input id="fav0" type="checkbox" class="btn-check-input">
-                                    <label for="fav0" class="btn btn-favorite">
-                                        <span class="icon-star-empty" aria-hidden="true"></span>
-                                        <span class="sr-only">Favorite</span>
-                                    </label>
-                                </span>
                                 <span class="dropdown link-above">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
@@ -341,9 +355,11 @@
                     </div>
                     <div class="card-footer">
                         <div class="row">
-                            <div class="col card-library-tag"></div>
-                        </div>
-                        <div class="row">
+                            <div class="col card-library-tag">
+                                <button type="button" class="btn btn-icon btn-starred link-above active" aria-label="Starred" data-cfw="tooltip" data-cfw-tooltip-title="Starred">
+                                    <span class="icon-starred" aria-hidden="true"></span>
+                                </button>
+                            </div>
                             <div class="col-auto card-library-action">
                                 <span class="dropdown link-above">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">

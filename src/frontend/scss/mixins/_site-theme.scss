@@ -257,6 +257,17 @@
         --CT_btnReactActiveColor: #{$btn-react-active-color};
         --CT_btnReactActiveBorderColor: #{$btn-react-active-border-color};
 
+        --CT_btnStarredFocusRingRGB: #{color-to-rgb($btn-starred-focus-ring)};
+        --CT_btnStarredBg: #{$btn-starred-bg};
+        --CT_btnStarredColor: #{$btn-starred-color};
+        --CT_btnStarredBorderColor: #{$btn-starred-border-color};
+        --CT_btnStarredHoverBg: #{$btn-starred-hover-bg};
+        --CT_btnStarredHoverColor: #{$btn-starred-hover-color};
+        --CT_btnStarredHoverBorderColor: #{$btn-starred-hover-border-color};
+        --CT_btnStarredActiveBg: #{$btn-starred-active-bg};
+        --CT_btnStarredActiveColor: #{$btn-starred-active-color};
+        --CT_btnStarredActiveBorderColor: #{$btn-starred-active-border-color};
+
         --CT_badgeCountBg: #{$badge-count-bg};
         --CT_badgeCountColor: #{$badge-count-color};
         --CT_badgeCountBorderColor: #{$badge-count-border-color};
@@ -469,6 +480,7 @@
 
         --CT_imgMascot: #{$img-mascot};
         --CT_imgMascotTipped: #{$img-mascot-tipped};
+        --CT_imgMascotTippedAnimated: #{$img-mascot-tipped-animated};
 
         --CT_starsBorderColor: #{$stars-border-color};
         --CT_starsIconColor: #{$stars-icon-color};
@@ -480,6 +492,10 @@
 
         --CT_reactLine: #{$react-line};
         --CT_reactIcon: #{$react-icon};
+        --CT_reactQ0Bg: #{$react-quad-0-bg};
+        --CT_reactQ1Bg: #{$react-quad-1-bg};
+        --CT_reactQ2Bg: #{$react-quad-2-bg};
+        --CT_reactQ3Bg: #{$react-quad-3-bg};
         --CT_reactW0: #{$react-wedge-0};
         --CT_reactW1: #{$react-wedge-1};
         --CT_reactW2: #{$react-wedge-2};
@@ -494,6 +510,10 @@
         --CT_reactW11: #{$react-wedge-11};
         --CT_reactBoxLine: #{$react-box-line};
         --CT_reactBoxIcon: #{$react-box-icon};
+        --CT_reactBoxQ0Bg: #{$react-box-quad-0-bg};
+        --CT_reactBoxQ1Bg: #{$react-box-quad-1-bg};
+        --CT_reactBoxQ2Bg: #{$react-box-quad-2-bg};
+        --CT_reactBoxQ3Bg: #{$react-box-quad-3-bg};
 
         --CT_readTimeLegendLabelColor: #{$readtime-legend-label-color};
         --CT_readTimeMarkColor: #{$readtime-mark-color};

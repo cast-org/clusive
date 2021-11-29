@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents, clusivePrefs, DJANGO_CSRF_TOKEN */
+/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN */
 /* exported load_translation */
 
 // Glossary-related functionality
@@ -228,6 +228,7 @@ vocabCheck.selected = function(value) {
     } else {
         $('#vocabCheckThanks').show();
         $('#vocabCheckDone').prop('disabled', false);
+        confettiCannon();
     }
 };
 
