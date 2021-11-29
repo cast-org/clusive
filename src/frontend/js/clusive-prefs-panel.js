@@ -317,5 +317,4 @@
         var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         return system || setting;
     };
-
 }(fluid_3_0_0));
