@@ -225,7 +225,7 @@
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
 
-        that.applier.change('modalSettings.reduceMotion', fluid.get(preferences, 'cisl_prefs_reduceMotion'));
+        cisl.prefs.modalSettings.handleReduceMotionPreference(fluid.get(preferences, 'cisl_prefs_reduceMotion'), that);
 
         that.applier.change('modalSettings.scroll', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'cisl_prefs_scroll'), that.options.mappedValues.preferenceScrollToModal));
 
@@ -238,6 +238,18 @@
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };
 
+    /**
+     * The reduce motion preference depends both on an OS system preference,
+     * which can be detected via an @media match query, as well as the user's
+     * preference stored in the data base -- check both.
+     * @param {Boolean} preference - The current state of the user's reduce
+     *                               motion preference
+     * @param {Object} that - The cisl.prefs.modalSettings instance
+     */
+    cisl.prefs.modalSettings.handleReduceMotionPreference = function (preference, that) {
+        var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        that.applier.change('modalSettings.reduceMotion', preference || system);
+    };
 
     cisl.prefs.modalSettings.setupVoiceListing = function (that) {
         console.debug("cisl.prefs.modalSettings.setupVoiceListing");

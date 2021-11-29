@@ -250,7 +250,7 @@
             }
         },
         selectors: {
-            reduceMotionElement: '.clusive-theme-default' // TOD: what element on the page needs to change?
+            reduceMotionElement: 'body'
         },
         invokers: {
             enactReduceMotion: {
@@ -268,15 +268,13 @@
     });
 
     cisl.prefs.enactor.reduceMotion.enactReduceMotion = function (reduceMotion, that) {
-        console.debug('enact reduceMotion', reduceMotion, that);
-        var jqEl = that.locate('reduceMotionElement')
-        console.debug('enact reduceMotion elemenst is ', jqEl);
-        if (jqEl) {
+        var element = that.locate('reduceMotionElement')
+        if (element) {
             if (reduceMotion) {
-                jqEl.context.css('background-color', 'blue');
+                element.context.addClass('clusive-reduced-motion');
             }
             else {
-                jqEl.context.css('background-color', '');
+                element.context.removeClass('clusive-reduced-motion');
             }
         }
     };
@@ -318,14 +316,6 @@
         // System preference - check CSS media query
         var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         return system || setting;
-    };
-
-    cisl.prefs.setReducedMotion = function() {
-        document.body.classList.add('clusive-reduced-motion');
-    };
-
-    cisl.prefs.unsetReducedMotion = function() {
-        document.body.classList.remove('clusive-reduced-motion');
     };
 
 }(fluid_3_0_0));
