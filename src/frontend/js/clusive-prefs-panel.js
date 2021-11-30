@@ -255,7 +255,7 @@
         invokers: {
             enactReduceMotion: {
                 funcName: 'cisl.prefs.enactor.reduceMotion.enactReduceMotion',
-                args: ['{arguments}.0', '{that}']   // {that} includes '{that}.dom.reduceMotionElement' ?
+                args: ['{arguments}.0', '{that}']
             }
         },
         modelListeners: {
@@ -268,6 +268,7 @@
     });
 
     cisl.prefs.enactor.reduceMotion.enactReduceMotion = function (reduceMotion, that) {
+        console.debug('enact reduceMotion', reduceMotion, that);
         var element = that.locate('reduceMotionElement')
         if (element) {
             if (reduceMotion) {
