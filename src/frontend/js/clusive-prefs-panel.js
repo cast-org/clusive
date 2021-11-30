@@ -243,42 +243,15 @@
     });
 
     fluid.defaults('cisl.prefs.enactor.reduceMotion', {
-        gradeNames: ['fluid.prefs.enactor', 'fluid.viewComponent'],
+        gradeNames: ['fluid.prefs.enactor.styleElements', 'fluid.viewComponent'],
+        cssClass: 'clusive-reduced-motion',
+        elementsToStyle: $('body'),     // must be a jquery instance
         preferenceMap: {
             'cisl.prefs.reduceMotion': {
-                'model.reduceMotion': 'value'
-            }
-        },
-        selectors: {
-            reduceMotionElement: 'body'
-        },
-        invokers: {
-            enactReduceMotion: {
-                funcName: 'cisl.prefs.enactor.reduceMotion.enactReduceMotion',
-                args: ['{arguments}.0', '{that}']
-            }
-        },
-        modelListeners: {
-            reduceMotion: {
-                listener: '{that}.enactReduceMotion',
-                args: ['{that}.model.reduceMotion'],
-                namespace: 'enactReduceMotion'
+                'model.value': 'value'
             }
         }
     });
-
-    cisl.prefs.enactor.reduceMotion.enactReduceMotion = function (reduceMotion, that) {
-        console.debug('enact reduceMotion', reduceMotion, that);
-        var element = that.locate('reduceMotionElement')
-        if (element) {
-            if (reduceMotion) {
-                element.context.addClass('clusive-reduced-motion');
-            }
-            else {
-                element.context.removeClass('clusive-reduced-motion');
-            }
-        }
-    };
 
     fluid.defaults('cisl.prefs.composite.separatedPanel', {
         gradeNames: ['fluid.prefs.separatedPanel'],
