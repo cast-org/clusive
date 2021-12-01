@@ -48,6 +48,13 @@
                 },
                 panel: null
             },
+            reduceMotion: {
+                type: 'cisl.prefs.reduceMotion',
+                enactor: {
+                    type: 'cisl.prefs.enactor.reduceMotion'
+                },
+                panel: null
+            },
             scroll: {
                 type: 'cisl.prefs.scroll',
                 panel: null
@@ -224,6 +231,28 @@
         }
     };
 
+    // Add a boolean preference for reducing motion effects
+    fluid.defaults('cisl.prefs.schemas.reduceMotion', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.reduceMotion': {
+                type: 'boolean',
+                default: false
+            }
+        }
+    });
+
+    fluid.defaults('cisl.prefs.enactor.reduceMotion', {
+        gradeNames: ['fluid.prefs.enactor.styleElements', 'fluid.viewComponent'],
+        cssClass: 'clusive-reduced-motion',
+        elementsToStyle: $('body'),     // must be a jquery instance
+        preferenceMap: {
+            'cisl.prefs.reduceMotion': {
+                'model.value': 'value'
+            }
+        }
+    });
+
     fluid.defaults('cisl.prefs.composite.separatedPanel', {
         gradeNames: ['fluid.prefs.separatedPanel'],
         iframeRenderer: {
@@ -262,13 +291,4 @@
         var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         return system || setting;
     };
-
-    cisl.prefs.setReducedMotion = function() {
-        document.body.classList.add('clusive-reduced-motion');
-    };
-
-    cisl.prefs.unsetReducedMotion = function() {
-        document.body.classList.remove('clusive-reduced-motion');
-    };
-
 }(fluid_3_0_0));
