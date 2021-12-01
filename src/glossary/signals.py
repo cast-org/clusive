@@ -1,6 +1,5 @@
 import logging
 
-from django.db.models import F
 from django.dispatch import receiver
 
 from eventlog.signals import vocab_lookup
