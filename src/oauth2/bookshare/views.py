@@ -13,8 +13,6 @@ from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
 
 from .provider import BookshareProvider
 
-import pdb
-
 class BookshareOAuth2Adapter(OAuth2Adapter):
     provider_id = BookshareProvider.id
     basic_auth = True   # Use basic Authorization in access token request
@@ -52,8 +50,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
     def get_access_keys(self):
         provider = self.get_provider()
         social_app = SocialApp.objects.get(provider=provider.id)
-        social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
-        access_token = SocialToken.objects.get(account=social_account, app_id=social_app.id)
+        access_token = SocialToken.objects.get(account__user=self.request.user, account__provider=provider.id)
         return {'access_token': access_token, 'api_key': social_app.client_id }
 
 def is_token_expired(token):
@@ -66,6 +63,10 @@ def is_bookshare_connected(request):
 def has_bookshare_account(request):
     bookshare_adapter = BookshareOAuth2Adapter(request)
     return bookshare_adapter.has_account()
+
+def get_access_keys(request):
+    bookshare_adapter = BookshareOAuth2Adapter(request)
+    return adapter.get_access_keys()
 
 def bookshare_connected(request, *args, **kwargs):
     request.session['bookshare_connected'] = True
