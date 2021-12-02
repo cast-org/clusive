@@ -27,7 +27,7 @@
                             <div class="row">
                                 <div class="col-12 col-md-2 mb-1 mb-md-0 text-md-center">
                                     {% if book.bookshareId %}
-                                    <a href="/library/bookshare-import/{{ book.bookshareId }}" class="btn btn-primary">Import</a>
+                                    <a href="/library/bookshare-import/{{ book.bookshareId }}/{{ query_key }}" class="btn btn-primary">Import</a>
                                     {% else %}
                                     <a href="#" class="btn btn-primary" disabled>Import</a>
                                     <p>No import link</p>                                    

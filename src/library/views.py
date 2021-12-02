@@ -766,13 +766,14 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'titles': self.metadata.get('titles', [])
+            'titles': self.metadata.get('titles', []),
+            'query_key' : self.query_key
         })
         return context
 
     def get_success_url(self):
         bookshare_id = self.request.POST.get('title_select')
-        return reverse('bookshare_search') + bookshare_id
+        return reverse('bookshare_search') + bookshare_id + '/' + self.query_key
         
     def get_bookshare_metadata(self, request):
         if self.query_key == '':
@@ -850,6 +851,7 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
 class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #EventMixin
     template_name = 'library/library_bookshare_import.html'
     bookshare_id = ''
+    previous = ''
     title_metadata = {}
 
     def dispatch(self, request, *args, **kwargs):
@@ -861,6 +863,7 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #Even
                 raise e
 
             self.bookshare_id = kwargs.get('bookshareId')
+            self.previous = kwargs.get('previous')
             resp = requests.request(
                 'GET',
                 'https://api.bookshare.org/v2/titles/' + self.bookshare_id + '?api_key=' + access_keys.get('api_key'),
@@ -877,7 +880,8 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #Even
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'title': self.title_metadata
+            'title': self.title_metadata,
+            'previous': self.previous
         })
         return context
     
