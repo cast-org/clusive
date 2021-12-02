@@ -1,6 +1,8 @@
 {% extends "shared/base.html" %}
 {% load static figuration %}
 
+{% block bodyClass %}library{% endblock %}
+
 {% block title %}Add via Bookshare{% endblock %}
 
 {% block header %}
@@ -10,27 +12,81 @@
 {% block content %}
 <div class="content">
     <main id="content" tabindex="-1">
+        <h1>Add from Bookshare</h1>
+        <div class="link-back ms-0">
+            <a href="{% url 'bookshare_search' %}" class="link-prev">Back to search</a>
+        </div>
         <div class="row">
-            <div class="col">
-                <h1>Add via Bookshare</h1>
-                <form method="post">
-                    {% csrf_token %}
-                    <fieldset>
-                        <legend>Step 2: Select from results ({{ form.title_select|length }} titles)</legend>
-                        <div class="form-group">
-                            {% for radio in form.title_select %}
-                                <div class="form-check form-checkradio mb-1">
-                                    {{ radio.tag | formcontrol }}
-                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                        {{ radio.choice_label }}
-                                    </label>
+            <div class="col-lg-10">
+                <div class="box">
+                    <h2>Step 2: Select from results:</h2>
+
+                    <div class="list list-divided list-spaced-y result-list mb-0">
+                        {% for book in titles %}
+                        <div class="list-item">
+                            <div class="row">
+                                <div class="col-12 col-md-2 mb-1 mb-md-0 text-md-center">
+                                    {% if book.bookshareId %}
+                                    <a href="/library/bookshare-import/{{ book.bookshareId }}" class="btn btn-primary">Import</a>
+                                    {% else %}
+                                    <a href="#" class="btn btn-primary" disabled>Import</a>
+                                    <p>No import link</p>                                    
+                                    {% endif %}
                                 </div>
-                            {% endfor %}
+                                <div class="col col-md">
+                                    <div class="row gx-0_5">
+                                        <div class="col-12 col-sm-3">
+                                            <div class="card-img">
+                                                {% if book.clusive.thumbnail %}
+                                                <img class="img-fluid" src="{{ book.clusive.thumbnail }}" alt="">
+                                                {% else %}
+                                                 <img class="img-fluid" src="./img/sample-1.jpg" alt="">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm">
+                                            <h3 class="card-title h2">
+                                                {{ book.title }}
+                                            </h3>
+                                            <div class="card-author">
+                                                {% for author in book.clusive.authors %}
+                                                <div>{{ author }}</div>
+                                                {% empty %}
+                                                <div>No author listed</div>
+                                                {% endfor %}
+                                                <div>ISBN: {{ book.isbn13 }}</div>
+                                            </div>
+                                            <div class="card-text">
+                                                {{ book.clusive.synopsis }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
                         </div>
-                    </fieldset>
-                    <input type="submit" class="btn btn-secondary" value="Upload reading" diabled/>
-                    <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
-                </form>
+                        {% endfor %}
+                    </div>
+                    <nav aria-label="page">
+                        <div class="library-pagination-wrapper">
+                            <div class="pagination library-pagination">
+                                <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                                    <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                                    Previous
+                                </a>
+                                <a href="#" class="page-link active" aria-current="page">1</a>
+                                <a href="#" class="page-link">2</a>
+                                <a href="#" class="page-link">3</a>
+                                <span class="page-text">&hellip;</span>
+                                <a href="#" class="page-link">9</a>
+                                <a href="#" class="page-link">
+                                    Next
+                                    <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
             </div>
         </div>
     </main>

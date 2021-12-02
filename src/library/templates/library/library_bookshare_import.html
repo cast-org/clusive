@@ -1,0 +1,46 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Add from Bookshare{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Add from Bookshare</h1>
+    <div class="row">
+        <div class="col-md-9 col-lg-6">
+            <div class="box">
+                <h2>Step 3: Review and edit</h2>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <p>Bookshare download:</p>
+                        <ul>
+                            <li>Title: {{ title.title }}</li>
+                            {% for author in title.clusive.authors %}
+                            <li>Author: {{ author }}</li>
+                            {% empty %}
+                            <li>No author</li>
+                            {% endfor %}
+                            <li>ISBN: {{ title.isbn13 }}</li>
+                            <li><img src="{{ title.clusive.thumbnail }}" alt="Cover of {{ title.title }}"</img></li>
+                            <li>Description: {{ title.clusive.synopsis }}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-secondary btn-small" value="Import"/>
+                        <a href="{% url 'bookshare_search' %}" class="btn btn-link btn-small">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
