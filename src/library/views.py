@@ -29,7 +29,7 @@ from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
 from tips.models import TipHistory
-from oauth2.bookshare.views import is_bookshare_connected, BookshareOAuth2Adapter
+from oauth2.bookshare.views import is_bookshare_connected, get_access_keys
 
 logger = logging.getLogger(__name__)
 
@@ -778,9 +778,8 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         if self.query_key == '':
             return {}
         else:
-            bookshare_adapter = BookshareOAuth2Adapter(request)
             try:
-                access_keys = bookshare_adapter.get_access_keys()
+                access_keys = get_access_keys(request)
                 return self.bookshare_metadata_loop(access_keys)
             except Exception as e:
                 logger.debug("BookshareSearch exception: ", e)
@@ -854,11 +853,9 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #Even
     title_metadata = {}
 
     def dispatch(self, request, *args, **kwargs):
-        pdb.set_trace()
         if request.clusive_user.can_upload:
-            bookshare_adapter = BookshareOAuth2Adapter(request)
             try:
-                access_keys = bookshare_adapter.get_access_keys()
+                access_keys = get_access_keys(request)
             except Exception as e:
                 logger.debug("Bookshare Import exception: ", e)
                 raise e
@@ -921,7 +918,6 @@ def filter_metadata(metadata, collected_metadata, is_keyword_search):
             collected_metadata['next'] = metadata['next']
             collected_metadata['allows'] = metadata['allows']
         
-    
     return collected_metadata
 
 def surface_bookshare_info(book):
@@ -945,10 +941,14 @@ def surface_bookshare_info(book):
     clusive['authors'] = authors
     
     synopsis = ''
+    more = False
     if book['synopsis'] is not None:
         synopsis = book['synopsis'][0:200]
         if len(synopsis) < len(book['synopsis']):
             synopsis += '&hellip;'
+            more = True
+
     clusive['synopsis'] = synopsis
+    clusive['more'] = more
     book['clusive'] = clusive
 

@@ -29,18 +29,50 @@
                             {% endfor %}
                             <li>ISBN: {{ title.isbn13 }}</li>
                             <li><img src="{{ title.clusive.thumbnail }}" alt="Cover of {{ title.title }}"</img></li>
-                            <li>Description: {{ title.clusive.synopsis }}</li>
+                            {% if title.clusive.more %}
+                            <li id="short_{{ title.bookshareId }}">
+                                Description: {{ title.clusive.synopsis }}
+                                <button onclick="clusive.moreOrLess({{ title.bookshareId }}, 'more', event)" class="btn btn-primary">More</button>
+                            </li>
+                            <li id="long_{{ title.bookshareId }}" style="display: none">
+                                Description: {{ title.synopsis }}
+                                <button onclick="clusive.moreOrLess({{ title.bookshareId }}, 'less', event)" class="btn btn-primary">Less</button>
+                            </li>
+                            {% else %}
+                            <li id="long_{{ title.bookshareId }}" style="display: none">
+                               Description: {{ title.synopsis }}
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
                     
                     <div class="form-group">
-                        <input type="submit" class="btn btn-secondary btn-small" value="Import"/>
+                        <input type="submit" class="btn btn-secondary btn-small" value="Import" disabled/>
                         <a href="{% url 'bookshare_search' %}" class="btn btn-link btn-small">Cancel</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        clusive.moreOrLess = function (id, action) {
+            if (action === "more") {
+                elementToShow = document.getElementById(`long_${id}`);
+                elementToHide = document.getElementById(`short_${id}`);
+                elementToHide.style.display = 'none';
+                elementToShow.style.display = 'block';
+            }
+            else if (action === "less") {
+                elementToHide = document.getElementById(`long_${id}`);
+                elementToShow = document.getElementById(`short_${id}`);
+                elementToHide.style.display = 'none';
+                elementToShow.style.display = 'block';
+            }
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    </script>
+
 </main>
 {% endblock %}
 
