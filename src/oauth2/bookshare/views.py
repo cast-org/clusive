@@ -66,7 +66,7 @@ def has_bookshare_account(request):
 
 def get_access_keys(request):
     bookshare_adapter = BookshareOAuth2Adapter(request)
-    return adapter.get_access_keys()
+    return bookshare_adapter.get_access_keys()
 
 def bookshare_connected(request, *args, **kwargs):
     request.session['bookshare_connected'] = True
