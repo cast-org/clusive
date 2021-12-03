@@ -59,7 +59,7 @@
                                             <div class="card-text">
                                                 {% if book.clusive.more %}
                                                 <p id="short_{{ book.bookshareId }}">
-                                                    {{ book.clusive.synopsis }}
+                                                    {{ book.clusive.synopsis }} &hellip;
                                                     <button onclick="clusive.moreOrLess({{ book.bookshareId }}, 'more')" class="btn btn-primary">More</button>
                                                 </p>
                                                 <p id="long_{{ book.bookshareId }}" style="display: none">

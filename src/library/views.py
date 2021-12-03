@@ -949,7 +949,6 @@ def surface_bookshare_info(book):
     if book['synopsis'] is not None:
         synopsis = book['synopsis'][0:200]
         if len(synopsis) < len(book['synopsis']):
-            synopsis += '&hellip;'
             more = True
 
     clusive['synopsis'] = synopsis

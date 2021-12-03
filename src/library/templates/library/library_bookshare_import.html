@@ -31,7 +31,7 @@
                             <li><img src="{{ title.clusive.thumbnail }}" alt="Cover of {{ title.title }}"</img></li>
                             {% if title.clusive.more %}
                             <li id="short_{{ title.bookshareId }}">
-                                Description: {{ title.clusive.synopsis }}
+                                Description: {{ title.clusive.synopsis }} &hellip;
                                 <button onclick="clusive.moreOrLess({{ title.bookshareId }}, 'more', event)" class="btn btn-primary">More</button>
                             </li>
                             <li id="long_{{ title.bookshareId }}" style="display: none">
