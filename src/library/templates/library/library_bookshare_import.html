@@ -32,14 +32,14 @@
                             {% if title.clusive.more %}
                             <li id="short_{{ title.bookshareId }}">
                                 Description: {{ title.clusive.synopsis }} &hellip;
-                                <button onclick="clusive.moreOrLess({{ title.bookshareId }}, 'more', event)" class="btn btn-primary">More</button>
+                                <button id="more_{{title.bookshareId}}" class="btn btn-primary more-or-less">More</button>
                             </li>
                             <li id="long_{{ title.bookshareId }}" style="display: none">
                                 Description: {{ title.synopsis }}
-                                <button onclick="clusive.moreOrLess({{ title.bookshareId }}, 'less', event)" class="btn btn-primary">Less</button>
+                                <button id="less_{{title.bookshareId}}" class="btn btn-primary more-or-less">Less</button>
                             </li>
                             {% else %}
-                            <li id="long_{{ title.bookshareId }}" style="display: none">
+                            <li id="long_{{ title.bookshareId }}">
                                Description: {{ title.synopsis }}
                             </li>
                             {% endif %}
@@ -55,24 +55,30 @@
         </div>
     </div>
     <script type="text/javascript">
-        clusive.moreOrLess = function (id, action) {
-            if (action === "more") {
+        clusive.moreOrLess = function (event) {
+            id = (event.target.id).replace(/(more_|less_)/, '');
+            action = (event.target.id).replace(id, '');
+            if (action === "more_") {
                 elementToShow = document.getElementById(`long_${id}`);
                 elementToHide = document.getElementById(`short_${id}`);
-                elementToHide.style.display = 'none';
-                elementToShow.style.display = 'block';
             }
-            else if (action === "less") {
+            else if (action === "less_") {
                 elementToHide = document.getElementById(`long_${id}`);
                 elementToShow = document.getElementById(`short_${id}`);
-                elementToHide.style.display = 'none';
-                elementToShow.style.display = 'block';
             }
+            elementToHide.style.display = 'none';
+            elementToShow.style.display = 'block';
             event.stopPropagation();
             event.preventDefault();
         }
-    </script>
 
+        $(document).ready(function() {
+            moreOrLessButtons = document.querySelectorAll('.more-or-less');
+            moreOrLessButtons.forEach(function (aButton) {
+                aButton.addEventListener ("click", clusive.moreOrLess);
+            });
+        });
+    </script>
 </main>
 {% endblock %}
 

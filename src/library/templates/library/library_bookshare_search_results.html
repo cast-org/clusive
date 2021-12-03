@@ -60,14 +60,14 @@
                                                 {% if book.clusive.more %}
                                                 <p id="short_{{ book.bookshareId }}">
                                                     {{ book.clusive.synopsis }} &hellip;
-                                                    <button onclick="clusive.moreOrLess({{ book.bookshareId }}, 'more')" class="btn btn-primary">More</button>
+                                                    <button id="more_{{ book.bookshareId }}" class="btn btn-primary more-or-less">More</button>
                                                 </p>
                                                 <p id="long_{{ book.bookshareId }}" style="display: none">
                                                     {{ book.synopsis }}
-                                                    <button onclick="clusive.moreOrLess({{ book.bookshareId }}, 'less')" class="btn btn-primary">Less</button>
+                                                    <button id="less_{{ book.bookshareId }}" class="btn btn-primary  more-or-less">Less</button>
                                                 </p>
                                                 {% else %}
-                                                <p id="long_{{ book.bookshareId }}" style="display: none">
+                                                <p id="long_{{ book.bookshareId }}">
                                                     {{ book.synopsis }}
                                                 </p>
                                                 {% endif %}
@@ -103,22 +103,29 @@
             </div>
         </div>
         <script type="text/javascript">
-            clusive.moreOrLess = function (id, action) {
-                if (action === "more") {
+            clusive.moreOrLess = function (event) {
+                id = (event.target.id).replace(/(more_|less_)/, '');
+                action = (event.target.id).replace(id, '');
+                if (action === "more_") {
                     elementToShow = document.getElementById(`long_${id}`);
                     elementToHide = document.getElementById(`short_${id}`);
-                    elementToHide.style.display = 'none';
-                    elementToShow.style.display = 'block';
                 }
-                else if (action === "less") {
+                else if (action === "less_") {
                     elementToHide = document.getElementById(`long_${id}`);
                     elementToShow = document.getElementById(`short_${id}`);
-                    elementToHide.style.display = 'none';
-                    elementToShow.style.display = 'block';
                 }
+                elementToHide.style.display = 'none';
+                elementToShow.style.display = 'block';
                 event.stopPropagation();
                 event.preventDefault();
             }
+
+            $(document).ready(function() {
+                moreOrLessButtons = document.querySelectorAll('.more-or-less');
+                moreOrLessButtons.forEach(function (aButton) {
+                    aButton.addEventListener ("click", clusive.moreOrLess);
+                });
+            });
         </script>
     </main>
 </div>
