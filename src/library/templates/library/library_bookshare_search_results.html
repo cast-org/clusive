@@ -60,11 +60,11 @@
                                                 {% if book.clusive.more %}
                                                 <p id="short_{{ book.bookshareId }}">
                                                     {{ book.clusive.synopsis }} &hellip;
-                                                    <button id="more_{{ book.bookshareId }}" class="btn btn-primary more-or-less">More</button>
+                                                    <button id="more_{{ book.bookshareId }}" class="link-btn more-or-less">See more</button>
                                                 </p>
                                                 <p id="long_{{ book.bookshareId }}" style="display: none">
                                                     {{ book.synopsis }}
-                                                    <button id="less_{{ book.bookshareId }}" class="btn btn-primary  more-or-less">Less</button>
+                                                    <button id="less_{{ book.bookshareId }}" class="link-btn more-or-less">See less</button>
                                                 </p>
                                                 {% else %}
                                                 <p id="long_{{ book.bookshareId }}">
@@ -104,20 +104,24 @@
         </div>
         <script type="text/javascript">
             clusive.moreOrLess = function (event) {
-                id = (event.target.id).replace(/(more_|less_)/, '');
-                action = (event.target.id).replace(id, '');
+                const id = (event.target.id).replace(/(more_|less_)/, '');
+                const action = (event.target.id).replace(id, '');
+                var focusId = '';
                 if (action === "more_") {
-                    elementToShow = document.getElementById(`long_${id}`);
-                    elementToHide = document.getElementById(`short_${id}`);
+                    var elementToShow = document.getElementById(`long_${id}`);
+                    var elementToHide = document.getElementById(`short_${id}`);
+                    focusId = `less_${id}`;
                 }
                 else if (action === "less_") {
-                    elementToHide = document.getElementById(`long_${id}`);
-                    elementToShow = document.getElementById(`short_${id}`);
+                    var elementToHide = document.getElementById(`long_${id}`);
+                    var elementToShow = document.getElementById(`short_${id}`);
+                    focusId = `more_${id}`;
                 }
                 elementToHide.style.display = 'none';
                 elementToShow.style.display = 'block';
                 event.stopPropagation();
                 event.preventDefault();
+                document.getElementById(focusId).focus();
             }
 
             $(document).ready(function() {
