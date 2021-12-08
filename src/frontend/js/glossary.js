@@ -329,11 +329,13 @@ $(function() {
 
     $('a.wordbank-next').on('click', function(e) {
         e.preventDefault();
+        confettiCannon(e.target);
         window.wordBank.moveRating(this, +1);
     });
 
     $('a.wordbank-prev').on('click', function(e) {
         e.preventDefault();
+        confettiCannon(e.target);
         window.wordBank.moveRating(this, -1);
     });
 
