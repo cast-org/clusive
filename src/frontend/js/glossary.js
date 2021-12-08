@@ -221,14 +221,14 @@ vocabCheck.update = function() {
     }
 };
 
-vocabCheck.selected = function(value) {
+vocabCheck.selected = function(value, target) {
     vocabCheck.ratings[vocabCheck.wordIndex] = value;
     if (vocabCheck.wordIndex < vocabCheck.wordCount - 1) {
         $('#vocabCheckNext').prop('disabled', false);
     } else {
         $('#vocabCheckThanks').show();
         $('#vocabCheckDone').prop('disabled', false);
-        confettiCannon();
+        confettiCannon(target);
     }
 };
 
@@ -310,11 +310,11 @@ $(function() {
     });
 
     // When ranking in the check-in modal is selected, notify server
-    $('#vocabCheckModal').on('change', 'input[type="radio"]', function() {
+    $('#vocabCheckModal').on('change', 'input[type="radio"]', function(event) {
         var value = $(this).val();
         var bookId = vocabCheck.pendingArticle;
         $.get('/glossary/rating/checkin/' + vocabCheck.words[vocabCheck.wordIndex] + '/' + value + '?bookId=' + bookId);
-        vocabCheck.selected(value);
+        vocabCheck.selected(value, event.target);
     });
 
     $('a.wordbank-word').on('click', function(e) {

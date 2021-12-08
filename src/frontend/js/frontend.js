@@ -306,7 +306,8 @@ function starsSelectedText() {
         }).done(function(html) {
             $('#star_rating_panel').replaceWith(html);
             starsSelectedTextUpdate($('#star_rating_panel .stars')[0]);
-            confettiCannon();
+            // eslint-disable-next-line no-use-before-define
+            confettiCannon(e.target);
         }).fail(function(err) {
             console.error('Failed sending star rating results: ', err);
         });
@@ -763,14 +764,37 @@ function contextTranslate(selection) {
     load_translation(selection);
 }
 
+function originInViewport(elem) {
+    'use strict';
+
+    if (typeof elem === 'undefined') {
+        return null;
+    }
+
+    var elRect = elem.getBoundingClientRect();
+    var winHeight = window.innerHeight || document.documentElement.clientHeight;
+    var winWidth = window.innerWidth || document.documentElement.clientWidth;
+    var inViewport = elRect.top >= 0 && elRect.left >= 0 && elRect.bottom <= winHeight && elRect.right <= winWidth;
+
+    if (inViewport) {
+        return {
+            x: (elRect.left + (elRect.width / 2)) / winWidth,
+            y: (elRect.top + (elRect.height / 2)) / winHeight
+        };
+    }
+
+    return null;
+}
+
 // See: https://github.com/catdad/canvas-confetti
-function confettiCannon() {
+function confettiCannon(elem) {
     'use strict';
 
     if (cisl.prefs.userPrefersReducedMotion()) {
         return;
     }
 
+    var viewportOrigin = originInViewport(elem);
     var count = 300;
     var defaults = {
         origin: {
@@ -786,28 +810,41 @@ function confettiCannon() {
         }));
     }
 
-    fire(0.25, {
-        spread: 26,
-        startVelocity: 55
-    });
-    fire(0.2, {
-        spread: 60
-    });
-    fire(0.35, {
-        spread: 100,
-        decay: 0.91,
-        scalar: 0.8
-    });
-    fire(0.1, {
-        spread: 120,
-        startVelocity: 25,
-        decay: 0.92,
-        scalar: 1.2
-    });
-    fire(0.1, {
-        spread: 120,
-        startVelocity: 45
-    });
+    if (viewportOrigin !== null) {
+        // Simplified cannon from single element
+        confetti({
+            origin: viewportOrigin,
+            particleCount: 75,
+            scalar: .75,
+            spread: 360,
+            startVelocity: 25,
+            zIndex: 1100
+        });
+    } else {
+        // Larger full-viewport cannon
+        fire(0.25, {
+            spread: 26,
+            startVelocity: 55
+        });
+        fire(0.2, {
+            spread: 60
+        });
+        fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.8
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 25,
+            decay: 0.92,
+            scalar: 1.2
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 45
+        });
+    }
 }
 
 $(window).ready(function() {
