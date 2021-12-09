@@ -243,7 +243,7 @@
     });
 
     fluid.defaults('cisl.prefs.enactor.reduceMotion', {
-        gradeNames: ['fluid.prefs.enactor.styleElements', 'fluid.viewComponent'],
+        gradeNames: ['fluid.prefs.enactor.styleElements'],
         cssClass: 'clusive-reduced-motion',
         elementsToStyle: $('body'),     // must be a jquery instance
         preferenceMap: {
