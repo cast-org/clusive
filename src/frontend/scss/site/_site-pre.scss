@@ -232,6 +232,9 @@ $list-item-active-bg:                   unset;
 $list-item-active-color:                unset;
 $list-bulleted-content:                 "\00a0\2022";
 
+$list-spaced-condensed-padding-y:       .5rem !default;
+$list-spaced-condensed-padding-x:       1rem !default;
+
 $table-bg-active:                       var(--CT_tableActiveBg);
 $table-border-color:                    var(--CT_tableBorderColor);
 $table-head-border-width:               5px;

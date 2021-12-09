@@ -170,6 +170,12 @@ h2,
     transform: translateX(-50%);
 }
 
+.list-spaced-condensed {
+    > .list-item {
+        padding: $list-spaced-condensed-padding-y $list-spaced-condensed-padding-x;
+    }
+}
+
 .link-above {
     position: relative;
     z-index: 2;

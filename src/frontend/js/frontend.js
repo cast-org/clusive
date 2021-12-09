@@ -707,6 +707,17 @@ function dashboardSetup() {
                 console.error('Failed fetching replacement dashboard panel: ', err);
             });
     });
+
+    $body
+        .on('click', '.readtime-bar[data-cfw="tooltip"]', function(e) {
+            $(e.currentTarget).attr('aria-expanded', 'true');
+        })
+        .on('beforeShow.cfw.tooltip', '.readtime-bar[data-cfw="tooltip"]', function() {
+            $('.readtime-tooltip:visible').CFW_Tooltip('hide');
+        })
+        .on('afterHide.cfw.tooltip', '.readtime-bar[data-cfw="tooltip"]', function(e) {
+            $(e.currentTarget).attr('aria-expanded', 'false');
+        });
 }
 
 // Starred button functionality
