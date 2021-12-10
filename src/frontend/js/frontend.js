@@ -803,6 +803,8 @@ function confettiCannon(elem) {
         zIndex: 1100
     };
 
+console.log(elem, viewportOrigin);
+
     function fire(particleRatio, opts) {
         // eslint-disable-next-line compat/compat
         confetti(Object.assign({}, defaults, opts, {

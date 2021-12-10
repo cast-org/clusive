@@ -329,14 +329,18 @@ $(function() {
 
     $('a.wordbank-next').on('click', function(e) {
         e.preventDefault();
-        confettiCannon(e.target);
+        var item = e.target.closest('.wordbank-item');
+        var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, +1);
+        $(item).CFW_transition(function() { confettiCannon(word); });
     });
 
     $('a.wordbank-prev').on('click', function(e) {
         e.preventDefault();
-        confettiCannon(e.target);
+        var item = e.target.closest('.wordbank-item');
+        var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, -1);
+        $(item).CFW_transition(function() { confettiCannon(word); });
     });
 
     window.wordBank.updateColumnCounts();

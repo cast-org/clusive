@@ -54,6 +54,13 @@
     &:last-child {
         border-right: 1px solid var(--CT_wordbankBorderColor);
     }
+
+    &.active {
+        position: relative;
+        z-index: 1;
+        outline: 2px dashed currentColor;
+        outline-offset: -3px;
+    }
 }
 
 .wordbank-title {
@@ -125,6 +132,7 @@
 
 .wordbank-list {
     width: 100%;
+    margin-top: .5rem;
     margin-bottom: 1rem;
 }
 
@@ -132,6 +140,7 @@
     display: flex;
     flex: 1 1 auto;
     align-items: center;
+    height: 1.5rem;
     padding-left: calc(.25rem + 1px);
     margin: .5rem 0;
     white-space: nowrap;
@@ -157,6 +166,14 @@
             display: none;
         }
     }
+
+    &.dragging {
+        @include transition(none);
+    }
+}
+
+.wordbank-word {
+    line-height: 1.5;
 }
 
 .wordbank-prev,
@@ -182,4 +199,19 @@
 
 .wordbank-prev {
     order: -1;
+}
+
+.wordbank-drag {
+    display: inline-flex;
+    align-items: center;
+    touch-action: none;
+    user-select: none;
+
+    &.dragging {
+        outline: 2px solid currentColor;
+
+        a {
+            pointer-events: none;
+        }
+    }
 }
