@@ -58,18 +58,20 @@
             </div>
             <div class="wordbank-body">
                 <div class="wordbank-body-bg">
-                    <div class="wordbank-col"></div>
-                    <div class="wordbank-col"></div>
-                    <div class="wordbank-col"></div>
-                    <div class="wordbank-col"></div>
+                    <div class="wordbank-col" data-dropzone-rating="0"></div>
+                    <div class="wordbank-col" data-dropzone-rating="1"></div>
+                    <div class="wordbank-col" data-dropzone-rating="2"></div>
+                    <div class="wordbank-col" data-dropzone-rating="3"></div>
                 </div>
                 <div class="wordbank-list">
                 {% for wm in words %}
                     <div data-rating="{{wm.knowledge_est}}" class="wordbank-item offset{{wm.knowledge_est}}">
-                        <a href="#" role="button" class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
-                        <a href="#" role="button" class="wordbank-prev" aria-label="Decrease rating for '{{wm.word}}'" title="Move left"><span class="icon-chevron-left" aria-hidden="true"></span><span class="sr-only">Decrease rating for '{{wm.word}}'</span></a>
-                        <a href="#" role="button" class="wordbank-next" aria-label="Increase rating for '{{wm.word}}'" title="Move right"><span class="icon-chevron-right" aria-hidden="true"></span><span class="sr-only">Increase rating for '{{wm.word}}'</span></a>
-                        <a href="#" role="button" class="wordbank-del" aria-label="Remove '{{wm.word}}' from word bank" title="Remove"><span class="icon-cancel" aria-hidden="true"></span><span class="sr-only">Remove '{{wm.word}}' from word bank</span></a>
+                        <div class="wordbank-drag">
+                            <a href="#" role="button" class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
+                            <a href="#" role="button" class="wordbank-prev" aria-label="Decrease rating for '{{wm.word}}'" title="Move left"><span class="icon-chevron-left" aria-hidden="true"></span><span class="sr-only">Decrease rating for '{{wm.word}}'</span></a>
+                            <a href="#" role="button" class="wordbank-next" aria-label="Increase rating for '{{wm.word}}'" title="Move right"><span class="icon-chevron-right" aria-hidden="true"></span><span class="sr-only">Increase rating for '{{wm.word}}'</span></a>
+                            <a href="#" role="button" class="wordbank-del" aria-label="Remove '{{wm.word}}' from word bank" title="Remove"><span class="icon-cancel" aria-hidden="true"></span><span class="sr-only">Remove '{{wm.word}}' from word bank</span></a>
+                        </div>
                     </div>
                 {% endfor %}
                 </div>

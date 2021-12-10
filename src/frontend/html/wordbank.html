@@ -43,6 +43,7 @@ window.wordBank.moveRating = function(elt, delta) {
 window.wordBank.displayNewWordRating = function(item, newrating) {
     item.removeClass('offset' + item.data('rating'));
     item.data('rating', newrating);
+    item[0].dataset.rating = newrating;
     item.addClass('offset' + newrating);
     item.find('.wordbank-word').attr('aria-describedby', 'rank' + newrating);
 };
@@ -56,7 +57,6 @@ window.wordBank.dragWord = {
 
 $(window).ready(function() {
     $('a.wordbank-next').on('click', function(e) {
-        e.stopPropagation();
         e.preventDefault();
         var item = e.target.closest('.wordbank-item');
         var word = item.querySelector('.wordbank-word');
@@ -65,7 +65,6 @@ $(window).ready(function() {
     });
 
     $('a.wordbank-prev').on('click', function(e) {
-        e.stopPropagation();
         e.preventDefault();
         var item = e.target.closest('.wordbank-item');
         var word = item.querySelector('.wordbank-word');
@@ -125,7 +124,7 @@ $(window).ready(function() {
     .pointerEvents({
         holdDuration: 300
     })
-    .on('hold', function (event) {
+    .on('hold', function(event) {
         // Use manual hold check and call due to clicks making false positive auto-start holds
         var interaction = event.interaction;
         if (!interaction.interacting()) {
@@ -157,9 +156,10 @@ $(window).ready(function() {
             var elmDrop = event.target;
             var item = elmDrag.closest('.wordbank-item');
             var word = item.querySelector('.wordbank-word');
+            var prevrating = Number(item.dataset.rating)
             var newrating = Number(elmDrop.dataset.dropzoneRating);
 
-            if (newrating >= 0 && newrating <= 3) {
+            if (prevrating !== newrating && newrating >= 0 && newrating <= 3) {
                 // TODO: eventlog
                 //var control = 'wb_drag??_??'
                 //$.get('/glossary/rating/' + control + '/' + word.text() + '/' + newrating);
