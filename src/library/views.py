@@ -73,6 +73,7 @@ logger = logging.getLogger(__name__)
 # FILTER:               page
 # PAGE:
 
+import pdb
 class LibraryDataView(LoginRequiredMixin, ListView):
     """
     Just the list of cards and navigation bar part of the library page.
@@ -135,6 +136,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             self.clusive_user.library_style = self.style
             user_changed = True
         if user_changed:
+            pdb.set_trace()
             self.clusive_user.save()
         return super().get(request, *args, **kwargs)
 
@@ -703,7 +705,7 @@ class BookshareConnect(LoginRequiredMixin, TemplateView):
     template_name = 'library/partial/connect_to_bookshare.html'
 
     def get(self, request, *args, **kwargs):
-#        pdb.set_trace()
+        pdb.set_trace()
         if is_bookshare_connected(request):
             request.session['bookshare_connected'] = True
             return HttpResponseRedirect(redirect_to=reverse('upload'))
@@ -767,6 +769,9 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'titles': self.metadata.get('titles', []),
+            'totalResults': self.metadata.get('totalResults'),
+            'clusive_title_count': self.metadata.get('clusive_title_count', '?'),
+            'duration': self.metadata.get('duration', '?'),
             'query_key' : self.query_key
         })
         return context
@@ -795,21 +800,24 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         is_keyword_search = False
         if self.query_key.startswith('title:'):
             href = 'https://api.bookshare.org/v2/titles?' + urlencode({
-                'title': self.query_key.replace('title:', ''),
+                'title': '"' + self.query_key.replace('title:', '') + '"',
                 'api_key': access_keys.get('api_key'),
-                'formats': 'EPUB3,'
+                'formats': 'EPUB3',
+                'excludeGlobalCollection': True
             })
         elif self.query_key.startswith('author:'):
             href = 'https://api.bookshare.org/v2/titles?' + urlencode({
                 'author': self.query_key.replace('author:', ''),
                 'api_key': access_keys.get('api_key'),
-                'formats': 'EPUB3,'
+                'formats': 'EPUB3',
+                'excludeGlobalCollection': True
             })
         else:
             href = 'https://api.bookshare.org/v2/titles?' + urlencode({
-                'keyword': self.query_key,
+                'keyword': '"' + self.query_key + '"',
                 'api_key': access_keys.get('api_key'),
-                'formats': 'EPUB3,'
+                'formats': 'EPUB3',
+                'excludeGlobalCollection': True
             })
             is_keyword_search = True
         logger.debug('Start of Bookshare search using %s', href)
@@ -844,6 +852,8 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
             new_metadata = None
 
         toc = time.perf_counter()
+        duration = f"{toc - tic:0.4f}"
+        collected_metadata['duration'] = duration
         logger.debug(f"Bookshare metadata filtering: {toc - tic:0.4f} seconds")
 #        pdb.set_trace()
         return collected_metadata
@@ -891,52 +901,63 @@ def filter_metadata(metadata, collected_metadata, is_keyword_search):
     Filter the bookshare title search metadata by:
     - whether the user can import it
     - whether the title has an EPUB3 version 
+    - whether the copyrightDate is None (temporary)
     """
     logger.debug("Metadata filter, message: '%s', next: '%s'", metadata.get('message', 'null'), metadata.get('next', ''))
 #    pdb.set_trace()
     if collected_metadata.get('totalResults', 0) == 0:
         collected_metadata['totalResults'] = metadata['totalResults']
+        logger.debug("START OF FILTERING, total results = %s", metadata['totalResults'])
         collected_metadata['limit'] = metadata['limit']
         collected_metadata['message'] = metadata['message']
         if collected_metadata.get('titles') is None:
             collected_metadata['titles'] = []
-    
-    new_titles = metadata.get('titles', [])
-    for title in new_titles:
-        can_import = title.get('available', False)
+
+    num_titles_included = 0
+    for title in metadata.get('titles', []):
+        if title.get('available', False):
+#         # Based in Bookshare's advice, for the partnerdemo account, only
+#         # title with no copyright can be imported.
+#         copyright = title.get('copyright')
+#         logger.debug("=> COPYRIGHT for %s (%s) is %s", title['title'], title['isbn13'], copyright)
+#         if copyright is None:
+
         # Sometimes metadata indicates that an EPBUB3 version is available,
-        # but sometimes the formats array is null.  For the latter, default to
-        # guessing that there is an EPUB3 version.
+        # but sometimes the formats array is null.  According to Bookshare's
+        # advice, a null copyright and an empty formats means there is an EPUB3
+        # version
 #         if not is_keyword_search:
 #             has_epub = True
-        if title.get('formats') is None:
-            has_epub = False
-        else:
-            has_epub = next((x for x in title['formats'] if x['formatId'] == 'EPUB3'), None) is not None
 
-        if can_import and has_epub:
-            logger.debug("==> Metadata filter: %s", title['title'])
-            surface_bookshare_info(title)
-            collected_metadata['titles'].append(title)
-            # Not sure what to do about these really.
-            collected_metadata['next'] = metadata['next']
-            collected_metadata['allows'] = metadata['allows']
-        
+            epub_info = check_bookshare_epub_format(title)
+            if not (epub_info['epub'] == 'no epub'):
+                logger.debug("==> Metadata filter: %s", title['title'])
+                surface_bookshare_info(title, epub_info)
+                collected_metadata['titles'].append(title)
+                num_titles_included += 1
+                # Not sure what to do about these really.
+                collected_metadata['next'] = metadata['next']
+                collected_metadata['allows'] = metadata['allows']
+
+    # Add the latest count
+    clusive_title_count = collected_metadata.get('clusive_title_count', 0)
+    clusive_title_count += num_titles_included
+    collected_metadata['clusive_title_count'] = clusive_title_count
     return collected_metadata
 
-def surface_bookshare_info(book):
+def surface_bookshare_info(book, clusive_addons=None):
     """
     Add a `clusive` block to the book's Bookshare metadata where the authors
     are taken from Bookshares's `contributors` section, and the thumnbail and
     download urls are taken from the `links` array.  It also creates a shortened
     synopis (200 characters).
     """
-    clusive = {}
+    clusive = {} if clusive_addons is None else clusive_addons
     for link in book.get('links', []):
         if link['rel'] == 'thumbnail':
             clusive['thumbnail'] = link['href']
         elif link['rel'] == 'self':
-            clusive['import_url'] = link['href']#.replace('https://', '')
+            clusive['import_url'] = link['href']
 
     authors = []
     for contributor in book.get('contributors', []):
@@ -951,7 +972,24 @@ def surface_bookshare_info(book):
         if len(synopsis) < len(book['synopsis']):
             more = True
 
+    if clusive.get('epub') is None:
+        clusive.update(check_bookshare_epub_format(book))
+
     clusive['synopsis'] = synopsis
     clusive['more'] = more
     book['clusive'] = clusive
 
+def check_bookshare_epub_format(book):
+    results = {}
+    formats = book.get('formats')
+    if formats is not None and len(formats) != 0:
+        # TODO: use next()?
+        results['epub'] = 'no epub'
+        for aFormat in formats:
+            if aFormat['formatId'] == 'EPUB3':
+                results['epub'] = 'has epub'
+                break
+    else:
+        results['epub'] = 'no formats listed'
+
+    return results

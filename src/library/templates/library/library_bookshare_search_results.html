@@ -22,6 +22,7 @@
                     <h2>Step 2: Select from results:</h2>
 
                     <div class="list list-divided list-spaced-y result-list mb-0">
+                        <p>Number of pre-filtered titles found: {{ totalResults }}, after filtering: {{ clusive_title_count }} (in {{ duration }} seconds)</p>
                         {% for book in titles %}
                         <div class="list-item">
                             <div class="row">
@@ -54,7 +55,7 @@
                                                 {% empty %}
                                                 <div>No author listed</div>
                                                 {% endfor %}
-                                                <div>ISBN: {{ book.isbn13 }}</div>
+                                                <div>ISBN: {{ book.isbn13 }} ({{ book.clusive.epub }})</div>
                                             </div>
                                             <div class="card-text">
                                                 {% if book.clusive.more %}
