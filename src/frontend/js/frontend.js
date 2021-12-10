@@ -685,7 +685,7 @@ function dashboardSetup() {
         $.get('/dashboard-activity-panel/' + $(this).data('days'))
             .done(function(result) {
                 $studentActivityPanel.replaceWith(result);
-                $studentActivityPanel.CFW_Init();
+                $('#StudentActivityPanel').CFW_Init();
             })
             .fail(function(err) {
                 console.error('Failed fetching replacement dashboard panel: ', err);
@@ -701,7 +701,7 @@ function dashboardSetup() {
         $.get('/dashboard-activity-panel-sort/' + $(this).data('sort'))
             .done(function(result) {
                 $studentActivityPanel.replaceWith(result);
-                $studentActivityPanel.CFW_Init();
+                $('#StudentActivityPanel').CFW_Init();
             })
             .fail(function(err) {
                 console.error('Failed fetching replacement dashboard panel: ', err);
@@ -718,6 +718,28 @@ function dashboardSetup() {
         .on('afterHide.cfw.tooltip', '.readtime-bar[data-cfw="tooltip"]', function(e) {
             $(e.currentTarget).attr('aria-expanded', 'false');
         });
+
+    $body.on('click', '.detailTrigger', function(e) {
+        e.preventDefault();
+        var $link = $(e.currentTarget);
+        // Fill in student name
+        $('#readDetailStudentName').text($link.data('clusive-student-name'));
+        $('#readDetailStudentLoading').show();
+        $('#readDetailStudentContent').hide();
+        $link.CFW_Modal({
+            target: '#readDetailStudent',
+            unlink: true,
+            show: true
+        });
+        $.get('/dashboard-activity-detail/' + $link.data('clusive-student-id') + '/' + $link.data('clusive-book-id'))
+            .done(function(result) {
+                $('#readDetailStudentContent').html(result).show();
+                $('#readDetailStudentLoading').hide();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
+    });
 }
 
 // Starred button functionality

@@ -320,16 +320,23 @@ class Paradata(models.Model):
     read_aloud_count = models.SmallIntegerField(default=0, verbose_name='Read-aloud use count')
     translation_count = models.SmallIntegerField(default=0, verbose_name='Translation use count')
 
+    @property
+    def words_looked_up_list(self):
+        val = self.words_looked_up
+        if val:
+            return json.loads(val)
+        else:
+            return []
 
     @classmethod
     def record_view(cls, book, version_number, clusive_user):
         """Update Paradata and ParadataDaily records to a view for the given book, user, version, and time."""
         bv = BookVersion.objects.get(book=book, sortOrder=version_number)
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
-        if created:
-            para.first_version = bv
         para.view_count += 1
         para.last_view = timezone.now()
+        if not para.first_version:
+            para.first_version = bv
         if para.last_version != bv:
             # If we're switching to a different version, clear out last reading location
             para.last_location = None

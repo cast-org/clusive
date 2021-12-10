@@ -1,0 +1,48 @@
+{% load humanize formatting %}
+<ul class="list list-divided list-spaced-condensed mb-0">
+    <li class="list-item">
+        <strong>Title:</strong>
+        {{ book.title }}
+    </li>
+    <li class="list-item">
+        <strong>Date last read:</strong>
+        {{ paradata.last_view | naturalday }}
+    </li>
+    <li class="list-item">
+        <strong>Active reading time:</strong>
+        {{ paradata.total_time | duration }} ({{ paradata.recent_time | duration}} this week)
+    </li>
+    <li class="list-item">
+        <strong>Words looked up:</strong>
+        {{ paradata.words_looked_up_list | join:", " | default:"&mdash;" }}
+    </li>
+    <li class="list-item">
+        <strong>Supports used:</strong>
+        {{ supports | join:", " | default:"&mdash;" }}
+    </li>
+    <li class="list-item">
+        <strong>Reactions:</strong>
+        {{ affect_check.to_answer_list | join:", " | default:"&mdash;" }}
+        <br />
+        <em>{{ affect_check.affect_free_response }}</em>
+    </li>
+    <li class="list-item">
+        <strong>How much did you learn:</strong>
+        {{ comp_check.get_answer | default:"&mdash;" }}
+        <br>
+        <em>{{ comp_check.comprehension_free_response }}</em>
+    </li>
+    <li class="list-item">
+        <strong>Highlights:</strong>
+        {{ highlight_count | default:"&mdash;" }}
+        {% if note_count %}({{ note_count }} note{{ note_count | pluralize }}){% endif %}
+    </li>
+    {% if book_has_versions %}
+    <li class="list-item">
+        <strong>Challenge level:</strong>
+        {{ paradata.last_version.sortOrder | add:1 }}
+        {% if version_switched %}(switched from {{ paradata.first_version.sortOrder | add:1 }} ){% endif %}
+    </li>
+    {% endif %}
+</ul>
+
