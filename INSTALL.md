@@ -186,6 +186,16 @@ there are several additional steps.
       * You can change the `Display Name` from "example.com" to something more meaningful to your situation, but it
         does not really matter.
 
+## Connecting to Bookshare
+
+Optional. In order to allow users to download books from their Bookshare accounts,
+you would need to obtain a Bookshare API key from Benetech. 
+If you have one, in Clusive's admin interface, go to "Social Applications", click Add, and set:
+* Provider: Bookshare
+* Name: bookshare
+* Client ID: your API key
+* Sites: add your site
+
 ## Running Cypress tests
 
  * Run the standard local install. This will install Cypress as a dev dependency.
