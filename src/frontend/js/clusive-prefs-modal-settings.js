@@ -96,9 +96,9 @@
                 args: ['{change}.value', 'preferences.cisl_prefs_glossary', '{that}'],
                 excludeSource: 'init'
             },
-            'modalSettings.reduceMotion': {
+            'modalSettings.animations': {
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
-                args: ['{change}.value', 'preferences.cisl_prefs_reduceMotion', '{that}'],
+                args: ['{change}.value', 'preferences.cisl_prefs_animations', '{that}'],
                 excludeSource: 'init'
             },
             'modalSettings.readSpeed': {
@@ -134,7 +134,7 @@
             font: '.cislc-modalSettings-font',
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
-            reduceMotion: '.cislc-modalSettings-reduceMotion',
+            animations: '.cislc-modalSettings-animations',
             scroll: '.cislc-modalSettings-scroll',
             readSpeed: '.cislc-modalSettings-readSpeed',
             readVoice: '.cislc-modalSettings-readVoice',
@@ -175,9 +175,9 @@
                     }
                 }
             },
-            reduceMotionSwitch: {
-                selector: 'reduceMotion',
-                path: 'modalSettings.reduceMotion',
+            animationsSwitch: {
+                selector: 'animations',
+                path: 'modalSettings.animations',
                 rules: {
                     domToModel: {
                         '': {
@@ -225,7 +225,7 @@
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
 
-        that.applier.change('modalSettings.reduceMotion', fluid.get(preferences, 'cisl_prefs_reduceMotion'));
+        that.applier.change('modalSettings.animations', fluid.get(preferences, 'cisl_prefs_animations'));
 
         that.applier.change('modalSettings.scroll', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'cisl_prefs_scroll'), that.options.mappedValues.preferenceScrollToModal));
 
