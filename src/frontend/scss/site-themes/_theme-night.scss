@@ -594,3 +594,14 @@ $readtime-bar-bg:                       #a0abfd;
 $readtime-bar-active-bg:                #ff554d;
 $readtime-bar-striped-bg:               $box-bg;
 $readtime-filter-active-border-color:   #ff554d;
+
+// Alerts
+$alert-primary-bg:                      $popover-header-bg;
+$alert-primary-color:                   $popover-header-color;
+$alert-primary-border-color:            $popover-border-color;
+$alert-primary-hover-color:             $link-hover-color;
+
+$alert-secondary-bg:                    #fd6;
+$alert-secondary-color:                 #333;
+$alert-secondary-border-color:          transparent;
+$alert-secondary-hover-color:           $link-hover-color;
