@@ -72,6 +72,12 @@ class ComprehensionCheckResponse(CheckResponse):
     )
     comprehension_free_response = models.TextField(null=True)
 
+    def get_answer(self):
+        for choice in ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES:
+            if choice[0] == self.comprehension_scale_response:
+                return choice[1]
+        return None
+
     @classmethod
     def get_counts(cls, book, period):
         """
@@ -150,14 +156,18 @@ class AffectiveCheckResponse(CheckResponse):
             result.append(self.get_by_name(word))
         return result
 
-    # Returns all True options as a single comma-separated string
-    # Used for Caliper event creation
-    def to_answer_string(self):
+    # Returns all True words as a list
+    def to_answer_list(self):
         answers = []
         for word in affect_words:
             if self.get_by_name(word):
                 answers.append(word)
-        return ','.join(answers)
+        return answers
+
+    # Returns all True options as a single comma-separated string
+    # Used for Caliper event creation
+    def to_answer_string(self):
+        return ','.join(self.to_answer_list())
 
     def __str__(self):
         return '<ACResp %s/%d>' % (self.user.anon_id, self.book.id)

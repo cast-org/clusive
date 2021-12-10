@@ -11,6 +11,8 @@ urlpatterns = [
          name='dashboard_activity_panel'),
     path('dashboard-activity-panel-sort/<sort>', views.DashboardActivityPanelView.as_view(),
          name='dashboard_activity_panel_sort'),
+    path('dashboard-activity-detail/<int:user_id>/<int:book_id>', views.DashboardActivityDetailView.as_view(),
+         name='dashboard_activity_detail'),
     path('reader', views.ReaderIndexView.as_view(), name='reader_index'),
     path('reader/<int:book_id>/<int:version>', views.ReaderView.as_view(), name='reader'),
     path('reader/<int:book_id>', views.ReaderChooseVersionView.as_view(pattern_name='reader'), name='reader_default'),

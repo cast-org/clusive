@@ -310,10 +310,23 @@ class Paradata(models.Model):
 
     view_count = models.SmallIntegerField(default=0, verbose_name='View count')
     last_view = models.DateTimeField(null=True, verbose_name='Last view time')
-    last_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
-                                     verbose_name='Last version viewed')
+    first_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True, blank=True,
+                                      verbose_name='Original version chosen by system', related_name='paradata_first_version_set')
+    last_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True, blank=True,
+                                     verbose_name='Last version viewed', related_name='paradata_last_version_set')
     last_location = models.TextField(null=True, verbose_name='Last reading location')
-    total_time = models.DurationField(null=True, verbose_name='Total time spent in book')
+    total_time = models.DurationField(null=True, verbose_name='Total active time spent in book')
+    words_looked_up = models.TextField(null=True, blank=True, verbose_name='JSON list of words looked up')
+    read_aloud_count = models.SmallIntegerField(default=0, verbose_name='Read-aloud use count')
+    translation_count = models.SmallIntegerField(default=0, verbose_name='Translation use count')
+
+    @property
+    def words_looked_up_list(self):
+        val = self.words_looked_up
+        if val:
+            return json.loads(val)
+        else:
+            return []
 
     @classmethod
     def record_view(cls, book, version_number, clusive_user):
@@ -322,6 +335,8 @@ class Paradata(models.Model):
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
         para.view_count += 1
         para.last_view = timezone.now()
+        if not para.first_version:
+            para.first_version = bv
         if para.last_version != bv:
             # If we're switching to a different version, clear out last reading location
             para.last_location = None
@@ -368,6 +383,33 @@ class Paradata(models.Model):
             parad.total_time = timedelta()
         parad.total_time += time
         parad.save()
+
+    @classmethod
+    def record_word_looked_up(cls, book, user, word):
+        """Update Paradata with the new lookup"""
+        para, created = cls.objects.get_or_create(book=book, user=user)
+        if para.words_looked_up:
+            words = json.loads(para.words_looked_up)
+        else:
+            words = []
+        if not word in words:
+            words.append(word)
+            words.sort()
+            para.words_looked_up = json.dumps(words)
+            logger.debug('Updated %s with new words_looked_up list: %s', para, para.words_looked_up)
+            para.save()
+
+    @classmethod
+    def record_translation(cls, book, user):
+        para, created = cls.objects.get_or_create(book=book, user=user)
+        para.translation_count += 1
+        para.save()
+
+    @classmethod
+    def record_read_aloud(cls, book, user):
+        para, created = cls.objects.get_or_create(book=book, user=user)
+        para.read_aloud_count += 1
+        para.save()
 
     def __str__(self):
         return "%s@%s" % (self.user, self.book)

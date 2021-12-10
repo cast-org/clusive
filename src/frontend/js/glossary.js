@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN */
+/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id */
 /* exported load_translation */
 
 // Glossary-related functionality
@@ -76,7 +76,8 @@ function load_translation(text) {
         },
         data: {
             text: text,
-            language: lang
+            language: lang,
+            book_id: pub_id
         }
     })
         .done(function(data) {
