@@ -779,7 +779,7 @@
                                     <span class="readtime-legend-mark">
                                         <span class="readtime-mark-shared"></span>
                                     </span>
-                                    <span class="readtime-legend-label">Shared</span>
+                                    <span class="readtime-legend-label">Assigned</span>
                                 </section>
                             </div>
                             <div class="col-12 col-md-auto">
@@ -812,34 +812,93 @@
                                         <td><a href="#">Davey C.</a></td>
                                         <td>
                                             <div class="readtime-progress">
-                                                <div class="readtime-bar" style="width: 25%;" tabindex="0" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_0">
-                                                    <span class="readtime-mark-shared"></span>
-                                                </div>
-                                                <div id="tooltip_0" class="tooltip">
+                                                <button type="button" class="readtime-bar" style="width: 25%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_0" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Clues to Clusive, 0.2 hours</span>
+                                                    <span class="readtime-mark-shared" aria-label="Assigned"></span>
+                                                </button>
+                                                <div id="tooltip_0" class="tooltip readtime-tooltip">
                                                     <div class="tooltip-body">
-                                                        <div class="tooltip-truncate">Some book title and other information?</div>
-                                                        <span class="aria-hidden">[</span>x.x <span class="sr-only">hours</span><span class="ms-0_25" aria-hidden="true"> hrs]</span>
+                                                        <div aria-hidden="true">Clues to Clusive, 0.2 hours</div>
+                                                        <a href="#readDetailStudent" role="button" class="tooltip-link" data-cfw="modal">More details</a>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
+                                                </div>
+<div id="readDetailStudent" class="modal why-modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Student Reading Details: <span class="">Student Name</span></h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <ul class="list list-divided list-spaced-condensed mb-0">
+                    <li class="list-item">
+                        <strong>Title:</strong>
+                        The Four Freedoms speech (1941)
+                    </li>
+                    <li class="list-item">
+                        <strong>Date last read:</strong>
+                        August 9
+                    </li>
+                    <li class="list-item">
+                        <strong>Active reading time:</strong>
+                        65 minutes (15 <span aria-hidden="true">min</span> <span class="sr-only">minutes</span> this week)
+                    </li>
+                    <li class="list-item">
+                        <strong>Words looked up:</strong>
+                        member, threatened, learn
+                    </li>
+                    <li class="list-item">
+                        <strong>Supports used:</strong>
+                        read aloud, translation
+                    </li>
+                    <li class="list-item">
+                        <strong>Reactions:</strong>
+                        surprised, happy
+                    </li>
+                    <li class="list-item">
+                        <strong>How much did you learn:</strong>
+                        A little
+                        <br>
+                        <em>I should speak up more</em>
+                    </li>
+                    <li class="list-item">
+                        <strong>Highlights:</strong>
+                        7 (2 notes)
+                    </li>
+                    <li class="list-item">
+                        <strong>Challenge level:</strong>
+                        3 (switched from 2)
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+                                                <button type="button" class="readtime-bar active" style="width: 50%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_1" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">A Day At The Museum, 0.0 hours</span>
+                                                </button>
+                                                <div id="tooltip_1" class="tooltip readtime-tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div aria-hidden="true">A Day At The Museum, 0.0 hours</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
                                                     </div>
                                                     <div class="tooltip-arrow"></div>
                                                 </div>
 
-                                                <div class="readtime-bar active" style="width: 50%;" tabindex="0" data-cfw="tooltip"  data-cfw-tooltip-target="#tooltip_1">
-                                                </div>
-                                                <div id="tooltip_1" class="tooltip">
+                                                <button type="button" class="readtime-bar" style="width: 25%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_2" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Some book title and other information?</span>
+                                                    <span class="readtime-mark-shared" aria-label="Assigned"></span>
+                                                </button>
+                                                <div id="tooltip_2" class="tooltip readtime-tooltip">
                                                     <div class="tooltip-body">
-                                                        <div class="tooltip-truncate">Some book title and other information?</div>
-                                                        <span class="aria-hidden">[</span>x.x <span class="sr-only">hours</span><span class="ms-0_25" aria-hidden="true"> hrs]</span>
-                                                    </div>
-                                                    <div class="tooltip-arrow"></div>
-                                                </div>
-
-                                                <div class="readtime-bar" style="width: 25%;" tabindex="0" data-cfw="tooltip"  data-cfw-tooltip-target="#tooltip_2">
-                                                    <span class="readtime-mark-shared"></span>
-                                                </div>
-                                                <div id="tooltip_2" class="tooltip">
-                                                    <div class="tooltip-body">
-                                                        <div class="tooltip-truncate">Some book title and other information?</div>
-                                                        <span class="aria-hidden">[</span>x.x <span class="sr-only">hours</span><span class="ms-0_25" aria-hidden="true"> hrs]</span>
+                                                        <div aria-hidden="true">Some book title and other information?</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
                                                     </div>
                                                     <div class="tooltip-arrow"></div>
                                                 </div>
@@ -852,14 +911,50 @@
                                         <td><a href="#">Jules J.</a></td>
                                         <td>
                                             <div class="readtime-progress">
-                                                <div class="readtime-bar active" style="width: 20%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
+                                                <button type="button" class="readtime-bar active" style="width: 20%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_3" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Some book title and other information?</span>
+                                                </button>
+                                                <div id="tooltip_3" class="tooltip readtime-tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div aria-hidden="true">Some book title and other information?</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
-                                                <div class="readtime-bar" style="width: 35%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
-                                                    <span class="readtime-mark-shared"></span>
+
+                                                <button type="button" class="readtime-bar" style="width: 35%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_3" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Some book title and other information?</span>
+                                                    <span class="readtime-mark-shared" aria-label="Assigned"></span>
+                                                </button>
+                                                <div id="tooltip_3" class="tooltip readtime-tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div aria-hidden="true">Some book title and other information?</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
-                                                <div class="readtime-bar" style="width: 10%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
+
+                                                <button type="button" class="readtime-bar" style="width: 10%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_4" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Some book title and other information?</span>
+
+                                                </button>
+                                                <div id="tooltip_4" class="tooltip readtime-tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div aria-hidden="true">Some book title and other information?</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
-                                                <div class="readtime-bar striped" style="width: 10%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
+
+                                                <button type="button" class="readtime-bar striped" style="width: 10%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_5" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Some book title and other information?</span>
+                                                </button>
+                                                <div id="tooltip_5" class="tooltip readtime-tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div aria-hidden="true">Some book title and other information?</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
                                             </div>
                                         </td>
@@ -870,10 +965,27 @@
                                         <td><a href="#">Layla H.</a></td>
                                         <td>
                                             <div class="readtime-progress">
-                                                <div class="readtime-bar" style="width: 10%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
-                                                    <span class="readtime-mark-shared"></span>
+                                                <button type="button" class="readtime-bar" style="width: 10%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_6" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Some book title and other information?</span>
+                                                    <span class="readtime-mark-shared" aria-label="Assigned"></span>
+                                                </button>
+                                                <div id="tooltip_6" class="tooltip readtime-tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div aria-hidden="true">Some book title and other information?</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
-                                                <div class="readtime-bar active" style="width: 5%;" tabindex="0" data-cfw="tooltip" title="Some book title and other information?">
+
+                                                <button type="button" class="readtime-bar active" style="width: 5%;" data-cfw="tooltip" data-cfw-tooltip-target="#tooltip_7" data-cfw-tooltip-trigger="click hover" data-cfw-tooltip-placement="top auto" aria-expanded="false">
+                                                    <span class="sr-only">Some book title and other information?</span>
+                                                </button>
+                                                <div id="tooltip_7" class="tooltip readtime-tooltip">
+                                                    <div class="tooltip-body">
+                                                        <div aria-hidden="true">Some book title and other information?</div>
+                                                        <a href="#" role="button" class="tooltip-link" data-cfw="modal">More details</a>
+                                                    </div>
+                                                    <div class="tooltip-arrow"></div>
                                                 </div>
                                             </div>
                                         </td>
