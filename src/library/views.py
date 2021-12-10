@@ -800,7 +800,7 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         is_keyword_search = False
         if self.query_key.startswith('title:'):
             href = 'https://api.bookshare.org/v2/titles?' + urlencode({
-                'title': '"' + self.query_key.replace('title:', '') + '"',
+                'title': self.query_key.replace('title:', ''),
                 'api_key': access_keys.get('api_key'),
                 'formats': 'EPUB3',
                 'excludeGlobalCollection': True
@@ -814,7 +814,7 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
             })
         else:
             href = 'https://api.bookshare.org/v2/titles?' + urlencode({
-                'keyword': '"' + self.query_key + '"',
+                'keyword': self.query_key,
                 'api_key': access_keys.get('api_key'),
                 'formats': 'EPUB3',
                 'excludeGlobalCollection': True
