@@ -6,8 +6,6 @@ from django.core.exceptions import ValidationError
 from library.models import Book
 from roster.models import Period, ClusiveUser
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 

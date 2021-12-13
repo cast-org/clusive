@@ -75,7 +75,6 @@ import pdb
 # FILTER:               page
 # PAGE:
 
-import pdb
 class LibraryDataView(LoginRequiredMixin, ListView):
     """
     Just the list of cards and navigation bar part of the library page.
@@ -138,6 +137,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             self.clusive_user.library_style = self.style
             user_changed = True
         if user_changed:
+            # The debugger call is for catching the intermittent invalid style
+            # view values coming from the kwargs.  See:
+            # CSL-1442 https://castudl.atlassian.net/browse/CSL-1442
             pdb.set_trace()
             self.clusive_user.save()
         return super().get(request, *args, **kwargs)
@@ -839,7 +841,6 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         while metadata:
             next_link = next((x for x in metadata['links'] if x.get('rel', '') == 'next'), None)
             if next_link:
-#                pdb.set_trace()
                 resp = requests.request(
                     'GET',
                     next_link['href'],
@@ -849,7 +850,6 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                 )
                 # Handle 404 or no results
                 logger.debug(resp.url)
-#                pdb.set_trace()
                 new_metadata = resp.json()
                 collected_metadata = filter_metadata(new_metadata, collected_metadata, is_keyword_search)
             
@@ -862,7 +862,6 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         duration = f"{toc - tic:0.4f}"
         collected_metadata['duration'] = duration
         logger.debug(f"Bookshare metadata filtering: {toc - tic:0.4f} seconds")
-#        pdb.set_trace()
         return collected_metadata
 
 class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #EventMixin
@@ -911,7 +910,6 @@ def filter_metadata(metadata, collected_metadata, is_keyword_search):
     - whether the copyrightDate is None (temporary)
     """
     logger.debug("Metadata filter, message: '%s', next: '%s'", metadata.get('message', 'null'), metadata.get('next', ''))
-#    pdb.set_trace()
     if collected_metadata.get('totalResults', 0) == 0:
         collected_metadata['totalResults'] = metadata['totalResults']
         logger.debug("START OF FILTERING, total results = %s", metadata['totalResults'])
