@@ -1,11 +1,7 @@
 {% load static figuration %}
 {% csrf_token %}
 <p>
-    {% if request.session.bookshare_connected %}
-    <span class="socialaccount_provider btn btn-night disabled">Connect to Bookshare</span>
-    Status: Connected
-    {% else %}
+    {% if not is_bookshare_connected %}
     <a href="{% url 'bookshare_connect' %}" class="socialaccount_provider btn btn-night">Connect to Bookshare</a>
-    Status: Not connected
     {% endif %}
 </p>

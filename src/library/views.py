@@ -29,9 +29,11 @@ from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews
 from tips.models import TipHistory
-from oauth2.bookshare.views import is_bookshare_connected, get_access_keys
+from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 
 logger = logging.getLogger(__name__)
+
+import pdb
 
 # The library page requires a lot of parameters, which interact in rather complex ways.
 # Here's a summary.  It is a sort-of hierarchy, in that changing parameters higher on this list
@@ -239,6 +241,7 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
         context['tip_name'] = self.tip_shown.name if self.tip_shown else None
+        context['has_bookshare_account'] = has_bookshare_account(self.request)
         return context
 
 
@@ -301,6 +304,12 @@ class UploadCreateFormView(UploadFormView):
 
     def get_success_url(self):
         return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['has_bookshare_account'] = has_bookshare_account(self.request)
+        context['is_bookshare_connected'] = is_bookshare_connected(self.request)
+        return context
 
     def configure_event(self, event: Event):
         event.page = 'UploadNew'
@@ -700,12 +709,10 @@ class UpdateTrendsView(View):
         BookTrend.update_all_trends()
         return JsonResponse({'status': 'ok'})
 
-import pdb
 class BookshareConnect(LoginRequiredMixin, TemplateView):
     template_name = 'library/partial/connect_to_bookshare.html'
 
     def get(self, request, *args, **kwargs):
-        pdb.set_trace()
         if is_bookshare_connected(request):
             request.session['bookshare_connected'] = True
             return HttpResponseRedirect(redirect_to=reverse('upload'))

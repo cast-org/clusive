@@ -52,7 +52,9 @@
     <div class="row">
         <div class="col">
             <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add reading</a>&nbsp;
+            {% if has_bookshare_account %}
             <a href="{% url 'bookshare_search' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add from Bookshare</a>
+            {% endif %}
         </div>
     </div>
 
