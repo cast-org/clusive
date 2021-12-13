@@ -1,17 +1,14 @@
 import requests
-from urllib.parse import urlencode
-from django.utils import timezone
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-
+from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
 from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
                                                           OAuth2LoginView,
                                                           OAuth2CallbackView)
-
-from allauth.socialaccount.providers.oauth2.client import OAuth2Error
-from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.utils import timezone
 
 from .provider import BookshareProvider
+
 
 class BookshareOAuth2Adapter(OAuth2Adapter):
     provider_id = BookshareProvider.id
@@ -47,7 +44,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         try:
             access_keys = self.get_access_keys()
             return not is_token_expired(access_keys.get('access_token'))
-        except (SocialAccount.DoesNotExist, SocialToken.DoesNotExist):
+        except (SocialApp.DoesNotExist, SocialAccount.DoesNotExist, SocialToken.DoesNotExist):
             return False
 
     def has_account(self):
