@@ -107,22 +107,18 @@
             clusive.moreOrLess = function (event) {
                 const id = (event.target.id).replace(/(more_|less_)/, '');
                 const action = (event.target.id).replace(id, '');
-                var focusId = '';
                 if (action === "more_") {
                     var elementToShow = document.getElementById(`long_${id}`);
                     var elementToHide = document.getElementById(`short_${id}`);
-                    focusId = `less_${id}`;
                 }
                 else if (action === "less_") {
                     var elementToHide = document.getElementById(`long_${id}`);
                     var elementToShow = document.getElementById(`short_${id}`);
-                    focusId = `more_${id}`;
                 }
                 elementToHide.style.display = 'none';
                 elementToShow.style.display = 'block';
                 event.stopPropagation();
                 event.preventDefault();
-                document.getElementById(focusId).focus();
             }
 
             $(document).ready(function() {
