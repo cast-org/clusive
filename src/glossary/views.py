@@ -1,9 +1,8 @@
-import json
 import logging
 import random
 
 from django.http import JsonResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 
 from eventlog.signals import vocab_lookup, word_rated, word_removed
 from glossary.apps import GlossaryConfig
@@ -177,6 +176,7 @@ def glossdef(request, book_id, cued, word):
                       request=request,
                       word=base,
                       cued=cued,
+                      book=book,
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:

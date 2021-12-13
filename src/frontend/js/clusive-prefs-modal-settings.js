@@ -96,6 +96,11 @@
                 args: ['{change}.value', 'preferences.cisl_prefs_glossary', '{that}'],
                 excludeSource: 'init'
             },
+            'modalSettings.reduceMotion': {
+                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
+                args: ['{change}.value', 'preferences.cisl_prefs_reduceMotion', '{that}'],
+                excludeSource: 'init'
+            },
             'modalSettings.readSpeed': {
                 funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
                 args: ['{change}.value', 'preferences.cisl_prefs_readSpeed', '{that}'],
@@ -129,6 +134,7 @@
             font: '.cislc-modalSettings-font',
             color: '.cislc-modalSettings-color',
             glossary: '.cislc-modalSettings-glossary',
+            reduceMotion: '.cislc-modalSettings-reduceMotion',
             scroll: '.cislc-modalSettings-scroll',
             readSpeed: '.cislc-modalSettings-readSpeed',
             readVoice: '.cislc-modalSettings-readVoice',
@@ -168,7 +174,30 @@
                         }
                     }
                 }
+            },
+            reduceMotionSwitch: {
+                selector: 'reduceMotion',
+                path: 'modalSettings.reduceMotion',
+                rules: {
+                    domToModel: {
+                        '': {
+                            transform: {
+                                type: 'fluid.binder.transforms.checkToBoolean',
+                                inputPath: ''
+                            }
+                        }
+                    },
+                    modelToDom: {
+                        '': {
+                            transform: {
+                                type: 'fluid.binder.transforms.booleanToCheck',
+                                inputPath: ''
+                            }
+                        }
+                    }
+                }
             }
+
 
         }
     });
@@ -196,6 +225,8 @@
 
         that.applier.change('modalSettings.glossary', fluid.get(preferences, 'cisl_prefs_glossary'));
 
+        that.applier.change('modalSettings.reduceMotion', fluid.get(preferences, 'cisl_prefs_reduceMotion'));
+
         that.applier.change('modalSettings.scroll', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'cisl_prefs_scroll'), that.options.mappedValues.preferenceScrollToModal));
 
         that.applier.change('modalSettings.readSpeed', fluid.get(preferences, 'cisl_prefs_readSpeed'));
@@ -206,7 +237,6 @@
 
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };
-
 
     cisl.prefs.modalSettings.setupVoiceListing = function (that) {
         console.debug("cisl.prefs.modalSettings.setupVoiceListing");

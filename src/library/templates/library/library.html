@@ -49,7 +49,8 @@
         {% include "library/partial/library_grid_options.html" %}
     {% endif %}
 
-    <div class="row">
+    {% if current_view == 'mine' %}
+    <div class="row mb-1">
         <div class="col">
             <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add reading</a>&nbsp;
             {% if has_bookshare_account %}
@@ -57,6 +58,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
 
     {% include 'library/partial/library_data.html' %}
 </main>

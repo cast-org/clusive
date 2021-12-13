@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN */
+/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id */
 /* exported load_translation */
 
 // Glossary-related functionality
@@ -76,7 +76,8 @@ function load_translation(text) {
         },
         data: {
             text: text,
-            language: lang
+            language: lang,
+            book_id: pub_id
         }
     })
         .done(function(data) {
@@ -221,14 +222,14 @@ vocabCheck.update = function() {
     }
 };
 
-vocabCheck.selected = function(value) {
+vocabCheck.selected = function(value, target) {
     vocabCheck.ratings[vocabCheck.wordIndex] = value;
     if (vocabCheck.wordIndex < vocabCheck.wordCount - 1) {
         $('#vocabCheckNext').prop('disabled', false);
     } else {
         $('#vocabCheckThanks').show();
         $('#vocabCheckDone').prop('disabled', false);
-        confettiCannon();
+        confettiCannon(target);
     }
 };
 
@@ -310,11 +311,11 @@ $(function() {
     });
 
     // When ranking in the check-in modal is selected, notify server
-    $('#vocabCheckModal').on('change', 'input[type="radio"]', function() {
+    $('#vocabCheckModal').on('change', 'input[type="radio"]', function(event) {
         var value = $(this).val();
         var bookId = vocabCheck.pendingArticle;
         $.get('/glossary/rating/checkin/' + vocabCheck.words[vocabCheck.wordIndex] + '/' + value + '?bookId=' + bookId);
-        vocabCheck.selected(value);
+        vocabCheck.selected(value, event.target);
     });
 
     $('a.wordbank-word').on('click', function(e) {
@@ -329,11 +330,13 @@ $(function() {
 
     $('a.wordbank-next').on('click', function(e) {
         e.preventDefault();
+        confettiCannon(e.target);
         window.wordBank.moveRating(this, +1);
     });
 
     $('a.wordbank-prev').on('click', function(e) {
         e.preventDefault();
+        confettiCannon(e.target);
         window.wordBank.moveRating(this, -1);
     });
 

@@ -9,6 +9,7 @@
 
     .modal-footer {
         display: block;
+        min-height: calc(#{$why-modal-footer-font-size} + #{$modal-footer-padding-y * 2});
         @include font-size($why-modal-footer-font-size);
     }
 }

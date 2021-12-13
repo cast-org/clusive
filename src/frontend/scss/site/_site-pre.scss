@@ -40,7 +40,8 @@ $enable-form-validation-tooltip:        false;
 $enable-form-validation-icon:           false;
 
 // Components
-$enable-alert:                          false;
+$enable-alert-heading:                  false;
+$enable-alert-link:                     false;
 $enable-badge:                          true;
 $enable-badge-close:                    false;
 $enable-badge-group:                    false;
@@ -103,7 +104,7 @@ $enable-utility-flex-order:             true;
 $enable-utility-flex-direction:         false;
 $enable-utility-flex-wrap:              false;
 $enable-utility-flex-justify:           false;
-$enable-utility-flex-items:             false;
+$enable-utility-flex-items:             true;
 $enable-utility-flex-content:           false;
 $enable-utility-flex-self:              false;
 $enable-utility-flex-sizing:            false;
@@ -231,6 +232,9 @@ $figure-caption-font-size:              .875rem;
 $list-item-active-bg:                   unset;
 $list-item-active-color:                unset;
 $list-bulleted-content:                 "\00a0\2022";
+
+$list-spaced-condensed-padding-y:       .5rem !default;
+$list-spaced-condensed-padding-x:       1rem !default;
 
 $table-bg-active:                       var(--CT_tableActiveBg);
 $table-border-color:                    var(--CT_tableBorderColor);
@@ -387,6 +391,10 @@ $modal-footer-bg:                       var(--CT_modalFooterBg);
 $modal-footer-color:                    var(--CT_modalFooterColor);
 $modal-footer-border-color:             var(--CT_modalFooterBorderColor);
 $modal-footer-border-width:             1px;
+
+$alert-padding-x:                       .5rem;
+$alert-padding-y:                       .25rem;
+$alert-border-width:                    2px;
 
 // Clusive specific items
 // =====
