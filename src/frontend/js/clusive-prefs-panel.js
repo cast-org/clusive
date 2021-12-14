@@ -48,10 +48,10 @@
                 },
                 panel: null
             },
-            reduceMotion: {
-                type: 'cisl.prefs.reduceMotion',
+            animations: {
+                type: 'cisl.prefs.animations',
                 enactor: {
-                    type: 'cisl.prefs.enactor.reduceMotion'
+                    type: 'cisl.prefs.enactor.animations'
                 },
                 panel: null
             },
@@ -232,26 +232,38 @@
     };
 
     // Add a boolean preference for reducing motion effects
-    fluid.defaults('cisl.prefs.schemas.reduceMotion', {
+    fluid.defaults('cisl.prefs.schemas.animations', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
-            'cisl.prefs.reduceMotion': {
+            'cisl.prefs.animations': {
                 type: 'boolean',
-                default: false
+                default: true
             }
         }
     });
 
-    fluid.defaults('cisl.prefs.enactor.reduceMotion', {
-        gradeNames: ['fluid.prefs.enactor.styleElements', 'fluid.viewComponent'],
+    fluid.defaults('cisl.prefs.enactor.animations', {
+        gradeNames: ['fluid.prefs.enactor.styleElements'],
         cssClass: 'clusive-reduced-motion',
         elementsToStyle: $('body'),     // must be a jquery instance
         preferenceMap: {
-            'cisl.prefs.reduceMotion': {
+            'cisl.prefs.animations': {
                 'model.value': 'value'
+            }
+        },
+        invokers: {
+            // Override to flip the use of applyStyle() and removeStyle()
+            handleStyle: {
+                funcName: "cisl.prefs.enactor.animations.handleStyle",
+                args: ["{arguments}.0", "{that}.options.elementsToStyle", "{that}.options.cssClass", "{that}.applyStyle", "{that}.resetStyle"]
             }
         }
     });
+
+    cisl.prefs.enactor.animations.handleStyle = function (value, elements, cssClass, applyStyleFunc, resetStyleFunc) {
+        var func = value ? resetStyleFunc : applyStyleFunc;
+        func(elements, cssClass);
+    };
 
     fluid.defaults('cisl.prefs.composite.separatedPanel', {
         gradeNames: ['fluid.prefs.separatedPanel'],
