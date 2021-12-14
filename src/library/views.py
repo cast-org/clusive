@@ -27,7 +27,7 @@ from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, Books
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from pages.views import ThemedPageMixin, SettingsPageMixin
-from roster.models import ClusiveUser, Period, LibraryViews
+from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 
@@ -127,6 +127,14 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             self.view_name = LibraryViews.display_name_of(self.view)
         # Set defaults for next time
         user_changed = False
+        # The validity check is a patch for catching the intermittent invalid
+        # style view values coming from the kwargs.  See:
+        # CSL-1442 https://castudl.atlassian.net/browse/CSL-1442
+        if check_valid_choice(LibraryViews.CHOICES, self.view) == False:
+            self.view = self.clusive_user.library_view
+        if check_valid_choice(LibraryStyles.CHOICES, self.style) == False:
+            self.style = self.clusive_user.library_style
+
         if self.clusive_user.library_view != self.view:
             self.clusive_user.library_view = self.view
             user_changed = True
@@ -137,10 +145,6 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             self.clusive_user.library_style = self.style
             user_changed = True
         if user_changed:
-            # The debugger call is for catching the intermittent invalid style
-            # view values coming from the kwargs.  See:
-            # CSL-1442 https://castudl.atlassian.net/browse/CSL-1442
-            pdb.set_trace()
             self.clusive_user.save()
         return super().get(request, *args, **kwargs)
 
