@@ -161,6 +161,8 @@ window.wordBank.wordClicked = function(elt) {
 // Methods related to dragging word bank words between ratings
 
 window.wordBank.dragWord = {
+    dragging: false,
+    delta: 5,
     position: {
         x: 0,
         y: 0
@@ -176,10 +178,10 @@ window.wordBank.enableDragDrop = function() {
     interact.pointerMoveTolerance(5);
     interact('.wordbank-drag')
         .draggable({
-            manualStart: true,
+            // manualStart: true,
             startAxis: 'x',
             lockAxis: 'x',
-            hold: 300,
+            // hold: 300,
             max: 1,
             modifiers: [
                 interact.modifiers.restrict({
@@ -199,16 +201,27 @@ window.wordBank.enableDragDrop = function() {
                         y: 0
                     };
                     // Add outline and block links
-                    event.target.classList.add('dragging');
+                    if (window.wordBank.dragWord.dragging) {
+                        event.target.classList.add('dragging');
+                    }
                 },
                 move: function move(event) {
-                    window.wordBank.dragWord.position.x += event.dx;
-                    window.wordBank.dragWord.position.y += event.dy;
-                    event.target.style.transform = 'translate(' + window.wordBank.dragWord.position.x + 'px, ' + window.wordBank.dragWord.position.y + 'px)';
+                    if (window.wordBank.dragWord.dragging) {
+                        window.wordBank.dragWord.position.x += event.dx;
+                        window.wordBank.dragWord.position.y += event.dy;
+                        event.target.style.transform = 'translate(' + window.wordBank.dragWord.position.x + 'px, ' + window.wordBank.dragWord.position.y + 'px)';
+                        return;
+                    }
 
-                    // Disallow sliding animation
-                    var item = event.target.closest('.wordbank-item');
-                    item.classList.add('dragging');
+                    // Check for minimum delta
+                    if (Math.abs(event.x0 - event.dx) >= window.wordBank.dragWord.delta) {
+                        window.wordBank.dragWord.dragging = true;
+                        // Add outline and block links
+                        event.target.classList.add('dragging');
+                        // Disallow sliding animation
+                        var item = event.target.closest('.wordbank-item');
+                        item.classList.add('dragging');
+                    }
                 },
                 end: function end(event) {
                     event.target.style.transform = '';
@@ -220,6 +233,7 @@ window.wordBank.enableDragDrop = function() {
                     setTimeout(function() {
                         item.classList.remove('dragging');
                     });
+                    window.wordBank.dragWord.dragging = false;
                 }
             }
         })
@@ -230,6 +244,7 @@ window.wordBank.enableDragDrop = function() {
             // Use manual hold check and call due to clicks making false positive auto-start holds
             var interaction = event.interaction;
             if (!interaction.interacting()) {
+                window.wordBank.dragWord.dragging = true;
                 interaction.start(
                     {
                         name: 'drag',
