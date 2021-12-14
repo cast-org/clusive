@@ -609,7 +609,7 @@ def finish_login(request):
         if clusive_user.data_source != RosterDataSource.GOOGLE:
             logger.debug("  Changing user to Google user")
             clusive_user.data_source = RosterDataSource.GOOGLE
-            clusive_user.external_id = google_user.uid
+            clusive_user.external_id = google_user[0].uid
             clusive_user.save()
     else:
         # Not a Google user
