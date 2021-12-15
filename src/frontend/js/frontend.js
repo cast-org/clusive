@@ -807,6 +807,13 @@ function originInViewport(elem) {
     var elRect = elem.getBoundingClientRect();
     var winHeight = window.innerHeight || document.documentElement.clientHeight;
     var winWidth = window.innerWidth || document.documentElement.clientWidth;
+
+    return {
+        x: (elRect.left + (elRect.width / 2)) / winWidth,
+        y: (elRect.top + (elRect.height / 2)) / winHeight
+    };
+
+    /*
     var inViewport = elRect.top >= 0 && elRect.left >= 0 && elRect.bottom <= winHeight && elRect.right <= winWidth;
 
     if (inViewport) {
@@ -817,6 +824,7 @@ function originInViewport(elem) {
     }
 
     return null;
+    */
 }
 
 // See: https://github.com/catdad/canvas-confetti
@@ -848,9 +856,9 @@ function confettiCannon(elem) {
         confetti({
             origin: viewportOrigin,
             particleCount: 75,
-            scalar: .75,
+            scalar: 0.75,
             spread: 360,
-            startVelocity: 25,
+            startVelocity: 20,
             zIndex: 1100
         });
     } else {

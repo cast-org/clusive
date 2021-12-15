@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id */
+/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id, interact */
 /* exported load_translation */
 
 // Glossary-related functionality
@@ -124,6 +124,7 @@ window.wordBank.moveRating = function(elt, delta) {
 window.wordBank.displayNewWordRating = function(item, newrating) {
     item.removeClass('offset' + item.data('rating'));
     item.data('rating', newrating);
+    item[0].dataset.rating = newrating;
     item.addClass('offset' + newrating);
     item.find('.wordbank-word').attr('aria-describedby', 'rank' + newrating);
     window.wordBank.updateColumnCounts();
@@ -131,6 +132,8 @@ window.wordBank.displayNewWordRating = function(item, newrating) {
 
 window.wordBank.updateColumnCounts = function() {
     var wordCount = 0;
+    var msgElmEmpty = document.querySelector('#wordbankEmptyMsg');
+    var msgElmPersonalize = document.querySelector('#wordbankPersonalizeMsg');
     for (var rank = 0; rank <= 3; rank++) {
         var n = $('.wordbank-item.offset' + rank).length;
         var indicator = $('#count' + rank);
@@ -143,8 +146,15 @@ window.wordBank.updateColumnCounts = function() {
         }
     }
     if (wordCount === 0) {
-        if (document.querySelector('#wordbankEmptyMsg') !== null) {
-            document.querySelector('#wordbankEmptyMsg').classList.remove('d-none');
+        if (msgElmEmpty !== null) {
+            msgElmEmpty.classList.remove('d-none');
+        }
+        if (msgElmPersonalize !== null) {
+            msgElmPersonalize.classList.add('d-none');
+        }
+    } else {
+        if (msgElmPersonalize !== null) {
+            msgElmPersonalize.classList.remove('d-none');
         }
     }
 };
@@ -155,6 +165,141 @@ window.wordBank.wordClicked = function(elt) {
     load_definition(1, word);
     $('#glossaryLocator').CFW_Popover('show');
     glossaryPop_focus($(elt));
+};
+
+// Methods related to dragging word bank words between ratings
+
+window.wordBank.dragWord = {
+    dragging: false,
+    delta: 5,
+    position: {
+        x: 0,
+        y: 0
+    }
+};
+
+window.wordBank.enableDragDrop = function() {
+    // Check to see if on word bank page
+    if (document.querySelector('.wordbank') === null) {
+        return;
+    }
+
+    interact.pointerMoveTolerance(5);
+    interact('.wordbank-drag')
+        .draggable({
+            // manualStart: true,
+            startAxis: 'x',
+            lockAxis: 'x',
+            // hold: 300,
+            max: 1,
+            modifiers: [
+                interact.modifiers.restrict({
+                    restriction: '.wordbank-scroll',
+                    elementRect: {
+                        top: 0,
+                        right: 1,
+                        bottom: 1,
+                        left: 0
+                    }
+                })
+            ],
+            listeners: {
+                start: function start(event) {
+                    window.wordBank.dragWord.position = {
+                        x: 0,
+                        y: 0
+                    };
+                    // Add outline and block links
+                    if (window.wordBank.dragWord.dragging) {
+                        event.target.classList.add('dragging');
+                    }
+                },
+                move: function move(event) {
+                    if (window.wordBank.dragWord.dragging) {
+                        window.wordBank.dragWord.position.x += event.dx;
+                        window.wordBank.dragWord.position.y += event.dy;
+                        event.target.style.transform = 'translate(' + window.wordBank.dragWord.position.x + 'px, ' + window.wordBank.dragWord.position.y + 'px)';
+                        return;
+                    }
+
+                    // Check for minimum delta
+                    if (Math.abs(event.x0 - event.dx) >= window.wordBank.dragWord.delta) {
+                        window.wordBank.dragWord.dragging = true;
+                        // Add outline and block links
+                        event.target.classList.add('dragging');
+                        // Disallow sliding animation
+                        var item = event.target.closest('.wordbank-item');
+                        item.classList.add('dragging');
+                    }
+                },
+                end: function end(event) {
+                    event.target.style.transform = '';
+
+                    // Remove outline and and unblock links
+                    event.target.classList.remove('dragging');
+                    // Allow sliding animation
+                    var item = event.target.closest('.wordbank-item');
+                    setTimeout(function() {
+                        item.classList.remove('dragging');
+                    });
+                    window.wordBank.dragWord.dragging = false;
+                }
+            }
+        })
+        .pointerEvents({
+            holdDuration: 300
+        })
+        .on('hold', function(event) {
+            // Use manual hold check and call due to clicks making false positive auto-start holds
+            var interaction = event.interaction;
+            if (!interaction.interacting()) {
+                window.wordBank.dragWord.dragging = true;
+                interaction.start(
+                    {
+                        name: 'drag',
+                        axis: 'x'       // See: https://github.com/taye/interact.js/issues/786
+                    },
+                    event.interactable,
+                    event.currentTarget
+                );
+            }
+        });
+
+    interact('.wordbank-col').dropzone({
+        accept: '.wordbank-drag',
+        overlap: 'pointer',
+        ondragenter: function(event) {
+            // Drag enters dropzone overlap area
+            event.target.classList.add('active');
+        },
+        ondragleave: function(event) {
+            // Drag leaves dropzone overlap area
+            event.target.classList.remove('active');
+        },
+        ondrop: function(event) {
+            // Item dropped
+            var elmDrag = event.relatedTarget;
+            var elmDrop = event.target;
+            var item = elmDrag.closest('.wordbank-item');
+            var word = item.querySelector('.wordbank-word');
+            var prevrating = Number(item.dataset.rating);
+            var newrating = Number(elmDrop.dataset.dropzoneRating);
+
+            if (prevrating !== newrating && newrating >= 0 && newrating <= 3) {
+                // TODO: eventlog
+                //var control = 'wb_drag??_??'
+                //$.get('/glossary/rating/' + control + '/' + word.text() + '/' + newrating);
+                window.wordBank.displayNewWordRating($(item), newrating);
+                setTimeout(function() {
+                    $(item).CFW_transition(null, function() { confettiCannon(word); });
+                });
+            }
+        },
+        ondropdeactivate: function(event) {
+            // Drop finished
+            event.target.classList.remove('active');
+        }
+    });
 };
 
 // Methods related to the vocabulary check-in process
@@ -330,15 +475,20 @@ $(function() {
 
     $('a.wordbank-next').on('click', function(e) {
         e.preventDefault();
-        confettiCannon(e.target);
+        var item = e.target.closest('.wordbank-item');
+        var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, +1);
+        $(item).CFW_transition(null, function() { confettiCannon(word); });
     });
 
     $('a.wordbank-prev').on('click', function(e) {
         e.preventDefault();
-        confettiCannon(e.target);
+        var item = e.target.closest('.wordbank-item');
+        var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, -1);
+        $(item).CFW_transition(null, function() { confettiCannon(word); });
     });
 
     window.wordBank.updateColumnCounts();
+    window.wordBank.enableDragDrop();
 });
