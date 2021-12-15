@@ -601,21 +601,25 @@ def finish_login(request):
     if request.user.is_staff:
         return HttpResponseRedirect('/admin')
     clusive_user = ClusiveUser.from_request(request)
-    # If you're logging in via Google, then you are marked as a Google user from now on.
-    if clusive_user.data_source != RosterDataSource.GOOGLE:
-        clusive_user.data_source = RosterDataSource.GOOGLE
-        clusive_user.save()
-        try:
-            external_user = SocialAccount.objects.get(user=request.user, provider='google')
-            clusive_user.external_id = external_user.uid
+    google_user = SocialAccount.objects.filter(user=request.user, provider='google')
+    logger.debug("In finish_login")
+    if google_user:
+        request.session['sso'] = True
+        # If you're logging in via Google, then you are marked as a Google user from now on.
+        if clusive_user.data_source != RosterDataSource.GOOGLE:
+            logger.debug("  Changing user to Google user")
+            clusive_user.data_source = RosterDataSource.GOOGLE
+            clusive_user.external_id = google_user[0].uid
             clusive_user.save()
-        except SocialAccount.DoesNotExist:
-            # Should be impossible
-            logger.debug('ClusiveUser SSO with no SocialAccount')
+    else:
+        # Not a Google user
+        if clusive_user.data_source != RosterDataSource.CLUSIVE:
+            logger.debug("  Changing user to non-google user")
+            clusive_user.data_source = RosterDataSource.CLUSIVE
+            clusive_user.save()
 
     # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
-        request.session['sso'] = True
         return HttpResponseRedirect(reverse('sign_up_role'))
     else:
         return HttpResponseRedirect(reverse('dashboard'))
