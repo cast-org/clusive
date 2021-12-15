@@ -336,7 +336,8 @@ class DashboardActivityDetailView(LoginRequiredMixin, TemplateView):
 
             # Highlights and notes
             data['highlight_count'] = Annotation.objects.filter(bookVersion__book=book, user=clusive_user, dateDeleted=None).count()
-            data['note_count'] = Annotation.objects.filter(bookVersion__book=book, user=clusive_user, dateDeleted=None, note__isnull=False).count()
+            data['note_count'] = Annotation.objects.filter(bookVersion__book=book, user=clusive_user, dateDeleted=None,
+                                                           note__isnull=False).exclude(note='').count()
 
             return data
         except ClusiveUser.DoesNotExist:
