@@ -19,6 +19,8 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.1.0/dist/js/figuration.min.js" integrity="sha384-mmncPfSUidq1LlOp/43b1c3A1knjWrGnwec26YYujQlzI2YgCmpcSEtsJ/gjJRHT" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
 <script src="./js/theme-test.js"></script>
@@ -41,21 +43,151 @@ window.wordBank.moveRating = function(elt, delta) {
 window.wordBank.displayNewWordRating = function(item, newrating) {
     item.removeClass('offset' + item.data('rating'));
     item.data('rating', newrating);
+    item[0].dataset.rating = newrating;
     item.addClass('offset' + newrating);
     item.find('.wordbank-word').attr('aria-describedby', 'rank' + newrating);
+};
+
+window.wordBank.dragWord = {
+    dragging: false,
+    delta: 5,
+    position: {
+        x: 0,
+        y: 0
+    }
 };
 
 $(window).ready(function() {
     $('a.wordbank-next').on('click', function(e) {
         e.preventDefault();
-        confettiCannon(e.target);
+        var item = e.target.closest('.wordbank-item');
+        var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, +1);
+        $(item).CFW_transition(null, function() { confettiCannon(word); });
     });
 
     $('a.wordbank-prev').on('click', function(e) {
         e.preventDefault();
-        confettiCannon(e.target);
+        var item = e.target.closest('.wordbank-item');
+        var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, -1);
+        $(item).CFW_transition(null, function() { confettiCannon(word); });
+    });
+
+    interact.pointerMoveTolerance(5);
+    interact('.wordbank-drag').draggable({
+        //manualStart: true,
+        startAxis: 'x',
+        lockAxis: 'x',
+        //hold: 300,
+        max: 1,
+        modifiers: [
+            interact.modifiers.restrict({
+                restriction: '.wordbank-scroll',
+                elementRect: {
+                    top: 0,
+                    right: 1,
+                    bottom: 1,
+                    left: 0
+                }
+            })
+        ],
+        listeners: {
+            start: function start(event) {
+                window.wordBank.dragWord.position = {
+                    x: 0,
+                    y: 0
+                };
+                // Add outline and block links
+                if (window.wordBank.dragWord.dragging) {
+                    event.target.classList.add('dragging');
+                }
+            },
+            move: function move(event) {
+                if (window.wordBank.dragWord.dragging) {
+                    window.wordBank.dragWord.position.x += event.dx;
+                    window.wordBank.dragWord.position.y += event.dy;
+                    event.target.style.transform = 'translate(' + window.wordBank.dragWord.position.x + 'px, ' + window.wordBank.dragWord.position.y + 'px)';
+                    return;
+                }
+
+                // Check for minimum delta
+                if (Math.abs(event.x0 - event.dx) >= window.wordBank.dragWord.delta) {
+                    window.wordBank.dragWord.dragging = true;
+                    // Add outline and block links
+                    event.target.classList.add('dragging');
+                    // Disallow sliding animation
+                    var item = event.target.closest('.wordbank-item');
+                    item.classList.add('dragging');
+                }
+            },
+            end: function end(event) {
+                event.target.style.transform = '';
+
+                // Remove outline and and unblock links
+                event.target.classList.remove('dragging');
+                // Allow sliding animation
+                var item = event.target.closest('.wordbank-item');
+                setTimeout(function() {
+                    item.classList.remove('dragging');
+                });
+                window.wordBank.dragWord.dragging = false;
+            }
+        }
+    })
+    .pointerEvents({
+        holdDuration: 300
+    })
+    .on('hold', function(event) {
+        // Use manual hold check and call due to clicks making false positive auto-start holds
+        var interaction = event.interaction;
+        if (!interaction.interacting()) {
+            window.wordBank.dragWord.dragging = true;
+            interaction.start(
+                {
+                    name: 'drag',
+                    axis: 'x'       // See: https://github.com/taye/interact.js/issues/786
+                },
+                event.interactable,
+                event.currentTarget,
+            );
+        }
+    });
+
+    interact('.wordbank-col').dropzone({
+        accept: '.wordbank-drag',
+        overlap: 'pointer',
+        ondragenter: function(event) {
+            // Drag enters dropzone overlap area
+            event.target.classList.add('active');
+        },
+        ondragleave: function(event) {
+            // Drag leaves dropzone overlap area
+            event.target.classList.remove('active');
+        },
+        ondrop: function(event) {
+            // Item dropped
+            var elmDrag = event.relatedTarget;
+            var elmDrop = event.target;
+            var item = elmDrag.closest('.wordbank-item');
+            var word = item.querySelector('.wordbank-word');
+            var prevrating = Number(item.dataset.rating)
+            var newrating = Number(elmDrop.dataset.dropzoneRating);
+
+            if (prevrating !== newrating && newrating >= 0 && newrating <= 3) {
+                // TODO: eventlog
+                //var control = 'wb_drag??_??'
+                //$.get('/glossary/rating/' + control + '/' + word.text() + '/' + newrating);
+                window.wordBank.displayNewWordRating($(item), newrating);
+                setTimeout(function() {
+                    $(item).CFW_transition(null, function() { confettiCannon(word); });
+                });
+            }
+        },
+        ondropdeactivate: function(event) {
+            // Drop finished
+            event.target.classList.remove('active');
+        }
     });
 });
 </script>
@@ -65,8 +197,7 @@ body {
     padding-bottom: 2rem;
 }
 #themeTest {
-    right: .25rem !important;
-    left: auto !important;
+    left: 66vw !important;
 }
 </style>
 
@@ -201,59 +332,75 @@ body {
                     </div>
                     <div class="wordbank-body">
                         <div class="wordbank-body-bg">
-                            <div class="wordbank-col"></div>
-                            <div class="wordbank-col"></div>
-                            <div class="wordbank-col"></div>
-                            <div class="wordbank-col"></div>
+                            <div class="wordbank-col" data-dropzone-rating="0"></div>
+                            <div class="wordbank-col" data-dropzone-rating="1"></div>
+                            <div class="wordbank-col" data-dropzone-rating="2"></div>
+                            <div class="wordbank-col" data-dropzone-rating="3"></div>
                         </div>
                         <div class="wordbank-list">
                             <div class="wordbank-item offset0" data-rating="0">
-                                <a id="wordbank-word-0" aria-describedby="rank0" href="#" role="button" class="wordbank-word">word-zero</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-zero</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-zero</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-zero from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-0" aria-describedby="rank0" href="#" role="button" class="wordbank-word">word-zero</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-zero</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-zero</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-zero from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                             <div class="wordbank-item offset1" data-rating="1">
-                                <a id="wordbank-word-1" aria-describedby="rank1" href="#" role="button" class="wordbank-word">word-one</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-one</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-one</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-one from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-1" aria-describedby="rank1" href="#" role="button" class="wordbank-word">word-one</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-one</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-one</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-one from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                             <div class="wordbank-item offset2" data-rating="2">
-                                <a id="wordbank-word-2" aria-describedby="rank2" href="#" role="button" class="wordbank-word">word-two</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-two</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-two</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-two from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-2" aria-describedby="rank2" href="#" role="button" class="wordbank-word">word-two</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-two</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-two</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-two from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                             <div class="wordbank-item offset3" data-rating="3">
-                                <a id="wordbank-word-3" aria-describedby="rank3" href="#" role="button" class="wordbank-word">Lorem ipsum dolor sit amet, consectetur</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for Lorem ipsum dolor sit amet, consectetur</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for Lorem ipsum dolor sit amet, consectetur</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove Lorem ipsum dolor sit amet, consectetur from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-3" aria-describedby="rank3" href="#" role="button" class="wordbank-word">Lorem ipsum dolor sit amet, consectetur</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for Lorem ipsum dolor sit amet, consectetur</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for Lorem ipsum dolor sit amet, consectetur</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove Lorem ipsum dolor sit amet, consectetur from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                             <div class="wordbank-item offset3" data-rating="3">
-                                <a id="wordbank-word-4" aria-describedby="rank3" href="#" role="button" class="wordbank-word">word-four</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-four</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-four</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-four from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-4" aria-describedby="rank3" href="#" role="button" class="wordbank-word">word-four</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-four</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-four</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-four from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                             <div class="wordbank-item offset2" data-rating="2">
-                                <a id="wordbank-word-5" aria-describedby="rank2" href="#" role="button" class="wordbank-word">word-five</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-five</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-five</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-five from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-5" aria-describedby="rank2" href="#" role="button" class="wordbank-word">word-five</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-five</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-five</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-five from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                             <div class="wordbank-item offset1" data-rating="1">
-                                <a id="wordbank-word-6" aria-describedby="rank1" href="#" role="button" class="wordbank-word">word-six</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-six</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-six</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-six from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-6" aria-describedby="rank1" href="#" role="button" class="wordbank-word">word-six</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-six</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-six</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-six from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                             <div class="wordbank-item offset0" data-rating="0">
-                                <a id="wordbank-word-7" aria-describedby="rank0" href="#" role="button" class="wordbank-word">word-seven</a>
-                                <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-seven</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-seven</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
-                                <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-seven from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                <div class="wordbank-drag">
+                                    <a id="wordbank-word-7" aria-describedby="rank0" href="#" role="button" class="wordbank-word">word-seven</a>
+                                    <a href="#" role="button" class="wordbank-prev"><span class="sr-only">decrease rating for word-seven</span><span class="icon-chevron-left" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-next"><span class="sr-only">increase rating for word-seven</span><span class="icon-chevron-right" aria-hidden="true"></span></a>
+                                    <a href="#" role="button" class="wordbank-del"><span class="sr-only">remove word-seven from word bank</span><span class="icon-cancel" aria-hidden="true"></span></a>
+                                </div>
                             </div>
                         </div>
                     </div>
