@@ -100,7 +100,7 @@ function libraryMasonryEnable() {
     elem.classList.add('has-masonry');
 
     libraryMasonryApi = new Masonry(elem, {
-        itemSelector: '.card-library',
+        itemSelector: '.card-library, .card-special',
         columnWidth: '.card-library',
         percentPosition: true,
         transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
