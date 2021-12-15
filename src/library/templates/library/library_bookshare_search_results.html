@@ -3,7 +3,7 @@
 
 {% block bodyClass %}library{% endblock %}
 
-{% block title %}Add via Bookshare{% endblock %}
+{% block title %}Add from Bookshare{% endblock %}
 
 {% block header %}
 {% include "shared/partial/site_header.html" with page_group="library" %}
@@ -89,16 +89,17 @@
                                     Previous
                                 </a>
                                 {% else %}
+                                <a href="{% url 'bookshare_search_results' keyword=query_key page=links.prev %}" class="page-link">
                                 <a href="/library/bookshare-results/{{query_key}}/{{links.prev}}" class="page-link">
                                     <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                                     Previous
                                 </a>
                                 {% endif %}
-                                {% for page in links.pages %}
-                                    {% if page == 'current' %}
-                                    <a href="#" class="page-link active" aria-current="page">{{ current_page }}</a>
+                                {% for page_num in links.pages %}
+                                    {% if page_num == 'current' %}
+                                    <a href="{% url 'bookshare_search_results' keyword=query_key page=current_page %}" class="page-link active" aria-current="page">{{ current_page }}</a>
                                     {% else %}
-                                    <a href="/library/bookshare-results/{{query_key}}/{{page}}" class="page-link">{{ page }}</a>
+                                    <a href="{% url 'bookshare_search_results' keyword=query_key page=page_num %}" class="page-link">{{ page_num }}</a>
                                     {% endif %}
                                 {% endfor %}
                                 {% if links.next == None %}
@@ -107,7 +108,7 @@
                                     <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                                 </a>
                                 {% else %}
-                                <a href="/library/bookshare-results/{{query_key}}/{{links.next}}" class="page-link">
+                                <a href="{% url 'bookshare_search_results' keyword=query_key page=links.next %}" class="page-link">
                                     Next
                                     <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                                 </a>
