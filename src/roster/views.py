@@ -602,9 +602,7 @@ def finish_login(request):
         return HttpResponseRedirect('/admin')
     clusive_user = ClusiveUser.from_request(request)
     google_user = SocialAccount.objects.filter(user=request.user, provider='google')
-    logger.debug("In finish_login")
     if google_user:
-        request.session['sso'] = True
         # If you're logging in via Google, then you are marked as a Google user from now on.
         if clusive_user.data_source != RosterDataSource.GOOGLE:
             logger.debug("  Changing user to Google user")
@@ -620,6 +618,7 @@ def finish_login(request):
 
     # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
+        request.session['sso'] = True
         return HttpResponseRedirect(reverse('sign_up_role'))
     else:
         return HttpResponseRedirect(reverse('dashboard'))
@@ -1321,3 +1320,26 @@ def get_add_scope_redirect_uri(request):
     if scheme == 'http' and request.META.get('HTTP_X_FORWARDED_PROTO') == 'https':
         scheme = 'https'
     return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'
+
+
+class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
+    template_name = 'roster/my_account.html'
+
+    def get(self, request, *args, **kwargs):
+        clusive_user: ClusiveUser
+        clusive_user = request.clusive_user
+        google_account = SocialAccount.objects.filter(user=request.user, provider='google')
+        logger.debug('User: %s, data source: %s, google account: %s',
+                     request.clusive_user, clusive_user.data_source, google_account)
+        self.extra_context = {
+            'can_edit_display_name': False,
+            'can_edit_email': False,
+            'can_edit_password': clusive_user.can_set_password,
+            'has_google_account': clusive_user.data_source == RosterDataSource.GOOGLE,
+        }
+        return super().get(request, *args, **kwargs)
+
+    def configure_event(self, event: Event):
+        event.page = 'MyAccount'
+
+
