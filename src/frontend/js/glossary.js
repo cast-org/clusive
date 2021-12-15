@@ -197,9 +197,9 @@ window.wordBank.enableDragDrop = function() {
                     restriction: '.wordbank-scroll',
                     elementRect: {
                         top: 0,
-                        right: 1,
+                        right: 0.5,
                         bottom: 1,
-                        left: 0
+                        left: 0.5
                     }
                 })
             ],
