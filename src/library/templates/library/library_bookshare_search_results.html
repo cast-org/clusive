@@ -75,7 +75,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr>
                                 </div>
                             </div>
                         </div>
@@ -84,25 +83,42 @@
                     <nav aria-label="page">
                         <div class="library-pagination-wrapper">
                             <div class="pagination library-pagination">
+                                {% if links.prev == None %}
                                 <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
                                     <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                                     Previous
                                 </a>
-                                <a href="#" class="page-link active" aria-current="page">1</a>
-                                <a href="#" class="page-link">2</a>
-                                <a href="#" class="page-link">3</a>
-                                <span class="page-text">&hellip;</span>
-                                <a href="#" class="page-link">9</a>
-                                <a href="#" class="page-link">
+                                {% else %}
+                                <a href="/library/bookshare-results/{{query_key}}/{{links.prev}}" class="page-link">
+                                    <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                                    Previous
+                                </a>
+                                {% endif %}
+                                {% for page in links.pages %}
+                                    {% if page == 'current' %}
+                                    <a href="#" class="page-link active" aria-current="page">{{ current_page }}</a>
+                                    {% else %}
+                                    <a href="/library/bookshare-results/{{query_key}}/{{page}}" class="page-link">{{ page }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if links.next == None %}
+                                <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
                                     Next
                                     <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                                 </a>
+                                {% else %}
+                                <a href="/library/bookshare-results/{{query_key}}/{{links.next}}" class="page-link">
+                                    Next
+                                    <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                                </a>
+                                {% endif %}
                             </div>
                         </div>
                     </nav>
                 </div>
             </div>
         </div>
+        <!-- TODO: Move this moreOrLess() script to a common location, such as frontend/js/... -->
         <script type="text/javascript">
             clusive.moreOrLess = function (event) {
                 const id = (event.target.id).replace(/(more_|less_)/, '');

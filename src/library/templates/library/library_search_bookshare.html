@@ -22,12 +22,7 @@
                         <label class="sr-only" for="{{ form.keyword.id_for_label }}">Step 1: Search by title, author, or ISBN:</label>
                         {{ form.keyword.errors }}
                         {{ form.keyword }}
-                        <p class="form-text">
-                            For title search, use "title:&lt;title&gt;"<br>
-                            For author search, use "author:&lt;author name&gt;"
-                        </p>
                     </div>
-                    
                     <div class="form-group">
                         <input type="submit" class="btn btn-secondary btn-small" value="Search"/>
                         <a href="{% url 'upload' %}" class="btn btn-link btn-small">Cancel</a>
