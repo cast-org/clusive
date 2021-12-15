@@ -27,11 +27,11 @@
 
     <h1>Word bank</h1>
 
-    {% if words|length %}
-    <div id="wordbankEmptyMsg" class="content-text mt-1 d-none">
-    {% else %}
-    <div id="wordbankEmptyMsg" class="content-text mt-1">
-    {% endif %}
+    <div id="wordbankPersonalizeMsg" class="content-text mt-1{% if words|length == 0 %} d-none{% endif %}">
+        <p>Move words to the right or left to help Clusive personalize settings and word highlighting for you.</p>
+    </div>
+
+    <div id="wordbankEmptyMsg" class="content-text mt-1{% if words|length %} d-none{% endif %}">
         <h2 class="h4">Rate some words!</h2>
         <p>Tell us how well you know some words as you start or look up words in a reading. That helps Clusive to personalize settings and word highlighting for you. Change ratings of words you are learning anytime in the Word bank.</p>
     </div>

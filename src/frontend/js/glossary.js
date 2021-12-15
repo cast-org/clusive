@@ -132,6 +132,8 @@ window.wordBank.displayNewWordRating = function(item, newrating) {
 
 window.wordBank.updateColumnCounts = function() {
     var wordCount = 0;
+    var msgElmEmpty = document.querySelector('#wordbankEmptyMsg');
+    var msgElmPersonalize = document.querySelector('#wordbankPersonalizeMsg');
     for (var rank = 0; rank <= 3; rank++) {
         var n = $('.wordbank-item.offset' + rank).length;
         var indicator = $('#count' + rank);
@@ -144,8 +146,15 @@ window.wordBank.updateColumnCounts = function() {
         }
     }
     if (wordCount === 0) {
-        if (document.querySelector('#wordbankEmptyMsg') !== null) {
-            document.querySelector('#wordbankEmptyMsg').classList.remove('d-none');
+        if (msgElmEmpty !== null) {
+            msgElmEmpty.classList.remove('d-none');
+        }
+        if (msgElmPersonalize !== null) {
+            msgElmPersonalize.classList.add('d-none');
+        }
+    } else {
+        if (msgElmPersonalize !== null) {
+            msgElmPersonalize.classList.remove('d-none');
         }
     }
 };
