@@ -891,7 +891,6 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
 class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #EventMixin
     template_name = 'library/library_bookshare_import.html'
     bookshare_id = ''
-    previous = ''
     title_metadata = {}
 
     def dispatch(self, request, *args, **kwargs):
@@ -901,9 +900,7 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #Even
             except Exception as e:
                 logger.debug("Bookshare Import exception: ", e)
                 raise e
-
             self.bookshare_id = kwargs.get('bookshareId')
-            self.previous = kwargs.get('previous')
             resp = requests.request(
                 'GET',
                 'https://api.bookshare.org/v2/titles/' + self.bookshare_id + '?api_key=' + access_keys.get('api_key'),
@@ -921,7 +918,8 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #Even
         context = super().get_context_data(**kwargs)
         context.update({
             'title': self.title_metadata,
-            'previous': self.previous
+            'previous': kwargs.get('previous'),
+            'previous_page': kwargs.get('previous_page'),
         })
         return context
 

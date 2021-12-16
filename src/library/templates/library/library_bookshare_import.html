@@ -3,82 +3,111 @@
 
 {% block bodyClass %}library{% endblock %}
 
-{% block title %}Add from Bookshare{% endblock %}
+{% block title %}Bookshare: Import{% endblock %}
 
 {% block header %}
 {% include "shared/partial/site_header.html" %}
 {% endblock %}
 
 {% block content %}
-<main id="content" tabindex="-1">
-    <h1>Bookshare: Import</h1>
-    <div class="row">
-        <div class="col-md-9 col-lg-6">
-            <div class="box">
-                <h2>Step 3: Review and edit</h2>
-                <form method="post">
-                    <div class="form-group">
-                        {% csrf_token %}
-                        <p>Bookshare download:</p>
-                        <ul>
-                            <li>Title: {{ title.title }}</li>
-                            {% for author in title.clusive.authors %}
-                            <li>Author: {{ author }}</li>
-                            {% empty %}
-                            <li>No author</li>
-                            {% endfor %}
-                            <li>ISBN: {{ title.isbn13 }}</li>
-                            <li><img src="{{ title.clusive.thumbnail }}" alt="Cover of {{ title.title }}"</img></li>
-                            {% if title.clusive.more %}
-                            <li id="short_{{ title.bookshareId }}">
-                                Description: {{ title.clusive.synopsis }} &hellip;
-                                <button id="more_{{title.bookshareId}}" class="link-btn more-or-less" aria-label="See more about {{ title.title }}">See more</button>
-                            </li>
-                            <li id="long_{{ title.bookshareId }}" style="display: none">
-                                Description: {{ title.synopsis }}
-                                <button id="less_{{title.bookshareId}}" class="link-btn more-or-less" aria-label="See less about {{ title.title }}">See less</button>
-                            </li>
-                            {% else %}
-                            <li id="long_{{ title.bookshareId }}">
-                               Description: {{ title.synopsis }}
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
+<div class="content">
+    <main id="content" tabindex="-1">
+        <h1>Add from Bookshare</h1>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="box">
+                    <h2>Step 3: Review and edit</h2>
+                    <div class="list list-divided list-spaced-y result-list mb-0">
+                        <form method="post">
+                            <div class="form-group">
+                                {% csrf_token %}
+                                <div class="list-item">
+                                    <div class="row">
+                                        <div class="col col-md">
+                                            <div class="row gx-0_5">
+                                                <div class="col-12 col-sm-3">
+                                                    <div class="card-img">
+                                                        {% if title.clusive.thumbnail %}
+                                                        <img class="imge-fluid" src="{{ title.clusive.thumbnail }}" alt=""</img>
+                                                        {% else %}
+                                                        <img class="img-fluid" src="./img/sample-1.jpg" alt="">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm">
+                                                    <h3 class="card-title h2">
+                                                        {{ title.title }}
+                                                    </h3>
+                                                    <div class="card-author">
+                                                        {% for author in title.clusive.authors %}
+                                                        <div>{{ author }}</div>
+                                                        {% empty %}
+                                                        <div>No author listed</div>
+                                                        {% endfor %}
+                                                        <div>ISBN: {{ title.isbn13 }}</div>
+                                                    </div>
+                                                    <div class="card-text">
+                                                        {% if title.clusive.more %}
+                                                        <p id="short_{{ title.bookshareId }}">
+                                                            {{ title.clusive.synopsis }} &hellip;
+                                                            <button id="more_{{title.bookshareId}}" class="link-btn more-or-less" aria-label="See more about {{ title.title }}">See more</button>
+                                                        </p>
+                                                        <p id="long_{{ title.bookshareId }}" style="display: none">
+                                                            Description: {{ title.synopsis }}
+                                                            <button id="less_{{title.bookshareId}}" class="link-btn more-or-less" aria-label="See less about {{ title.title }}">See less</button>
+                                                        </p>
+                                                        {% else %}
+                                                        <p id="long_{{ title.bookshareId }}">
+                                                           Description: {{ title.synopsis }}
+                                                        </p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-secondary btn-small" value="Import" disabled/>
-                        <a href="/library/bookshare-results/{{ previous }}" class="btn btn-link btn-small">Cancel</a>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary btn-small" value="Add to My Readings" disabled/>
+                                {% if previous_page %}
+                                <a href="/library/bookshare-results/{{ previous }}/{{ previous_page }}" class="btn btn-link btn-small">Cancel</a>
+                                {% else %}
+                                <a href="/library/bookshare-results/{{ previous }}" class="btn btn-link btn-small">Cancel</a>
+                                {% endif %}
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- TODO: Move this moreOrLess() script to a common location, such as frontend/js/... -->
-    <script type="text/javascript">
-        clusive.moreOrLess = function (event) {
-            const id = (event.target.id).replace(/(more_|less_)/, '');
-            const action = (event.target.id).replace(id, '');
-            if (action === "more_") {
-                var elementToShow = document.getElementById(`long_${id}`);
-                var elementToHide = document.getElementById(`short_${id}`);
+        <!-- TODO: Move this moreOrLess() script to a common location, such as frontend/js/... -->
+        <script type="text/javascript">
+            clusive.moreOrLess = function (event) {
+                const id = (event.target.id).replace(/(more_|less_)/, '');
+                const action = (event.target.id).replace(id, '');
+                if (action === "more_") {
+                    var elementToShow = document.getElementById(`long_${id}`);
+                    var elementToHide = document.getElementById(`short_${id}`);
+                }
+                else if (action === "less_") {
+                    var elementToHide = document.getElementById(`long_${id}`);
+                    var elementToShow = document.getElementById(`short_${id}`);
+                }
+                elementToHide.style.display = 'none';
+                elementToShow.style.display = 'block';
+                event.preventDefault();
             }
-            else if (action === "less_") {
-                var elementToHide = document.getElementById(`long_${id}`);
-                var elementToShow = document.getElementById(`short_${id}`);
-            }
-            elementToHide.style.display = 'none';
-            elementToShow.style.display = 'block';
-            event.preventDefault();
-        }
 
-        $(document).ready(function() {
-            moreOrLessButtons = document.querySelectorAll('.more-or-less');
-            moreOrLessButtons.forEach(function (aButton) {
-                aButton.addEventListener ("click", clusive.moreOrLess);
+            $(document).ready(function() {
+                moreOrLessButtons = document.querySelectorAll('.more-or-less');
+                moreOrLessButtons.forEach(function (aButton) {
+                    aButton.addEventListener ("click", clusive.moreOrLess);
+                });
             });
-        });
-    </script>
-</main>
+        </script>
+    </main>
+</div>
 {% endblock %}
 
