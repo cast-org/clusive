@@ -32,11 +32,11 @@
                             {% if title.clusive.more %}
                             <li id="short_{{ title.bookshareId }}">
                                 Description: {{ title.clusive.synopsis }} &hellip;
-                                <button id="more_{{title.bookshareId}}" class="link-btn more-or-less">See more</button>
+                                <button id="more_{{title.bookshareId}}" class="link-btn more-or-less" aria-label="See more about {{ title.title }}">See more</button>
                             </li>
                             <li id="long_{{ title.bookshareId }}" style="display: none">
                                 Description: {{ title.synopsis }}
-                                <button id="less_{{title.bookshareId}}" class="link-btn more-or-less">See less</button>
+                                <button id="less_{{title.bookshareId}}" class="link-btn more-or-less" aria-label="See less about {{ title.title }}">See less</button>
                             </li>
                             {% else %}
                             <li id="long_{{ title.bookshareId }}">
@@ -69,7 +69,6 @@
             }
             elementToHide.style.display = 'none';
             elementToShow.style.display = 'block';
-            event.stopPropagation();
             event.preventDefault();
         }
 

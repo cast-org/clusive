@@ -61,11 +61,11 @@
                                                 {% if book.clusive.more %}
                                                 <p id="short_{{ book.bookshareId }}">
                                                     {{ book.clusive.synopsis }} &hellip;
-                                                    <button id="more_{{ book.bookshareId }}" class="link-btn more-or-less">See more</button>
+                                                    <button id="more_{{ book.bookshareId }}" class="link-btn more-or-less" aria-label="See more about {{ book.title}}">See more</button>
                                                 </p>
                                                 <p id="long_{{ book.bookshareId }}" style="display: none">
                                                     {{ book.synopsis }}
-                                                    <button id="less_{{ book.bookshareId }}" class="link-btn more-or-less">See less</button>
+                                                    <button id="less_{{ book.bookshareId }}" class="link-btn more-or-less" aria-label="See less about {{ book.title}}">See less</button>
                                                 </p>
                                                 {% else %}
                                                 <p id="long_{{ book.bookshareId }}">
@@ -90,7 +90,6 @@
                                 </a>
                                 {% else %}
                                 <a href="{% url 'bookshare_search_results' keyword=query_key page=links.prev %}" class="page-link">
-                                <a href="/library/bookshare-results/{{query_key}}/{{links.prev}}" class="page-link">
                                     <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                                     Previous
                                 </a>
@@ -134,7 +133,6 @@
                 }
                 elementToHide.style.display = 'none';
                 elementToShow.style.display = 'block';
-                event.stopPropagation();
                 event.preventDefault();
             }
 
