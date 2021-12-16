@@ -85,35 +85,3 @@ class BookshareSearchForm(forms.Form):
             return data.strip()
         else:
             raise ValidationError(_('Invalid format for keyword'))
-
-class BookshareListResourcesForm(forms.Form):
-    # title, authors, isbn
-    label_formatter = '{}   By {}, ISBN: {}, Format: {}'
-
-    def __init__(self, *args, **kwargs):
-        titles = kwargs.pop('titles')
-        super().__init__(*args, **kwargs)
-        title_choices = []
-        for book in titles.get('titles', []):
-            title = book['title']
-            authors = []
-            for contributor in book['contributors']:
-                if contributor['type'] == 'author':
-                    authors.append(contributor['name']['displayName'])
-            by = ', '.join(authors)
-            # a None value for isbn13 is possible (!)
-            isbn = book.get('isbn13', '-')
-            bookshare_id = book['bookshareId']
-            book_format = book.get('formats', 'unknown')
-            if book_format is not 'unknown':
-                book_format = next((x['formatId'] for x in book_format if x['formatId'] == 'EPUB3'), 'unknown')
-            label = self.label_formatter.format(title, by, isbn, book_format)
-            title_choices.append((bookshare_id, label))
-            logger.debug('title: %s', label)
-        
-        self.fields['title_select'] = forms.ChoiceField(
-            choices=title_choices,
-            required=True,
-            widget=forms.RadioSelect
-        )
-

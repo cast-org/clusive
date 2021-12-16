@@ -23,7 +23,7 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, BookshareListResourcesForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from pages.views import ThemedPageMixin, SettingsPageMixin
