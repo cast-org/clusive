@@ -286,7 +286,6 @@ window.wordBank.enableDragDrop = function() {
             var newrating = Number(elmDrop.dataset.dropzoneRating);
 
             if (prevrating !== newrating && newrating >= 0 && newrating <= 3) {
-                // TODO: eventlog
                 var control = prevrating < newrating ? 'wb_drag_right' : 'wb_drag_left';
                 $.get('/glossary/rating/' + control + '/' + $(word).text() + '/' + newrating);
                 window.wordBank.displayNewWordRating($(item), newrating);
