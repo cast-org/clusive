@@ -84,30 +84,30 @@
                         <div class="library-pagination-wrapper">
                             <div class="pagination library-pagination">
                                 {% if links.prev == None %}
-                                <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                                <a href="#" class="page-text disabled" tabindex="-1" aria-disabled="true">
                                     <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                                     Previous
                                 </a>
                                 {% else %}
-                                <a href="{% url 'bookshare_search_results' keyword=query_key page=links.prev %}" class="page-link">
+                                <a href="{% url 'bookshare_search_results' keyword=query_key page=links.prev %}" class="page-text">
                                     <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                                     Previous
                                 </a>
                                 {% endif %}
                                 {% for page_num in links.pages %}
                                     {% if page_num == 'current' %}
-                                    <a href="{% url 'bookshare_search_results' keyword=query_key page=current_page %}" class="page-link active" aria-current="page">{{ current_page }}</a>
+                                    <a href="{% url 'bookshare_search_results' keyword=query_key page=current_page %}" class="page-text active" aria-current="page">{{ current_page }}</a>
                                     {% else %}
-                                    <a href="{% url 'bookshare_search_results' keyword=query_key page=page_num %}" class="page-link">{{ page_num }}</a>
+                                    <a href="{% url 'bookshare_search_results' keyword=query_key page=page_num %}" class="page-text">{{ page_num }}</a>
                                     {% endif %}
                                 {% endfor %}
                                 {% if links.next == None %}
-                                <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                                <a href="#" class="page-text disabled" tabindex="-1" aria-disabled="true">
                                     Next
                                     <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                                 </a>
                                 {% else %}
-                                <a href="{% url 'bookshare_search_results' keyword=query_key page=links.next %}" class="page-link">
+                                <a href="{% url 'bookshare_search_results' keyword=query_key page=links.next %}" class="page-text">
                                     Next
                                     <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                                 </a>
