@@ -287,8 +287,8 @@ window.wordBank.enableDragDrop = function() {
 
             if (prevrating !== newrating && newrating >= 0 && newrating <= 3) {
                 // TODO: eventlog
-                //var control = 'wb_drag??_??'
-                //$.get('/glossary/rating/' + control + '/' + word.text() + '/' + newrating);
+                var control = prevrating < newrating ? 'wb_drag_right' : 'wb_drag_left';
+                $.get('/glossary/rating/' + control + '/' + $(word).text() + '/' + newrating);
                 window.wordBank.displayNewWordRating($(item), newrating);
                 setTimeout(function() {
                     $(item).CFW_transition(null, function() { confettiCannon(word); });
