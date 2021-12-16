@@ -780,12 +780,6 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # DEBUGGING urls.py
-#         keyword = kwargs.get('keyword', '')
-#         page = kwargs.get('page', 1)
-#         pdb.set_trace()
-#         an_url = reverse('bookshare_search_results', kwargs = { 'keyword': keyword, 'page': page })
-        # END DEBUGGING
 
         current_page = kwargs.get('page', 1)
         keyword = kwargs.get('keyword', '')
@@ -805,17 +799,17 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                 pages[pages_index] = pages_index + 1
             pages_index += 1
         links['pages'] = pages
-        pdb.set_trace()
         context.update({
             'chunks': chunks,
             'chunk_index': chunk_index,
             'current_page': current_page,
-            'titles': chunks[chunk_index],                                                    #self.metadata.get('titles', []),
+            'titles': chunks[chunk_index],
             'links': links,
-            'totalResults': bookshare_search_metadata.get('totalResults'),                    #self.metadata.get('totalResults'),
-            'clusive_title_count': bookshare_search_metadata.get('clusive_title_count', '?'), #self.metadata.get('clusive_title_count', '?'),
-            'duration': bookshare_search_metadata.get('duration', '?'),                       #self.metadata.get('duration', '?'),
-            'query_key' : keyword,                                                            #self.query_key,
+            # TODO This next bunch is for debugging and should be removed
+            'totalResults': bookshare_search_metadata.get('totalResults'),
+            'clusive_title_count': bookshare_search_metadata.get('clusive_title_count', '?'),
+            'duration': bookshare_search_metadata.get('duration', '?'),
+            'query_key' : keyword,
         })
         return context
 
@@ -956,7 +950,6 @@ def filter_metadata(metadata, collected_metadata, is_keyword_search, has_full_ac
             # access to copyrighted titles and only titles with no copyright can
             # be imported
             copyright = title.get('copyright')
-            logger.debug("=> COPYRIGHT for %s (%s) is %s", title['title'], title['isbn13'], copyright)
         else:
             copyright = True
             is_available = title.get('available', False)
@@ -971,6 +964,10 @@ def filter_metadata(metadata, collected_metadata, is_keyword_search, has_full_ac
                 # Not sure what to do about these really.
                 collected_metadata['next'] = metadata['next']
                 collected_metadata['allows'] = metadata['allows']
+            else:
+                logger.log("Bookshare title '%s' (%s) has no EPUB format", title['title'], title['isbn13'])
+        else:
+            logger.log("Bookshare title '%s' (%s) is not availalble", title['title'], title['isbn13'])
 
     # Append the filtered titles
     collected_metadata['chunks'].append(filtered_titles)
