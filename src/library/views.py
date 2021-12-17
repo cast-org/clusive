@@ -23,7 +23,7 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, BookshareImportForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from pages.views import ThemedPageMixin, SettingsPageMixin
@@ -888,28 +888,36 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         logger.debug(f"Bookshare metadata filtering: {toc - tic:0.4f} seconds")
         return collected_metadata
 
-class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #EventMixin
+class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #EventMixin
     template_name = 'library/library_bookshare_import.html'
     bookshare_id = ''
+    access_keys = None
     title_metadata = {}
+    form_class = BookshareImportForm
 
     def dispatch(self, request, *args, **kwargs):
         if request.clusive_user.can_upload:
             try:
-                access_keys = get_access_keys(request)
+                self.access_keys = get_access_keys(request)
             except Exception as e:
                 logger.debug("Bookshare Import exception: ", e)
-                raise e
+                self.handle_no_permission()
+
             self.bookshare_id = kwargs.get('bookshareId')
+            # Get the meta data for this book to show to the user
             resp = requests.request(
                 'GET',
-                'https://api.bookshare.org/v2/titles/' + self.bookshare_id + '?api_key=' + access_keys.get('api_key'),
+                'https://api.bookshare.org/v2/titles/' + self.bookshare_id,
+                params = {
+                    'api_key': self.access_keys.get('api_key')
+                },
                 headers = {
-                    'Authorization': 'Bearer ' + access_keys.get('access_token').token
+                    'Authorization': 'Bearer ' + self.access_keys.get('access_token').token
                 }
             )
             self.title_metadata = resp.json()
-            surface_bookshare_info(self.title_metadata, access_keys.get('proof_status', False))
+            surface_bookshare_info(self.title_metadata, self.access_keys.get('proof_status', False))
+            self.import_form = BookshareImportForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
             self.handle_no_permission()
@@ -920,9 +928,99 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #Even
             'title': self.title_metadata,
             'previous': kwargs.get('previous'),
             'previous_page': kwargs.get('previous_page'),
+            'waiting': kwargs.get('pending'),
         })
         return context
 
+    def post(self, request, *args, **kwargs):
+        if request.clusive_user.can_upload:
+            previous = kwargs.get('previous')
+            previous_page = kwargs.get('previous_page')
+            waiting = kwargs.get('pending')
+
+            # The following request will return a status code of 202 meaning the
+            # request to download has been acknowledged, and a package is being 
+            # prepared for download.  Subsequent requests will either 202 again,
+            # or, when the package is ready, the status code is 302, and the 
+            # response will contain the url to use to download.  However, 302 
+            # is also a redirect, and Bookshare automatically redirects and
+            # downloads the title.  The response contains the epub content.
+            # https://apidocs.bookshare.org/reference/index.html#_responses_3
+            resp = requests.request(
+                'GET',
+                'https://api.bookshare.org/v2/titles/' + self.bookshare_id + '/EPUB3',
+                params = {
+                    'api_key': self.access_keys.get('api_key')
+                },
+                headers = {
+                    'Authorization': 'Bearer ' + self.access_keys.get('access_token').token
+                }
+            )
+
+            # 202 - "Download request received; package being prepared"
+            if resp.status_code == 202:
+                # Loop back to the import page, noting that the download is
+                # pending.
+                return HttpResponseRedirect(redirect_to=reverse(
+                    'bookshare_import', kwargs = {
+                        'bookshareId': self.bookshare_id,
+                        'previous': previous,
+                        'previous_page': previous_page,
+                        'pending': 'pending',
+                    }
+                ))
+            # 302 - "Package ready"
+            elif resp.status_code == 302:
+                pdb.set_trace()
+                result = resp.json()
+                download_url = result['messages'][0]
+                # Loop back to the import page, noting that the download is
+                # ready
+                # NEED STORE THE download_url, if redirect back to this page.
+                return HttpResponseRedirect(redirect_to=reverse(
+                    'bookshare_import', kwargs = {
+                        'bookshareId': self.bookshare_id,
+                        'previous': previous,
+                        'previous_page': previous_page,
+                        'pending': 'ready',
+                    }
+                ))
+            # 200 - resp contains the epub file, save it.  But, check the resp
+            # header 'Content-Type' (Is the latter really necessary?  Isn't 200
+            # enough?).
+            elif resp.status_code == 200 and resp.headers['Content-Type'] == 'application/octet-stream':
+                self.save_book(resp.content, self.title_metadata, kwargs)
+                return HttpResponseRedirect(redirect_to=reverse(
+                    'library_style_redirect', kwargs = {'view': 'mine' }
+                ))
+
+        else:
+            self.handle_no_permission()
+    
+    def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
+        # This is mostly a copy of UploadFormView.form_valid() from above.
+        # Consider writing one function to do both.
+        fd, tempfile = mkstemp(suffix='epub', prefix=str(bookshare_metadata['bookshareId']))
+        try:
+            with os.fdopen(fd, 'wb') as f:
+                f.write(downloaded_contents)
+            (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
+            if changed:
+                logger.debug('Uploaded file name = %s', bookshare_metadata['bookshareId'])
+                self.bv.filename = bookshare_metadata['bookshareId']
+                self.bv.save()
+                logger.debug('Updating word lists')
+                scan_book(self.bv.book)
+            else:
+                raise Exception('unpack_epub_file did not find new content.')
+
+        except Exception as e:
+            logger.warning('Could not process uploaded file, filename=%s, error=%s',
+                           str(bookshare_metadata['bookshareId']), e)
+        finally:
+            logger.debug("Removing temp file %s" % (tempfile))
+            os.remove(tempfile)
+            
 def filter_metadata(metadata, collected_metadata, is_keyword_search, has_full_access=False):
     """
     Filter the bookshare title search metadata by:

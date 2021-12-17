@@ -85,3 +85,9 @@ class BookshareSearchForm(forms.Form):
             return data.strip()
         else:
             raise ValidationError(_('Invalid format for keyword'))
+
+class BookshareImportForm(forms.Form):
+    why = 42 # So that something is here...
+
+
+    

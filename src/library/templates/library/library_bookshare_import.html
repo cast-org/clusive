@@ -70,7 +70,15 @@
                             </div>
                     
                             <div class="form-group">
+                                {% if pending is None %}
+                                <input type="submit" class="btn btn-primary btn-small" value="Add to My Readings"/>
+                                {% elif pending == 'pending' %}
+                                <input type="submit" class="btn btn-primary btn-small" value="Waiting ..."/>
+                                {% elif pending == 'ready' %}
+                                <input type="submit" class="btn btn-primary btn-small" value="Download"/>
+                                {% elif pending == 'done' %}
                                 <input type="submit" class="btn btn-primary btn-small" value="Add to My Readings" disabled/>
+                                {% endif %}
                                 {% if previous_page %}
                                 <a href="/library/bookshare-results/{{ previous }}/{{ previous_page }}" class="btn btn-link btn-small">Cancel</a>
                                 {% else %}
