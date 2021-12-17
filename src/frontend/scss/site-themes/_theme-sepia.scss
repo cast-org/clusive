@@ -249,7 +249,9 @@ $action-current-color:                  $body-color;
 $page-title-border-color:               #a0abfd;
 
 $sidebar-start-bg:                      linear-gradient(180deg, rgba(#b09f88, .175) 0%, rgba(#b09f88, .325) 100%);
+$sidebar-start-divider-color:           $body-bg;
 $sidebar-end-bg:                        linear-gradient(180deg, rgba(#b09f88, .6) 0%, rgba(#b09f88, .8) 100%);
+$sidebar-end-divider-color:             $sidebar-start-divider-color;
 
 // Figure
 $figure-caption-bg:                     #ebe3d5;

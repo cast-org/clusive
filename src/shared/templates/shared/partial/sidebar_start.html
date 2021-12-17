@@ -3,21 +3,6 @@
     <button id="tocButton" type="button" data-cfw="modal" data-cfw-modal-target="#modalToc" class="btn btn-nav btn-icon btn-nav-toc" aria-label="Contents, highlights, &amp; notes" title="Contents, highlights, &amp; notes" data-cle-handler="click" data-cle-control="contents-highlights-notes-sidebar" data-cle-value="opened">
         <span class="icon-th-list" aria-hidden="true"></span>
     </button>
-    <button id="prevResourceButton" onclick="D2Reader.previousPage();" type="button" class="btn btn-nav btn-icon btn-nav-prev" aria-label="Previous page" title="Previous page" data-cle-handler="click" data-cle-control="reader-navigation-pagination" data-cle-value="previous-page">
-        <span class="icon-chevron-left" aria-hidden="true"></span>
-    </button>
-    <button id="nextResourceButton" onclick="D2Reader.nextPage();" type="button" class="btn btn-nav btn-icon btn-nav-next" aria-label="Next page" title="Next page" data-cle-handler="click" data-cle-control="reader-navigation-pagination" data-cle-value="next-page">
-        <span class="icon-chevron-right" aria-hidden="true"></span>
-    </button>
-</nav>
-{% endif %}
-{% if why %}
-<div class="sidebar-support" role="region" aria-label="Support">
-    <button id="compButton" type="button" class="btn btn-nav btn-icon btn-thought"
-            arial-label="Your thoughts" title="Your thoughts">
-        <span class="icon-thought" aria-hidden="true"></span>
-        <span class="sr-only">Your thoughts</span>
-    </button>
 
     {% if version_count == 1 %}
     <span class="d-inline-block mt-0_75" tabindex="0" title="Can't switch: there is only one version of this content."
@@ -41,6 +26,25 @@
         {% endif %}
     </button>
     {% endif %}
+
+    <div class="sidebar-divider-wrapper">
+        <div class="sidebar-divider"></div>
+    </div>
+    <button id="prevResourceButton" onclick="D2Reader.previousPage();" type="button" class="btn btn-nav btn-icon btn-nav-prev" aria-label="Previous page" title="Previous page" data-cle-handler="click" data-cle-control="reader-navigation-pagination" data-cle-value="previous-page">
+        <span class="icon-chevron-left" aria-hidden="true"></span>
+    </button>
+    <button id="nextResourceButton" onclick="D2Reader.nextPage();" type="button" class="btn btn-nav btn-icon btn-nav-next" aria-label="Next page" title="Next page" data-cle-handler="click" data-cle-control="reader-navigation-pagination" data-cle-value="next-page">
+        <span class="icon-chevron-right" aria-hidden="true"></span>
+    </button>
+</nav>
+{% endif %}
+{% if why %}
+<div class="sidebar-support" role="region" aria-label="Support">
+    <button id="compButton" type="button" class="btn btn-nav btn-icon btn-thought mt-0_75"
+            arial-label="Your thoughts" title="Your thoughts">
+        <span class="icon-thought" aria-hidden="true"></span>
+        <span class="sr-only">Your thoughts</span>
+    </button>
 </div>
 
 {% include "shared/partial/popover_comp.html" %}
