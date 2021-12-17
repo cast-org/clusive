@@ -928,7 +928,7 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
             'title': self.title_metadata,
             'previous': kwargs.get('previous'),
             'previous_page': kwargs.get('previous_page'),
-            'waiting': kwargs.get('pending'),
+            'pending': kwargs.get('pending'),
         })
         return context
 
@@ -936,7 +936,6 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
         if request.clusive_user.can_upload:
             previous = kwargs.get('previous')
             previous_page = kwargs.get('previous_page')
-            waiting = kwargs.get('pending')
 
             # The following request will return a status code of 202 meaning the
             # request to download has been acknowledged, and a package is being 
@@ -974,19 +973,24 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
                 pdb.set_trace()
                 result = resp.json()
                 download_url = result['messages'][0]
-                # Loop back to the import page, noting that the download is
-                # ready
-                # NEED STORE THE download_url, if redirect back to this page.
-                return HttpResponseRedirect(redirect_to=reverse(
-                    'bookshare_import', kwargs = {
-                        'bookshareId': self.bookshare_id,
-                        'previous': previous,
-                        'previous_page': previous_page,
-                        'pending': 'ready',
-                    }
-                ))
+                resp = requests.request(download_url)
+                if resp.status_code == 200:
+                    self.save_book(resp.content, self.title_metadata, kwargs)
+                    return HttpResponseRedirect(redirect_to=reverse(
+                        'library_style_redirect', kwargs = {'view': 'mine' }
+                    ))
+                else:
+                    return HttpResponseRedirect(redirect_to=reverse(
+                        'bookshare_import', kwargs = {
+                            'bookshareId': self.bookshare_id,
+                            'previous': previous,
+                            'previous_page': previous_page,
+                            'pending': 'ready',
+                        }
+                    ))
+
             # 200 - resp contains the epub file, save it.  But, check the resp
-            # header 'Content-Type' (Is the latter really necessary?  Isn't 200
+            # header 'Content-Type' (Is the latter really necessary?  Is 200
             # enough?).
             elif resp.status_code == 200 and resp.headers['Content-Type'] == 'application/octet-stream':
                 self.save_book(resp.content, self.title_metadata, kwargs)
