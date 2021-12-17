@@ -625,7 +625,7 @@ function filterAllUpdate() {
 function libraryPageLinkSetup() {
     'use strict';
 
-    $(document.body).on('click', 'a.page-link', function(e) {
+    $(document.body).on('click', 'a.ajax-page-link', function(e) {
         e.preventDefault();
         var $elm = $(e.currentTarget);
         updateLibraryData($elm.attr('href'))

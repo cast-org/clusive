@@ -31,7 +31,7 @@
                                     <a href="{% url 'bookshare_import' bookshareId=book.bookshareId previous_page=current_page previous=query_key %}" class="btn btn-primary">Import</a>
                                     {% else %}
                                     <a href="#" class="btn btn-primary" disabled>Import</a>
-                                    <p>No import link</p>                                    
+                                    <p>No import link</p>
                                     {% endif %}
                                 </div>
                                 <div class="col col-md">
@@ -90,7 +90,7 @@
                                 Previous
                             </a>
                             {% else %}
-                            <a href="{% url 'bookshare_search_results' keyword=query_key page=links.prev %}" class="page-text">
+                            <a href="{% url 'bookshare_search_results' keyword=query_key page=links.prev %}" class="page-link">
                                 <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                                 Previous
                             </a>
@@ -99,7 +99,7 @@
                                 {% if page_num == 'current' %}
                                 <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true" aria-current="page">{{ current_page }}</a>
                                 {% else %}
-                                <a href="{% url 'bookshare_search_results' keyword=query_key page=page_num %}" class="page-text">{{ page_num }}</a>
+                                <a href="{% url 'bookshare_search_results' keyword=query_key page=page_num %}" class="page-link">{{ page_num }}</a>
                                 {% endif %}
                             {% endfor %}
                             {% if links.next == None %}
@@ -108,7 +108,7 @@
                                 <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                             </a>
                             {% else %}
-                            <a href="{% url 'bookshare_search_results' keyword=query_key page=links.next %}" class="page-text">
+                            <a href="{% url 'bookshare_search_results' keyword=query_key page=links.next %}" class="page-link">
                                 Next
                                 <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                             </a>
