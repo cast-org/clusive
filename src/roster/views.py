@@ -602,17 +602,20 @@ def finish_login(request):
     if request.user.is_staff:
         return HttpResponseRedirect('/admin')
     clusive_user = ClusiveUser.from_request(request)
-    # If you're logging in via Google, then you are marked as a Google user from now on.
-    if clusive_user.data_source != RosterDataSource.GOOGLE:
-        clusive_user.data_source = RosterDataSource.GOOGLE
-        clusive_user.save()
-        try:
-            external_user = SocialAccount.objects.get(user=request.user, provider='google')
-            clusive_user.external_id = external_user.uid
+    google_user = SocialAccount.objects.filter(user=request.user, provider='google')
+    if google_user:
+        # If you're logging in via Google, then you are marked as a Google user from now on.
+        if clusive_user.data_source != RosterDataSource.GOOGLE:
+            logger.debug("  Changing user to Google user")
+            clusive_user.data_source = RosterDataSource.GOOGLE
+            clusive_user.external_id = google_user[0].uid
             clusive_user.save()
-        except SocialAccount.DoesNotExist:
-            # Should be impossible
-            logger.debug('ClusiveUser SSO with no SocialAccount')
+    else:
+        # Not a Google user
+        if clusive_user.data_source != RosterDataSource.CLUSIVE:
+            logger.debug("  Changing user to non-google user")
+            clusive_user.data_source = RosterDataSource.CLUSIVE
+            clusive_user.save()
 
     # Check for valid Bookshare access token for this user.
     if is_bookshare_connected(request):
@@ -1324,3 +1327,26 @@ def get_add_scope_redirect_uri(request):
     if scheme == 'http' and request.META.get('HTTP_X_FORWARDED_PROTO') == 'https':
         scheme = 'https'
     return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'
+
+
+class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
+    template_name = 'roster/my_account.html'
+
+    def get(self, request, *args, **kwargs):
+        clusive_user: ClusiveUser
+        clusive_user = request.clusive_user
+        google_account = SocialAccount.objects.filter(user=request.user, provider='google')
+        logger.debug('User: %s, data source: %s, google account: %s',
+                     request.clusive_user, clusive_user.data_source, google_account)
+        self.extra_context = {
+            'can_edit_display_name': False,
+            'can_edit_email': False,
+            'can_edit_password': clusive_user.can_set_password,
+            'has_google_account': clusive_user.data_source == RosterDataSource.GOOGLE,
+        }
+        return super().get(request, *args, **kwargs)
+
+    def configure_event(self, event: Event):
+        event.page = 'MyAccount'
+
+

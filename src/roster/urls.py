@@ -63,4 +63,6 @@ urlpatterns = [
     path('add_scope_access', views.add_scope_access, name='add_scope_access'),
     path('add_scope_callback/', views.add_scope_callback, name='add_scope_callback'),
     path('sync_mailing_list', views.SyncMailingListView.as_view(), name='sync_mailing_list'),
+
+    path('my_account', views.MyAccountView.as_view(), name='my_account'),
 ]

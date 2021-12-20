@@ -31,7 +31,7 @@
     width: $sidebar-width;
     max-width: $sidebar-width;
     height: calc(100vh - #{$header-height + $body-padding-y});
-    padding: $sidebar-padding;
+    padding: $sidebar-padding-y $sidebar-padding-x;
     background: var(--CT_sidebarStartBg);
     @include border-radius($sidebar-border-radius);
 
@@ -39,7 +39,7 @@
         flex-basis: $sidebar-sm-width;
         width: $sidebar-sm-width;
         max-width: $sidebar-sm-width;
-        padding: $sidebar-sm-padding;
+        padding: $sidebar-sm-padding-y $sidebar-sm-padding-x;
     }
 
     @include media-breakpoint-up(md) {
@@ -72,6 +72,22 @@
         font-weight: $font-weight-bold;
         transform: rotate(-90deg) translateY(-50%);
         transform-origin: top center;
+    }
+}
+
+.sidebar-divider-wrapper {
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+}
+.sidebar-divider {
+    position: absolute;
+    right: 0;
+    left: 0;
+    line-height: 1;
+    border-top: 2px solid var(--CT_sidebarStartDividerColor);
+
+    @include media-breakpoint-up(xl) {
+        left: -33vw;
     }
 }
 
@@ -128,6 +144,15 @@
             right: auto;
             left: 0;
             background: var(--CT_sidebarEndBg);
+        }
+    }
+
+    .sidebar-divider {
+        border-color: var(--CT_sidebarEndDividerColor);
+
+        @include media-breakpoint-up(xl) {
+            left: 0;
+            right: -33vw;
         }
     }
 }

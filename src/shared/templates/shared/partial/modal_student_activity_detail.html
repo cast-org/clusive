@@ -17,8 +17,8 @@
         {{ paradata.words_looked_up_list | join:", " | default:"&mdash;" }}
     </li>
     <li class="list-item">
-        <strong>Supports used:</strong>
-        {{ supports | join:", " | default:"&mdash;" }}
+        <strong>Read aloud:</strong>
+        {% if paradata.read_aloud_count > 0 %}✓{% else %}&mdash;{% endif %}
     </li>
     <li class="list-item">
         <strong>Reactions:</strong>

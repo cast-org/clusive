@@ -180,6 +180,12 @@
     }
 }
 
+.library-grid:not(.dashboard-grid) {
+    .card-special {
+        min-height: 18rem;
+    }
+}
+
 .library-grid-col-2 {
     > .card {
         @include media-breakpoint-up(sm) {
@@ -249,6 +255,13 @@
     .card-collapse {
         @include media-breakpoint-up(md) {
             display: block;
+        }
+    }
+
+    .card-special {
+        .card-body {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
         }
     }
 }

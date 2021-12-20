@@ -105,12 +105,14 @@
                                         {{ p.title }}<br />
                                         {{ p.hours|floatformat:1}} hours
                                     </div>
+                                    {% if not p.is_other %}
                                     <a id="detailTrigger_{{ info.clusive_user.user.id }}_{{ p.book_id }}"
                                        class="tooltip-link detailTrigger" href="#" role="button"
                                        data-cle-handler="click" data-cle-control="dash_activity_detail" data-cle-value="{{ info.clusive_user.anon_id }}"
                                        data-clusive-student-name="{{ info.clusive_user.user.first_name }}"
                                        data-clusive-student-id="{{ info.clusive_user.id }}"
-                                       data-clusive-book-id="{{ p.book_id }}">More details</a>
+                                       data-clusive-book-id="{{ p.book_id }}"><strong>More details</strong></a>
+                                    {% endif %}
                                 </div>
                                 <div class="tooltip-arrow"></div>
                             </div>
