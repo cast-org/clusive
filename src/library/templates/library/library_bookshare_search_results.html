@@ -22,16 +22,20 @@
                     <h2>Step 2: Select from results:</h2>
 
                     <div class="list list-divided list-spaced-y result-list mb-0">
-                        <p>Number of pre-filtered titles found: {{ totalResults }}, after filtering: {{ clusive_title_count }} (in {{ duration }} seconds)</p>
+                        <p>Total number of books found: {{ totalResults }}</p>
                         {% for book in titles %}
                         <div class="list-item">
                             <div class="row">
                                 <div class="col-12 col-md-2 mb-1 mb-md-0 text-md-center">
                                     {% if book.bookshareId %}
-                                    <a href="{% url 'bookshare_import' bookshareId=book.bookshareId previous_page=current_page previous=query_key %}" class="btn btn-primary">Import</a>
+                                      {% if book.clusive.epub %}
+                                        <a href="{% url 'bookshare_import' bookshareId=book.bookshareId previous_page=current_page %}" class="btn btn-primary">Import</a>
+                                      {% else %}
+                                        <p>Not available</p>
+                                      {% endif %}
                                     {% else %}
-                                    <a href="#" class="btn btn-primary" disabled>Import</a>
-                                    <p>No import link</p>
+                                      <a href="#" class="btn btn-primary" disabled>Import</a>
+                                      <p>No import link</p>
                                     {% endif %}
                                 </div>
                                 <div class="col col-md">
@@ -40,8 +44,6 @@
                                             <div class="card-img">
                                                 {% if book.clusive.thumbnail %}
                                                 <img class="img-fluid" src="{{ book.clusive.thumbnail }}" alt="">
-                                                {% else %}
-                                                 <img class="img-fluid" src="./img/sample-1.jpg" alt="">
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -55,7 +57,7 @@
                                                 {% empty %}
                                                 <div>No author listed</div>
                                                 {% endfor %}
-                                                <div>ISBN: {{ book.isbn13 }} ({{ book.clusive.epub }})</div>
+                                                <div>ISBN: {{ book.isbn13 }}</div>
                                             </div>
                                             <div class="card-text">
                                                 {% if book.clusive.more %}
@@ -68,7 +70,7 @@
                                                     <button id="less_{{ book.bookshareId }}" class="link-btn more-or-less" aria-label="See less about {{ book.title}}">See less</button>
                                                 </p>
                                                 {% else %}
-                                                <p id="long_{{ book.bookshareId }}">
+                                                <p>
                                                     {{ book.synopsis }}
                                                 </p>
                                                 {% endif %}
@@ -90,16 +92,16 @@
                                 Previous
                             </a>
                             {% else %}
-                            <a href="{% url 'bookshare_search_results' keyword=query_key page=links.prev %}" class="page-link">
+                            <a href="{% url 'bookshare_search_results' page=links.prev %}" class="page-link">
                                 <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                                 Previous
                             </a>
                             {% endif %}
                             {% for page_num in links.pages %}
                                 {% if page_num == 'current' %}
-                                <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true" aria-current="page">{{ current_page }}</a>
+                                <span class="page-link active" tabindex="-1" aria-current="page">{{ current_page }}</span>
                                 {% else %}
-                                <a href="{% url 'bookshare_search_results' keyword=query_key page=page_num %}" class="page-link">{{ page_num }}</a>
+                                <a href="{% url 'bookshare_search_results' page=page_num %}" class="page-link">{{ page_num }}</a>
                                 {% endif %}
                             {% endfor %}
                             {% if links.next == None %}
@@ -108,7 +110,7 @@
                                 <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                             </a>
                             {% else %}
-                            <a href="{% url 'bookshare_search_results' keyword=query_key page=links.next %}" class="page-link">
+                            <a href="{% url 'bookshare_search_results' page=links.next %}" class="page-link">
                                 Next
                                 <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                             </a>

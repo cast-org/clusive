@@ -3,11 +3,10 @@ import json
 import logging
 import os
 import shutil
-import requests
-import time
-from urllib.parse import urlencode
 from tempfile import mkstemp
+from urllib.parse import urlencode
 
+import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, QuerySet
@@ -26,10 +25,10 @@ from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, BookshareImportForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
+from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
-from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 
 logger = logging.getLogger(__name__)
 
@@ -742,7 +741,7 @@ class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
             return super().dispatch(request, *args, **kwargs)
         else:
             self.handle_no_permission()
-        
+
     def get_success_url(self):
         keyword = self.search_form.clean_keyword()
         # About to start a new Bookshare search.  Clear any existing Bookshare
@@ -752,7 +751,7 @@ class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
         except:
             pass
         return reverse('bookshare_search_results', kwargs={'keyword': keyword})
-    
+
     def post(self, request, *args, **kwargs):
         keyword = self.search_form.clean_keyword()
         if keyword == '':
@@ -761,55 +760,70 @@ class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
         else:
             return HttpResponseRedirect(redirect_to=self.get_success_url())
 
+
 class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #EventMixin
     template_name = 'library/library_bookshare_search_results.html'
     query_key = ''
     metadata = {}
-    
+
     def dispatch(self, request, *args, **kwargs):
         if request.clusive_user.can_upload:
+            # This view should be called with EITHER a keyword or a page, not both.
             self.query_key = kwargs.get('keyword', '')
-            if request.session.get('bookshare_search_metadata') is None:
+            self.page = kwargs.get('page', 1)
+            if self.query_key:
+                # New search
+                logger.debug('New search, keyword = %s', self.query_key)
+                self.page = 1
                 self.metadata = self.get_bookshare_metadata(self.request)
                 request.session['bookshare_search_metadata'] = self.metadata
             else:
                 self.metadata = request.session['bookshare_search_metadata']
+                pages_available = len(self.metadata['chunks'])
+                if self.page <= pages_available:
+                    logger.debug('Showing page %d of existing results', self.page)
+                    pass
+                elif self.page == pages_available+1:
+                    logger.debug('Getting next page %d of reults from API', self.page)
+                    self.extend_bookshare_metadata(self.request, self.metadata)
+                else:
+                    # We can only move forward one page at a time.
+                    logger.warn('Got request for page %d of search results, only %d available; redirecting to page %d',
+                                self.page, pages_available, pages_available+1)
+                    return HttpResponseRedirect(redirect_to=reverse('bookshare_search_results',
+                                                                    kwargs={ 'page': pages_available+1 }))
             return super().dispatch(request, *args, **kwargs)
         else:
             self.handle_no_permission()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        current_page = kwargs.get('page', 1)
-        keyword = kwargs.get('keyword', '')
-        bookshare_search_metadata = self.request.session['bookshare_search_metadata']
-        chunks = bookshare_search_metadata['chunks']
-        chunk_index = current_page - 1;
+        num_pages = len(self.metadata['chunks'])
+        # Can we get another page from the API if requested?
+        if self.metadata['nextLink']:
+            num_pages += 1
+        current_page = self.page
+        keyword = self.query_key
         links = {
-            'prev': None if current_page == 1 else current_page - 1,
-            'next': (current_page + 1) if current_page < len(chunks) else None
+            'prev': (current_page - 1) if current_page > 1 else None,
+            'next': (current_page + 1) if current_page < num_pages else None
         }
-        pages = [0]*len(chunks)
-        pages_index = 0
-        while pages_index < len(chunks):
-            if pages_index == chunk_index:
-                pages[pages_index] = 'current'
+        # Create links for pages n-3 to n+3
+        first_page_link = max(1, current_page-3)
+        last_page_link = min(num_pages, current_page+3)
+        page_links = []
+        for p in list(range(first_page_link, last_page_link+1)):
+            if p == current_page:
+                page_links.append('current')
             else:
-                pages[pages_index] = pages_index + 1
-            pages_index += 1
-        links['pages'] = pages
+                page_links.append(p)
+        links['pages'] = page_links
         context.update({
-            'chunks': chunks,
-            'chunk_index': chunk_index,
-            'current_page': current_page,
-            'titles': chunks[chunk_index],
-            'links': links,
-            # TODO This next bunch is for debugging and should be removed
-            'totalResults': bookshare_search_metadata.get('totalResults'),
-            'clusive_title_count': bookshare_search_metadata.get('clusive_title_count', '?'),
-            'duration': bookshare_search_metadata.get('duration', '?'),
             'query_key' : keyword,
+            'titles': self.metadata['chunks'][current_page-1],
+            'current_page': current_page,
+            'links': links,
+            'totalResults': self.metadata['totalResults'],
         })
         return context
 
@@ -819,76 +833,125 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         else:
             try:
                 access_keys = get_access_keys(request)
-                return self.bookshare_metadata_loop(access_keys)
+                response = self.bookshare_start_search(access_keys)
+                metadata = {
+                    'query': self.query_key,
+                    'totalResults': response['totalResults'],
+                    'retrieved': len(response['titles']),
+                    'nextLink': next((x['href'] for x in response['links'] if x.get('rel', '') == 'next'), None),
+                    'chunks': [ response['titles'] ],
+                }
+                return metadata
             except Exception as e:
                 logger.debug("BookshareSearch exception: ", e)
                 raise e
 
-    def bookshare_metadata_loop(self, access_keys):
+    def extend_bookshare_metadata(self, request, metadata):
+        """Add one more chunk to the existing search results metadata."""
+        access_keys = get_access_keys(request)
+        response = self.bookshare_continue_search(access_keys, metadata['nextLink'])
+        metadata['retrieved'] += len(response['titles'])
+        metadata['chunks'].append(response['titles'])
+        metadata['nextLink'] = next((x['href'] for x in response['links'] if x.get('rel', '') == 'next'), None)
+        return metadata
+
+    def bookshare_start_search(self, access_keys):
         """
-        Repeatedly calls Bookshare for the next batch of metadata, filtering
-        out titles that the user has no access to.
+        Call Bookshare API with a new search term and get first batch of results.
+        Results of this request should be a JSON structure that includes the following:
+        totalResults: (integer)
+        titles: [ {book}, {book} ]
+        links: [ {rel: 'next', href: (URL of next batch of results, if any)} ]
+        :param access_keys:
+        :return:
         """
-        common_params = {
+        access_token = access_keys.get('access_token').token
+        href = 'https://api.bookshare.org/v2/titles?' + urlencode({
+            'keyword': self.query_key,
             'api_key': access_keys.get('api_key'),
             'formats': 'EPUB3',
-            'excludeGlobalCollection': True
-        }
-        # Check for prefix to do a title or author search vs. keyword search
-        is_keyword_search = False
-        if self.query_key.startswith('title:'):
-            href = 'https://api.bookshare.org/v2/titles?' + urlencode({
-                **{'title': self.query_key.replace('title:', '')},
-                **common_params
-            })
-        elif self.query_key.startswith('author:'):
-            href = 'https://api.bookshare.org/v2/titles?' + urlencode({
-                **{'author': self.query_key.replace('author:', '')},
-                **common_params
-            })
-        else:
-            href = 'https://api.bookshare.org/v2/titles?' + urlencode({
-                **{'keyword': self.query_key},
-                **common_params
-            })
-            is_keyword_search = True
-        logger.debug('Start of Bookshare search using %s', href)
+            'excludeGlobalCollection': True,
+        })
+        resp = requests.request(
+            'GET',
+            href,
+            headers={
+                'Authorization': 'Bearer ' + access_token
+            },
+        )
+
+        # Handle 404 or no results
+        new_metadata = resp.json()
+        return self.filter_metadata(new_metadata)
+
+    def bookshare_continue_search(self, access_keys, url):
         access_token = access_keys.get('access_token').token
-        metadata = {'links': [
-            {'rel': 'next', 'href': href}
-        ]}
-        has_full_access = access_keys.get('proof_status', False)
-        new_metadata = None
-        collected_metadata = {'chunks': []}
+        resp = requests.request(
+            'GET',
+            url,
+            headers = {
+                'Authorization': 'Bearer ' + access_token
+            }
+        )
+        # Handle 404 or no results
+        new_metadata = resp.json()
+        return self.filter_metadata(new_metadata)
 
-        tic = time.perf_counter()
-        while metadata:
-            next_link = next((x for x in metadata['links'] if x.get('rel', '') == 'next'), None)
-            if next_link:
-                resp = requests.request(
-                    'GET',
-                    next_link['href'],
-                    headers = {
-                        'Authorization': 'Bearer ' + access_token
-                    }
-                )
-                # Handle 404 or no results
-                logger.debug(resp.url)
-                new_metadata = resp.json()
-                collected_metadata = filter_metadata(new_metadata, collected_metadata, is_keyword_search, has_full_access)
-            
-            # Processed the next link in the metadata if any.  Continue the
-            # filtering with the new meta data, if any.
-            metadata = new_metadata
-            new_metadata = None
+    def filter_metadata(self, metadata, has_full_access=True):
+        """
+        Filter the bookshare title search metadata by:
+        - whether the user can import it
+        - whether the title has an EPUB3 version
+        - whether the copyrightDate is None (temporary)
+        """
+        if metadata['message']:
+            logger.warn('Bookshare returned message: %s', metadata['message'])
 
-        toc = time.perf_counter()
-        duration = f"{toc - tic:0.4f}"
-        collected_metadata['duration'] = duration
-        logger.debug(f"Bookshare metadata filtering: {toc - tic:0.4f} seconds")
-        return collected_metadata
+        for title in metadata.get('titles', []):
+            # logger.debug('Found title %s', title.get('title'))
+            self.surface_bookshare_info(title, has_full_access)
+        return metadata
 
-class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #EventMixin
+    def surface_bookshare_info(self, book, has_full_access):
+        """
+        Add a `clusive` block to the book's Bookshare metadata where the authors
+        are taken from Bookshares's `contributors` section, and the thumnbail and
+        download urls are taken from the `links` array.  It also creates a shortened
+        synopis (200 characters).
+        """
+        clusive = {}
+        for link in book.get('links', []):
+            if link['rel'] == 'thumbnail':
+                clusive['thumbnail'] = link['href']
+            elif link['rel'] == 'self':
+                clusive['import_url'] = link['href']
+
+        authors = []
+        for contributor in book.get('contributors', []):
+            if contributor['type'] == 'author':
+                authors.append(contributor['name']['displayName'])
+        clusive['authors'] = authors
+
+        if book['synopsis'] is not None:
+            clusive['synopsis'] = book['synopsis'][0:200]
+            if len(clusive['synopsis']) < len(book['synopsis']):
+                clusive['more'] = True
+        else:
+            clusive['synopsis'] = ''
+            clusive['more'] = False
+
+        clusive['epub'] = self.has_epub(book)
+
+        book['clusive'] = clusive
+
+    def has_epub(self, book):
+        for aFormat in book.get('formats', []):
+            if aFormat['formatId'] == 'EPUB3':
+                return True
+        return False
+
+
+class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #TODO EventMixin
     template_name = 'library/library_bookshare_import.html'
     bookshare_id = ''
     access_keys = None
@@ -904,7 +967,6 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
                 self.handle_no_permission()
 
             self.bookshare_id = kwargs.get('bookshareId')
-            # Get the meta data for this book to show to the user
             resp = requests.request(
                 'GET',
                 'https://api.bookshare.org/v2/titles/' + self.bookshare_id,
@@ -916,7 +978,7 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
                 }
             )
             self.title_metadata = resp.json()
-            surface_bookshare_info(self.title_metadata, self.access_keys.get('proof_status', False))
+            # surface_bookshare_info(self.title_metadata, self.access_keys.get('proof_status', False))
             self.import_form = BookshareImportForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -926,7 +988,6 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
         context = super().get_context_data(**kwargs)
         context.update({
             'title': self.title_metadata,
-            'previous': kwargs.get('previous'),
             'previous_page': kwargs.get('previous_page'),
             'pending': kwargs.get('pending'),
         })
@@ -934,14 +995,13 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
 
     def post(self, request, *args, **kwargs):
         if request.clusive_user.can_upload:
-            previous = kwargs.get('previous')
             previous_page = kwargs.get('previous_page')
 
             # The following request will return a status code of 202 meaning the
-            # request to download has been acknowledged, and a package is being 
+            # request to download has been acknowledged, and a package is being
             # prepared for download.  Subsequent requests will either 202 again,
-            # or, when the package is ready, the status code is 302, and the 
-            # response will contain the url to use to download.  However, 302 
+            # or, when the package is ready, the status code is 302, and the
+            # response will contain the url to use to download.  However, 302
             # is also a redirect, and Bookshare automatically redirects and
             # downloads the title.  The response contains the epub content.
             # https://apidocs.bookshare.org/reference/index.html#_responses_3
@@ -963,7 +1023,6 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
                 return HttpResponseRedirect(redirect_to=reverse(
                     'bookshare_import', kwargs = {
                         'bookshareId': self.bookshare_id,
-                        'previous': previous,
                         'previous_page': previous_page,
                         'pending': 'pending',
                     }
@@ -983,7 +1042,6 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
                     return HttpResponseRedirect(redirect_to=reverse(
                         'bookshare_import', kwargs = {
                             'bookshareId': self.bookshare_id,
-                            'previous': previous,
                             'previous_page': previous_page,
                             'pending': 'ready',
                         }
@@ -997,10 +1055,11 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
                 return HttpResponseRedirect(redirect_to=reverse(
                     'library_style_redirect', kwargs = {'view': 'mine' }
                 ))
+            # TODO if book can't be downloaded, this returns 403; handle this
 
         else:
             self.handle_no_permission()
-    
+
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.
         # Consider writing one function to do both.
@@ -1024,111 +1083,4 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
         finally:
             logger.debug("Removing temp file %s" % (tempfile))
             os.remove(tempfile)
-            
-def filter_metadata(metadata, collected_metadata, is_keyword_search, has_full_access=False):
-    """
-    Filter the bookshare title search metadata by:
-    - whether the user can import it
-    - whether the title has an EPUB3 version 
-    - whether the copyrightDate is None (temporary)
-    """
-    logger.debug("Metadata filter, message: '%s', next: '%s'", metadata.get('message', 'null'), metadata.get('next', ''))
-    if collected_metadata.get('totalResults', 0) == 0:
-        collected_metadata['totalResults'] = metadata['totalResults']
-        logger.debug("START OF FILTERING, total results = %s", metadata['totalResults'])
-        collected_metadata['limit'] = metadata['limit']
-        collected_metadata['message'] = metadata['message']
-        if collected_metadata.get('titles') is None:
-            collected_metadata['titles'] = []
 
-    num_titles_included = 0
-    filtered_titles = []
-    for title in metadata.get('titles', []):
-        copyright = None
-        if not has_full_access:
-            # Based on Bookshare's advice, the partnerdemo account does not have
-            # access to copyrighted titles and only titles with no copyright can
-            # be imported
-            copyright = title.get('copyright')
-        else:
-            copyright = True
-            is_available = title.get('available', False)
-
-        if copyright is None or is_available:
-            epub_info = check_bookshare_epub_format(title, has_full_access)
-            if not (epub_info['epub'] == 'no epub'):
-                logger.debug("==> Metadata filter: %s", title['title'])
-                surface_bookshare_info(title, has_full_access, epub_info)
-                filtered_titles.append(title)
-                num_titles_included += 1
-                # Not sure what to do about these really.
-                collected_metadata['next'] = metadata['next']
-                collected_metadata['allows'] = metadata['allows']
-            else:
-                logger.log("Bookshare title '%s' (%s) has no EPUB format", title['title'], title['isbn13'])
-        else:
-            logger.log("Bookshare title '%s' (%s) is not availalble", title['title'], title['isbn13'])
-
-    # Append the filtered titles
-    collected_metadata['chunks'].append(filtered_titles)
-    clusive_title_count = collected_metadata.get('clusive_title_count', 0)
-    clusive_title_count += num_titles_included
-    collected_metadata['clusive_title_count'] = clusive_title_count
-    return collected_metadata
-
-def surface_bookshare_info(book, has_full_access, clusive_addons=None):
-    """
-    Add a `clusive` block to the book's Bookshare metadata where the authors
-    are taken from Bookshares's `contributors` section, and the thumnbail and
-    download urls are taken from the `links` array.  It also creates a shortened
-    synopis (200 characters).
-    """
-    clusive = {} if clusive_addons is None else clusive_addons
-    for link in book.get('links', []):
-        if link['rel'] == 'thumbnail':
-            clusive['thumbnail'] = link['href']
-        elif link['rel'] == 'self':
-            clusive['import_url'] = link['href']
-
-    authors = []
-    for contributor in book.get('contributors', []):
-        if contributor['type'] == 'author':
-            authors.append(contributor['name']['displayName'])
-    clusive['authors'] = authors
-    
-    synopsis = ''
-    more = False
-    if book['synopsis'] is not None:
-        synopsis = book['synopsis'][0:200]
-        if len(synopsis) < len(book['synopsis']):
-            more = True
-
-    if clusive.get('epub') is None:
-        clusive.update(check_bookshare_epub_format(book, has_full_access))
-
-    clusive['synopsis'] = synopsis
-    clusive['more'] = more
-    book['clusive'] = clusive
-
-def check_bookshare_epub_format(book, has_full_access):
-    results = {}
-    formats = book.get('formats')
-    if formats is not None and len(formats) != 0:
-        # TODO: use next()?
-        results['epub'] = 'no epub'
-        for aFormat in formats:
-            if aFormat['formatId'] == 'EPUB3':
-                results['epub'] = 'has epub'
-                break
-
-    # Rationale and assumption of this elif:  if the Bookshare user does not
-    # have full access, this function assumes the caller is aware of that, and
-    # has determined that the book is in pubilc domain.  Bookshare has advised
-    # that publicly available books wiil have an EPUB version but the `formats`
-    # metadata will be empty or missing.
-    elif has_full_access == False:
-        results['epub'] = 'has epub'
-    else:
-        results['epub'] = 'no formats listed'
-
-    return results
