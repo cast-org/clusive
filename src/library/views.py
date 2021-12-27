@@ -720,7 +720,7 @@ class BookshareConnect(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         if is_bookshare_connected(request):
             request.session['bookshare_connected'] = True
-            return HttpResponseRedirect(redirect_to=reverse('upload'))
+            return HttpResponseRedirect(redirect_to=reverse('my_account'))
         else:
             request.session['bookshare_connected'] = False
             return HttpResponseRedirect(redirect_to='/accounts/bookshare/login?process=connect&next=/library/upload/create')

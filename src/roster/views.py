@@ -36,6 +36,7 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
+from oauth2.bookshare.views import is_bookshare_connected
 from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
 from roster import csvparser
 from roster.csvparser import parse_file
@@ -44,7 +45,6 @@ from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationFor
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, \
     RosterDataSource
 from roster.signals import user_registered
-from oauth2.bookshare.views import is_bookshare_connected
 
 logger = logging.getLogger(__name__)
 
@@ -1335,14 +1335,23 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         clusive_user: ClusiveUser
         clusive_user = request.clusive_user
-        google_account = SocialAccount.objects.filter(user=request.user, provider='google')
-        logger.debug('User: %s, data source: %s, google account: %s',
-                     request.clusive_user, clusive_user.data_source, google_account)
+        google_account = None
+        bookshare_account = None
+        for account in SocialAccount.objects.filter(user=request.user):
+            if account.provider=='google':
+                # Not sure if there's any user-friendly representation of what account this is.
+                # uid is just a long number.
+                # So the template uses the email address that Clusive stores - should be the same as the google email.
+                google_account = account
+            if account.provider=='bookshare':
+                # For bookshare, uid is the email address registered with Bookshare.
+                bookshare_account = account.uid
         self.extra_context = {
             'can_edit_display_name': False,
             'can_edit_email': False,
             'can_edit_password': clusive_user.can_set_password,
-            'has_google_account': clusive_user.data_source == RosterDataSource.GOOGLE,
+            'google_account': google_account,
+            'bookshare_account': bookshare_account,
         }
         return super().get(request, *args, **kwargs)
 

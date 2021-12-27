@@ -68,24 +68,25 @@
                 <h2>Linked Accounts</h2>
                 <div class="list list-divided list-spaced-y">
                     {% if has_google_account %}
-                    <div class="list-item">
-                        <div><strong>Google account</strong></div>
-                        {{ user.email }}
-                        <!-- (<a href="#">remove account</a>) -->
-                    </div>
-                    {% else %}
-                    <div class="list-item">None</div>
+                        <div class="list-item">
+                            <div><strong>Google account</strong></div>
+                            {{ user.email }}
+                            <!-- (<a href="#">remove account</a>) -->
+                        </div>
                     {% endif %}
-                <!--
-                <div class="list-item">
-                    <button type="button" class="btn btn-primary">Connect to a Bookshare account</button>
-                    <div class="form-text">
-                        Looking for more to read?
-                        Bookshare has over 1 million titles available.
+                    <div class="list-item">
+                        <div><strong>Bookshare account</strong></div>
+                        {% if bookshare_account %}
+                            {{ bookshare_account }}
+                            <!-- (<a href="#">remove account</a>) -->
+                        {% else %}
+                        <div class="form-text mb-0_5">
+                            Looking for more to read?
+                            Bookshare has over 1 million titles available.
+                        </div>
+                        <a href="{% url 'bookshare_connect' %}" class="btn btn-primary">Connect to a Bookshare account</a>
+                        {% endif %}
                     </div>
-                </div>
-                -->
-
                 </div>
             </div>
         </div>
