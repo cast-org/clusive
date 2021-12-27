@@ -1,0 +1,9 @@
+<div class="card card-special">
+    <div class="card-body">
+        <p>Have something to add to your library?</p>
+        <p><a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+ </span>Upload a new reading</a></p>
+        {% if has_bookshare_account %}
+            <p><a href="{% url 'bookshare_search' %}" class="btn btn-primary"><span aria-hidden="true">+ </span>Upload from Bookshare</a></p>
+        {% endif %}
+    </div>
+</div>

@@ -27,9 +27,6 @@
                         <a href="{% url 'library_style_redirect' view='mine' %}" class="btn btn-link">Cancel</a>
                     </div>
                 </form>
-                    {% if has_bookshare_account %}
-                        {% include "library/partial/library_launch_bookshare_search.html" %}
-                    {% endif %}
                 {% else %}
                 <p>You will need to create an account before you can upload your own readings.</p>
                 {% endif %}
