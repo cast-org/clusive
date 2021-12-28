@@ -1,0 +1,10 @@
+{% load formatting %}
+{% if messages %}
+<div class="alert alert-primary" role="alert">
+    <ul class="list-unstyled mb-0">
+        {% for message in messages %}
+            <li>{{ message | add_icons }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

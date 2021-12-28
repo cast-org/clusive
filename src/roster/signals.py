@@ -49,7 +49,14 @@ def auto_connect_google_login(sender, **kwargs):
     For security reasons, this should only be allowed if the email is verified.
     """
     request = kwargs['request']
+    sociallogin: SocialLogin
     sociallogin = kwargs['sociallogin']
+    logger.debug('pre_social_login with %s for %s, existing=%s',
+                 sociallogin.account.provider, sociallogin.user, sociallogin.is_existing)
+
+    # This process only applies to Google
+    if sociallogin.account.provider != 'google':
+        return
 
     # Ignore existing social accounts, just do this stuff for new ones
     if sociallogin.is_existing:

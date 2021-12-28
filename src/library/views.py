@@ -7,6 +7,7 @@ from tempfile import mkstemp
 from urllib.parse import urlencode
 
 import requests
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, QuerySet
@@ -390,6 +391,7 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
 
         else:
             logger.debug('Form valid, no cover image')
+        messages.success(self.request, 'Reading added. Your readings are indicated by a personal icon ({icon:user-o}) on your library card.')
         return super().form_valid(form)
 
 
@@ -478,7 +480,9 @@ class RemoveBookView(LoginRequiredMixin, View):
         book = get_object_or_404(Book, pk=kwargs['pk'])
         if book.owner != request.clusive_user:
             raise PermissionDenied()
+        title = book.title
         book.delete()
+        messages.success(request, "Deleted reading \"%s\"" % title)
         return redirect('library_style_redirect', view='mine')
 
 
@@ -714,6 +718,7 @@ class UpdateTrendsView(View):
         BookTrend.update_all_trends()
         return JsonResponse({'status': 'ok'})
 
+
 class BookshareConnect(LoginRequiredMixin, TemplateView):
     template_name = 'library/partial/connect_to_bookshare.html'
 
@@ -723,7 +728,8 @@ class BookshareConnect(LoginRequiredMixin, TemplateView):
             return HttpResponseRedirect(redirect_to=reverse('my_account'))
         else:
             request.session['bookshare_connected'] = False
-            return HttpResponseRedirect(redirect_to='/accounts/bookshare/login?process=connect&next=/library/upload/create')
+            return HttpResponseRedirect(redirect_to='/accounts/bookshare/login/?process=connect&next=/account/my_account')
+
 
 class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #EventMixin
     template_name = 'library/library_search_bookshare.html'

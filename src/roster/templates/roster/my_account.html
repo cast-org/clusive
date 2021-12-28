@@ -15,6 +15,7 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
+    {% include "shared/partial/alerts.html" %}
     <h1>Hi, {{ user.first_name }}</h1>
 
     <div class="row">
