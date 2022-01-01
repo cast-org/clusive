@@ -1069,14 +1069,15 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.
         # Consider writing one function to do both.
-        fd, tempfile = mkstemp(suffix='epub', prefix=str(bookshare_metadata['bookshareId']))
+        bookshare_id = bookshare_metadata['bookshareId']
+        fd, tempfile = mkstemp(suffix='epub', prefix=str(bookshare_id))
         try:
             with os.fdopen(fd, 'wb') as f:
                 f.write(downloaded_contents)
-            (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
+            (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile, bookshare_id=bookshare_id)
             if changed:
-                logger.debug('Uploaded file name = %s', bookshare_metadata['bookshareId'])
-                self.bv.filename = bookshare_metadata['bookshareId']
+                logger.debug('Uploaded file name = %s', bookshare_id)
+                self.bv.filename = bookshare_id
                 self.bv.save()
                 logger.debug('Updating word lists')
                 scan_book(self.bv.book)
@@ -1085,7 +1086,7 @@ class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
 
         except Exception as e:
             logger.warning('Could not process uploaded file, filename=%s, error=%s',
-                           str(bookshare_metadata['bookshareId']), e)
+                           bookshare_id, e)
         finally:
             logger.debug("Removing temp file %s" % (tempfile))
             os.remove(tempfile)

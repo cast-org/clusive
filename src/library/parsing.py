@@ -47,7 +47,7 @@ def convert_and_unpack_docx_file(clusive_user, file):
     return unpack_epub_file(clusive_user, tempfile, omit_filename='title_page.xhtml')
 
 
-def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None):
+def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None, bookshare_id=None):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
@@ -116,7 +116,8 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
                         title=title,
                         author=author,
                         description=description,
-                        cover=cover)
+                        cover=cover,
+                        bookshare_id=bookshare_id)
             book.save()
             logger.debug('Created new book for import: %s', book)
 
