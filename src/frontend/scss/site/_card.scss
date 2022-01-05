@@ -56,6 +56,10 @@
     }
 
 }
+.card-graph-title {
+    margin-bottom: .25rem;
+    @include font-size(.8125rem);
+}
 
 .card {
     .stars-chart {
