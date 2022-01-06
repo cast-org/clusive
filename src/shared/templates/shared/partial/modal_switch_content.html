@@ -18,29 +18,41 @@
             <div class="col-md switch-col{% if v == bv %} active{% endif %}">
                 <div class="row">
                     <div class="col-sm-4 col-md-12 switch-select">
-                        {% if v == bv %}
-                        <button type="button" class="btn btn-primary link-stretch" data-cfw-dismiss="modal" data-cle-handler="click" data-cle-control="switch-choose" data-cle-value="stay">Stay Here</button>
-                        {% else %}
-                        <a href="{{ v.sortOrder }}" class="btn btn-primary link-stretch" data-cle-handler="click" data-cle-control="switch-choose" data-cle-value="{{ v.sortOrder }}">Switch</a>
-                        {% endif %}
                         <div class="switch-icon-default">
                             {% if forloop.revcounter == 1 %}
-                            {% include "shared/partial/icons/spaceship.svg" with class="switch-icon" %}
+                            <span class="icon-climb why-icon" aria-hidden="true"></span>
                             {% elif forloop.revcounter == 2 %}
-                            {% include "shared/partial/icons/car.svg" with class="switch-icon" %}
+                            <span class="icon-hike why-icon" aria-hidden="true"></span>
                             {% else %}
-                            {% include "shared/partial/icons/boat.svg" with class="switch-icon" %}
+                            <span class="icon-walk why-icon" aria-hidden="true"></span>
                             {% endif %}
                         </div>
                         <div class="switch-icon-active">
                             {% if forloop.revcounter == 1 %}
-                            {% include "shared/partial/icons/spaceship-active.svg" with class="switch-icon" %}
+                            <span class="icon-climb why-icon active" aria-hidden="true"></span>
                             {% elif forloop.revcounter == 2 %}
-                            {% include "shared/partial/icons/car-active.svg" with class="switch-icon" %}
+                            <span class="icon-hike why-icon active" aria-hidden="true"></span>
                             {% else %}
-                            {% include "shared/partial/icons/boat-active.svg" with class="switch-icon" %}
+                            <span class="icon-walk why-icon active" aria-hidden="true"></span>
                             {% endif %}
                         </div>
+
+                        {% if v == bv %}
+                            <div class="switch-level-text">
+                            {% if forloop.revcounter == 1 %}(most challenge)
+                            {% elif forloop.revcounter == 2 %}(more challenge)
+                            {% else %}(least challenge)
+                            {% endif %}
+                            </div>
+                        <button type="button" class="btn btn-primary link-stretch mt-0_25" data-cfw-dismiss="modal" data-cle-handler="click" data-cle-control="switch-choose" data-cle-value="stay">Stay Here</button>
+                        {% else %}
+                        <a href="{{ v.sortOrder }}" class="btn btn-primary link-stretch mt-0_25" data-cle-handler="click" data-cle-control="switch-choose" data-cle-value="{{ v.sortOrder }}">
+                            {% if forloop.revcounter == 1 %}Most challenge
+                            {% elif forloop.revcounter == 2 %}More challenge
+                            {% else %}Least challenge
+                            {% endif %}
+                        </a>
+                        {% endif %}
                     </div>
                     <div class="col-sm-8 col-md-12">
                         Words include:

@@ -742,7 +742,8 @@ body {
 <hr>
 
 <button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#whyModal">Why 0</button>
-<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#switchModal">Switch</button>
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#switchModal-vehicles">Switch - vehicles</button>
+<button type="button" class="btn btn-primary" data-cfw="modal" data-cfw-modal-target="#switchModal-people">Switch - people</button>
 
 <div id="whyModal" class="modal why-modal">
     <div class="modal-dialog modal-dialog-centered">
@@ -782,7 +783,7 @@ body {
     </div>
 </div>
 
-<div id="switchModal" class="modal switch-modal">
+<div id="switchModal-vehicles" class="modal switch-modal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -802,7 +803,6 @@ body {
                     <div class="col-md-4 switch-col">
                         <div class="row">
                             <div class="col-sm-4 col-md-12 switch-select">
-                                <a href="#" class="btn btn-primary link-stretch">Switch</a>
                                 <div class="switch-icon-default">
 <svg viewBox="0 0 256 160" xmlns="http://www.w3.org/2000/svg" class="switch-icon">
 <path class="ci-primary" d="M147.999451,115 C141.399451,114.3 124.299451,112.7 109.999451,111.5 C81.0994509,109.1 79.2994509,108.5 78.6994509,102.5 C78.2994509,99.1 80.8994509,94.8 94.6994509,75.2 C97.8994509,70.8 99.0994509,68.3 98.2994509,68 C96.9994509,67.6 71.8994509,65.3 48.4994509,63.5 C12.8994509,60.7 5.29945086,59.6 3.89945086,58.4 C1.69945086,56.6 0.499450858,53.1 1.19945086,50.5 C2.19945086,46.8 29.0994509,21.7 36.4994509,18.1 C42.5994509,15.2 43.6994509,15 53.4994509,15.1 C63.5994509,15.1 64.2994509,15.3 73.3994509,19.4 C90.7994509,27.2 105.299451,27.1 123.299451,19.3 C132.599451,15.2 133.399451,15 142.999451,15 C152.599451,15 153.399451,15.2 162.699451,19.3 C174.699451,24.5 184.299451,26.1 194.799451,24.5 C198.699451,24 202.275191,22.9482223 203.799451,23.2 C204.899451,23.1 212.299451,28.9 222.699451,38 C258.699451,69.5 254.999451,70.8 255.299451,74.6 C255.499451,77.3 252.45613,81.7702503 250.469713,82.7649962 C249.145435,83.4281602 234.455348,82.0731615 206.399451,78.7 L196.199451,87.3 C166.399451,118.2 168.299451,116.5 163.999451,116.4 C161.799451,116.3 154.599451,115.7 147.999451,115 Z M160.10063,102.618118 C161.019492,102.702155 161.925911,102.358684 162.558336,101.686816 L184.690192,78.1746353 C184.843833,78.0114119 184.938178,77.8013007 184.958084,77.5780269 C185.007128,77.027924 184.600939,76.5422198 184.050836,76.4931761 L118.549516,70.6534968 C117.111858,70.5253243 115.716647,71.1816164 114.898667,72.3708175 L99.9356185,94.1244841 C99.7413782,94.4068756 99.6229693,94.7344467 99.5917529,95.0757673 C99.4911514,96.175746 100.301307,97.1490086 101.401285,97.2496101 L160.10063,102.618118 Z" transform="translate(128.154415, 65.723022) scale(-1, 1) rotate(180.000000) translate(-128.154415, -65.723022)"></path>
@@ -817,6 +817,7 @@ body {
 <path class="ci-primary" d="M11.8403595,142.292105 C9.02052886,137.57531 8.96134084,132.274212 15.0856579,130.193672 C18.5888672,129.793672 26.5756602,128.093672 31.7831336,126.193672 C41.437155,122.633165 44.9404695,121.581342 54.2191352,121.074212 C63.4978008,120.567082 68.0460847,122.693672 77.7982622,126.393672 C86.6983076,129.793672 88.6866157,130.193672 96.7345291,130.193672 C104.782443,130.193672 105.019966,129.793672 113.920011,126.393672 C123.672189,122.693672 124.425028,121.074212 137.396371,121.074212 C150.367714,121.074212 152.312472,122.693672 162.06465,126.393672 C170.964695,129.793672 172.953003,130.193672 181.000917,130.193672 C186.965841,130.193672 191.415864,129.693672 194.161622,128.593672 C199.842502,126.393672 203.469785,125.461868 205.633948,129.74377 C207.715571,133.862365 208.480027,138.498502 199.958707,141.298502 C195.792728,142.698502 191.13182,143.474212 181.000917,143.474212 C169.481598,143.474212 145.77946,133.993672 138.867723,133.993672 C131.861304,133.993672 129.210227,134.493672 120.594225,137.693672 C110.747367,141.393672 110.179279,143.074212 96.7345291,143.074212 C83.2897796,143.074212 82.7216916,141.393672 72.8748328,137.693672 C58.7673139,132.493672 50.6247192,132.493672 36.3278377,137.593672 C22.9777695,142.393672 15.0856579,147.72059 11.8403595,142.292105 Z" transform="translate(108.500000, 132.789207) scale(1, -1) translate(-108.500000, -132.789207)"></path>
 </svg>
                                 </div>
+                                <a href="#" class="btn btn-primary link-stretch">Switch</a>
                             </div>
                             <div class="col-sm-8 col-md-12">
                                 Words include:
@@ -834,7 +835,6 @@ body {
                     <div class="col-md-4 switch-col active">
                         <div class="row">
                             <div class="col-sm-4 col-md-12 switch-select">
-                                <button type="button" class="btn btn-primary link-stretch" data-cfw-dismiss="modal">Stay Here</button>
                                 <div class="switch-icon-default">
 <svg viewBox="0 0 256 160" xmlns="http://www.w3.org/2000/svg" class="switch-icon">
 <path class="ci-primary" d="M111.346334,10 C129.898589,7.25706599 143.3,11.8749669 159.7,24.6760407 C165.8,29.4764434 179.2,44.106242 183.6,50.9639601 L186.9,56.2215439 L198.7,58.1645641 C224.4,62.3934902 228,63.1935573 233.4,66.0509399 C240.1,69.5940942 247.8,78.0519465 250.9,85.4811411 C254.9,94.9676512 256,101.939665 256,118.626779 C256,133.828054 255.9,134.513826 253.5,137.142617 C251.7,139.314228 243.335436,140.980028 242.5,140 C250.9,114.153796 232.538487,93.1385908 206,93.1385908 C179.461513,93.1385908 163.29888,115.891191 170.2,140 L129.5,140 L90,140 C92.6171598,113.48349 81.7343445,94 53,94 C24.2656555,94 12.7302666,114.663752 17.3259512,140 C16.1170684,141.305352 8.2,136.685436 6.7,135.771074 C1.6,132.799396 0.9,128.79906 0.7,99.5394632 C0.5,73.8230204 0.6,74.0229533 2.9,68.6510741 C4.2,65.4508057 6.9,61.6790607 9.1,59.8503359 C13.6,56.1928862 38,47.9636245 53.3,44.9919467 C62.9,43.1632219 63.2,42.0489266 69.3,35.8769803 C72.7,32.4481212 77.7,27.8763092 80.3,25.8189937 C87.4,20.218524 98.6647081,11.8749669 111.346334,10 Z M138.4,21.7960304 C125.8,16.7809536 108.7,18.4163047 96,25.9389199 C85.2,32.1532542 72.8,48.9428591 74.5,54.8301231 C75.9,59.6271531 78.2,59.8451999 125.1,60.6083638 C162.1,61.1534808 169.9,61.0444574 171.5,59.7361765 C173.3,58.3188722 173.3,57.991802 170.1,50.9052804 C164.4,38.3675884 152.4,27.3562242 138.4,21.7960304 Z"></path>
@@ -851,6 +851,7 @@ body {
 <path class="ci-toggle-eye" d="M127.5,74 C133.851275,74 139,68.8512746 139,62.5 C139,56.1487254 133.851275,51 127.5,51 C121.148725,51 116,56.1487254 116,62.5 C116,68.8512746 121.148725,74 127.5,74 Z"></path>
 </svg>
                                 </div>
+                                <button type="button" class="btn btn-primary link-stretch" data-cfw-dismiss="modal">Stay Here</button>
                             </div>
                             <div class="col-sm-8 col-md-12">
                                 Words include:
@@ -868,7 +869,6 @@ body {
                     <div class="col-md-4 switch-col">
                         <div class="row">
                             <div class="col-sm-4 col-md-12 switch-select">
-                                <a href="#" class="btn btn-primary link-stretch">Switch</a>
                                 <div class="switch-icon-default">
 <svg viewBox="0 0 256 160" xmlns="http://www.w3.org/2000/svg" class="switch-icon">
 <path class="ci-primary" d="M122.5,87.335704 C118.2,87.0531388 107,84.2274863 104,82.7204716 C102.6,82.0611527 101.020491,81.4717841 100.320491,81.4717841 C99.7204908,81.4717841 96.5,78.8587466 94.1,77.2575435 C87.5,73.0190648 79.3,63.8827885 75.4,56.5360921 C71.4,48.812642 68.6,37.6042205 69.3,31.6703503 C70.3,22.6282624 80.2,15.8466964 99,11.2314641 C108.1,8.97094208 113.8,8.5 129.5,8.5 C155.7,8.59418842 175.1,14.2454934 184,24.4178423 C186.2,26.9609295 186.5,28.0911905 186.5,34.8727564 C186.4,57.666353 168.6,78.952935 144.3,85.2635589 C137.7,86.9589504 128.6,87.9008345 122.5,87.335704 Z M124.4,79.1 C125.4,78 126,76 125.8,74.3 C125.6,72.1 124.5,71 121,69.3 C118.5,68.1 115.9,67.1 115.3,67.1 C113.8,67 111.5,65.2 104.5,58.8 C101.6,56.1 98.4,54 97.2,54 C94.6,54 91,57.7 91,60.2 C91,63 99.6,71.7 106,75.4 C116,81.3 121.5,82.4 124.4,79.1 Z" transform="translate(127.846289, 48.000000) rotate(180.000000) translate(-127.846289, -48.000000)"></path>
@@ -890,6 +890,7 @@ body {
 <path class="ci-primary" d="M78.3,158.870333 C75,157.270333 74,152.170333 76.6,149.670333 C78,148.270333 83.9,148.070229 127.3,148.070229 C181.5,148.070229 181,147.970333 181,153.970333 C181,160.270333 182.3,160.070333 128.9,159.970333 C97.4,159.970333 79.7,159.570333 78.3,158.870333 Z" transform="translate(128.063171, 154.035166) rotate(180.000000) translate(-128.063171, -154.035166)"></path>
 </svg>
                                 </div>
+                                <a href="#" class="btn btn-primary link-stretch">Switch</a>
                             </div>
                             <div class="col-sm-8 col-md-12">
                                 Words include:
@@ -914,6 +915,107 @@ body {
     </div>
 </div>
 
+<div id="switchModal-people" class="modal switch-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-block">
+                    <h2 class="modal-title">Switch?</h2>
+                </div>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>You have options!</strong>
+                    How do you want to travel through this text?
+                </p>
+                <div class="row switch-row">
+                    <div class="col-md-4 switch-col">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-12 switch-select">
+                                <div class="switch-icon-default">
+                                    <span class="icon-walk why-icon" aria-hidden="true"></span>
+                                </div>
+                                <div class="switch-icon-active">
+                                    <span class="icon-walk why-icon active" aria-hidden="true"></span>
+                                </div>
+                                <a href="#" class="btn btn-primary link-stretch mt-0_25">Least challenge</a>
+                            </div>
+                            <div class="col-sm-8 col-md-12">
+                                Words include:
+                                <ul>
+                                    <li>First word</li>
+                                    <li>Second word</li>
+                                    <li>Third word</li>
+                                </ul>
+                                <div class="switch-meta none">
+                                    No highlights
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 switch-col active">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-12 switch-select">
+                                <div class="switch-icon-default">
+                                    <span class="icon-hike why-icon" aria-hidden="true"></span>
+                                </div>
+                                <div class="switch-icon-active">
+                                    <span class="icon-hike why-icon active" aria-hidden="true"></span>
+                                </div>
+                                <div class="switch-level-text">
+                                    (more challenge)
+                                </div>
+                                <button type="button" class="btn btn-primary link-stretch mt-0_25" data-cfw-dismiss="modal" aria-labelled-by="switch-select-level">Stay Here</button>
+                            </div>
+                            <div class="col-sm-8 col-md-12">
+                                Words include:
+                                <ul>
+                                    <li>First word</li>
+                                    <li>Second word</li>
+                                    <li>Third word</li>
+                                </ul>
+                                <div class="switch-meta">
+                                    2 highlights
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 switch-col">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-12 switch-select">
+                                <div class="switch-icon-default">
+                                    <span class="icon-climb why-icon" aria-hidden="true"></span>
+                                </div>
+                                <div class="switch-icon-active">
+                                    <span class="icon-climb why-icon active" aria-hidden="true"></span>
+                                </div>
+                                <a href="#" class="btn btn-primary link-stretch mt-0_25">Most challenge</a>
+                            </div>
+                            <div class="col-sm-8 col-md-12">
+                                Words include:
+                                <ul>
+                                    <li>First word</li>
+                                    <li>Second word</li>
+                                    <li>Third word</li>
+                                </ul>
+                                <div class="switch-meta">
+                                    3 highlights, 1 note
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                Clusive estimates that you know 60% of the words in this text.
+                <a href="#">Check out your data <span aria-hidden="true">&gt;</span></a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <hr>
 
