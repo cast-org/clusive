@@ -42,9 +42,8 @@ class Book(models.Model):
     There may be multiple versions of a single Book, which are separate EPUB files.
 
     If bookshare_id is not null, then this is a book imported from Bookshare.
-    These are stored separately and have more restrictive permissions.
+    These have more restrictive permissions.
     Two Book records can point to the same Bookshare ID since multiple users can load it as their own.
-    However, only one copy of the actual EPUB will be stored.
     """
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     title = models.CharField(max_length=256, db_index=True)
@@ -79,8 +78,6 @@ class Book(models.Model):
     @property
     def path(self):
         """URL-style path to the book's location."""
-        if self.is_bookshare:
-            return 'bookshare/%s' % self.bookshare_id
         if self.owner:
             return '%d/%d' % (self.owner.pk, self.pk)
         else:
