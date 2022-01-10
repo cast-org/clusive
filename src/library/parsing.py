@@ -47,7 +47,7 @@ def convert_and_unpack_docx_file(clusive_user, file):
     return unpack_epub_file(clusive_user, tempfile, omit_filename='title_page.xhtml')
 
 
-def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None, bookshare_id=None):
+def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None, bookshare_metadata=None):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
@@ -59,6 +59,8 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
     look for a matching Book. If there is no matching Book or BookVersion, they will be created.
     If a matching BookVersion already exists it will be overwritten only if
     the modification date in the EPUB metadata is newer.
+
+    If bookshare_metadata is provided, it will be used to fill in metadata fields and record the bookshare ID.
 
     This method will:
      * unzip the file into the user media area
@@ -79,8 +81,39 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
         manifest = make_manifest(upload, omit_filename)
         title = get_metadata_item(upload, 'titles') or ''
         author = get_metadata_item(upload, 'creators') or ''
+        sort_author = ''
         description = get_metadata_item(upload, 'description') or ''
         language = get_metadata_item(upload, 'language') or ''
+
+        if bookshare_metadata:
+            # Bookshare EPUBs don't seem to have much metadata embedded, but the API gives us some we can add.
+            logging.debug('Bookshare metadata was provided: %s', bookshare_metadata)
+            bookshare_id = bookshare_metadata['bookshareId']
+            if title == '':
+                logger.debug('Title was blank, set to value from bookshare_metadata')
+                title = bookshare_metadata.get('title', '')
+            if author == '':
+                logger.debug('Author was blank, set to value from bookshare_metadata')
+                authors = []
+                sort_authors = []
+                for contributor in bookshare_metadata.get('contributors', []):
+                    if contributor['type'] == 'author':
+                        authors.append(contributor['name']['displayName'])
+                        sort_authors.append(contributor['name']['indexName'])
+                if len(authors) > 2:
+                    author = ', '.join(authors[:-1]) + ', and ' + authors[-1]
+                    sort_author = ', '.join(sort_authors[:-1]) + ', and ' + sort_authors[-1]
+                else:
+                    author = ' and '.join(authors)
+                    sort_author = ' and '.join(sort_authors)
+            if description == '':
+                logger.debug('Description was blank, set to value from bookshare_metadata')
+                description = bookshare_metadata.get('synopsis', '')[:500]
+            # TODO language? { 'languages': ['eng'] }
+            # TODO subjects from eg { 'categories': [{'name': 'History', ...}...] }
+            # TODO get cover from metadata and store as a file { 'links': [ {'rel': 'coverimage, 'href': 'https://...' } ] }
+        else:
+            bookshare_id = None
 
         mod_date = upload.meta.get('dates').get('modification') or None
         # Date, if provided should be UTC according to spec.
@@ -115,6 +148,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
             book = Book(owner=clusive_user,
                         title=title,
                         author=author,
+                        sort_author=sort_author,
                         description=description,
                         cover=cover,
                         bookshare_id=bookshare_id)

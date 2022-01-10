@@ -78,7 +78,7 @@ class BookshareSearchForm(forms.Form):
             'class': 'form-control',
         })
     )
-    
+
     def clean_keyword(self):
         if self.is_valid():
             data = self.cleaned_data.get('keyword', '')
@@ -86,8 +86,5 @@ class BookshareSearchForm(forms.Form):
         else:
             raise ValidationError(_('Invalid format for keyword'))
 
-class BookshareImportForm(forms.Form):
-    why = 42 # So that something is here...
 
 
-    

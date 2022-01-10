@@ -23,7 +23,7 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, BookshareImportForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
@@ -33,7 +33,6 @@ from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
-import pdb
 
 # The library page requires a lot of parameters, which interact in rather complex ways.
 # Here's a summary.  It is a sort-of hierarchy, in that changing parameters higher on this list
@@ -957,137 +956,86 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
         return False
 
 
-class BookshareImport(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #TODO EventMixin
-    template_name = 'library/library_bookshare_import.html'
-    bookshare_id = ''
-    access_keys = None
-    title_metadata = {}
-    form_class = BookshareImportForm
+class BookshareImport(LoginRequiredMixin, View):
+    """
+    This API function will return a JSON object with keys:
+    * 'status', which is either 'done' (book has been imported), 'pending' (waiting for Bookshare), or 'error'
+    * 'message', which has more details on any error.
+    * 'id', the ID of the imported book, when done.
+    """
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.clusive_user.can_upload:
-            try:
-                self.access_keys = get_access_keys(request)
-            except Exception as e:
-                logger.debug("Bookshare Import exception: ", e)
-                self.handle_no_permission()
+    def get(self, request, *args, **kwargs):
+        if not request.clusive_user.can_upload:
+            raise PermissionDenied('User cannot upload')
+        bookshare_id = kwargs.get('bookshareId')
+        try:
+            access_keys = get_access_keys(request)
+        except Exception as e:
+            logger.debug("Bookshare Import exception: ", e)
+            raise PermissionDenied('No Bookshare access token')
 
-            self.bookshare_id = kwargs.get('bookshareId')
-            resp = requests.request(
-                'GET',
-                'https://api.bookshare.org/v2/titles/' + self.bookshare_id,
-                params = {
-                    'api_key': self.access_keys.get('api_key')
-                },
-                headers = {
-                    'Authorization': 'Bearer ' + self.access_keys.get('access_token').token
-                }
-            )
-            self.title_metadata = resp.json()
-            # surface_bookshare_info(self.title_metadata, self.access_keys.get('proof_status', False))
-            self.import_form = BookshareImportForm(request.POST)
-            return super().dispatch(request, *args, **kwargs)
+        # The following request will return a status code of 202 meaning the
+        # request to download has been acknowledged, and a package is being
+        # prepared for download.  Subsequent requests will either result in 202 again,
+        # or, when the package is ready, a 302 redirect to
+        # a URL that retrieves the epub content.
+        # https://apidocs.bookshare.org/reference/index.html#_responses_3
+        resp = requests.request(
+            'GET',
+            'https://api.bookshare.org/v2/titles/' + bookshare_id + '/EPUB3',
+            params = {
+                'api_key': access_keys.get('api_key')
+            },
+            headers = {
+                'Authorization': 'Bearer ' + access_keys.get('access_token').token
+            }
+        )
+        # 202 - "Download request received; package being prepared"
+        if resp.status_code == 202:
+            return JsonResponse(data={'status': 'pending', 'message': 'In progress'})
+        # 200 - resp contains the epub file
+        elif resp.status_code == 200:
+            if resp.headers['Content-Type'] == 'application/octet-stream':
+                # Also grab the metadata to pass along to import process.
+                # TODO: could re-use the metadata that was already fetched as part of the search
+                meta_resp = requests.request(
+                    'GET',
+                    'https://api.bookshare.org/v2/titles/' + bookshare_id,
+                    params = { 'api_key': access_keys.get('api_key') },
+                    headers = { 'Authorization': 'Bearer ' + access_keys.get('access_token').token }
+                )
+                metadata = meta_resp.json()
+                bv = self.save_book(resp.content, metadata, kwargs)
+                return JsonResponse(data={'status': 'done', 'id': bv.book.id})
+            else:
+                return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
+        # If book can't be downloaded, this returns 403
         else:
-            self.handle_no_permission()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'title': self.title_metadata,
-            'previous_page': kwargs.get('previous_page'),
-            'pending': kwargs.get('pending'),
-        })
-        return context
-
-    def post(self, request, *args, **kwargs):
-        if request.clusive_user.can_upload:
-            previous_page = kwargs.get('previous_page')
-
-            # The following request will return a status code of 202 meaning the
-            # request to download has been acknowledged, and a package is being
-            # prepared for download.  Subsequent requests will either 202 again,
-            # or, when the package is ready, the status code is 302, and the
-            # response will contain the url to use to download.  However, 302
-            # is also a redirect, and Bookshare automatically redirects and
-            # downloads the title.  The response contains the epub content.
-            # https://apidocs.bookshare.org/reference/index.html#_responses_3
-            resp = requests.request(
-                'GET',
-                'https://api.bookshare.org/v2/titles/' + self.bookshare_id + '/EPUB3',
-                params = {
-                    'api_key': self.access_keys.get('api_key')
-                },
-                headers = {
-                    'Authorization': 'Bearer ' + self.access_keys.get('access_token').token
-                }
-            )
-
-            # 202 - "Download request received; package being prepared"
-            if resp.status_code == 202:
-                # Loop back to the import page, noting that the download is
-                # pending.
-                return HttpResponseRedirect(redirect_to=reverse(
-                    'bookshare_import', kwargs = {
-                        'bookshareId': self.bookshare_id,
-                        'previous_page': previous_page,
-                        'pending': 'pending',
-                    }
-                ))
-            # 302 - "Package ready"
-            elif resp.status_code == 302:
-                pdb.set_trace()
-                result = resp.json()
-                download_url = result['messages'][0]
-                resp = requests.request(download_url)
-                if resp.status_code == 200:
-                    self.save_book(resp.content, self.title_metadata, kwargs)
-                    return HttpResponseRedirect(redirect_to=reverse(
-                        'library_style_redirect', kwargs = {'view': 'mine' }
-                    ))
-                else:
-                    return HttpResponseRedirect(redirect_to=reverse(
-                        'bookshare_import', kwargs = {
-                            'bookshareId': self.bookshare_id,
-                            'previous_page': previous_page,
-                            'pending': 'ready',
-                        }
-                    ))
-
-            # 200 - resp contains the epub file, save it.  But, check the resp
-            # header 'Content-Type' (Is the latter really necessary?  Is 200
-            # enough?).
-            elif resp.status_code == 200 and resp.headers['Content-Type'] == 'application/octet-stream':
-                self.save_book(resp.content, self.title_metadata, kwargs)
-                return HttpResponseRedirect(redirect_to=reverse(
-                    'library_style_redirect', kwargs = {'view': 'mine' }
-                ))
-            # TODO if book can't be downloaded, this returns 403; handle this
-
-        else:
-            self.handle_no_permission()
+            return JsonResponse(data={'status': 'error',
+                                      'message': 'Error importing the book (code = %d)' % resp.status_code})
 
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.
         # Consider writing one function to do both.
         bookshare_id = bookshare_metadata['bookshareId']
         fd, tempfile = mkstemp(suffix='epub', prefix=str(bookshare_id))
-        try:
-            with os.fdopen(fd, 'wb') as f:
-                f.write(downloaded_contents)
-            (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile, bookshare_id=bookshare_id)
-            if changed:
-                logger.debug('Uploaded file name = %s', bookshare_id)
-                self.bv.filename = bookshare_id
-                self.bv.save()
-                logger.debug('Updating word lists')
-                scan_book(self.bv.book)
-            else:
-                raise Exception('unpack_epub_file did not find new content.')
+        # try:
+        with os.fdopen(fd, 'wb') as f:
+            f.write(downloaded_contents)
+        (bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile, bookshare_metadata=bookshare_metadata)
+        if changed:
+            logger.debug('Uploaded file name = %s', bookshare_id)
+            bv.filename = bookshare_id
+            bv.save()
+            logger.debug('Updating word lists')
+            scan_book(bv.book)
+        else:
+            raise Exception('unpack_epub_file did not find new content.')
 
-        except Exception as e:
-            logger.warning('Could not process uploaded file, filename=%s, error=%s',
-                           bookshare_id, e)
-        finally:
-            logger.debug("Removing temp file %s" % (tempfile))
-            os.remove(tempfile)
-
+        # except Exception as e:
+        #     logger.warning('Could not process uploaded file, filename=%s, error=%s',
+        #                    bookshare_id, e)
+        # finally:
+        #     logger.debug("Removing temp file %s" % (tempfile))
+        #     os.remove(tempfile)
+        return bv

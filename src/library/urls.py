@@ -45,8 +45,6 @@ urlpatterns = [
     path('bookshare-results/new/<keyword>', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),
     path('bookshare-results/page/<int:page>', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),
     path('bookshare-import/<str:bookshareId>', views.BookshareImport.as_view(), name='bookshare_import'),
-    path('bookshare-import/<str:bookshareId>/<int:previous_page>', views.BookshareImport.as_view(), name='bookshare_import'),
-    path('bookshare-import/<str:bookshareId>/<int:previous_page>/<pending>', views.BookshareImport.as_view(), name='bookshare_import'),
 
     path('data/<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryDataView.as_view(),
         name='library_data'),
