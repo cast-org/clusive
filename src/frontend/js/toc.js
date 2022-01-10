@@ -13,6 +13,8 @@ var TOC_EMPTY = '#tocEmpty';
 var NOTES_TAB = '#notesTab';  // links to #notesPanel
 var NOTES_CONTAINER = '#notesList';
 
+var TOC_focusSelector = null;
+
 // eslint-disable-next-line no-unused-vars
 function showTocPanel() {
     'use strict';
@@ -459,6 +461,30 @@ function setUpNotes() {
     });
 }
 
+// Accessibility addition to close TOC and move focus to selected item
+// within the reader frame
+function tocKeypressHandler() {
+    'use strict';
+
+    // Keydown does not work with screen readers since they use simulated click events
+    //$(TOC_CONTAINER).on('keydown', 'a:not([data-cfw="collapse"])', function(event) {
+    $(TOC_CONTAINER).on('click', 'a:not([data-cfw="collapse"])', function(event) {
+        //if (event.which !== KEYCODE_ENTER) { return; }
+        var item = event.target;
+        var selector = item.getAttribute('href') || '';
+        if (selector.length === 0) { return; }
+        TOC_focusSelector = selector;
+        // Block focusing button to send focus directly to reader frame
+        // Trying to get NVDA to skip the button
+        $('#tocButton').attr('disabled', 'disabled');
+        $(TOC_MODAL).on('afterHide.cfw.modal', function() {
+            $('#tocButton').removeAttr('disabled');
+        });
+        // Hide without animation
+        $(TOC_MODAL).removeClass('fade').CFW_Modal('hide');
+    });
+}
+
 //  Initial setup
 
 $(document).ready(function() {
@@ -466,6 +492,7 @@ $(document).ready(function() {
 
     savePendingLocationUpdate();
     setUpNotes();
+    tocKeypressHandler();
 
     $(NOTES_CONTAINER)
         .on('click touchstart', '.delete-highlight', deleteAnnotation)
@@ -489,4 +516,46 @@ $(document).ready(function() {
         .on('afterShow.cfw.tab', function() {
             scrollToCurrentTocItem();
         });
+});
+
+//$(document).on('updateCurrentLocation.d2reader resourceReady.d2reader', function(event) {
+$(document).on('updateCurrentLocation.d2reader', function(event) {
+    'use strict';
+
+console.log('TOC REFOCUS', TOC_focusSelector, event);
+
+    if (TOC_focusSelector === null) { return; }
+
+    var _getValidSelector = function(selector, rootElement) {
+        if (typeof rootElement === 'undefined') { rootElement = document; }
+        try {
+            return rootElement.querySelector(selector) ? selector : null;
+        } catch (error) {
+            return null;
+        }
+    }
+    var readerIframe = document.querySelector('#D2Reader-Container iframe');
+    var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
+    var readerBody = readerDocument.body;
+
+    var selector = _getValidSelector(TOC_focusSelector, readerBody);
+    var focusElm = null;
+
+    setTimeout(function() {
+        if (selector === null) {
+            // No specific element - focus on body
+console.log('FOCUS BODY', readerBody);
+            readerIframe.focus();
+            readerBody.setAttribute('tabindex', -1);
+            //setTimeout(function() {
+                readerBody.focus();
+                //readerBody.removeAttribute('tabindex');
+            //});
+        } else {
+console.log('FOCUS ELEMENT', readerBody.querySelector(selector));
+            readerBody.querySelector(selector).focus();
+        }
+
+        TOC_focusSelector = null;
+    });
 });

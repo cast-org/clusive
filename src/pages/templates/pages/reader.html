@@ -214,6 +214,10 @@ var manifest_path = "{{ manifest_path }}";
             api: {
                 resourceReady: function() {
                     console.debug("D2Reader finished loading the resource at: " + new Date());
+
+                    // Fire custom event
+                    $(document).trigger('resourceReady.d2reader');
+
                     $(document).ready(function () {
                         // Do things that only need to be done once
                         if(!firstResourceLoaded) {
@@ -251,6 +255,9 @@ var manifest_path = "{{ manifest_path }}";
                 //     console.debug('resourceAtStart');
                 // },
                 updateCurrentLocation: function (locator) {
+                    // Fire custom event
+                    $(document).trigger('updateCurrentLocation.d2reader');
+
                     // Grey out forward/back navigation buttons when necessary.
                     // This logic cannot be moved to resourceAtStart/resourceAtEnd since it also needs to know
                     // when you move away from the edge, so that the buttons can be re-enabled.
