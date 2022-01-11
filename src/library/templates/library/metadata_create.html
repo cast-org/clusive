@@ -15,11 +15,19 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
+    {% if object.bookshare_id %}
+    <h1>Add from Bookshare</h1>
+    {% else %}
     <h1>Add New Reading</h1>
+    {% endif %}
     <div class="row">
         <div class="col-md-9 col-lg-6">
             <div class="box">
+                {% if object.bookshare_id %}
+                <h2>Step 3: Review &amp; Edit</h2>
+                {% else %}
                 <h2>Step 2: Review &amp; Edit</h2>
+                {% endif %}
                 <!-- file, title, author, description, cover -->
                 <form method="post" enctype="multipart/form-data">
                     {% include "library/partial/metadata_form.html" %}
