@@ -280,14 +280,23 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
                     f.write(chunk)
             if upload.name.endswith('.docx'):
                 (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile)
+                event_control = 'upload_docx'
             else:
                 (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
+                event_control = 'upload_epub'
             if changed:
                 logger.debug('Uploaded file name = %s', upload.name)
                 self.bv.filename = upload.name
                 self.bv.save()
                 logger.debug('Updating word lists')
                 scan_book(self.bv.book)
+                event = Event.build(session=self.request.session,
+                                    type='TOOL_USE_EVENT',
+                                    action='USED',
+                                    control=event_control,
+                                    page=self.page_name, # Defined by subclasses
+                                    book_version=self.bv)
+                event.save()
             else:
                 raise Exception('unpack_epub_file did not find new content.')
             return super().form_valid(form)
@@ -306,6 +315,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
 class UploadCreateFormView(UploadFormView):
     """Upload an EPUB file as a new Book."""
     template_name = 'library/upload_create.html'
+    page_name = 'UploadNew'
 
     def get_success_url(self):
         return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
@@ -317,12 +327,13 @@ class UploadCreateFormView(UploadFormView):
         return context
 
     def configure_event(self, event: Event):
-        event.page = 'UploadNew'
+        event.page = self.page_name
 
 
 class UploadReplaceFormView(UploadFormView):
     """Upload an EPUB file to replace an existing Book that you own."""
     template_name = 'library/upload_replace.html'
+    page_name = 'UploadReplacement'
 
     def dispatch(self, request, *args, **kwargs):
         self.orig_book = get_object_or_404(Book, pk=kwargs['pk'])
@@ -347,7 +358,7 @@ class UploadReplaceFormView(UploadFormView):
         return reverse('metadata_replace', kwargs={'orig': self.orig_book.pk, 'pk': self.bv.book.pk})
 
     def configure_event(self, event: Event):
-        event.page = 'UploadReplacement'
+        event.page = self.page_name
 
 
 class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
@@ -488,6 +499,13 @@ class RemoveBookView(LoginRequiredMixin, View):
         title = book.title
         book.delete()
         messages.success(request, "Deleted reading \"%s\"" % title)
+        event = Event.build(session=self.request.session,
+                            type='TOOL_USE_EVENT',
+                            action='USED',
+                            control='delete_book',
+                            page='Library',
+                            book_id=kwargs['pk'])
+        event.save()
         return redirect('library_style_redirect', view='mine')
 
 
