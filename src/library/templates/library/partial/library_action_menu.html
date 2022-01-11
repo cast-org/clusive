@@ -12,7 +12,7 @@
             <li><a href="{% url 'metadata_edit' pk=book.id %}">Edit</a></li>
             <li><button type="button" class="dropdown-item" data-clusive="confirmPubDel" data-clusive-book-id="{{ book.id }}">Delete</button></li>
             {% endif %}
-            {% if request.clusive_user.can_manage_periods %}
+            {% if request.clusive_user.can_manage_periods and not book.bookshare_id %}
             <li><button type="button" class="dropdown-item" data-clusive="confirmSharing" data-clusive-book-id="{{ book.id }}">Assign</button></li>
             {% endif %}
         </ul>

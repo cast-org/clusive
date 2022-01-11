@@ -393,6 +393,9 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
         messages.success(self.request, 'Reading added. Your readings are indicated by a personal icon ({icon:user-o}) on your library card.')
         return super().form_valid(form)
 
+    def configure_event(self, event: Event):
+        event.book_id = self.object.id
+
 
 class MetadataCreateFormView(MetadataFormView):
     """Edit metadata for a newly-created book. Cancelling will delete it."""
@@ -400,6 +403,7 @@ class MetadataCreateFormView(MetadataFormView):
 
     def configure_event(self, event: Event):
         event.page = 'EditMetadataNew'
+        super().configure_event(event)
 
 
 class MetadataEditFormView(MetadataFormView):
@@ -408,6 +412,7 @@ class MetadataEditFormView(MetadataFormView):
 
     def configure_event(self, event: Event):
         event.page = 'EditMetadata'
+        super().configure_event(event)
 
 
 class MetadataReplaceFormView(MetadataFormView):
@@ -471,6 +476,7 @@ class MetadataReplaceFormView(MetadataFormView):
 
     def configure_event(self, event: Event):
         event.page = 'EditMetadataReplace'
+        super().configure_event(event)
 
 
 class RemoveBookView(LoginRequiredMixin, View):
@@ -730,7 +736,7 @@ class BookshareConnect(LoginRequiredMixin, TemplateView):
             return HttpResponseRedirect(redirect_to='/accounts/bookshare/login/?process=connect&next=/account/my_account')
 
 
-class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormView):  #EventMixin
+class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):
     template_name = 'library/library_search_bookshare.html'
     form_class = BookshareSearchForm
     formlabel ='Step 1: Search by title, author, or ISBN'
@@ -765,8 +771,11 @@ class BookshareSearch(LoginRequiredMixin, ThemedPageMixin, TemplateView, FormVie
         else:
             return HttpResponseRedirect(redirect_to=self.get_success_url())
 
+    def configure_event(self, event: Event):
+        event.page = 'BookshareSearchForm'
 
-class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):  #EventMixin
+
+class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     template_name = 'library/library_bookshare_search_results.html'
     query_key = ''
     metadata = {}
@@ -955,6 +964,8 @@ class BookshareSearchResults(LoginRequiredMixin, ThemedPageMixin, TemplateView):
                 return True
         return False
 
+    def configure_event(self, event: Event):
+        event.page = 'BookshareSearchResults'
 
 class BookshareImport(LoginRequiredMixin, View):
     """
@@ -1029,13 +1040,13 @@ class BookshareImport(LoginRequiredMixin, View):
             bv.save()
             logger.debug('Updating word lists')
             scan_book(bv.book)
+            event = Event.build(session=self.request.session,
+                                type='TOOL_USE_EVENT',
+                                action='USED',
+                                control='import_bookshare',
+                                page='BookshareSearchResults',
+                                book_version=bv)
+            event.save()
         else:
             raise Exception('unpack_epub_file did not find new content.')
-
-        # except Exception as e:
-        #     logger.warning('Could not process uploaded file, filename=%s, error=%s',
-        #                    bookshare_id, e)
-        # finally:
-        #     logger.debug("Removing temp file %s" % (tempfile))
-        #     os.remove(tempfile)
         return bv
