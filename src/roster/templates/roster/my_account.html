@@ -71,7 +71,7 @@
                     {% if has_google_account %}
                         <div class="list-item">
                             <div><strong>Google account</strong></div>
-                            {{ user.email }}
+                            {{ google_acount }}
                             <!-- (<a href="#">remove account</a>) -->
                         </div>
                     {% endif %}
@@ -79,7 +79,7 @@
                         <div><strong>Bookshare account</strong></div>
                         {% if bookshare_account %}
                             {{ bookshare_account }}
-                            <!-- (<a href="#">remove account</a>) -->
+                            (<a href="{% url 'remove_social_account' provider='bookshare' %}">remove account</a>)
                         {% else %}
                         <div class="form-text mb-0_5">
                             Looking for more to read?
