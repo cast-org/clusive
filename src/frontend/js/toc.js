@@ -528,6 +528,12 @@ console.log('TOC REFOCUS', TOC_focusSelector, event);
 
     var _getValidSelector = function(selector, rootElement) {
         if (typeof rootElement === 'undefined') { rootElement = document; }
+
+        // Split at #
+        if (selector.indexOf('#') > -1) {
+            selector = selector.substring(selector.indexOf('#'));
+        }
+console.log("SELECTOR", selector);
         try {
             return rootElement.querySelector(selector) ? selector : null;
         } catch (error) {
@@ -537,23 +543,32 @@ console.log('TOC REFOCUS', TOC_focusSelector, event);
     var readerIframe = document.querySelector('#D2Reader-Container iframe');
     var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
     var readerBody = readerDocument.body;
-
     var selector = _getValidSelector(TOC_focusSelector, readerBody);
-    var focusElm = null;
+
+console.log("SELECTOR parsed", selector);
 
     setTimeout(function() {
         if (selector === null) {
             // No specific element - focus on body
 console.log('FOCUS BODY', readerBody);
-            readerIframe.focus();
-            readerBody.setAttribute('tabindex', -1);
-            //setTimeout(function() {
-                readerBody.focus();
-                //readerBody.removeAttribute('tabindex');
-            //});
+            setTimeout(function() {
+                //readerIframe.focus();
+                readerBody.setAttribute('tabindex', -1);
+                setTimeout(function() {
+                    readerBody.focus();
+                    //readerBody.removeAttribute('tabindex');
+                });
+            });
         } else {
-console.log('FOCUS ELEMENT', readerBody.querySelector(selector));
-            readerBody.querySelector(selector).focus();
+            var readerItem = readerBody.querySelector(selector);
+console.log('FOCUS ELEMENT', readerItem);
+            setTimeout(function() {
+                //readerIframe.focus();
+                readerItem.setAttribute('tabindex', -1);
+                setTimeout(function() {
+                    readerItem.focus();
+                });
+            });
         }
 
         TOC_focusSelector = null;
