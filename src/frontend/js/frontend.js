@@ -906,6 +906,9 @@ function moreOrLess(event) {
 // Holds identifier of timer for polling while waiting for Bookshare import to be ready.
 var bookshareImportProgressTimer = null;
 
+// Flag to avoid sending a second request before the first has completed.
+var bookshareImportCheckInFlight = false;
+
 // Stop trying to import a Bookshare book
 function bookshareCancelImport() {
     'use strict';
@@ -920,7 +923,12 @@ function bookshareCancelImport() {
 function bookshareCheckImportProgress(id) {
     'use strict';
 
+    if (bookshareImportCheckInFlight) {
+        console.warn('Bookshare check already in-flight, skipping');
+        return;
+    }
     console.debug('Checking progress of ' + id);
+    bookshareImportCheckInFlight = true;
     $.getJSON('/library/bookshare-import/' + id)
         .done(function(data) {
             if (data.status === 'done') {
@@ -941,6 +949,7 @@ function bookshareCheckImportProgress(id) {
         .fail(function(err) {
             console.warn('error calling bookshare import: ', err);
         });
+    bookshareImportCheckInFlight = false;
 }
 
 // When 'import' button is clicked, kick off the process of importing a book
