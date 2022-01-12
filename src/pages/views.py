@@ -458,6 +458,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         cuelist = [{ 'order': i, 'result': 1, 'terms': terms } for i, terms in enumerate(cuelist_map.values())]
         logger.debug('Cuelist: %s', repr(cuelist))
         pdata = Paradata.record_view(book, version, clusive_user)
+        # See if user wants the cues to be initially shown or not
+        hide_cues = not Preference.get_glossary_pref_for_user(clusive_user)
 
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
@@ -470,6 +472,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'last_position': pdata.last_location or "null",
             'annotations': annotationList,
             'cuelist': json.dumps(cuelist),
+            'hide_cues': hide_cues,
             'tip_name': self.tip_shown.name if self.tip_shown else None,
         }
         return super().get(request, *args, **kwargs)

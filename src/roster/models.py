@@ -488,6 +488,11 @@ class Preference (models.Model):
         pref = cls.objects.filter(user=user, pref='fluid_prefs_contrast').first() if user else None
         return pref.value if pref else 'default'
 
+    @classmethod
+    def get_glossary_pref_for_user(cls, user: ClusiveUser):
+        pref = cls.objects.filter(user=user, pref='cisl_prefs_glossary').first() if user else None
+        return pref.typed_value if pref else True
+
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)
 

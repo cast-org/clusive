@@ -207,10 +207,8 @@ var manifest_path = "{{ manifest_path }}";
                 }
             },
             define: {
-                // color: "#40E0D0",
-                //color: "var(--CRT_glossaryUnderline)",
                 color: "transparent",
-                hideLayer: true,
+                hideLayer: {{ hide_cues | yesno:"true,false" }},
                 fullWordSearch: true,
                 api: {
                     click: function (item, element) {
