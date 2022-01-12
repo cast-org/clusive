@@ -132,6 +132,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
         clusive_user = request.clusive_user
         self.teacher_view = False
         self.class_popular = None
+        self.any_unauthorized_book = False
         self.my_recent = None
         if clusive_user.can_manage_periods and clusive_user.current_period:
             self.teacher_view = True
@@ -153,10 +154,15 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
             top_books.sort(reverse=True, key=lambda l: len(l))
             top_books = top_books[0:10]
             self.class_popular = [{
-                'count': len(votes),
-                'book': votes[0].book,
-                'names': ', '.join([v.user.user.first_name for v in votes]),
-            } for votes in top_books]
+                'count': len(b),
+                'book': b[0].book,
+                'unauthorized': not b[0].book.is_visible_to(clusive_user),
+                'names': ', '.join([v.user.user.first_name for v in b]),
+            } for b in top_books]
+            # Determine if any of the books is not visible to the user
+            for p in self.class_popular:
+                if p['unauthorized']:
+                    self.any_unauthorized_book = True
         else:
             self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
         # Globally-ranked books with particular ratings (public library only):
@@ -178,6 +184,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
         context['my_recent'] = self.my_recent
         context['class_popular'] = self.class_popular
         context['popular'] = self.popular
+        context['any_unauthorized_book'] = self.any_unauthorized_book
         return context
 
 

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Reader - Clusive Mockup</title>
+<title>Bookshare: Search - Clusive Mockup</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap" rel="stylesheet">
@@ -18,12 +18,14 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.1.0/dist/js/figuration.min.js" integrity="sha384-mmncPfSUidq1LlOp/43b1c3A1knjWrGnwec26YYujQlzI2YgCmpcSEtsJ/gjJRHT" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
+<script src="../js/stt.js"></script>
 <script src="./js/theme-test.js"></script>
 
 </head>
-<body>
+<body class="library sidebar-no-start">
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
@@ -31,11 +33,9 @@
     <div class="site-header-navbar navbar navbar-expand-md">
         <div class="site-header-container container-xl">
             <div class="site-header-logo">
-                <a href="#" class="icon-logo-clusive-link">
-                    <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
-                    <span class="icon-logo-clusive" aria-hidden="true"></span>
-                    <span class="sr-only">Back to Library</span>
-                </a>
+                <span class="icon-logo-clusive-toggle" aria-hidden="true"></span>
+                <span class="icon-logo-clusive" aria-hidden="true"></span>
+                <span class="sr-only">Clusive</span>
             </div>
             <button class="navbar-toggle btn btn-primary btn-small" type="button" data-cfw="collapse" data-cfw-collapse-target="#siteNav">
                 <span class="not-open">
@@ -51,6 +51,9 @@
 
             <nav id="siteNav" class="site-header-nav navbar-collapse collapse" aria-label="Main">
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <span class="nav-link current" aria-current="true">Dashboard</span>
+                    </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">Library</a>
                     </li>
@@ -74,35 +77,10 @@
 </header>
 
 <div class="container-xl">
+
     <div class="sidebars-wrapper">
         <div class="sidebars">
             <div class="sidebar sidebar-start">
-                <nav class="sidebar-nav" aria-label="Article">
-                    <button type="button" class="btn btn-nav btn-icon btn-nav-toc" aria-label="Contents">
-                        <span class="icon-th-list" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn btn-nav btn-icon btn-switch-level" aria-label="Switch">
-                        <span class="icon-walk" aria-hidden="true"></span>
-                    </button>
-                    <div class="sidebar-divider-wrapper">
-                        <div class="sidebar-divider"></div>
-                    </div>
-                    <button type="button" class="btn btn-nav btn-icon btn-nav-prev" aria-label="Previous page">
-                        <span class="icon-chevron-left" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn btn-nav btn-icon btn-nav-next" aria-label="Next page" disabled>
-                        <span class="icon-chevron-right" aria-hidden="true"></span>
-                    </button>
-                </nav>
-                <div class="sidebar-support" role="region" aria-label="Support">
-                    <button type="button" class="btn btn-nav btn-icon btn-thought mt-0_75" arial-label="Your thoughts" title="Your thoughts" data-cfw="popover">
-                        <span class="icon-thought" aria-hidden="true"></span>
-                        <span class="sr-only">Your thoughts</span>
-                    </button>
-                    <button type="button" class="btn btn-icon btn-starred" aria-label="Not starred" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
-                        <span class="icon-starred" aria-hidden="true"></span>
-                    </button>
-                </div>
             </div>
 
             <div class="sidebar sidebar-end">
@@ -140,33 +118,41 @@
 
     <div class="content">
         <main id="content" tabindex="-1">
-            <!--
-            <h1>Lorem ipsum dolor sit amet</h1>
-            -->
 
-            <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; border: 0px; display: block; opacity: 1;" width="1133px" height="1189" src="./reader-frame.html" class=""></iframe>
+            <h1>Add from Bookshare</h1>
+
+            <div class="row">
+                <div class="col-md-9 col-lg-6">
+                    <div class="box">
+                        <h2>Step 1: Search Title, Author, or ISBN:</h2>
+                        <form>
+                            <div class="form-group">
+                                <label for="search-term" class="sr-only">Search terms</label>
+                                <input id="search-term" type="search" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-secondary btn-small">Save</button>
+                                <button type="button" class="btn btn-link btn-small">Cancel</button>
+                            </div>
+                        </form>
+
+                        <hr>
+
+                        <div class="form-text">
+                            Not finding the reading you're looking for?
+                            Here are some search tips&hellip;
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </main>
 
         <footer>
-            <!-- anything here? -->
+            <!-- placeholder -->
         </footer>
-    </div>
-</div>
-
-<div id="modalSettings" class="modal setting-modal">
-    <div class="modal-dialog modal-dialog-side-end modal-dialog-scrollable modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title h5">Settings</h2>
-                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
-                    <span class="icon-cancel" aria-hidden="true"></span>
-                </button>
-                <button class="btn btn-primary btn-xsmall cislc-modalSettings-reset" type="button">Reset</button>
-            </div>
-            <div class="modal-body">
-                See modal mockups.
-            </div>
-        </div>
     </div>
 </div>
 

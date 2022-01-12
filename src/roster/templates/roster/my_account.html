@@ -1,0 +1,94 @@
+{% extends "shared/base.html" %}
+{% load figuration %}
+
+{% block bodyClass %}library sidebar-no-start{% endblock %}
+
+{% block title %}Clusive: my account{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=False %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Hi, {{ user.first_name }}</h1>
+
+    <div class="row">
+        <div class="col-md-9 col-lg-6">
+            <div class="box">
+                <h2>My Clusive Account</h2>
+                <div class="list list-divided list-spaced-y">
+                    <div class="list-item">
+                        <div class="row flex-items-end">
+                            <div class="col">
+                                <div><strong>Display name:</strong></div>
+                                {{ user.first_name }}
+                            </div>
+                            {% if can_edit_display_name %}
+                            <div class="col-12 col-sm-auto">
+                                <button type="button" class="btn btn-primary btn-small">Edit</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="row flex-items-end">
+                            <div class="col">
+                                <div><strong>Email:</strong></div>
+                                {{ user.email | default:"&mdash;" }}
+                            </div>
+                            {% if can_edit_email %}
+                            <div class="col-12 col-sm-auto">
+                                <button type="button" class="btn btn-primary btn-small">Edit</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="row flex-items-end">
+                            <div class="col">
+                                <div><strong>Password:</strong></div>
+                                ******
+                            </div>
+                            {% if can_edit_password %}
+                            <div class="col-12 col-sm-auto">
+                                <a href="{% url 'password_change' %}" class="btn btn-primary btn-small">Edit</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <h2>Linked Accounts</h2>
+                <div class="list list-divided list-spaced-y">
+                    {% if has_google_account %}
+                    <div class="list-item">
+                        <div><strong>Google account</strong></div>
+                        {{ user.email }}
+                        <!-- (<a href="#">remove account</a>) -->
+                    </div>
+                    {% else %}
+                    <div class="list-item">None</div>
+                    {% endif %}
+                <!--
+                <div class="list-item">
+                    <button type="button" class="btn btn-primary">Connect to a Bookshare account</button>
+                    <div class="form-text">
+                        Looking for more to read?
+                        Bookshare has over 1 million titles available.
+                    </div>
+                </div>
+                -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

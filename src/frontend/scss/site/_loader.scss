@@ -18,7 +18,7 @@
 
 @if $enable-transitions-reduced {
     @media (prefers-reduced-motion: reduce) {
-        .loader-spin-cw {
+        .loader-circle {
             animation-duration: $loader-animation-speed * 2;
         }
     }

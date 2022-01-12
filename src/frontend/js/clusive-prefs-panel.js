@@ -45,6 +45,13 @@
                 type: 'cisl.prefs.glossary',
                 panel: null
             },
+            animations: {
+                type: 'cisl.prefs.animations',
+                enactor: {
+                    type: 'cisl.prefs.enactor.animations'
+                },
+                panel: null
+            },
             scroll: {
                 type: 'cisl.prefs.scroll',
                 panel: null
@@ -182,6 +189,40 @@
         }
     });
 
+    // Add a boolean preference for reducing motion effects
+    fluid.defaults('cisl.prefs.schemas.animations', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.animations': {
+                type: 'boolean',
+                default: true
+            }
+        }
+    });
+
+    fluid.defaults('cisl.prefs.enactor.animations', {
+        gradeNames: ['fluid.prefs.enactor.styleElements'],
+        cssClass: 'clusive-reduced-motion',
+        elementsToStyle: $('body'),     // must be a jquery instance
+        preferenceMap: {
+            'cisl.prefs.animations': {
+                'model.value': 'value'
+            }
+        },
+        invokers: {
+            // Override to flip the use of applyStyle() and removeStyle()
+            handleStyle: {
+                funcName: "cisl.prefs.enactor.animations.handleStyle",
+                args: ["{arguments}.0", "{that}.options.elementsToStyle", "{that}.options.cssClass", "{that}.applyStyle", "{that}.resetStyle"]
+            }
+        }
+    });
+
+    cisl.prefs.enactor.animations.handleStyle = function (value, elements, cssClass, applyStyleFunc, resetStyleFunc) {
+        var func = value ? resetStyleFunc : applyStyleFunc;
+        func(elements, cssClass);
+    };
+
     fluid.defaults('cisl.prefs.composite.separatedPanel', {
         gradeNames: ['fluid.prefs.separatedPanel'],
         iframeRenderer: {
@@ -210,5 +251,14 @@
     cisl.prefs.dispatchPreferenceUpdateEvent = function() {
         var event = new Event('update.cisl.prefs');
         document.dispatchEvent(event);
+    };
+
+    // Reduced motion interactions
+    cisl.prefs.userPrefersReducedMotion = function() {
+        // Clusive setting - check class
+        var setting = document.body.classList.contains('clusive-reduced-motion');
+        // System preference - check CSS media query
+        var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        return system || setting;
     };
 }(fluid_3_0_0));

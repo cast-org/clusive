@@ -1,10 +1,12 @@
 import json
 import logging
+from datetime import date, timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Sum, Q
 from django.db.models.functions import Lower
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, RedirectView
@@ -12,7 +14,8 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
 from assessment.forms import ClusiveRatingForm
-from assessment.models import ClusiveRatingResponse, AffectiveUserTotal, ComprehensionCheckResponse
+from assessment.models import ClusiveRatingResponse, AffectiveUserTotal, ComprehensionCheckResponse, \
+    AffectiveCheckResponse
 from eventlog.models import Event
 from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
@@ -119,7 +122,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
 
-    # Decision-making data
+        # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
 
         # Welcome panel
@@ -190,6 +193,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 t = tdata['trend']
                 comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
                 tdata['comp_check'] = comp_data[t.book.id]
+                tdata['unauthorized'] = not t.book.is_visible_to(self.clusive_user)
             for tdata in assigned_trend_data:
                 t = tdata['trend']
                 if t.book.id not in comp_data:
@@ -297,6 +301,53 @@ class DashboardActivityPanelView(TemplateView):
             'reading_data': Paradata.reading_data_for_period(self.current_period, days=self.days, sort=self.sort),
         }
         return context
+
+
+class DashboardActivityDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'shared/partial/modal_student_activity_detail.html'
+
+    def get_context_data(self, **kwargs):
+        user_id = kwargs['user_id']
+        book_id = kwargs['book_id']
+        data = super().get_context_data(**kwargs)
+
+        try:
+            clusive_user = ClusiveUser.objects.get(pk=user_id)
+            data['clusive_user'] = clusive_user
+            book = Book.objects.get(pk=book_id)
+            data['book'] = book
+            data['book_has_versions'] = book.versions.count() > 1
+
+            paras = Paradata.objects.filter(user=clusive_user, book=book)
+            # Annotate with the time total from the last week
+            start_date = date.today()-timedelta(days=7)
+            paras = paras.annotate(recent_time=Sum('paradatadaily__total_time',
+                                                           filter=Q(paradatadaily__date__gt=start_date)))
+            paradata = paras[0]
+            data['paradata'] = paradata
+            if paradata.first_version and paradata.first_version != paradata.last_version:
+                data['version_switched'] = True
+
+            # Affect and Comp check
+            affect_checks = AffectiveCheckResponse.objects.filter(user=clusive_user, book=book)
+            if affect_checks:
+                data['affect_check'] = affect_checks[0]
+            comp_checks = ComprehensionCheckResponse.objects.filter(user=clusive_user, book=book)
+            if comp_checks:
+                data['comp_check'] = comp_checks[0]
+
+            # Highlights and notes
+            data['highlight_count'] = Annotation.objects.filter(bookVersion__book=book, user=clusive_user, dateDeleted=None).count()
+            data['note_count'] = Annotation.objects.filter(bookVersion__book=book, user=clusive_user, dateDeleted=None,
+                                                           note__isnull=False).exclude(note='').count()
+
+            return data
+        except ClusiveUser.DoesNotExist:
+            logger.error('No clusive user %d', user_id)
+            raise Http404('No such user')
+        except Book.DoesNotExist:
+            logger.error('No such book %d', book_id)
+            raise Http404('No such book')
 
 
 class SetStarRatingView(LoginRequiredMixin, BaseCreateView):

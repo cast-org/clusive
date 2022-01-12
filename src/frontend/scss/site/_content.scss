@@ -30,6 +30,23 @@ body {
     font-family: OpenDyslexicRegular, sans-serif !important;
 }
 
+// Special icon cases
+.icon-starred {
+    &::before {
+        // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
+        font-family: fontello;
+        @include font-size(1em);
+        line-height: 1;
+        color: inherit;
+        content: "\e826";
+    }
+
+    .active > &::before,
+    :active > &::before {
+        content: "\e825";
+    }
+}
+
 // Readium's default forced height on this container can cause added scrollheight
 // in `scroll` view mode causing 'short' pages causing navigation to prev/next page
 // to incur a scroll instead of page change.
@@ -151,6 +168,12 @@ h2,
     color: var(--CT_formRangeTipColor);
     user-select: none;
     transform: translateX(-50%);
+}
+
+.list-spaced-condensed {
+    > .list-item {
+        padding: $list-spaced-condensed-padding-y $list-spaced-condensed-padding-x;
+    }
 }
 
 .link-above {
@@ -446,5 +469,36 @@ h2,
         padding-top: 1rem;
         margin-top: 1rem;
         border-top: 1px solid var(--CT_modalContentBorderColor);
+    }
+}
+
+.result-list {
+    .card-author {
+        margin-top: -.25rem;
+        color: var(--CT_formTextColor);
+    }
+    .card-img {
+        flex: 1 0 auto;
+        text-align: center;
+        background: var(--CT_cardImgBg);
+
+        img {
+            max-height: 40vw;
+
+            @include media-breakpoint-up(sm) {
+                max-height: 8vw;
+            }
+
+            @include media-breakpoint-up(md) {
+                max-height: 10vw;
+            }
+
+            @include media-breakpoint-up(xl) {
+                max-height: 10rem;
+            }
+        }
+    }
+    .result-muted {
+        color: var(--CT_formTextColor);
     }
 }

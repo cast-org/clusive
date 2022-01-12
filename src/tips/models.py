@@ -225,9 +225,9 @@ class CTAHistory(models.Model):
         if self.type.name == 'star_rating':
             if self.user.role == Roles.GUEST:
                 return False
-            if user_stats.logins > 3:
+            if user_stats.logins > 1:
                 return True
-            return user_stats.active_duration and user_stats.active_duration > timedelta(minutes=60)
+            return user_stats.active_duration and user_stats.active_duration > timedelta(minutes=30)
         # Unknown type
         logger.warning('Unimplemented CTA type: %s', self)
         return False

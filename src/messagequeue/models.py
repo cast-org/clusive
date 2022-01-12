@@ -67,7 +67,7 @@ class Message:
         action = self.content['caliperEvent']['action']
         reader_info = self.content['readerInfo']
         control_used.send(sender=self.__class__, timestamp=self.timestamp,
-                          request=self.request, event_id = event_id, event_type=event_type, control=control, value=value, action=action, reader_info=reader_info)
+                          request=self.request, event_id=event_id, event_type=event_type, control=control, value=value, action=action, reader_info=reader_info)
 
     def send_cue_view(self):
         cue_viewed.send(sender=self.__class__, request=self.request, word = self.content['word'])

@@ -20,6 +20,8 @@ import execInfusion from 'script-loader!infusion';
 var Popper = require('script-loader!popper.js').default;
 var Masonry = require('script-loader!masonry-layout');
 import execFiguration from 'script-loader!figuration';
+var confetti = require('script-loader!canvas-confetti/dist/confetti.browser.js');
+var interact = require('script-loader!interactjs/dist/interact.js');
 
 import execGPIIBinder from "script-loader!fluid-binder/src/js/binder.js";
 

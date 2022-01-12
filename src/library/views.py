@@ -243,11 +243,14 @@ class LibraryStyleRedirectView(View):
     def dispatch(self, request, *args, **kwargs):
         view = kwargs.get('view')
         style = request.clusive_user.library_style
-        return HttpResponseRedirect(redirect_to=reverse('library', kwargs={
+        kwargs = {
             'view': view,
             'sort': 'title',  # FIXME
             'style': style,
-        }))
+        }
+        if request.clusive_user and request.clusive_user.current_period:
+            kwargs['period_id'] = request.clusive_user.current_period.id
+        return HttpResponseRedirect(redirect_to=reverse('library', kwargs=kwargs))
 
 
 class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):

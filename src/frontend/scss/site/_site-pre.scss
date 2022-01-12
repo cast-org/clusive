@@ -40,7 +40,8 @@ $enable-form-validation-tooltip:        false;
 $enable-form-validation-icon:           false;
 
 // Components
-$enable-alert:                          false;
+$enable-alert-heading:                  false;
+$enable-alert-link:                     false;
 $enable-badge:                          true;
 $enable-badge-close:                    false;
 $enable-badge-group:                    false;
@@ -103,7 +104,7 @@ $enable-utility-flex-order:             true;
 $enable-utility-flex-direction:         false;
 $enable-utility-flex-wrap:              false;
 $enable-utility-flex-justify:           false;
-$enable-utility-flex-items:             false;
+$enable-utility-flex-items:             true;
 $enable-utility-flex-content:           false;
 $enable-utility-flex-self:              false;
 $enable-utility-flex-sizing:            false;
@@ -174,6 +175,7 @@ $spacers: (
     "0":    0,
     "0_25": ($spacer * .25),
     "0_5":  ($spacer * .5),
+    "0_75": ($spacer * .75),
     "1":    $spacer,
 );
 
@@ -231,6 +233,9 @@ $figure-caption-font-size:              .875rem;
 $list-item-active-bg:                   unset;
 $list-item-active-color:                unset;
 $list-bulleted-content:                 "\00a0\2022";
+
+$list-spaced-condensed-padding-y:       .5rem !default;
+$list-spaced-condensed-padding-x:       1rem !default;
 
 $table-bg-active:                       var(--CT_tableActiveBg);
 $table-border-color:                    var(--CT_tableBorderColor);
@@ -388,6 +393,10 @@ $modal-footer-color:                    var(--CT_modalFooterColor);
 $modal-footer-border-color:             var(--CT_modalFooterBorderColor);
 $modal-footer-border-width:             1px;
 
+$alert-padding-x:                       .5rem;
+$alert-padding-y:                       .25rem;
+$alert-border-width:                    2px;
+
 // Clusive specific items
 // =====
 
@@ -409,10 +418,12 @@ $logo-md-font-size:                     1.375rem;
 
 $sidebar-border-radius:                 $border-radius;
 $sidebar-width:                         3rem;
-$sidebar-padding:                       .75rem .25rem;
+$sidebar-padding-y:                     .75rem;
+$sidebar-padding-x:                     .25rem;
 $sidebar-gutter:                        1rem;
 $sidebar-sm-width:                      4rem;
-$sidebar-sm-padding:                    .75rem;
+$sidebar-sm-padding-y:                  .75rem;
+$sidebar-sm-padding-x:                  .75rem;
 $sidebar-sm-gutter:                     2rem;
 // Sidebar stretched max width is half of:
 // vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)

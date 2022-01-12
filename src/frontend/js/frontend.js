@@ -1,5 +1,5 @@
-/* global Masonry, clusiveTTS, clusivePrefs, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
-/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate */
+/* global Masonry, cisl, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation, confetti */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate, confettiCannon */
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options) {
@@ -100,7 +100,7 @@ function libraryMasonryEnable() {
     elem.classList.add('has-masonry');
 
     libraryMasonryApi = new Masonry(elem, {
-        itemSelector: '.card-library',
+        itemSelector: '.card-library, .card-special',
         columnWidth: '.card-library',
         percentPosition: true,
         transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
@@ -306,6 +306,8 @@ function starsSelectedText() {
         }).done(function(html) {
             $('#star_rating_panel').replaceWith(html);
             starsSelectedTextUpdate($('#star_rating_panel .stars')[0]);
+            // eslint-disable-next-line no-use-before-define
+            confettiCannon(e.target);
         }).fail(function(err) {
             console.error('Failed sending star rating results: ', err);
         });
@@ -684,7 +686,7 @@ function dashboardSetup() {
         $.get('/dashboard-activity-panel/' + $(this).data('days'))
             .done(function(result) {
                 $studentActivityPanel.replaceWith(result);
-                $studentActivityPanel.CFW_Init();
+                $('#StudentActivityPanel').CFW_Init();
             })
             .fail(function(err) {
                 console.error('Failed fetching replacement dashboard panel: ', err);
@@ -700,11 +702,73 @@ function dashboardSetup() {
         $.get('/dashboard-activity-panel-sort/' + $(this).data('sort'))
             .done(function(result) {
                 $studentActivityPanel.replaceWith(result);
-                $studentActivityPanel.CFW_Init();
+                $('#StudentActivityPanel').CFW_Init();
             })
             .fail(function(err) {
                 console.error('Failed fetching replacement dashboard panel: ', err);
             });
+    });
+
+    $body
+        .on('click', '.readtime-bar[data-cfw="tooltip"]', function(e) {
+            $(e.currentTarget).attr('aria-expanded', 'true');
+        })
+        .on('beforeShow.cfw.tooltip', '.readtime-bar[data-cfw="tooltip"]', function() {
+            $('.readtime-tooltip:visible').CFW_Tooltip('hide');
+        })
+        .on('afterHide.cfw.tooltip', '.readtime-bar[data-cfw="tooltip"]', function(e) {
+            $(e.currentTarget).attr('aria-expanded', 'false');
+        });
+
+    $body.on('click', '.detailTrigger', function(e) {
+        e.preventDefault();
+        var $link = $(e.currentTarget);
+        // Fill in student name
+        $('#readDetailStudentName').text($link.data('clusive-student-name'));
+        $('#readDetailStudentLoading').show();
+        $('#readDetailStudentContent').hide();
+        $link.CFW_Modal({
+            target: '#readDetailStudent',
+            unlink: true,
+            show: true
+        });
+        $.get('/dashboard-activity-detail/' + $link.data('clusive-student-id') + '/' + $link.data('clusive-book-id'))
+            .done(function(result) {
+                $('#readDetailStudentContent').html(result).show();
+                $('#readDetailStudentLoading').hide();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
+    });
+}
+
+// Starred button functionality
+function starredButtons() {
+    'use strict';
+
+    var txtDefault = 'Not Starred';
+    var txtActive = 'Starred';
+
+    $(document).on('click', '.btn-starred', function(e) {
+        var $trigger = $(e.currentTarget);
+        $trigger.toggleClass('active');
+        var isActive = $trigger.hasClass('active');
+        var textMsg = isActive ? txtActive : txtDefault;
+
+        $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
+            $trigger
+                .attr('aria-label', textMsg)
+                .removeAttr('data-cfw-tooltip-title')
+                .CFW_Tooltip({
+                    title: textMsg
+                })
+                .CFW_Tooltip('show');
+        });
+
+        $trigger.CFW_Tooltip('dispose');
+
+        // TODO: Callback to event logging?
     });
 }
 
@@ -733,6 +797,97 @@ function contextTranslate(selection) {
     load_translation(selection);
 }
 
+function originInViewport(elem) {
+    'use strict';
+
+    if (typeof elem === 'undefined') {
+        return null;
+    }
+
+    var elRect = elem.getBoundingClientRect();
+    var winHeight = window.innerHeight || document.documentElement.clientHeight;
+    var winWidth = window.innerWidth || document.documentElement.clientWidth;
+
+    return {
+        x: (elRect.left + (elRect.width / 2)) / winWidth,
+        y: (elRect.top + (elRect.height / 2)) / winHeight
+    };
+
+    /*
+    var inViewport = elRect.top >= 0 && elRect.left >= 0 && elRect.bottom <= winHeight && elRect.right <= winWidth;
+
+    if (inViewport) {
+        return {
+            x: (elRect.left + (elRect.width / 2)) / winWidth,
+            y: (elRect.top + (elRect.height / 2)) / winHeight
+        };
+    }
+
+    return null;
+    */
+}
+
+// See: https://github.com/catdad/canvas-confetti
+function confettiCannon(elem) {
+    'use strict';
+
+    if (cisl.prefs.userPrefersReducedMotion()) {
+        return;
+    }
+
+    var viewportOrigin = originInViewport(elem);
+    var count = 300;
+    var defaults = {
+        origin: {
+            y: 1
+        },
+        zIndex: 1100
+    };
+
+    function fire(particleRatio, opts) {
+        // eslint-disable-next-line compat/compat
+        confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+        }));
+    }
+
+    if (viewportOrigin !== null) {
+        // Simplified cannon from single element
+        confetti({
+            origin: viewportOrigin,
+            particleCount: 75,
+            scalar: 0.75,
+            spread: 360,
+            startVelocity: 20,
+            zIndex: 1100
+        });
+    } else {
+        // Larger full-viewport cannon
+        fire(0.25, {
+            spread: 26,
+            startVelocity: 55
+        });
+        fire(0.2, {
+            spread: 60
+        });
+        fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.8
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 25,
+            decay: 0.92,
+            scalar: 1.2
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 45
+        });
+    }
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -752,6 +907,7 @@ $(window).ready(function() {
     libraryPageLinkSetup();
     libraryStyleSortLinkSetup();
     dashboardSetup();
+    starredButtons();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

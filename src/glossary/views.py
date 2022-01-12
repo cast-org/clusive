@@ -183,6 +183,7 @@ def glossdef(request, book_id, cued, word):
                       request=request,
                       word=base,
                       cued=cued,
+                      book=book,
                       source = defs['source'] if defs else None)
     # TODO might want to record how many meanings were found (especially if it's 0): len(defs['meanings'])
     if defs:

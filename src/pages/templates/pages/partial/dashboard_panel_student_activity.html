@@ -86,14 +86,35 @@
                     <td class="d-xs-down-none">
                         <div class="readtime-progress">
                             {% for p in info.books %}
-                            <div class="readtime-bar{% if p.is_other %} striped{% endif %}"
-                                 style="width:{{p.percent_time}}%;"
-                                 tabindex="0"
-                                 data-clusive-tip-action="activity"
-                                 data-cfw="tooltip"
-                                 data-clusive-book-id="{{ p.book_id }}"
-                                 title="{{ p.title }}, {{ p.hours|floatformat:1}} hours">
-                                {% if p.is_assigned %}<span class="readtime-mark-shared"></span>{% endif %}
+                            <button class="readtime-bar{% if p.is_other %} striped{% endif %}"
+                                    style="width:{{p.percent_time}}%;"
+                                    tabindex="0"
+                                    data-clusive-tip-action="activity"
+                                    data-cfw="tooltip"
+                                    data-cfw-tooltip-target="#tooltipReadTime{{ info.clusive_user.user.id }}_{{ p.book_id }}"
+                                    data-cfw-tooltip-trigger="click hover"
+                                    data-cfw-tooltip-placement="top auto"
+                                    aria-expanded="false"
+                                    data-clusive-book-id="{{ p.book_id }}">
+                                <span class="sr-only">{{ p.title }}, {{ p.hours|floatformat:1}} hours</span>
+                                {% if p.is_assigned %}<span class="readtime-mark-shared" aria-label="Assigned"></span>{% endif %}
+                            </button>
+                            <div id="tooltipReadTime{{ info.clusive_user.user.id }}_{{ p.book_id }}" class="tooltip readtime-tooltip">
+                                <div class="tooltip-body">
+                                    <div aria-hidden="true">
+                                        {{ p.title }}<br />
+                                        {{ p.hours|floatformat:1}} hours
+                                    </div>
+                                    {% if not p.is_other %}
+                                    <a id="detailTrigger_{{ info.clusive_user.user.id }}_{{ p.book_id }}"
+                                       class="tooltip-link detailTrigger" href="#" role="button"
+                                       data-cle-handler="click" data-cle-control="dash_activity_detail" data-cle-value="{{ info.clusive_user.anon_id }}"
+                                       data-clusive-student-name="{{ info.clusive_user.user.first_name }}"
+                                       data-clusive-student-id="{{ info.clusive_user.id }}"
+                                       data-clusive-book-id="{{ p.book_id }}"><strong>More details</strong></a>
+                                    {% endif %}
+                                </div>
+                                <div class="tooltip-arrow"></div>
                             </div>
                             {% endfor %}
                         </div>
@@ -113,3 +134,24 @@
     </div>
 </div>
 
+<div id="readDetailStudent" class="modal why-modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Student Reading Details: <span id="readDetailStudentName">Student Name</span></h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="readDetailStudentLoading">
+                    <strong>Loading...</strong> <div class="ms-2 loader-circle" role="status" aria-hidden="true"></div>
+                </div>
+                <div id="readDetailStudentContent" style="display: none;">
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

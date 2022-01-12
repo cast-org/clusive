@@ -247,105 +247,111 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 2;
+    z-index: 3;
     display: block;
-    width: calc(100% - (var(--reactPad) * 2));
+    width: calc(100% - (var(--reactPad) * 1.75));
     height: 1px;
     content: "";
     background-color: var(--reactLine);
     transform-origin: center center;
 }
 .react-line-0 {
-    width: calc(100% + (var(--reactPad) * 1));
+    // stylelint-disable-next-line function-name-case
+    width: Max(calc(100% + 2rem), calc(100% + 56.25%));
     transform: translate3d(-50%, -50%, 0) rotate(0);
 }
-.react-line-0::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
-    font-family: fontello;
-    @include font-size(1rem);
-    line-height: 1;
-    color: var(--reactIcon);
-    text-align: center;
-    content: "\e808";
-    transform: translate3d(-100%, -50%, 0) translateX(-.375rem);
-}
-.react-line-0::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
-    font-family: fontello;
-    @include font-size(1rem);
-    line-height: 1;
-    color: var(--reactIcon);
-    text-align: center;
-    content: "\e807";
-    transform: translate3d(100%, -50%, 0) translateX(.375rem);
-}
 .react-line-1 {
-    width: calc(100% - (var(--reactPad) * 1));
     transform: translate3d(-50%, -50%, 0) rotate(30deg);
 }
 .react-line-2 {
     transform: translate3d(-50%, -50%, 0) rotate(60deg);
 }
 .react-line-3 {
+    width: calc(100% + (var(--reactPad) * 1.5));
     transform: translate3d(-50%, -50%, 0) rotate(90deg);
-}
-.react-line-3::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
-    font-family: fontello;
-    @include font-size(1rem);
-    line-height: 1;
-    color: var(--reactIcon);
-    text-align: center;
-    content: "\e838";
-    transform: translate3d(-100%, -50%, 0) translateX(-.375rem) rotate(-90deg);
-}
-.react-line-3::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    // stylelint-disable-next-line font-family-no-missing-generic-family-keyword
-    font-family: fontello;
-    @include font-size(1rem);
-    line-height: 1;
-    color: var(--reactIcon);
-    text-align: center;
-    content: "\e837";
-    transform: translate3d(100%, -50%, 0) translateX(.375rem) rotate(-90deg);
 }
 .react-line-4 {
     transform: translate3d(-50%, -50%, 0) rotate(120deg);
 }
 .react-line-5 {
-    width: calc(100% - (var(--reactPad) * 1));
     transform: translate3d(-50%, -50%, 0) rotate(150deg);
+}
+
+.react-quad {
+    position: absolute;
+    z-index: 1;
+    display: block;
+    // stylelint-disable-next-line function-name-case
+    width: Max(calc(50% + 1rem), calc(50% + 28.125%));
+    height: calc(50% + (var(--reactPad) * .75));
+    content: "";
+}
+.react-quad-0 {
+    bottom: 50%;
+    left: 50%;
+    background: var(--CT_reactQ0Bg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: top right;
+    background-size: 1.625rem 1.625rem, auto;
+
+    .box & {
+        background: var(--CT_reactBoxQ0Bg);
+        background-repeat: no-repeat, no-repeat;
+        background-position: top right;
+        background-size: 1.625rem 1.625rem, auto;
+    }
+}
+.react-quad-1 {
+    top: 50%;
+    left: 50%;
+    background: var(--CT_reactQ1Bg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: bottom right;
+    background-size: 1.625rem 1.625rem, auto;
+
+    .box & {
+        background: var(--CT_reactBoxQ1Bg);
+        background-repeat: no-repeat, no-repeat;
+        background-position: bottom right;
+        background-size: 1.625rem 1.625rem, auto;
+    }
+}
+.react-quad-2 {
+    top: 50%;
+    right: 50%;
+    background: var(--CT_reactQ2Bg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: bottom left;
+    background-size: 1.625rem 1.625rem, auto;
+
+    .box & {
+        background: var(--CT_reactBoxQ2Bg);
+        background-repeat: no-repeat, no-repeat;
+        background-position: bottom left;
+        background-size: 1.625rem 1.625rem, auto;
+    }
+}
+.react-quad-3 {
+    right: 50%;
+    bottom: 50%;
+    background: var(--CT_reactQ3Bg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: top left;
+    background-size: 1.625rem 1.625rem, auto;
+
+    .box & {
+        background: var(--CT_reactBoxQ3Bg);
+        background-repeat: no-repeat, no-repeat;
+        background-position: top left;
+        background-size: 1.625rem 1.625rem, auto;
+    }
 }
 
 .react-item {
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 1;
+    z-index: 2;
     display: block;
     width: calc(100% - (var(--reactPad) * 2));
     height: calc(100% - (var(--reactPad) * 2));
@@ -464,7 +470,7 @@
 }
 .react-label-1 {
     // transform: translate3d(0, -100%, 0) rotate(-30deg);
-    transform: translate3d(12%, -100%, 0) rotate(-30deg);
+    transform: translate3d(15%, -80%, 0) rotate(-30deg);
 }
 .react-label-2 {
     transform: translate3d(0, -100%, 0) rotate(-60deg);
@@ -496,7 +502,7 @@
 }
 .react-label-10 {
     // transform: translate3d(0, -100%, 0) rotate(-300deg) translateX(-100%);
-    transform: translate3d(-5%, -100%, 0) rotate(-300deg) translateX(-100%);
+    transform: translate3d(-9%, -100%, 0) rotate(-300deg) translateX(-100%);
 }
 .react-label-11 {
     transform: translate3d(0, -100%, 0) rotate(-330deg) translateX(-100%);
