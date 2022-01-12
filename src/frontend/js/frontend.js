@@ -936,12 +936,14 @@ function bookshareCheckImportProgress(id) {
                 window.location.href = '/library/metadata/upload/' + data.id;
             } else if (data.status === 'pending') {
                 console.debug('Import is still pending');
+                bookshareImportCheckInFlight = false;
             } else if (data.status === 'error') {
                 bookshareCancelImport();
                 $('#importPendingModal .modal-body').html(
                     '<p><strong>Import failed</strong></p><p>Error message: ' +
                     data.message +
                     '</p>');
+                bookshareImportCheckInFlight = false;
             } else {
                 console.warn('Unexpected return value from API: ', data);
             }
@@ -949,7 +951,6 @@ function bookshareCheckImportProgress(id) {
         .fail(function(err) {
             console.warn('error calling bookshare import: ', err);
         });
-    bookshareImportCheckInFlight = false;
 }
 
 // When 'import' button is clicked, kick off the process of importing a book
