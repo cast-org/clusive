@@ -8,6 +8,7 @@ import requests
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from allauth.socialaccount import signals
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model, logout
@@ -1328,7 +1329,6 @@ def get_add_scope_redirect_uri(request):
         scheme = 'https'
     return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'
 
-
 class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
     template_name = 'roster/my_account.html'
 
@@ -1339,10 +1339,8 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
         bookshare_account = None
         for account in SocialAccount.objects.filter(user=request.user):
             if account.provider=='google':
-                # Not sure if there's any user-friendly representation of what account this is.
-                # uid is just a long number.
-                # So the template uses the email address that Clusive stores - should be the same as the google email.
-                google_account = account
+                # Google account's `extra_data` contain the user's google email
+                google_account = account.extra_data.get('email')
             if account.provider=='bookshare':
                 # For bookshare, uid is the email address registered with Bookshare.
                 bookshare_account = account.uid
@@ -1358,4 +1356,31 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
     def configure_event(self, event: Event):
         event.page = 'MyAccount'
 
+def remove_social_account(request, *args, **kwargs):
+    clusive_user: ClusiveUser
+    clusive_user = request.clusive_user
 
+    # Currently, a Google SocialAccount is created for Google SSO, and not for
+    # an associated account.  Google SSO users cannot delete the SocialAccount
+    # since it is needed for logging into Clusive.  Use the
+    # `clusive_user.data_source` to detect this condition (see finish_login()
+    # above, where it is set for Google SSO users).
+    social_app_name = kwargs.get('provider')
+    if clusive_user.data_source == RosterDataSource.GOOGLE and social_app_name == 'google':
+        logger.debug('Google SSO user %s cannot remove their google SocialAccount', request.user.username)
+        return HttpResponseRedirect(reverse('my_account'))
+
+    # Find the SocialAccount for the user/provider and delete it.
+    try:
+        social_account = SocialAccount.objects.get(user=request.user, provider=social_app_name)
+        # Deletion and signal based on allauth's DisconnectForm, see github
+        # issue, "How to unlink an account from a social auth provider?":
+        # https://github.com/pennersr/django-allauth/issues/814
+        social_account.delete()
+        signals.social_account_removed.send(
+            sender=SocialAccount, request=request, socialaccount=social_account
+        )
+    except SocialAccount.DoesNotExist:
+        logger.debug('User %s does not have a %s account', request.user.username, social_app_name)
+
+    return HttpResponseRedirect(reverse('my_account'))
