@@ -1,6 +1,8 @@
+#!/usr/bin/env bash
 # Run from the root 'clusive' directory after setting up your virtual environment
-
-source ./env/bin/activate
+if [ -e ./env/bin/activate ]; then
+  source ./env/bin/activate
+fi
 npm install
 pip install -r requirements.txt
 python -m nltk.downloader wordnet
@@ -9,5 +11,8 @@ cd target
 python manage.py migrate
 python manage.py loaddata preferencesets tiptypes callstoaction subjects
 python manage.py importdir ../content
-echo "Setup complete! Run python manage.py createsuperuser to create the super user and you're all done"
+echo "Creating superuser account:"
+python manage.py createsuperuser
+python manage.py createrostersamples
+echo "Setup complete!"
 cd ..
