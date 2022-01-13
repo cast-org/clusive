@@ -78,12 +78,16 @@
                     <div class="list-item">
                         <div><strong>Bookshare account</strong></div>
                         {% if bookshare_account %}
-                            {{ bookshare_account }}
-                            (<a href="{% url 'remove_social_account' provider='bookshare' %}">remove account</a>)
+                            <p>
+                                {{ bookshare_account }}
+                                (<a href="{% url 'remove_social_account' provider='bookshare' %}">remove account</a>)
+                            </p>
+                        <p>Head to <a href="{% url 'library_style_redirect' view='mine' %}">My Readings</a> in the library to add books from Bookshare.</p>
                         {% else %}
                         <div class="form-text mb-0_5">
                             Looking for more to read?
                             Bookshare has over 1 million titles available.
+                            <a href="https://www.bookshare.org/cms/bookshare-me">See if you qualify.</a>
                         </div>
                         <a href="{% url 'bookshare_connect' %}" class="btn btn-primary">Connect to a Bookshare account</a>
                         {% endif %}
