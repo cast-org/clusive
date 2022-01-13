@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import date, timedelta
 
@@ -19,6 +20,7 @@ from eventlog.models import Event
 from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
+from glossary.views import choose_words_to_cue
 from library.models import Book, BookVersion, Paradata, Annotation, BookTrend
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
@@ -502,7 +504,13 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         self.book_version = versions[version]
         self.book = book
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
+        cuelist_map = choose_words_to_cue(book_version=self.book_version, user=clusive_user)
+        # Make into format that R2D2BC wants for "definitions"
+        cuelist = [{ 'order': i, 'result': 1, 'terms': terms } for i, terms in enumerate(cuelist_map.values())]
+        logger.debug('Cuelist: %s', repr(cuelist))
         pdata = Paradata.record_view(book, version, clusive_user)
+        # See if user wants the cues to be initially shown or not
+        hide_cues = not Preference.get_glossary_pref_for_user(clusive_user)
 
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
@@ -514,6 +522,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'manifest_path': self.book_version.manifest_path,
             'last_position': pdata.last_location or "null",
             'annotations': annotationList,
+            'cuelist': json.dumps(cuelist),
+            'hide_cues': hide_cues,
             'tip_name': self.tip_shown.name if self.tip_shown else None,
         }
         return super().get(request, *args, **kwargs)

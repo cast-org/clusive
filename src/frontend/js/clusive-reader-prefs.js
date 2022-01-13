@@ -129,6 +129,16 @@
                     type: 'fluid.transforms.value',
                     input: '{that}.model.preferences.cisl_prefs_scroll'
                 }
+            },
+            'readerPreferences.glossary': {
+                target: 'readerPreferences.glossary',
+                backward: {
+                    excludeSource: '*'
+                },
+                singleTransform: {
+                    type: 'fluid.transforms.value',
+                    input: '{that}.model.preferences.cisl_prefs_glossary'
+                }
             }
         },
         modelListeners: {
@@ -166,6 +176,11 @@
                 func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
                 args: ['scroll', '{change}.value'],
                 excludeSource: "init"
+            },
+            'readerPreferences.glossary': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyGlossarySetting',
+                args: ['show', '{change}.value'],
+                excludeSource: "init"
             }
         },
         listeners: {
@@ -190,7 +205,7 @@
             {
                 [settingName]:settingValue
             };
-            
+
             reader.applyUserSettings(settingsObj);
         }
     };
@@ -204,7 +219,7 @@
                 [ttsSettingName]:settingValue
             };
             reader.applyTTSSettings(settingsObj);
-        }        
+        }
     };
 
     cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(scrollSettingName, settingValue) {
@@ -214,4 +229,16 @@
             reader.scroll(settingValue);
         }
     };
+
+    cisl.prefs.readerPreferencesBridge.applyGlossarySetting = function(settingName, settingValue) {
+        console.debug('cisl.prefs.readerPreferencesBridge.applyGlossarySetting', settingName, settingValue)
+        var reader = clusiveContext.reader.instance;
+        if (reader) {
+            if (settingValue) {
+                D2Reader.showLayer('definitions')
+            } else {
+                D2Reader.hideLayer('definitions')
+            }
+        }
+    }
 }(fluid_3_0_0));
