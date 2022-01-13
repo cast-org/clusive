@@ -594,7 +594,6 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
 
-
 def finish_login(request):
     """
     Called as the redirect after Google Oauth SSO login.
@@ -1377,6 +1376,8 @@ def remove_social_account(request, *args, **kwargs):
         # issue, "How to unlink an account from a social auth provider?":
         # https://github.com/pennersr/django-allauth/issues/814
         social_account.delete()
+        request.session.pop('bookshare_connected', None)
+        request.session.pop('bookshare_search_metadata', None)
         signals.social_account_removed.send(
             sender=SocialAccount, request=request, socialaccount=social_account
         )
