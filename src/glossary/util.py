@@ -75,12 +75,20 @@ def base_form_sort_key(word):
 
 
 def all_forms(word):
+    """
+    Return the given word and all its inflected forms as a list.
+    :param word: base form of word
+    :return: list of forms. The given base form will be first in the returned list.
+    """
     wl = word.lower()
     all_forms = set()
     all_forms.add(wl)
     for list in getAllInflections(wl).values():
         all_forms.update(list)
-    return all_forms
+    all_forms.remove(wl)
+    result = [wl]
+    result.extend(sorted(all_forms))
+    return result
 
 
 def test_glossary_file(glossfile):

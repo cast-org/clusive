@@ -1,12 +1,29 @@
 import logging
 
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 
 from eventlog.signals import vocab_lookup
 from glossary.models import WordModel
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
+
+cue_viewed = Signal(providing_args=['request', 'word'])
+
+
+@receiver(cue_viewed)
+def record_cue_view(sender, **kwargs):
+    """
+    Record the fact that a vocabulary cue was seen by a user.
+    This should be reported the first time that cue is scrolled into view in the user's perusal of a book.
+    :param sender:
+    :param kwargs:
+    :return:
+    """
+    clusive_user = kwargs.get('request').clusive_user
+    word=kwargs['word'].lower()
+    wm = WordModel.register_cue(user=clusive_user, word=word)
+    logger.debug('Noted cue viewed: %s, %s', word, wm)
 
 
 @receiver(vocab_lookup)

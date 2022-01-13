@@ -93,6 +93,8 @@ var manifest_path = "{{ manifest_path }}";
         {% for a in annotations %}
             annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
         {% endfor %}
+        var definitions = JSON.parse('{{cuelist|safe}}');
+        var definitionsSeen = {};
         var lastReadingPosition = {{ last_position|safe }};
 
         var selectionMenuItems = [
@@ -122,6 +124,7 @@ var manifest_path = "{{ manifest_path }}";
             },
             rights: {
                 enableAnnotations: true,
+                enableDefinitions: true,
                 enableTTS: true,
                 enableBookmarks: false,
                 enableMaterial: false,
@@ -131,7 +134,7 @@ var manifest_path = "{{ manifest_path }}";
                 autoGeneratePositions: false
             },
             tts: {
-                enableSplitter: true,
+                enableSplitter: false,
                 highlight: "words",
                 autoScroll: true,
                 rate: 1.0,
@@ -188,15 +191,46 @@ var manifest_path = "{{ manifest_path }}";
                         return addNewAnnotation(annotation, pub_id, pub_version);
                     },
                     selectedAnnotation: function (annotation) {
-                        console.debug('Selected annotation: ', annotation.id);
-                        showExistingAnnotation(annotation);
-                        return Promise.resolve();
+                        if (annotation) {
+                            console.debug('Selected annotation: ', annotation.id);
+                            showExistingAnnotation(annotation);
+                            return Promise.resolve();
+                        } else {
+                            console.debug('selectedAnnotation called with no annotation');
+                            return Promise.resolve();
+                        }
                     },
                     deleteAnnotation: function (annotation) {
                         console.warn('Not implemented: Delete annotation: ', annotation.id);
                         return Promise.reject();
                     }
                 }
+            },
+            define: {
+                color: "transparent",
+                hideLayer: {{ hide_cues | yesno:"true,false" }},
+                fullWordSearch: true,
+                api: {
+                    click: function (item, element) {
+                        window.openGlossaryForWord(item.terms[0]);
+                    },
+                    success: function (item, element) {
+                        console.log("  define item " + item.terms + " was found " + element.length + " times");
+                    },
+                    visible: function (item, element) {
+                        var word = item.terms[0];
+                        if (!definitionsSeen[word]) {
+                            definitionsSeen[word] = 1;
+                            console.log("first time define visible: ", word);
+                            var message = {
+                                type: 'CV',
+                                word: word
+                            }
+                            clusiveEvents.messageQueue.add(message);
+                        }
+                    },
+                },
+                definitions: definitions
             },
             bookmarks: {
                 api: {

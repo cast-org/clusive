@@ -56,6 +56,10 @@
     }
 
 }
+.card-graph-title {
+    margin-bottom: .25rem;
+    @include font-size(.8125rem);
+}
 
 .card {
     .stars-chart {
@@ -76,7 +80,7 @@
 .card-library {
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
-    *:not(.card-graph) > .link-stretch {
+    *:not(.card-graph):not(.card-graph-title) > .link-stretch {
         color: inherit;
         text-decoration: none;
 

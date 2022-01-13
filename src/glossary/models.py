@@ -61,14 +61,20 @@ class WordModel(models.Model):
         self.save()
 
     @classmethod
+    def register_cue(cls, user, word):
+        """Add one to the 'cued' statistic for a single word and user"""
+        wm, created = WordModel.objects.get_or_create(user=user, word=word)
+        wm.cued += 1
+        if wm.interest>0:
+            wm.interest += cls.CUE_WEIGHT
+        wm.save()
+        return wm
+
+    @classmethod
     def register_cues(cls, user, words):
         """Add one to the 'cued' statistic for each of the words for the given user"""
         for word in words:
-            wm, created = WordModel.objects.get_or_create(user=user, word=word)
-            wm.cued += 1
-            if wm.interest>0:
-                wm.interest += cls.CUE_WEIGHT
-            wm.save()
+            cls.register_cue(user, word)
 
     @classmethod
     def is_valid_rating(cls, number):

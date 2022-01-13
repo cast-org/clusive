@@ -8,7 +8,7 @@
     <span class="d-inline-block mt-0_75" tabindex="0" title="Can't switch: there is only one version of this content."
           data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="forward">
         <button id="noSwitchButton" type="button" disabled class="btn btn-nav btn-icon btn-switch-level">
-            <span class="icon-ci-car" aria-hidden="true"></span>
+            <span class="icon-walk" aria-hidden="true"></span>
         </button>
     </span>
     {% else %}
@@ -18,11 +18,11 @@
             data-clusive-tip-id="switch" data-clusive-tip-action="switch"
             data-cle-handler="click" data-cle-control="switch" data-cle-value="opened">
         {% if version == version_count|add:-1 %}
-            <span class="icon-ci-spaceship" aria-hidden="true"></span>
+            <span class="icon-climb" aria-hidden="true"></span>
         {% elif version == version_count|add:-2 %}
-            <span class="icon-ci-car" aria-hidden="true"></span>
+            <span class="icon-hike" aria-hidden="true"></span>
         {% else %}
-            <span class="icon-ci-boat" aria-hidden="true"></span>
+            <span class="icon-walk" aria-hidden="true"></span>
         {% endif %}
     </button>
     {% endif %}

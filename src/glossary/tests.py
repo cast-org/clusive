@@ -1,17 +1,14 @@
-import json
 import logging
-import os
 
 from django.contrib.auth.models import User
 
+from eventlog.models import Event
 from glossary.util import base_form, all_forms
 from library.models import Book, BookVersion
 from roster.models import ClusiveUser
-from eventlog.models import Event
 
 logger = logging.getLogger(__name__)
 
-from django.contrib.staticfiles import finders
 from django.test import TestCase
 
 class GlossaryTestCase(TestCase):
@@ -81,9 +78,11 @@ class GlossaryTestCase(TestCase):
         self.assertEqual('ooblecks', base_form('ooblecks')) # unknown word is passed through as is
 
     def test_inflected_forms(self):
-        self.assertEqual({'noun', 'nouns'}, all_forms('noun'))
-        self.assertEqual({'act', 'acts', 'acting', 'acted'}, all_forms('act'))
-        self.assertEqual({'fluffy', 'fluffier', 'fluffiest'}, all_forms('fluffy'))
+        self.assertEqual(['noun', 'nouns'], all_forms('noun'))
+        self.assertEqual(['act', 'acted', 'acting', 'acts'], all_forms('ACT'))
+        self.assertEqual(['fluffy', 'fluffier', 'fluffiest'], all_forms('fluffy'))
+        self.assertEqual(['focus', 'foci', 'focused', 'focuses', 'focusing', 'focussed', 'focusses', 'focussing'],
+                         all_forms('focus')) # Base form should be returned first despite being alphabetically later.
 
     def test_check_list(self):
         self.login_and_generate_page_event_id()
