@@ -55,9 +55,6 @@ if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoa
     var prefsPromise = clusivePrefs.prefsEditorLoader.getSettings();
     prefsPromise.then(function (prefs) {
         console.debug('prefs received', prefs)
-        if(prefs.preferences["cisl_prefs_glossary"]) {
-            window.markCuedWords();
-        }
     }, function (e) {
         console.error('error fetching prefs', e)
     })
