@@ -792,14 +792,15 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
     def configure_event(self, event: Event):
         event.page = 'BookshareSearchForm'
 
-
 class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
     template_name = 'library/library_bookshare_search_results.html'
     query_key = ''
     metadata = {}
+    imported_books = []
 
     def dispatch(self, request, *args, **kwargs):
         if request.clusive_user.can_upload:
+            self.imported_books = self.get_imported_books(request)
             # This view should be called with EITHER a keyword or a page, not both.
             self.query_key = kwargs.get('keyword', '')
             self.page = kwargs.get('page', 1)
@@ -856,6 +857,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             'current_page': current_page,
             'links': links,
             'totalResults': self.metadata['totalResults'],
+            'imported_books': self.imported_books,
         })
         return context
 
@@ -982,6 +984,13 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                 return True
         return False
 
+    def get_imported_books(self, request):
+        results = []
+        owned_bookhare_books = Book.objects.filter(owner=request.clusive_user, bookshare_id__isnull=False)
+        for book in owned_bookhare_books:
+            results.append(int(book.bookshare_id))
+        return results
+    
     def configure_event(self, event: Event):
         event.page = 'BookshareSearchResults'
 
