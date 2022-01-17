@@ -33,7 +33,6 @@ from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
-
 # The library page requires a lot of parameters, which interact in rather complex ways.
 # Here's a summary.  It is a sort-of hierarchy, in that changing parameters higher on this list
 # can reset parameters that are lower on the list, but the effects never go in the opposite direction.
@@ -913,9 +912,12 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                 'Authorization': 'Bearer ' + access_token
             },
         )
-
-        # Handle 404 or no results
         new_metadata = resp.json()
+
+        # Handle request error, if any.  This will raise an exception
+        if resp.status_code != 200:
+            self.report_search_error(new_metadata)
+
         return self.filter_metadata(new_metadata)
 
     def bookshare_continue_search(self, access_keys, url):
@@ -927,8 +929,12 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                 'Authorization': 'Bearer ' + access_token
             }
         )
-        # Handle 404 or no results
         new_metadata = resp.json()
+
+        # Handle request error, if any.  This will raise an exception
+        if resp.status_code != 200:
+            self.report_search_error(new_metadata)
+
         return self.filter_metadata(new_metadata)
 
     def filter_metadata(self, metadata, has_full_access=True):
@@ -991,6 +997,11 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             results.append(int(book.bookshare_id))
         return results
     
+    def report_search_error(self, error_response):
+        error_messages = ', '.join(error_response['messages'])
+        err_str = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
+        raise Exception(err_str)
+
     def configure_event(self, event: Event):
         event.page = 'BookshareSearchResults'
 
