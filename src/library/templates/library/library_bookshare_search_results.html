@@ -12,6 +12,7 @@
 {% block content %}
 <div class="content">
     <main id="content" tabindex="-1">
+        {% include "shared/partial/alerts.html" %}
         <h1>Add from Bookshare</h1>
         <div class="link-back ms-0">
             <a href="{% url 'bookshare_search' %}" class="link-prev">Back to search</a>

@@ -796,6 +796,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
     query_key = ''
     metadata = {}
     imported_books = []
+    search_error = {}
 
     def dispatch(self, request, *args, **kwargs):
         if request.clusive_user.can_upload:
@@ -807,8 +808,14 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                 # New search
                 logger.debug('New search, keyword = %s', self.query_key)
                 self.page = 1
-                self.metadata = self.get_bookshare_metadata(self.request)
-                request.session['bookshare_search_metadata'] = self.metadata
+                search_results = self.get_bookshare_metadata(self.request)
+                if search_results.get('status_code', 200) == 200:
+                    self.metadata = search_results
+                    self.search_error = {}
+                    request.session['bookshare_search_metadata'] = self.metadata
+                else:
+                    messages.error(request, search_results['error_message'])
+                    self.search_error = search_results
             else:
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
@@ -817,7 +824,10 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                     pass
                 elif self.page == pages_available+1:
                     logger.debug('Getting next page %d of reults from API', self.page)
-                    self.extend_bookshare_metadata(self.request, self.metadata)
+                    response = self.extend_bookshare_metadata(self.request, self.metadata)
+                    if response.get('status_code', 200) != 200:
+                        messages.error(request, response['error_message'])
+                        self.search_error = response
                 else:
                     # We can only move forward one page at a time.
                     logger.warn('Got request for page %d of search results, only %d available; redirecting to page %d',
@@ -830,11 +840,21 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        num_pages = len(self.metadata['chunks'])
+        chunks = self.metadata.get('chunks', [])
+        num_pages = len(chunks)
         # Can we get another page from the API if requested?
-        if self.metadata['nextLink']:
+        if self.metadata.get('nextLink'):
             num_pages += 1
-        current_page = self.page
+
+        # Search errors only occur for the first search or when moving forward
+        # to a page of results not yet captured.  Check self.search_error, and
+        # if there is an error, set the `current_page` back by one, i.e., one
+        # less than the 'next' request had it given no errors.
+        if self.search_error.get('status_code', 200) != 200:
+            current_page = self.page - 1
+        else:
+            current_page = self.page
+
         keyword = self.query_key
         links = {
             'prev': (current_page - 1) if current_page > 1 else None,
@@ -850,12 +870,13 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             else:
                 page_links.append(p)
         links['pages'] = page_links
+
         context.update({
             'query_key' : keyword,
-            'titles': self.metadata['chunks'][current_page-1],
+            'titles': chunks[current_page-1] if len(chunks) > 0 else [],
             'current_page': current_page,
             'links': links,
-            'totalResults': self.metadata['totalResults'],
+            'totalResults': self.metadata.get('totalResults', 'Unknown'),
             'imported_books': self.imported_books,
         })
         return context
@@ -867,6 +888,8 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             try:
                 access_keys = get_access_keys(request)
                 response = self.bookshare_start_search(access_keys)
+                if response.get('status_code', 200) != 200:
+                    return response
                 metadata = {
                     'query': self.query_key,
                     'totalResults': response['totalResults'],
@@ -883,6 +906,8 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
         """Add one more chunk to the existing search results metadata."""
         access_keys = get_access_keys(request)
         response = self.bookshare_continue_search(access_keys, metadata['nextLink'])
+        if response.get('status_code', 200) != 200:
+            return response
         metadata['retrieved'] += len(response['titles'])
         metadata['chunks'].append(response['titles'])
         metadata['nextLink'] = next((x['href'] for x in response['links'] if x.get('rel', '') == 'next'), None)
@@ -913,10 +938,13 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             },
         )
         new_metadata = resp.json()
+        logger.debug("Bookshare search response status: %s", resp.status_code)
 
-        # Handle request error, if any.  This will raise an exception
+        # Handle request error, if any.
         if resp.status_code != 200:
-            self.report_search_error(new_metadata)
+           new_metadata['status_code'] = resp.status_code
+           self.make_error_message(new_metadata)
+           return new_metadata
 
         return self.filter_metadata(new_metadata)
 
@@ -930,10 +958,13 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             }
         )
         new_metadata = resp.json()
+        logger.debug("Bookshare search response status: %s", resp.status_code)
 
-        # Handle request error, if any.  This will raise an exception
+        # Handle request error, if any.
         if resp.status_code != 200:
-            self.report_search_error(new_metadata)
+            new_metadata['status_code'] = resp.status_code
+            self.make_error_message(new_metadata)
+            return new_metadata
 
         return self.filter_metadata(new_metadata)
 
@@ -997,10 +1028,9 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             results.append(int(book.bookshare_id))
         return results
     
-    def report_search_error(self, error_response):
+    def make_error_message(self, error_response):
         error_messages = ', '.join(error_response['messages'])
-        err_str = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
-        raise Exception(err_str)
+        error_response['error_message'] = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
 
     def configure_event(self, event: Event):
         event.page = 'BookshareSearchResults'
