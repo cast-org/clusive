@@ -916,10 +916,18 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
     def bookshare_start_search(self, access_keys):
         """
         Call Bookshare API with a new search term and get first batch of results.
-        Results of this request should be a JSON structure that includes the following:
+        Successful results of this request should be a JSON structure that
+        includes the following:
         totalResults: (integer)
         titles: [ {book}, {book} ]
         links: [ {rel: 'next', href: (URL of next batch of results, if any)} ]
+        If the response status is not 200 (success), then the response from
+        Bookshare contains a `key` and an array of error `messages`.  See:
+        https://apidocs.bookshare.org/reference/index.html#_error_model
+        The JSON structure returned in this case is:
+        response_status: {integer}
+        key: {string} (as returned by Bookshare)
+        error_message: {string} (concatenation of messages returned by Bookshare)
         :param access_keys:
         :return:
         """
