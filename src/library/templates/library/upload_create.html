@@ -31,17 +31,24 @@
                 <p>You will need to create an account before you can upload your own readings.</p>
                 {% endif %}
             </div>
-            <hr class="my-2" />
         </div>
     </div>
+
+    <hr class="my-2" />
+    <h2>New!</h2>
+    <p>If you have a Bookshare account, you can search for and add Bookshare books right here in Clusive.
+        Go to <a href="{% url 'my_account' %}">My Account</a>
+        and click <strong>Connect to a Bookshare account</strong> to get started.</p>
+
+    <hr class="my-2" />
     <h2>How to upload readings</h2>
     <p>Content needs to be in EPUB or Word format to be uploaded into Clusive.</p>
 
     <p>If you have a <strong>Microsoft Word</strong> file, upload it here directly.
-        Make sure it is the latest Word format (.docx).</p>
+        Make sure it is saved in the latest Word format (.docx).</p>
 
     <p>If you have a <strong>Google Doc</strong>, use the <em>File - Download - Microsoft Word</em> menu item
-        to get the file to upload here.</p>
+        to get a .docx file to upload here.</p>
 
     <p><strong>EPUB</strong> is a common format for electronic books. You can find EPUBs at
         <a href="https://standardebooks.org/">Standard eBooks</a>,
@@ -52,7 +59,7 @@
         <a href="https://daisy.org/activities/software/wordtoepub/">DAISY WordToEpub Converter</a>
         (Windows only), or from open resources using
         <a href="https://www.oercommons.org/authoring-overview">OER Commons OpenAuthor</a>.</p>
-    <p><strong>Learn more</strong> at the
+    <p><strong>Learn more</strong> about accessible formats at the
         <a href="http://aem.cast.org/creating/getting-started-with-epub.html">AEM Center</a>.</p>
 </main>
 {% endblock %}

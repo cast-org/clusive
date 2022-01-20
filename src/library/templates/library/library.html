@@ -14,6 +14,7 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
+    {% include "shared/partial/alerts.html" %}
     <div class="row mt-0_5">
         <div class="col">
             <h1>Library</h1>
@@ -47,14 +48,6 @@
         {% include "library/partial/library_list_options.html" %}
     {% else %}
         {% include "library/partial/library_grid_options.html" %}
-    {% endif %}
-
-    {% if current_view == 'mine' %}
-    <div class="row mb-1">
-        <div class="col">
-            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+</span> Add reading</a>
-        </div>
-    </div>
     {% endif %}
 
     {% include 'library/partial/library_data.html' %}

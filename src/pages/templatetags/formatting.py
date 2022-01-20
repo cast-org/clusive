@@ -1,4 +1,8 @@
+import re
+
 from django import template
+from django.template.defaultfilters import stringfilter
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -19,3 +23,20 @@ def duration(td):
             return '<1 minute'
     else:
         return '0'
+
+
+@register.filter(is_safe=True)
+@stringfilter
+def add_icons(text):
+    """
+    If there are any strings of the form {icon:foo} in the input, replace with a glyph from the icon library.
+    For example, given input "Here is a star: {{icon:starred}},
+    this generates "Here is a star: <span class="icon-starred" aria-hidden="true"></span>."
+
+    :param text: input text
+    :return: replacement text
+    """
+    interpolated = re.sub('{icon:([^}]+)}',
+                          '<span class="icon-\\1" aria-hidden="true"></span>',
+                          text)
+    return mark_safe(interpolated)

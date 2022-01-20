@@ -15,6 +15,7 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
+    {% include "shared/partial/alerts.html" %}
     <h1>Hi, {{ user.first_name }}</h1>
 
     <div class="row">
@@ -68,24 +69,29 @@
                 <h2>Linked Accounts</h2>
                 <div class="list list-divided list-spaced-y">
                     {% if has_google_account %}
-                    <div class="list-item">
-                        <div><strong>Google account</strong></div>
-                        {{ user.email }}
-                        <!-- (<a href="#">remove account</a>) -->
-                    </div>
-                    {% else %}
-                    <div class="list-item">None</div>
+                        <div class="list-item">
+                            <div><strong>Google account</strong></div>
+                            {{ google_acount }}
+                            <!-- (<a href="#">remove account</a>) -->
+                        </div>
                     {% endif %}
-                <!--
-                <div class="list-item">
-                    <button type="button" class="btn btn-primary">Connect to a Bookshare account</button>
-                    <div class="form-text">
-                        Looking for more to read?
-                        Bookshare has over 1 million titles available.
+                    <div class="list-item">
+                        <div><strong>Bookshare account</strong></div>
+                        {% if bookshare_account %}
+                            <p>
+                                {{ bookshare_account }}
+                                (<a href="{% url 'remove_social_account' provider='bookshare' %}">remove account</a>)
+                            </p>
+                        <p>Head to <a href="{% url 'library_style_redirect' view='mine' %}">My Readings</a> in the library to add books from Bookshare.</p>
+                        {% else %}
+                        <div class="form-text mb-0_5">
+                            Looking for more to read?
+                            Bookshare has over 1 million titles available.
+                            <a href="https://www.bookshare.org/cms/bookshare-me">See if you qualify.</a>
+                        </div>
+                        <a href="{% url 'bookshare_connect' %}" class="btn btn-primary">Connect to a Bookshare account</a>
+                        {% endif %}
                     </div>
-                </div>
-                -->
-
                 </div>
             </div>
         </div>

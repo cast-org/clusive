@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # including only Google provider for now, see:
     # https://django-allauth.readthedocs.io/en/latest/installation.html#django
     'allauth.socialaccount.providers.google',
+    'oauth2.bookshare',
     'debug_toolbar',
 ]
 
@@ -67,6 +68,9 @@ SOCIALACCOUNT_PROVIDERS = {
             # https://django-allauth.readthedocs.io/en/latest/providers.html?highlight=refresh%20token#django-configuration
             'access_type': 'offline'
         }
+    },
+    'bookshare': {
+        'SCOPE': ['basic']
     }
 }
 

@@ -30,7 +30,7 @@ module.exports = function (grunt) {
                         nonull: true,
                         src: ["clusive_project/**", "assessment/**", "authoring/**", "eventlog/**", "glossary/**", "library/**",
                             "messagequeue/**", "pages/**", "roster/**", "shared/**", "tips/**", "translation/**", "wordnet/**",
-                            "manage.py"],
+                            "manage.py", "oauth2/**"],
                         dest: "target"
                     }
                 ]

@@ -39,12 +39,19 @@ urlpatterns = [
     path('switch/<int:book_id>/<int:version>', views.SwitchModalContentView.as_view(),
          name='modal_switch'),
 
+    path('bookshare/connect/', views.BookshareConnect.as_view(), name='bookshare_connect'),
+    path('bookshare/search/', views.BookshareSearch.as_view(), name='bookshare_search'),
+    path('bookshare/search/<keyword>', views.BookshareSearch.as_view(), name='bookshare_search'),
+    path('bookshare-results/new/<keyword>', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),
+    path('bookshare-results/page/<int:page>', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),
+    path('bookshare-import/<str:bookshareId>', views.BookshareImport.as_view(), name='bookshare_import'),
+
     path('data/<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryDataView.as_view(),
         name='library_data'),
     path('data/<str:style>/<str:sort>/<str:view>/', views.LibraryDataView.as_view(),
          name='library_data'),
 
-    # Warning: patterns below here will match any URL. Put more specific matchers above.
+    # WARNING: PATTERNS BELOW HERE WILL MATCH ANY URL. PUT MORE SPECIFIC MATCHERS ABOVE.
     path('<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryView.as_view(),
          name='library'),
     path('<str:style>/<str:sort>/<str:view>/', views.LibraryView.as_view(),

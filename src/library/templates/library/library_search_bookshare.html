@@ -1,0 +1,47 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Bookshare: Search{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Add from Bookshare</h1>
+    <div class="row">
+        <div class="col-md-9 col-lg-6">
+            <div class="box">
+                <h2>Step 1: Search Title, Author, or ISBN:</h2>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label class="sr-only" for="{{ form.keyword.id_for_label }}">Step 1: Search by title, author, or ISBN:</label>
+                        {{ form.keyword.errors }}
+                        {{ form.keyword }}
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-secondary btn-small" value="Search"/>
+                        <a href="{% url 'library_style_redirect' view='mine' %}" class="btn btn-link btn-small">Cancel</a>
+                    </div>
+                </form>
+                <hr>
+                <div>
+                    <p>Not finding the reading you’re looking for?</p>
+                    <ul>
+                        <li>If you get too many results for a title or author, you can also include both.
+                            For example, “Tolkien The Hobbit”.</li>
+                        <li>Or, try using Bookshare’s
+                            <a href="https://www.bookshare.org/search" target="_blank" rel="noopener noreferrer">Advanced Search</a>
+                            to find the ISBN of the book you want.  An ISBN is a unique code for every book.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+

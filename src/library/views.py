@@ -4,7 +4,10 @@ import logging
 import os
 import shutil
 from tempfile import mkstemp
+from urllib.parse import urlencode
 
+import requests
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, QuerySet
@@ -20,11 +23,12 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
+from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 from pages.views import ThemedPageMixin, SettingsPageMixin
-from roster.models import ClusiveUser, Period, LibraryViews
+from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
@@ -121,6 +125,14 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             self.view_name = LibraryViews.display_name_of(self.view)
         # Set defaults for next time
         user_changed = False
+        # The validity check is a patch for catching the intermittent invalid
+        # style view values coming from the kwargs.  See:
+        # CSL-1442 https://castudl.atlassian.net/browse/CSL-1442
+        if check_valid_choice(LibraryViews.CHOICES, self.view) == False:
+            self.view = self.clusive_user.library_view
+        if check_valid_choice(LibraryStyles.CHOICES, self.style) == False:
+            self.style = self.clusive_user.library_style
+
         if self.clusive_user.library_view != self.view:
             self.clusive_user.library_view = self.view
             user_changed = True
@@ -233,6 +245,7 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
         context['tip_name'] = self.tip_shown.name if self.tip_shown else None
+        context['has_bookshare_account'] = has_bookshare_account(self.request)
         return context
 
 
@@ -266,14 +279,23 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
                     f.write(chunk)
             if upload.name.endswith('.docx'):
                 (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile)
+                event_control = 'upload_docx'
             else:
                 (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
+                event_control = 'upload_epub'
             if changed:
                 logger.debug('Uploaded file name = %s', upload.name)
                 self.bv.filename = upload.name
                 self.bv.save()
                 logger.debug('Updating word lists')
                 scan_book(self.bv.book)
+                event = Event.build(session=self.request.session,
+                                    type='TOOL_USE_EVENT',
+                                    action='USED',
+                                    control=event_control,
+                                    page=self.page_name, # Defined by subclasses
+                                    book_version=self.bv)
+                event.save()
             else:
                 raise Exception('unpack_epub_file did not find new content.')
             return super().form_valid(form)
@@ -292,17 +314,25 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
 class UploadCreateFormView(UploadFormView):
     """Upload an EPUB file as a new Book."""
     template_name = 'library/upload_create.html'
+    page_name = 'UploadNew'
 
     def get_success_url(self):
         return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['has_bookshare_account'] = has_bookshare_account(self.request)
+        context['is_bookshare_connected'] = is_bookshare_connected(self.request)
+        return context
+
     def configure_event(self, event: Event):
-        event.page = 'UploadNew'
+        event.page = self.page_name
 
 
 class UploadReplaceFormView(UploadFormView):
     """Upload an EPUB file to replace an existing Book that you own."""
     template_name = 'library/upload_replace.html'
+    page_name = 'UploadReplacement'
 
     def dispatch(self, request, *args, **kwargs):
         self.orig_book = get_object_or_404(Book, pk=kwargs['pk'])
@@ -327,7 +357,7 @@ class UploadReplaceFormView(UploadFormView):
         return reverse('metadata_replace', kwargs={'orig': self.orig_book.pk, 'pk': self.bv.book.pk})
 
     def configure_event(self, event: Event):
-        event.page = 'UploadReplacement'
+        event.page = self.page_name
 
 
 class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, UpdateView):
@@ -370,7 +400,11 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
 
         else:
             logger.debug('Form valid, no cover image')
+        messages.success(self.request, 'Reading added. Your readings are indicated by a personal icon ({icon:user-o}) on your library card.')
         return super().form_valid(form)
+
+    def configure_event(self, event: Event):
+        event.book_id = self.object.id
 
 
 class MetadataCreateFormView(MetadataFormView):
@@ -379,6 +413,7 @@ class MetadataCreateFormView(MetadataFormView):
 
     def configure_event(self, event: Event):
         event.page = 'EditMetadataNew'
+        super().configure_event(event)
 
 
 class MetadataEditFormView(MetadataFormView):
@@ -387,6 +422,7 @@ class MetadataEditFormView(MetadataFormView):
 
     def configure_event(self, event: Event):
         event.page = 'EditMetadata'
+        super().configure_event(event)
 
 
 class MetadataReplaceFormView(MetadataFormView):
@@ -450,6 +486,7 @@ class MetadataReplaceFormView(MetadataFormView):
 
     def configure_event(self, event: Event):
         event.page = 'EditMetadataReplace'
+        super().configure_event(event)
 
 
 class RemoveBookView(LoginRequiredMixin, View):
@@ -458,7 +495,16 @@ class RemoveBookView(LoginRequiredMixin, View):
         book = get_object_or_404(Book, pk=kwargs['pk'])
         if book.owner != request.clusive_user:
             raise PermissionDenied()
+        title = book.title
         book.delete()
+        messages.success(request, "Deleted reading \"%s\"" % title)
+        event = Event.build(session=self.request.session,
+                            type='TOOL_USE_EVENT',
+                            action='USED',
+                            control='delete_book',
+                            page='Library',
+                            book_id=kwargs['pk'])
+        event.save()
         return redirect('library_style_redirect', view='mine')
 
 
@@ -693,3 +739,390 @@ class UpdateTrendsView(View):
     def get(self, request, *args, **kwargs):
         BookTrend.update_all_trends()
         return JsonResponse({'status': 'ok'})
+
+
+class BookshareConnect(LoginRequiredMixin, TemplateView):
+    template_name = 'library/partial/connect_to_bookshare.html'
+
+    def get(self, request, *args, **kwargs):
+        if is_bookshare_connected(request):
+            request.session['bookshare_connected'] = True
+            return HttpResponseRedirect(redirect_to=reverse('my_account'))
+        else:
+            request.session['bookshare_connected'] = False
+            return HttpResponseRedirect(redirect_to='/accounts/bookshare/login/?process=connect&next=/account/my_account')
+
+
+class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):
+    template_name = 'library/library_search_bookshare.html'
+    form_class = BookshareSearchForm
+    formlabel ='Step 1: Search by title, author, or ISBN'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not is_bookshare_connected(request):
+            # Log into Bookshare and then come back here.
+            return HttpResponseRedirect(
+                redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_search')
+            )
+        elif request.clusive_user.can_upload:
+            self.search_form = BookshareSearchForm(request.POST)
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            self.handle_no_permission()
+
+    def get_success_url(self):
+        keyword = self.search_form.clean_keyword()
+        # About to start a new Bookshare search.  Clear any existing Bookshare
+        # session data
+        try:
+            del self.request.session['bookshare_search_metadata']
+        except:
+            pass
+        return reverse('bookshare_search_results', kwargs={'keyword': keyword})
+
+    def post(self, request, *args, **kwargs):
+        keyword = self.search_form.clean_keyword()
+        if keyword == '':
+            # endless loop
+            return HttpResponseRedirect(redirect_to=reverse('bookshare_search'))
+        else:
+            return HttpResponseRedirect(redirect_to=self.get_success_url())
+
+    def configure_event(self, event: Event):
+        event.page = 'BookshareSearchForm'
+
+class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView):
+    template_name = 'library/library_bookshare_search_results.html'
+    query_key = ''
+    metadata = {}
+    imported_books = []
+    search_error = {}
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.clusive_user.can_upload:
+            self.imported_books = self.get_imported_books(request)
+            # This view should be called with EITHER a keyword or a page, not both.
+            self.query_key = kwargs.get('keyword', '')
+            self.page = kwargs.get('page', 1)
+            if self.query_key:
+                # New search
+                logger.debug('New search, keyword = %s', self.query_key)
+                self.page = 1
+                search_results = self.get_bookshare_metadata(self.request)
+                if search_results.get('status_code', 200) == 200:
+                    self.metadata = search_results
+                    self.search_error = {}
+                    request.session['bookshare_search_metadata'] = self.metadata
+                else:
+                    messages.error(request, search_results['error_message'])
+                    self.search_error = search_results
+            else:
+                self.metadata = request.session['bookshare_search_metadata']
+                pages_available = len(self.metadata['chunks'])
+                if self.page <= pages_available:
+                    logger.debug('Showing page %d of existing results', self.page)
+                    pass
+                elif self.page == pages_available+1:
+                    logger.debug('Getting next page %d of reults from API', self.page)
+                    response = self.extend_bookshare_metadata(self.request, self.metadata)
+                    if response.get('status_code', 200) != 200:
+                        messages.error(request, response['error_message'])
+                        self.search_error = response
+                else:
+                    # We can only move forward one page at a time.
+                    logger.warn('Got request for page %d of search results, only %d available; redirecting to page %d',
+                                self.page, pages_available, pages_available+1)
+                    return HttpResponseRedirect(redirect_to=reverse('bookshare_search_results',
+                                                                    kwargs={ 'page': pages_available+1 }))
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            self.handle_no_permission()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        chunks = self.metadata.get('chunks', [])
+        num_pages = len(chunks)
+        # Can we get another page from the API if requested?
+        if self.metadata.get('nextLink'):
+            num_pages += 1
+
+        # Search errors only occur for the first search or when moving forward
+        # to a page of results not yet captured.  Check self.search_error, and
+        # if there is an error, set the `current_page` back by one, i.e., one
+        # less than the 'next' request had it given no errors.
+        if self.search_error.get('status_code', 200) != 200:
+            current_page = self.page - 1
+        else:
+            current_page = self.page
+
+        keyword = self.query_key
+        links = {
+            'prev': (current_page - 1) if current_page > 1 else None,
+            'next': (current_page + 1) if current_page < num_pages else None
+        }
+        # Create links for pages n-3 to n+3
+        first_page_link = max(1, current_page-3)
+        last_page_link = min(num_pages, current_page+3)
+        page_links = []
+        for p in list(range(first_page_link, last_page_link+1)):
+            if p == current_page:
+                page_links.append('current')
+            else:
+                page_links.append(p)
+        links['pages'] = page_links
+
+        context.update({
+            'query_key' : keyword,
+            'titles': chunks[current_page-1] if len(chunks) > 0 else [],
+            'current_page': current_page,
+            'links': links,
+            'totalResults': self.metadata.get('totalResults', 'Unknown'),
+            'imported_books': self.imported_books,
+        })
+        return context
+
+    def get_bookshare_metadata(self, request):
+        if self.query_key == '':
+            return {}
+        else:
+            try:
+                access_keys = get_access_keys(request)
+                response = self.bookshare_start_search(access_keys)
+                if response.get('status_code', 200) != 200:
+                    return response
+                metadata = {
+                    'query': self.query_key,
+                    'totalResults': response['totalResults'],
+                    'retrieved': len(response['titles']),
+                    'nextLink': next((x['href'] for x in response['links'] if x.get('rel', '') == 'next'), None),
+                    'chunks': [ response['titles'] ],
+                }
+                return metadata
+            except Exception as e:
+                logger.debug("BookshareSearch exception: ", e)
+                raise e
+
+    def extend_bookshare_metadata(self, request, metadata):
+        """Add one more chunk to the existing search results metadata."""
+        access_keys = get_access_keys(request)
+        response = self.bookshare_continue_search(access_keys, metadata['nextLink'])
+        if response.get('status_code', 200) != 200:
+            return response
+        metadata['retrieved'] += len(response['titles'])
+        metadata['chunks'].append(response['titles'])
+        metadata['nextLink'] = next((x['href'] for x in response['links'] if x.get('rel', '') == 'next'), None)
+        return metadata
+
+    def bookshare_start_search(self, access_keys):
+        """
+        Call Bookshare API with a new search term and get first batch of results.
+        Successful results of this request should be a JSON structure that
+        includes the following:
+        totalResults: (integer)
+        titles: [ {book}, {book} ]
+        links: [ {rel: 'next', href: (URL of next batch of results, if any)} ]
+        If the response status is not 200 (success), then the response from
+        Bookshare contains a `key` and an array of error `messages`.  See:
+        https://apidocs.bookshare.org/reference/index.html#_error_model
+        The JSON structure returned in this case is:
+        response_status: {integer}
+        key: {string} (as returned by Bookshare)
+        error_message: {string} (concatenation of messages returned by Bookshare)
+        :param access_keys:
+        :return:
+        """
+        access_token = access_keys.get('access_token').token
+        href = 'https://api.bookshare.org/v2/titles?' + urlencode({
+            'keyword': self.query_key,
+            'api_key': access_keys.get('api_key'),
+            'formats': 'EPUB3',
+            'excludeGlobalCollection': True,
+        })
+        resp = requests.request(
+            'GET',
+            href,
+            headers={
+                'Authorization': 'Bearer ' + access_token
+            },
+        )
+        new_metadata = resp.json()
+        logger.debug("Bookshare search response status: %s", resp.status_code)
+
+        # Handle request error, if any.
+        if resp.status_code != 200:
+           new_metadata['status_code'] = resp.status_code
+           self.make_error_message(new_metadata)
+           return new_metadata
+
+        return self.filter_metadata(new_metadata)
+
+    def bookshare_continue_search(self, access_keys, url):
+        access_token = access_keys.get('access_token').token
+        resp = requests.request(
+            'GET',
+            url,
+            headers = {
+                'Authorization': 'Bearer ' + access_token
+            }
+        )
+        new_metadata = resp.json()
+        logger.debug("Bookshare search response status: %s", resp.status_code)
+
+        # Handle request error, if any.
+        if resp.status_code != 200:
+            new_metadata['status_code'] = resp.status_code
+            self.make_error_message(new_metadata)
+            return new_metadata
+
+        return self.filter_metadata(new_metadata)
+
+    def filter_metadata(self, metadata, has_full_access=True):
+        """
+        Filter the bookshare title search metadata by:
+        - whether the user can import it
+        - whether the title has an EPUB3 version
+        - whether the copyrightDate is None (temporary)
+        """
+        if metadata['message']:
+            logger.warn('Bookshare returned message: %s', metadata['message'])
+
+        for title in metadata.get('titles', []):
+            # logger.debug('Found title %s', title.get('title'))
+            self.surface_bookshare_info(title, has_full_access)
+        return metadata
+
+    def surface_bookshare_info(self, book, has_full_access):
+        """
+        Add a `clusive` block to the book's Bookshare metadata where the authors
+        are taken from Bookshares's `contributors` section, and the thumnbail and
+        download urls are taken from the `links` array.  It also creates a shortened
+        synopis (200 characters).
+        """
+        clusive = {}
+        for link in book.get('links', []):
+            if link['rel'] == 'thumbnail':
+                clusive['thumbnail'] = link['href']
+            elif link['rel'] == 'self':
+                clusive['import_url'] = link['href']
+
+        authors = []
+        for contributor in book.get('contributors', []):
+            if contributor['type'] == 'author':
+                authors.append(contributor['name']['displayName'])
+        clusive['authors'] = authors
+
+        if book['synopsis'] is not None:
+            clusive['synopsis'] = book['synopsis'][0:200]
+            if len(clusive['synopsis']) < len(book['synopsis']):
+                clusive['more'] = True
+        else:
+            clusive['synopsis'] = ''
+            clusive['more'] = False
+
+        clusive['epub'] = self.has_epub(book)
+
+        book['clusive'] = clusive
+
+    def has_epub(self, book):
+        for aFormat in book.get('formats', []):
+            if aFormat['formatId'] == 'EPUB3':
+                return True
+        return False
+
+    def get_imported_books(self, request):
+        results = []
+        owned_bookhare_books = Book.objects.filter(owner=request.clusive_user, bookshare_id__isnull=False)
+        for book in owned_bookhare_books:
+            results.append(int(book.bookshare_id))
+        return results
+    
+    def make_error_message(self, error_response):
+        error_messages = ', '.join(error_response['messages'])
+        error_response['error_message'] = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
+
+    def configure_event(self, event: Event):
+        event.page = 'BookshareSearchResults'
+
+class BookshareImport(LoginRequiredMixin, View):
+    """
+    This API function will return a JSON object with keys:
+    * 'status', which is either 'done' (book has been imported), 'pending' (waiting for Bookshare), or 'error'
+    * 'message', which has more details on any error.
+    * 'id', the ID of the imported book, when done.
+    """
+
+    def get(self, request, *args, **kwargs):
+        if not request.clusive_user.can_upload:
+            raise PermissionDenied('User cannot upload')
+        bookshare_id = kwargs.get('bookshareId')
+        try:
+            access_keys = get_access_keys(request)
+        except Exception as e:
+            logger.debug("Bookshare Import exception: ", e)
+            raise PermissionDenied('No Bookshare access token')
+
+        # The following request will return a status code of 202 meaning the
+        # request to download has been acknowledged, and a package is being
+        # prepared for download.  Subsequent requests will either result in 202 again,
+        # or, when the package is ready, a 302 redirect to
+        # a URL that retrieves the epub content.
+        # https://apidocs.bookshare.org/reference/index.html#_responses_3
+        resp = requests.request(
+            'GET',
+            'https://api.bookshare.org/v2/titles/' + bookshare_id + '/EPUB3',
+            params = {
+                'api_key': access_keys.get('api_key')
+            },
+            headers = {
+                'Authorization': 'Bearer ' + access_keys.get('access_token').token
+            }
+        )
+        # 202 - "Download request received; package being prepared"
+        if resp.status_code == 202:
+            return JsonResponse(data={'status': 'pending', 'message': 'In progress'})
+        # 200 - resp contains the epub file
+        elif resp.status_code == 200:
+            if resp.headers['Content-Type'] == 'application/octet-stream':
+                # Also grab the metadata to pass along to import process.
+                # TODO: could re-use the metadata that was already fetched as part of the search
+                meta_resp = requests.request(
+                    'GET',
+                    'https://api.bookshare.org/v2/titles/' + bookshare_id,
+                    params = { 'api_key': access_keys.get('api_key') },
+                    headers = { 'Authorization': 'Bearer ' + access_keys.get('access_token').token }
+                )
+                metadata = meta_resp.json()
+                bv = self.save_book(resp.content, metadata, kwargs)
+                return JsonResponse(data={'status': 'done', 'id': bv.book.id})
+            else:
+                return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
+        # If book can't be downloaded, this returns 403
+        else:
+            return JsonResponse(data={'status': 'error',
+                                      'message': 'Error importing the book (code = %d)' % resp.status_code})
+
+    def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
+        # This is mostly a copy of UploadFormView.form_valid() from above.
+        # Consider writing one function to do both.
+        bookshare_id = bookshare_metadata['bookshareId']
+        fd, tempfile = mkstemp(suffix='epub', prefix=str(bookshare_id))
+        # try:
+        with os.fdopen(fd, 'wb') as f:
+            f.write(downloaded_contents)
+        (bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile, bookshare_metadata=bookshare_metadata)
+        if changed:
+            logger.debug('Uploaded file name = %s', bookshare_id)
+            bv.filename = bookshare_id
+            bv.save()
+            logger.debug('Updating word lists')
+            scan_book(bv.book)
+            event = Event.build(session=self.request.session,
+                                type='TOOL_USE_EVENT',
+                                action='USED',
+                                control='import_bookshare',
+                                page='BookshareSearchResults',
+                                book_version=bv)
+            event.save()
+        else:
+            raise Exception('unpack_epub_file did not find new content.')
+        return bv

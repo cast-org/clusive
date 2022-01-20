@@ -28,17 +28,14 @@
                 <div class="card-body login-section">
                     <h2 class="mb-1">Log in to Clusive</h2>
                     <div class="socialaccount_ballot">
-                        {% get_providers as socialaccount_providers %}
                         <ul class="list-unstyled text-center mb-0_5">
-                            {% for provider in socialaccount_providers %}
                             <li class="mb-0_5">
-                            <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                            <form method="get" action="{% provider_login_url 'google' process=process scope=scope auth_params=auth_params %}">
                                 <button type="submit" class="socialaccount_provider login-btn login-google">
-                                    <span class="sr-only">Sign in with {{provider.name}}</span>
+                                    <span class="sr-only">Sign in with Google</span>
                                 </button>
                             </form>
                             <li>
-                            {% endfor %}
                         </ul>
                         {% for message in messages %}
                             {% if message.level >= DEFAULT_MESSAGE_LEVELS.WARNING %}

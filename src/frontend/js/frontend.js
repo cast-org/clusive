@@ -625,7 +625,7 @@ function filterAllUpdate() {
 function libraryPageLinkSetup() {
     'use strict';
 
-    $(document.body).on('click', 'a.page-link', function(e) {
+    $(document.body).on('click', 'a.ajax-page-link', function(e) {
         e.preventDefault();
         var $elm = $(e.currentTarget);
         updateLibraryData($elm.attr('href'))
@@ -888,6 +888,92 @@ function confettiCannon(elem) {
     }
 }
 
+function moreOrLess(event) {
+    'use strict';
+
+    var id = event.target.id.replace(/(more_|less_)/, '');
+    var action = event.target.id.replace(id, '');
+    if (action === 'more_') {
+        document.getElementById('long_' + id).style.display = 'block';
+        document.getElementById('short_' + id).style.display = 'none';
+    } else if (action === 'less_') {
+        document.getElementById('long_' + id).style.display = 'none';
+        document.getElementById('short_' + id).style.display = 'block';
+    }
+    event.preventDefault();
+}
+
+// Holds identifier of timer for polling while waiting for Bookshare import to be ready.
+var bookshareImportProgressTimer = null;
+
+// Flag to avoid sending a second request before the first has completed.
+var bookshareImportCheckInFlight = false;
+
+// Stop trying to import a Bookshare book
+function bookshareCancelImport() {
+    'use strict';
+
+    if (bookshareImportProgressTimer) {
+        clearInterval(bookshareImportProgressTimer);
+        bookshareImportProgressTimer = null;
+    }
+}
+
+// Called at the start of Bookshare import process, and then periodically to see if it's ready
+function bookshareCheckImportProgress(id) {
+    'use strict';
+
+    if (bookshareImportCheckInFlight) {
+        console.warn('Bookshare check already in-flight, skipping');
+        return;
+    }
+    console.debug('Checking progress of ' + id);
+    bookshareImportCheckInFlight = true;
+    $.getJSON('/library/bookshare-import/' + id)
+        .done(function(data) {
+            if (data.status === 'done') {
+                // When import is done, redirect to metadata editing page.
+                window.location.href = '/library/metadata/upload/' + data.id;
+            } else if (data.status === 'pending') {
+                console.debug('Import is still pending');
+                bookshareImportCheckInFlight = false;
+            } else if (data.status === 'error') {
+                bookshareCancelImport();
+                $('#importPendingModal .modal-body').html(
+                    '<p><strong>Import failed</strong></p><p>Error message: ' +
+                    data.message +
+                    '</p>');
+                bookshareImportCheckInFlight = false;
+            } else {
+                console.warn('Unexpected return value from API: ', data);
+            }
+        })
+        .fail(function(err) {
+            console.warn('error calling bookshare import: ', err);
+        });
+}
+
+// When 'import' button is clicked, kick off the process of importing a book
+function bookshareStartImportProcess(event) {
+    'use strict';
+
+    var $trigger = $(event.currentTarget);
+    var id = $trigger.data('bookshare-id');
+    $trigger.CFW_Modal({
+        target: '#importPendingModal',
+        unlink: true,
+        show: true,
+        container: 'body'
+    });
+    // Cancel any active import timer - there really shouldn't be any
+    if (bookshareImportProgressTimer) {
+        bookshareCancelImport();
+    }
+    // Call API to trigger import immediately, and then check import status every 5 seconds.
+    bookshareCheckImportProgress(id);
+    bookshareImportProgressTimer = setInterval(bookshareCheckImportProgress, 5000, id);
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -918,4 +1004,10 @@ $(window).ready(function() {
     if (settingReadSpeed !== null) {
         formRangeTip(settingReadSpeed, formRangeReadSpeed);
     }
+
+    document.querySelectorAll('.more-or-less').forEach(function(aButton) {
+        aButton.addEventListener('click', moreOrLess);
+    });
+    $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
+    $('body').on('click', 'button.import-button', bookshareStartImportProcess);
 });

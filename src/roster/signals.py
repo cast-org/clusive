@@ -49,7 +49,14 @@ def auto_connect_google_login(sender, **kwargs):
     For security reasons, this should only be allowed if the email is verified.
     """
     request = kwargs['request']
+    sociallogin: SocialLogin
     sociallogin = kwargs['sociallogin']
+    logger.debug('pre_social_login with %s for %s, existing=%s',
+                 sociallogin.account.provider, sociallogin.user, sociallogin.is_existing)
+
+    # This process only applies to Google
+    if sociallogin.account.provider != 'google':
+        return
 
     # Ignore existing social accounts, just do this stuff for new ones
     if sociallogin.is_existing:
@@ -120,11 +127,12 @@ def update_social_email(sender, **kwargs):
         # No other User has `social_email` as their email -- good.
         logger.debug('While checking update email for %s, no other Clusive user has that email', social_email)
 
-    # Update
+    # Update clusive user record's email
     if clusive_user.user.email.lower() != social_email:
         clusive_user.user.email = social_email
         clusive_user.user.save()
 
+    # Update only the primary email address record for this clusive user
     try:
         email_address = EmailAddress.objects.get(user_id=clusive_user.user.id, primary=True)
         if email_address.email.lower() != social_email:
@@ -132,3 +140,6 @@ def update_social_email(sender, **kwargs):
             email_address.save()
     except EmailAddress.DoesNotExist:
         logger.info('Did not find expected EmailAddress record for %s', social_email)
+    except EmailAddress.MultiplieObjectsReturned as multi_err:
+        logger.info('Found multiple primary EmailAddress records for %s', social_email)
+        raise multi_err

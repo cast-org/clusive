@@ -1,0 +1,7 @@
+{% load static figuration %}
+{% csrf_token %}
+<p>
+    {% if not is_bookshare_connected %}
+    <a href="{% url 'bookshare_connect' %}" class="socialaccount_provider btn btn-night">Connect to Bookshare</a>
+    {% endif %}
+</p>

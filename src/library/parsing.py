@@ -3,9 +3,11 @@ import logging
 import os
 import posixpath
 import shutil
+import requests
 from html.parser import HTMLParser
 from os.path import basename
 from tempfile import mkstemp
+from urllib.parse import urlparse
 from zipfile import ZipFile
 
 import dawn
@@ -46,8 +48,7 @@ def convert_and_unpack_docx_file(clusive_user, file):
         raise RuntimeError(output)
     return unpack_epub_file(clusive_user, tempfile, omit_filename='title_page.xhtml')
 
-
-def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None):
+def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None, bookshare_metadata=None):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
@@ -59,6 +60,8 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
     look for a matching Book. If there is no matching Book or BookVersion, they will be created.
     If a matching BookVersion already exists it will be overwritten only if
     the modification date in the EPUB metadata is newer.
+
+    If bookshare_metadata is provided, it will be used to fill in metadata fields and record the bookshare ID.
 
     This method will:
      * unzip the file into the user media area
@@ -79,8 +82,44 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
         manifest = make_manifest(upload, omit_filename)
         title = get_metadata_item(upload, 'titles') or ''
         author = get_metadata_item(upload, 'creators') or ''
+        sort_author = ''
         description = get_metadata_item(upload, 'description') or ''
         language = get_metadata_item(upload, 'language') or ''
+        tempcover_info = None
+
+        if bookshare_metadata:
+            # Bookshare EPUBs don't seem to have much metadata embedded, but the API gives us some we can add.
+            logging.debug('Bookshare metadata was provided: %s', bookshare_metadata)
+            bookshare_id = bookshare_metadata['bookshareId']
+            if title == '':
+                logger.debug('Title was blank, set to value from bookshare_metadata')
+                title = bookshare_metadata.get('title', '')
+            if author == '':
+                logger.debug('Author was blank, set to value from bookshare_metadata')
+                authors = []
+                sort_authors = []
+                for contributor in bookshare_metadata.get('contributors', []):
+                    if contributor['type'] == 'author':
+                        authors.append(contributor['name']['displayName'])
+                        sort_authors.append(contributor['name']['indexName'])
+                if len(authors) > 2:
+                    author = ', '.join(authors[:-1]) + ', and ' + authors[-1]
+                    sort_author = ', '.join(sort_authors[:-1]) + ', and ' + sort_authors[-1]
+                else:
+                    author = ' and '.join(authors)
+                    sort_author = ' and '.join(sort_authors)
+            if description == '':
+                logger.debug('Description was blank, set to value from bookshare_metadata')
+                description = bookshare_metadata.get('synopsis', '')[:500]
+            # TODO language? { 'languages': ['eng'] }
+            # TODO subjects from eg { 'categories': [{'name': 'History', ...}...] }
+            if upload.cover is None:
+                for link in bookshare_metadata.get('links', []):
+                    if link['rel'] == 'coverimage':
+                        tempcover_info = download_and_save_cover(link['href'], bookshare_id)
+                        break
+        else:
+            bookshare_id = None
 
         mod_date = upload.meta.get('dates').get('modification') or None
         # Date, if provided should be UTC according to spec.
@@ -95,6 +134,8 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
             cover = adjust_href(upload, upload.cover.href)
             # For cover path, need to prefix this path with the directory holding this version of the book.
             cover = os.path.join(str(sort_order), cover)
+        elif tempcover_info is not None:
+            cover = tempcover_info['filename']
         else:
             cover = None
 
@@ -115,8 +156,10 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
             book = Book(owner=clusive_user,
                         title=title,
                         author=author,
+                        sort_author=sort_author,
                         description=description,
-                        cover=cover)
+                        cover=cover,
+                        bookshare_id=bookshare_id)
             book.save()
             logger.debug('Created new book for import: %s', book)
 
@@ -155,6 +198,12 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
             zf.extractall(path=dir)
         with open(os.path.join(dir, 'manifest.json'), 'w') as mf:
             mf.write(json.dumps(manifest, indent=4))
+
+        # If the cover image was retrieved and stored in a tmp file, move it to
+        # the new EPUB storage directory.
+        if tempcover_info and book.cover_storage:
+            shutil.copyfile(tempcover_info['tempfile'], book.cover_storage)
+
         logger.debug("Unpacked epub into %s", dir)
         return book_version, True
 
@@ -406,6 +455,28 @@ def find_all_words(bv, glossary_words):
     else:
         logger.error("Book directory had no manifest: %s", bv.manifest_file)
 
+def download_and_save_cover(href, book_id):
+    """
+    Download and save the cover image to a tmp file, and return information
+    about that file: the intended cover filename, and the full path to the tmp
+    file.  Return None if if something goes wrong fails.
+    """
+    resp = requests.request('GET', href)
+    if resp.status_code == 200:
+        src_url = urlparse(href)
+        filename_from_url = os.path.basename(src_url.path)
+        file_ext = os.path.splitext(filename_from_url)
+        cover_filename = 'cover' + str(book_id)
+        fd, tempfile = mkstemp(suffix=file_ext[1], prefix=cover_filename)
+        with os.fdopen(fd, 'wb') as f:
+            f.write(resp.content)
+            f.close()
+        return {
+            'filename': cover_filename + file_ext[1],
+            'tempfile': tempfile,
+        }
+    else:
+        return None
 
 class TextExtractor(HTMLParser):
     element_stack = []

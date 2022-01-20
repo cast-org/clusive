@@ -8,6 +8,7 @@ import requests
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from allauth.socialaccount import signals
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model, logout
@@ -36,6 +37,7 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
+from oauth2.bookshare.views import is_bookshare_connected
 from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
 from roster import csvparser
 from roster.csvparser import parse_file
@@ -592,7 +594,6 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
 
-
 def finish_login(request):
     """
     Called as the redirect after Google Oauth SSO login.
@@ -615,6 +616,12 @@ def finish_login(request):
             logger.debug("  Changing user to non-google user")
             clusive_user.data_source = RosterDataSource.CLUSIVE
             clusive_user.save()
+
+    # Check for valid Bookshare access token for this user.
+    if is_bookshare_connected(request):
+        request.session['bookshare_connected'] = True
+    else:
+        request.session['bookshare_connected'] = False
 
     # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
@@ -1321,25 +1328,60 @@ def get_add_scope_redirect_uri(request):
         scheme = 'https'
     return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'
 
-
 class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
     template_name = 'roster/my_account.html'
 
     def get(self, request, *args, **kwargs):
         clusive_user: ClusiveUser
         clusive_user = request.clusive_user
-        google_account = SocialAccount.objects.filter(user=request.user, provider='google')
-        logger.debug('User: %s, data source: %s, google account: %s',
-                     request.clusive_user, clusive_user.data_source, google_account)
+        google_account = None
+        bookshare_account = None
+        for account in SocialAccount.objects.filter(user=request.user):
+            if account.provider=='google':
+                # Google account's `extra_data` contain the user's google email
+                google_account = account.extra_data.get('email')
+            if account.provider=='bookshare':
+                # For bookshare, uid is the email address registered with Bookshare.
+                bookshare_account = account.uid
         self.extra_context = {
             'can_edit_display_name': False,
             'can_edit_email': False,
             'can_edit_password': clusive_user.can_set_password,
-            'has_google_account': clusive_user.data_source == RosterDataSource.GOOGLE,
+            'google_account': google_account,
+            'bookshare_account': bookshare_account,
         }
         return super().get(request, *args, **kwargs)
 
     def configure_event(self, event: Event):
         event.page = 'MyAccount'
 
+def remove_social_account(request, *args, **kwargs):
+    clusive_user: ClusiveUser
+    clusive_user = request.clusive_user
 
+    # Currently, a Google SocialAccount is created for Google SSO, and not for
+    # an associated account.  Google SSO users cannot delete the SocialAccount
+    # since it is needed for logging into Clusive.  Use the
+    # `clusive_user.data_source` to detect this condition (see finish_login()
+    # above, where it is set for Google SSO users).
+    social_app_name = kwargs.get('provider')
+    if clusive_user.data_source == RosterDataSource.GOOGLE and social_app_name == 'google':
+        logger.debug('Google SSO user %s cannot remove their google SocialAccount', request.user.username)
+        return HttpResponseRedirect(reverse('my_account'))
+
+    # Find the SocialAccount for the user/provider and delete it.
+    try:
+        social_account = SocialAccount.objects.get(user=request.user, provider=social_app_name)
+        # Deletion and signal based on allauth's DisconnectForm, see github
+        # issue, "How to unlink an account from a social auth provider?":
+        # https://github.com/pennersr/django-allauth/issues/814
+        social_account.delete()
+        request.session.pop('bookshare_connected', None)
+        request.session.pop('bookshare_search_metadata', None)
+        signals.social_account_removed.send(
+            sender=SocialAccount, request=request, socialaccount=social_account
+        )
+    except SocialAccount.DoesNotExist:
+        logger.debug('User %s does not have a %s account', request.user.username, social_app_name)
+
+    return HttpResponseRedirect(reverse('my_account'))

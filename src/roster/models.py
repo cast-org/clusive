@@ -149,7 +149,6 @@ class LibraryViews:
             logger.warning('Found no name for library view ' + view)
             return None
 
-
 class LibraryStyles:
     BRICKS = 'bricks'
     GRID = 'grid'
@@ -160,7 +159,6 @@ class LibraryStyles:
         (GRID, 'grid'),
         (LIST, 'list'),
     ]
-
 
 class StudentActivitySort:
     NAME = 'name'
@@ -173,6 +171,13 @@ class StudentActivitySort:
         (COUNT, 'count'),
     ]
 
+def check_valid_choice(choices, value):
+    try:
+        next(x[1] for x in choices if x[0] == value)
+        return True
+    except StopIteration:
+        logger.warning('Found no match for choice ' + value)
+        return False
 
 class ClusiveUser(models.Model):
     guest_serial_number = 0

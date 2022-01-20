@@ -5,6 +5,7 @@
     <div class="form-group">
         <div class="form-text">* = required</div>
     </div>
+    {% if not object.bookshare_id %}
     <div class="form-group">
         <div class="form-label">
             File *<br />
@@ -14,6 +15,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
     <div class="form-group">
         {{ form.title.label_tag | formlabel }} *
         {{ form.title.errors }}

@@ -37,22 +37,33 @@ class Subject(models.Model):
 
 
 class Book(models.Model):
-    """Metadata about a single reading, to be represented as an item on the Library page.
-    There may be multiple versions of a single Book, which are separate EPUB files."""
-    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True)
-    title = models.CharField(max_length=256)
+    """
+    Metadata about a single reading, to be represented as an item on the Library page.
+    There may be multiple versions of a single Book, which are separate EPUB files.
+
+    If bookshare_id is not null, then this is a book imported from Bookshare.
+    These have more restrictive permissions.
+    Two Book records can point to the same Bookshare ID since multiple users can load it as their own.
+    """
+    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
+    title = models.CharField(max_length=256, db_index=True)
     sort_title = models.CharField(max_length=256)
-    author = models.CharField(max_length=256)
+    author = models.CharField(max_length=256, db_index=True)
     sort_author = models.CharField(max_length=256)
-    description = models.TextField(default="", blank=True)
+    description = models.TextField(default="", blank=True, db_index=True)
     cover = models.CharField(max_length=256, null=True)
-    word_count = models.PositiveIntegerField(null=True)
+    word_count = models.PositiveIntegerField(null=True, db_index=True)
     picture_count = models.PositiveIntegerField(null=True)
-    subjects = models.ManyToManyField(Subject)
+    subjects = models.ManyToManyField(Subject, db_index=True)
+    bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
 
     @property
     def is_public(self):
         return self.owner is None
+
+    @property
+    def is_bookshare(self):
+        return self.bookshare_id is not None
 
     def is_visible_to(self, user : ClusiveUser):
         if self.is_public:
@@ -114,7 +125,10 @@ class Book(models.Model):
         return os.path.join(self.storage_dir, 'glossary.json')
 
     def __str__(self):
-        return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
+        if self.is_bookshare:
+            return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
+        else:
+            return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
 
     @classmethod
     def get_featured_books(cls):

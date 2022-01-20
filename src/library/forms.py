@@ -1,6 +1,7 @@
 import logging
 
 from django import forms
+from django.core.exceptions import ValidationError
 
 from library.models import Book
 from roster.models import Period, ClusiveUser
@@ -67,4 +68,23 @@ class ShareForm(forms.Form):
         super().__init__(*args, **kwargs)
         periods = clusive_user.periods.all()
         self.fields['periods'].queryset = periods
+
+class BookshareSearchForm(forms.Form):
+    keyword = forms.CharField(
+        required = True,
+        initial = '',
+        widget = forms.TextInput(attrs={
+            'aria-label': 'Step 1: Search by title, author, or ISBN',
+            'class': 'form-control',
+        })
+    )
+
+    def clean_keyword(self):
+        if self.is_valid():
+            data = self.cleaned_data.get('keyword', '')
+            return data.strip()
+        else:
+            raise ValidationError(_('Invalid format for keyword'))
+
+
 

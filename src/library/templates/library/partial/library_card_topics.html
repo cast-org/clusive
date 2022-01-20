@@ -15,5 +15,13 @@
             {{ book.picture_count|intcomma }} <span class="sr-only">picture{{book.picture_count|pluralize}}</span>
         </span>
     </span>
+    {% if book.owner == request.clusive_user %}
+    <span class="badge badge-count">
+        <span class="badge-item">
+            <span class="icon-user-o" aria-hidden="true"></span>
+            <span class="sr-only">My reading</span>
+        </span>
+    </span>
+    {% endif %}
 </div>
 {% endif %}

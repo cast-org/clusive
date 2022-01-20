@@ -1,6 +1,10 @@
 {% load static %}
 
 <div class="library-list">
+    {% if current_view == 'mine' %}
+        {% include "library/partial/library_add_content.html" %}
+    {% endif %}
+
     {% for book in object_list %}
         {% include "library/partial/library_card_list.html" with show_menu=True show_topics=True %}
     {% endfor %}

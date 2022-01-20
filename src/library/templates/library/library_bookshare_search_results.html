@@ -1,0 +1,130 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Bookshare: Results{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <main id="content" tabindex="-1">
+        {% include "shared/partial/alerts.html" %}
+        <h1>Add from Bookshare</h1>
+        <div class="link-back ms-0">
+            <a href="{% url 'bookshare_search' %}" class="link-prev">Back to search</a>
+        </div>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="box">
+                    <h2>Step 2: Select from results:</h2>
+
+                    <div class="list list-divided list-spaced-y result-list mb-0">
+                        <p>Total number of books found: {{ totalResults }}</p>
+                        {% for book in titles %}
+                        <div class="list-item">
+                            <div class="row">
+                                <div class="col-12 col-md-2 mb-1 mb-md-0 text-md-center">
+                                    {% if book.bookshareId %}
+                                      {% if book.bookshareId in imported_books %}
+                                        <p>Already imported</p>
+                                      {% elif book.clusive.epub %}
+                                        <button data-bookshare-id="{{book.bookshareId}}" class="btn btn-primary import-button">Import</button>
+                                      {% else %}
+                                        <p>Not available</p>
+                                      {% endif %}
+                                    {% else %}
+                                      <a href="#" class="btn btn-primary" disabled>Import</a>
+                                      <p>No import link</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col col-md">
+                                    <div class="row gx-0_5">
+                                        <div class="col-12 col-sm-3">
+                                            <div class="card-img">
+                                                {% if book.clusive.thumbnail %}
+                                                <img class="img-fluid" src="{{ book.clusive.thumbnail }}" alt="">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm">
+                                            <h3 class="card-title h2">
+                                                {{ book.title }}
+                                            </h3>
+                                            <div class="card-author">
+                                                {% for author in book.clusive.authors %}
+                                                <div>{{ author }}</div>
+                                                {% empty %}
+                                                <div>No author listed</div>
+                                                {% endfor %}
+                                                <div>ISBN: {{ book.isbn13 }}</div>
+                                            </div>
+                                            <div class="card-text">
+                                                {% if book.clusive.more %}
+                                                <p id="short_{{ book.bookshareId }}">
+                                                    {{ book.clusive.synopsis }} &hellip;
+                                                    <button id="more_{{ book.bookshareId }}" class="link-btn more-or-less" aria-label="See more about {{ book.title}}">See more</button>
+                                                </p>
+                                                <p id="long_{{ book.bookshareId }}" style="display: none">
+                                                    {{ book.synopsis }}
+                                                    <button id="less_{{ book.bookshareId }}" class="link-btn more-or-less" aria-label="See less about {{ book.title}}">See less</button>
+                                                </p>
+                                                {% else %}
+                                                <p>
+                                                    {{ book.synopsis }}
+                                                </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <nav aria-label="page">
+                    <div class="library-pagination-wrapper">
+                        <div class="pagination library-pagination">
+                            {% if links.prev == None %}
+                            <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                                <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                                Previous
+                            </a>
+                            {% else %}
+                            <a href="{% url 'bookshare_search_results' page=links.prev %}" class="page-link">
+                                <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                                Previous
+                            </a>
+                            {% endif %}
+                            {% for page_num in links.pages %}
+                                {% if page_num == 'current' %}
+                                <span class="page-link active" tabindex="-1" aria-current="page">{{ current_page }}</span>
+                                {% else %}
+                                <a href="{% url 'bookshare_search_results' page=page_num %}" class="page-link">{{ page_num }}</a>
+                                {% endif %}
+                            {% endfor %}
+                            {% if links.next == None %}
+                            <a href="#" class="page-link disabled" tabindex="-1" aria-disabled="true">
+                                Next
+                                <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'bookshare_search_results' page=links.next %}" class="page-link">
+                                Next
+                                <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </main>
+</div>
+{% include "library/partial/modal_import_pending.html" %}
+{% endblock %}
+
