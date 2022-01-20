@@ -3,7 +3,6 @@ import logging
 import os
 import posixpath
 import shutil
-import requests
 from html.parser import HTMLParser
 from os.path import basename
 from tempfile import mkstemp
@@ -12,6 +11,7 @@ from zipfile import ZipFile
 
 import dawn
 import pypandoc
+import requests
 import wordfreq as wf
 from dawn.epub import Epub
 from django.utils import timezone
@@ -426,7 +426,7 @@ def count_pictures(bv):
             manifest = json.load(file)
             pictures = 0
             for item in manifest['resources']:
-                logger.debug('Manifest item: %s', repr(item))
+                # logger.debug('Manifest item: %s', repr(item))
                 if item['type'] and item['type'].startswith('image/'):
                     pictures += 1
             bv.picture_count = pictures

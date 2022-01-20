@@ -1035,7 +1035,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
         for book in owned_bookhare_books:
             results.append(int(book.bookshare_id))
         return results
-    
+
     def make_error_message(self, error_response):
         error_messages = ', '.join(error_response['messages'])
         error_response['error_message'] = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
@@ -1060,6 +1060,13 @@ class BookshareImport(LoginRequiredMixin, View):
         except Exception as e:
             logger.debug("Bookshare Import exception: ", e)
             raise PermissionDenied('No Bookshare access token')
+
+        # Check that it hasn't already been imported.
+        # This can happen if the user leaves the site while import is in progress, other other corner cases.
+        existing = BookVersion.objects.filter(book__owner=request.clusive_user, book__bookshare_id=bookshare_id)
+        if existing:
+            logger.debug("Bookshare import exists already: %s", existing)
+            return JsonResponse(data={'status': 'done', 'id': existing.first().id})
 
         # The following request will return a status code of 202 meaning the
         # request to download has been acknowledged, and a package is being
