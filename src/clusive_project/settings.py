@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'eventlog.apps.EventlogConfig',
     'library.apps.LibraryConfig',
     'messagequeue.apps.MessageQueueConfig',
+    'merriamwebster.apps.MerriamwebsterConfig',
     'glossary.apps.GlossaryConfig',
     'authoring.apps.AuthoringConfig',
     'tips.apps.TipsConfig',
@@ -222,6 +223,9 @@ SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 LOGIN_URL = '/account/login'
+
+# To use Merriam-Webster dictionary for definition lookup, set environment variable to your API key here
+MERRIAM_WEBSTER_API_KEY = os.environ.get('MERRIAM_WEBSTER_API_KEY', None)
 
 # If new registrants should be synced to a MailChimp mailing list, set these to valid values.
 MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', None)

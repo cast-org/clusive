@@ -43,3 +43,5 @@ LOGGING['loggers']['django.db.backends'] = {
     'level': 'INFO',
     'propagate': False,
 }
+
+MERRIAM_WEBSTER_API_KEY = 'fake api key'

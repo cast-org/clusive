@@ -4,6 +4,7 @@ import os
 
 from lemminflect import getAllLemmas, getAllInflections
 
+import merriamwebster.util
 from wordnet import util as wordnetutil
 from .bookglossary import BookGlossary
 
@@ -38,13 +39,18 @@ def lookup(book, word):
         defs = book_glossaries[book_id].lookup(word)
         if (defs):
             defs['source'] = 'Book'
-    # THIS IS WHERE THE ADDITIONAL DICTIONARY HAPPENS
-    if not defs:
-        # Next try Wordnet
-        defs = wordnetutil.lookup(word)
-        if (defs):
-            defs['source'] = 'Wordnet'
+            return defs
 
+    # Next try Merriam-Webster (if configured)
+    defs = merriamwebster.util.lookup(word)
+    if (defs):
+        defs['source'] = 'MW'
+        return defs
+
+    # Next try Wordnet
+    defs = wordnetutil.lookup(word)
+    if (defs):
+        defs['source'] = 'Wordnet'
     return defs
 
 #what wordnet things is the most common - LDM - always matched on base form of the word no matter the form
