@@ -104,6 +104,9 @@ var manifest_path = "{{ manifest_path }}";
             },
             {
                 id: 'lookupIcon',
+                //
+                // This is also related to the the glossary - LDM
+                //
                 callback: function(selection) { contextLookup(selection); }
             }
         ];
@@ -212,6 +215,9 @@ var manifest_path = "{{ manifest_path }}";
                 fullWordSearch: true,
                 api: {
                     click: function (item, element) {
+/*
+                       ****** this is called for the definition
+*/
                         window.openGlossaryForWord(item.terms[0]);
                     },
                     success: function (item, element) {

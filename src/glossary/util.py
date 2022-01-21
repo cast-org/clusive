@@ -19,6 +19,9 @@ book_glossaries = {}
 def has_definition(book, word):
     """Determine whether the given word exists in the book's glossary or dictionary.
      We don't want to query or cue words when we don't have a definition."""
+
+    #THIS WILL NEED TO BE MORE SOPHISTICATED BECAUSE WE DO NOT WANT TO DO THAT WITH METERED USAGE - LDM
+
     return lookup(book, word) is not None
 
 
@@ -28,18 +31,23 @@ def lookup(book, word):
         # First try to find in a book glossary
         book_id = book.id
         if not book_glossaries.get(book_id):
+            # Book glossary is in the content directory
+            # stored in memory on the server - persistent
+            # this is not in the database
             book_glossaries[book_id] = BookGlossary(book_id)
         defs = book_glossaries[book_id].lookup(word)
         if (defs):
             defs['source'] = 'Book'
+    # THIS IS WHERE THE ADDITIONAL DICTIONARY HAPPENS
     if not defs:
         # Next try Wordnet
         defs = wordnetutil.lookup(word)
         if (defs):
             defs['source'] = 'Wordnet'
+
     return defs
 
-
+#what wordnet things is the most common - LDM - always matched on base form of the word no matter the form
 def base_form(word, return_word_if_not_found=True):
     """
     Return the base form of the given word.

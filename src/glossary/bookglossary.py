@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 # Methods for looking up words in a book's glossary
 
+#THIS IS THE CUSTOM GLOSSARY FOR A BOOK - LDM
 
 class BookGlossary:
 

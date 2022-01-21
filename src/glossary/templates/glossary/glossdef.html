@@ -3,6 +3,8 @@
 <strong>{{defs.headword}}</strong>
 {% endcomment %}
 
+<!--this html should work for both the dictionary and the custom glossary-->
+
 {% for m in defs.meanings %}
 <p>
     <span class="definition-speech">({{m.pos}})</span> <span class="definition-meaning">{{m.definition}}</span><br />
