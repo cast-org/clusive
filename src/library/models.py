@@ -595,3 +595,34 @@ class Annotation(models.Model):
     class Meta:
         ordering = ['progression']
 
+class Customization(models.Model):
+    """Hold customizations for a Book as used in zero or more Periods"""
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
+    periods = models.ManyToManyField(Period, blank=True, related_name='customizations')
+    title = models.CharField(max_length=256)
+    question = models.CharField(max_length=256)
+    vocabulary_words = models.TextField(default="[]")
+    mod_date = models.DateTimeField(default=timezone.now)
+
+    @property
+    def vocabulary_word_list(self):
+        """Decode JSON format and return vocabulary words as a list."""
+        if not hasattr(self, '_vocabulary_word_list'):
+            self._vocabulary_word_list = json.loads(self.vocabulary_words)
+        return self._vocabulary_word_list
+
+    @vocabulary_word_list.setter
+    def vocabulary_word_list(self, val):
+        self._vocabulary_word_list = val
+        self.vocabulary_words = json.dumps(val)
+
+    @property
+    def storage_dir(self):
+        """Absolute filesystem location of this customization vocabulary words."""
+        return os.path.join(self.book.storage_dir, str(self.title))
+
+    def __str__(self):
+        return '<Customization %d: %s %s>' % (self.pk, self.title, self.book)
+
+    class Meta:
+        ordering = ['book', 'title']

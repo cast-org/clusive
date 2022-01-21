@@ -8,11 +8,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from roster.models import ClusiveUser, Period, Site
-from .models import Book, Paradata, BookVersion, BookAssignment
+from .models import Book, Paradata, BookVersion, BookAssignment, Customization
 from .parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
-
 
 class LibraryTestCase(TestCase):
 
@@ -178,3 +177,61 @@ class ShareFormTestCase(TestCase):
         print(response)
         self.assertFormError(response, 'form', 'periods', 'Select a valid choice. 2 is not one of the available choices.')
 
+class Customizations(TestCase):
+
+    def setUp(self) -> None:
+        self.site = Site.objects.create(name='test site', anon_id='test site')
+        self.period1 = Period.objects.create(site=self.site, name='test period 1', anon_id='test period 1')
+        self.period2 = Period.objects.create(site=self.site, name='test period 2', anon_id='test period 2')
+        self.period3 = Period.objects.create(site=self.site, name='test period 3', anon_id='test period 3')
+        teacher = User.objects.create_user(username="teacher", password="password1")
+        self.teacher = ClusiveUser.objects.create(anon_id="T1", user=teacher, role='TE')
+        self.teacher.periods.add(self.period1)
+        self.teacher.save()
+
+        student_1 = User.objects.create_user(username="student", password="password1")
+        student_1.save()
+        cuser = ClusiveUser.objects.create(anon_id="Student1", user=student_1, role='ST')
+        cuser.save()
+        self.book = Book.objects.create(owner=cuser, title='Book One', description='')
+        self.book.save()
+        bv = BookVersion.objects.create(book=self.book, sortOrder=0)
+        bv.save()
+
+        self.customization_title = 'Test Customization Title'
+        self.custom = Customization.objects.create(book=self.book, title=self.customization_title)
+        self.custom.save()
+
+    def test_create(self):
+        custom = Customization.objects.get(book=self.book)
+        self.assertNotEqual(None, custom)
+        self.assertEquals(self.custom.title, custom.title)
+
+        self.assertEquals(0, len(custom.periods.all()))
+        self.assertEquals('', custom.question)
+        self.assertEquals(0, len(custom.vocabulary_word_list))
+
+    def test_set_question(self):
+        question = 'To be or not to be'
+        self.custom.question = question
+        self.custom.save()
+        custom = Customization.objects.get(book=self.book)
+        self.assertEquals(question, custom.question)
+
+    def test_set_vocabulary(self):
+        vocabulary = ['here', 'are', 'some', 'words']
+        self.custom.vocabulary_word_list = vocabulary
+        self.custom.save()
+        custom = Customization.objects.get(book=self.custom.book)
+        self.assertEquals(vocabulary, custom.vocabulary_word_list)
+
+    def test_periods(self):
+        periods = [self.period1, self.period2]
+        self.custom.periods.set(periods)
+        self.custom.save()
+        custom = Customization.objects.get(book=self.book)
+        custom_periods = custom.periods.all()
+        self.assertNotEquals(0, len(custom_periods))
+        self.assertTrue(self.period1 in custom_periods)
+        self.assertTrue(self.period2 in custom_periods)
+        self.assertFalse(self.period3 in custom_periods)
