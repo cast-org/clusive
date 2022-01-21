@@ -1038,7 +1038,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
 
     def make_error_message(self, error_response):
         error_messages = ', '.join(error_response['messages'])
-        error_response['error_message'] = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
+        error_response['error_message'] = f"Error: {error_messages}"
 
     def configure_event(self, event: Event):
         event.page = 'BookshareSearchResults'
