@@ -599,8 +599,8 @@ class Customization(models.Model):
     """Hold customizations for a Book as used in zero or more Periods"""
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     periods = models.ManyToManyField(Period, blank=True, related_name='customizations')
-    title = models.CharField(max_length=256)
-    question = models.CharField(max_length=256)
+    title = models.CharField(max_length=256, default='Customization', blank=True)
+    question = models.CharField(max_length=256, default='', blank=True)
     vocabulary_words = models.TextField(default="[]")
     mod_date = models.DateTimeField(default=timezone.now)
 

@@ -198,18 +198,24 @@ class Customizations(TestCase):
         bv = BookVersion.objects.create(book=self.book, sortOrder=0)
         bv.save()
 
-        self.customization_title = 'Test Customization Title'
-        self.custom = Customization.objects.create(book=self.book, title=self.customization_title)
+        self.custom = Customization.objects.create(book=self.book)
         self.custom.save()
 
     def test_create(self):
         custom = Customization.objects.get(book=self.book)
         self.assertNotEqual(None, custom)
-        self.assertEquals(self.custom.title, custom.title)
+        self.assertEquals('Customization', custom.title)
 
         self.assertEquals(0, len(custom.periods.all()))
         self.assertEquals('', custom.question)
         self.assertEquals(0, len(custom.vocabulary_word_list))
+
+        # Create another customization with a passed-in title
+        test_title='Frankenstein custom vocabulary'
+        custom = Customization.objects.create(book=self.book, title=test_title)
+        custom.save()
+        custom = Customization.objects.get(title=test_title)
+        self.assertEquals(test_title, custom.title)
 
     def test_set_question(self):
         question = 'To be or not to be'
