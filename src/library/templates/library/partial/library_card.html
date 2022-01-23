@@ -28,11 +28,8 @@
         <div class="card-footer">
             <div class="row">
                 {% include 'library/partial/library_card_topics.html' %}
-                {% include "library/partial/library_action_menu.html" %}
-                {% if show_assignments and book.assigned_period_name_list %}
-                <hr/>
-                <p>Assigned to: {{ book.assigned_period_name_list | highlight:period_name }}</p>
-                {% endif %}
+                {% include 'library/partial/library_action_menu.html' %}
+                {% include 'library/partial/library_teacher_extra_info.html' %}
             </div>
         </div>
 </div>

@@ -1,3 +1,4 @@
+import logging
 from contextlib import contextmanager
 from unittest import mock
 
@@ -9,9 +10,9 @@ from django.urls import reverse
 from eventlog.signals import preference_changed
 from .models import Preference, MailingListMember
 from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
-# TODO: make sure all tests have helpful messages
 from .signals import user_registered
 
+logger = logging.getLogger(__name__)
 
 def set_up_test_sites():
     Site.objects.create(name="CAST Collegiate", city="Wakefield", state_or_province="MA", country="USA").save()
