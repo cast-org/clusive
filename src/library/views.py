@@ -96,6 +96,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         self.view = kwargs.get('view')
         self.query = request.GET.get('query')
 
+        self.show_assignments = self.clusive_user.can_manage_periods
+
         self.subjects_string = request.GET.get('subjects')
         if self.subjects_string:
             subject_strings = self.subjects_string.split(',')
@@ -191,6 +193,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         q = q.distinct()
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
+        # Assignments will be needed for teacher display as well
+        if self.clusive_user.can_manage_periods:
+            q = q.prefetch_related('assignments')
 
         return q
 
@@ -214,12 +219,14 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['subjects_string'] = self.subjects_string
         context['subjects'] = self.subjects
         context['period'] = self.period
+        context['period_name'] = self.period.name if self.period else None
         context['style'] = self.style
         context['current_view'] = self.view
         context['current_view_name'] = self.view_name
         context['sort'] = self.sort
         context['view_names'] = dict(LibraryViews.CHOICES)
         context['topics'] = Subject.get_list()
+        context['show_assignments'] = self.show_assignments
         return context
 
 
