@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import path
 
-from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend, Customization
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend, Customization, CustomVocabularyWords
 from library.parsing import scan_all_books
 
 logger = logging.getLogger(__name__)
@@ -89,3 +89,7 @@ class CustomizationAdmin(admin.ModelAdmin):
     list_display = ['id', 'book', 'title']
     sortable_by = ('id', 'book', 'title')
 
+@admin.register(CustomVocabularyWords)
+class CustomVocabularyWordsAdmin(admin.ModelAdmin):
+    list_display = ['id']
+    sortable_by = ('id')
