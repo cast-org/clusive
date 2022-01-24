@@ -255,7 +255,7 @@ class Customizations(TestCase):
         self.assertEquals(vocabulary, custom1.vocabulary_words.word_list)
 
         # Set the second Customization to the sanme new vocabulary list and
-        # check that both Customizaitons reference the same new vocabulary list.
+        # check that both Customizations reference the same new vocabulary list.
         self.custom2.vocabulary_words = vocabulary_words
         self.custom2.save()
         custom2 = Customization.objects.get(book=self.custom2.book)
