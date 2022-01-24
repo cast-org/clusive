@@ -595,7 +595,7 @@ class Annotation(models.Model):
     class Meta:
         ordering = ['progression']
 
-class CustomVocabularyWords(models.Model):
+class CustomVocabulary(models.Model):
     """List of words for a Customization"""
     words = models.TextField(default='[]', blank=True)
 
@@ -612,14 +612,14 @@ class CustomVocabularyWords(models.Model):
         self.words = json.dumps(val)
 
     def __str__(self):
-        return '<CustomVocabularyWords %s %s>' % (self.pk, self.word_list)
+        return '<CustomVocabulary %s %s>' % (self.pk, self.word_list)
 
 class Customization(models.Model):
     """Hold customizations for a Book as used in zero or more Periods"""
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     periods = models.ManyToManyField(Period, blank=True, related_name='customizations', db_index=True)
-    vocabulary_words = models.ForeignKey(to=CustomVocabularyWords, null=True, blank=True, on_delete=models.CASCADE, db_index=True)
+    vocabulary_words = models.ForeignKey(to=CustomVocabulary, null=True, blank=True, on_delete=models.CASCADE, db_index=True)
     title = models.CharField(max_length=256, default='Customization', blank=True)
     question = models.CharField(max_length=256, default='', blank=True)
     created = models.DateTimeField(auto_now_add=True)

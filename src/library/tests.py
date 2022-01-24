@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from roster.models import ClusiveUser, Period, Site
-from .models import Book, Paradata, BookVersion, BookAssignment, Customization, CustomVocabularyWords
+from .models import Book, Paradata, BookVersion, BookAssignment, Customization, CustomVocabulary
 from .parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
@@ -210,7 +210,7 @@ class Customizations(TestCase):
         self.custom2.save()
 
         self.word_list_string = "['hello', 'world']"
-        self.custom_vocabulary = CustomVocabularyWords(words=self.word_list_string)
+        self.custom_vocabulary = CustomVocabulary(words=self.word_list_string)
         self.custom_vocabulary.save()
 
     def test_create(self):
@@ -225,7 +225,7 @@ class Customizations(TestCase):
 
         # Check the newly created vocabulary list -- first() since there should
         # be only one at this point
-        vocab = CustomVocabularyWords.objects.first()
+        vocab = CustomVocabulary.objects.first()
         self.assertEquals(self.word_list_string, vocab.words)
 
         # Create another customization with a passed-in title
@@ -243,9 +243,9 @@ class Customizations(TestCase):
         self.assertEquals(question, custom.question)
 
     def test_set_vocabulary(self):
-        # Create a new CustomVocabularyWords
+        # Create a new CustomVocabulary
         vocabulary = ['here', 'are', 'some', 'words']
-        vocabulary_words = CustomVocabularyWords.objects.create(word_list=vocabulary)
+        vocabulary_words = CustomVocabulary.objects.create(word_list=vocabulary)
         vocabulary_words.save()
 
         # Set the first Customization with the new vocabulary list, and check.
