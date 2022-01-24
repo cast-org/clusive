@@ -91,5 +91,5 @@ class CustomizationAdmin(admin.ModelAdmin):
 
 @admin.register(CustomVocabulary)
 class CustomVocabularyAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['id', 'words']
     sortable_by = ('id')
