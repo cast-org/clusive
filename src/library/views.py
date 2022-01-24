@@ -10,7 +10,7 @@ import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, QuerySet
+from django.db.models import Q, QuerySet, Prefetch
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -194,8 +194,10 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
         # Assignments will be needed for teacher display as well
+        # This queries for just the assignments to Periods that this teacher is in, and attaches it to custom attribute
         if self.clusive_user.can_manage_periods:
-            q = q.prefetch_related('assignments')
+            assignment_query = BookAssignment.objects.filter(period__in=self.clusive_user.periods.all())
+            q = q.prefetch_related(Prefetch('assignments', queryset=assignment_query, to_attr='assign_list'))
 
         return q
 

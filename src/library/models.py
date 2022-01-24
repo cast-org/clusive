@@ -124,11 +124,6 @@ class Book(models.Model):
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
-    @property
-    def assigned_period_name_list(self):
-        periods = self.assignments.all()
-        return ", ".join([ p.period.name for p in periods])
-
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
