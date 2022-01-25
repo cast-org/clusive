@@ -151,8 +151,8 @@
         border-color: var(--CT_sidebarEndDividerColor);
 
         @include media-breakpoint-up(xl) {
-            left: 0;
             right: -33vw;
+            left: 0;
         }
     }
 }
