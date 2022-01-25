@@ -595,31 +595,11 @@ class Annotation(models.Model):
     class Meta:
         ordering = ['progression']
 
-class CustomVocabulary(models.Model):
-    """List of words for a Customization"""
-    words = models.TextField(default='[]', blank=True)
-
-    @property
-    def word_list(self):
-        """Decode JSON format and return vocabulary words as a list."""
-        self._word_list = json.loads(self.words)
-        return self._word_list
-
-    @word_list.setter
-    def word_list(self, val):
-        """Encode and store words as JSON."""
-        self._word_list = val
-        self.words = json.dumps(val)
-
-    def __str__(self):
-        return '<CustomVocabulary %s %s>' % (self.pk, self.word_list)
-
 class Customization(models.Model):
     """Hold customizations for a Book as used in zero or more Periods"""
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     periods = models.ManyToManyField(Period, blank=True, related_name='customizations', db_index=True)
-    vocabulary_words = models.ForeignKey(to=CustomVocabulary, null=True, blank=True, on_delete=models.CASCADE, db_index=True)
     title = models.CharField(max_length=256, default='Customization', blank=True)
     question = models.CharField(max_length=256, default='', blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -630,3 +610,12 @@ class Customization(models.Model):
 
     class Meta:
         ordering = ['book', 'title']
+
+class CustomVocabularyWord(models.Model):
+    """A word used in a Customization"""
+    customization = models.ForeignKey(to=Customization, on_delete=models.CASCADE, db_index=True)
+    word = models.CharField(max_length=256, default='', blank=True)
+
+    def __str__(self):
+        return '[CustomVocabularyWord %s for %s]' % (self.word, self.customization)
+

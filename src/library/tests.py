@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from roster.models import ClusiveUser, Period, Site
-from .models import Book, Paradata, BookVersion, BookAssignment, Customization, CustomVocabulary
+from .models import Book, Paradata, BookVersion, BookAssignment, Customization, CustomVocabularyWord
 from .parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
@@ -209,24 +209,24 @@ class Customizations(TestCase):
         self.custom2 = Customization.objects.create(book=self.book2, owner=self.teacher)
         self.custom2.save()
 
-        self.word_list_string = "['hello', 'world']"
-        self.custom_vocabulary = CustomVocabulary(words=self.word_list_string)
-        self.custom_vocabulary.save()
+        self.test_word = 'hello'
+        self.custom_vocabulary_word = CustomVocabularyWord(customization=self.custom1, word=self.test_word)
+        self.custom_vocabulary_word.save()
 
     def test_create(self):
-        customizations = [(self.custom1, self.book1), (self.custom2, self.book2)]
-        for (self_custom, self_book) in customizations:
-            custom = Customization.objects.get(book=self_book)
+        checks = [(self.custom1, self.book1, 1), (self.custom2, self.book2, 0)]
+        for (customization, book, expected_custom_vocab_words) in checks:
+            custom = Customization.objects.get(book=book)
             self.assertNotEqual(None, custom)
-            self.assertEquals('Customization', self_custom.title)
+            self.assertEquals('Customization', customization.title)
             self.assertEquals(0, len(custom.periods.all()))
             self.assertEquals('', custom.question)
-            self.assertEquals(None, custom.vocabulary_words)
+            self.assertEquals(expected_custom_vocab_words, len(custom.customvocabularyword_set.all()))
 
         # Check the newly created vocabulary list -- first() since there should
         # be only one at this point
-        vocab = CustomVocabulary.objects.first()
-        self.assertEquals(self.word_list_string, vocab.words)
+        vocab = CustomVocabularyWord.objects.first()
+        self.assertEquals(self.test_word, vocab.word)
 
         # Create another customization with a passed-in title
         test_title='Frankenstein custom vocabulary'
@@ -243,23 +243,18 @@ class Customizations(TestCase):
         self.assertEquals(question, custom.question)
 
     def test_set_vocabulary(self):
-        # Create a new CustomVocabulary
+        # Create some CustomVocabularyWords and attach them to self.custom1
+        # Customization
         vocabulary = ['here', 'are', 'some', 'words']
-        vocabulary_words = CustomVocabulary.objects.create(word_list=vocabulary)
-        vocabulary_words.save()
+        for vocab_word in vocabulary:
+            custom_vocab_word = CustomVocabularyWord.objects.create(word=vocab_word, customization=self.custom1)
+            custom_vocab_word.save()
 
-        # Set the first Customization with the new vocabulary list, and check.
-        self.custom1.vocabulary_words = vocabulary_words
-        self.custom1.save()
-        custom1 = Customization.objects.get(book=self.custom1.book)
-        self.assertEquals(vocabulary, custom1.vocabulary_words.word_list)
-
-        # Set the second Customization to the sanme new vocabulary list and
-        # check that both Customizations reference the same new vocabulary list.
-        self.custom2.vocabulary_words = vocabulary_words
-        self.custom2.save()
-        custom2 = Customization.objects.get(book=self.custom2.book)
-        self.assertEquals(custom1.vocabulary_words.word_list, custom2.vocabulary_words.word_list)
+        # Find each `vocabulary` word as a CustomVocabularyWord in the first
+        # Customization
+        for vocab_word in vocabulary:
+            custom_vocabulary = self.custom1.customvocabularyword_set.get(word=vocab_word)
+            self.assertNotEquals(None, custom_vocabulary)
 
     def test_periods(self):
         periods = [self.period1, self.period2]
