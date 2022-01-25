@@ -605,6 +605,13 @@ class Customization(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    @property
+    def word_list(self):
+        words = []
+        for custom_vocabulary_word in self.customvocabularyword_set.all():
+            words.append(custom_vocabulary_word.word)
+        return words
+
     def __str__(self):
         return '<Customization %d: %s %s>' % (self.pk, self.title, self.book)
 

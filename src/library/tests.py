@@ -209,6 +209,7 @@ class Customizations(TestCase):
         self.custom2 = Customization.objects.create(book=self.book2, owner=self.teacher)
         self.custom2.save()
 
+        self.test_vocabulary = ['here', 'are', 'some', 'words']
         self.test_word = 'hello'
         self.custom_vocabulary_word = CustomVocabularyWord(customization=self.custom1, word=self.test_word)
         self.custom_vocabulary_word.save()
@@ -245,16 +246,27 @@ class Customizations(TestCase):
     def test_set_vocabulary(self):
         # Create some CustomVocabularyWords and attach them to self.custom1
         # Customization
-        vocabulary = ['here', 'are', 'some', 'words']
-        for vocab_word in vocabulary:
+        for vocab_word in self.test_vocabulary:
             custom_vocab_word = CustomVocabularyWord.objects.create(word=vocab_word, customization=self.custom1)
             custom_vocab_word.save()
 
         # Find each `vocabulary` word as a CustomVocabularyWord in the first
         # Customization
-        for vocab_word in vocabulary:
+        for vocab_word in self.test_vocabulary:
             custom_vocabulary = self.custom1.customvocabularyword_set.get(word=vocab_word)
             self.assertNotEquals(None, custom_vocabulary)
+
+    def test_customization_word_list(self):
+        # Test the `word_list` Customization property; should be empty
+        self.assertEquals(0, len(self.custom2.word_list))
+
+        # Store test vocabulary words into the second Customization
+        for vocab_word in self.test_vocabulary:
+            custom_vocab_word = CustomVocabularyWord.objects.create(word=vocab_word, customization=self.custom2)
+            custom_vocab_word.save()
+
+        # Test the `word_list` Customization property
+        self.assertEquals(self.test_vocabulary, self.custom2.word_list)
 
     def test_periods(self):
         periods = [self.period1, self.period2]
