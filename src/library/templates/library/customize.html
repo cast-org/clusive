@@ -1,0 +1,35 @@
+{% extends "shared/base.html" %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Customize | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Customize Reading</h1>
+
+    <div class="library-list">
+    {% include "library/partial/library_card_list.html" with show_menu=True show_topics=True query=None %}
+    </div>
+
+    <h2>Customizations:</h2>
+    <ul>
+        {% for c in customizations %}
+        <li>{{ c }}</li>
+        {% empty %}
+        <em>No customizations for this book</em>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'customize_add' pk=book.id %}" class="btn btn-primary">Add a customization</a></p>
+
+</main>
+{% endblock %}

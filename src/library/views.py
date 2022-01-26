@@ -18,13 +18,13 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, FormView, UpdateView, TemplateView
+from django.views.generic import ListView, FormView, UpdateView, TemplateView, RedirectView
 
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 from pages.views import ThemedPageMixin, SettingsPageMixin
@@ -1035,7 +1035,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
         for book in owned_bookhare_books:
             results.append(int(book.bookshare_id))
         return results
-    
+
     def make_error_message(self, error_response):
         error_messages = ', '.join(error_response['messages'])
         error_response['error_message'] = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
@@ -1126,3 +1126,35 @@ class BookshareImport(LoginRequiredMixin, View):
         else:
             raise Exception('unpack_epub_file did not find new content.')
         return bv
+
+
+class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
+    template_name = 'library/customize.html'
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, id=kwargs['pk'])
+        user =  request.clusive_user
+        periods = user.periods.all()
+        customizations = Customization.objects.filter(Q(book=book)
+                                                      & (Q(periods__in=periods) | Q(owner=user)))
+        self.extra_context = {
+            'book': book,
+            'customizations': customizations,
+        }
+        return super().get(request, *args, **kwargs)
+
+
+    def configure_event(self, event: Event):
+        event.page = 'Customize'
+
+
+class AddCustomizationView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('customize_book', kwargs=kwargs)
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, id=kwargs['pk'])
+        c = Customization(book=book, owner=request.clusive_user).save()
+        logger.debug('Created customization for book %d: %s', kwargs['pk'], c)
+        return super().get(request, *args, **kwargs)
