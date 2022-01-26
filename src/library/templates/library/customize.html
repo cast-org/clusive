@@ -33,8 +33,20 @@
                None
             {% endfor %}
         </p>
-        <p><strong>Fixme other info:</strong></p>
-        {{ c }}
+        <p><strong>Question:</strong></p>
+        <p>
+            {% if c.question %}
+              {{ c.question }}
+            {% else %}
+                None
+            {% endif %}
+        </p>
+        <p><strong>Vocubulary Words:</strong></p>
+            {% for word in c.word_list %}
+               {{ word }}<br>
+            {% empty %}
+                None
+            {% endfor %}
     </div>
     {% empty %}
     <em>No customizations for this book</em>
