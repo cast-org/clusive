@@ -1135,8 +1135,10 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         book = get_object_or_404(Book, id=kwargs['pk'])
         user =  request.clusive_user
         periods = user.periods.all()
-        customizations = Customization.objects.filter(Q(book=book)
-                                                      & (Q(periods__in=periods) | Q(owner=user)))
+        customizations = Customization.objects\
+            .filter(Q(book=book)
+                    & (Q(periods__in=periods) | Q(owner=user)))\
+            .distinct()
         self.extra_context = {
             'book': book,
             'customizations': customizations,
@@ -1155,6 +1157,9 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
 
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, id=kwargs['pk'])
-        c = Customization(book=book, owner=request.clusive_user).save()
+        user = request.clusive_user
+        c = Customization(book=book, owner=user)
+        c.save()
+        c.periods.set(user.periods.all())
         logger.debug('Created customization for book %d: %s', kwargs['pk'], c)
         return super().get(request, *args, **kwargs)

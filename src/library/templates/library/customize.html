@@ -21,13 +21,24 @@
     </div>
 
     <h2>Customizations:</h2>
-    <ul>
-        {% for c in customizations %}
-        <li>{{ c }}</li>
-        {% empty %}
-        <em>No customizations for this book</em>
-        {% endfor %}
-    </ul>
+    {% for c in customizations %}
+    <div class="box">
+        <h3>{{ c.title }}</h3>
+        <p><strong>Classes:</strong></p>
+        <p>
+            {% for p in c.periods.all %}
+              {{ p.name }}
+              {% if not forloop.last %}, {% endif %}
+            {% empty %}
+               None
+            {% endfor %}
+        </p>
+        <p><strong>Fixme other info:</strong></p>
+        {{ c }}
+    </div>
+    {% empty %}
+    <em>No customizations for this book</em>
+    {% endfor %}
 
     <p><a href="{% url 'customize_add' pk=book.id %}" class="btn btn-primary">Add a customization</a></p>
 

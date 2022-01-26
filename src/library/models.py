@@ -613,7 +613,7 @@ class Customization(models.Model):
         return words
 
     def __str__(self):
-        return '<Customization %d: %s %s>' % (self.pk, self.title, self.book)
+        return '<Customization %s: %s %s>' % (self.pk, self.title, self.book)
 
     class Meta:
         ordering = ['book', 'title']
