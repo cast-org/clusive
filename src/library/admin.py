@@ -86,10 +86,10 @@ class SubjectAdmin(admin.ModelAdmin):
 
 @admin.register(Customization)
 class CustomizationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'book', 'title']
+    list_display = ['id', 'owner', 'book', 'title']
     sortable_by = ('id', 'book', 'title')
 
 @admin.register(CustomVocabularyWord)
 class CustomVocabularyWordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customization', 'word']
-    sortable_by = ('id', 'customization')
+    list_display = ['id', 'word', 'customization']
+    sortable_by = ('id', 'word', 'customization')
