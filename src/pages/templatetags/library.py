@@ -1,10 +1,9 @@
 import re
 from urllib.parse import urlencode
 
+from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
-
-from django import template
 
 register = template.Library()
 
@@ -40,3 +39,6 @@ def highlight(text, search):
         return mark_safe(text)
 
 
+@register.filter(is_safe=True)
+def period_names(assignment_list):
+    return ", ".join([p.period.name for p in assignment_list])

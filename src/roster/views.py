@@ -6,9 +6,9 @@ from urllib.parse import urlencode
 
 import requests
 from allauth.account.models import EmailAddress
+from allauth.socialaccount import signals
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
-from allauth.socialaccount import signals
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, get_user_model, logout
@@ -1378,6 +1378,7 @@ def remove_social_account(request, *args, **kwargs):
         social_account.delete()
         request.session.pop('bookshare_connected', None)
         request.session.pop('bookshare_search_metadata', None)
+        messages.info(request, "Removed Bookshare account.")
         signals.social_account_removed.send(
             sender=SocialAccount, request=request, socialaccount=social_account
         )

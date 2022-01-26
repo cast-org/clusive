@@ -1,11 +1,24 @@
-// stylelint-disable selector-no-qualifying-type, selector-class-pattern, declaration-no-important
+//stylelint-disable selector-max-id, selector-class-pattern, declaration-no-important
 
-[data-tts-current-word="true"] {
+#R2_ID_READALOUD_CONTAINER .R2_CLASS_HIGHLIGHT_AREA {
     color: var(--CRT_ttsTextColor) !important;
     background-color: var(--CRT_ttsBackgroundColor) !important;
-}
 
-[data-tts-current-line="true"] {
-    color: var(--CRT_ttsTextColor) !important;
-    background-color: var(--CRT_ttsBackgroundColor) !important;
+    // Stretch the height a bit
+    &::before,
+    &::after {
+        position: absolute;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: .125rem;
+        content: "";
+        background-color: var(--CRT_ttsBackgroundColor);
+    }
+    &::before {
+        top: -.125rem;
+    }
+    &::after {
+        bottom: -.125rem;
+    }
 }

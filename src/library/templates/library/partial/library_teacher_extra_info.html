@@ -1,0 +1,6 @@
+{% load library %}
+
+{% if show_assignments and book.assign_list  %}
+<hr/>
+<p>Assigned to: {{ book.assign_list | period_names | highlight:period_name }}</p>
+{% endif %}
