@@ -1,6 +1,13 @@
 {% load library %}
 
-{% if show_assignments and book.assign_list  %}
-<hr/>
-<p>Assigned to: {{ book.assign_list | period_names | highlight:period_name }}</p>
+{% if show_assignments %}
+    {% if book.assign_list or book.custom_list %}
+        <hr/>
+        {% if book.assign_list %}
+            <p>Assigned to: {{ book.assign_list | period_names | highlight:period_name }}</p>
+        {% endif %}
+        {% if book.custom_list %}
+            <p>Customized</p>
+        {% endif %}
+    {% endif %}
 {% endif %}

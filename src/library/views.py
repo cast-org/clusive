@@ -193,11 +193,15 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         q = q.distinct()
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
-        # Assignments will be needed for teacher display as well
+
+        # For teachers/parents, also look up relevant BookAssignments and Customizations
         # This queries for just the assignments to Periods that this teacher is in, and attaches it to custom attribute
         if self.clusive_user.can_manage_periods:
-            assignment_query = BookAssignment.objects.filter(period__in=self.clusive_user.periods.all())
+            periods = self.clusive_user.periods.all()
+            assignment_query = BookAssignment.objects.filter(period__in=periods)
             q = q.prefetch_related(Prefetch('assignments', queryset=assignment_query, to_attr='assign_list'))
+            customization_query = Customization.objects.filter(Q(periods__in=periods) | Q(owner=self.clusive_user))
+            q = q.prefetch_related(Prefetch('customization_set', queryset=customization_query, to_attr='custom_list'))
 
         return q
 
