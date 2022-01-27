@@ -136,6 +136,16 @@
             <hr/>
 
             <form id="comprehensionCheckForm">
+                {% if customization.question %}
+                <div class="form-group">
+                    <label id="customQuestion" for="compText1" class="form-label">{{ customization.question }}</label>
+                    <div class="stt-wrapper">
+                        <textarea id="compText1" class="form-control" name="comprehension-custom"></textarea>
+                        <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#compText1"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
+                    </div>
+                </div>
+                <hr/>
+                {% endif %}
                 <p id="compScaleQuestion">How much did you learn from this reading?</p>
                 <div class="form-inline">
                     <div class="form-check form-checkradio me-1">

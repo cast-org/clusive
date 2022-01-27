@@ -60,7 +60,9 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     clusiveAssessment.checkDone = true;
     var scaleResponse = data.scaleResponse;
     var freeResponse = data.freeResponse;
+    var customResponse = data.customResponse;
     $('textarea[name="comprehension-free"]').val(freeResponse);
+    $('textarea[name="comprehension-custom"]').val(customResponse);
     $('input[name="comprehension-scale"]').val([scaleResponse]);
     if (freeResponse.length > 0) {
         $('#comprehensionFreeResponseArea').show();
@@ -98,11 +100,14 @@ clusiveAssessment.saveComprehensionCheck = function() {
     var bookId = clusiveContext.reader.info.publication.id;
     var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
     var freeResponse = $('textarea[name="comprehension-free"]').val();
+    var customResponse = $('textarea[name="comprehension-custom"]').val();
     var comprehensionResponse = {
         scaleQuestion: $('#compScaleQuestion').text(),
         scaleResponse: scaleResponse,
         freeQuestion: $('#compFreeQuestion').children(':visible').text(),
         freeResponse: freeResponse,
+        customQuestion: $('#customQuestion').text(),
+        customResponse: customResponse,
         bookVersionId: clusiveContext.reader.info.publication.version_id,
         bookId: clusiveContext.reader.info.publication.id,
         eventId: PAGE_EVENT_ID
@@ -149,6 +154,9 @@ clusiveAssessment.setupAssessments = function() {
     });
 
     $('textarea[name="comprehension-free"]').change(function() {
+        clusiveAssessment.saveComprehensionCheck();
+    });
+    $('textarea[name="comprehension-custom"]').change(function() {
         clusiveAssessment.saveComprehensionCheck();
     });
 

@@ -42,6 +42,7 @@ class AffectiveCheck:
 class ComprehensionCheck:
     scale_response_key = "scaleResponse"
     free_response_key = "freeResponse"
+    custom_response_key = "customResponse"
 
     class ComprehensionScale:
         NOTHING = 0
@@ -64,13 +65,19 @@ class CheckResponse(models.Model):
     class Meta:
         abstract = True
 
-# Comprehension check responses
+
 class ComprehensionCheckResponse(CheckResponse):
+    """
+    Latest response of a student to the comprehension-related questions on a Book.
+    Includes the multiple-choice response, free text, as well as the response to any custom question
+    their teacher may have asked.
+    """
     comprehension_scale_response = models.IntegerField(
         choices=ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES,
-        null=True
+        null=True, blank=True
     )
-    comprehension_free_response = models.TextField(null=True)
+    comprehension_free_response = models.TextField(null=True, blank=True)
+    custom_response = models.TextField(null=True, blank=True)
 
     def get_answer(self):
         for choice in ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES:
@@ -120,7 +127,7 @@ class ComprehensionCheckResponse(CheckResponse):
             })
         return details
 
-def __str__(self):
+    def __str__(self):
         return '<CCResp %s/%d>' % (self.user.anon_id, self.book.id)
 
 

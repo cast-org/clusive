@@ -22,6 +22,7 @@ class AffectCheckView(LoginRequiredMixin, View):
     def create_from_request(request, affect_check_data, book_id):
         clusive_user = request.clusive_user
         book = Book.objects.get(id=book_id)
+        words_changed = free_response_changed = False
 
         with transaction.atomic():
             (acr, created) = AffectiveCheckResponse.objects.get_or_create(user=clusive_user, book=book)
@@ -40,10 +41,15 @@ class AffectCheckView(LoginRequiredMixin, View):
             acr.surprised_option_response = affect_check_data.get('affect-option-surprised')
 
             free_question = affect_check_data.get('freeQuestion')
-            acr.affect_free_response = affect_check_data.get('freeResponse')
+            if acr.affect_free_response != affect_check_data.get('freeResponse'):
+                free_response_changed = True
+                acr.affect_free_response = affect_check_data.get('freeResponse')
             acr.save()
 
-            new_values = acr.to_list()
+        new_values = acr.to_list()
+        page_event_id=affect_check_data.get("eventId")
+
+        if new_values != orig_values:
             (aut, created) = AffectiveUserTotal.objects.get_or_create(user=clusive_user)
             aut.update(orig_values, new_values)
             aut.save()
@@ -52,17 +58,21 @@ class AffectCheckView(LoginRequiredMixin, View):
             abt.update(orig_values, new_values)
             abt.save()
 
-        page_event_id=affect_check_data.get("eventId")
-        affect_check_completed.send(sender=AffectCheckView,
-                                  request=request, event_id=page_event_id,
-                                  affect_check_response_id=acr.id,
-                                  answer=acr.to_answer_string())
+            affect_check_completed.send(sender=AffectCheckView,
+                                        request=request,
+                                        event_id=page_event_id,
+                                        control='affect_check_words',
+                                        affect_check_response_id=acr.id,
+                                        answer=acr.to_answer_string())
 
-        affect_check_completed.send(sender=AffectCheckView,
-                                    request=request, event_id=page_event_id,
-                                    affect_check_response_id=acr.id,
-                                    question=free_question,
-                                    answer=acr.affect_free_response)
+        if free_response_changed:
+            affect_check_completed.send(sender=AffectCheckView,
+                                        request=request,
+                                        event_id=page_event_id,
+                                        control='affect_check_free_response',
+                                        affect_check_response_id=acr.id,
+                                        question=free_question,
+                                        answer=acr.affect_free_response)
 
     def post(self, request, book_id):
         try:
@@ -194,31 +204,56 @@ class ComprehensionCheckView(LoginRequiredMixin, View):
         clusive_user = request.clusive_user
         book = Book.objects.get(id=book_id)
 
+        scale_response_changed = free_response_changed = custom_response_changed = False
         (ccr, created) = ComprehensionCheckResponse.objects.get_or_create(user=clusive_user, book=book)
-        ccr.comprehension_scale_response = comprehension_check_data.get('scaleResponse')
-        ccr.comprehension_free_response = comprehension_check_data.get('freeResponse')
-        ccr.save()
+        try:
+            scale_response = int(comprehension_check_data.get('scaleResponse'))
+        except:
+            scale_response = None
+        if ccr.comprehension_scale_response != scale_response:
+            scale_response_changed = True
+            ccr.comprehension_scale_response = scale_response
+        if ccr.comprehension_free_response != comprehension_check_data.get('freeResponse'):
+            free_response_changed = True
+            ccr.comprehension_free_response = comprehension_check_data.get('freeResponse')
+        if ccr.custom_response != comprehension_check_data.get('customResponse'):
+            custom_response_changed = True
+            ccr.custom_response = comprehension_check_data.get('customResponse')
 
-        # Fire event creation signals
-        page_event_id =comprehension_check_data.get("eventId")
-        comprehension_check_completed.send(sender=ComprehensionCheckView,
-                                request=request, event_id=page_event_id,
-                                comprehension_check_response_id=ccr.id,
-                                key=ComprehensionCheck.scale_response_key,
-                                question=comprehension_check_data.get('scaleQuestion'),
-                                answer=ccr.comprehension_scale_response)
+        if scale_response_changed or free_response_changed or custom_response_changed:
+            ccr.save()
 
-        comprehension_check_completed.send(sender=ComprehensionCheckView,
-                                request=request, event_id=page_event_id,
-                                comprehension_check_response_id=ccr.id,
-                                key=ComprehensionCheck.free_response_key,
-                                question=comprehension_check_data.get('freeQuestion'),
-                                answer=ccr.comprehension_free_response)
+            # Fire event creation signals
+            # Note, these events are recorded at the time they are received. May be a few seconds off
+            # (or more, if there are network problems) from the time that the response was actually made.
+            page_event_id = comprehension_check_data.get("eventId")
+            if scale_response_changed:
+                comprehension_check_completed.send(sender=ComprehensionCheckView,
+                                                   request=request, event_id=page_event_id,
+                                                   comprehension_check_response_id=ccr.id,
+                                                   key=ComprehensionCheck.scale_response_key,
+                                                   question=comprehension_check_data.get('scaleQuestion'),
+                                                   answer=comprehension_check_data.get('scaleResponse'))
+
+            if free_response_changed:
+                comprehension_check_completed.send(sender=ComprehensionCheckView,
+                                                   request=request, event_id=page_event_id,
+                                                   comprehension_check_response_id=ccr.id,
+                                                   key=ComprehensionCheck.free_response_key,
+                                                   question=comprehension_check_data.get('freeQuestion'),
+                                                   answer=ccr.comprehension_free_response)
+            if custom_response_changed:
+                comprehension_check_completed.send(sender=ComprehensionCheckView,
+                                                   request=request, event_id=page_event_id,
+                                                   comprehension_check_response_id=ccr.id,
+                                                   key=ComprehensionCheck.custom_response_key,
+                                                   question=comprehension_check_data.get('customQuestion'),
+                                                   answer=ccr.custom_response)
 
     def post(self, request, book_id):
         try:
             comprehension_check_data = json.loads(request.body)
-            logger.info('Received a valid comprehension check response: %s' % comprehension_check_data)
+            logger.debug('Received a valid comprehension check response: %s' % comprehension_check_data)
         except json.JSONDecodeError:
             logger.warning('Received malformed comprehension check data: %s' % request.body)
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
@@ -231,6 +266,9 @@ class ComprehensionCheckView(LoginRequiredMixin, View):
         user = request.clusive_user
         book = Book.objects.get(id=book_id)
         ccr = get_object_or_404(ComprehensionCheckResponse, user=user, book=book)
-        response_value = {ComprehensionCheck.scale_response_key: ccr.comprehension_scale_response,
-                       ComprehensionCheck.free_response_key: ccr.comprehension_free_response}
+        response_value = {
+            ComprehensionCheck.scale_response_key: ccr.comprehension_scale_response,
+            ComprehensionCheck.free_response_key: ccr.comprehension_free_response,
+            ComprehensionCheck.custom_response_key: ccr.custom_response,
+        }
         return JsonResponse(response_value)

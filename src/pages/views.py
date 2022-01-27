@@ -21,7 +21,7 @@ from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from glossary.views import choose_words_to_cue
-from library.models import Book, BookVersion, Paradata, Annotation, BookTrend
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.views import TranslateApiManager
@@ -515,6 +515,10 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
 
+        # See if there's a custom question
+        customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period)
+        logger.debug('Customization: %s', customizations)
+
         self.extra_context = {
             'pub': book,
             'version_id': self.book_version.id,
@@ -525,6 +529,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'cuelist': json.dumps(cuelist),
             'hide_cues': hide_cues,
             'tip_name': self.tip_shown.name if self.tip_shown else None,
+            'customization': customizations[0] if customizations else None,
         }
         return super().get(request, *args, **kwargs)
 
