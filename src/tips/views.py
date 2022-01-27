@@ -25,6 +25,8 @@ class CTARedirectView(RedirectView):
             return reverse('sign_up_role')
         elif self.cta == 'demographics':
             return 'https://sri.co1.qualtrics.com/jfe/form/SV_b49OZCdvuAWpy8S?anonid=%s' % self.anon_id
+        elif self.cta == 'bookshare':
+            return reverse('my_account')
         else:
             return reverse('dashboard')
 
