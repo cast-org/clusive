@@ -10,7 +10,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from eventlog.signals import affect_check_completed, comprehension_check_completed
-from library.models import Book
+from library.models import Book, Customization
 from roster.models import Roles
 from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheckResponse, \
     AffectiveUserTotal, AffectiveBookTotal
@@ -120,7 +120,28 @@ class ComprehensionDetailView(LoginRequiredMixin, TemplateView):
         if clusive_user.can_manage_periods and clusive_user.current_period:
             period = clusive_user.current_period
             self.extra_context = {
-                'details': ComprehensionCheckResponse.get_class_details(book=book, period=period),
+                'details': ComprehensionCheckResponse.get_class_details_by_scale(book=book, period=period),
+            }
+            return super().get(request, *args, **kwargs)
+        else:
+            raise PermissionDenied()
+
+
+class CustomQuestionDetailView(LoginRequiredMixin, TemplateView):
+    """
+    Show a list of responses to the customized comprehension question for a teacher's current period.
+    """
+    template_name = 'shared/partial/modal_class_custom_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, id=kwargs['book_id'])
+        clusive_user = request.clusive_user
+        if clusive_user.can_manage_periods and clusive_user.current_period:
+            period = clusive_user.current_period
+            customizations = Customization.objects.filter(book=book, periods=period)
+            self.extra_context = {
+                'question': customizations[0].question if customizations else None,
+                'details': ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=period),
             }
             return super().get(request, *args, **kwargs)
         else:

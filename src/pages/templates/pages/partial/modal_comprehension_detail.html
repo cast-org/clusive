@@ -1,0 +1,16 @@
+<div id="{{ id_prefix }}-{{ id_serial }}" class="modal why-modal modal-comp-detail" data-clusive-type="{{ type }}" data-clusive-book-id="{{item.trend.book.id}}">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">{{ title_prefix }}: {{ item.trend.book.title }}</h2>
+                {% include "shared/partial/dialog_tts.html" %}
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>

@@ -89,7 +89,14 @@ class ComprehensionCheckResponse(CheckResponse):
     def get_counts(cls, book, period):
         """
         Get comprehension check stats for the given book and period.
-        :return:
+        :return: a structure like this:
+        { 'max':  <maximum of any of the counts>,
+          'items': [
+            { 'label': 'Nothing', 'value': 1 }
+            { 'label': 'A little', 'value': 7 },
+            { 'label': 'A lot', 'value': 4 }
+          ]
+        }
         """
         comp_check_counts = list(cls.objects \
             .filter(book=book, user__periods=period, user__role=Roles.STUDENT) \
@@ -110,9 +117,22 @@ class ComprehensionCheckResponse(CheckResponse):
                  'items': data }
 
     @classmethod
-    def get_class_details(cls, book, period):
+    def get_class_details_custom_responses(cls, book, period):
         """
-        Get a list of all comp check responses for the given book and students in the given period.
+        Get comp check responses that include a custom-question answer for the given book and period, as a simple list.
+        :param book:
+        :param period:
+        :return: list of responses in student name order.
+        """
+        responses = cls.objects.filter(book=book, user__periods=period, user__role=Roles.STUDENT,
+                                       custom_response__isnull=False) \
+            .order_by('user__user__first_name')
+        return responses
+
+    @classmethod
+    def get_class_details_by_scale(cls, book, period):
+        """
+        Get comp check responses for the given book and period, categorized by scale response.
         :param book:
         :param period:
         :return: list of lists with the related information.
