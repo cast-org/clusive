@@ -2,8 +2,6 @@ import json
 import logging
 from datetime import date, timedelta
 
-import more_itertools
-import more_itertools.recipes
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Sum, Q
@@ -195,14 +193,11 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             books = books.union(set(trend.book for trend in assigned_trends))
             customizations = Customization.objects.filter(book__in=books, periods=self.current_period)
             # Attach customization information to each trend data object
+            # The filter just looks for customizations that match the given book, and we record the first.
             for td in top_trend_data:
-                td['customization'] = more_itertools.recipes.first_true(customizations,
-                                                                        pred=lambda c: c.book==td['trend'].book,
-                                                                        default=None)
+                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
             for td in assigned_trend_data:
-                td['customization'] = more_itertools.recipes.first_true(customizations,
-                                                                        pred=lambda c: c.book==td['trend'].book,
-                                                                        default=None)
+                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
 
             # Get comp check statistics for each distinct book, avoid querying twice.
             comp_data = {}
