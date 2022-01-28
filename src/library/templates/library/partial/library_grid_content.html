@@ -6,6 +6,6 @@
     {% endif %}
 
     {% for book in object_list %}
-        {% include "library/partial/library_card.html" with show_menu=True show_description=True show_topics=True %}
+        {% include "library/partial/library_card.html" with show_menu=True show_description=True show_topics=True link_stretch=True %}
     {% endfor %}
 </div>

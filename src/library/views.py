@@ -1155,6 +1155,9 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         book = get_object_or_404(Book, id=kwargs['pk'])
         user =  request.clusive_user
         periods = user.periods.all()
+        # Look up assignments for display, attach as expected by template
+        book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
+        # Look up customizations
         customizations = Customization.objects\
             .filter(Q(book=book)
                     & (Q(periods__in=periods) | Q(owner=user)))\
@@ -1162,6 +1165,7 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         self.extra_context = {
             'book': book,
             'customizations': customizations,
+            'period_name': None,
         }
         return super().get(request, *args, **kwargs)
 
