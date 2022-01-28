@@ -86,5 +86,37 @@ class BookshareSearchForm(forms.Form):
         else:
             raise ValidationError(_('Invalid format for keyword'))
 
+class EditCustomizationForm(forms.Form):
+    title = forms.CharField(
+        required=False,
+        initial = '',
+        widget = forms.TextInput(attrs={
+            'class': 'form-control',
+        })
+    )
+    question = forms.CharField(
+        required=False,
+        initial = '',
+        widget = forms.TextInput(attrs={
+            'class': 'form-control',
+        })
+    )
 
+    def __init__(self, *args, **kwargs):
+        customization = kwargs.pop('customization')
+        super().__init__(*args, **kwargs)
+        self.fields['title'].initial = customization.title
+        self.fields['question'].initial = customization.question
 
+    def clean_title(self):
+        self.clean_x('title')
+
+    def clean_question(self):
+        self.clean_x('question')
+
+    def clean_x(self, field_name):
+        if self.is_valid():
+            data = self.cleaned_data.get(field_name, '')
+            return data.strip()
+        else:
+            raise ValidationError(_(f"Invalid format for {field_name}"))

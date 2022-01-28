@@ -23,7 +23,7 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView, R
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
@@ -1169,7 +1169,6 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         }
         return super().get(request, *args, **kwargs)
 
-
     def configure_event(self, event: Event):
         event.page = 'Customize'
 
@@ -1187,3 +1186,35 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         c.periods.set(user.periods.all())
         logger.debug('Created customization for book %d: %s', kwargs['pk'], c)
         return super().get(request, *args, **kwargs)
+
+class EditCustomizationView(LoginRequiredMixin, TemplateView, FormView):    # EventMixin
+    template_name = 'library/edit_customization.html'
+    form_class = EditCustomizationForm
+    customization = None
+
+    def get_form(self, form_class=None):
+        kwargs = self.get_form_kwargs()
+        return EditCustomizationForm(**kwargs, customization=self.customization)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.customization = get_object_or_404(Customization, id=kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        assigned_periods = self.customization.periods
+        context.update({
+            'customization': self.customization,
+            'assigned_periods': assigned_periods,
+            'book': self.customization.book,
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.customization.title = request.POST.get('title')
+        self.customization.question = request.POST.get('question')
+        self.customization.save()
+        return HttpResponseRedirect(redirect_to=reverse('customize_book', kwargs={'pk': self.customization.book.id}))
+
+#     def configure_event(self, event: Event):
+#         event.page = 'EditCustomization'

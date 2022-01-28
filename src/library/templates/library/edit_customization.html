@@ -1,0 +1,70 @@
+{% extends "shared/base.html" %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Customize | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Customize Reading</h1>
+
+    <div class="library-list">
+    {% include "library/partial/library_card_list.html" with show_menu=False show_topics=True query=None %}
+    </div>
+
+    <h2>Edit {{ customization.title }}</h2>
+    <div class="box">
+        <form method="post">
+            <div class="form-group">
+                {% csrf_token %}
+                <p>
+                    <strong><label for="{{ form.title.id_for_label }}">Customization Title:</label></strong>
+                    {{ form.title.errors }}
+                    {{ form.title }}
+                </p>
+                <hr>
+                <p>
+                    <strong><label for="{{ form.periods.id_for_label }}">Classes:</label></strong>
+                </p>
+                <p>
+                    {% for p in customization.periods.all %}
+                      {{ p.name }}
+                      {% if not forloop.last %}, {% endif %}
+                      <br>
+                    {% empty %}
+                       None
+                    {% endfor %}
+                </p>
+                <hr>
+                <p><strong>Words:</strong></p>
+                <p>
+                    {% for word in customization.word_list %}
+                       {{ word }} &nbsp;&nbsp;
+                    {% empty %}
+                        None
+                    {% endfor %}
+                </p>
+                <hr>
+                <p><strong><label for="{{ form.question.id_for_label }}">Custom Question:</label></strong>
+                    This will appear in addtion to the genral knowledge
+                    questions &quot;How much did you learn&quot; and
+                    &quot;What's one thing you learned or found interesting?&quot;
+                    {{ form.question.errors }}
+                    {{ form.question }}
+                </p>
+                <hr>
+                <input type="submit" class="btn btn-secondary btn-small" value="Save"/>
+                <a href="{% url 'customize_book' pk=customization.book.id %}" class="btn btn-link btn-small">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
