@@ -1,4 +1,5 @@
 {% extends "shared/base.html" %}
+{% load figuration %}
 
 {% block bodyClass %}library{% endblock %}
 
@@ -23,43 +24,29 @@
     <h2>Edit {{ customization.title }}</h2>
     <div class="box">
         <form method="post">
-            <div class="form-group">
                 {% csrf_token %}
-                <p>
-                    <strong><label for="{{ form.title.id_for_label }}">Customization Title:</label></strong>
-                    {{ form.title.errors }}
-                    {{ form.title }}
-                </p>
-                <hr>
-                <p>
-                    <strong><label for="{{ form.periods.id_for_label }}">Classes:</label></strong>
-                </p>
-                <p>
-                    {% for p in customization.periods.all %}
-                      {{ p.name }}
-                      {% if not forloop.last %}, {% endif %}
-                      <br>
-                    {% empty %}
-                       None
-                    {% endfor %}
-                </p>
-                <hr>
-                <p><strong>Words:</strong></p>
-                <p>
-                    {% for word in customization.word_list %}
-                       {{ word }} &nbsp;&nbsp;
-                    {% empty %}
-                        None
-                    {% endfor %}
-                </p>
-                <hr>
-                <p><strong><label for="{{ form.question.id_for_label }}">Custom Question:</label></strong>
-                    This will appear in addtion to the genral knowledge
+            <div class="form-group">
+                {{ form.title.label_tag | formlabel }} *
+                {{ form.title.errors }}
+                {{ form.title | formcontrol }}
+            </div>
+            <hr>
+            <div class="form-group">
+                {{ form.periods.label_tag | formlabel }}
+                {{ form.periods.errors }}
+                {{ form.periods }}
+            </div>
+            <hr>
+            <div class="form-group">
+                {{ form.question.label_tag | formlabel }}
+                <div class="form-text">
+                    This will appear in addtion to the general knowledge
                     questions &quot;How much did you learn&quot; and
                     &quot;What's one thing you learned or found interesting?&quot;
-                    {{ form.question.errors }}
-                    {{ form.question }}
-                </p>
+                </div>
+                {{ form.question.errors }}
+                {{ form.question | formcontrol }}
+            </div>
                 <hr>
                 <input type="submit" class="btn btn-secondary btn-small" value="Save"/>
                 <a href="{% url 'customize_book' pk=customization.book.id %}" class="btn btn-link btn-small">Cancel</a>

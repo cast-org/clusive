@@ -1187,34 +1187,29 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         logger.debug('Created customization for book %d: %s', kwargs['pk'], c)
         return super().get(request, *args, **kwargs)
 
-class EditCustomizationView(LoginRequiredMixin, TemplateView, FormView):    # EventMixin
-    template_name = 'library/edit_customization.html'
-    form_class = EditCustomizationForm
-    customization = None
 
-    def get_form(self, form_class=None):
-        kwargs = self.get_form_kwargs()
-        return EditCustomizationForm(**kwargs, customization=self.customization)
+class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
+    template_name = 'library/edit_customization.html'
+    model = Customization
+    form_class = EditCustomizationForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.customization = get_object_or_404(Customization, id=kwargs['pk'])
+        self.clusive_user = request.clusive_user
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        assigned_periods = self.customization.periods
-        context.update({
-            'customization': self.customization,
-            'assigned_periods': assigned_periods,
-            'book': self.customization.book,
-        })
+        context['book'] = self.object.book
         return context
 
-    def post(self, request, *args, **kwargs):
-        self.customization.title = request.POST.get('title')
-        self.customization.question = request.POST.get('question')
-        self.customization.save()
-        return HttpResponseRedirect(redirect_to=reverse('customize_book', kwargs={'pk': self.customization.book.id}))
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.clusive_user
+        return kwargs
 
-#     def configure_event(self, event: Event):
-#         event.page = 'EditCustomization'
+    def get_success_url(self):
+        return reverse('customize_book', kwargs={'pk': self.object.book.id})
+
+    def configure_event(self, event: Event):
+        event.page = 'EditCustomization'
+
