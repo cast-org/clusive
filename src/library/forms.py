@@ -88,7 +88,6 @@ class BookshareSearchForm(forms.Form):
         else:
             raise ValidationError(_('Invalid format for keyword'))
 
-
 class EditCustomizationForm(ModelForm):
 
     class Meta:
@@ -100,7 +99,6 @@ class EditCustomizationForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         clusive_user : ClusiveUser
-        clusive_user = kwargs.pop('user')
+        clusive_user = kwargs.pop('clusive_user')
         super().__init__(*args, **kwargs)
-        periods = clusive_user.periods.all()
-        self.fields['periods'].queryset = periods
+        self.fields['periods'].queryset = clusive_user.periods.all()

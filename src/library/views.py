@@ -1187,7 +1187,6 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         logger.debug('Created customization for book %d: %s', kwargs['pk'], c)
         return super().get(request, *args, **kwargs)
 
-
 class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
     template_name = 'library/edit_customization.html'
     model = Customization
@@ -1204,7 +1203,7 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.clusive_user
+        kwargs['clusive_user'] = self.clusive_user
         return kwargs
 
     def get_success_url(self):
@@ -1212,4 +1211,3 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def configure_event(self, event: Event):
         event.page = 'EditCustomization'
-

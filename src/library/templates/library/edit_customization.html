@@ -13,6 +13,8 @@
 {% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
 {% endblock %}
 
+{% load static figuration %}
+
 {% block content %}
 <main id="content" tabindex="-1">
     <h1>Customize Reading</h1>
@@ -34,19 +36,31 @@
             <div class="form-group">
                 {{ form.periods.label_tag | formlabel }}
                 {{ form.periods.errors }}
-                {{ form.periods }}
+                <ul class="list">
+                    {% for checkbox in form.periods %}
+                        <li class="list-item">
+                            <div class="form-check form-checkradio">
+                                {{ checkbox.tag | formcontrol }}
+                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                            </div>
+                        </li>
+                        <li class="list-item">
+                    {% endfor %}
+                </ul>
             </div>
             <hr>
             <div class="form-group">
                 {{ form.question.label_tag | formlabel }}
-                <div class="form-text">
+                <p class="form-text">
                     This will appear in addtion to the general knowledge
                     questions &quot;How much did you learn&quot; and
-                    &quot;What's one thing you learned or found interesting?&quot;
-                </div>
+                    &quot;What's one thing you learned or found
+                    interesting?&quot;
+                </p>
                 {{ form.question.errors }}
                 {{ form.question | formcontrol }}
             </div>
+            <div>
                 <hr>
                 <input type="submit" class="btn btn-secondary btn-small" value="Save"/>
                 <a href="{% url 'customize_book' pk=customization.book.id %}" class="btn btn-link btn-small">Cancel</a>
