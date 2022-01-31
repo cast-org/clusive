@@ -1176,16 +1176,19 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
 class AddCustomizationView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse('customize_book', kwargs=kwargs)
+        return reverse('edit_customization', kwargs={'pk': self.customization.id})
 
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, id=kwargs['pk'])
         user = request.clusive_user
-        c = Customization(book=book, owner=user)
-        c.save()
-        c.periods.set(user.periods.all())
-        logger.debug('Created customization for book %d: %s', kwargs['pk'], c)
+        book_customizations = Customization.objects.filter(book=book)
+        self.customization = Customization(book=book, owner=user)
+        self.customization.title = 'New Customization #' + str(book_customizations.count()) + ' for: ' + book.title
+        self.customization.save()
+        self.customization.periods.set(user.periods.all())
+        logger.debug('Created customization for book %d: %s', kwargs['pk'], self.customization)
         return super().get(request, *args, **kwargs)
+
 
 class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
     template_name = 'library/edit_customization.html'
