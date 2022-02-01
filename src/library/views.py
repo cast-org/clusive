@@ -1190,6 +1190,21 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         return super().get(request, *args, **kwargs)
 
 
+class CancelAddCustomizationView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('customize_book', kwargs={'pk': kwargs['bk']})
+
+    def get(self, request, *args, **kwargs):
+        try:
+            customization = Customization.objects.get(pk=kwargs['ck'])
+            logger.debug('Deleting customization for book %d: %s', customization.book.id, customization)
+            customization.delete()
+        except:
+            pass
+        return super().get(request, *args, **kwargs)
+
+
 class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
     template_name = 'library/edit_customization.html'
     model = Customization

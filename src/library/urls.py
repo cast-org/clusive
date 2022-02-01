@@ -48,6 +48,7 @@ urlpatterns = [
 
     path('customize/<int:pk>', views.CustomizeBookView.as_view(), name='customize_book'),
     path('customize/<int:pk>/new', views.AddCustomizationView.as_view(), name='customize_add'),
+    path('customize/<int:bk>/cancel_add/<int:ck>', views.CancelAddCustomizationView.as_view(), name='customize_cancel_add'),
     path('customize/<int:pk>/edit', views.EditCustomizationView.as_view(), name='edit_customization'),
     path('customize/<int:pk>/edit/<str:is_new>', views.EditCustomizationView.as_view(), name='edit_customization'),
 
