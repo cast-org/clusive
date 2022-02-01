@@ -10,7 +10,7 @@ import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, QuerySet
+from django.db.models import Q, QuerySet, Prefetch
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -95,6 +95,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         self.sort = kwargs.get('sort')
         self.view = kwargs.get('view')
         self.query = request.GET.get('query')
+
+        self.show_assignments = self.clusive_user.can_manage_periods
 
         self.subjects_string = request.GET.get('subjects')
         if self.subjects_string:
@@ -191,6 +193,11 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         q = q.distinct()
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
+        # Assignments will be needed for teacher display as well
+        # This queries for just the assignments to Periods that this teacher is in, and attaches it to custom attribute
+        if self.clusive_user.can_manage_periods:
+            assignment_query = BookAssignment.objects.filter(period__in=self.clusive_user.periods.all())
+            q = q.prefetch_related(Prefetch('assignments', queryset=assignment_query, to_attr='assign_list'))
 
         return q
 
@@ -214,12 +221,14 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['subjects_string'] = self.subjects_string
         context['subjects'] = self.subjects
         context['period'] = self.period
+        context['period_name'] = self.period.name if self.period else None
         context['style'] = self.style
         context['current_view'] = self.view
         context['current_view_name'] = self.view_name
         context['sort'] = self.sort
         context['view_names'] = dict(LibraryViews.CHOICES)
         context['topics'] = Subject.get_list()
+        context['show_assignments'] = self.show_assignments
         return context
 
 
@@ -1038,7 +1047,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
 
     def make_error_message(self, error_response):
         error_messages = ', '.join(error_response['messages'])
-        error_response['error_message'] = f"Error searching Bookshare with '{error_response['key']}': {error_messages}"
+        error_response['error_message'] = f"Error: {error_messages}"
 
     def configure_event(self, event: Event):
         event.page = 'BookshareSearchResults'

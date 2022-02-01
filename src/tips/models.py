@@ -209,6 +209,9 @@ class CTAHistory(models.Model):
         # Welcome panel. Generally the first thing shown.
         if self.type.name == 'welcome':
             return True
+        # Bookshare note. Show any time, but not to guests.
+        if self.type.name == 'bookshare':
+            return self.user.role != Roles.GUEST
         # Summer Reading Challenge "congrats" panel: Students only. Requires >100 minutes active reading time.
         if self.type.name == 'summer_reading_st':
             if self.user.role != Roles.STUDENT:
@@ -218,7 +221,7 @@ class CTAHistory(models.Model):
         # Summer reading promo for Guest users - shown to all guests
         if self.type.name == 'summer_reading_gu':
             return self.user.role == Roles.GUEST
-        # Demographics, shown right away, for parent & teacher.
+        # Demographics, shown at any time, for parent & teacher.
         if self.type.name == 'demographics':
             return self.user.role == Roles.PARENT or self.user.role == Roles.TEACHER
         # Star Rating: any registered user, > 60 minutes active or > 3 logins.
