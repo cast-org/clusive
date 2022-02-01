@@ -1159,12 +1159,17 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
         # Look up customizations
         customizations = get_customizations(book, periods, user)
-        self.extra_context = {
-            'book': book,
-            'customizations': customizations,
-            'period_name': None,
-        }
-        return super().get(request, *args, **kwargs)
+        if customizations.count() is not 0:
+            self.extra_context = {
+                'book': book,
+                'customizations': customizations,
+                'period_name': None,
+            }
+            return super().get(request, *args, **kwargs)
+        else:
+            # Go to EditCustomizationView via AddCustomizationView, passing
+            # the fact that this was triggered from the Library
+            return HttpResponseRedirect(redirect_to=reverse('customize_add', kwargs={'pk': book.id}))
 
     def configure_event(self, event: Event):
         event.page = 'Customize'
@@ -1175,7 +1180,7 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse('edit_customization', kwargs={
             'pk': self.customization.id,
-            'is_new': 'true'
+            'is_new': 'true',
         })
 
     def get(self, request, *args, **kwargs):
@@ -1183,7 +1188,7 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         user = request.clusive_user
         book_customizations = get_customizations(book, user.periods.all(), user)
         self.customization = Customization(book=book, owner=user)
-        self.customization.title = 'Customization #' + str(book_customizations.count())
+        self.customization.title = 'Customization #' + str(book_customizations.count()+1)
         self.customization.save()
         self.customization.periods.set(user.periods.all())
         logger.debug('Created customization for book %d: %s', kwargs['pk'], self.customization)
