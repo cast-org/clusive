@@ -11,7 +11,6 @@ pos_names = {
 
 def lookup(word):
     synsets = wordnet.synsets(word)
-    # CONSTRUCTING A JSON THAT LOOKS LIKE THE CUSTOM GLOSSARY
     if synsets:
         return {'headword': word,
                 'meanings':

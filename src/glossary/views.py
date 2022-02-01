@@ -170,7 +170,6 @@ def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
     return map_to_forms
 
 
-# may want to convert this into a class - function is old style
 def glossdef(request, book_id, cued, word):
     """Return a formatted HTML representation of a word's meaning(s)."""
     base = base_form(word)
@@ -180,7 +179,7 @@ def glossdef(request, book_id, cued, word):
         book = None
     defs = lookup(book, base)
 
-    # logging an event in the eventlog LDM
+    # logging an event in the eventlog
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=base,

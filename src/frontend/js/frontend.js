@@ -772,7 +772,7 @@ function starredButtons() {
     });
 }
 
-// Context (selection) menu methods - LDM
+// Context (selection) menu methods
 
 function contextLookup(selection) {
     'use strict';
