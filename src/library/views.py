@@ -1158,10 +1158,7 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         # Look up assignments for display, attach as expected by template
         book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
         # Look up customizations
-        customizations = Customization.objects\
-            .filter(Q(book=book)
-                    & (Q(periods__in=periods) | Q(owner=user)))\
-            .distinct()
+        customizations = get_customizations(book, periods, user)
         self.extra_context = {
             'book': book,
             'customizations': customizations,
@@ -1176,14 +1173,17 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
 class AddCustomizationView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse('edit_customization', kwargs={'pk': self.customization.id})
+        return reverse('edit_customization', kwargs={
+            'pk': self.customization.id,
+            'is_new': 'true'
+        })
 
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, id=kwargs['pk'])
         user = request.clusive_user
-        book_customizations = Customization.objects.filter(book=book)
+        book_customizations = get_customizations(book, user.periods.all(), user)
         self.customization = Customization(book=book, owner=user)
-        self.customization.title = 'New Customization #' + str(book_customizations.count()) + ' for: ' + book.title
+        self.customization.title = 'Customization #' + str(book_customizations.count())
         self.customization.save()
         self.customization.periods.set(user.periods.all())
         logger.debug('Created customization for book %d: %s', kwargs['pk'], self.customization)
@@ -1197,11 +1197,13 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+        self.is_new = kwargs.get('is_new', 'false')
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['book'] = self.object.book
+        context['is_new'] = self.is_new
         return context
 
     def get_form_kwargs(self):
@@ -1214,3 +1216,10 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def configure_event(self, event: Event):
         event.page = 'EditCustomization'
+
+
+def get_customizations(book, periods, owner):
+    return Customization.objects\
+        .filter(Q(book=book)
+                & (Q(periods__in=periods) | Q(owner=owner)))\
+        .distinct()

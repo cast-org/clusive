@@ -23,7 +23,7 @@
         {% include "library/partial/library_card_list.html" with direct_link=True show_assignments=True query=None %}
     </div>
 
-    <h2>Edit {{ customization.title }}</h2>
+    <h2>Edit {{ customization.title }} {% if is_new == 'true' %}(New){% endif %}</h2>
     <div class="box">
         <form method="post">
                 {% csrf_token %}

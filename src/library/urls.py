@@ -49,6 +49,7 @@ urlpatterns = [
     path('customize/<int:pk>', views.CustomizeBookView.as_view(), name='customize_book'),
     path('customize/<int:pk>/new', views.AddCustomizationView.as_view(), name='customize_add'),
     path('customize/<int:pk>/edit', views.EditCustomizationView.as_view(), name='edit_customization'),
+    path('customize/<int:pk>/edit/<str:is_new>', views.EditCustomizationView.as_view(), name='edit_customization'),
 
     path('data/<str:style>/<str:sort>/<str:view>/<int:period_id>', views.LibraryDataView.as_view(),
         name='library_data'),
