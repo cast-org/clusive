@@ -102,3 +102,4 @@ class EditCustomizationForm(ModelForm):
         clusive_user = kwargs.pop('clusive_user')
         super().__init__(*args, **kwargs)
         self.fields['periods'].queryset = clusive_user.periods.all()
+        self.fields['periods'].label = 'Classes'
