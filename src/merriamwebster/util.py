@@ -1,6 +1,8 @@
-import requests
 import logging
 import re
+
+import requests
+
 from clusive_project import settings
 
 logger = logging.getLogger(__name__)
@@ -19,8 +21,8 @@ def find_in_dictionary(word):
         if r:
             try:
                 return r.json()
-            except requests.exceptions.JSONDecodeError as error:
-                logging.error('MW: Error creating json : %s', error)
+            except ValueError as error:
+                logging.error('MW: Error creating json : %s. API response: %s', error, r.text)
                 return None
         else:
             return None
