@@ -1155,11 +1155,15 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         book = get_object_or_404(Book, id=kwargs['pk'])
         user =  request.clusive_user
         periods = user.periods.all()
+        from_cancel_add = kwargs.get('from_cancel_add', 0) == 1
         # Look up assignments for display, attach as expected by template
         book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
         # Look up customizations
         customizations = get_customizations(book, periods, user)
-        if customizations.count() is not 0:
+        # If there are no customizations but the user has just cancelled adding
+        # one, do not prompt them to add a new one again.  That would be an
+        # infinite loop
+        if customizations.count() is not 0 or from_cancel_add:
             self.extra_context = {
                 'book': book,
                 'customizations': customizations,
@@ -1167,8 +1171,8 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
             }
             return super().get(request, *args, **kwargs)
         else:
-            # Go to EditCustomizationView via AddCustomizationView, passing
-            # the fact that this was triggered from the Library
+            # No customizations yet.  Go to the customization editor routing 
+            # through the add customization handler.
             return HttpResponseRedirect(redirect_to=reverse('customize_add', kwargs={'pk': book.id}))
 
     def configure_event(self, event: Event):
@@ -1188,7 +1192,7 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         user = request.clusive_user
         book_customizations = get_customizations(book, user.periods.all(), user)
         self.customization = Customization(book=book, owner=user)
-        self.customization.title = 'Customization #' + str(book_customizations.count()+1)
+        self.customization.title = 'Customization ' + str(book_customizations.count()+1)
         self.customization.save()
         self.customization.periods.set(user.periods.all())
         logger.debug('Created customization for book %d: %s', kwargs['pk'], self.customization)
@@ -1198,7 +1202,10 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
 class CancelAddCustomizationView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse('customize_book', kwargs={'pk': kwargs['bk']})
+        return reverse('customize_book', kwargs={
+            'pk': kwargs['bk'],
+            'from_cancel_add': 1
+        })
 
     def get(self, request, *args, **kwargs):
         try:

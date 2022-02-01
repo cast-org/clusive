@@ -47,6 +47,7 @@ urlpatterns = [
     path('bookshare-import/<str:bookshareId>', views.BookshareImport.as_view(), name='bookshare_import'),
 
     path('customize/<int:pk>', views.CustomizeBookView.as_view(), name='customize_book'),
+    path('customize/<int:pk>/<int:from_cancel_add>', views.CustomizeBookView.as_view(), name='customize_book'),
     path('customize/<int:pk>/new', views.AddCustomizationView.as_view(), name='customize_add'),
     path('customize/<int:bk>/cancel_add/<int:ck>', views.CancelAddCustomizationView.as_view(), name='customize_cancel_add'),
     path('customize/<int:pk>/edit', views.EditCustomizationView.as_view(), name='edit_customization'),
