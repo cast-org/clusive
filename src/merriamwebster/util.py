@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def find_in_dictionary(word):
-    if settings.MERRIAM_WEBSTER_API_KEY is not None:
+    if settings.MERRIAM_WEBSTER_API_KEY is not None and settings.MERRIAM_WEBSTER_API_KEY:
         api_key = settings.MERRIAM_WEBSTER_API_KEY
         api_url = 'https://www.dictionaryapi.com/api/v3/references/sd3/json/'
         api_call = api_url + word + '?key=' + api_key

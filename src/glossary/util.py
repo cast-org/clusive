@@ -17,16 +17,14 @@ logger = logging.getLogger(__name__)
 book_glossaries = {}
 
 
-def has_definition(book, word):
+def has_definition(book, word, priority_lookup):
     """Determine whether the given word exists in the book's glossary or dictionary.
-     We don't want to query or cue words when we don't have a definition."""
-
-    #THIS WILL NEED TO BE MORE SOPHISTICATED BECAUSE WE DO NOT WANT TO DO THAT WITH METERED USAGE - LDM
-
-    return lookup(book, word) is not None
+     We don't want to query or cue words when we don't have a definition.
+     priority lookups can attempt to use a priority dictionary """
+    return lookup(book, word, priority_lookup) is not None
 
 
-def lookup(book, word):
+def lookup(book, word, priority_lookup):
     defs = None
     if book:
         # First try to find in a book glossary
@@ -37,23 +35,24 @@ def lookup(book, word):
             # this is not in the database
             book_glossaries[book_id] = BookGlossary(book_id)
         defs = book_glossaries[book_id].lookup(word)
-        if (defs):
+        if defs:
             defs['source'] = 'Book'
             return defs
 
     # Next try Merriam-Webster (if configured)
-    defs = merriamwebster.util.lookup(word)
-    if (defs):
-        defs['source'] = 'MW'
-        return defs
+    if priority_lookup:
+        defs = merriamwebster.util.lookup(word)
+        if defs:
+            defs['source'] = 'MW'
+            return defs
 
     # Next try Wordnet
     defs = wordnetutil.lookup(word)
-    if (defs):
+    if defs:
         defs['source'] = 'Wordnet'
     return defs
 
-#what wordnet things is the most common - LDM - always matched on base form of the word no matter the form
+
 def base_form(word, return_word_if_not_found=True):
     """
     Return the base form of the given word.
