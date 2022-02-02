@@ -4,6 +4,7 @@ import os
 
 from lemminflect import getAllLemmas, getAllInflections
 
+import merriamwebster.util
 from wordnet import util as wordnetutil
 from .bookglossary import BookGlossary
 
@@ -16,27 +17,39 @@ logger = logging.getLogger(__name__)
 book_glossaries = {}
 
 
-def has_definition(book, word):
+def has_definition(book, word, priority_lookup):
     """Determine whether the given word exists in the book's glossary or dictionary.
-     We don't want to query or cue words when we don't have a definition."""
-    return lookup(book, word) is not None
+     We don't want to query or cue words when we don't have a definition.
+     priority lookups can attempt to use a priority dictionary """
+    return lookup(book, word, priority_lookup) is not None
 
 
-def lookup(book, word):
+def lookup(book, word, priority_lookup):
     defs = None
     if book:
         # First try to find in a book glossary
         book_id = book.id
         if not book_glossaries.get(book_id):
+            # Book glossary is in the content directory
+            # stored in memory on the server - persistent
+            # this is not in the database
             book_glossaries[book_id] = BookGlossary(book_id)
         defs = book_glossaries[book_id].lookup(word)
-        if (defs):
+        if defs:
             defs['source'] = 'Book'
-    if not defs:
-        # Next try Wordnet
-        defs = wordnetutil.lookup(word)
-        if (defs):
-            defs['source'] = 'Wordnet'
+            return defs
+
+    # Next try Merriam-Webster (if configured)
+    if priority_lookup:
+        defs = merriamwebster.util.lookup(word)
+        if defs:
+            defs['source'] = 'MW'
+            return defs
+
+    # Next try Wordnet
+    defs = wordnetutil.lookup(word)
+    if defs:
+        defs['source'] = 'Wordnet'
     return defs
 
 

@@ -21,6 +21,8 @@ function glossaryPop_focus($elm) {
     $('#glossaryPop').trigger('focus');
 }
 
+// this is relevant for the glossary - LDM
+
 function openGlossaryForWord(word) {
     'use strict';
 
@@ -28,6 +30,9 @@ function openGlossaryForWord(word) {
     window.parent.$('#glossaryLocator').CFW_Popover('show');
     // window.parent.glossaryPop_focus($(elt));
 }
+
+// this is relevant for dictionary
+// LDM
 
 function load_definition(cued, word) {
     var title;
@@ -38,12 +43,14 @@ function load_definition(cued, word) {
         glossaryCurrentWord = word;
         title = word;
         var pub = window.pub_id || 0;
+        // ajax call
         $.get('/glossary/glossdef/' + pub + '/' + cued + '/' + word)
             // eslint-disable-next-line no-unused-vars
             .done(function(data, status) {
                 $('#glossaryBody').html(data);
                 $('#glossaryFooter').show();
             })
+            // didn't find a definition
             .fail(function(err) {
                 console.error(err);
                 $('#glossaryBody').html(err.responseText);
@@ -53,6 +60,7 @@ function load_definition(cued, word) {
                     $('#glossaryPop').CFW_Popover('locateUpdate');
                 }
             });
+        // getting your rating for the word
         $.get('/glossary/rating/' + word)
             // eslint-disable-next-line no-unused-vars
             .done(function(data, status) {

@@ -5,9 +5,9 @@
 
 {% for m in defs.meanings %}
 <p>
-    <span class="definition-speech">({{m.pos}})</span> <span class="definition-meaning">{{m.definition}}</span><br />
+    <span class="definition-speech">({{m.pos}})</span> <span class="definition-meaning">{{m.definition|safe}}</span><br />
     {% for e in m.examples %}
-        <span class="definition-example">{{e}}</span>
+        <span class="definition-example">{{e|safe}}</span>
     {% endfor %}
 </p>
 {% endfor %}

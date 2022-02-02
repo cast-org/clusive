@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 # Methods for looking up words in a book's glossary
 
-
 class BookGlossary:
 
     book = None

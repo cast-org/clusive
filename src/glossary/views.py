@@ -82,7 +82,7 @@ def checklist(request, book_id):
                 # Still not enough words - maybe there was no glossary.
                 # Choose other challenging words from article to fill up the list.
                 for w in bv.all_word_list:
-                    if len(w) < min_word_length or not has_definition(book, w):
+                    if len(w) < min_word_length or not has_definition(book, w, priority_lookup=False):
                         continue
                     # It's a potential word; make sure it hasn't been rated already:
                     user_word = WordModel.objects.filter(user=user, word=w)
@@ -137,10 +137,11 @@ def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
     to_find = 10
 
     # First, find any words where we think the user is interested
+    priority_lookup = False
     interest_words = [wm.word for wm in user_words
                       if wm.interest_est() > 0
                       and (wm.knowledge_est()==None or wm.knowledge_est()<3)
-                      and has_definition(book_version.book, wm.word)]
+                      and has_definition(book_version.book, wm.word, priority_lookup)]
     logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
     cue_words = set(interest_words)
 
@@ -149,7 +150,7 @@ def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
         unknown_words = set([wm.word for wm in user_words
                              if wm.knowledge_est()
                              and wm.knowledge_est() < 2
-                             and has_definition(book_version.book, wm.word)])
+                             and has_definition(book_version.book, wm.word, priority_lookup)])
         logger.debug("Found:  %d low-knowledge words: %s", len(unknown_words), unknown_words)
         unknown_words = unknown_words-cue_words
         #logger.debug("Filter: %d low-knowledge words: %s", len(unknown_words), unknown_words)
@@ -177,8 +178,10 @@ def glossdef(request, book_id, cued, word):
         book = Book.objects.get(pk=book_id)
     except Book.DoesNotExist:
         book = None
-    defs = lookup(book, base)
+    priority_lookup = True
+    defs = lookup(book, base, priority_lookup)
 
+    # logging an event in the eventlog
     vocab_lookup.send(sender=GlossaryConfig.__class__,
                       request=request,
                       word=base,
