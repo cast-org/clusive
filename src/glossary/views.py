@@ -82,7 +82,7 @@ def checklist(request, book_id):
                 # Still not enough words - maybe there was no glossary.
                 # Choose other challenging words from article to fill up the list.
                 for w in bv.all_word_list:
-                    if len(w) < min_word_length or not has_definition(book, w):
+                    if len(w) < min_word_length or not has_definition(book, w, priority_lookup=False):
                         continue
                     # It's a potential word; make sure it hasn't been rated already:
                     user_word = WordModel.objects.filter(user=user, word=w)
