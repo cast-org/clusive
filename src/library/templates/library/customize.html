@@ -14,6 +14,7 @@
 
 {% block content %}
 <main id="content" tabindex="-1">
+    {% include "shared/partial/alerts.html" %}
     <h1>Customize Reading</h1>
 
     <div class="library-list">
@@ -35,6 +36,7 @@
             {% endfor %}
         </p>
         <hr>
+        {% comment not ready for this yet %}
         <p><strong>Words</strong></p>
         <p>
             {% for word in c.word_list %}
@@ -44,6 +46,7 @@
             {% endfor %}
         </p>
         <hr>
+        {% endcomment %}
         <p><strong>Custom Question</strong></p>
         <p>
             {% if c.question %}

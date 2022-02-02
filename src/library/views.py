@@ -1159,7 +1159,7 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
         # Look up assignments for display, attach as expected by template
         book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
         # Look up customizations
-        customizations = get_customizations(book, periods, user)
+        customizations = Customization.get_customizations(book, periods, user)
         # If there are no customizations but the user has just cancelled adding
         # one, do not prompt them to add a new one again.  That would be an
         # infinite loop
@@ -1171,7 +1171,7 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
             }
             return super().get(request, *args, **kwargs)
         else:
-            # No customizations yet.  Go to the customization editor routing 
+            # No customizations yet.  Go to the customization editor routing
             # through the add customization handler.
             return HttpResponseRedirect(redirect_to=reverse('customize_add', kwargs={'pk': book.id}))
 
@@ -1190,7 +1190,7 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, id=kwargs['pk'])
         user = request.clusive_user
-        book_customizations = get_customizations(book, user.periods.all(), user)
+        book_customizations = Customization.get_customizations(book, user.periods.all(), user)
         self.customization = Customization(book=book, owner=user)
         self.customization.title = 'Customization ' + str(book_customizations.count()+1)
         self.customization.save()
@@ -1225,6 +1225,7 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
         self.is_new = kwargs.get('is_new', 'false')
+        self.request = request
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -1238,15 +1239,18 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         kwargs['clusive_user'] = self.clusive_user
         return kwargs
 
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        if form.overridden_periods:
+            messages.warning(self.request, '%s reassigned to the new customization: %s' %
+                             ('Class' if len(form.overridden_periods)==1 else 'Classes',
+                              ', '.join([p.name for p in form.overridden_periods])))
+        return result
+
     def get_success_url(self):
         return reverse('customize_book', kwargs={'pk': self.object.book.id})
 
     def configure_event(self, event: Event):
         event.page = 'EditCustomization'
+        event.book_id = self.object.book.id
 
-
-def get_customizations(book, periods, owner):
-    return Customization.objects\
-        .filter(Q(book=book)
-                & (Q(periods__in=periods) | Q(owner=owner)))\
-        .distinct()

@@ -612,6 +612,13 @@ class Customization(models.Model):
             words.append(custom_vocabulary_word.word)
         return words
 
+    @classmethod
+    def get_customizations(cls, book, periods, owner):
+        return Customization.objects \
+            .filter(Q(book=book)
+                    & (Q(periods__in=periods) | Q(owner=owner))) \
+            .distinct()
+
     def __str__(self):
         return '<Customization %s: %s %s>' % (self.pk, self.title, self.book)
 
