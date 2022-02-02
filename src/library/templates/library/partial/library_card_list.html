@@ -13,13 +13,14 @@
         <div class="card-header">
                 <div class="row">
                     <div class="col">
-                        <a href="#" class="link-stretch"
-                           {% if unauthorized %}
-                           data-cfw="tooltip" title="Not authorized to view"
-                           {% else %}
-                           onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"
-                           {% endif %}
-                        ><h2 class="card-title">
+                        {% if unauthorized %}
+                        <a href="#" data-cfw="tooltip" title="Not authorized to view">
+                        {% else %}
+                        <a href="{% url 'reader_default' book_id=book.id %}"
+                           {% if link_stretch %}class="link-stretch"{% endif %}
+                           {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
+                        {% endif %}
+                            <h2 class="card-title">
                             {% if unauthorized %}
                             <span class="icon-block" title="Not authorized to view"></span>
                             {% endif %}

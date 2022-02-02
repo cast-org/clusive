@@ -21,7 +21,7 @@ from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from glossary.views import choose_words_to_cue
-from library.models import Book, BookVersion, Paradata, Annotation, BookTrend
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.views import TranslateApiManager
@@ -186,8 +186,20 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             top_trend_data = [{'trend': t} for t in top_trends]
             assigned_trends = BookTrend.top_assigned(self.current_period)[:3]
             assigned_trend_data = [{'trend': t} for t in assigned_trends]
+
+            # Look up customizations for any of the books displayed.
+            books: set
+            books = set(trend.book for trend in top_trends)
+            books = books.union(set(trend.book for trend in assigned_trends))
+            customizations = Customization.objects.filter(book__in=books, periods=self.current_period)
+            # Attach customization information to each trend data object
+            # The filter just looks for customizations that match the given book, and we record the first.
+            for td in top_trend_data:
+                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
+            for td in assigned_trend_data:
+                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
+
             # Get comp check statistics for each distinct book, avoid querying twice.
-            reads_data = {}
             comp_data = {}
             for tdata in top_trend_data:
                 t = tdata['trend']
@@ -515,6 +527,10 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
 
+        # See if there's a custom question
+        customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period)
+        logger.debug('Customization: %s', customizations)
+
         self.extra_context = {
             'pub': book,
             'version_id': self.book_version.id,
@@ -525,6 +541,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'cuelist': json.dumps(cuelist),
             'hide_cues': hide_cues,
             'tip_name': self.tip_shown.name if self.tip_shown else None,
+            'customization': customizations[0] if customizations else None,
         }
         return super().get(request, *args, **kwargs)
 

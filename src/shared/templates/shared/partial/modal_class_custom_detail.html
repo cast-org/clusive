@@ -1,0 +1,11 @@
+<ul class="list list-ruled">
+    <h3>{{ question }}</h3>
+    {% for r in details %}
+        <li class="list-item py-0_25">
+            {{r.user.user.first_name}}
+            <div class="font-italic">{{r.custom_response}}</div>
+        </li>
+    {% empty %}
+        <li class="list-item py-0_25">(no responses)</li>
+    {% endfor %}
+</ul>

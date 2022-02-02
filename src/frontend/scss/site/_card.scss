@@ -40,6 +40,10 @@
     & + & {
         margin-top: -1rem;
     }
+
+    &.spaced-top {
+        margin-top: $card-padding-y;
+    }
 }
 
 .card-graph {
@@ -106,6 +110,15 @@
         }
     }
 
+    .card-title {
+        margin-right: calc(1rem + .25rem + (.375rem + 1px) * 2);
+    }
+    .btn-starred {
+        padding: .14125em .375em;
+        @include font-size(1rem);
+        line-height: 1.25;
+    }
+
     .card-body {
         @include calc-line-height(1.375);
     }
@@ -130,12 +143,12 @@
             @include border-bottom-radius(0);
         }
     }
+}
 
-    .btn-starred {
-        padding: .14125em .375em;
-        @include font-size(1rem);
-        line-height: 1.25;
-    }
+.card-library-favorite {
+    position: absolute;
+    top: $card-header-padding-y * .5;
+    right: $card-header-padding-x * .5;
 }
 
 .card-library-tag {

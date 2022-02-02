@@ -1,17 +1,18 @@
 {% load static library %}
 <div class="card card-library">
     <div class="card-header">
-        <a href="#" class="link-stretch"
-           {% if unauthorized %}
-           data-cfw="tooltip" title="Not authorized to view"
-           {% else %}
-           onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"
-           {% endif %}
-           ><h2 class="card-title">
-            {% if unauthorized %}
-            <span class="icon-block" title="Not authorized to view"></span>
-            {% endif %}
-            {{ book.title|highlight:query }}
+        {% if unauthorized %}
+        <a href="#" data-cfw="tooltip" title="Not authorized to view">
+        {% else %}
+        <a href="{% url 'reader_default' book_id=book.id %}"
+           {% if link_stretch %}class="link-stretch"{% endif %}
+           {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
+        {% endif %}
+            <h2 class="card-title">
+                {% if unauthorized %}
+                <span class="icon-block" title="Not authorized to view"></span>
+                {% endif %}
+                {{ book.title|highlight:query }}
             </h2>
         </a>
         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
@@ -23,13 +24,14 @@
     {% endif %}
     <div class="card-body">
         {% if show_description and book.description %}<p class="card-text">{{ book.description|highlight:query }}</p>{% endif %}
+        {% if custom_question_data %}{% include 'library/partial/library_card_custom_question.html' %}{% endif %}
         {% if graph_data %}{% include 'library/partial/library_card_graph.html' %}{% endif %}
     </div>
         <div class="card-footer">
             <div class="row">
                 {% include 'library/partial/library_card_topics.html' %}
                 {% include 'library/partial/library_action_menu.html' %}
-                {% include 'library/partial/library_teacher_extra_info.html' %}
             </div>
+            {% include 'library/partial/library_teacher_extra_info.html' %}
         </div>
 </div>

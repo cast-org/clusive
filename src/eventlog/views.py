@@ -3,14 +3,13 @@ import logging
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import StreamingHttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic.base import ContextMixin
 
 from eventlog.models import Event
 from library.models import BookVersion
 from roster.models import ResearchPermissions
-
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +49,7 @@ class EventMixin(ContextMixin):
         return context
 
     def configure_event(self, event: Event):
-        raise NotImplementedError('View must define the contribute_event_data method')
+        raise NotImplementedError('View must define the configure_event method')
 
 
 @staff_member_required

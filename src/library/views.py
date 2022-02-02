@@ -18,13 +18,13 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, FormView, UpdateView, TemplateView
+from django.views.generic import ListView, FormView, UpdateView, TemplateView, RedirectView
 
 from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 from pages.views import ThemedPageMixin, SettingsPageMixin
@@ -193,11 +193,15 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         q = q.distinct()
         # Avoid separate queries for the topic list of every book
         q = q.prefetch_related('subjects')
-        # Assignments will be needed for teacher display as well
+
+        # For teachers/parents, also look up relevant BookAssignments and Customizations
         # This queries for just the assignments to Periods that this teacher is in, and attaches it to custom attribute
         if self.clusive_user.can_manage_periods:
-            assignment_query = BookAssignment.objects.filter(period__in=self.clusive_user.periods.all())
+            periods = self.clusive_user.periods.all()
+            assignment_query = BookAssignment.objects.filter(period__in=periods)
             q = q.prefetch_related(Prefetch('assignments', queryset=assignment_query, to_attr='assign_list'))
+            customization_query = Customization.objects.filter(Q(periods__in=periods) | Q(owner=self.clusive_user))
+            q = q.prefetch_related(Prefetch('customization_set', queryset=customization_query, to_attr='custom_list'))
 
         return q
 
@@ -1142,3 +1146,111 @@ class BookshareImport(LoginRequiredMixin, View):
         else:
             raise Exception('unpack_epub_file did not find new content.')
         return bv
+
+
+class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
+    template_name = 'library/customize.html'
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, id=kwargs['pk'])
+        user =  request.clusive_user
+        periods = user.periods.all()
+        from_cancel_add = kwargs.get('from_cancel_add', 0) == 1
+        # Look up assignments for display, attach as expected by template
+        book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
+        # Look up customizations
+        customizations = Customization.get_customizations(book, periods, user)
+        # If there are no customizations but the user has just cancelled adding
+        # one, do not prompt them to add a new one again.  That would be an
+        # infinite loop
+        if customizations.count() is not 0 or from_cancel_add:
+            self.extra_context = {
+                'book': book,
+                'customizations': customizations,
+                'period_name': None,
+            }
+            return super().get(request, *args, **kwargs)
+        else:
+            # No customizations yet.  Go to the customization editor routing
+            # through the add customization handler.
+            return HttpResponseRedirect(redirect_to=reverse('customize_add', kwargs={'pk': book.id}))
+
+    def configure_event(self, event: Event):
+        event.page = 'Customize'
+
+
+class AddCustomizationView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('edit_customization', kwargs={
+            'pk': self.customization.id,
+            'is_new': 'true',
+        })
+
+    def get(self, request, *args, **kwargs):
+        book = get_object_or_404(Book, id=kwargs['pk'])
+        user = request.clusive_user
+        book_customizations = Customization.get_customizations(book, user.periods.all(), user)
+        self.customization = Customization(book=book, owner=user)
+        self.customization.title = 'Customization ' + str(book_customizations.count()+1)
+        self.customization.save()
+        self.customization.periods.set(user.periods.all())
+        logger.debug('Created customization for book %d: %s', kwargs['pk'], self.customization)
+        return super().get(request, *args, **kwargs)
+
+
+class CancelAddCustomizationView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('customize_book', kwargs={
+            'pk': kwargs['bk'],
+            'from_cancel_add': 1
+        })
+
+    def get(self, request, *args, **kwargs):
+        try:
+            customization = Customization.objects.get(pk=kwargs['ck'])
+            logger.debug('Deleting customization for book %d: %s', customization.book.id, customization)
+            customization.delete()
+        except:
+            pass
+        return super().get(request, *args, **kwargs)
+
+
+class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
+    template_name = 'library/edit_customization.html'
+    model = Customization
+    form_class = EditCustomizationForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.is_new = kwargs.get('is_new', 'false')
+        self.request = request
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['book'] = self.object.book
+        context['is_new'] = self.is_new
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['clusive_user'] = self.clusive_user
+        return kwargs
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        if form.overridden_periods:
+            messages.warning(self.request, '%s reassigned to the new customization: %s' %
+                             ('Class' if len(form.overridden_periods)==1 else 'Classes',
+                              ', '.join([p.name for p in form.overridden_periods])))
+        return result
+
+    def get_success_url(self):
+        return reverse('customize_book', kwargs={'pk': self.object.book.id})
+
+    def configure_event(self, event: Event):
+        event.page = 'EditCustomization'
+        event.book_id = self.object.book.id
+

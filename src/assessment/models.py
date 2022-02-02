@@ -42,6 +42,7 @@ class AffectiveCheck:
 class ComprehensionCheck:
     scale_response_key = "scaleResponse"
     free_response_key = "freeResponse"
+    custom_response_key = "customResponse"
 
     class ComprehensionScale:
         NOTHING = 0
@@ -64,13 +65,19 @@ class CheckResponse(models.Model):
     class Meta:
         abstract = True
 
-# Comprehension check responses
+
 class ComprehensionCheckResponse(CheckResponse):
+    """
+    Latest response of a student to the comprehension-related questions on a Book.
+    Includes the multiple-choice response, free text, as well as the response to any custom question
+    their teacher may have asked.
+    """
     comprehension_scale_response = models.IntegerField(
         choices=ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES,
-        null=True
+        null=True, blank=True
     )
-    comprehension_free_response = models.TextField(null=True)
+    comprehension_free_response = models.TextField(null=True, blank=True)
+    custom_response = models.TextField(null=True, blank=True)
 
     def get_answer(self):
         for choice in ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES:
@@ -82,7 +89,14 @@ class ComprehensionCheckResponse(CheckResponse):
     def get_counts(cls, book, period):
         """
         Get comprehension check stats for the given book and period.
-        :return:
+        :return: a structure like this:
+        { 'max':  <maximum of any of the counts>,
+          'items': [
+            { 'label': 'Nothing', 'value': 1 }
+            { 'label': 'A little', 'value': 7 },
+            { 'label': 'A lot', 'value': 4 }
+          ]
+        }
         """
         comp_check_counts = list(cls.objects \
             .filter(book=book, user__periods=period, user__role=Roles.STUDENT) \
@@ -103,9 +117,22 @@ class ComprehensionCheckResponse(CheckResponse):
                  'items': data }
 
     @classmethod
-    def get_class_details(cls, book, period):
+    def get_class_details_custom_responses(cls, book, period):
         """
-        Get a list of all comp check responses for the given book and students in the given period.
+        Get comp check responses that include a custom-question answer for the given book and period, as a simple list.
+        :param book:
+        :param period:
+        :return: list of responses in student name order.
+        """
+        responses = cls.objects.filter(book=book, user__periods=period, user__role=Roles.STUDENT,
+                                       custom_response__isnull=False) \
+            .order_by('user__user__first_name')
+        return responses
+
+    @classmethod
+    def get_class_details_by_scale(cls, book, period):
+        """
+        Get comp check responses for the given book and period, categorized by scale response.
         :param book:
         :param period:
         :return: list of lists with the related information.
@@ -120,7 +147,7 @@ class ComprehensionCheckResponse(CheckResponse):
             })
         return details
 
-def __str__(self):
+    def __str__(self):
         return '<CCResp %s/%d>' % (self.user.anon_id, self.book.id)
 
 

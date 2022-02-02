@@ -26,7 +26,7 @@ control_used = Signal(providing_args=['request', 'event_id', 'event_type', 'cont
 word_rated = Signal(providing_args=['request', 'event_id', 'book_id', 'control', 'word', 'rating'])
 word_removed = Signal(providing_args=['request', 'event_id', 'word'])
 comprehension_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
-affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'answer', 'affect_check_response_id'])
+affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'control', 'answer', 'affect_check_response_id'])
 star_rating_completed = Signal(providing_args=['request', 'question', 'answer'])
 
 #
@@ -178,7 +178,7 @@ def log_comprehension_check_completed(sender, **kwargs):
 def log_affect_check_completed(sender, **kwargs):
     action = 'COMPLETED'
     event_type = 'ASSESSMENT_ITEM_EVENT'
-    control = 'affect_check'
+    control = kwargs.get('control')
     question = kwargs.get('question')
     answer = kwargs.get('answer')
     create_event(kwargs, control=control, object=question, value=answer, action=action, event_type=event_type)

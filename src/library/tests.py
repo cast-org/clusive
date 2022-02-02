@@ -8,11 +8,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from roster.models import ClusiveUser, Period, Site
-from .models import Book, Paradata, BookVersion, BookAssignment
+from .models import Book, Paradata, BookVersion, BookAssignment, Customization, CustomVocabularyWord
 from .parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
-
 
 class LibraryTestCase(TestCase):
 
@@ -178,3 +177,104 @@ class ShareFormTestCase(TestCase):
         print(response)
         self.assertFormError(response, 'form', 'periods', 'Select a valid choice. 2 is not one of the available choices.')
 
+class Customizations(TestCase):
+
+    def setUp(self) -> None:
+        self.site = Site.objects.create(name='test site', anon_id='test site')
+        self.period1 = Period.objects.create(site=self.site, name='test period 1', anon_id='test period 1')
+        self.period2 = Period.objects.create(site=self.site, name='test period 2', anon_id='test period 2')
+        self.period3 = Period.objects.create(site=self.site, name='test period 3', anon_id='test period 3')
+        teacher = User.objects.create_user(username="teacher", password="password1")
+        self.teacher = ClusiveUser.objects.create(anon_id="T1", user=teacher, role='TE')
+        self.teacher.periods.add(self.period1)
+        self.teacher.save()
+
+        student_1 = User.objects.create_user(username="student", password="password1")
+        student_1.save()
+        cuser = ClusiveUser.objects.create(anon_id="Student1", user=student_1, role='ST')
+        cuser.save()
+
+        self.book1 = Book.objects.create(owner=cuser, title='Book One', description='')
+        self.book1.save()
+        bv = BookVersion.objects.create(book=self.book1, sortOrder=0)
+        bv.save()
+
+        self.book2 = Book.objects.create(owner=cuser, title='Book Two', description='')
+        self.book2.save()
+        bv = BookVersion.objects.create(book=self.book2, sortOrder=0)
+        bv.save()
+
+        self.custom1 = Customization.objects.create(book=self.book1, owner=self.teacher)
+        self.custom1.save()
+        self.custom2 = Customization.objects.create(book=self.book2, owner=self.teacher)
+        self.custom2.save()
+
+        self.test_vocabulary = ['here', 'are', 'some', 'words']
+        self.test_word = 'hello'
+        self.custom_vocabulary_word = CustomVocabularyWord(customization=self.custom1, word=self.test_word)
+        self.custom_vocabulary_word.save()
+
+    def test_create(self):
+        checks = [(self.custom1, self.book1, 1), (self.custom2, self.book2, 0)]
+        for (customization, book, expected_custom_vocab_words) in checks:
+            custom = Customization.objects.get(book=book)
+            self.assertNotEqual(None, custom)
+            self.assertEquals('Customization', customization.title)
+            self.assertEquals(0, len(custom.periods.all()))
+            self.assertEquals('', custom.question)
+            self.assertEquals(expected_custom_vocab_words, len(custom.customvocabularyword_set.all()))
+
+        # Check the newly created vocabulary list -- first() since there should
+        # be only one at this point
+        vocab = CustomVocabularyWord.objects.first()
+        self.assertEquals(self.test_word, vocab.word)
+
+        # Create another customization with a passed-in title
+        test_title='Frankenstein custom vocabulary'
+        custom = Customization.objects.create(book=self.book1, owner=self.teacher, title=test_title)
+        custom.save()
+        custom = Customization.objects.get(title=test_title)
+        self.assertEquals(test_title, custom.title)
+
+    def test_set_question(self):
+        question = 'To be or not to be'
+        self.custom1.question = question
+        self.custom1.save()
+        custom = Customization.objects.get(book=self.book1)
+        self.assertEquals(question, custom.question)
+
+    def test_set_vocabulary(self):
+        # Create some CustomVocabularyWords and attach them to self.custom1
+        # Customization
+        for vocab_word in self.test_vocabulary:
+            custom_vocab_word = CustomVocabularyWord.objects.create(word=vocab_word, customization=self.custom1)
+            custom_vocab_word.save()
+
+        # Find each `vocabulary` word as a CustomVocabularyWord in the first
+        # Customization
+        for vocab_word in self.test_vocabulary:
+            custom_vocabulary = self.custom1.customvocabularyword_set.get(word=vocab_word)
+            self.assertNotEquals(None, custom_vocabulary)
+
+    def test_customization_word_list(self):
+        # Test the `word_list` Customization property; should be empty
+        self.assertEquals(0, len(self.custom2.word_list))
+
+        # Store test vocabulary words into the second Customization
+        for vocab_word in self.test_vocabulary:
+            custom_vocab_word = CustomVocabularyWord.objects.create(word=vocab_word, customization=self.custom2)
+            custom_vocab_word.save()
+
+        # Test the `word_list` Customization property
+        self.assertEquals(self.test_vocabulary, self.custom2.word_list)
+
+    def test_periods(self):
+        periods = [self.period1, self.period2]
+        self.custom1.periods.set(periods)
+        self.custom1.save()
+        custom = Customization.objects.get(book=self.book1)
+        custom_periods = custom.periods.all()
+        self.assertNotEquals(0, len(custom_periods))
+        self.assertTrue(self.period1 in custom_periods)
+        self.assertTrue(self.period2 in custom_periods)
+        self.assertFalse(self.period3 in custom_periods)

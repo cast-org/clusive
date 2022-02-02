@@ -595,3 +595,41 @@ class Annotation(models.Model):
     class Meta:
         ordering = ['progression']
 
+class Customization(models.Model):
+    """Hold customizations for a Book as used in zero or more Periods"""
+    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
+    periods = models.ManyToManyField(Period, blank=True, related_name='customizations', db_index=True)
+    title = models.CharField(max_length=256, default='Customization', blank=True)
+    question = models.CharField(max_length=256, default='', blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def word_list(self):
+        words = []
+        for custom_vocabulary_word in self.customvocabularyword_set.all():
+            words.append(custom_vocabulary_word.word)
+        return words
+
+    @classmethod
+    def get_customizations(cls, book, periods, owner):
+        return Customization.objects \
+            .filter(Q(book=book)
+                    & (Q(periods__in=periods) | Q(owner=owner))) \
+            .distinct()
+
+    def __str__(self):
+        return '<Customization %s: %s %s>' % (self.pk, self.title, self.book)
+
+    class Meta:
+        ordering = ['book', 'title']
+
+class CustomVocabularyWord(models.Model):
+    """A word used in a Customization"""
+    customization = models.ForeignKey(to=Customization, on_delete=models.CASCADE, db_index=True)
+    word = models.CharField(max_length=256, default='', blank=True)
+
+    def __str__(self):
+        return '[CustomVocabularyWord %s for %s]' % (self.word, self.customization)
+

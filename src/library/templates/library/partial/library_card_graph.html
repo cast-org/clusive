@@ -1,4 +1,8 @@
+{% if custom_question_data.question %}
+<div class="card-divider spaced-top"></div>
+{% else %}
 <div class="card-divider"></div>
+{% endif %}
 
 {% if graph_data.max == 0 %}
 No learning data. Have your readers add their thoughts at the bottom left of the reading page.

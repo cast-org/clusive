@@ -116,8 +116,7 @@
     }
 }
 
-.btn-flag,
-.btn-favorite {
+.btn-flag {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -127,17 +126,6 @@
     @include font-size(1.25rem);
     line-height: 1;
     @include border-radius(10rem);
-}
-
-.btn-check-input {
-    &:checked + .btn-favorite {
-        [class^="icon-"],
-        [class*=" icon-"] {
-            &::before {
-                content: "\e825";
-            }
-        }
-    }
 }
 
 .btn-tag {
