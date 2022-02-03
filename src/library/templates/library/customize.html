@@ -29,7 +29,6 @@
         <p>
             {% for p in c.periods.all %}
               {{ p.name }}
-              {% if not forloop.last %}, {% endif %}
               <br>
             {% empty %}
                None

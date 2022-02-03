@@ -88,15 +88,17 @@ class BookshareSearchForm(forms.Form):
         else:
             raise ValidationError(_('Invalid format for keyword'))
 
+
 class EditCustomizationForm(ModelForm):
     overridden_periods = []
+    periods = PeriodModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+        queryset=Period.objects.all(),
+        required=False)
 
     class Meta:
         model = Customization
         fields = ['title', 'periods', 'question']
-        widgets = {
-            'periods': forms.CheckboxSelectMultiple(),
-        }
 
     def __init__(self, *args, **kwargs):
         clusive_user : ClusiveUser
