@@ -58,6 +58,21 @@
                     interesting?&quot;
                 </p>
                 {{ form.question.errors }}
+                <div class="mb-0_5">
+                    <a href="#" class="btn btn-primary" data-cfw="dropdown">
+                        Question starters
+                        <span class="caret" aria-hidden="true"></span>
+                    </a>
+                    <ul class="dropdown-menu sentence-starter-menu" data-insert-into="{{ form.question.id_for_label }}">
+                        <li><a href="#">Who is…</a></li>
+                        <li><a href="#">What happened when…</a></li>
+                        <li><a href="#">Where did…</a></li>
+                        <li><a href="#">When did…</a></li>
+                        <li><a href="#">Why do you think…</a></li>
+                        <li><a href="#">What evidence is there for…</a></li>
+                        <li><a href="#">What are you wondering about now?</a></li>
+                    </ul>
+                </div>
                 {{ form.question | formcontrol }}
             </div>
             <div>
@@ -72,4 +87,13 @@
         </form>
     </div>
 </main>
+<script>
+    $('.sentence-starter-menu a').click(function(e) {
+       e.preventDefault();
+       var text = $(e.currentTarget).text().replace('…', ' ');
+       var $input = $('#'+$(e.currentTarget).closest('.sentence-starter-menu').data('insert-into'));
+       $input.val($input.val() + text);
+       $input.focus();
+    });
+</script>
 {% endblock %}
