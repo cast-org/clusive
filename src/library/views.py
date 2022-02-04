@@ -1148,8 +1148,8 @@ class BookshareImport(LoginRequiredMixin, View):
         return bv
 
 
-class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
-    template_name = 'library/customize.html'
+class ListCustomizationsView(LoginRequiredMixin, EventMixin, TemplateView):
+    template_name = 'library/list_customizations.html'
 
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, id=kwargs['pk'])
@@ -1176,7 +1176,7 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
             return HttpResponseRedirect(redirect_to=reverse('customize_add', kwargs={'pk': book.id}))
 
     def configure_event(self, event: Event):
-        event.page = 'Customize'
+        event.page = 'ListCustomizations'
 
 
 class AddCustomizationView(LoginRequiredMixin, RedirectView):
@@ -1199,7 +1199,7 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class CancelAddCustomizationView(LoginRequiredMixin, RedirectView):
+class DeleteCustomizationView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return reverse('customize_book', kwargs={
@@ -1232,7 +1232,23 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['book'] = self.object.book
         context['is_new'] = self.is_new
+        context['recent_custom_questions'] = self.get_recent_custom_questions(3)
         return context
+
+    def get_recent_custom_questions(self, n):
+        # Find N most recently-saved questions
+        recent = Customization.objects.filter(Q(question__isnull=False)
+                                              & ~Q(question='')
+                                              & (Q(owner=self.clusive_user)
+                                                 | Q(periods__in=self.clusive_user.periods.all()))) \
+            .order_by('-updated')
+        recent_custom_questions = []
+        for c in recent:
+            if c.question not in recent_custom_questions:
+                recent_custom_questions.append(c.question)
+                if len(recent_custom_questions) >= n:
+                    break
+        return recent_custom_questions
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

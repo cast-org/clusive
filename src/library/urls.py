@@ -46,10 +46,10 @@ urlpatterns = [
     path('bookshare-results/page/<int:page>', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),
     path('bookshare-import/<str:bookshareId>', views.BookshareImport.as_view(), name='bookshare_import'),
 
-    path('customize/<int:pk>', views.CustomizeBookView.as_view(), name='customize_book'),
-    path('customize/<int:pk>/<int:from_cancel_add>', views.CustomizeBookView.as_view(), name='customize_book'),
+    path('customize/<int:pk>', views.ListCustomizationsView.as_view(), name='customize_book'),
+    path('customize/<int:pk>/<int:from_cancel_add>', views.ListCustomizationsView.as_view(), name='customize_book'),
     path('customize/<int:pk>/new', views.AddCustomizationView.as_view(), name='customize_add'),
-    path('customize/<int:bk>/cancel_add/<int:ck>', views.CancelAddCustomizationView.as_view(), name='customize_cancel_add'),
+    path('customize/<int:bk>/delete/<int:ck>', views.DeleteCustomizationView.as_view(), name='delete_customization'),
     path('customize/<int:pk>/edit', views.EditCustomizationView.as_view(), name='edit_customization'),
     path('customize/<int:pk>/edit/<str:is_new>', views.EditCustomizationView.as_view(), name='edit_customization'),
 
