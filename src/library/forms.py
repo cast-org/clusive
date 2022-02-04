@@ -106,6 +106,7 @@ class EditCustomizationForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['periods'].queryset = clusive_user.periods.all()
         self.fields['periods'].label = 'Classes'
+        self.fields['question'].label = 'Custom question'
 
     def save(self, commit=True):
         instance = super().save(commit)
