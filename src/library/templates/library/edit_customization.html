@@ -85,7 +85,7 @@
                 <hr>
                <input type="submit" class="btn btn-secondary btn-small" value="Save"/>
                 {% if is_new == 'true' %}
-                <a href="{% url 'customize_cancel_add' bk=customization.book.id ck=customization.id %}" class="btn btn-link btn-small">Cancel</a>
+                <a href="{% url 'delete_customization' bk=customization.book.id ck=customization.id %}" class="btn btn-link btn-small">Cancel</a>
                 {% else %}
                 <a href="{% url 'customize_book' pk=customization.book.id %}" class="btn btn-link btn-small">Cancel</a>
                 {% endif %}

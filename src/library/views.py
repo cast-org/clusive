@@ -1148,8 +1148,8 @@ class BookshareImport(LoginRequiredMixin, View):
         return bv
 
 
-class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
-    template_name = 'library/customize.html'
+class ListCustomizationsView(LoginRequiredMixin, EventMixin, TemplateView):
+    template_name = 'library/list_customizations.html'
 
     def get(self, request, *args, **kwargs):
         book = get_object_or_404(Book, id=kwargs['pk'])
@@ -1176,7 +1176,7 @@ class CustomizeBookView(LoginRequiredMixin, EventMixin, TemplateView):
             return HttpResponseRedirect(redirect_to=reverse('customize_add', kwargs={'pk': book.id}))
 
     def configure_event(self, event: Event):
-        event.page = 'Customize'
+        event.page = 'ListCustomizations'
 
 
 class AddCustomizationView(LoginRequiredMixin, RedirectView):
@@ -1199,7 +1199,7 @@ class AddCustomizationView(LoginRequiredMixin, RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class CancelAddCustomizationView(LoginRequiredMixin, RedirectView):
+class DeleteCustomizationView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return reverse('customize_book', kwargs={
