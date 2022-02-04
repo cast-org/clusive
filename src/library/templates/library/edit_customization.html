@@ -71,6 +71,12 @@
                         <li><a href="#">Why do you think…</a></li>
                         <li><a href="#">What evidence is there for…</a></li>
                         <li><a href="#">What are you wondering about now?</a></li>
+                        {% if recent_custom_questions %}
+                        <li class="dropdown-divider"></li>
+                        {% for q in recent_custom_questions %}
+                        <li><a href="#">{{ q }}</a></li>
+                        {% endfor %}
+                        {% endif %}
                     </ul>
                 </div>
                 {{ form.question | formcontrol }}
