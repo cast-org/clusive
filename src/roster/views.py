@@ -1370,8 +1370,11 @@ def remove_social_account(request, *args, **kwargs):
         return HttpResponseRedirect(reverse('my_account'))
 
     # Find the SocialAccount for the user/provider and delete it.
-    try:
-        social_account = SocialAccount.objects.get(user=request.user, provider=social_app_name)
+    # 03-Feb-2022:  there should only be one, but Q/A using the 'Sam' login
+    # found multiple SocialTokens and SocialAccounts.  To take that into account
+    # loop through all the user's SocialAccounts with the given provider.
+    social_accounts = SocialAccount.objects.filter(user=request.user, provider=social_app_name)
+    for social_account in social_accounts:
         # Deletion and signal based on allauth's DisconnectForm, see github
         # issue, "How to unlink an account from a social auth provider?":
         # https://github.com/pennersr/django-allauth/issues/814
@@ -1382,7 +1385,7 @@ def remove_social_account(request, *args, **kwargs):
         signals.social_account_removed.send(
             sender=SocialAccount, request=request, socialaccount=social_account
         )
-    except SocialAccount.DoesNotExist:
+    if social_accounts.count() == 0:
         logger.debug('User %s does not have a %s account', request.user.username, social_app_name)
 
     return HttpResponseRedirect(reverse('my_account'))

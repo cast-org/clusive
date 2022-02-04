@@ -58,12 +58,24 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
     def get_access_keys(self):
         provider = self.get_provider()
         social_app = SocialApp.objects.get(provider=provider.id)
-        access_token = SocialToken.objects.get(account__user=self.request.user, account__provider=provider.id)
-        proof_status = self.proof_of_disability_status()
+        access_tokens = SocialToken.objects.filter(account__user=self.request.user, account__provider=provider.id)\
+            .order_by('-expires_at')
+        if len(access_tokens) == 0:
+            raise SocialToken.DoesNotExist
+        # There should be only one SocialAccount/SocialToken for this (user, provider).
+        # If there is more than one, delete all but the most recent.
+        the_access_token = access_tokens.first()
+        for token in access_tokens:
+            if token != the_access_token:
+                try:
+                    social_account = SocialAccount.objects.get(id=token.account.id)
+                    social_account.delete() # cascades and deletes the token
+                except:
+                    token.delete()
         return {
-            'access_token': access_token,
+            'access_token': the_access_token,
             'api_key': social_app.client_id,
-            'proof_status': proof_status
+            'proof_status': self.proof_of_disability_status()
         }
 
     def proof_of_disability_status(self):
