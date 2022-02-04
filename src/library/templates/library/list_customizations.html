@@ -21,11 +21,10 @@
     {% include "library/partial/library_card_list.html" with direct_link=True show_assignments=True query=None %}
     </div>
 
-    <h2>Customizations:</h2>
     {% for c in customizations %}
     <div class="box">
-        <h3>{{ c.title }} <a href="{% url 'edit_customization' pk=c.id %}">edit</a></h3>
-        <p><strong>Classes</strong></p>
+        <h2>{{ c.title }} <a href="{% url 'edit_customization' pk=c.id %}">edit</a></h2>
+        <h3>Classes</h3>
         <p>
             {% for p in c.periods.all %}
               {{ p.name }}
@@ -36,7 +35,7 @@
         </p>
         <hr>
         {% comment not ready for this yet %}
-        <p><strong>Words</strong></p>
+        <h3>Words</h3>
         <p>
             {% for word in c.word_list %}
                {{ word }} &nbsp;&nbsp;
@@ -46,7 +45,7 @@
         </p>
         <hr>
         {% endcomment %}
-        <p><strong>Custom Question</strong></p>
+        <h3>Custom Question</h3>
         <p>
             {% if c.question %}
               {{ c.question }}
