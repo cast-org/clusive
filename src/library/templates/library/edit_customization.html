@@ -52,6 +52,27 @@
             </div>
             <hr>
             <div class="form-group">
+                <h3>Words:</h3>
+                <div class="container">
+                    <div class="row vocabulary-word-list">
+                    {% for word in customization.word_list %}
+                        <div class="col-lg-4 vocabulary-word current-vocabulary-word">
+                            {{ word }}
+                            <input type="hidden" class="vocabulary-word current-vocabulary-word" name="current-vocabulary-word" value="{{ word }}">
+                        </div>
+                    {% empty %}
+                        None
+                    {% endfor %}
+                    </div>
+                    <div class="col-lg-4 form-group">
+                        <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
+                        <input type="text" id="id_word_to_add" class="form-control">
+                        <button id="add-word" class="btn btn-primary">Add</button>
+                        <a href="#" class="form-text">See word suggestions</a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
                 {{ form.question.label_tag | formlabel }}
                 <p class="form-text">
                     This will appear in addition to the general knowledge
@@ -103,5 +124,27 @@
        $input.val($input.val() + text);
        $input.focus();
     });
+
+    $('#add-word').click(function (e) {
+        e.preventDefault();
+        var inputField = $('#id_word_to_add');
+        var newWord = inputField.val().trim();
+        if (newWord.length && (!isDuplicateVocabularyWord(newWord))) {
+            $('.vocabulary-word-list').append(`
+                <div class="col-lg-4 vocabulary-word new-vocabulary-word">
+                    ${newWord}
+                    <input type="hidden" class="vocabulary-word new-vocabulary-word" name="new-vocabulary-word" value="${newWord}">
+                </div>
+            `);
+        }
+        inputField.val('');
+    });
+
+    function isDuplicateVocabularyWord (word) {
+        vocabularyWords = $('[name="current-vocabulary-word"]').add('[name="new-vocabulary-word"]').toArray();
+        return vocabularyWords.some(function (inputCurrentVocabularyWord) {
+            return word == inputCurrentVocabularyWord.value.trim();
+        });
+    };
 </script>
 {% endblock %}
