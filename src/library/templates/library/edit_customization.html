@@ -61,22 +61,22 @@
                 </p>
                 {{ form.question.errors }}
                 <div class="mb-0_5">
-                    <a href="#" class="btn btn-primary" data-cfw="dropdown">
+                    <button type="button" class="btn btn-primary" data-cfw="dropdown">
                         Question starters
                         <span class="caret" aria-hidden="true"></span>
-                    </a>
+                    </button>
                     <ul class="dropdown-menu sentence-starter-menu" data-insert-into="{{ form.question.id_for_label }}">
-                        <li><a href="#">Who is…</a></li>
-                        <li><a href="#">What happened when…</a></li>
-                        <li><a href="#">Where did…</a></li>
-                        <li><a href="#">When did…</a></li>
-                        <li><a href="#">Why do you think…</a></li>
-                        <li><a href="#">What evidence is there for…</a></li>
-                        <li><a href="#">What are you wondering about now?</a></li>
+                        <li><button type="button" class="dropdown-item">Who is…</button></li>
+                        <li><button type="button" class="dropdown-item">What happened when…</button></li>
+                        <li><button type="button" class="dropdown-item">Where did…</button></li>
+                        <li><button type="button" class="dropdown-item">When did…</button></li>
+                        <li><button type="button" class="dropdown-item">Why do you think…</button></li>
+                        <li><button type="button" class="dropdown-item">What evidence is there for…</button></li>
+                        <li><button type="button" class="dropdown-item">What are you wondering about now?</button></li>
                         {% if recent_custom_questions %}
                         <li class="dropdown-divider"></li>
                         {% for q in recent_custom_questions %}
-                        <li><a href="#">{{ q }}</a></li>
+                        <li><button type="button" class="dropdown-item">{{ q }}</button></li>
                         {% endfor %}
                         {% endif %}
                     </ul>
@@ -96,8 +96,7 @@
     </div>
 </main>
 <script>
-    $('.sentence-starter-menu a').click(function(e) {
-       e.preventDefault();
+    $('.sentence-starter-menu .dropdown-item').click(function(e) {
        var text = $(e.currentTarget).text().replace('…', ' ');
        var $input = $('#'+$(e.currentTarget).closest('.sentence-starter-menu').data('insert-into'));
        $input.val($input.val() + text);
