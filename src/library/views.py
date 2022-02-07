@@ -24,7 +24,7 @@ from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 from pages.views import ThemedPageMixin, SettingsPageMixin
@@ -1257,6 +1257,7 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def form_valid(self, form):
         result = super().form_valid(form)
+        self.modify_custom_vocabulary(form.instance)
         if form.overridden_periods:
             messages.warning(self.request, '%s reassigned to the new customization: %s' %
                              ('Class' if len(form.overridden_periods)==1 else 'Classes',
@@ -1265,6 +1266,17 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('customize_book', kwargs={'pk': self.object.book.id})
+
+    def modify_custom_vocabulary(self, customization):
+        # Add new words
+        new_words_str = self.request.POST.get('new_vocabulary_words', '')
+        for new_word in new_words_str.split():
+            custom_vocab_word = CustomVocabularyWord.objects.create(
+                word=new_word, customization=customization
+            )
+            custom_vocab_word.save()
+        # Delete old words
+        # TODO
 
     def configure_event(self, event: Event):
         event.page = 'EditCustomization'

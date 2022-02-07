@@ -58,12 +58,14 @@
                     {% for word in customization.word_list %}
                         <div class="col-lg-4 vocabulary-word current-vocabulary-word">
                             {{ word }}
-                            <input type="hidden" class="vocabulary-word current-vocabulary-word" name="current-vocabulary-word" value="{{ word }}">
                         </div>
                     {% empty %}
                         None
                     {% endfor %}
                     </div>
+                    {{ form.current_vocabulary_words }}
+                    {{ form.new_vocabulary_words }}
+                    {{ form.delete_vocabulary_words }}
                     <div class="col-lg-4 form-group">
                         <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
                         <input type="text" id="id_word_to_add" class="form-control">
@@ -133,17 +135,19 @@
             $('.vocabulary-word-list').append(`
                 <div class="col-lg-4 vocabulary-word new-vocabulary-word">
                     ${newWord}
-                    <input type="hidden" class="vocabulary-word new-vocabulary-word" name="new-vocabulary-word" value="${newWord}">
                 </div>
             `);
+            newVocabularyWordList = $('#id_new_vocabulary_words').val() + ` ${newWord}`;
+            $('#id_new_vocabulary_words').val(newVocabularyWordList.trim());
         }
         inputField.val('');
     });
 
     function isDuplicateVocabularyWord (word) {
-        vocabularyWords = $('[name="current-vocabulary-word"]').add('[name="new-vocabulary-word"]').toArray();
-        return vocabularyWords.some(function (inputCurrentVocabularyWord) {
-            return word == inputCurrentVocabularyWord.value.trim();
+        allWordsString = $('#id_current_vocabulary_words').val() + ' ';
+        allWordsString = allWordsString.concat($('#id_new_vocabulary_words').val());
+        return allWordsString.split(' ').some(function (inputWord) {
+            return word == inputWord;
         });
     };
 </script>
