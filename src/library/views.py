@@ -1216,6 +1216,7 @@ class DeleteCustomizationView(LoginRequiredMixin, RedirectView):
             pass
         return super().get(request, *args, **kwargs)
 
+
 class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
     template_name = 'library/edit_customization.html'
     model = Customization
@@ -1274,7 +1275,7 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
                 word=new_word, customization=customization
             )
             custom_vocab_word.save()
-        # Delete old words
+        # Delete old words marked for deletion
         delete_words_str = self.request.POST.get('delete_vocabulary_words', '')
         for delete_word in delete_words_str.split():
             try:

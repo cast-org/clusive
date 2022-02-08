@@ -57,7 +57,7 @@
                     <div class="row vocabulary-word-list">
                     {% for word in customization.word_list %}
                         <div class="col-lg-4 vocabulary-word current-vocabulary-word">
-                            {{ word }}
+                            {{ word }} <button id="delete_{{word}}" class="link-btn delete-word-button">x</button>
                         </div>
                     {% empty %}
                         None
@@ -69,7 +69,7 @@
                     <div class="col-lg-4 form-group">
                         <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
                         <input type="text" id="id_word_to_add" class="form-control">
-                        <button id="add-word" class="btn btn-primary">Add</button>
+                        <button id="add-word-button" class="btn btn-primary">Add</button>
                         <a href="#" class="form-text">See word suggestions</a>
                     </div>
                 </div>
@@ -127,28 +127,138 @@
        $input.focus();
     });
 
-    $('#add-word').click(function (e) {
-        e.preventDefault();
-        var inputField = $('#id_word_to_add');
-        var newWord = inputField.val().trim();
-        if (newWord.length && (!isDuplicateVocabularyWord(newWord))) {
-            $('.vocabulary-word-list').append(`
-                <div class="col-lg-4 vocabulary-word new-vocabulary-word">
-                    ${newWord}
-                </div>
-            `);
-            newVocabularyWordList = $('#id_new_vocabulary_words').val() + ` ${newWord}`;
-            $('#id_new_vocabulary_words').val(newVocabularyWordList.trim());
-        }
-        inputField.val('');
+    $('#add-word-button').click(function (e) {
+        addVocabularyWord(e);
     });
 
-    function isDuplicateVocabularyWord (word) {
-        allWordsString = $('#id_current_vocabulary_words').val() + ' ';
-        allWordsString = allWordsString.concat($('#id_new_vocabulary_words').val());
-        return allWordsString.split(' ').some(function (inputWord) {
-            return word == inputWord;
+    $('#id_word_to_add').keypress(function (e) {
+        var keycode = (e.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            addVocabularyWord(e);
+        }
+    });
+
+    $('.delete-word-button').click(function (e) {
+        deleteVocabularyWord(e);
+    });
+
+    function deleteVocabularyWord (e) {
+        e.preventDefault();
+        var parentDiv = $(e.currentTarget).parent();
+        var wordToDelete= $(e.currentTarget).attr('id').replace(/^delete_/,'');
+        // Remove wordToDelete from the new words list, if present.
+        var newResult = isNewWord(wordToDelete);
+        if (newResult.isMember) {
+            var modNewWords = $.grep(newResult.wordArray, function (aWord) {
+                return aWord !== wordToDelete;
+            });
+            $('#id_new_vocabulary_words').val(modNewWords.join(' ').trim());
+        }
+        else {
+            // Note:  leave the current words list intact as it records the
+            // actual current words -- a current word can appear in both the
+            // current words list and the deleted words list, but a new word is
+            // either in the new words list or not, and never in the deleted
+            // words list.
+            // Add wordToDelete to deleted words, but only once.
+            var deleteResult = isDeletedWord(wordToDelete);
+            if (!deleteResult.isMember) {
+                deleteResult.wordArray.push(wordToDelete);
+                $('#id_delete_vocabulary_words').val(deleteResult.wordArray.join(' ').trim());
+            }
+        }
+        // In all cases, removed the <div> containint the wordToDelete from the
+        // document.
+        $(parentDiv).remove();
+        e.stopPropagation();
+    };
+
+    function addVocabularyWord(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var inputField = $('#id_word_to_add');
+        var newWord = inputField.val().trim();
+        if (newWord.length) {
+            var condition = addCondition(newWord);
+            if (condition === 'addNew' || condition === 'addAndRemoveFromDeleted') {
+                var delete_button_id = `delete_${newWord}`;
+                // Add the new <div> for the "new" vocabulary word.
+                $('.vocabulary-word-list').append(`
+                    <div class="col-lg-4 vocabulary-word new-vocabulary-word">
+                        ${newWord}  <button id="${delete_button_id}" class="link-btn">x</button>
+                    </div>
+                `);
+                // Hook up the delete listener for the new word's delete button.
+                $(`#${delete_button_id}`).click(function (e) {
+                    deleteVocabularyWord(e);
+                });
+                // Update word lists.
+                if (condition === 'addNew') {
+                    var newVocabularyWordList = $('#id_new_vocabulary_words').val() + ` ${newWord}`;
+                    $('#id_new_vocabulary_words').val(newVocabularyWordList.trim());
+                }
+                else {  // condition === addAndRemoveFromDeleted
+                    var deletedVocabularyWordList = $('#id_delete_vocabulary_words').val().split(' ');
+                    deletedVocabularyWordList = $.grep(deletedVocabularyWordList, function (deletedWord) {
+                        return deletedWord !== newWord;
+                    });
+                    $('#id_delete_vocabulary_words').val(deletedVocabularyWordList.join(' ').trim());
+                }
+            }
+            else {
+                console.log(`New word ${newWord} already added (condition is ${condition})`);
+            }
+        }
+        inputField.val('');
+        inputField.focus();
+    };
+
+    function isCurrentWord (word) {
+        return isWordListMember(word, '#id_current_vocabulary_words');
+    };
+
+    function isNewWord (word) {
+        return isWordListMember(word, '#id_new_vocabulary_words');
+    };
+
+    function isDeletedWord (word) {
+        return isWordListMember(word, '#id_delete_vocabulary_words');
+    };
+
+    function isWordListMember (word, wordListid) {
+        var wordList = $(wordListid).val();
+        if (wordList.length === 0) {
+            wordList = [];
+        }
+        else {
+            wordList = wordList.split(' ')
+        }
+        var inList = wordList.some(function (listWord) {
+            return word === listWord;
         });
+        return { wordArray: wordList, isMember: inList };
+    };
+
+    function addCondition (word) {
+        // If already in new word list, be done.
+        newWord = isNewWord(word);
+        if (newWord.isMember) {
+            return 'dontAdd';
+        }
+        // Not in new word list.  Check the current words and the deleted words.
+        // If a current word but not deleted, be done.
+        currentWord = isCurrentWord(word);
+        deletedWord = isDeletedWord(word);
+        if (currentWord.isMember && !deletedWord.isMember) {
+            return 'dontAdd';
+        }
+        // If a current word and in the deleted list, remove from deleted, and
+        // add back to display.
+        if (currentWord.isMember && deletedWord.isMember) {
+            return 'addAndRemoveFromDeleted';
+        }
+        // Not in new list, nor a current word, simply add it.
+        return 'addNew';
     };
 </script>
 {% endblock %}
