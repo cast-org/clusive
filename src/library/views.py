@@ -1270,15 +1270,25 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
     def modify_custom_vocabulary(self, customization):
         # Add new words
         new_words_str = self.request.POST.get('new_vocabulary_words', '')
-        for new_word in new_words_str.split():
-            custom_vocab_word = CustomVocabularyWord.objects.create(
-                word=new_word, customization=customization
-            )
-            custom_vocab_word.save()
+        for new_word in new_words_str.split('|'):
+            new_word = new_word.strip()
+            # Don't add empty strings
+            if len(new_word) > 0:
+                custom_vocab_word = CustomVocabularyWord.objects.create(
+                    word=new_word, customization=customization
+                )
+                custom_vocab_word.save()
         # Delete old words marked for deletion
         delete_words_str = self.request.POST.get('delete_vocabulary_words', '')
-        for delete_word in delete_words_str.split():
+        for delete_word in delete_words_str.split('|'):
+            delete_word = delete_word.strip()
             try:
+                # TODO: (JS) Note that get() will fail if the
+                # (delete_word,customization) matches more than one record, i.e.
+                # multiple instances of a word connected to one customization.
+                # Should the CustomVocabularyWord/Customization models restrict
+                # the words to be unique?  Vs. support multiple definitions or
+                # multiple pronunciations?
                 custom_vocab_word = CustomVocabularyWord.objects.get(
                     word=delete_word, customization=customization
                 )

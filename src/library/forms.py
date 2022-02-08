@@ -131,7 +131,7 @@ class EditCustomizationForm(ModelForm):
         self.fields['periods'].queryset = clusive_user.periods.all()
         self.fields['periods'].label = 'Classes'
         self.fields['question'].label = 'Custom question'
-        self.fields['current_vocabulary_words'].initial = ' '.join(self.instance.word_list)
+        self.fields['current_vocabulary_words'].initial = '|'.join(self.instance.word_list)
 
     def save(self, commit=True):
         instance = super().save(commit)

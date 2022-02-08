@@ -57,7 +57,7 @@
                     <div class="row vocabulary-word-list">
                     {% for word in customization.word_list %}
                         <div class="col-lg-4 vocabulary-word current-vocabulary-word">
-                            {{ word }} <button id="delete_{{word}}" class="link-btn delete-word-button">x</button>
+                            {{ word }} <button id="delete_{{ word }}" class="link-btn delete-word-button">x</button>
                         </div>
                     {% empty %}
                         None
@@ -145,14 +145,14 @@
     function deleteVocabularyWord (e) {
         e.preventDefault();
         var parentDiv = $(e.currentTarget).parent();
-        var wordToDelete= $(e.currentTarget).attr('id').replace(/^delete_/,'');
+        var wordToDelete= $(e.currentTarget).attr('id').replace(/^delete_/,'').replace('_', ' ');
         // Remove wordToDelete from the new words list, if present.
         var newResult = isNewWord(wordToDelete);
         if (newResult.isMember) {
             var modNewWords = $.grep(newResult.wordArray, function (aWord) {
                 return aWord !== wordToDelete;
             });
-            $('#id_new_vocabulary_words').val(modNewWords.join(' ').trim());
+            $('#id_new_vocabulary_words').val(modNewWords.join('|').trim());
         }
         else {
             // Note:  leave the current words list intact as it records the
@@ -164,7 +164,7 @@
             var deleteResult = isDeletedWord(wordToDelete);
             if (!deleteResult.isMember) {
                 deleteResult.wordArray.push(wordToDelete);
-                $('#id_delete_vocabulary_words').val(deleteResult.wordArray.join(' ').trim());
+                $('#id_delete_vocabulary_words').val(deleteResult.wordArray.join('|').trim());
             }
         }
         // In all cases, removed the <div> containint the wordToDelete from the
@@ -181,7 +181,7 @@
         if (newWord.length) {
             var condition = addCondition(newWord);
             if (condition === 'addNew' || condition === 'addAndRemoveFromDeleted') {
-                var delete_button_id = `delete_${newWord}`;
+                var delete_button_id = 'delete_' + newWord.replace(' ', '_');
                 // Add the new <div> for the "new" vocabulary word.
                 $('.vocabulary-word-list').append(`
                     <div class="col-lg-4 vocabulary-word new-vocabulary-word">
@@ -194,15 +194,22 @@
                 });
                 // Update word lists.
                 if (condition === 'addNew') {
-                    var newVocabularyWordList = $('#id_new_vocabulary_words').val() + ` ${newWord}`;
-                    $('#id_new_vocabulary_words').val(newVocabularyWordList.trim());
+                    var newVocabularyWordList = $('#id_new_vocabulary_words').val();
+                    if (newVocabularyWordList.length === 0) {
+                        $('#id_new_vocabulary_words').val(newWord.trim());
+                    }
+                    else {
+                        newVocabularyWordList = newVocabularyWordList.split('|');
+                        newVocabularyWordList.push(`${newWord}`);
+                        $('#id_new_vocabulary_words').val(newVocabularyWordList.join('|').trim());
+                    }
                 }
                 else {  // condition === addAndRemoveFromDeleted
-                    var deletedVocabularyWordList = $('#id_delete_vocabulary_words').val().split(' ');
+                    var deletedVocabularyWordList = $('#id_delete_vocabulary_words').val().split('|');
                     deletedVocabularyWordList = $.grep(deletedVocabularyWordList, function (deletedWord) {
                         return deletedWord !== newWord;
                     });
-                    $('#id_delete_vocabulary_words').val(deletedVocabularyWordList.join(' ').trim());
+                    $('#id_delete_vocabulary_words').val(deletedVocabularyWordList.join('|').trim());
                 }
             }
             else {
@@ -231,7 +238,7 @@
             wordList = [];
         }
         else {
-            wordList = wordList.split(' ')
+            wordList = wordList.split('|')
         }
         var inList = wordList.some(function (listWord) {
             return word === listWord;
