@@ -46,10 +46,3 @@ audio {
     width: 100%;
     height: 2em;
 }
-
-//stylelint-disable selector-max-id, selector-class-pattern, declaration-no-important
-#R2_ID_HIGHLIGHTS_CONTAINER .R2_CLASS_HIGHLIGHT_AREA,
-#R2_ID_DEFINITIONS_CONTAINER .R2_CLASS_HIGHLIGHT_AREA {
-    pointer-events: auto !important;
-    cursor: pointer;
-}
