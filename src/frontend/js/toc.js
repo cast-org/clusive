@@ -1,4 +1,4 @@
-/* global D2Reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
+/* global d2reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
 /* exported buildTableOfContents, trackReadingLocation,
    buildAnnotationList, addNewAnnotation, showExistingAnnotation */
 
@@ -41,7 +41,7 @@ function buildTocLevel(list, level, id) {
         var toc_depth = 'toc-depth-' + level;
         var li_class = 'nav-link ' + toc_depth;
         // eslint-disable-next-line no-script-url
-        var click = 'javascript:D2Reader.goTo({\'href\':\'' + element.href + '\'}); return false;';
+        var click = 'javascript:d2reader.goTo({\'href\':\'' + element.href + '\'}); return false;';
         var twiddle = '';
         var submenu = '';
         var submenu_id = id + '_' + index;
@@ -103,7 +103,7 @@ function resetCurrentTocItem(collapse) {
 function markTocItemActive() {
     'use strict';
 
-    var current = D2Reader.mostRecentNavigatedTocItem();
+    var current = d2reader.mostRecentNavigatedTocItem;
     if (current.startsWith('/')) {
         current = current.substr(1);
     }
@@ -134,31 +134,32 @@ function scrollToCurrentTocItem() {
 function buildTableOfContents() {
     'use strict';
 
-    if (typeof D2Reader === 'object') {
-        D2Reader.tableOfContents().then(function(items) {
-            var has_structure = items.length > 1;
-            if (items.length === 1 && items[0].children && items[0].children.length > 1) {
-                has_structure = true;
-            }
-            if (has_structure) {
-                $(TOC_EMPTY).hide();
-                var out = buildTocLevel(items, 0, 'toc');
-                $(TOC_CONTAINER).html(out).CFW_Init();
+    if (typeof d2reader === 'object') {
+        var items = d2reader.tableOfContents;
+        var has_structure = items.length > 1;
+        if (items.length === 1 && items[0].children && items[0].children.length > 1) {
+            has_structure = true;
+        }
+        if (has_structure) {
+            $(TOC_EMPTY).hide();
+            var out = buildTocLevel(items, 0, 'toc');
+            $(TOC_CONTAINER).html(out).CFW_Init();
 
-                var navLinks = $(TOC_CONTAINER).find('.nav-link');
-                // Add click event to update menu when new page selected
-                navLinks.on('click', function() {
-                    // Use timeout delay until we can get a callback from reader
-                    setTimeout(function() {
-                        resetCurrentTocItem(false);
-                        markTocItemActive();
-                    }, 100);
-                });
-            } else {
-                // Empty TOC
-                $(TOC_CONTAINER).hide();
-            }
-        });
+            var navLinks = $(TOC_CONTAINER).find('.nav-link');
+            // Add click event to update menu when new page selected
+            navLinks.on('click', function() {
+                // Use timeout delay until we can get a callback from reader
+                setTimeout(function() {
+                    resetCurrentTocItem(false);
+                    markTocItemActive();
+                }, 100);
+            });
+        } else {
+            // Empty TOC
+            $(TOC_CONTAINER).hide();
+        }
+    } else {
+        console.warn('d2reader not initialized');
     }
 }
 
@@ -302,7 +303,7 @@ function deleteAnnotation(e) {
     var $container = $(this).closest('.annotation-container');
     var id = $container.data('annotation-id');
     console.debug('Deleting annotation: ', id);
-    D2Reader.deleteAnnotation({
+    d2reader.deleteAnnotation({
         id: id
     });
     $container.html('<div class="highlight-undelete">Deleted' +
@@ -331,7 +332,7 @@ function undeleteAnnotation(event) {
     var encoded = $container.data('annotation');
     var annotation = JSON.parse(atob(encoded));
     console.debug('Undeleting annotation id=', annotation.id);
-    D2Reader.addAnnotation(annotation);
+    d2reader.addAnnotation(annotation);
     $.ajax('/library/annotation', {
         method: 'POST',
         headers: {
@@ -370,7 +371,7 @@ function goToAnnotation(event) {
     // Decode base-64 encoded JSON attribute value
     var json = JSON.parse(atob(encoded));
     markAnnotationActive(json);
-    D2Reader.goTo(json);
+    d2reader.goTo(json);
 
     // Check to see if we should close the TOC modal based on current browser breakpoint
     var bpVal = window.getBreakpointByName('xs');

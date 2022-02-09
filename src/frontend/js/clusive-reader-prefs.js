@@ -1,4 +1,4 @@
-/* global fluid_3_0_0, cisl, D2Reader */
+/* global fluid_3_0_0, cisl, d2reader */
 
 /*
     Defines interactions between Clusive preferences and Readium.
@@ -235,9 +235,9 @@
         var reader = clusiveContext.reader.instance;
         if (reader) {
             if (settingValue) {
-                D2Reader.showLayer('definitions')
+                d2reader.showLayer('definitions')
             } else {
-                D2Reader.hideLayer('definitions')
+                d2reader.hideLayer('definitions')
             }
         }
     }

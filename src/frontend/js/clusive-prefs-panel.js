@@ -1,4 +1,4 @@
-/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT, D2Reader, clusiveTTS */
+/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT, clusiveTTS */
 
 /*
     This code defines canonical representations of the various preference settings,
