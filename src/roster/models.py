@@ -446,7 +446,7 @@ class Preference (models.Model):
 
     pref = models.CharField(max_length=32, db_index=True)
 
-    value = models.CharField(max_length=32, null=True)
+    value = models.CharField(max_length=64, null=True)
 
     @property
     def typed_value(self):
