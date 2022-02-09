@@ -30,6 +30,14 @@ body {
     font-family: OpenDyslexicRegular, sans-serif !important;
 }
 
+#iframe-wrapper {
+    height: calc(100vh - #{$header-height + $body-padding-y});
+
+    @include media-breakpoint-up(md) {
+        height: calc(100vh - #{$header-md-height + $body-padding-y});
+    }
+}
+
 // Special icon cases
 .icon-starred {
     &::before {
