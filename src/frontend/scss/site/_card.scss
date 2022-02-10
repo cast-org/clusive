@@ -52,7 +52,7 @@
 
     .link-stretch {
         &::after {
-            top: -$card-padding-y;
+            top: calc(-#{$card-padding-y} - 3px);
             right: -$card-padding-x;
             bottom: calc(-2rem + #{-$card-padding-y});
             left: -$card-padding-x;
@@ -61,6 +61,28 @@
 
 }
 .card-graph-title {
+    margin-bottom: .25rem;
+    @include font-size(.8125rem);
+}
+
+.card-question {
+    position: relative;
+    z-index: 2;
+
+    .link-stretch {
+        &::after {
+            top: calc(-#{$card-padding-y} - 3px);
+            right: -$card-padding-x;
+            bottom: -$card-padding-y;
+            left: -$card-padding-x;
+        }
+
+        &:hover::after {
+            background-color: rgba(0, 0, 0, .05);
+        }
+    }
+}
+.card-question-title {
     margin-bottom: .25rem;
     @include font-size(.8125rem);
 }
@@ -84,7 +106,8 @@
 .card-library {
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
-    *:not(.card-graph):not(.card-graph-title) > .link-stretch {
+    .card-title a,
+    *:not(.card-graph):not(.card-graph-title):not(.card-question-title) > .link-stretch {
         color: inherit;
         text-decoration: none;
 
@@ -110,7 +133,7 @@
         }
     }
 
-    .card-title {
+    .has-favorite .card-title {
         margin-right: calc(1rem + .25rem + (.375rem + 1px) * 2);
     }
     .btn-starred {
