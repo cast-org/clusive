@@ -24,7 +24,8 @@ from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, CustomVocabularyWord
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
+    CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 from pages.views import ThemedPageMixin, SettingsPageMixin
@@ -1233,6 +1234,7 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         context['book'] = self.object.book
         context['is_new'] = self.is_new
         context['recent_custom_questions'] = self.get_recent_custom_questions(3)
+        context['all_words'] = self.object.book.all_word_list
         return context
 
     def get_recent_custom_questions(self, n):

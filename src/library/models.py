@@ -12,6 +12,7 @@ from django.db.models import Sum, Q
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles, StudentActivitySort
+from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,19 @@ class Book(models.Model):
         if BookAssignment.objects.filter(book=self, period__in=periods).exists():
             return True
         return False
+
+    @property
+    def all_word_list(self):
+        if not hasattr(self, '_all_word_list'):
+            versions = self.versions.all()
+            if len(versions) == 1:
+                self._all_word_list = versions[0].all_word_list
+            else:
+                words = set()
+                for v in versions:
+                    words.update(v.all_word_list)
+                self._all_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
+        return self._all_word_list
 
     @property
     def path(self):
