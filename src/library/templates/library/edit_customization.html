@@ -66,7 +66,7 @@
                         {{ word }} <button id="delete_{{ word }}" class="link-btn delete-word-button" data-word="{{ word }}">x</button>
                     </div>
                 {% empty %}
-                    None
+                    <span id="empty-vocabulary-list">None</span>
                 {% endfor %}
                 </div>
             </div>
@@ -189,8 +189,11 @@
             }
         }
         // In all cases, removed the <div> containing the wordToDelete from the
-        // document.
+        // document.  If all have been removed, put "None" instead.
         $(parentDiv).remove();
+        if ($('div.vocabulary-word').length === 0) {
+            $('.vocabulary-word-list').append('<span id="empty-vocabulary-list">None</span>');
+        }
     };
 
     function addVocabularyWord(e) {
@@ -201,6 +204,7 @@
         if (newWord.length) {
             if (!all_words.includes(newWord)) {
                 $('#worderror').show();
+                inputField.select();
                 return;
             } else {
                 $('#worderror').hide();
@@ -215,6 +219,10 @@
                         ${newWord} <button id="${deleteButtonId}" class="link-btn delete-word-button" data-word="${newWord}">x</button>
                     </div>
                 `);
+                var noWordsIndicator = $('#empty-vocabulary-list');
+                if (noWordsIndicator[0]) {
+                    noWordsIndicator.remove();
+                }
                 // Update word lists.
                 if (condition === 'addNew') {
                     cisl.customVocabs.newList.push(newWord.trim());
