@@ -1005,7 +1005,8 @@ function initEditCustomizaitons () {
     $('#add-word-button').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        addVocabularyWord(e);
+        var inputField = $('#id_word_to_add');
+        addVocabularyWord(inputField.val().trim(), inputField);
     });
 
     $('#id_word_to_add').keypress(function (e) {
@@ -1013,7 +1014,8 @@ function initEditCustomizaitons () {
         if (keycode == '13') {
             e.preventDefault();
             e.stopPropagation();
-            addVocabularyWord(e);
+            var inputField = $('#id_word_to_add');
+            addVocabularyWord(inputField.val().trim(), inputField);
         }
     });
 
@@ -1054,15 +1056,13 @@ function deleteVocabularyWord (e) {
     }
 };
 
-function addVocabularyWord(e) {
+function addVocabularyWord(newWord, /*optional*/ inputField) {
     'use strict';
 
-    var inputField = $('#id_word_to_add');
-    var newWord = inputField.val().trim();
     if (newWord.length) {
         if (!all_words.includes(newWord)) {
             $('#worderror').show();
-            inputField.select();
+            if (inputField) inputField.select();
             return;
         } else {
             $('#worderror').hide();
@@ -1095,8 +1095,10 @@ function addVocabularyWord(e) {
             console.log(`New word ${newWord} already added (condition is ${condition})`);
         }
     }
-    inputField.val('');
-    inputField.focus();
+    if (inputField) {
+        inputField.val('');
+        inputField.focus();
+    }
 };
 
 function isCurrentWord (word) {
