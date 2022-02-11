@@ -528,7 +528,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
 
         # See if there's a custom question
-        customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period)
+        customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
+            if clusive_user.current_period else None
         logger.debug('Customization: %s', customizations)
 
         self.extra_context = {
