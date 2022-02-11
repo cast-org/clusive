@@ -90,6 +90,20 @@ class Book(models.Model):
         return self._all_word_list
 
     @property
+    def all_word_and_non_dict_word_list(self):
+        if not hasattr(self, '_all_word_and_non_dict_word_list'):
+            versions = self.versions.all()
+            if len(versions) == 1:
+                self._all_word_and_non_dict_word_list = versions[0].all_word_list + versions[0].non_dict_word_list
+            else:
+                words = set()
+                for v in versions:
+                    words.update(v.all_word_list)
+                    words.update(v.non_dict_word_list)
+                self._all_word_and_non_dict_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
+        return self._all_word_and_non_dict_word_list
+
+    @property
     def path(self):
         """URL-style path to the book's location."""
         if self.owner:

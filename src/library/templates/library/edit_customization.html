@@ -59,10 +59,10 @@
             </div>
             <hr>
             <h3>Words:</h3>
-            <div class="container">
+            <div class="container mb-1">
                 <div class="row vocabulary-word-list">
                 {% for word in customization.word_list %}
-                    <div class="col-lg-4 vocabulary-word current-vocabulary-word">
+                    <div class="col-lg-3 col-md-4 col-sm-6 vocabulary-word current-vocabulary-word">
                         {{ word }} <button id="delete_{{ word }}" class="link-btn delete-word-button" data-word="{{ word }}">x</button>
                     </div>
                 {% empty %}
@@ -73,9 +73,9 @@
             {{ form.current_vocabulary_words }}
             {{ form.new_vocabulary_words }}
             {{ form.delete_vocabulary_words }}
-            <div class="col-lg-4 form-group">
+            <div class="form-inline">
                 <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
-                <input type="text" id="id_word_to_add" class="form-control">
+                <input type="text" id="id_word_to_add" class="form-control me-0_5">
                 <button id="add-word-button" class="btn btn-primary">Add</button>
             </div>
             <p id="worderror" class="errorlist mt-0_5" style="display:none;">That word does not occur in this reading.</p>
