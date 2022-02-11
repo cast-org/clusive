@@ -139,7 +139,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         if self.clusive_user.library_view != self.view:
             self.clusive_user.library_view = self.view
             user_changed = True
-        if self.clusive_user.current_period != self.period:
+        if self.period and self.clusive_user.current_period != self.period:
             self.clusive_user.current_period = self.period
             user_changed = True
         if self.clusive_user.library_style != self.style:

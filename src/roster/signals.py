@@ -5,6 +5,7 @@ from allauth.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.models import SocialLogin
 from allauth.socialaccount.signals import pre_social_login, social_account_updated
 from django.contrib import messages
+from django.contrib.auth import user_logged_in
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver, Signal
@@ -29,6 +30,22 @@ def new_registration_watcher(sender, clusive_user, **kwargs):
         logger.debug('Noticed and added new registration from %s', clusive_user)
     else:
         logger.debug('Ignoring new user, not self-created: %s', clusive_user)
+
+
+@receiver(user_logged_in)
+def after_login(sender, **kwargs):
+    """At login time, make sure user has a reasonable current_period set."""
+    try:
+        clusive_user = ClusiveUser.objects.get(user=kwargs['user'])
+        periods = list(clusive_user.periods.all())
+        # logger.debug('user: %s, periods: %s, currrent: %s', clusive_user, periods, clusive_user.current_period)
+        if periods:
+            current = clusive_user.current_period
+            if not current or current not in periods:
+                clusive_user.current_period = periods[0]
+                clusive_user.save()
+    except ClusiveUser.DoesNotExist:
+        logger.debug('User logging in is not a ClusiveUser')
 
 
 @receiver(post_save, sender=Event)
