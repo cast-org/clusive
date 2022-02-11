@@ -2,23 +2,26 @@ import logging
 import random
 
 from django.http import JsonResponse, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.views import View
 
 from eventlog.signals import vocab_lookup, word_rated, word_removed
 from glossary.apps import GlossaryConfig
 from glossary.models import WordModel
 from glossary.util import base_form, all_forms, lookup, has_definition
-from library.models import Book, BookVersion, Paradata
+from library.models import Book, BookVersion, Paradata, Customization
 from roster.models import ClusiveUser
 
 logger = logging.getLogger(__name__)
 
 
-def checklist(request, book_id):
+class ChecklistView(View):
     """Return up to five words that should be presented in the vocab check dialog"""
-    try:
+
+    def get(self, request, *args, **kwargs):
+        book_id = kwargs.get('book_id')
+        book = get_object_or_404(Book, id=book_id)
         user = request.clusive_user
-        book = Book.objects.get(id=book_id)
         paradata, created = Paradata.objects.get_or_create(user=user, book=book)
 
         # We present a checklist only the first time a user goes to a new Book
@@ -27,61 +30,71 @@ def checklist(request, book_id):
             return JsonResponse({'words': []})
 
         versions = BookVersion.objects.filter(book=book)
+        customization = Customization.get_customization_for_user(book, user)
+        custom_words = customization.word_list if customization else []
+        logger.debug('customization: %s; words: %s', customization, custom_words)
+
         to_find = 5
         min_word_length = 4
         check_words = set()
 
         if len(versions) > 1:
             # Multiple versions, so we want to use our check words to determine which version to show.
-            # Create two lists for each version above the simplest:
-            #   All "new" words in this version that are not yet rated and > 3 letters
+            # Create three lists for each version above the simplest:
+            #   All "new" words in this version that are not yet rated and at least min_word_length letters
             #   The subset of that list that are glossary words.
+            #   the subset of that list that are custom words.
             for bv in versions:
                 if bv.sortOrder > 0:
-                    logger.debug("%s all new words: %s", bv, bv.new_word_list)
+                    # logger.debug("%s all new words: %s", bv, bv.new_word_list)
                     user_words = WordModel.objects.filter(user=user, word__in=bv.new_word_list)
-                    bv.potential_words = [w for w in bv.new_word_list if len(w)>=min_word_length and not any(wm.word==w and wm.rating!=None for wm in user_words)]
-                    logger.debug("%s potential: %s", bv, bv.potential_words)
-                    bv.potential_gloss_words = [w for w in bv.potential_words if w in bv.glossary_word_list]
-                    logger.debug("%s glossary:  %s", bv, bv.potential_gloss_words)
+                    # logger.debug("  will ignore already rated: %s", list(user_words))
+                    bv.potential_words = self.not_yet_rated(bv.new_word_list, user_words, min_length=min_word_length)
+                    # logger.debug("%s potential: %s", bv, bv.potential_words)
+                    bv.potential_gloss_words = [w for w in bv.glossary_word_list if w in bv.potential_words]
+                    # logger.debug("%s glossary:  %s", bv, bv.potential_gloss_words)
+                    bv.potential_custom_words = [w for w in custom_words if w in bv.potential_words]
+                    # logger.debug("%s custom: %s", bv, bv.potential_custom_words)
             # Now pick words from these lists, round-robin style so we get a reasonably even distribution.
             some_potential_words_remain = True # Make sure there are words left somewhere
             while len(check_words) < to_find and some_potential_words_remain:
                 some_potential_words_remain = False
                 for bv in versions:
                     if bv.sortOrder > 0:
-                        if len(bv.potential_gloss_words) > 0:  # Glossary word is preferred if there is one
-                            word = random.choice(bv.potential_gloss_words)
-                            check_words.add(word)
-                            bv.potential_gloss_words.remove(word)
-                            bv.potential_words.remove(word)
-                        else:
-                            if len(bv.potential_words) > 0:    # Otherwise any new word.
-                                word = random.choice(bv.potential_words)
-                                check_words.add(word)
-                                bv.potential_words.remove(word)
+                        word = self.pick_from_lists(bv.potential_custom_words, bv.potential_gloss_words, bv.potential_words)
+                        check_words.add(word)
                         if len(check_words) == to_find:
                             break
                         if len(bv.potential_words) > 0:
                             some_potential_words_remain = True
-            logger.debug("Picked: %s", check_words)
         else:
-            # There is only one version.  Pick a sample of unrated glossary words.
+            # There is only one version.  Pick a sample of unrated words, preferring customized & glossary.
             bv = versions[0]
             glossary_words = bv.glossary_word_list
             user_words = WordModel.objects.filter(user=user, word__in=glossary_words)
+            check_words = []
 
-            # Look for any glossary words that we don't have a rating for yet.
-            #logger.debug("Checking: %s", all_glossary_words)
-            #logger.debug("Against:  %s", [[wm.word, wm.rating] for wm in user_words])
-            gloss_words = [w for w in glossary_words if not any(wm.word==w and wm.rating!=None for wm in user_words)]
-            logger.debug("Single version. Check words from glossary: %s", gloss_words)
-            check_words = random.sample(gloss_words, k=min(to_find, len(gloss_words)))
+            # First, use custom words, if any.
+            if custom_words:
+                unrated_custom_words = self.not_yet_rated(custom_words, user_words)
+                # logger.debug('Choosing from unrated custom words: %s', unrated_custom_words)
+                check_words += random.sample(unrated_custom_words, k=min(to_find, len(unrated_custom_words)))
+                # logger.debug('   words: %s', check_words)
+
+            # Next try glossary words.
+            if len(check_words) < to_find:
+                unrated_glossary_words = self.not_yet_rated(glossary_words, user_words)
+                # logger.debug("Choosing from unrated glossary words: %s", unrated_glossary_words)
+                check_words += random.sample(unrated_glossary_words,
+                                                 k=min(to_find-len(check_words), len(unrated_glossary_words)))
+                # logger.debug('   words: %s', check_words)
 
             if len(check_words) < to_find:
                 # Still not enough words - maybe there was no glossary.
                 # Choose other challenging words from article to fill up the list.
                 for w in bv.all_word_list:
+                    if w in check_words:
+                        continue
                     if len(w) < min_word_length or not has_definition(book, w, priority_lookup=False):
                         continue
                     # It's a potential word; make sure it hasn't been rated already:
@@ -92,14 +105,32 @@ def checklist(request, book_id):
                     check_words.append(w)
                     if len(check_words) == to_find:
                         break
-
+        logger.debug("Picked: %s", check_words)
         return JsonResponse({'words': sorted(check_words)})
-    except ClusiveUser.DoesNotExist:
-        logger.warning("Could not fetch check words, no Clusive user: %s", request.user)
-        return JsonResponse({'words': []})
-    except BookVersion.DoesNotExist:
-        logger.error("No BookVersions found for book %d", book_id)
-        return JsonResponse({'words': []})
+
+    def not_yet_rated(self, word_list, user_words, min_length=0):
+        # Return a filtered list that does not include words already rated by the user
+        return [w for w in word_list
+                if len(w)>=min_length and not any(wm.word==w and wm.rating!=None for wm in user_words)]
+
+    def pick_from_lists(self, *args):
+        """
+        Randomly choose a word from the first of the provided lists that has any elements.
+        The word is removed from ALL lists in which it occurs, and is then returned.
+        """
+        word = None
+        for list in args:
+            if (len(list)>0):
+                word = random.choice(list)
+                logger.debug('    picked %s from %s', word, list)
+                break
+        if word:
+            for list in args:
+                try:
+                    list.remove(word)
+                except ValueError:
+                    pass
+        return word
 
 
 def cuelist(request, book_id, version):

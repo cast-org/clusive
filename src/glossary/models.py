@@ -80,3 +80,5 @@ class WordModel(models.Model):
     def is_valid_rating(cls, number):
         return isinstance(number, int) and number>=0 and number<=3
 
+    def __str__(self):
+        return '<WordModel %s=%s>' % (self.word, self.rating)

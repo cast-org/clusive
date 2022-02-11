@@ -627,8 +627,13 @@ class Customization(models.Model):
         return words
 
     @classmethod
+    def get_customization_for_user(cls, book, clusive_user):
+        result = cls.objects.filter(book=book, periods=clusive_user.current_period)
+        return result[0] if result else None
+
+    @classmethod
     def get_customizations(cls, book, periods, owner):
-        return Customization.objects \
+        return cls.objects \
             .filter(Q(book=book)
                     & (Q(periods__in=periods) | Q(owner=owner))) \
             .distinct()
