@@ -13,7 +13,7 @@
 {% block title %}Customize | Clusive{% endblock %}
 
 {% block header %}
-{% include "shared/partial/site_header.html" with page_group="library" %}
+{% include "shared/partial/site_header.html" %}
 {% endblock %}
 
 {% block sidebar_end %}
@@ -79,7 +79,7 @@
                 <button id="add-word-button" class="btn btn-primary">Add</button>
             </div>
             <p id="worderror" class="errorlist mt-0_5" style="display:none;">That word does not occur in this reading.</p>
-            <p><a href="#" class="form-text mt=0_5">See word suggestions</a></p>
+            <p><a href="#" class="form-text mt=0_5" data-cfw="modal" data-cfw-modal-target="#modalWordSuggestions">See word suggestions</a></p>
             <div class="form-group">
                 {{ form.question.label_tag | formlabel }}
                 <p class="form-text">
@@ -123,6 +123,7 @@
             </div>
         </form>
     </div>
+    {% include "library/partial/modal_word_suggestions.html" %}
 </main>
 <script>
     $('.sentence-starter-menu a').click(function(e) {
