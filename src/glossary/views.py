@@ -133,16 +133,23 @@ class ChecklistView(View):
         return word
 
 
-def cuelist(request, book_id, version):
-    """Return the list of words that should be cued in this document for this user"""
-    ## TODO: can delete, no longer used.
-    try:
-        bv = BookVersion.lookup(book_id=book_id, version_number=version)
-        map_to_forms = choose_words_to_cue(bv, request.clusive_user)
-        return JsonResponse({'words': map_to_forms})
-    except ClusiveUser.DoesNotExist:
-        logger.warning("Could not fetch cue words, no Clusive user: %s", request.user)
-        return JsonResponse({'words': []})
+def merge_into_set(old_set: set, new_set: set, max_count: int):
+    """
+    Add all or some items from new_set into old_set, without letting old_set get larger than max_count.
+    If there isn't space to add all the items, a random sampling is chosen.
+    :param old_set:
+    :param new_set:
+    :param max_count: desired size of set.
+    :return: void
+    """
+    if len(old_set) >= max_count or len(new_set) == 0:
+        return
+    new_set_without_dups = new_set - old_set
+    if len(old_set) + len(new_set_without_dups) < max_count:
+        old_set |= new_set_without_dups
+    else:
+        sample = random.sample(new_set_without_dups, k=max_count - len(old_set))
+        old_set |= set(sample)
 
 
 def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
@@ -154,47 +161,53 @@ def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
     """
     all_glossary_words = book_version.glossary_word_list
     all_book_words = book_version.all_word_list
-
-    # Get all of user's words
     all_user_words = list(WordModel.objects.filter(user=user))
 
     # Filter user's word list by words in the book
     user_words = [wm for wm in all_user_words
-                  if wm.word in all_book_words
-                  ]
+                  if wm.word in all_book_words]
 
     # Target number of words.  For now, just pick an arbitrary number.
     # TODO: target number should depend on word count of the book.
     to_find = 10
+    cue_words = set()
 
-    # First, find any words where we think the user is interested
+    # First, find any words where we think the user is interested & doesn't know word
     priority_lookup = False
     interest_words = [wm.word for wm in user_words
                       if wm.interest_est() > 0
                       and (wm.knowledge_est()==None or wm.knowledge_est()<3)
                       and has_definition(book_version.book, wm.word, priority_lookup)]
     logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
-    cue_words = set(interest_words)
+    merge_into_set(cue_words, set(interest_words), max_count=to_find)
+
+    # Next look for words in the teacher's Customization
+    if len(cue_words) < to_find:
+        customization = Customization.get_customization_for_user(book_version.book, user)
+        if customization:
+            custom_words = customization.word_list
+            logger.debug("Found:  %d custom words: %s", len(custom_words), custom_words)
+            # First, any custom words that are known to be low-knowledge
+            low_knowledge_custom = [wm.word for wm in user_words
+                                    if wm.word in custom_words
+                                    and (wm.knowledge_est()==None or wm.knowledge_est()<3)]
+            merge_into_set(cue_words, set(low_knowledge_custom), max_count=to_find)
+
+            # Then, any others
+            merge_into_set(cue_words, set(custom_words), max_count=to_find)
 
     # Next look for words where the user has low estimated knowledge
     if len(cue_words) < to_find:
-        unknown_words = set([wm.word for wm in user_words
-                             if wm.knowledge_est()
-                             and wm.knowledge_est() < 2
-                             and has_definition(book_version.book, wm.word, priority_lookup)])
+        unknown_words = [wm.word for wm in user_words
+                         if wm.knowledge_est()
+                         and wm.knowledge_est() < 2
+                         and has_definition(book_version.book, wm.word, priority_lookup)]
         logger.debug("Found:  %d low-knowledge words: %s", len(unknown_words), unknown_words)
-        unknown_words = unknown_words-cue_words
-        #logger.debug("Filter: %d low-knowledge words: %s", len(unknown_words), unknown_words)
-        unknown_words = set(random.sample(unknown_words, k=min(to_find-len(cue_words), len(unknown_words))))
-        #logger.debug("Trim:   %d low-knowledge words: %s", len(unknown_words), unknown_words)
-        cue_words = cue_words | unknown_words
+        merge_into_set(cue_words, set(unknown_words), max_count=to_find)
 
     # Fill up the list with glossary words
     if len(cue_words) < to_find:
-        glossary_words = set(random.sample(all_glossary_words,
-                                           k=min(to_find-len(cue_words), len(all_glossary_words))))
-        logger.debug("Found %d glossary words: %s", len(glossary_words), glossary_words)
-        cue_words = cue_words | glossary_words
+        merge_into_set(cue_words, set(all_glossary_words), max_count=to_find)
 
     map_to_forms = {}
     for word in cue_words:
