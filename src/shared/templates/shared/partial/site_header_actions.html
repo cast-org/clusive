@@ -8,7 +8,9 @@
     </li>
 
     <li class="nav-item">
-        {% if page_group == 'library' %}
+        {% if page_group == 'library' and group_linkable %}
+        <a href="{% url 'reader_index' %}" class="nav-link current" aria-current="true">Library</a>
+        {% elif page_group == 'library' %}
         <span class="nav-link current" aria-current="true">Library</span>
         {% else %}
         <a href="{% url 'reader_index' %}" class="nav-link">Library</a>

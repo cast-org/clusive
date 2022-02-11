@@ -164,6 +164,13 @@ html {
         }
     }
 
+    a.nav-link.current {
+        @include hover-focus() {
+            color: var(--CT_actionHoverColor);
+            background-color: var(--CT_actionHoverBg);
+        }
+    }
+
     @include media-breakpoint-up(md) {
         .navbar-nav {
             margin-left: auto;
