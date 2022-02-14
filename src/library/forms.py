@@ -7,8 +7,6 @@ from django.forms import ModelForm
 from library.models import Book, Customization
 from roster.models import Period, ClusiveUser
 
-import pdb
-
 logger = logging.getLogger(__name__)
 
 
