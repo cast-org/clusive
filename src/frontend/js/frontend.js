@@ -987,8 +987,7 @@ function initEditCustomizations () {
         deleteList: []
     };
 
-    $('.sentence-starter-menu a').click(function(e) {
-       e.preventDefault();
+    $('.sentence-starter-menu button').click(function(e) {
        var text = $(e.currentTarget).text().replace('…', ' ');
        var $input = $('#'+$(e.currentTarget).closest('.sentence-starter-menu').data('insert-into'));
        $input.val($input.val() + text);
@@ -1085,8 +1084,9 @@ function addVocabularyWord(newWord, /*optional*/ inputField) {
             var deleteButtonId = 'delete_' + newWord.replace(' ', '_');
             // Add the new <div> for the "new" vocabulary word.
             $('.vocabulary-word-list').append(`
-                <div class="col-lg-3 col-md-4 col-sm-6 vocabulary-word current-vocabulary-word">
-                    ${newWord} <button id="${deleteButtonId}" class="link-btn delete-word-button" data-word="${newWord}">x</button>
+                <div class="col vocabulary-word new-vocabulary-word">
+                    ${newWord}
+                    <button id="${deleteButtonId}" role="button" class="delete-word-button" data-word="${newWord}"><span class="sr-only">remove {{ word }} from customization</span><span class="icon-cancel" aria-hidden="true"></span></button>
                 </div>
             `);
             var noWordsIndicator = $('#empty-vocabulary-list');

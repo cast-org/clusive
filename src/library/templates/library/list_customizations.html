@@ -23,25 +23,29 @@
 
     {% for c in customizations %}
     <div class="box">
-        <h2>{{ c.title }} <a href="{% url 'edit_customization' pk=c.id %}">edit</a></h2>
+        <div class="d-flex">
+            <h2 class="me-0_5">{{ c.title }}</h2>
+            <a href="{% url 'edit_customization' pk=c.id %}">edit <span class="sr-only">{{ c.title }}</span></a>
+        </div>
+
         <h3>Classes</h3>
-        <p>
+        <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
             {% for p in c.periods.all %}
-              {{ p.name }}
+                <div class="col">{{ p.name }}</div>
               <br>
             {% empty %}
-               None
+               <div class="col">None</div>
             {% endfor %}
-        </p>
+        </div>
         <hr>
         <h3>Words</h3>
-        <p>
+        <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
             {% for word in c.word_list %}
-               {{ word }} &nbsp;&nbsp;
+               <div class="col">{{ word }}</div>
             {% empty %}
-                None
+                <div class="col">None</div>
             {% endfor %}
-        </p>
+        </div>
         <hr>
         <h3>Custom Question</h3>
         <p>

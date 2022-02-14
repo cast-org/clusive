@@ -173,18 +173,36 @@
 }
 
 .wordbank-word {
+    padding: 0;
     line-height: 1.5;
+    color: $link-color;
+    text-decoration: $link-decoration;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+
+    &:hover,
+    &:focus {
+        color: $link-hover-color;
+        text-decoration: $link-hover-decoration;
+    }
 }
 
 .wordbank-prev,
 .wordbank-next,
-.wordbank-del {
+.wordbank-del,
+.delete-word-button {
     padding: .125rem .25rem;
     @include font-size(.875rem);
     line-height: 1;
     color: var(--CT_wordbankControlColor);
     text-decoration: none;
     vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
 
     &:hover,
     &:focus {
@@ -217,8 +235,13 @@
     &.dragging {
         outline: 2px solid currentColor;
 
-        a {
+        button {
             pointer-events: none;
         }
     }
+}
+
+.vocabulary-word {
+    display: flex;
+    flex-align-items: center;
 }
