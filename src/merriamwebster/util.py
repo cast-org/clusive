@@ -147,10 +147,11 @@ def lookup(word: str):
     else:
         mw_dictionary_result = dict()
         meanings = list()
+
         # loop through the list of data returned from MW
         for definition_entry in word_data:
 
-            # MW returnes a list of words, if this word is not quite right
+            # If this definition is not quite right it won't have the meta tag
             if 'meta' in definition_entry:
                 # clean any syllable markers (asterisk) from headword
                 # remove anything inside curly brackets
@@ -180,7 +181,9 @@ def lookup(word: str):
                                                 # assumption that this is always before dt
                                                 if k == 'sls':
                                                     for sls_val in v:
-                                                        offensive_note = sls_val
+                                                        if 'offensive' in sls_val:
+                                                            offensive_note = sls_val
+                                                            logger.debug("MW: found offensive indicator:", offensive_note)
                                                 elif k == 'dt':
                                                     meaning = extract_definition(v, offensive_note)
                                             if meaning:
@@ -190,15 +193,13 @@ def lookup(word: str):
                                     mw_dictionary_result["meanings"] = meanings
                         else:
                             logging.error("MW: Skipping this POS - no def ", clean_headword)
-
                 else:
                     logging.error('MW: Skipping, No Headword found')
-                    return None
-
-                if mw_dictionary_result:
-                    return mw_dictionary_result
-                else:
-                    return None
             else:
-                logging.error('MW: Skipping, Not a word in intermediate dictionary')
+                logging.error('MW: Skipping, No Meta - Not a word in intermediate dictionary')
                 return None
+
+    if mw_dictionary_result:
+        return mw_dictionary_result
+    else:
+        return None
