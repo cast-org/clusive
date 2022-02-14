@@ -976,9 +976,11 @@ function bookshareStartImportProcess(event) {
 }
 
 // Edit customization dialog: custom vocabulary words handling
-function initEditCustomizaitons () {
+function initEditCustomizations () {
     'use strict';
 
+    // Local storage for tracking current words, words to be added, and words
+    // to delete.
     cisl.customVocabs = {
         currentList: $('#id_current_vocabulary_words').val().split('|'),
         newList: [],
@@ -994,7 +996,7 @@ function initEditCustomizaitons () {
     });
 
     // Transfer the final add and remove word lists to their respective hidden
-    // <input>s.
+    // <input>s when the user submits the form.
     $('#customization-edit-submit').click(function (e) {
         $('#id_new_vocabulary_words').val(cisl.customVocabs.newList.join('|').trim());
         console.debug('On submit, <input> words to add: ' + $('#id_new_vocabulary_words').val());
@@ -1002,6 +1004,8 @@ function initEditCustomizaitons () {
         console.debug('On submit, <input> words to delete: ' + $('#id_delete_vocabulary_words').val());
     });
 
+    // "Add" button for text field where user enters a custom vocabulary word
+    // -- click handler.
     $('#add-word-button').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -1009,6 +1013,8 @@ function initEditCustomizaitons () {
         addVocabularyWord(inputField.val().trim(), inputField);
     });
 
+    // "Add action" for text field where user enters a custom vocabulary word
+    // -- keystroke handler.
     $('#id_word_to_add').keypress(function (e) {
         var keycode = (e.keyCode ? event.keyCode : event.which);
         if (keycode == '13') {
@@ -1019,10 +1025,17 @@ function initEditCustomizaitons () {
         }
     });
 
+    // "x" button beside each custom vocabulary word to allow user to remove
+    // that word
     $('.vocabulary-word-list').on('click', 'button', function (e) {
         e.preventDefault();
         e.stopPropagation();
         deleteVocabularyWord(e);
+    });
+
+    // "Add" button on the custom vocabulary word suggetsions dialog
+    $('#add-words-from-suggestions').click(function (e) {
+        $('#modalWordSuggestions [type="checkbox"]').each(addCustomVocabFromSuggestions);
     });
 }
 
@@ -1154,6 +1167,13 @@ function addCondition (word) {
     return 'addNew';
 };
 
+// For custom vocabulary word suggestions modal dialog
+function addCustomVocabFromSuggestions (index, checkbox) {
+    if ($(checkbox).prop('checked')) {
+        addVocabularyWord($(checkbox).attr('data-word'));
+    }
+};
+
 $(window).ready(function() {
     'use strict';
 
@@ -1189,7 +1209,7 @@ $(window).ready(function() {
         aButton.addEventListener('click', moreOrLess);
     });
     if (document.querySelector('.custom-vocabulary-editor') !== null) {
-        initEditCustomizaitons();
+        initEditCustomizations();
     }
     $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
     $('body').on('click', 'button.import-button', bookshareStartImportProcess);
