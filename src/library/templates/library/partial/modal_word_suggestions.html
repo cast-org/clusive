@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <form>
                 <div class="form-check form-checkradio">
-                    {% for word in all_words|slice:":20" %}
+                    {% for word in suggested_words|slice:":20" %}
                     <div>
                         <input class="form-check-input" type="checkbox" id="id_{{ word }}" data-word="{{ word }}">&nbsp;
                         <label class="form-check-label" for="id_{{ word }}">{{ word }}</label>

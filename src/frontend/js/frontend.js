@@ -1080,13 +1080,12 @@ function addVocabularyWord(newWord, /*optional*/ inputField) {
         } else {
             $('#worderror').hide();
         }
-
         var condition = addCondition(newWord);
         if (condition === 'addNew' || condition === 'addAndRemoveFromDeleted') {
             var deleteButtonId = 'delete_' + newWord.replace(' ', '_');
             // Add the new <div> for the "new" vocabulary word.
             $('.vocabulary-word-list').append(`
-                <div class="col-lg-4 vocabulary-word new-vocabulary-word">
+                <div class="col-lg-3 col-md-4 col-sm-6 vocabulary-word current-vocabulary-word">
                     ${newWord} <button id="${deleteButtonId}" class="link-btn delete-word-button" data-word="${newWord}">x</button>
                 </div>
             `);
