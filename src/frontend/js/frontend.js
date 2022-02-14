@@ -1171,6 +1171,7 @@ function addCondition (word) {
 function addCustomVocabFromSuggestions (index, checkbox) {
     if ($(checkbox).prop('checked')) {
         addVocabularyWord($(checkbox).attr('data-word'));
+        $(checkbox).prop('checked', false);
     }
 };
 

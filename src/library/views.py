@@ -1234,7 +1234,11 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         context['book'] = self.object.book
         context['is_new'] = self.is_new
         context['recent_custom_questions'] = self.get_recent_custom_questions(3)
-        context['all_words'] = self.object.book.all_word_and_non_dict_word_list
+        all_words = self.object.book.all_word_and_non_dict_word_list;
+        for current_word in self.object.word_list:
+            if current_word in all_words:
+                all_words.remove(current_word)
+        context['all_words'] = all_words
         return context
 
     def get_recent_custom_questions(self, n):
