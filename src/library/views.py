@@ -1164,7 +1164,7 @@ class ListCustomizationsView(LoginRequiredMixin, EventMixin, TemplateView):
         # If there are no customizations but the user has just cancelled adding
         # one, do not prompt them to add a new one again.  That would be an
         # infinite loop
-        if customizations.count() is not 0 or from_cancel_add:
+        if customizations.count() != 0 or from_cancel_add:
             self.extra_context = {
                 'book': book,
                 'customizations': customizations,
