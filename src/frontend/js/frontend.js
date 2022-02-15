@@ -751,15 +751,14 @@ function starredButtons() {
     var txtDefault = 'Not Starred';
     var txtActive = 'Starred';
 
-    $(document).on('click', '.btn-starred', function(e) {
+    $(document).on('click', '.btn-check-starred', function(e) {
         var $trigger = $(e.currentTarget);
-        $trigger.toggleClass('active');
-        var isActive = $trigger.hasClass('active');
+        var $tip = $trigger.parents('.btn-check');
+        var isActive = $trigger.is(':checked');
         var textMsg = isActive ? txtActive : txtDefault;
 
         $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
-            $trigger
-                .attr('aria-label', textMsg)
+            $tip
                 .removeAttr('data-cfw-tooltip-title')
                 .CFW_Tooltip({
                     title: textMsg
@@ -767,7 +766,7 @@ function starredButtons() {
                 .CFW_Tooltip('show');
         });
 
-        $trigger.CFW_Tooltip('dispose');
+        $tip.CFW_Tooltip('dispose');
 
         // TODO: Callback to event logging?
     });

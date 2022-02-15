@@ -14,17 +14,28 @@
                 <div class="row">
                     <div class="col">
                         {% if unauthorized %}
-                        <a href="#" data-cfw="tooltip" title="Not authorized to view">
-                        {% else %}
-                        <a href="{% url 'reader_default' book_id=book.id %}"
-                           {% if link_stretch %}class="link-stretch"{% endif %}
-                           {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
-                        {% endif %}
+                        <span class="d-block" tabindex="0" data-cfw="tooltip" title="Not authorized to view">
                             <h2 class="card-title">
-                            {% if unauthorized %}
-                            <span class="icon-block" title="Not authorized to view"></span>
-                            {% endif %}
-                            {{ book.title|highlight:query }}</h2></a>
+                                <span class="icon-block" title="Not authorized to view"></span>
+                                {{ book.title|highlight:query }}
+                            </h2>
+                        </span>
+                        {% elif link_stretch %}
+                        <a href="{% url 'reader_default' book_id=book.id %}"
+                            class="link-stretch"
+                            {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
+                            <h2 class="card-title">
+                                {{ book.title|highlight:query }}
+                            </h2>
+                        </a>
+                        {% else %}
+                        <h2 class="card-title">
+                            <a href="{% url 'reader_default' book_id=book.id %}"
+                            {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
+                                {{ book.title|highlight:query }}
+                            </a>
+                        </h2>
+                        {% endif %}
                         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
                     </div>
                     <div class="col-auto card-toggle">

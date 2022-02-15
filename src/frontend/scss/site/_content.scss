@@ -41,8 +41,8 @@ body {
         content: "\e826";
     }
 
-    .active > &::before,
-    :active > &::before {
+
+    .btn-check-input:not([disabled]):not(:disabled):checked ~ .btn &::before {
         content: "\e825";
     }
 }
