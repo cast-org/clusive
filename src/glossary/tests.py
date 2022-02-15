@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.models import User
 
+import glossary.views
 from eventlog.models import Event
 from glossary.util import base_form, all_forms
 from library.models import Book, BookVersion
@@ -16,13 +17,14 @@ class GlossaryTestCase(TestCase):
     def setUp(self):
         user_1 = User.objects.create_user(username="user1", password="password1")
         user_1.save()
-        ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST').save()
+        self.clusive_user = ClusiveUser.objects.create(anon_id="Student1", user=user_1, role='ST')
+        self.clusive_user.save()
         self.book = Book.objects.create(title='Test Book')
         self.book.save()
-        book_1 = BookVersion.objects.create(book=self.book, sortOrder=0,
+        self.bv_0 = BookVersion.objects.create(book=self.book, sortOrder=0,
                                             glossary_words='["test"]',
                                             all_words='["test", "the", "end"]')
-        book_2 = BookVersion.objects.create(book=self.book, sortOrder=1,
+        self.bv_1 = BookVersion.objects.create(book=self.book, sortOrder=1,
                                             glossary_words='["test tricky"]',
                                             all_words='["a", "tricky", "test", "the", "end"]',
                                             new_words='["a", "tricky"]')
@@ -52,11 +54,8 @@ class GlossaryTestCase(TestCase):
                      {'word': 'something', 'rating': False})
 
     def test_cuelist(self):
-        self.login_and_generate_page_event_id()
-        response = self.client.get('/glossary/cuelist/%d/0?eventId=%s'  % (self.book.pk, self.event_id))
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(str(response.content, encoding='utf8'),
-                                 {'words': {'test': ['test', 'tested', 'testing', 'tests']}})
+        words = glossary.views.choose_words_to_cue(self.bv_0, self.clusive_user)
+        self.assertEqual(words, {'test': ['test', 'tested', 'testing', 'tests']})
 
     def test_definition(self):
         self.login_and_generate_page_event_id()

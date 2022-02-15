@@ -10,14 +10,16 @@
             </div>
             <div class="modal-body">
                 <form>
-                <div class="form-check form-checkradio">
-                    {% for word in suggested_words|slice:":20" %}
-                    <div>
-                        <input class="form-check-input" type="checkbox" id="id_{{ word }}" data-word="{{ word }}">&nbsp;
-                        <label class="form-check-label" for="id_{{ word }}">{{ word }}</label>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+                        {% for word in suggested_words|slice:":20" %}
+                        <div class="col">
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="checkbox" id="id_{{ word }}" data-word="{{ word }}">&nbsp;
+                                <label class="form-check-label" for="id_{{ word }}">{{ word }}</label>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                </div>
                 </form>
             </div>
             <div class="modal-footer">

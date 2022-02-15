@@ -30,9 +30,11 @@ class PageTestCases(TestCase):
     def test_word_bank_page(self):
         login = self.client.login(username='user1', password='password1')
         response = self.client.get(reverse('word_bank'))
-        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['words']), 1)
-        self.assertContains(response, '<a href="#" role="button" class="wordbank-word" aria-describedby="rank2">testword</a>', html=True)
+        self.assertContains(response,
+                            '<button type="button" class="wordbank-word" aria-describedby="rank2">testword</button>',
+                            html=True,
+                            status_code=200)
 
 
 
