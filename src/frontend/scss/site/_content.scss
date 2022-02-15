@@ -31,11 +31,13 @@ body {
 }
 
 #iframe-wrapper {
-    min-height: calc(100vh - #{$header-height + $body-padding-y});
-    overflow: initial !important;
+    height: calc(100vh - #{$header-height + $body-padding-y});
+    //min-height: calc(100vh - #{$header-height + $body-padding-y});
+    //overflow: initial !important;
 
     @include media-breakpoint-up(md) {
-        min-height: calc(100vh - #{$header-md-height + $body-padding-y});
+        height: calc(100vh - #{$header-md-height + $body-padding-y});
+        //min-height: calc(100vh - #{$header-md-height + $body-padding-y});
     }
 }
 
