@@ -1,8 +1,8 @@
 {% load static %}
 
 
-{% if source == 'mw' %}
+{% if source == 'MW' %}
     {% include "merriamwebster/mw_ack.html" %}
 {% else %}
-    <p>SOURCE NOT FOUND</p>
+    <p>Source is {{ source }}</p>
 {% endif %}

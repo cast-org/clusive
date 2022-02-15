@@ -37,18 +37,28 @@ function openGlossaryForWord(word) {
 function load_definition(cued, word) {
     var title;
     var body;
-    $('#glossaryFooter').hide();
     $('#glossaryInput').hide();
+    $('#glossaryWordbankLink').hide();
+    $('#glossaryAcknowledgementSection').hide();
+    $('#glossaryAcknowledgement').empty();
     if (word) {
         glossaryCurrentWord = word;
         title = word;
         var pub = window.pub_id || 0;
-        // ajax call
         $.get('/glossary/glossdef/' + pub + '/' + cued + '/' + word)
             // eslint-disable-next-line no-unused-vars
             .done(function(data, status) {
                 $('#glossaryBody').html(data);
-                $('#glossaryFooter').show();
+                $('#glossaryWordbankLink').show();
+                var source = $('#glossaryDefinition').data('source');
+                $.get('/glossary/glossdef/ack/' + source)
+                    .done(function(ack_data) {
+                        $('#glossaryAcknowledgement').html(ack_data);
+                        $('#glossaryAcknowledgementSection').show();
+                    })
+                    .fail(function(err) {
+                        console.error('Failed to get dictionary acknowledgement: ', err);
+                    });
             })
             // didn't find a definition
             .fail(function(err) {
