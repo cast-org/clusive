@@ -241,7 +241,7 @@ window.wordBank.enableDragDrop = function() {
                     // Check for minimum delta
                     if (Math.abs(event.x0 - event.dx) >= window.wordBank.dragWord.delta) {
                         window.wordBank.dragWord.dragging = true;
-                        // Add outline and block links
+                        // Add outline and block buttons
                         event.target.classList.add('dragging');
                         // Disallow sliding animation
                         var item = event.target.closest('.wordbank-item');
@@ -478,26 +478,22 @@ $(function() {
         vocabCheck.selected(value, event.target);
     });
 
-    $('a.wordbank-word').on('click', function(e) {
-        e.preventDefault();
+    $('.wordbank-word').on('click', function() {
         window.wordBank.wordClicked(this);
     });
 
-    $('a.wordbank-del').on('click', function(e) {
-        e.preventDefault();
+    $('.wordbank-del').on('click', function() {
         window.wordBank.removeWord(this);
     });
 
-    $('a.wordbank-next').on('click', function(e) {
-        e.preventDefault();
+    $('.wordbank-next').on('click', function(e) {
         var item = e.target.closest('.wordbank-item');
         var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, +1);
         $(item).CFW_transition(null, function() { confettiCannon(word); });
     });
 
-    $('a.wordbank-prev').on('click', function(e) {
-        e.preventDefault();
+    $('.wordbank-prev').on('click', function(e) {
         var item = e.target.closest('.wordbank-item');
         var word = item.querySelector('.wordbank-word');
         window.wordBank.moveRating(this, -1);

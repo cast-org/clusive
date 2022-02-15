@@ -1,0 +1,18 @@
+// Allow `.form-label` to inherit visual styling from wrapping simulated heading
+// Some forms have design confusion between headings and labels ??
+// Note: <label> is not valid inside <h#>
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    .form-label {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+        @include font-size(inherit);
+        font-weight: inherit;
+        line-height: inherit;
+    }
+}

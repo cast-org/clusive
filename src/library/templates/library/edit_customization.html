@@ -1,12 +1,19 @@
 {% extends "shared/base.html" %}
 {% load figuration %}
 
+{% block head_additional %}
+<script>
+    var all_words = {{ all_words | safe }};
+    console.debug('all words: ', all_words);
+</script>
+{% endblock %}
+
 {% block bodyClass %}library{% endblock %}
 
 {% block title %}Customize | Clusive{% endblock %}
 
 {% block header %}
-{% include "shared/partial/site_header.html" with page_group="library" %}
+{% include "shared/partial/site_header.html" %}
 {% endblock %}
 
 {% block sidebar_end %}
@@ -28,32 +35,61 @@
         <form method="post">
                 {% csrf_token %}
             <div class="form-group">
-                {{ form.title.label_tag | formlabel }} *
+                <div class="d-flex">
+                    <span class="h3">{{ form.title.label_tag | formlabel }}</span>
+                    <span>*</span>
+                </div>
                 {{ form.title.errors }}
                 {{ form.title | formcontrol }}
             </div>
             <hr>
             <div class="form-group">
-                {{ form.periods.label_tag | formlabel }}
+                <h3>{{ form.periods.label }}:</h3>
                 {{ form.periods.errors }}
-                <p class="form-text">Select one or more classes:</p>
-                <div class="container">
-                    <div class="row">
-                    {% for checkbox in form.periods %}
-                        <div class="col-lg-4">
-                            <div class="form-check form-checkradio">
-                                {{ checkbox.tag | formcontrol }}
-                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                <fieldset>
+                    <legend class="form-label p-0 mb-1">Select one or more classes:</legend>
+                    <div class="container">
+                        <div class="row">
+                        {% for checkbox in form.periods %}
+                            <div class="col-lg-4">
+                                <div class="form-check form-checkradio">
+                                    {{ checkbox.tag | formcontrol }}
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                                </div>
                             </div>
+                        {% endfor %}
                         </div>
-                    {% endfor %}
                     </div>
-                </div>
+                </fieldset>
             </div>
             <hr>
+            <h3>Words:</h3>
+            <div class="container mb-1 custom-vocabulary-editor">
+                <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 vocabulary-word-list">
+                {% for word in customization.word_list %}
+                    <div class="col vocabulary-word current-vocabulary-word">
+                        {{ word }}
+                        <button id="delete_{{ word }}" role="button" class="delete-word-button" data-word="{{ word }}"><span class="sr-only">remove {{ word }} from customization</span><span class="icon-cancel" aria-hidden="true"></span></button>
+                    </div>
+                {% empty %}
+                    <span id="empty-vocabulary-list">None</span>
+                {% endfor %}
+                </div>
+            </div>
+            {{ form.current_vocabulary_words }}
+            {{ form.new_vocabulary_words }}
+            {{ form.delete_vocabulary_words }}
+            <div class="form-inline">
+                <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
+                <input type="text" id="id_word_to_add" class="form-control me-0_5">
+                <button id="add-word-button" class="btn btn-primary">Add</button>
+            </div>
+            <p id="worderror" class="errorlist mt-0_5" style="display:none;">That word does not occur in this reading.</p>
+            <p class="form-text"><a href="#" data-cfw="modal" data-cfw-modal-target="#modalWordSuggestions">See word suggestions</a></p>
+            <hr>
             <div class="form-group">
-                {{ form.question.label_tag | formlabel }}
-                <p class="form-text">
+                <h3>{{ form.question.label }}:</h3>
+                <p>
                     This will appear in addition to the general knowledge
                     questions &quot;How much did you learn&quot; and
                     &quot;What's one thing you learned or found
@@ -81,26 +117,20 @@
                         {% endif %}
                     </ul>
                 </div>
+                <span class="sr-only">{{ form.question.label_tag }}</span>
                 {{ form.question | formcontrol }}
             </div>
             <div>
                 <hr>
-               <input type="submit" class="btn btn-secondary btn-small" value="Save"/>
+                <input id="customization-edit-submit" type="submit" class="btn btn-secondary" value="Save"/>
                 {% if is_new == 'true' %}
-                <a href="{% url 'delete_customization' bk=customization.book.id ck=customization.id %}" class="btn btn-link btn-small">Cancel</a>
+                <a href="{% url 'delete_customization' bk=customization.book.id ck=customization.id %}" class="btn btn-link">Cancel</a>
                 {% else %}
-                <a href="{% url 'customize_book' pk=customization.book.id %}" class="btn btn-link btn-small">Cancel</a>
+                <a href="{% url 'customize_book' pk=customization.book.id %}" class="btn btn-link">Cancel</a>
                 {% endif %}
             </div>
         </form>
     </div>
+    {% include "library/partial/modal_word_suggestions.html" %}
 </main>
-<script>
-    $('.sentence-starter-menu .dropdown-item').click(function(e) {
-       var text = $(e.currentTarget).text().replace('…', ' ');
-       var $input = $('#'+$(e.currentTarget).closest('.sentence-starter-menu').data('insert-into'));
-       $input.val($input.val() + text);
-       $input.focus();
-    });
-</script>
 {% endblock %}

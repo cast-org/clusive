@@ -1,5 +1,6 @@
 /* global Masonry, cisl, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation, confetti */
 /* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate, confettiCannon */
+/*eslint quotes: ["error", "backtick"]*/
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options) {
@@ -974,6 +975,205 @@ function bookshareStartImportProcess(event) {
     bookshareImportProgressTimer = setInterval(bookshareCheckImportProgress, 5000, id);
 }
 
+// Edit customization dialog: custom vocabulary words handling
+function initEditCustomizations () {
+    'use strict';
+
+    // Local storage for tracking current words, words to be added, and words
+    // to delete.
+    cisl.customVocabs = {
+        currentList: $('#id_current_vocabulary_words').val().split('|'),
+        newList: [],
+        deleteList: []
+    };
+
+    $('.sentence-starter-menu button').click(function(e) {
+       var text = $(e.currentTarget).text().replace('…', ' ');
+       var $input = $('#'+$(e.currentTarget).closest('.sentence-starter-menu').data('insert-into'));
+       $input.val($input.val() + text);
+       $input.focus();
+    });
+
+    // Transfer the final add and remove word lists to their respective hidden
+    // <input>s when the user submits the form.
+    $('#customization-edit-submit').click(function (e) {
+        $('#id_new_vocabulary_words').val(cisl.customVocabs.newList.join('|').trim());
+        console.debug('On submit, <input> words to add: ' + $('#id_new_vocabulary_words').val());
+        $('#id_delete_vocabulary_words').val(cisl.customVocabs.deleteList.join('|').trim());
+        console.debug('On submit, <input> words to delete: ' + $('#id_delete_vocabulary_words').val());
+    });
+
+    // "Add" button for text field where user enters a custom vocabulary word
+    // -- click handler.
+    $('#add-word-button').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var inputField = $('#id_word_to_add');
+        addVocabularyWord(inputField.val().trim(), inputField);
+    });
+
+    // "Add action" for text field where user enters a custom vocabulary word
+    // -- keystroke handler.
+    $('#id_word_to_add').keypress(function (e) {
+        var keycode = (e.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            e.preventDefault();
+            e.stopPropagation();
+            var inputField = $('#id_word_to_add');
+            addVocabularyWord(inputField.val().trim(), inputField);
+        }
+    });
+
+    // "x" button beside each custom vocabulary word to allow user to remove
+    // that word
+    $('.vocabulary-word-list').on('click', 'button', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        deleteVocabularyWord(e);
+    });
+
+    // "Add" button on the custom vocabulary word suggetsions dialog
+    $('#add-words-from-suggestions').click(function (e) {
+        $('#modalWordSuggestions [type="checkbox"]').each(addCustomVocabFromSuggestions);
+    });
+}
+
+function deleteVocabularyWord (e) {
+    'use strict';
+
+    var parentDiv = $(e.currentTarget).parent();
+    var wordToDelete= $(e.currentTarget).attr('data-word');
+    // Remove wordToDelete from the new words list, if present.
+    var newResult = isNewWord(wordToDelete);
+    if (newResult.index !== -1) {
+        newResult.wordArray.splice(newResult.index);
+    }
+    else {
+        // Note:  leave the current words list intact as it records the
+        // actual current words -- a current word can appear in both the
+        // current words list and the deleted words list, but a new word is
+        // either in the new words list or not, and never in the deleted
+        // words list.
+        // Add wordToDelete to deleted words, but only once.
+        var deleteResult = isDeletedWord(wordToDelete);
+        if (deleteResult.index === -1) {
+            deleteResult.wordArray.push(wordToDelete);
+        }
+    }
+    // In all cases, removed the <div> containing the wordToDelete from the
+    // document.  If all have been removed, put "None" instead.
+    $(parentDiv).remove();
+    if ($('div.vocabulary-word').length === 0) {
+        $('.vocabulary-word-list').append('<span id="empty-vocabulary-list">None</span>');
+    }
+};
+
+function addVocabularyWord(newWord, /*optional*/ inputField) {
+    'use strict';
+
+    if (newWord.length) {
+        if (!all_words.includes(newWord)) {
+            $('#worderror').show();
+            if (inputField) inputField.select();
+            return;
+        } else {
+            $('#worderror').hide();
+        }
+        var condition = addCondition(newWord);
+        if (condition === 'addNew' || condition === 'addAndRemoveFromDeleted') {
+            var deleteButtonId = 'delete_' + newWord.replace(' ', '_');
+            // Add the new <div> for the "new" vocabulary word.
+            $('.vocabulary-word-list').append(`
+                <div class="col vocabulary-word new-vocabulary-word">
+                    ${newWord}
+                    <button id="${deleteButtonId}" role="button" class="delete-word-button" data-word="${newWord}"><span class="sr-only">remove {{ word }} from customization</span><span class="icon-cancel" aria-hidden="true"></span></button>
+                </div>
+            `);
+            var noWordsIndicator = $('#empty-vocabulary-list');
+            if (noWordsIndicator[0]) {
+                noWordsIndicator.remove();
+            }
+            // Update word lists.
+            if (condition === 'addNew') {
+                cisl.customVocabs.newList.push(newWord.trim());
+            }
+            else {  // condition === addAndRemoveFromDeleted
+                cisl.customVocabs.deleteList.splice(
+                    cisl.customVocabs.deleteList.indexOf(newWord)
+                );
+            }
+        }
+        else {
+            console.log(`New word ${newWord} already added (condition is ${condition})`);
+        }
+    }
+    if (inputField) {
+        inputField.val('');
+        inputField.focus();
+    }
+};
+
+function isCurrentWord (word) {
+    'use strict';
+
+    return isWordListMember(word, cisl.customVocabs.currentList);
+};
+
+function isNewWord (word) {
+    'use strict';
+
+    return isWordListMember(word, cisl.customVocabs.newList);
+};
+
+function isDeletedWord (word) {
+    'use strict';
+
+    return isWordListMember(word, cisl.customVocabs.deleteList);
+};
+
+function isWordListMember (word, wordList) {
+    'use strict';
+
+    if (!wordList) {
+        return { wordArray: [], index: -1 };
+    }
+    else {
+        return { wordArray: wordList, index: wordList.indexOf(word) };
+    }
+};
+
+function addCondition (word) {
+    'use strict';
+
+    // If already in new word list, be done.
+    var newWord = isNewWord(word);
+    if (newWord.index !== -1) {
+        return 'dontAdd';
+    }
+    // Not in new word list.  Check the current words and the deleted words.
+    // If a current word but not deleted, be done.
+    var currentWord = isCurrentWord(word);
+    var deletedWord = isDeletedWord(word);
+    if (currentWord.index !== -1 && deletedWord.index === -1) {
+        return 'dontAdd';
+    }
+    // If a current word and in the deleted list, remove from deleted, and
+    // add back to display.
+    if (currentWord.index !== -1 && deletedWord.index !== -1) {
+        return 'addAndRemoveFromDeleted';
+    }
+    // Not in new list, nor a current word, simply add it.
+    return 'addNew';
+};
+
+// For custom vocabulary word suggestions modal dialog
+function addCustomVocabFromSuggestions (index, checkbox) {
+    if ($(checkbox).prop('checked')) {
+        addVocabularyWord($(checkbox).attr('data-word'));
+        $(checkbox).prop('checked', false);
+    }
+};
+
 $(window).ready(function() {
     'use strict';
 
@@ -1008,6 +1208,9 @@ $(window).ready(function() {
     document.querySelectorAll('.more-or-less').forEach(function(aButton) {
         aButton.addEventListener('click', moreOrLess);
     });
+    if (document.querySelector('.custom-vocabulary-editor') !== null) {
+        initEditCustomizations();
+    }
     $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
     $('body').on('click', 'button.import-button', bookshareStartImportProcess);
 });

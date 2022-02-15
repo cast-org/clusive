@@ -24,7 +24,8 @@ from eventlog.models import Event
 from eventlog.signals import annotation_action
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
-from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization
+from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
+    CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
 from pages.views import ThemedPageMixin, SettingsPageMixin
@@ -138,7 +139,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         if self.clusive_user.library_view != self.view:
             self.clusive_user.library_view = self.view
             user_changed = True
-        if self.clusive_user.current_period != self.period:
+        if self.period and self.clusive_user.current_period != self.period:
             self.clusive_user.current_period = self.period
             user_changed = True
         if self.clusive_user.library_style != self.style:
@@ -1233,6 +1234,12 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         context['book'] = self.object.book
         context['is_new'] = self.is_new
         context['recent_custom_questions'] = self.get_recent_custom_questions(3)
+        context['all_words'] = self.object.book.all_word_and_non_dict_word_list;
+        suggested_words = context['all_words'][:]
+        for current_word in self.object.word_list:
+            if current_word in suggested_words:
+                suggested_words.remove(current_word)
+        context['suggested_words'] = suggested_words
         return context
 
     def get_recent_custom_questions(self, n):
@@ -1257,6 +1264,7 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def form_valid(self, form):
         result = super().form_valid(form)
+        self.modify_custom_vocabulary(form.instance)
         if form.overridden_periods:
             messages.warning(self.request, '%s reassigned to the new customization: %s' %
                              ('Class' if len(form.overridden_periods)==1 else 'Classes',
@@ -1265,6 +1273,35 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('customize_book', kwargs={'pk': self.object.book.id})
+
+    def modify_custom_vocabulary(self, customization):
+        # Add new words
+        new_words_str = self.request.POST.get('new_vocabulary_words', '')
+        for new_word in new_words_str.split('|'):
+            new_word = new_word.strip()
+            # Don't add empty strings
+            if len(new_word) > 0:
+                custom_vocab_word = CustomVocabularyWord.objects.create(
+                    word=new_word, customization=customization
+                )
+                custom_vocab_word.save()
+        # Delete old words marked for deletion
+        delete_words_str = self.request.POST.get('delete_vocabulary_words', '')
+        for delete_word in delete_words_str.split('|'):
+            delete_word = delete_word.strip()
+            try:
+                # TODO: (JS) Note that get() will fail if the
+                # (delete_word,customization) matches more than one record, i.e.
+                # multiple instances of a word connected to one customization.
+                # Should the CustomVocabularyWord/Customization models restrict
+                # the words to be unique?  Vs. support multiple definitions or
+                # multiple pronunciations?
+                custom_vocab_word = CustomVocabularyWord.objects.get(
+                    word=delete_word, customization=customization
+                )
+                custom_vocab_word.delete()
+            except:
+                pass
 
     def configure_event(self, event: Event):
         event.page = 'EditCustomization'

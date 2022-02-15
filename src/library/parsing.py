@@ -12,13 +12,13 @@ from zipfile import ZipFile
 import dawn
 import pypandoc
 import requests
-import wordfreq as wf
 from dawn.epub import Epub
 from django.utils import timezone
 from nltk import RegexpTokenizer
 
 from glossary.util import base_form
 from library.models import Book, BookVersion, Subject
+from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
 
@@ -520,9 +520,7 @@ class TextExtractor(HTMLParser):
                         # Neither in glossary, nor in dictionary
                         non_word_set.add(t.lower())
         # Append frequency of each word, sort by it, then remove the frequencies from return value
-        word_list = [[w, self.sort_key(w)] for w in word_set]
-        word_list.sort(key=lambda p: p[1])
-        word_list = [p[0] for p in word_list]
+        word_list = sort_words_by_frequency(word_set, self.lang)
         # Glossary and non-dictionary words are just sorted alphabetically.
         glossary_list = list(glossary_set)
         glossary_list.sort()
@@ -534,16 +532,6 @@ class TextExtractor(HTMLParser):
             'non_dict_words': non_word_list,
             'word_count': word_count,
         }
-
-    # We sort the hardest (low-frequency) words to the front of our list.
-    # However, words that return '0' for frequency (aka non-words) should go to the end of the list,
-    # so give them a large sort key.
-    def sort_key(self, word):
-        freq = wf.word_frequency(word, self.lang)
-        if freq > 0:
-            return freq
-        else:
-            return 1
 
     def extract(self, html):
         self.feed(html)

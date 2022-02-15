@@ -67,10 +67,10 @@
                 {% for wm in words %}
                     <div data-rating="{{wm.knowledge_est}}" class="wordbank-item offset{{wm.knowledge_est}}">
                         <div class="wordbank-drag">
-                            <a href="#" role="button" class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</a>
-                            <a href="#" role="button" class="wordbank-prev" aria-label="Decrease rating for '{{wm.word}}'" title="Move left"><span class="icon-chevron-left" aria-hidden="true"></span><span class="sr-only">Decrease rating for '{{wm.word}}'</span></a>
-                            <a href="#" role="button" class="wordbank-next" aria-label="Increase rating for '{{wm.word}}'" title="Move right"><span class="icon-chevron-right" aria-hidden="true"></span><span class="sr-only">Increase rating for '{{wm.word}}'</span></a>
-                            <a href="#" role="button" class="wordbank-del" aria-label="Remove '{{wm.word}}' from word bank" title="Remove"><span class="icon-cancel" aria-hidden="true"></span><span class="sr-only">Remove '{{wm.word}}' from word bank</span></a>
+                            <button type="button" class="wordbank-word" aria-describedby="rank{{wm.knowledge_est}}">{{wm.word}}</button>
+                            <button type="button" class="wordbank-prev" aria-label="Decrease rating for '{{wm.word}}'" title="Move left"><span class="icon-chevron-left" aria-hidden="true"></span><span class="sr-only">Decrease rating for '{{wm.word}}'</span></button>
+                            <button type="button" class="wordbank-next" aria-label="Increase rating for '{{wm.word}}'" title="Move right"><span class="icon-chevron-right" aria-hidden="true"></span><span class="sr-only">Increase rating for '{{wm.word}}'</span></button>
+                            <button type="button" class="wordbank-del" aria-label="Remove '{{wm.word}}' from word bank" title="Remove"><span class="icon-cancel" aria-hidden="true"></span><span class="sr-only">Remove '{{wm.word}}' from word bank</span></button>
                         </div>
                     </div>
                 {% endfor %}

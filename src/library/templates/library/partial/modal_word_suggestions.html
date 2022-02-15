@@ -1,0 +1,31 @@
+<div id="modalWordSuggestions" class="modal" aria-labelledby="modalConfirmTitle">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalConfirmTitle" class="modal-title">Word suggestions</h2>
+                {% include "shared/partial/dialog_tts.html" %}
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+                        {% for word in suggested_words|slice:":20" %}
+                        <div class="col">
+                            <div class="form-check form-checkradio">
+                                <input class="form-check-input" type="checkbox" id="id_{{ word }}" data-word="{{ word }}">&nbsp;
+                                <label class="form-check-label" for="id_{{ word }}">{{ word }}</label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="add-words-from-suggestions" class="btn btn-secondary btn-small" data-cfw-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-link" data-cfw-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
