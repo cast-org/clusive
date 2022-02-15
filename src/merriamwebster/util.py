@@ -1,7 +1,6 @@
-import logging
 import re
-
 import requests
+import logging
 
 from clusive_project import settings
 
@@ -28,27 +27,6 @@ def find_in_dictionary(word):
             return None
     else:
         return None
-
-
-def json_extract(obj, key):
-    # Recursively fetch values from nested JSON.
-    arr = []
-
-    def extract(loop_obj, loop_arr, loop_key):
-        # Recursively search for values of key in JSON tree.
-        if isinstance(loop_obj, dict):
-            for k, v in loop_obj.items():
-                if k == loop_key:
-                    loop_arr.append(v)
-                elif isinstance(v, (dict, list)):
-                    extract(v, loop_arr, loop_key)
-        elif isinstance(loop_obj, list):
-            for item in loop_obj:
-                extract(item, loop_arr, loop_key)
-        return loop_arr
-
-    values = extract(obj, arr, key)
-    return values
 
 
 def clean_string(some_text):
@@ -81,16 +59,20 @@ def clean_string(some_text):
     # insert a break
     clean_text = re.sub("{p_br}", "<br>", clean_text)
 
+    # add a colon when there are 2 links together
+    clean_text = re.sub(":\w\|\|.*?}\s{.*?\|", " : ", clean_text)
+    clean_text = re.sub("\|\|.*?}\s{.*?\|", " : ", clean_text)
+
     # remove link markings: {a_link}, {d_link}, {dxt}, {et_link}, {i_link}, {mat}, {sx}
     # remove cross references: {dx}, {dx_def}, {dx_ety}, {ma}
     # note the only example found in test words were {sx} - assume the format
     # is the same for other links
     clean_text = re.sub('{.*?\|', "", clean_text)
+    clean_text = re.sub(":\w\|\|.*?}", "", clean_text)
     clean_text = re.sub("\|\|.*?}", "", clean_text)
 
     # anything else left in curly brackets will be removed
     # work markings and gloss tokens: {gloss}, {parahw}, {phrase}, {qword}, {wi}
-    # TODO: log these items?
     clean_text = re.sub("{.*?}", "", clean_text)
 
     return clean_text
@@ -109,39 +91,46 @@ def extract_examples(examples):
     return clean_examples
 
 
-def extract_definition(def_content):
-    clean_def = ""
+def extract_definition(def_content, offensive_note):
     meaning = dict()
     examples = list()
 
-    for def_instance in def_content:
-        logging.debug('MW: The def_instance: %s', def_instance)
-        if len(def_instance) > 1 and def_instance[1] is not None:
+    if offensive_note:
+        clean_def = "[" + offensive_note + "] "
+    else:
+        clean_def = ""
+
+    def_dict = dict(def_content)
+    for ky, vl in def_dict.items():
+        if vl is not None:
+            #logging.debug('MW: The def_instance: (key, value)', ky, vl)
             # if this is a text check to see if there are any other parts to concat
-            if def_instance[0] == 'text':
-                clean_def = clean_def + clean_string(def_instance[1])
+            if ky == 'text':
+                clean_def = clean_def + clean_string(vl)
             # if this is a vis (example) then parse and clean the list of examples
-            elif def_instance[0] == 'vis':
-                examples = extract_examples(def_instance[1])
+            elif ky == 'vis':
+                # only extract examples if there is a definition
+                if clean_def:
+                    examples = extract_examples(vl)
             # uns - usage note - no conversion
-            elif def_instance[0] == 'uns':
-                logging.debug('MW: Found uns: %s', def_instance[1])
+            elif ky == 'uns':
+                logging.debug('MW: Found uns: %s', vl)
             # if this is a g then concat with the text
-            elif def_instance[0] == 'g':
-                clean_def = clean_def + def_instance[1]
+            elif ky == 'g':
+                clean_def = clean_def + vl
             # if this is another tag not accounted for - log these items
             # bnw - biographical name wrap
             # ca - called also
             # snote - supplemental note
             else:
-                logging.error('MW: Found an uncaught definition instance: %s', def_instance)
+                logging.error('MW: Found an uncaught definition instance: %s', vl)
         else:
-            logging.error('MW: Found an uncaught definition instance: %s', def_instance)
+            logging.error("MW: value in definition dictionary is none")
 
     if clean_def:
         meaning["definition"] = clean_def
-    if examples:
-        meaning["examples"] = examples
+        if examples:
+            meaning["examples"] = examples
     return meaning
 
 
@@ -158,37 +147,59 @@ def lookup(word: str):
     else:
         mw_dictionary_result = dict()
         meanings = list()
+
+        # loop through the list of data returned from MW
         for definition_entry in word_data:
-            # clean any syllable markers (asterisk) from headword
-            # remove anything inside curly brackets
-            #   example is N-allylnormorphine "hw":"{bit}N{\/bit}-al*lyl*nor*mor*phine"
-            if definition_entry["hwi"]["hw"]:
-                clean_headword = definition_entry["hwi"]["hw"].replace("*", "")
-                clean_headword = re.sub("{.*?}", "", clean_headword)
 
-                if clean_headword == word:
-                    mw_dictionary_result["headword"] = clean_headword
+            # If this definition is not quite right it won't have the meta tag
+            if 'meta' in definition_entry:
+                # clean any syllable markers (asterisk) from headword
+                # remove anything inside curly brackets
+                #   example is N-allylnormorphine "hw":"{bit}N{\/bit}-al*lyl*nor*mor*phine"
+                if definition_entry["hwi"]["hw"]:
+                    clean_headword = definition_entry["hwi"]["hw"].replace("*", "")
+                    clean_headword = re.sub("{.*?}", "", clean_headword)
 
-                    if 'fl' in definition_entry:
-                        # get the part of speech
-                        pos = definition_entry["fl"]
+                    meaning = ""
+                    if clean_headword == word:
+                        mw_dictionary_result["headword"] = clean_headword
 
-                        # for this pos, extract a list of meanings with examples
-                        json_dt = json_extract(definition_entry, 'dt')
+                        if 'fl' in definition_entry:
+                            # get the part of speech
+                            pos = definition_entry["fl"]
 
-                        for def_content in json_dt:
-                            meaning = extract_definition(def_content)
-                            meaning["pos"] = pos
-                            if meaning:
-                                meanings.append(meaning)
-                        mw_dictionary_result["meanings"] = meanings
-                    else:
-                        logging.debug('MW: No POS found - skip')
+                            # for this pos, extract a list of meanings with examples
+                            # get the defining text(dt) found at [def][sseq][sense][dt]
+                            # offensive info is sibling to dt [def][sseq][sense][sls]
+                            for def_instance in definition_entry['def']:
+                                for def_sseq in def_instance.values():
+                                    for def_sense in def_sseq:
+                                        for sense_element in def_sense:
+                                            offensive_note = ""
+                                            for k, v in sense_element[1].items():
+                                                # sls is a string of notes with offensive info
+                                                # assumption that this is always before dt
+                                                if k == 'sls':
+                                                    for sls_val in v:
+                                                        if 'offensive' in sls_val:
+                                                            offensive_note = sls_val
+                                                            logger.debug("MW: found offensive indicator:", offensive_note)
+                                                elif k == 'dt':
+                                                    meaning = extract_definition(v, offensive_note)
+                                            if meaning:
+                                                meaning["pos"] = pos
+                                                # only append the pos if there is a definition
+                                                meanings.append(meaning)
+                                    mw_dictionary_result["meanings"] = meanings
+                        else:
+                            logging.error("MW: Skipping this POS - no def ", clean_headword)
+                else:
+                    logging.error('MW: Skipping, No Headword found')
             else:
-                logging.debug('MW: No Headword found - skip')
+                logging.error('MW: Skipping, No Meta - Not a word in intermediate dictionary')
                 return None
-        if mw_dictionary_result:
-            logging.debug('MW: results: %s', mw_dictionary_result)
-            return mw_dictionary_result
-        else:
-            return None
+
+    if mw_dictionary_result:
+        return mw_dictionary_result
+    else:
+        return None
