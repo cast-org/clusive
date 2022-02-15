@@ -31,10 +31,11 @@ body {
 }
 
 #iframe-wrapper {
-    height: calc(100vh - #{$header-height + $body-padding-y});
+    min-height: calc(100vh - #{$header-height + $body-padding-y});
+    overflow: initial !important; // stylelint-disable-line declaration-no-important
 
     @include media-breakpoint-up(md) {
-        height: calc(100vh - #{$header-md-height + $body-padding-y});
+        min-height: calc(100vh - #{$header-md-height + $body-padding-y});
     }
 }
 
