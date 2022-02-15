@@ -32,7 +32,7 @@ body {
 
 #iframe-wrapper {
     min-height: calc(100vh - #{$header-height + $body-padding-y});
-    overflow: initial !important; // stylelint-disable-line declaration-no-important
+    overflow: initial !important;
 
     @include media-breakpoint-up(md) {
         min-height: calc(100vh - #{$header-md-height + $body-padding-y});
