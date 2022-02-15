@@ -3,6 +3,7 @@ import random
 
 from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render
+from django.views.generic import TemplateView
 
 from eventlog.signals import vocab_lookup, word_rated, word_removed
 from glossary.apps import GlossaryConfig
@@ -253,3 +254,12 @@ def word_bank_remove(request, word):
     except ClusiveUser.DoesNotExist:
         logger.warning("No clusive user, can't remove word")
         return JsonResponse({'success' : 0})
+
+class DefinitionAcknowledgementView (TemplateView):
+
+    template_name = 'glossary/ack.html'
+
+    def get(self, request, *args, **kwargs):
+        #self.extra_context = {'source', kwargs.get('source')}
+        return super().get(request, *args, **kwargs)
+
