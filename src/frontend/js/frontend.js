@@ -1031,7 +1031,7 @@ function initEditCustomizations () {
         deleteVocabularyWord(e);
     });
 
-    // "Add" button on the custom vocabulary word suggetsions dialog
+    // "Add" button on the custom vocabulary word suggestions dialog
     $('#add-words-from-suggestions').click(function (e) {
         $('#modalWordSuggestions [type="checkbox"]').each(addCustomVocabFromSuggestions);
     });
@@ -1173,6 +1173,14 @@ function addCustomVocabFromSuggestions (index, checkbox) {
     }
 };
 
+// Configure the "Delete this Customization?" confirmation popup.
+function configureConfirmDeletionPopup (e) {
+    $('#deleteCustomizationTitle').text($(e.currentTarget).attr('data-title'));
+    $('#deleteCustomizationSubmit').attr(
+        'href', $(e.currentTarget).attr('data-delete-url')
+    );
+};
+
 $(window).ready(function() {
     'use strict';
 
@@ -1210,6 +1218,7 @@ $(window).ready(function() {
     if (document.querySelector('.custom-vocabulary-editor') !== null) {
         initEditCustomizations();
     }
+    $('body').on('click', 'button.delete-customization', configureConfirmDeletionPopup);
     $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
     $('body').on('click', 'button.import-button', bookshareStartImportProcess);
 });

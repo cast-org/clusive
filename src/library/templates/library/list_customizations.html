@@ -27,7 +27,6 @@
             <h2 class="me-0_5">{{ c.title }}</h2>
             <a href="{% url 'edit_customization' pk=c.id %}">edit <span class="sr-only">{{ c.title }}</span></a>
         </div>
-
         <h3>Classes</h3>
         <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
             {% for p in c.periods.all %}
@@ -55,12 +54,16 @@
                 None
             {% endif %}
         </p>
+        <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+            <button type="button" class="btn btn-primary btn-small delete-customization" data-title="{{ c.title }}" data-delete-url="{% url 'delete_customization' bk=c.book.id ck=c.id %}" data-cfw="modal" data-cfw-modal-target="#modalDeleteCustomization">Delete this Customization</button>
+        </div>
     </div>
     {% empty %}
     <em>No customizations for this book</em>
     {% endfor %}
 
     <p><a href="{% url 'customize_add' pk=book.id %}" class="btn btn-primary">Add a customization</a></p>
+    {% include "library/partial/modal_delete_customization.html" %}
 
 </main>
 {% endblock %}
