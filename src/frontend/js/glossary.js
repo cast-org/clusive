@@ -50,15 +50,14 @@ function load_definition(cued, word) {
             .done(function(data, status) {
                 $('#glossaryBody').html(data);
                 $('#glossaryWordbankLink').show();
+                // 'source' data attribute lets us know where the definition came from.
                 var source = $('#glossaryDefinition').data('source');
-                $.get('/glossary/glossdef/ack/' + source)
-                    .done(function(ack_data) {
-                        $('#glossaryAcknowledgement').html(ack_data);
-                        $('#glossaryAcknowledgementSection').show();
-                    })
-                    .fail(function(err) {
-                        console.error('Failed to get dictionary acknowledgement: ', err);
-                    });
+                // See if there is a div containing an attribution for that source.
+                var $attribution_div = $('#glossaryAcknowledgement-' + source);
+                if ($attribution_div.length) {
+                    $attribution_div.show();
+                    $('#glossaryAcknowledgementSection').show();
+                }
             })
             // didn't find a definition
             .fail(function(err) {
