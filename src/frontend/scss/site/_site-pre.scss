@@ -421,7 +421,8 @@ $sidebar-width:                         3rem;
 $sidebar-gutter:                        .5rem;
 $sidebar-md-width:                      4rem;
 $sidebar-md-gutter:                     1rem;
-$sidebar-xl-width:                      calc(50vw - (#{map-get($container-max-widths, xl)} - ((#{$sidebar-md-width * 2} + #{$body-padding-x}))) / 2);
+$sidebar-xl-width:                      calc(50vw - (#{map-get($container-max-widths, xl)} - ((#{$sidebar-md-width} - #{$sidebar-md-gutter} + #{$body-padding-x}) * 2)) / 2);
+@warn $sidebar-xl-width;
 
 $library-grid-gutter:                   2rem;
 
