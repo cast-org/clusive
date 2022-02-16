@@ -80,7 +80,12 @@
             {{ form.delete_vocabulary_words }}
             <div class="form-inline">
                 <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
-                <input type="text" id="id_word_to_add" class="form-control me-0_5">
+                <input type="text" id="id_word_to_add" list="suggestedWordCompletions" class="form-control me-0_5">
+                <datalist id="suggestedWordCompletions">
+                    {% for word_completion in all_words %}
+                        <option value="{{ word_completion }}"></option>
+                    {% endfor %}
+                </datalist>
                 <button id="add-word-button" class="btn btn-primary">Add</button>
             </div>
             <p id="worderror" class="errorlist mt-0_5" style="display:none;">That word does not occur in this reading.</p>
