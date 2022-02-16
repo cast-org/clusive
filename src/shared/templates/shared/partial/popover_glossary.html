@@ -43,8 +43,11 @@
             <div id="glossaryAcknowledgementSection">
                 <div class="popover-footer-divider"></div>
                 {% comment %} There can be an acknowledgement div here for each source. One or none will be shown. {% endcomment %}
-                <div id="glossaryAcknowledgement-MW">
+                <div class="glossaryAcknowledgement" id="glossaryAcknowledgement-MW">
                   {% include "merriamwebster/mw_ack.html" %}
+                </div>
+                <div class="glossaryAcknowledgement" id="glossaryAcknowledgement-Wordnet">
+                    <span class="me-0_25">Definition by WordNet®</span>
                 </div>
             </div>
         </div>

@@ -40,7 +40,7 @@ function load_definition(cued, word) {
     $('#glossaryInput').hide();
     $('#glossaryWordbankLink').hide();
     $('#glossaryAcknowledgementSection').hide();
-    $('#glossaryAcknowledgement').empty();
+    $('.glossaryAcknowledgement').hide();
     if (word) {
         glossaryCurrentWord = word;
         title = word;
