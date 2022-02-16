@@ -10,23 +10,49 @@ var pub_version_id = "{{ version_id }}";
 var manifest_path = "{{ manifest_path }}";
 </script>
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
-<link rel="stylesheet" href="{% static 'shared/js/lib/reader/injectables/style/linefocus.css' %}" />
+<!--<link rel="stylesheet" href="{% static 'shared/js/lib/reader/injectables/style/linefocus.css' %}" /> -->
 <style>
+    /* Try to limit the line-focus to the frame area */
+    /* See: _contents.scss */
+    /*
+    #D2Reader-Container {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 100%;
+        transform: translateX(-50%);
+        max-width: 74rem;
+        height: calc(100vh - 3.75rem);
+        overflow: hidden;
+    }
+
+    @media (min-width: 48em) {
+        #D2Reader-Container {
+            height: calc(100vh - 4.25rem);
+        }
+    }
+
+    #D2Reader-Container > #divBefore {
+        height: 0 !important;
+    }
+    */
+
     .d2-line-focus-container {
-        position: fixed;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
         height: 100vh;
         width: 100%;
         pointer-events: none;
-        z-index: 100;
-        top:0;
     }
 
     .d2-line-focus-bottom, .d2-line-focus-top {
         position: absolute;
         height: 0;
         min-height: 0;
-        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjMxOTlCOUNGQTU2QzExRTc5QUZBQTQ3NkYwNjBCNUJBIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjMxOTlCOUQwQTU2QzExRTc5QUZBQTQ3NkYwNjBCNUJBIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MzE5OUI5Q0RBNTZDMTFFNzlBRkFBNDc2RjA2MEI1QkEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MzE5OUI5Q0VBNTZDMTFFNzlBRkFBNDc2RjA2MEI1QkEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7FS0eIAAAAD0lEQVR42mJgYGC4CRBgAADeANokcoX4AAAAAElFTkSuQmCC");
-        background-repeat: repeat;
+        background-color: rgba(0, 0, 0, .9);
         transition-property: height;
         z-index: 25;
         pointer-events: all;
@@ -37,7 +63,7 @@ var manifest_path = "{{ manifest_path }}";
         top: 0;
         right: 0;
         height: 0;
-        box-shadow: 0 2px 7px 0 rgba(0, 0, 0, .4)
+        box-shadow: 0 2px 7px 0 rgba(0, 0, 0, .4);
     }
 
     .d2-line-focus-bottom {
@@ -45,7 +71,7 @@ var manifest_path = "{{ manifest_path }}";
         bottom: 0;
         right: 0;
         height: 0;
-        box-shadow: 2px 0 7px 0 rgba(0, 0, 0, .4)
+        box-shadow: 2px 0 7px 0 rgba(0, 0, 0, .4);
     }
 </style>
 {% endblock %}
@@ -78,6 +104,12 @@ var manifest_path = "{{ manifest_path }}";
         <div id="lineFocusBottomBlinder" class="d2-line-focus-bottom"></div>
     </div>
     <main tabindex="-1" id="iframe-wrapper">
+        <!--
+        <div id="lineFocusContainer" class="d2-line-focus-container" style="display: none">
+            <div id="lineFocusTopBlinder" class="d2-line-focus-top"></div>
+            <div id="lineFocusBottomBlinder" class="d2-line-focus-bottom"></div>
+        </div>
+        -->
         <span id="content" tabindex="-1"></span>
         <h1 class="sr-only">Reading: {{ pub.title }}</h1>
 

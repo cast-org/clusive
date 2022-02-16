@@ -3,18 +3,13 @@
     top: $header-height;
     left: 50%;
     width: 100%;
-    max-width: 100%;
+    max-width: map-get($container-max-widths, xl);
     height: 0;
     transform: translateX(-50%);
 
     @include media-breakpoint-up(md) {
         top: $header-md-height;
-        width: calc(100% - #{($body-padding-x * 2)});
-        max-width: calc(100% - #{($body-padding-x * 2)});
-    }
-
-    @include media-breakpoint-up(xl) {
-        max-width: map-get($container-max-widths, xl) - ($body-padding-x * 2);
+        padding: 0 1rem;
     }
 }
 
@@ -28,52 +23,90 @@
     position: relative;
     display: flex;
     flex: 0 0 $sidebar-width;
-    width: $sidebar-width;
-    max-width: $sidebar-width;
     height: calc(100vh - #{$header-height + $body-padding-y});
-    padding: $sidebar-padding-y $sidebar-padding-x;
-    background: var(--CT_sidebarStartBg);
-    @include border-radius($sidebar-border-radius);
+    pointer-events: none;
 
-    @include media-breakpoint-up(sm) {
-        flex-basis: $sidebar-sm-width;
-        width: $sidebar-sm-width;
-        max-width: $sidebar-sm-width;
-        padding: $sidebar-sm-padding-y $sidebar-sm-padding-x;
+    > * {
+        pointer-events: auto;
     }
 
     @include media-breakpoint-up(md) {
+        flex-basis: $sidebar-md-width;
         height: calc(100vh - #{$header-md-height + $body-padding-y});
+    }
+}
+
+.sidebar-start {
+    margin-right: $sidebar-gutter;
+
+    @include media-breakpoint-up(md) {
+        margin-right: $sidebar-md-gutter;
+    }
+}
+.sidebar-end {
+    margin-left: $sidebar-gutter;
+
+    @include media-breakpoint-up(md) {
+        margin-left: $sidebar-md-gutter;
+    }
+
+}
+
+.sidebars-bg {
+    .sidebar-start {
+        background: var(--CT_sidebarStartBg);
+        @include border-radius($sidebar-border-radius);
+    }
+    .sidebar-end {
+        background: var(--CT_sidebarEndBg);
+        @include border-radius($sidebar-border-radius);
     }
 
     @include media-breakpoint-up(xl) {
-        background: none;
+        .sidebar-start,
+        .sidebar-end {
+            background: none;
 
-        &::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            display: block;
-            width: $sidebar-xl-width;
-            min-width: $sidebar-sm-width;
-            max-width: $sidebar-xl-width;
-            content: "";
+            &::after {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                z-index: -1;
+                display: block;
+                width: $sidebar-xl-width;
+                min-width: $sidebar-md-width;
+                max-width: $sidebar-xl-width;
+                content: "";
+            }
+        }
+
+        .sidebar-start:after {
             background: var(--CT_sidebarStartBg);
             @include border-radius($sidebar-border-radius);
         }
-    }
-
-    .btn-glossary {
-        position: absolute;
-        top: 50%;
-        right: -2.125rem;
-        font-weight: $font-weight-bold;
-        transform: rotate(-90deg) translateY(-50%);
-        transform-origin: top center;
+        .sidebar-end:after {
+            right: auto;
+            left: 0;
+            background: var(--CT_sidebarEndBg);
+            @include border-radius($sidebar-border-radius);
+        }
     }
 }
+
+.sidebars-top .sidebar {
+    flex-direction: column;
+    align-items: center;
+    padding-top: .75rem;
+    padding-bottom: .75rem; // Until .sidebars-bottom is added
+}
+.sidebars-bottom .sidebar {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: .75rem;
+}
+
 
 .sidebar-divider-wrapper {
     margin-top: .75rem;
@@ -90,63 +123,7 @@
         left: -33vw;
     }
 }
-
-.sidebar-start {
-    flex-direction: column;
-    margin-right: 1rem;
-}
-
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-self: flex-end;
-
-    .btn + .btn {
-        margin-top: .75rem;
-    }
-}
-
-.sidebar-support {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-self: flex-end;
-    justify-content: flex-end;
-    margin-top: auto;
-
-    .btn + .btn {
-        margin-top: .75rem;
-    }
-
-    .btn + .btn-starred {
-        margin-top: .25rem;
-    }
-
-    .btn-starred {
-        width: 2.25rem;
-        height: 2.25rem;
-        padding: 0;
-        @include border-radius(2.25rem);
-    }
-}
-
 .sidebar-end {
-    flex-direction: column;
-    order: 1;
-    margin-left: 1rem;
-    background: var(--CT_sidebarEndBg);
-
-    @include media-breakpoint-up(xl) {
-        background: none;
-
-        &::after {
-            right: auto;
-            left: 0;
-            background: var(--CT_sidebarEndBg);
-        }
-    }
-
     .sidebar-divider {
         border-color: var(--CT_sidebarEndDividerColor);
 
@@ -157,14 +134,28 @@
     }
 }
 
-.sidebar-tool {
+.sidebar-region {
     display: flex;
     flex-direction: column;
     align-items: center;
-    align-self: flex-start;
 
     .btn + .btn {
         margin-top: .75rem;
+    }
+}
+
+.sidebar-support {
+    margin-top: auto;
+
+    .btn-starred {
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        @include border-radius(2.25rem);
+    }
+
+    .btn + .btn-starred {
+        margin-top: .25rem;
     }
 }
 
@@ -211,20 +202,15 @@
         visibility: hidden;
     }
     .content {
-        padding-left: 2rem;
+        margin-left: 1rem;
     }
     &.home {
         .content {
-            padding-left: 1rem;
+            margin-left: 0;
 
-            @include media-breakpoint-up(sm) {
-                padding-left: 2rem;
+            @include media-breakpoint-up(md) {
+                margin-left: 1rem;
             }
-        }
-    }
-    &.library {
-        .content {
-            padding-left: 1.7rem;
         }
     }
 }
@@ -234,14 +220,14 @@
         visibility: hidden;
     }
     .content {
-        padding-right: 2rem;
+        margin-right: 1rem;
     }
     &.home {
         .content {
-            padding-right: 1rem;
+            margin-right: 0;
 
-            @include media-breakpoint-up(sm) {
-                padding-right: 2rem;
+            @include media-breakpoint-up(md) {
+                margin-right: 1rem;
             }
         }
     }

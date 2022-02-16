@@ -103,29 +103,37 @@ h2,
 }
 
 .content {
-    //max-width: calc(100vw - 8rem);
-    padding-top: $header-height + $content-offset-top;
-    padding-right: $sidebar-width + $sidebar-gutter;
-    padding-bottom: $body-padding-x;
-    padding-left: $sidebar-width + $sidebar-gutter;
-    margin-right: ($grid-gutter-width / -2);
-    margin-left: ($grid-gutter-width / -2);
+    position: relative;
+    margin-right: $sidebar-width + $sidebar-gutter;
+    margin-left: $sidebar-width + $sidebar-gutter;
     outline: 0;
 
-    @include media-breakpoint-up(sm) {
-        //max-width: calc(100vw - 10.625rem);
-        padding-right: $sidebar-sm-width + $sidebar-sm-gutter;
-        padding-left: $sidebar-sm-width + $sidebar-sm-gutter;
-    }
-
     @include media-breakpoint-up(md) {
-        padding-top: $header-md-height + $content-offset-top;
+        margin-right: $sidebar-md-width + $sidebar-md-gutter;
+        margin-left: $sidebar-md-width + $sidebar-md-gutter;
     }
 }
 
+// Try to limit the line-focus to the frame area
 // stylelint-disable-next-line selector-max-id
-#D2Reader-Container iframe {
-    //padding-bottom: 2rem;
+#D2Reader-Container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    max-width: map-get($container-max-widths, xl);
+    height: calc(100vh - #{$header-height + $body-padding-y});
+    overflow: hidden;
+
+    @include media-breakpoint-up(md) {
+        height: calc(100vh - #{$header-md-height + $body-padding-y});
+    }
+
+    > #divBefore {
+        height: 0 !important;
+    }
 }
 
 .login-status {
@@ -353,8 +361,8 @@ h2,
     outline: 0;
     @include sr-only();
 
-    @include media-breakpoint-up(sm) {
-        left: $sidebar-sm-width;
+    @include media-breakpoint-up(md) {
+        left: $sidebar-md-width;
     }
 }
 

@@ -27,7 +27,7 @@
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-<header class="site-header">
+<header class="site-header is-sticky">
     <div class="site-header-navbar navbar navbar-expand-md">
         <div class="site-header-container container-xl">
             <div class="site-header-logo">
@@ -74,19 +74,21 @@
 </header>
 
 <div class="container-xl">
-    <div class="sidebars-wrapper">
+    <div class="sidebars-wrapper sidebars-bg sidebars-top is-fixed">
         <div class="sidebars">
             <div class="sidebar sidebar-start">
-                <nav class="sidebar-nav" aria-label="Article">
+                <nav class="sidebar-region sidebar-nav" aria-label="Page">
                     <button type="button" class="btn btn-nav btn-icon btn-nav-toc" aria-label="Contents">
                         <span class="icon-th-list" aria-hidden="true"></span>
                     </button>
                     <button type="button" class="btn btn-nav btn-icon btn-switch-level" aria-label="Switch">
                         <span class="icon-walk" aria-hidden="true"></span>
                     </button>
+
                     <div class="sidebar-divider-wrapper">
                         <div class="sidebar-divider"></div>
                     </div>
+
                     <button type="button" class="btn btn-nav btn-icon btn-nav-prev" aria-label="Previous page">
                         <span class="icon-chevron-left" aria-hidden="true"></span>
                     </button>
@@ -94,7 +96,7 @@
                         <span class="icon-chevron-right" aria-hidden="true"></span>
                     </button>
                 </nav>
-                <div class="sidebar-support" role="region" aria-label="Support">
+                <div class="sidebar-region sidebar-support" role="region" aria-label="Support">
                     <button type="button" class="btn btn-nav btn-icon btn-thought mt-0_75" arial-label="Your thoughts" title="Your thoughts" data-cfw="popover">
                         <span class="icon-thought" aria-hidden="true"></span>
                         <span class="sr-only">Your thoughts</span>
