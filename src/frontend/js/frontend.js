@@ -1031,7 +1031,7 @@ function initEditCustomizations () {
         deleteVocabularyWord(e);
     });
 
-    // "Add" button on the custom vocabulary word suggetsions dialog
+    // "Add" button on the custom vocabulary word suggestions dialog
     $('#add-words-from-suggestions').click(function (e) {
         $('#modalWordSuggestions [type="checkbox"]').each(addCustomVocabFromSuggestions);
     });
@@ -1065,7 +1065,7 @@ function deleteVocabularyWord (e) {
     if ($('div.vocabulary-word').length === 0) {
         $('.vocabulary-word-list').append('<span id="empty-vocabulary-list">None</span>');
     }
-};
+}
 
 function addVocabularyWord(newWord, /*optional*/ inputField) {
     'use strict';
@@ -1110,25 +1110,25 @@ function addVocabularyWord(newWord, /*optional*/ inputField) {
         inputField.val('');
         inputField.focus();
     }
-};
+}
 
 function isCurrentWord (word) {
     'use strict';
 
     return isWordListMember(word, cisl.customVocabs.currentList);
-};
+}
 
 function isNewWord (word) {
     'use strict';
 
     return isWordListMember(word, cisl.customVocabs.newList);
-};
+}
 
 function isDeletedWord (word) {
     'use strict';
 
     return isWordListMember(word, cisl.customVocabs.deleteList);
-};
+}
 
 function isWordListMember (word, wordList) {
     'use strict';
@@ -1139,7 +1139,7 @@ function isWordListMember (word, wordList) {
     else {
         return { wordArray: wordList, index: wordList.indexOf(word) };
     }
-};
+}
 
 function addCondition (word) {
     'use strict';
@@ -1163,7 +1163,7 @@ function addCondition (word) {
     }
     // Not in new list, nor a current word, simply add it.
     return 'addNew';
-};
+}
 
 // For custom vocabulary word suggestions modal dialog
 function addCustomVocabFromSuggestions (index, checkbox) {
@@ -1171,7 +1171,15 @@ function addCustomVocabFromSuggestions (index, checkbox) {
         addVocabularyWord($(checkbox).attr('data-word'));
         $(checkbox).prop('checked', false);
     }
-};
+}
+
+// Configure the "Delete this Customization?" confirmation popup.
+function configureConfirmDeletionPopup (e) {
+    $('#deleteCustomizationTitle').text($(e.currentTarget).attr('data-title'));
+    $('#deleteCustomizationSubmit').attr(
+        'href', $(e.currentTarget).attr('data-delete-url')
+    );
+}
 
 $(window).ready(function() {
     'use strict';
@@ -1210,6 +1218,7 @@ $(window).ready(function() {
     if (document.querySelector('.custom-vocabulary-editor') !== null) {
         initEditCustomizations();
     }
+    $('body').on('click', 'a.delete-customization', configureConfirmDeletionPopup);
     $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
     $('body').on('click', 'button.import-button', bookshareStartImportProcess);
 });
