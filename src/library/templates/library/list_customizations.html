@@ -16,6 +16,7 @@
 <main id="content" tabindex="-1">
     {% include "shared/partial/alerts.html" %}
     <h1>Customize Reading</h1>
+    <p>Customize questions and vocabulary words<!--, and word definitions--> for one or more classes.</p>
 
     <div class="library-list">
     {% include "library/partial/library_card_list.html" with direct_link=True show_assignments=True query=None %}
@@ -39,6 +40,7 @@
         </div>
         <hr>
         <h3>Words</h3>
+        <p>Vocabulary words typically show up underlined in the reading.</p>
         <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
             {% for word in c.word_list %}
                <div class="col">{{ word }}</div>

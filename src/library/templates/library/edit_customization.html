@@ -24,7 +24,7 @@
 {% block content %}
 <main id="content" tabindex="-1">
     <h1>Edit Customization</h1>
-    <p>Add a custom question {% comment TODO %}and/or vocabulary words{% endcomment %} for this reading.</p>
+    <p>Customize questions and vocabulary words<!--, and word definitions--> for one or more classes.</p>
     <div class="library-list">
         {% include "library/partial/library_card_list.html" with direct_link=True show_assignments=True query=None %}
     </div>
@@ -63,6 +63,11 @@
             </div>
             <hr>
             <h3>Words:</h3>
+            <p>
+                Vocabulary words typically show up underlined in the reading.
+                Use the dictionary form of words: for example “eat”, not “eats”,
+                “eating”, or “ate”.
+            </p>
             <div class="container mb-1 custom-vocabulary-editor">
                 <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 vocabulary-word-list">
                 {% for word in customization.word_list %}
@@ -80,7 +85,12 @@
             {{ form.delete_vocabulary_words }}
             <div class="form-inline">
                 <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
-                <input type="text" id="id_word_to_add" class="form-control me-0_5">
+                <input type="text" id="id_word_to_add" list="suggestedWordCompletions" class="form-control me-0_5">
+                <datalist id="suggestedWordCompletions">
+                    {% for word_completion in all_words %}
+                        <option value="{{ word_completion }}"></option>
+                    {% endfor %}
+                </datalist>
                 <button id="add-word-button" class="btn btn-primary">Add</button>
             </div>
             <p id="worderror" class="errorlist mt-0_5" style="display:none;">That word does not occur in this reading.</p>
