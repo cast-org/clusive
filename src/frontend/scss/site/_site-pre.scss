@@ -220,6 +220,7 @@ $font-family-sans-serif:                "Source Sans Pro", -apple-system, BlinkM
 $h1-font-size:                          ($font-size-base * 1.375);
 $h2-font-size:                          ($font-size-base * 1.125);
 $h3-font-size:                          ($font-size-base * 1);
+$headings-font-weight:                  700;
 $headings-line-height:                  scale-line-height(1.25);
 
 $text-muted:                            var(--CT_textMuted);
