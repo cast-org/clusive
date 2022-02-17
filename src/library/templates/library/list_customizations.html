@@ -25,7 +25,9 @@
     <div class="box">
         <div class="d-flex">
             <h2 class="me-0_5">{{ c.title }}</h2>
-            <a href="{% url 'edit_customization' pk=c.id %}">edit <span class="sr-only">{{ c.title }}</span></a>
+            <a href="{% url 'edit_customization' pk=c.id %}" class="mx-0_25">edit <span class="sr-only">{{ c.title }}</span></a> |
+            <a role="button" href="#" class="mx-0_25 delete-customization" data-title="{{ c.title }}" data-delete-url="{% url 'delete_customization' bk=c.book.id ck=c.id %}" data-cfw="modal" data-cfw-modal-target="#modalDeleteCustomization">delete <span class="sr-only">{{ c.title }}</span></a>
+
         </div>
         <h3>Classes</h3>
         <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
@@ -54,9 +56,6 @@
                 None
             {% endif %}
         </p>
-        <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
-            <button type="button" class="btn btn-primary btn-small delete-customization" data-title="{{ c.title }}" data-delete-url="{% url 'delete_customization' bk=c.book.id ck=c.id %}" data-cfw="modal" data-cfw-modal-target="#modalDeleteCustomization">Delete this Customization</button>
-        </div>
     </div>
     {% empty %}
     <em>No customizations for this book</em>
