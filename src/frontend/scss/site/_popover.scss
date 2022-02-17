@@ -90,6 +90,15 @@
     }
 }
 
+.popover-footer-divider {
+    padding-top: calc(1px + #{$popover-footer-padding-y});
+    margin-top: $popover-footer-padding-y;
+    margin-right: #{-$popover-footer-padding-x};
+    margin-left: #{-$popover-footer-padding-x};
+    line-height: 1;
+    border-top: 1px solid $popover-footer-border-color;
+}
+
 .popover-section {
     position: relative;
     padding-top: $popover-body-padding-y;

@@ -297,3 +297,4 @@ def word_bank_remove(request, word):
     except ClusiveUser.DoesNotExist:
         logger.warning("No clusive user, can't remove word")
         return JsonResponse({'success' : 0})
+

@@ -3,6 +3,7 @@
 <strong>{{defs.headword}}</strong>
 {% endcomment %}
 
+<div id="glossaryDefinition" data-source="{{ defs.source }}">
 {% for m in defs.meanings %}
 <p>
     <span class="definition-speech">({{m.pos}})</span> <span class="definition-meaning">{{m.definition|safe}}</span><br />
@@ -15,7 +16,7 @@
 {% for m in defs.meanings %}
     {% for img in m.images %}
         <figure class="figure">
-            <img class="figure-img img-fluid" src="{% get_media_prefix %}{{book_path}}/{{img.src}}" alt="{{img.alt}}" />            
+            <img class="figure-img img-fluid" src="{% get_media_prefix %}{{book_path}}/{{img.src}}" alt="{{img.alt}}" />
             <div class="figure-caption">
                 {{img.caption}}
                 {% if img.description %}
@@ -29,3 +30,4 @@
         </figure>
     {% endfor %}
 {% endfor %}
+</div>

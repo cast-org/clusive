@@ -39,7 +39,17 @@
             </div>
         </div>
         <div id="glossaryFooter" class="popover-footer">
-            Added to <a href="{% url 'word_bank' %}">word bank</a>
+            <div id="glossaryWordbankLink">Added to <a href="{% url 'word_bank' %}">word bank</a></div>
+            <div id="glossaryAcknowledgementSection">
+                <div class="popover-footer-divider"></div>
+                {% comment %} There can be an acknowledgement div here for each source. One or none will be shown. {% endcomment %}
+                <div class="glossaryAcknowledgement" id="glossaryAcknowledgement-MW">
+                  {% include "merriamwebster/mw_ack.html" %}
+                </div>
+                <div class="glossaryAcknowledgement" id="glossaryAcknowledgement-Wordnet">
+                    <span class="me-0_25">Definition by WordNet®</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

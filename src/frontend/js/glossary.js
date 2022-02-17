@@ -37,18 +37,27 @@ function openGlossaryForWord(word) {
 function load_definition(cued, word) {
     var title;
     var body;
-    $('#glossaryFooter').hide();
     $('#glossaryInput').hide();
+    $('#glossaryWordbankLink').hide();
+    $('#glossaryAcknowledgementSection').hide();
+    $('.glossaryAcknowledgement').hide();
     if (word) {
         glossaryCurrentWord = word;
         title = word;
         var pub = window.pub_id || 0;
-        // ajax call
         $.get('/glossary/glossdef/' + pub + '/' + cued + '/' + word)
             // eslint-disable-next-line no-unused-vars
             .done(function(data, status) {
                 $('#glossaryBody').html(data);
-                $('#glossaryFooter').show();
+                $('#glossaryWordbankLink').show();
+                // 'source' data attribute lets us know where the definition came from.
+                var source = $('#glossaryDefinition').data('source');
+                // See if there is a div containing an attribution for that source.
+                var $attribution_div = $('#glossaryAcknowledgement-' + source);
+                if ($attribution_div.length) {
+                    $attribution_div.show();
+                    $('#glossaryAcknowledgementSection').show();
+                }
             })
             // didn't find a definition
             .fail(function(err) {
