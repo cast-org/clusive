@@ -100,32 +100,33 @@ def extract_definition(def_content, offensive_note):
     else:
         clean_def = ""
 
-    def_dict = dict(def_content)
-    for ky, vl in def_dict.items():
-        if vl is not None:
-            #logging.debug('MW: The def_instance: (key, value)', ky, vl)
-            # if this is a text check to see if there are any other parts to concat
-            if ky == 'text':
-                clean_def = clean_def + clean_string(vl)
-            # if this is a vis (example) then parse and clean the list of examples
-            elif ky == 'vis':
-                # only extract examples if there is a definition
-                if clean_def:
-                    examples = extract_examples(vl)
-            # uns - usage note - no conversion
-            elif ky == 'uns':
-                logging.debug('MW: Found uns: %s', vl)
-            # if this is a g then concat with the text
-            elif ky == 'g':
-                clean_def = clean_def + vl
-            # if this is another tag not accounted for - log these items
-            # bnw - biographical name wrap
-            # ca - called also
-            # snote - supplemental note
+    # for each item in def_content - loop through 2 at a time
+    for def_element in def_content:
+        for l in range(0, len(def_element), 2):
+            if def_element[l] is not None and def_element[l+1] is not None:
+                ky = def_element[l]
+                vl = def_element[l+1]
+                if ky == 'text':
+                    clean_def = clean_def + clean_string(vl)
+                    # if this is a vis (example) then parse and clean the list of examples
+                elif ky == 'vis':
+                    # only extract examples if there is a definition
+                    if clean_def:
+                        examples = extract_examples(vl)
+                    # uns - usage note - no conversion
+                elif ky == 'uns':
+                    logging.debug('MW: Found uns: %s', vl)
+                    # if this is a g then concat with the text
+                elif ky == 'g':
+                    clean_def = clean_def + " " + vl + " "
+                    # if this is another tag not accounted for - log these items
+                    # bnw - biographical name wrap
+                    # ca - called also
+                    # snote - supplemental note
+                else:
+                    logging.error('MW: Found an uncaught definition instance: %s', vl)
             else:
-                logging.error('MW: Found an uncaught definition instance: %s', vl)
-        else:
-            logging.error("MW: value in definition dictionary is none")
+                logging.error("MW: value in definition dictionary is none")
 
     if clean_def:
         meaning["definition"] = clean_def
@@ -159,8 +160,10 @@ def lookup(word: str):
                 if definition_entry["hwi"]["hw"]:
                     clean_headword = definition_entry["hwi"]["hw"].replace("*", "")
                     clean_headword = re.sub("{.*?}", "", clean_headword)
+                    clean_headword = clean_headword.lower()
 
                     meaning = ""
+                    offensive_note = ""
                     if clean_headword == word:
                         mw_dictionary_result["headword"] = clean_headword
 
@@ -170,27 +173,40 @@ def lookup(word: str):
 
                             # for this pos, extract a list of meanings with examples
                             # get the defining text(dt) found at [def][sseq][sense][dt]
-                            # offensive info is sibling to dt [def][sseq][sense][sls]
+                            # offensive info is sibling to dt [def][sseq][sense][sls] or above [def][sls]
                             for def_instance in definition_entry['def']:
-                                for def_sseq in def_instance.values():
-                                    for def_sense in def_sseq:
-                                        for sense_element in def_sense:
-                                            offensive_note = ""
-                                            for k, v in sense_element[1].items():
-                                                # sls is a string of notes with offensive info
-                                                # assumption that this is always before dt
-                                                if k == 'sls':
-                                                    for sls_val in v:
-                                                        if 'offensive' in sls_val:
-                                                            offensive_note = sls_val
-                                                            logger.debug("MW: found offensive indicator:", offensive_note)
-                                                elif k == 'dt':
-                                                    meaning = extract_definition(v, offensive_note)
-                                            if meaning:
-                                                meaning["pos"] = pos
-                                                # only append the pos if there is a definition
-                                                meanings.append(meaning)
-                                    mw_dictionary_result["meanings"] = meanings
+
+                                for a, b in def_instance.items():
+                                    if a == 'sseq':
+                                        for def_sseq in b:
+                                            for def_sense in def_sseq:
+                                                for sense_element in def_sense:
+                                                    if sense_element != "sense" and type(sense_element) is dict:
+                                                        for k, v in sense_element.items():
+                                                            # sls is a string of notes with offensive info
+                                                            # assumption that this is always before dt
+                                                            if k == 'sls':
+                                                                for sls_val in v:
+                                                                    if "offensive" in sls_val.lower():
+                                                                        offensive_note = sls_val
+                                                                        logger.debug("MW: found off note:", offensive_note)
+                                                            elif k == 'dt':
+                                                                meaning = extract_definition(v, offensive_note)
+                                                                offensive_note = ""
+                                                        if meaning:
+                                                            meaning["pos"] = pos
+                                                            # only append the pos if there is a definition
+                                                            meanings.append(meaning)
+                                        mw_dictionary_result["meanings"] = meanings
+                                    # if this is sls check for an offensive tag
+                                    elif a == 'sls':
+                                        ch = b[0].lower()
+                                        if ch.find("offensive"):
+                                            offensive_note = b[0]
+                                            logger.debug("MW: found off note:", offensive_note)
+                                    else:
+                                        logging.error("MW: did not find an sls or sseq in def")
+
                         else:
                             logging.error("MW: Skipping this POS - no def ", clean_headword)
                 else:
