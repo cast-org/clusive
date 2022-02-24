@@ -35,7 +35,9 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
             params = { "api_key": app.client_id }
         )
         resp.raise_for_status()
-        extra_data.update( {'proofOfDisabilityStatus': resp.json()['proofOfDisabilityStatus']} )
+        json_resp = resp.json()
+        extra_data.update( {'proofOfDisabilityStatus': json_resp['proofOfDisabilityStatus']} )
+        extra_data.update( {'studentStatus': json_resp['studentStatus']} )
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
         return login
@@ -86,6 +88,16 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         except SocialAccount.DoesNotExist:
             return 'missing'
 
+    def is_organizational_account(self):
+        try:
+            provider = self.get_provider()
+            social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
+            studentStatus = social_account.extra_data.get('studentStatus');
+            return studentStatus != None
+        except SocialAccount.DoesNotExist:
+            return False
+
+
 def is_token_expired(token):
     return token.expires_at < timezone.now()
 
@@ -104,6 +116,11 @@ def get_access_keys(request):
 def bookshare_connected(request, *args, **kwargs):
     request.session['bookshare_connected'] = True
     return HttpResponseRedirect(reverse('reader_index'))
+
+def is_organizational_account(request):
+    bookshare_adapter = BookshareOAuth2Adapter(request)
+    return bookshare_adaptor.is_organizational_account()
+
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
 oauth2_callback = OAuth2CallbackView.adapter_view(BookshareOAuth2Adapter)

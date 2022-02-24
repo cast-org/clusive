@@ -79,9 +79,13 @@
                         <div><strong>Bookshare account</strong></div>
                         {% if bookshare_account %}
                             <p>
-                                {{ bookshare_account }}
+                                {{ bookshare_account.id }}
                                 (<a href="{% url 'remove_social_account' provider='bookshare' %}">remove account</a>)
-                            </p>
+                                {% if bookshare_account.organization != 'single user' %}
+                                <br>({{ bookshare_account.organization }})
+                                {% endif %}
+                           </p>
+
                         <p>Head to <a href="{% url 'library_style_redirect' view='mine' %}">My Readings</a> in the library to add books from Bookshare.</p>
                         {% else %}
                         <div class="form-text mb-0_5">

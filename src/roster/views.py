@@ -1342,7 +1342,14 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
                 google_account = account.extra_data.get('email')
             if account.provider=='bookshare':
                 # For bookshare, uid is the email address registered with Bookshare.
-                bookshare_account = account.uid
+                bookshare_account = { 'id': account.uid, 'organization': 'single user' }
+                studentStatus = account.extra_data.get('studentStatus')
+                if studentStatus:
+                    org_name = studentStatus.get('organizationName')
+                    if org_name:
+                        bookshare_account['organization'] = 'Organization: ' + org_name
+                    else:
+                        bookshare_account['organization'] = 'Organizational account'
         self.extra_context = {
             'can_edit_display_name': False,
             'can_edit_email': False,
