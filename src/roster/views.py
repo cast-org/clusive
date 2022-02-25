@@ -37,7 +37,8 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
-from oauth2.bookshare.views import is_bookshare_connected
+from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
+    GENERIC_ORG_NAME, SINGLE_USER_NOT_ORG
 from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
 from roster import csvparser
 from roster.csvparser import parse_file
@@ -1342,14 +1343,12 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
                 google_account = account.extra_data.get('email')
             if account.provider=='bookshare':
                 # For bookshare, uid is the email address registered with Bookshare.
-                bookshare_account = { 'id': account.uid, 'organization': 'single user' }
-                studentStatus = account.extra_data.get('studentStatus')
-                if studentStatus:
-                    org_name = studentStatus.get('organizationName')
-                    if org_name:
-                        bookshare_account['organization'] = 'Organization: ' + org_name
-                    else:
-                        bookshare_account['organization'] = 'Organizational account'
+                # Organization is either a name of an organziational account or
+                # a single user account
+                bookshare_account = {
+                    'id': account.uid,
+                    'organization': self.organization_for_display(account)
+                }
         self.extra_context = {
             'can_edit_display_name': False,
             'can_edit_email': False,
@@ -1358,6 +1357,14 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
             'bookshare_account': bookshare_account,
         }
         return super().get(request, *args, **kwargs)
+
+    def organization_for_display(self, account):
+        org_name = get_organization_name(account)
+        if org_name == GENERIC_ORG_NAME or org_name == SINGLE_USER_NOT_ORG:
+            return org_name
+        else:
+            # org_name is an actual name of an organization.
+            return 'Organization: ' + org_name
 
     def configure_event(self, event: Event):
         event.page = 'MyAccount'

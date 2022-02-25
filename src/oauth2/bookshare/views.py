@@ -9,6 +9,8 @@ from django.utils import timezone
 
 from .provider import BookshareProvider
 
+GENERIC_ORG_NAME = 'Organizational Account'
+SINGLE_USER_NOT_ORG = 'single user'
 
 class BookshareOAuth2Adapter(OAuth2Adapter):
     provider_id = BookshareProvider.id
@@ -28,7 +30,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         resp.raise_for_status()
         extra_data = resp.json()
 
-        # 2. Get "proofOfDisability"
+        # 2. Get "proofOfDisability" and "studentStatus" (organizational account)
         resp = requests.get(
             self.account_summary_url,
             headers = { "Authorization": "Bearer " + token.token },
@@ -51,9 +53,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
 
     def has_account(self):
         try:
-            provider = self.get_provider()
-            social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
-            return True
+            return True if self.social_account else False
         except SocialAccount.DoesNotExist:
             return False
 
@@ -82,44 +82,61 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
 
     def proof_of_disability_status(self):
         try:
-            provider = self.get_provider()
-            social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
-            return social_account.extra_data.get('proofOfDisabilityStatus', 'missing')
+            return self.social_account.extra_data.get('proofOfDisabilityStatus', 'missing')
         except SocialAccount.DoesNotExist:
             return 'missing'
 
     def is_organizational_account(self):
         try:
-            provider = self.get_provider()
-            social_account = SocialAccount.objects.get(user=self.request.user, provider=provider.id)
-            studentStatus = social_account.extra_data.get('studentStatus');
+            studentStatus = self.social_account.extra_data.get('studentStatus');
             return studentStatus != None
         except SocialAccount.DoesNotExist:
             return False
+
+    @property
+    def social_account(self):
+        provider = self.get_provider()
+        return SocialAccount.objects.get(user=self.request.user, provider=provider.id)
+
+    @property
+    def organization_name(self):
+        try:
+            return get_organization_name(self.social_account)
+        except SocialAccount.DoesNotExist:
+            return SINGLE_USER_NOT_ORG  # best guess?
 
 
 def is_token_expired(token):
     return token.expires_at < timezone.now()
 
 def is_bookshare_connected(request):
-    bookshare_adapter = BookshareOAuth2Adapter(request)
-    return bookshare_adapter.is_connected()
+    return BookshareOAuth2Adapter(request).is_connected()
 
 def has_bookshare_account(request):
-    bookshare_adapter = BookshareOAuth2Adapter(request)
-    return bookshare_adapter.has_account()
+    return BookshareOAuth2Adapter(request).has_account()
 
 def get_access_keys(request):
-    bookshare_adapter = BookshareOAuth2Adapter(request)
-    return bookshare_adapter.get_access_keys()
+    return BookshareOAuth2Adapter(request).get_access_keys()
 
 def bookshare_connected(request, *args, **kwargs):
     request.session['bookshare_connected'] = True
     return HttpResponseRedirect(reverse('reader_index'))
 
 def is_organizational_account(request):
-    bookshare_adapter = BookshareOAuth2Adapter(request)
-    return bookshare_adapter.is_organizational_account()
+    BookshareOAuth2Adapter(request).is_organizational_account()
+
+def get_organization_name(account):
+    """
+    If this represents an organizational account, return the
+    organization's name.  If the organizational account does not provide
+    a name, the generic name 'Organizational Account' is returned.  If the
+    account is a single user account, the string 'single user' is returned.
+    """
+    studentStatus = account.extra_data.get('studentStatus');
+    if studentStatus != None:
+        return studentStatus.get('organizationName', GENERIC_ORG_NAME)
+    else:
+        return SINGLE_USER_NOT_ORG
 
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
