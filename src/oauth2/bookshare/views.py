@@ -119,7 +119,7 @@ def bookshare_connected(request, *args, **kwargs):
 
 def is_organizational_account(request):
     bookshare_adapter = BookshareOAuth2Adapter(request)
-    return bookshare_adaptor.is_organizational_account()
+    return bookshare_adapter.is_organizational_account()
 
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
