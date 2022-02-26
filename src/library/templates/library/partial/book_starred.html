@@ -1,0 +1,43 @@
+{% load static library %}
+
+{% if starred|lower == 'true' %}
+    <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Starred">
+        <input id="starred{{book_id}}" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred" data-clusive-book-id="{{book_id}}" checked>
+{% else %}
+    <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+        <input id="starred{{book_id}}" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Not starred" data-clusive-book-id="{{book_id}}" >
+{% endif %}
+        <label for="starred{{book_id}}" class="btn btn-icon btn-starred link-above">
+            <span class="icon-starred flex-self-center" aria-hidden="true"></span>
+        </label>
+    </div>
+
+
+<!--
+Library list
+<div class="card-library-favorite">
+    <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Not starred" data-cfw-tooltip-original-title="" title="" id="cfw-tooltip-429959">
+        <input id="starred0" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred">
+        <label for="starred0" class="btn btn-icon btn-starred link-above">
+            <span class="icon-starred" aria-hidden="true"></span>
+        </label>
+     </div>
+</div>-->
+<!--Library grid
+<div class="card-library-favorite">
+    <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+        <input id="starred0" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred">
+        <label for="starred0" class="btn btn-icon btn-starred link-above">
+            <span class="icon-starred" aria-hidden="true"></span>
+        </label>
+     </div>
+</div>-->
+<!--
+Reading Page
+<div class="btn-check mt-0_5" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+    <input id="starred0" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred">
+    <label for="starred0" class="btn btn-icon btn-starred">
+        <span class="icon-starred flex-self-center" aria-hidden="true"></span>
+    </label>
+</div>
+-->

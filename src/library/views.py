@@ -204,6 +204,12 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             customization_query = Customization.objects.filter(Q(periods__in=periods) | Q(owner=self.clusive_user))
             q = q.prefetch_related(Prefetch('customization_set', queryset=customization_query, to_attr='custom_list'))
 
+        # All of paradata is attached to the book object.
+        # Note that in library.py the filter (for starred) is register so that it can be
+        # called in the html by the registered name.
+        paradata_query = Paradata.objects.filter(user=self.clusive_user)
+        q = q.prefetch_related(Prefetch('paradata_set', queryset=paradata_query, to_attr='paradata_list'))
+
         return q
 
     def query_for_length(self, size):
@@ -1307,3 +1313,43 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         event.page = 'EditCustomization'
         event.book_id = self.object.book.id
 
+
+class UpdateStarredRatingView(LoginRequiredMixin, EventMixin, View):
+    # starred is the favorite star on the reading and library pages, hidden on dashboard
+    # values locallay set sent via url in frontend.js starredButtons function
+    # url is /library/setstarred
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(UpdateStarredRatingView, self).dispatch(request, *args, **kwargs)
+
+
+    def post(self, request, *args, **kwargs):
+        if not (request.POST.get('book') and request.POST.get('starred')):
+            return JsonResponse({
+                'status': 'error',
+                'error': 'POST must contain book and starred.'
+            }, status=500)
+
+        clusive_user_id = request.clusive_user.id
+        book_id = int(request.POST.get('book'))
+        if request.POST.get('starred').lower() == 'true':
+            starred = True
+        else:
+            starred = False
+
+        try:
+            Paradata.record_starred(book_id, clusive_user_id, starred)
+        except Book.DoesNotExist:
+            return JsonResponse({
+                'status': 'error',
+                'error': 'Unknown book.'
+            }, status=500)
+        else:
+            return JsonResponse({'status': 'ok'})
+
+    def configure_event(self, event: Event):
+        event.type = 'AnnotationEvent'
+        event.book_id = self.book_id
+        event.value = self.starred
+        super().configure_event(event)

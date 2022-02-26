@@ -543,6 +543,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'hide_cues': hide_cues,
             'tip_name': self.tip_shown.name if self.tip_shown else None,
             'customization': customizations[0] if customizations else None,
+            'starred': pdata.starred,
+            'book_id': book.id,
         }
         return super().get(request, *args, **kwargs)
 

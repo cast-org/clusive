@@ -10,7 +10,7 @@
     {% else %}
     <div class="card-col col-12">
     {% endif %}
-        <div class="card-header">
+        <div class="card-header has-favorite">
                 <div class="row">
                     <div class="col">
                         {% if unauthorized %}
@@ -37,6 +37,9 @@
                         </h2>
                         {% endif %}
                         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
+                        <div class="card-library-favorite">
+                            {% include "library/partial/book_starred.html" with starred=book.paradata_list|starred_val book_id=book.id %}
+                        </div>
                     </div>
                     <div class="col-auto card-toggle">
                         <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-{{ book.id }}">
