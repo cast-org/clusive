@@ -361,6 +361,7 @@ class Paradata(models.Model):
     words_looked_up = models.TextField(null=True, blank=True, verbose_name='JSON list of words looked up')
     read_aloud_count = models.SmallIntegerField(default=0, verbose_name='Read-aloud use count')
     translation_count = models.SmallIntegerField(default=0, verbose_name='Translation use count')
+    starred = models.BooleanField(null=False, default=False)
 
     @property
     def words_looked_up_list(self):
@@ -442,6 +443,15 @@ class Paradata(models.Model):
             para.save()
 
     @classmethod
+    def record_starred(cls, book_id, clusive_user_id, starred):
+        # record the starred (favorite) value for this para
+        user_object = ClusiveUser.objects.get(pk=clusive_user_id)
+        book_object = Book.objects.get(pk=book_id)
+        para, created = cls.objects.get_or_create(book=book_object, user=user_object)
+        para.starred = starred
+        para.save()
+
+    @classmethod
     def record_translation(cls, book, user):
         para, created = cls.objects.get_or_create(book=book, user=user)
         para.translation_count += 1
@@ -460,6 +470,16 @@ class Paradata(models.Model):
     def latest_for_user(cls, user: ClusiveUser, max=10):
         """Return a QuerySet for Paradatas for a user with most recent last_view time"""
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
+
+    # @classmethod
+    # def get_starred_values(cls, user: ClusiveUser):
+    #     """Return a QuerySet for Paradatas for a user """
+    #     return Paradata.objects.filter(user=user)
+    #
+    # @classmethod
+    # def get_starred_values_for_book(cls, user: ClusiveUser, book: Book):
+    #     """Return a QuerySet for Paradatas for a user """
+    #     return Paradata.objects.filter(user=user, book=book)
 
     @classmethod
     def reading_data_for_period(cls, period: Period, days=0, sort='name'):
