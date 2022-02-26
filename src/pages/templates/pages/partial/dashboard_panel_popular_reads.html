@@ -31,7 +31,7 @@
         <div class="tab-pane" id="popularTab0">
             <div class="library-grid dashboard-grid">
                 {% for item in data.all %}
-                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_description=False show_menu=False show_topics=False %}
+                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=False show_description=False show_menu=False show_topics=False %}
                 {% empty %}
                 <p class="mx-1">
                     Your students haven't done any reading, yet.
