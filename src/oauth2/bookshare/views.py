@@ -11,6 +11,12 @@ from .provider import BookshareProvider
 
 GENERIC_ORG_NAME = 'Organizational Account'
 SINGLE_USER_NOT_ORG = 'single user'
+NOT_A_BOOKSHARE_ACCOUNT = 'not bookshare'
+
+BOOKSHARE_ACCOUNT_NAMES = {
+    GENERIC_ORG_NAME, SINGLE_USER_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
+}
+
 
 class BookshareOAuth2Adapter(OAuth2Adapter):
     provider_id = BookshareProvider.id
@@ -103,7 +109,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         try:
             return get_organization_name(self.social_account)
         except SocialAccount.DoesNotExist:
-            return SINGLE_USER_NOT_ORG  # best guess?
+            return NOT_A_BOOKSHARE_ACCOUNT
 
 
 def is_token_expired(token):
@@ -123,7 +129,7 @@ def bookshare_connected(request, *args, **kwargs):
     return HttpResponseRedirect(reverse('reader_index'))
 
 def is_organizational_account(request):
-    BookshareOAuth2Adapter(request).is_organizational_account()
+    return BookshareOAuth2Adapter(request).is_organizational_account()
 
 def get_organization_name(account):
     """

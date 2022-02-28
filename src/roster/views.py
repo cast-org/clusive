@@ -38,7 +38,7 @@ from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
-    GENERIC_ORG_NAME, SINGLE_USER_NOT_ORG
+    BOOKSHARE_ACCOUNT_NAMES
 from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
 from roster import csvparser
 from roster.csvparser import parse_file
@@ -1360,7 +1360,7 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
 
     def organization_for_display(self, account):
         org_name = get_organization_name(account)
-        if org_name == GENERIC_ORG_NAME or org_name == SINGLE_USER_NOT_ORG:
+        if org_name in BOOKSHARE_ACCOUNT_NAMES:
             return org_name
         else:
             # org_name is an actual name of an organization.
