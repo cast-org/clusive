@@ -98,7 +98,7 @@ var manifest_path = "{{ manifest_path }}";
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
-{% include "shared/partial/sidebar_start.html" with nav=True why=True %}
+{% include "shared/partial/sidebar_start.html" with nav=True %}
 {% endblock %}
 
 {% block sidebar_end %}
@@ -108,6 +108,10 @@ var manifest_path = "{{ manifest_path }}";
 
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}
+
+{% block sidebar_bottom_start %}
+{% include "shared/partial/sidebar_bottom_start.html" with why=True %}
+{% endblock %}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 

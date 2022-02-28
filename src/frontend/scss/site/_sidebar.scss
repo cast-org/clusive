@@ -132,6 +132,14 @@
         }
     }
 }
+.sidebar-divider-small {
+    width: 100%;
+
+    .sidebar-divider {
+        position: relative;
+        left: 0;
+    }
+}
 
 .sidebar-region {
     display: flex;
@@ -212,15 +220,6 @@
 
             @include media-breakpoint-up(md) {
                 margin-left: $body-padding-x;
-            }
-        }
-    }
-
-    @include media-breakpoint-up(xl) {
-        .sidebar-end {
-            &::after {
-                width: $sidebar-xl-width-one-bar;
-                max-width: $sidebar-xl-width-one-bar;
             }
         }
     }
