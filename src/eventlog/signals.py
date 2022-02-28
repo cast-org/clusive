@@ -28,6 +28,7 @@ word_removed = Signal(providing_args=['request', 'event_id', 'word'])
 comprehension_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
 affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'control', 'answer', 'affect_check_response_id'])
 star_rating_completed = Signal(providing_args=['request', 'question', 'answer'])
+book_starred = Signal(providing_args=['request', 'book_id', 'starred'])
 
 #
 # Signal handlers that log specific events
@@ -339,3 +340,14 @@ def log_timeout(sender, **kwargs):
             logger.debug("Timeout user %s", clusive_user)
         except ClusiveUser.DoesNotExist:
             logger.debug("Timeout of non-Clusive user session: %s", kwargs['user'])
+
+
+@receiver(book_starred)
+def log_book_starred(sender, **kwargs):
+    value = 'add star' if kwargs['starred'] else 'remove star'
+    create_event(kwargs,
+        event_type='ANNOTATION_EVENT',
+        action='TAGGED',
+        control='star',
+        value=value)
+

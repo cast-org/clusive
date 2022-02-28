@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, FormView, UpdateView, TemplateView, RedirectView
 
 from eventlog.models import Event
-from eventlog.signals import annotation_action
+from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
@@ -1314,7 +1314,7 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         event.book_id = self.object.book.id
 
 
-class UpdateStarredRatingView(LoginRequiredMixin, EventMixin, View):
+class UpdateStarredRatingView(LoginRequiredMixin, View):
     # starred is the favorite star on the reading and library pages, hidden on dashboard
     # values locallay set sent via url in frontend.js starredButtons function
     # url is /library/setstarred
@@ -1322,7 +1322,6 @@ class UpdateStarredRatingView(LoginRequiredMixin, EventMixin, View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super(UpdateStarredRatingView, self).dispatch(request, *args, **kwargs)
-
 
     def post(self, request, *args, **kwargs):
         if not (request.POST.get('book') and request.POST.get('starred')):
@@ -1345,11 +1344,6 @@ class UpdateStarredRatingView(LoginRequiredMixin, EventMixin, View):
                 'status': 'error',
                 'error': 'Unknown book.'
             }, status=500)
-        else:
-            return JsonResponse({'status': 'ok'})
 
-    def configure_event(self, event: Event):
-        event.type = 'AnnotationEvent'
-        event.book_id = self.book_id
-        event.value = self.starred
-        super().configure_event(event)
+        book_starred.send(self.__class__, request=request, book_id=book_id, starred=starred)
+        return JsonResponse({'status': 'ok'})
