@@ -27,7 +27,7 @@
 
 <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
 
-<header class="site-header">
+<header class="site-header is-sticky">
     <div class="site-header-navbar navbar navbar-expand-md">
         <div class="site-header-container container-xl">
             <div class="site-header-logo">
@@ -73,30 +73,20 @@
     </div>
 </header>
 
-<div class="container-xl">
-    <div class="sidebars-wrapper">
+<div class="content-container container-xl">
+
+    <div class="sidebars-wrapper sidebars-bg sidebars-top is-fixed">
         <div class="sidebars">
-            <div class="col-auto sidebar sidebar-start">
-                <div class="sidebar-support" role="region" aria-label="Support">
-                    <button type="button" class="btn btn-nav btn-icon btn-support-help" aria-label="Help/Information">
-                        <span class="icon-help" aria-hidden="true"></span>
-                        <span class="icon-attention" aria-hidden="true"></span>
-                    </button>
-                </div>
+            <div class="sidebar sidebar-start">
             </div>
 
             <div class="sidebar sidebar-end">
-                <div class="sidebar-tool" role="region" aria-label="User preferences">
+                <div class="sidebar-region sidebar-tool" role="region" aria-label="User preferences">
                     <button type="button" class="btn btn-setting" aria-label="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings">
                         <span class="icon-settings" aria-hidden="true"></span>
                     </button>
-                    <!--
-                    <button type="button" class="btn btn-tool" aria-label="Lookup definition">
-                        <span class="icon-book" aria-hidden="true"></span>
-                    </button>
-                    -->
                 </div>
-                <div class="sidebar-tts" role="region" aria-label="Read aloud controls">
+                <div class="sidebar-region sidebar-tts" role="region" aria-label="Read aloud controls">
                     <div class="tts-inactive">
                         <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud">
                             <span class="icon-play" aria-hidden="true"></span>

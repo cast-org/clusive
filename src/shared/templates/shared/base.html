@@ -21,9 +21,9 @@
     {% include "shared/partial/site_header.html" %}
     {% endblock%}
 
-    <div class="container-xl">
-        <div class="sidebars-wrapper">
-            <div class="sidebars is-fixed">
+    <div class="content-container container-xl">
+        <div class="sidebars-wrapper sidebars-bg sidebars-top is-fixed">
+            <div class="sidebars">
                 <div class="sidebar sidebar-start">
                     {% block sidebar_start %}
                     {% include "shared/partial/sidebar_start.html" with nav=0 why=0 %}
