@@ -32,9 +32,10 @@
     </span>
     {% endif %}
 
-    <div class="sidebar-divider-wrapper">
+    <div class="sidebar-divider-wrapper sidebar-divider-small">
         <div class="sidebar-divider"></div>
     </div>
+
     <button id="prevResourceButton" onclick="d2reader.previousPage();" type="button" class="btn btn-nav btn-icon btn-nav-prev" aria-label="Previous page" title="Previous page" data-cle-handler="click" data-cle-control="reader-navigation-pagination" data-cle-value="previous-page">
         <span class="icon-chevron-left" aria-hidden="true"></span>
     </button>
@@ -42,35 +43,4 @@
         <span class="icon-chevron-right" aria-hidden="true"></span>
     </button>
 </nav>
-{% endif %}
-{% if why %}
-<div class="sidebar-region sidebar-support" role="region" aria-label="Support">
-    <button id="compButton" type="button" class="btn btn-nav btn-icon btn-thought mt-0_75"
-            arial-label="Your thoughts" title="Your thoughts">
-        <span class="icon-thought" aria-hidden="true"></span>
-        <span class="sr-only">Your thoughts</span>
-    </button>
-</div>
-
-{% include "shared/partial/popover_comp.html" %}
-
-<script>
-$('#compButton').CFW_Popover({
-    target: '#compPop',
-    placement: 'top',
-    drag: true,
-    popperConfig: {
-        positionFixed: true,
-        eventsEnabled: false,
-        modifiers: {
-            preventOverflow: {
-                boundariesElement: 'viewport'
-            },
-            computeStyle: {
-                gpuAcceleration: false
-            }
-        }
-    }
-});
-</script>
 {% endif %}

@@ -26,7 +26,7 @@
             <div class="sidebars">
                 <div class="sidebar sidebar-start">
                     {% block sidebar_start %}
-                    {% include "shared/partial/sidebar_start.html" with nav=0 why=0 %}
+                    {% include "shared/partial/sidebar_start.html" with nav=False %}
                     {% endblock%}
                 </div>
 
@@ -41,6 +41,16 @@
         <div class="content">
             {% block content %}
             {% endblock %}
+        </div>
+
+        <div class="sidebars-wrapper sidebars-bottom is-fixed">
+            <div class="sidebars">
+                <div class="sidebar sidebar-start">
+                    {% block sidebar_bottom_start %}
+                    {% include "shared/partial/sidebar_bottom_start.html" with why=False %}
+                    {% endblock%}
+                </div>
+            </div>
         </div>
     </div>
 

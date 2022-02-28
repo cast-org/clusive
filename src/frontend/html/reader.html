@@ -85,7 +85,7 @@
                     <button type="button" class="btn btn-nav btn-icon btn-switch-level" aria-label="Switch">
                         <span class="icon-walk" aria-hidden="true"></span>
                     </button>
-                    <div class="sidebar-divider-wrapper">
+                    <div class="sidebar-divider-wrapper sidebar-divider-small">
                         <div class="sidebar-divider"></div>
                     </div>
                     <button type="button" class="btn btn-nav btn-icon btn-nav-prev" aria-label="Previous page">
@@ -95,15 +95,6 @@
                         <span class="icon-chevron-right" aria-hidden="true"></span>
                     </button>
                 </nav>
-                <div class="sidebar-region sidebar-support" role="region" aria-label="Support">
-                    <button type="button" class="btn btn-nav btn-icon btn-thought mt-0_75" arial-label="Your thoughts" title="Your thoughts" data-cfw="popover">
-                        <span class="icon-thought" aria-hidden="true"></span>
-                        <span class="sr-only">Your thoughts</span>
-                    </button>
-                    <button type="button" class="btn btn-icon btn-starred" aria-label="Not starred" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
-                        <span class="icon-starred" aria-hidden="true"></span>
-                    </button>
-                </div>
             </div>
 
             <div class="sidebar sidebar-end">
@@ -142,10 +133,25 @@
 
             <iframe sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; border: 0px; display: block; opacity: 1;" width="1133px" height="1189" src="./reader-frame.html" class=""></iframe>
         </main>
+    </div>
 
-        <footer>
-            <!-- anything here? -->
-        </footer>
+    <div class="sidebars-wrapper sidebars-bottom is-fixed">
+        <div class="sidebars">
+            <div class="sidebar sidebar-start">
+                <div class="sidebar-region sidebar-support" role="region" aria-label="Reading feedback">
+                    <div class="sidebar-divider-wrapper">
+                        <div class="sidebar-divider"></div>
+                    </div>
+                    <button type="button" class="btn btn-nav btn-icon btn-thought" arial-label="Your thoughts" title="Your thoughts" data-cfw="popover">
+                        <span class="icon-thought" aria-hidden="true"></span>
+                        <span class="sr-only">Your thoughts</span>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-starred" aria-label="Not starred" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+                        <span class="icon-starred" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
