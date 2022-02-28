@@ -169,13 +169,13 @@ var manifest_path = "{{ manifest_path }}";
                 enableAnnotations: true,
                 enableDefinitions: true,
                 enableTTS: true,
-                enableBookmarks: false,
+                autoGeneratePositions: true,
                 enableLineFocus: true,
+                enableBookmarks: false,
                 enableMaterial: false,
                 enableSearch: false,
                 enableTimeline: false,
-                enableContentProtection: false,
-                autoGeneratePositions: false
+                enableContentProtection: false
             },
             lineFocus: {
                 lines: 5,
@@ -198,10 +198,8 @@ var manifest_path = "{{ manifest_path }}";
                     },
                     stopped: function() {
                         console.debug('D2Reader TTS stopped');
-                        // `stopped` is called when reader tts starts speaking,
-                        // after the `started` callback, resulting in incorrect control state
-                        // so ignore for the time being
-                        //window.parent.clusiveTTS.updateUI('stop');
+                        // FIXME Bug: `stopped` is called when reader tts starts speaking,
+                        window.parent.clusiveTTS.updateUI('stop');
                         return null;
                     },
                     paused: function() {
