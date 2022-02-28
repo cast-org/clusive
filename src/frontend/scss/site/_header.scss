@@ -1,10 +1,8 @@
 .site-header {
-    position: fixed;
+    position: sticky;
     top: 0;
-    right: 0;
-    left: 0;
-    z-index: $zindex-fixed;
-    min-height: $header-height;
+    z-index: $zindex-sticky;
+    padding-bottom: $body-padding-y;
     background-color: var(--CT_headerOuterBg);
 
     @include media-breakpoint-up(md) {
