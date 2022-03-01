@@ -42,7 +42,3 @@ def highlight(text, search):
 @register.filter(is_safe=True)
 def period_names(assignment_list):
     return ", ".join([p.period.name for p in assignment_list])
-
-@register.filter(is_safe=True)
-def starred_val(paradata_set):
-    return ", ".join([str(p.starred).lower() for p in paradata_set])

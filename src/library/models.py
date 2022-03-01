@@ -471,16 +471,6 @@ class Paradata(models.Model):
         """Return a QuerySet for Paradatas for a user with most recent last_view time"""
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
-    # @classmethod
-    # def get_starred_values(cls, user: ClusiveUser):
-    #     """Return a QuerySet for Paradatas for a user """
-    #     return Paradata.objects.filter(user=user)
-    #
-    # @classmethod
-    # def get_starred_values_for_book(cls, user: ClusiveUser, book: Book):
-    #     """Return a QuerySet for Paradatas for a user """
-    #     return Paradata.objects.filter(user=user, book=book)
-
     @classmethod
     def reading_data_for_period(cls, period: Period, days=0, sort='name'):
         """

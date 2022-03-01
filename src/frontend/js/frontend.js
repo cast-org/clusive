@@ -780,22 +780,7 @@ function starredButtons() {
     });
 }
 
-// Push data to server.  Asynchronous - returns a Promise.
-function sendStarredBookToServer(book, isActive) {
-    'use strict';
-
-    return $.post('/library/setstarred', {
-        book: book,
-        starred: isActive
-    })
-        .fail(function(err) {
-            console.error('Set location API failure!', err);
-        });
-}
-
-
 // Context (selection) menu methods
-
 function contextLookup(selection) {
     'use strict';
 
