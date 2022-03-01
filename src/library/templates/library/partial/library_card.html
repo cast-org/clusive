@@ -20,7 +20,9 @@
         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
         {% if show_starred %}
             <div class="card-library-favorite">
-                {% include "library/partial/book_starred.html" with starred=book.paradata_list|starred_val book_id=book.id %}
+                {% with  book.paradata_list|first as paradata %}
+                    {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
+                {% endwith %}
             </div>
         {% endif %}
     </div>
