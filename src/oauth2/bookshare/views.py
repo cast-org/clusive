@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from .provider import BookshareProvider
 
+
 GENERIC_ORG_NAME = 'Organizational Account'
 SINGLE_USER_NOT_ORG = 'single user'
 NOT_A_BOOKSHARE_ACCOUNT = 'not bookshare'
@@ -25,6 +26,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
     access_token_url = 'https://auth.bookshare.org/oauth/token'
     profile_url = 'https://api.bookshare.org/v2/me'
     account_summary_url = 'https://api.bookshare.org/v2/myaccount'
+    organization_members_url = 'https://api.bookshare.org/v2/myOrganization/members'
 
     def complete_login(self, request, app, token, **kwargs):
         # 1. Get user profile info, e.g., name, and username
@@ -46,6 +48,23 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         json_resp = resp.json()
         extra_data.update( {'proofOfDisabilityStatus': json_resp['proofOfDisabilityStatus']} )
         extra_data.update( {'studentStatus': json_resp['studentStatus']} )
+
+        # 3. Ask for a list of organization members if `studentStatus` was null.
+        # If the request for members succeeds, then conclude it's an
+        # organizational account; otherwise, it isn't.
+        if extra_data['studentStatus'] == None:
+            resp = requests.get(
+                self.organization_members_url,
+                headers = { "Authorization": "Bearer " + token.token },
+                params = { "api_key": app.client_id }
+            )
+            try:
+                resp.raise_for_status()
+                extra_data.update( { 'organizational': True } )
+            except requests.exceptions.HTTPError:
+                extra_data.update( { 'organizational': False } )
+        else:
+            extra_data.update( { 'organizational': True } )
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
         return login
@@ -94,8 +113,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
 
     def is_organizational_account(self):
         try:
-            studentStatus = self.social_account.extra_data.get('studentStatus');
-            return studentStatus != None
+            return self.social_account.extra_data.get('organizational');
         except SocialAccount.DoesNotExist:
             return False
 
@@ -138,9 +156,12 @@ def get_organization_name(account):
     a name, the generic name 'Organizational Account' is returned.  If the
     account is a single user account, the string 'single user' is returned.
     """
+    is_organizational = account.extra_data.get('organizational', False)
     studentStatus = account.extra_data.get('studentStatus');
     if studentStatus != None:
         return studentStatus.get('organizationName', GENERIC_ORG_NAME)
+    elif is_organizational:
+        return GENERIC_ORG_NAME
     else:
         return SINGLE_USER_NOT_ORG
 

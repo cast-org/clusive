@@ -23,7 +23,8 @@ SINGLE_USER_EXTRADATA = {
         'links': []
     },
     'proofOfDisabilityStatus': 'active',
-    'studentStatus': None
+    'studentStatus': None,
+    'organizational': False
 }
 
 ORGANIZATIONAL_EXTRADATA = {
@@ -40,7 +41,8 @@ ORGANIZATIONAL_EXTRADATA = {
     'proofOfDisabilityStatus': 'active',
     'studentStatus': {
         'organizationName': 'Anonymous Organization'
-    }
+    },
+    'organizational': True
 }
 
 
