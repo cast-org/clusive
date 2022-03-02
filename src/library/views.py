@@ -1165,6 +1165,8 @@ class ListCustomizationsView(LoginRequiredMixin, EventMixin, TemplateView):
         from_cancel_add = kwargs.get('from_cancel_add', 0) == 1
         # Look up assignments for display, attach as expected by template
         book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
+        # Look up paradata for favorites star
+        book.paradata_list = list(Paradata.objects.filter(book=book, user=user))
         # Look up customizations
         customizations = Customization.get_customizations(book, periods, user)
         # If there are no customizations but the user has just cancelled adding
@@ -1237,10 +1239,16 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['book'] = self.object.book
+        book = self.object.book
+        # Look up assignments for display, attach as expected by template
+        book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=self.clusive_user.periods.all()))
+        # Look up paradata for favorites star
+        book.paradata_list = list(Paradata.objects.filter(book=book, user=self.clusive_user))
+        context['book'] = book
+        context['period_name'] = None
         context['is_new'] = self.is_new
         context['recent_custom_questions'] = self.get_recent_custom_questions(3)
-        context['all_words'] = self.object.book.all_word_and_non_dict_word_list;
+        context['all_words'] = self.object.book.all_word_and_non_dict_word_list
         suggested_words = context['all_words'][:]
         for current_word in self.object.word_list:
             if current_word in suggested_words:
