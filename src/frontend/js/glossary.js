@@ -21,8 +21,6 @@ function glossaryPop_focus($elm) {
     $('#glossaryPop').trigger('focus');
 }
 
-// this is relevant for the glossary - LDM
-
 function openGlossaryForWord(word) {
     'use strict';
 
@@ -30,9 +28,6 @@ function openGlossaryForWord(word) {
     window.parent.$('#glossaryLocator').CFW_Popover('show');
     // window.parent.glossaryPop_focus($(elt));
 }
-
-// this is relevant for dictionary
-// LDM
 
 function load_definition(cued, word) {
     var title;
