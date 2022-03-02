@@ -1,6 +1,6 @@
 {% load static library %}
 <div class="card card-library">
-    <div class="card-header has-favorite" >
+    <div {% if show_starred %}class="card-header has-favorite" {% else %}class="card-header" {% endif %}>
         {% if unauthorized %}
         <span class="d-block" tabindex="0" data-cfw="tooltip" title="Not authorized to view">
             <h2 class="card-title">
