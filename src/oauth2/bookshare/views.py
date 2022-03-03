@@ -18,6 +18,28 @@ BOOKSHARE_ACCOUNT_NAMES = {
     GENERIC_ORG_NAME, SINGLE_USER_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
 }
 
+class UserTypes(object):
+    """
+    Except for UNKNOWN, these string values are from:
+    https://www.bookshare.org/cms/api-v10-user-preferences#BookshareWebService(Revised)-UserPreferenceFields,
+    and:
+    https://www.bookshare.org/cms/api-v10-user-preferences#BookshareWebService%28Revised%29-UserPreferenceListResponse
+    """
+    USER_TYPE = 'User Type'
+    INDIVIDUAL = '1'
+    ORGANIZATIONAL = '2'
+    UNKNOWN = '99'
+
+    USER_TYPES_CHOICES = [
+        (INDIVIDUAL, 'Individual'),
+        (ORGANIZATIONAL, 'Organizational'),
+        (UNKNOWN, 'Unknown'),
+    ]
+
+    @classmethod
+    def display_name(cls, user_type):
+        return [item[1] for item in UserTypes.USER_TYPES_CHOICES if item[0] == user_type][0]
+
 
 class BookshareOAuth2Adapter(OAuth2Adapter):
     provider_id = BookshareProvider.id
@@ -53,16 +75,8 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         # If the request for members succeeds, then conclude it's an
         # organizational account; otherwise, it isn't.
         if extra_data['studentStatus'] == None:
-            resp = requests.get(
-                self.organization_members_url,
-                headers = { "Authorization": "Bearer " + token.token },
-                params = { "api_key": app.client_id }
-            )
-            try:
-                resp.raise_for_status()
-                extra_data.update( { 'organizational': True } )
-            except requests.exceptions.HTTPError:
-                extra_data.update( { 'organizational': False } )
+            members = get_organization_members(token.token, app.client_id)
+            extra_data.update ( {'organizational': members != None})
         else:
             extra_data.update( { 'organizational': True } )
 
@@ -164,6 +178,48 @@ def get_organization_name(account):
         return GENERIC_ORG_NAME
     else:
         return SINGLE_USER_NOT_ORG
+
+def get_organization_members(access_token, api_key):
+    """
+    If the account associated with the given authorization keys is an
+    organizational account, this returns the list of its members as
+    documented at:
+    https://apidocs.bookshare.org/reference/index.html#_user_account_list
+    If not an organizational account, this returns None.
+    """
+    resp = requests.get(
+        BookshareOAuth2Adapter.organization_members_url,
+        headers = { "Authorization": "Bearer " + access_token },
+        params = { "api_key": api_key }
+    )
+    try:
+        resp.raise_for_status()
+        return resp.json()
+    except requests.exceptions.HTTPError:
+        return None
+
+def get_user_type(user_id, access_token, api_key):
+    """
+    Ask for the user's preferences using the version 1 API request, but
+    passing the usual OAuth2 access token and api key'.
+    """
+    resp = requests.get(
+        'https://api.bookshare.org/user/preferences/list/for/' + user_id + '/format/json',
+        headers = { "Authorization": "Bearer " + access_token },
+        params = { "api_key": api_key }
+    )
+    try:
+        resp.raise_for_status()
+        user_results = resp.json()['bookshare']['user']['result']
+        for a_result in user_results:
+            if a_result['name'] == UserTypes.USER_TYPE:
+                user_type = a_result['value']
+                break
+            else:
+                continue
+        return user_type
+    except:
+        return UserTypes.UNKNOWN
 
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)

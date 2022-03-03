@@ -1,4 +1,6 @@
+import json
 import logging
+import os
 
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -6,7 +8,9 @@ from django.test.client import RequestFactory
 from allauth.socialaccount.models import SocialAccount
 
 from .provider import BookshareProvider
-from .views import BookshareOAuth2Adapter, is_organizational_account, get_organization_name, \
+from .views import BookshareOAuth2Adapter, UserTypes, \
+    is_organizational_account, get_organization_name, \
+    get_organization_members, get_user_type, \
     GENERIC_ORG_NAME, SINGLE_USER_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
 
 logger = logging.getLogger(__name__)
@@ -74,13 +78,39 @@ class BookshareTestCase(TestCase):
         user_no_bookshare = User.objects.create_user(username='userNoBookshare', password='password3')
         self.user_no_bookshare = user_no_bookshare
         self.user_no_bookshare.save()
+        # Read secrets.  These must be supplied by the developer in a json file
+        # that resides in the parent directory.  For example, assuming this code
+        # is run from 'target', the parent is 'clusive'.   The name of the file
+        # itself is 'keysForTesting.json'.  The structure of the
+        # file is:
+        # {
+        #   "singleUserKeys": {
+        #       "userId":"partnerdemo@bookshare.org",
+        #       "accessToken":"actual-access-token-value-goes-here",
+        #       "apiKey":"actual-api-key-goes-here"
+        #   },
+        #   "organizationalUserKeys": {
+        #       "userId":"partnerorgdemo@bookshare.org",
+        #       "accessToken":"actual-access-token-value-goes-here",
+        #       "apiKey":"actual-api-key-goes-here"
+        #    }
+        # }
+        # If the keys can't be loaded the test_get_organization_members() and
+        # test_get_user_type() tests are not run.
+        try:
+            parent_dir = os.path.dirname(os.getcwd())
+            json_file = open(os.path.join(parent_dir, 'keysForTesting.json'))
+            self.keys = json.load(json_file)
+        except Exception as e:
+            self.keys = None
+            logger.debug('Error retrieving keys "%s""', e)
 
     def test_create(self):
-        self.assertNotEqual(None, self.single_user)
-        self.assertNotEqual(None, self.single_user_account)
-        self.assertNotEqual(None, self.org_user)
-        self.assertNotEqual(None, self.org_account)
-        self.assertNotEqual(None, self.user_no_bookshare)
+        self.assertIsNotNone(self.single_user)
+        self.assertIsNotNone(self.single_user_account)
+        self.assertIsNotNone(self.org_user)
+        self.assertIsNotNone(self.org_account)
+        self.assertIsNotNone(self.user_no_bookshare)
 
     def test_is_organizational_account(self):
         request = self.request_factory.get('/my_account')
@@ -120,3 +150,46 @@ class BookshareTestCase(TestCase):
             BookshareOAuth2Adapter(request).organization_name,
             NOT_A_BOOKSHARE_ACCOUNT
         )
+
+    def test_get_organization_members(self):
+        if self.keys:
+            # Test organizational account
+            organization = self.keys['organizationalUserKeys']
+            member_list = get_organization_members(
+                organization['accessToken'],
+                organization['apiKey']
+            )
+            # Test individual account
+            individual = self.keys['individualUserKeys']
+            self.assertIsNotNone(member_list)
+            member_list = get_organization_members(
+                individual['accessToken'],
+                individual['apiKey']
+            )
+            self.assertIsNone(member_list)
+        else:
+            logger.debug('Ignoring "test_get_organization_members()", no access keys.')
+
+    def test_get_user_type(self):
+        if self.keys:
+            # Test individual account
+            individual = self.keys['individualUserKeys']
+            user_type = get_user_type(
+                individual['userId'],
+                individual['accessToken'],
+                individual['apiKey']
+            )
+            self.assertEqual(user_type, UserTypes.INDIVIDUAL)
+            # Test organizational account
+            organization = self.keys['organizationalUserKeys']
+            user_type = get_user_type(
+                organization['userId'],
+                organization['accessToken'],
+                organization['apiKey']
+            )
+            self.assertEqual(user_type, UserTypes.ORGANIZATIONAL)
+            # Test for unknown.
+            user_type = get_user_type('foo', 'bar', individual['apiKey'])
+            self.assertEqual(user_type, UserTypes.UNKNOWN)
+        else:
+            logger.debug('Ignoring "test_get_user_type()", no access keys.')
