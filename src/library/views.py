@@ -27,7 +27,8 @@ from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, Books
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
     CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
-from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
+from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
+    get_access_keys, is_organizational_account
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
@@ -779,6 +780,12 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
                 redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_search')
             )
         elif request.clusive_user.can_upload:
+            if is_organizational_account(request):
+                messages.warning(request,
+                    'You are using an organizational account.  You can still \
+                    search for titles, but you can only import titles in the \
+                    public domain.'
+                )
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -831,6 +838,11 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                     messages.error(request, search_results['error_message'])
                     self.search_error = search_results
             else:
+                if is_organizational_account(request):
+                    messages.warning(request,
+                        'You are using an organizational account.  You can only \
+                        import titles in the public domain.'
+                    )
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
                 if self.page <= pages_available:
