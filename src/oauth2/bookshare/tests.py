@@ -151,6 +151,14 @@ class BookshareTestCase(TestCase):
             NOT_A_BOOKSHARE_ACCOUNT
         )
 
+    def test_display_user_type(self):
+        name = UserTypes.display_name(UserTypes.INDIVIDUAL)
+        self.assertEquals(name, 'Individual')
+        name = UserTypes.display_name(UserTypes.ORGANIZATIONAL)
+        self.assertEquals(name, 'Organizational')
+        name = UserTypes.display_name(UserTypes.UNKNOWN)
+        self.assertEquals(name, 'Unknown')
+
     def test_get_organization_members(self):
         if self.keys:
             # Test organizational account
