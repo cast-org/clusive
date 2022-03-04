@@ -146,7 +146,7 @@
     flex-direction: column;
     align-items: center;
 
-    .btn + .btn {
+    &:not(.sidebar-tts) .btn + .btn {
         margin-top: .75rem;
     }
 }
