@@ -40,6 +40,7 @@ urlpatterns = [
          name='modal_switch'),
 
     path('bookshare/connect/', views.BookshareConnect.as_view(), name='bookshare_connect'),
+    path('bookshare/org/memberlist', views.BookshareShowOrgMembers.as_view(), name='bookshare_org_memberlist'),
     path('bookshare/search/', views.BookshareSearch.as_view(), name='bookshare_search'),
     path('bookshare/search/<keyword>', views.BookshareSearch.as_view(), name='bookshare_search'),
     path('bookshare-results/new/<keyword>', views.BookshareSearchResults.as_view(), name='bookshare_search_results'),

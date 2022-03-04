@@ -27,8 +27,9 @@ from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, Books
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
     CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
-from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
-    get_access_keys, is_organizational_account
+from oauth2.bookshare.views import BookshareOAuth2Adapter, has_bookshare_account, \
+    is_bookshare_connected, get_access_keys, is_organizational_account, get_organization_name, \
+    get_organization_members
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
@@ -766,6 +767,42 @@ class BookshareConnect(LoginRequiredMixin, TemplateView):
         else:
             request.session['bookshare_connected'] = False
             return HttpResponseRedirect(redirect_to='/accounts/bookshare/login/?process=connect&next=/account/my_account')
+
+
+class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
+    template_name = 'library/bookshare_org_members.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not is_bookshare_connected(request):
+            # Log into Bookshare and then come back here.
+            return HttpResponseRedirect(
+                redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_org_memberlist')
+            )
+        else:
+            bookshare = BookshareOAuth2Adapter(request)
+            account = bookshare.social_account
+            self.account_name = account.uid
+            if is_organizational_account(request):
+                # TODO: function/method for getting all org info
+                # (keys, name, memberlist) in one call.
+                self.org_name = bookshare.organization_name #get_organization_name(bookshare.social_account)
+                access_keys = bookshare.get_access_keys()
+                self.member_list = get_organization_members(
+                    access_keys.get('access_token').token, access_keys.get('api_key')
+                )
+            else:
+                self.org_name = 'Individual Account'
+                self.member_list = []
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'account_name': self.account_name,
+            'org_name': self.org_name,
+            'member_list': self.member_list,
+        })
+        return context
 
 
 class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):
