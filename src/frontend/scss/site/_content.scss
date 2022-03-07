@@ -121,6 +121,7 @@ h2,
 // stylelint-disable-next-line selector-max-id
 #iframe-wrapper {
     height: calc(100vh - #{$header-height + $body-padding-y});
+    outline: 0;
 
     @include media-breakpoint-up(md) {
         height: calc(100vh - #{$header-md-height + $body-padding-y});
@@ -156,14 +157,16 @@ h2,
     right: 0;
     left: 0;
     height: 0;
-    box-shadow: 0 2px 7px 0 rgba(0, 0, 0, .4);
+    box-shadow: 0 .125rem .4375rem 0 rgba(0, 0, 0, .4);
+    transform: translateY(-.125rem);
 }
 .d2-line-focus-bottom {
     right: 0;
     bottom: 0;
     left: 0;
     height: 0;
-    box-shadow: 2px 0 7px 0 rgba(0, 0, 0, .4);
+    box-shadow: .125rem 0 .4375rem 0 rgba(0, 0, 0, .4);
+    transform: translateY(.125rem);
 }
 
 .login-status {
