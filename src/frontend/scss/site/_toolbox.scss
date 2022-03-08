@@ -16,6 +16,10 @@
     animation: toolsAnimateIn 100ms ease-out both;
 }
 
+.toolbox-wrapper {
+    height: 0;
+}
+
 .toolbox-menu-group {
     line-height: 1;
     color: var(--CT_toolboxMenuColor);
