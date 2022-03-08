@@ -157,8 +157,7 @@ var manifest_path = "{{ manifest_path }}";
             url: new URL(url),
             userSettings: {
                 textAlignment:'start',
-                verticalScroll: 'readium-scroll-on'
-
+                columnCount: '1'
             },
             lastReadingPosition: lastReadingPosition,
             injectables: injectables,
@@ -355,7 +354,6 @@ var manifest_path = "{{ manifest_path }}";
             var readerPreferences = e.detail.readerPreferences;
 
             var mergedUserSettings = $.extend({}, readerOptions.userSettings, readerPreferences);
-            console.debug("mergedUserSettings", mergedUserSettings);
             readerOptions.userSettings = mergedUserSettings;
             console.debug("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {

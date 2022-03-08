@@ -121,13 +121,23 @@
                 }
             },
             'readerPreferences.scroll': {
-                target: 'readerPreferences.scroll',
+                target: 'readerPreferences.verticalScroll',
                 backward: {
                     excludeSource: '*'
                 },
                 singleTransform: {
-                    type: 'fluid.transforms.value',
-                    input: '{that}.model.preferences.cisl_prefs_scroll'
+                    type: 'fluid.transforms.valueMapper',
+                    defaultInput: '{that}.model.preferences.cisl_prefs_scroll',
+                    match: [
+                        {
+                            inputValue: true,
+                            outputValue: 'readium-scroll-on'
+                        },
+                        {
+                            inputValue: false,
+                            outputValue: 'readium-scroll-off'
+                        }
+                    ]
                 }
             },
             'readerPreferences.glossary': {
@@ -172,9 +182,9 @@
                 args: ['rate', '{change}.value'],
                 excludeSource: "init"
             },
-            'readerPreferences.scroll': {
-                func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
-                args: ['scroll', '{change}.value'],
+            'readerPreferences.verticalScroll': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
+                args: ['verticalScroll', '{change}.value'],
                 excludeSource: "init"
             },
             'readerPreferences.glossary': {
@@ -219,14 +229,6 @@
                 [ttsSettingName]:settingValue
             };
             reader.applyTTSSettings(settingsObj);
-        }
-    };
-
-    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(scrollSettingName, settingValue) {
-        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", scrollSettingName, settingValue)
-        var reader = clusiveContext.reader.instance;
-        if (reader && reader.applyUserSettings) {
-            reader.scroll(settingValue);
         }
     };
 
