@@ -121,13 +121,23 @@
                 }
             },
             'readerPreferences.scroll': {
-                target: 'readerPreferences.scroll',
+                target: 'readerPreferences.verticalScroll',
                 backward: {
                     excludeSource: '*'
                 },
                 singleTransform: {
-                    type: 'fluid.transforms.value',
-                    input: '{that}.model.preferences.cisl_prefs_scroll'
+                    type: 'fluid.transforms.valueMapper',
+                    defaultInput: '{that}.model.preferences.cisl_prefs_scroll',
+                    match: [
+                        {
+                            inputValue: true,
+                            outputValue: 'readium-scroll-on'
+                        },
+                        {
+                            inputValue: false,
+                            outputValue: 'readium-scroll-off'
+                        }
+                    ]
                 }
             },
             'readerPreferences.glossary': {
@@ -138,6 +148,26 @@
                 singleTransform: {
                     type: 'fluid.transforms.value',
                     input: '{that}.model.preferences.cisl_prefs_glossary'
+                }
+            },
+            'readerPreferences.lineFocus': {
+                target: 'readerPreferences.lineFocus',
+                backward: {
+                    excludeSource: '*'
+                },
+                singleTransform: {
+                    type: 'fluid.transforms.value',
+                    input: '{that}.model.preferences.cisl_prefs_lineFocus'
+                }
+            },
+            'readerPreferences.lineFocusLines': {
+                target: 'readerPreferences.lineFocusLines',
+                backward: {
+                    excludeSource: '*'
+                },
+                singleTransform: {
+                    type: 'fluid.transforms.value',
+                    input: '{that}.model.preferences.cisl_prefs_lineFocusLines'
                 }
             }
         },
@@ -180,6 +210,16 @@
             'readerPreferences.glossary': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyGlossarySetting',
                 args: ['show', '{change}.value'],
+                excludeSource: "init"
+            },
+            'readerPreferences.lineFocus': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyLineFocusSetting',
+                args: ['lineFocus', '{change}.value'],
+                excludeSource: "init"
+            },
+            'readerPreferences.lineFocusLines': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyLineFocusLinesSetting',
+                args: ['lineFocusLines', '{change}.value'],
                 excludeSource: "init"
             }
         },
@@ -241,4 +281,24 @@
             }
         }
     }
+
+    cisl.prefs.readerPreferencesBridge.applyLineFocusSetting = function(settingName, settingValue) {
+        console.debug('cisl.prefs.readerPreferencesBridge.applyLineFocusSetting', settingName, settingValue)
+        var reader = clusiveContext.reader.instance;
+        if (reader) {
+            if (settingValue) {
+                d2reader.enableLineFocus();
+            } else {
+                d2reader.disableLineFocus();
+            }
+        }
+    }
+    cisl.prefs.readerPreferencesBridge.applyLineFocusLinesSetting = function(settingName, settingValue) {
+        console.debug('cisl.prefs.readerPreferencesBridge.applyLineFocusLinesSetting', settingName, settingValue)
+        var reader = clusiveContext.reader.instance;
+        if (reader && reader.applyUserSettings) {
+            reader.applyLineFocusSettings({lines: settingValue})
+        }
+    }
+
 }(fluid_3_0_0));

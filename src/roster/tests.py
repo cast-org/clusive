@@ -239,7 +239,8 @@ class ClusiveUserTestCase(TestCase):
                             '"fluid_prefs_textSize":1, "fluid_prefs_lineSpace":1.6, "fluid_prefs_letterSpace":1, ' \
                             '"cisl_prefs_glossary":true, "cisl_prefs_scroll":true, "cisl_prefs_readVoices": [], ' \
                             '"cisl_prefs_readSpeed": 1.0, "cisl_prefs_translationLanguage": "default",' \
-                            '"cisl_prefs_animations": true}'
+                            '"cisl_prefs_animations": true,' \
+                            '"cisl_prefs_lineFocus": false, "cisl_prefs_lineFocusLines": 3}'
 
     def test_preference_sets(self):
         # delete any existing preferences so we're starting with a clean set
