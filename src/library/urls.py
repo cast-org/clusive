@@ -7,6 +7,8 @@ urlpatterns = [
          name='update_trends'),
     path('setlocation', views.UpdateLastLocationView.as_view(),
          name='setlocation'),
+    path('setstarred', views.UpdateStarredRatingView.as_view(),
+         name='setstarred'),
     path('annotation/<int:id>', views.AnnotationView.as_view(),
          name='annotation_detail'),
     path('annotation', views.AnnotationView.as_view(),
