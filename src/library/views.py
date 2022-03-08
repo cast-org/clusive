@@ -1181,11 +1181,11 @@ class BookshareImport(LoginRequiredMixin, View):
                 return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
         # If book can't be downloaded, this returns 403
         else:
-            display_message = 'Error importing the book (code = %d).' % resp.status_code
+            display_message = f'Error importing the book (code = {resp.status_code}).'
             for message in resp.json()['messages']:
-                display_message = display_message + ' ' + message
+                display_message = f'{display_message}\n{message}'
             if for_user:
-                display_message = display_message + ' (recipient: ' + for_user + ')'
+                display_message = f'{display_message}\n(recipient: {for_user})'
             return JsonResponse(data={'status': 'error',
                                       'message': display_message})
 
