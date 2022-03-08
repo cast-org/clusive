@@ -103,7 +103,7 @@ class BookshareTestCase(TestCase):
             self.keys = json.load(json_file)
         except Exception as e:
             self.keys = None
-            logger.debug('Error retrieving keys "%s""', e)
+            logger.debug('Error retrieving keys "%s"', e)
 
     def test_create(self):
         self.assertIsNotNone(self.single_user)
