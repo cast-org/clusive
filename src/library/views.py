@@ -1090,7 +1090,8 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
         for aFormat in book.get('formats', []):
             if aFormat['formatId'] == 'EPUB3':
                 return True
-        return False
+        return book.get('available', False)
+#        return False
 
     def get_imported_books(self, request):
         results = []
@@ -1131,18 +1132,24 @@ class BookshareImport(LoginRequiredMixin, View):
             logger.debug("Bookshare import exists already: %s", existing)
             return JsonResponse(data={'status': 'done', 'id': existing.first().id})
 
+        if is_organizational_account(request):
+            for_user = 'partnerorgM1@bookshare.org'
+        else:
+            for_user = None
+
         # The following request will return a status code of 202 meaning the
         # request to download has been acknowledged, and a package is being
         # prepared for download.  Subsequent requests will either result in 202 again,
         # or, when the package is ready, a 302 redirect to
         # a URL that retrieves the epub content.
         # https://apidocs.bookshare.org/reference/index.html#_responses_3
+        the_params = { 'api_key': access_keys.get('api_key') }
+        if for_user != None:
+            the_params.update({ 'forUser': for_user })
         resp = requests.request(
             'GET',
             'https://api.bookshare.org/v2/titles/' + bookshare_id + '/EPUB3',
-            params = {
-                'api_key': access_keys.get('api_key')
-            },
+            params = the_params,
             headers = {
                 'Authorization': 'Bearer ' + access_keys.get('access_token').token
             }
@@ -1168,8 +1175,13 @@ class BookshareImport(LoginRequiredMixin, View):
                 return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
         # If book can't be downloaded, this returns 403
         else:
+            display_message = 'Error importing the book (code = %d).' % resp.status_code
+            for message in resp.json()['messages']:
+                display_message = display_message + ' ' + message
+            if for_user:
+                display_message = display_message + ' (recipient: ' + for_user + ')'
             return JsonResponse(data={'status': 'error',
-                                      'message': 'Error importing the book (code = %d)' % resp.status_code})
+                                      'message': display_message})
 
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.
