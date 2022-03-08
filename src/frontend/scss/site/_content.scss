@@ -135,13 +135,16 @@ h2,
 .d2-line-focus-container {
     position: absolute;
     top: 0;
-    width: 100vw;
-    height: calc(100vh - #{$header-height + $body-padding-y});
+    right: 0;
+    bottom: 0;
+    left: 0;
+    //width: 100%;
+    //height: calc(100vh - #{$header-height + $body-padding-y});
     pointer-events: none;
 
-    @include media-breakpoint-up(md) {
-        height: calc(100vh - #{$header-md-height + $body-padding-y});
-    }
+    //@include media-breakpoint-up(md) {
+    //    height: calc(100vh - #{$header-md-height + $body-padding-y});
+    //}
 }
 .d2-line-focus-bottom,
 .d2-line-focus-top {
@@ -167,6 +170,17 @@ h2,
     height: 0;
     box-shadow: .125rem 0 .4375rem 0 rgba(0, 0, 0, .4);
     transform: translateY(.125rem);
+}
+.d2-line-focus-nav {
+    position: absolute;
+    right: .5rem;
+    bottom: .5rem;
+    z-index: 1;
+    pointer-events: auto;
+
+    .btn {
+        margin-left: .5rem;
+    }
 }
 
 .login-status {

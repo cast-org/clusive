@@ -47,6 +47,14 @@ var manifest_path = "{{ manifest_path }}";
         <div id="lineFocusContainer" class="d2-line-focus-container" style="display: none">
             <div id="lineFocusTopBlinder" class="d2-line-focus-top"></div>
             <div id="lineFocusBottomBlinder" class="d2-line-focus-bottom"></div>
+            <nav id="lineFocusNav" class="d2-line-focus-nav" aria-label="Line focus">
+                <button id="lineFocusUp" onclick="d2reader.lineUp();" type="button" class="btn btn-nav btn-icon" aria-label="Line focus up" title="Previous page" data-cle-handler="click" data-cle-control="reader-navigation-linefocus" data-cle-value="up-linefocus">
+                    <span class="icon-chevron-up" aria-hidden="true"></span>
+                </button>
+                <button id="lineFocusDown" onclick="d2reader.lineDown();" type="button" class="btn btn-nav btn-icon" aria-label="Line focus down" title="Next page" data-cle-handler="click" data-cle-control="reader-navigation-linefocus" data-cle-value="down-linefocus">
+                    <span class="icon-chevron-down" aria-hidden="true"></span>
+                </button>
+            </nav>
         </div>
         {% include "shared/partial/toolbox_menu.html" %}
 
@@ -127,7 +135,7 @@ var manifest_path = "{{ manifest_path }}";
             url: new URL(url),
             userSettings: {
                 textAlignment:'start',
-                verticalScroll: 'readium-scroll-on'
+                FcolumnCount: '1'
 
             },
             lastReadingPosition: lastReadingPosition,
@@ -139,13 +147,13 @@ var manifest_path = "{{ manifest_path }}";
                 enableAnnotations: true,
                 enableDefinitions: true,
                 enableTTS: true,
-                enableBookmarks: false,
+                autoGeneratePositions: true,
                 enableLineFocus: true,
+                enableBookmarks: false,
                 enableMaterial: false,
                 enableSearch: false,
                 enableTimeline: false,
-                enableContentProtection: false,
-                autoGeneratePositions: false
+                enableContentProtection: false
             },
             lineFocus: {
                 lines: 5,
@@ -276,6 +284,11 @@ var manifest_path = "{{ manifest_path }}";
                             });
                             // Update additional TTS settings - such as rate
                             d2reader.applyTTSSettings(readerOptions.userSettings.tts);
+                            // Line focus
+                            d2reader.applyLineFocusSettings({lines: readerOptions.userSettings.lineFocusLines});
+                            if (readerOptions.userSettings.lineFocus) {
+                                d2reader.enableLineFocus();
+                            }
                             firstResourceLoaded = true;
                         }
                     });
@@ -324,7 +337,6 @@ var manifest_path = "{{ manifest_path }}";
             var readerPreferences = e.detail.readerPreferences;
 
             var mergedUserSettings = $.extend({}, readerOptions.userSettings, readerPreferences);
-            console.debug("mergedUserSettings", mergedUserSettings);
             readerOptions.userSettings = mergedUserSettings;
             console.debug("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
