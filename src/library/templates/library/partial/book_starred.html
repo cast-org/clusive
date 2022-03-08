@@ -1,0 +1,17 @@
+{% load static library %}
+
+{% if starred %}
+    <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Starred">
+        <input id="starred{{book_id}}" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred" data-clusive-book-id="{{book_id}}" checked>
+        <label for="starred{{book_id}}" class="btn btn-icon btn-starred link-above">
+            <span class="icon-starred flex-self-center" aria-hidden="true"></span>
+        </label>
+    </div>
+{% else %}
+    <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+        <input id="starred{{book_id}}" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Not starred" data-clusive-book-id="{{book_id}}" >
+        <label for="starred{{book_id}}" class="btn btn-icon btn-starred link-above">
+            <span class="icon-starred flex-self-center" aria-hidden="true"></span>
+        </label>
+    </div>
+{% endif %}

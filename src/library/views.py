@@ -21,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, FormView, UpdateView, TemplateView, RedirectView
 
 from eventlog.models import Event
-from eventlog.signals import annotation_action
+from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
@@ -203,6 +203,12 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             q = q.prefetch_related(Prefetch('assignments', queryset=assignment_query, to_attr='assign_list'))
             customization_query = Customization.objects.filter(Q(periods__in=periods) | Q(owner=self.clusive_user))
             q = q.prefetch_related(Prefetch('customization_set', queryset=customization_query, to_attr='custom_list'))
+
+        # All of paradata is attached to the book object.
+        # Note that in library.py the filter (for starred) is register so that it can be
+        # called in the html by the registered name.
+        paradata_query = Paradata.objects.filter(user=self.clusive_user)
+        q = q.prefetch_related(Prefetch('paradata_set', queryset=paradata_query, to_attr='paradata_list'))
 
         return q
 
@@ -1159,6 +1165,8 @@ class ListCustomizationsView(LoginRequiredMixin, EventMixin, TemplateView):
         from_cancel_add = kwargs.get('from_cancel_add', 0) == 1
         # Look up assignments for display, attach as expected by template
         book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=periods))
+        # Look up paradata for favorites star
+        book.paradata_list = list(Paradata.objects.filter(book=book, user=user))
         # Look up customizations
         customizations = Customization.get_customizations(book, periods, user)
         # If there are no customizations but the user has just cancelled adding
@@ -1231,10 +1239,16 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['book'] = self.object.book
+        book = self.object.book
+        # Look up assignments for display, attach as expected by template
+        book.assign_list = list(BookAssignment.objects.filter(book=book, period__in=self.clusive_user.periods.all()))
+        # Look up paradata for favorites star
+        book.paradata_list = list(Paradata.objects.filter(book=book, user=self.clusive_user))
+        context['book'] = book
+        context['period_name'] = None
         context['is_new'] = self.is_new
         context['recent_custom_questions'] = self.get_recent_custom_questions(3)
-        context['all_words'] = self.object.book.all_word_and_non_dict_word_list;
+        context['all_words'] = self.object.book.all_word_and_non_dict_word_list
         suggested_words = context['all_words'][:]
         for current_word in self.object.word_list:
             if current_word in suggested_words:
@@ -1307,3 +1321,37 @@ class EditCustomizationView(LoginRequiredMixin, EventMixin, UpdateView):
         event.page = 'EditCustomization'
         event.book_id = self.object.book.id
 
+
+class UpdateStarredRatingView(LoginRequiredMixin, View):
+    # starred is the favorite star on the reading and library pages, hidden on dashboard
+    # values locallay set sent via url in frontend.js starredButtons function
+    # url is /library/setstarred
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(UpdateStarredRatingView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if not (request.POST.get('book') and request.POST.get('starred')):
+            return JsonResponse({
+                'status': 'error',
+                'error': 'POST must contain book and starred.'
+            }, status=500)
+
+        clusive_user_id = request.clusive_user.id
+        book_id = int(request.POST.get('book'))
+        if request.POST.get('starred').lower() == 'true':
+            starred = True
+        else:
+            starred = False
+
+        try:
+            Paradata.record_starred(book_id, clusive_user_id, starred)
+        except Book.DoesNotExist:
+            return JsonResponse({
+                'status': 'error',
+                'error': 'Unknown book.'
+            }, status=500)
+
+        book_starred.send(self.__class__, request=request, book_id=book_id, starred=starred)
+        return JsonResponse({'status': 'ok'})
