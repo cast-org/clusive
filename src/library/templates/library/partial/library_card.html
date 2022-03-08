@@ -1,6 +1,6 @@
 {% load static library %}
 <div class="card card-library">
-    <div class="card-header">
+    <div {% if show_starred %}class="card-header has-favorite" {% else %}class="card-header" {% endif %}>
         {% if unauthorized %}
         <span class="d-block" tabindex="0" data-cfw="tooltip" title="Not authorized to view">
             <h2 class="card-title">
@@ -18,6 +18,13 @@
         </h2>
         {% endif %}
         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
+        {% if show_starred %}
+            <div class="card-library-favorite">
+                {% with  book.paradata_list|first as paradata %}
+                    {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
+                {% endwith %}
+            </div>
+        {% endif %}
     </div>
     {% if book.cover %}
     <div class="card-img">

@@ -172,6 +172,7 @@
     position: absolute;
     top: $card-header-padding-y * .5;
     right: $card-header-padding-x * .5;
+    z-index: 0;
 }
 
 .card-library-tag {

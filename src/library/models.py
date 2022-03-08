@@ -361,6 +361,7 @@ class Paradata(models.Model):
     words_looked_up = models.TextField(null=True, blank=True, verbose_name='JSON list of words looked up')
     read_aloud_count = models.SmallIntegerField(default=0, verbose_name='Read-aloud use count')
     translation_count = models.SmallIntegerField(default=0, verbose_name='Translation use count')
+    starred = models.BooleanField(null=False, default=False)
 
     @property
     def words_looked_up_list(self):
@@ -440,6 +441,15 @@ class Paradata(models.Model):
             para.words_looked_up = json.dumps(words)
             logger.debug('Updated %s with new words_looked_up list: %s', para, para.words_looked_up)
             para.save()
+
+    @classmethod
+    def record_starred(cls, book_id, clusive_user_id, starred):
+        # record the starred (favorite) value for this para
+        user_object = ClusiveUser.objects.get(pk=clusive_user_id)
+        book_object = Book.objects.get(pk=book_id)
+        para, created = cls.objects.get_or_create(book=book_object, user=user_object)
+        para.starred = starred
+        para.save()
 
     @classmethod
     def record_translation(cls, book, user):

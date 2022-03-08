@@ -747,7 +747,6 @@ function dashboardSetup() {
 // Starred button functionality
 function starredButtons() {
     'use strict';
-
     var txtDefault = 'Not Starred';
     var txtActive = 'Starred';
 
@@ -756,6 +755,7 @@ function starredButtons() {
         var $tip = $trigger.parents('.btn-check');
         var isActive = $trigger.is(':checked');
         var textMsg = isActive ? txtActive : txtDefault;
+        var book = $trigger.data('clusive-book-id');
 
         $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
             $tip
@@ -766,14 +766,21 @@ function starredButtons() {
                 .CFW_Tooltip('show');
         });
 
+        $.ajax({
+            type: 'POST',
+            url: '/library/setstarred',
+            data: {
+                book: book,
+                starred: isActive
+            }
+        }).fail(function(err) {
+            console.error('Failed sending star rating results: ', err);
+        });
         $tip.CFW_Tooltip('dispose');
-
-        // TODO: Callback to event logging?
     });
 }
 
 // Context (selection) menu methods
-
 function contextLookup(selection) {
     'use strict';
 
