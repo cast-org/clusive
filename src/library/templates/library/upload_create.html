@@ -36,10 +36,12 @@
 
     <hr class="my-2" />
     <h2>New!</h2>
-    <p>If you have a Bookshare account, you can search for and add Bookshare books right here in Clusive.
-        Go to <a href="{% url 'my_account' %}">My Account</a>
-        and click <strong>Connect to a Bookshare account</strong> to get started.</p>
-
+    <p>
+        If you have a Bookshare account, you can search for and add Bookshare books right here in Clusive.
+        {% if request.clusive_user.can_upload %}
+          Go to <a href="{% url 'my_account' %}">My Account</a>
+          and click <strong>Connect to a Bookshare account</strong> to get started.</p>
+        {% endif %}
     <hr class="my-2" />
     <h2>How to upload readings</h2>
     <p>Content needs to be in EPUB or Word format to be uploaded into Clusive.</p>
