@@ -1347,7 +1347,8 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
                 # a single user account
                 bookshare_account = {
                     'id': account.uid,
-                    'organization': self.organization_for_display(account)
+                    'is_organizational': account.extra_data.get('organizational', False),
+                    'organization': self.organization_for_display(account),
                 }
         self.extra_context = {
             'can_edit_display_name': False,
@@ -1364,7 +1365,7 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
             return org_name
         else:
             # org_name is an actual name of an organization.
-            return 'Organization: ' + org_name
+            return 'Sponsor: ' + org_name
 
     def configure_event(self, event: Event):
         event.page = 'MyAccount'

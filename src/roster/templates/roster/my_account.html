@@ -82,8 +82,8 @@
                             <p>
                                 {{ bookshare_account.id }}
                                 (<a href="{% url 'remove_social_account' provider='bookshare' %}">remove account</a>)
-                                {% if bookshare_account.organization != 'single user' %}
-                                <br>({{ bookshare_account.organization }})
+                                {% if bookshare_account.is_organizational %}
+                                <br><strong>({{ bookshare_account.organization }}) Currently, sponsor accounts can search Bookshare, but can only import titles in the public domain.</strong>
                                 {% endif %}
                             </p>
                             <p>Head to <a href="{% url 'library_style_redirect' view='mine' %}">My Readings</a> in the library to add books from Bookshare.</p>

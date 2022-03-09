@@ -10,12 +10,12 @@ from django.utils import timezone
 from .provider import BookshareProvider
 
 
-GENERIC_ORG_NAME = 'Organizational Account'
-SINGLE_USER_NOT_ORG = 'single user'
-NOT_A_BOOKSHARE_ACCOUNT = 'not bookshare'
+GENERIC_ORG_NAME = 'Sponsor Account'
+INDIVIDUAL_NOT_ORG = 'Individual Account'
+NOT_A_BOOKSHARE_ACCOUNT = 'Not Bookshare'
 
 BOOKSHARE_ACCOUNT_NAMES = {
-    GENERIC_ORG_NAME, SINGLE_USER_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
+    GENERIC_ORG_NAME, INDIVIDUAL_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
 }
 
 class UserTypes(object):
@@ -32,7 +32,7 @@ class UserTypes(object):
 
     USER_TYPES_CHOICES = [
         (INDIVIDUAL, 'Individual'),
-        (ORGANIZATIONAL, 'Organizational'),
+        (ORGANIZATIONAL, 'Sponsor'),
         (UNKNOWN, 'Unknown'),
     ]
 
@@ -167,8 +167,8 @@ def get_organization_name(account):
     """
     If this represents an organizational account, return the
     organization's name.  If the organizational account does not provide
-    a name, the generic name 'Organizational Account' is returned.  If the
-    account is a single user account, the string 'single user' is returned.
+    a name, the generic name (GENERIC_ORG_NAME) is returned.  If the
+    account is a individual account, INDIVIDUAL_NOT_ORG is returned.
     """
     is_organizational = account.extra_data.get('organizational', False)
     studentStatus = account.extra_data.get('studentStatus');
@@ -177,7 +177,7 @@ def get_organization_name(account):
     elif is_organizational:
         return GENERIC_ORG_NAME
     else:
-        return SINGLE_USER_NOT_ORG
+        return INDIVIDUAL_NOT_ORG
 
 def get_organization_members(access_token, api_key):
     """

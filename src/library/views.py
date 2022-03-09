@@ -788,9 +788,10 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
         elif request.clusive_user.can_upload:
             if is_organizational_account(request):
                 messages.warning(request,
-                    'You are using an organizational account.  You can still \
+                    'You are using a “sponsor” Bookshare account.  You can \
                     search for titles, but you can only import titles in the \
-                    public domain.'
+                    public domain.  Sponsor import of Bookshare titles for \
+                    students is not yet implemented, but coming soon.'
                 )
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
@@ -846,8 +847,9 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             else:
                 if is_organizational_account(request):
                     messages.warning(request,
-                        'You are using an organizational account.  You can only \
-                        import titles in the public domain.'
+                        'You are using a Sponsor Bookshare account. Sponsor \
+                        import of Bookshare titles for students is not yet \
+                        implemented, but coming soon.'
                     )
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
