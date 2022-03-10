@@ -1133,8 +1133,10 @@ class BookshareImport(LoginRequiredMixin, View):
                 return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
         # If book can't be downloaded, this returns 403
         else:
+            bookshare_messages = ', '.join(resp.json().get('messages', []))
+            message = f'Error importing the book (code = {resp.status_code}). {bookshare_messages}'
             return JsonResponse(data={'status': 'error',
-                                      'message': 'Error importing the book (code = %d)' % resp.status_code})
+                                      'message': message})
 
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.

@@ -947,7 +947,7 @@ function bookshareCheckImportProgress(id) {
             } else if (data.status === 'error') {
                 bookshareCancelImport();
                 $('#importPendingModal .modal-body').html(
-                    '<p><strong>Import failed</strong></p><p>Error message: ' +
+                    '<p><strong>Import failed</strong></p><p>' +
                     data.message +
                     '</p>');
                 bookshareImportCheckInFlight = false;
