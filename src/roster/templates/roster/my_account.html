@@ -80,9 +80,20 @@
                         <div><strong>Bookshare account</strong></div>
                             {% if bookshare_account %}
                             <p>
-                                {{ bookshare_account }}
+                                {{ bookshare_account.id }}
                                 (<a href="{% url 'remove_social_account' provider='bookshare' %}">remove account</a>)
+                                {% if bookshare_account.organization %}
+                                <br><strong>{{ bookshare_account.organization }}</strong>
+                                {% endif %}
                             </p>
+                            {% if bookshare_account.is_organizational %}
+                            <p><strong>
+                                You are using a Sponsor (Teacher/District/School)
+                                Bookshare account. Your import of Bookshare
+                                titles for students is not yet implemented,
+                                but coming soon.
+                            </strong></p>
+                            {% endif %}
                             <p>Head to <a href="{% url 'library_style_redirect' view='mine' %}">My Readings</a> in the library to add books from Bookshare.</p>
                             {% else %}
                             <div class="form-text mb-0_5">

@@ -27,7 +27,8 @@ from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, Books
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
     CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
-from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, get_access_keys
+from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
+    get_access_keys, is_organizational_account
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
@@ -772,11 +773,14 @@ class BookshareConnect(LoginRequiredMixin, TemplateView):
             request.session['bookshare_connected'] = False
             return HttpResponseRedirect(redirect_to='/accounts/bookshare/login/?process=connect&next=/account/my_account')
 
-
 class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):
     template_name = 'library/library_search_bookshare.html'
     form_class = BookshareSearchForm
     formlabel ='Step 1: Search by title, author, or ISBN'
+    sponsor_warning_message = '\
+        You are using a Sponsor (Teacher/District/School) Bookshare account. \
+        Your import of Bookshare titles for students is not yet implemented, \
+        but coming soon.'
 
     def dispatch(self, request, *args, **kwargs):
         if not is_bookshare_connected(request):
@@ -785,6 +789,8 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
                 redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_search')
             )
         elif request.clusive_user.can_upload:
+            if is_organizational_account(request):
+                messages.warning(request, self.sponsor_warning_message)
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -837,6 +843,8 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                     messages.error(request, search_results['error_message'])
                     self.search_error = search_results
             else:
+                if is_organizational_account(request):
+                    messages.warning(request, BookshareSearch.sponsor_warning_message)
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
                 if self.page <= pages_available:
@@ -1125,8 +1133,10 @@ class BookshareImport(LoginRequiredMixin, View):
                 return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
         # If book can't be downloaded, this returns 403
         else:
+            bookshare_messages = ', '.join(resp.json().get('messages', []))
+            message = f'Error importing the book (code = {resp.status_code}). {bookshare_messages}'
             return JsonResponse(data={'status': 'error',
-                                      'message': 'Error importing the book (code = %d)' % resp.status_code})
+                                      'message': message})
 
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.

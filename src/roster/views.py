@@ -37,7 +37,8 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
-from oauth2.bookshare.views import is_bookshare_connected
+from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
+    GENERIC_BOOKSHARE_ACCOUNT_NAMES
 from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
 from roster import csvparser
 from roster.csvparser import parse_file
@@ -1342,7 +1343,13 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
                 google_account = account.extra_data.get('email')
             if account.provider=='bookshare':
                 # For bookshare, uid is the email address registered with Bookshare.
-                bookshare_account = account.uid
+                # Organization is either a name of an organziational account or
+                # a single user account
+                bookshare_account = {
+                    'id': account.uid,
+                    'is_organizational': account.extra_data.get('organizational', False),
+                    'organization': self.organization_for_display(account),
+                }
         self.extra_context = {
             'can_edit_display_name': False,
             'can_edit_email': False,
@@ -1351,6 +1358,14 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
             'bookshare_account': bookshare_account,
         }
         return super().get(request, *args, **kwargs)
+
+    def organization_for_display(self, account):
+        """
+        Return an actual organization name, if any.  If the name
+        defaulted to one of the generic ones, return None
+        """
+        org_name = get_organization_name(account)
+        return f'({org_name})' if org_name not in GENERIC_BOOKSHARE_ACCOUNT_NAMES else None
 
     def configure_event(self, event: Event):
         event.page = 'MyAccount'
