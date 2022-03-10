@@ -34,6 +34,8 @@ from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
 
+import pdb
+
 logger = logging.getLogger(__name__)
 
 # The library page requires a lot of parameters, which interact in rather complex ways.
@@ -1181,13 +1183,10 @@ class BookshareImport(LoginRequiredMixin, View):
                 return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
         # If book can't be downloaded, this returns 403
         else:
-            display_message = f'Error importing the book (code = {resp.status_code}).'
-            for message in resp.json()['messages']:
-                display_message = f'{display_message}\n{message}'
-            if for_user:
-                display_message = f'{display_message}\n(recipient: {for_user})'
+            bookshare_messages = ', '.join(resp.json().get('messages', []))
+            message = f'Error importing the book (code = {resp.status_code}). {bookshare_messages}'
             return JsonResponse(data={'status': 'error',
-                                      'message': display_message})
+                                      'message': message})
 
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.
