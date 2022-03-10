@@ -817,6 +817,10 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
     template_name = 'library/library_search_bookshare.html'
     form_class = BookshareSearchForm
     formlabel ='Step 1: Search by title, author, or ISBN'
+    sponsor_warning_message = '\
+        You are using a Sponsor (Teacher/District/School) Bookshare account. \
+        Your import of Bookshare titles for students is not yet implemented, \
+        but coming soon.'
 
     def dispatch(self, request, *args, **kwargs):
         if not is_bookshare_connected(request):
@@ -826,11 +830,7 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
             )
         elif request.clusive_user.can_upload:
             if is_organizational_account(request):
-                messages.warning(request,
-                    'You are using an organizational account.  You can still \
-                    search for titles, but you can only import titles in the \
-                    public domain.'
-                )
+                messages.warning(request, self.sponsor_warning_message)
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -884,10 +884,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                     self.search_error = search_results
             else:
                 if is_organizational_account(request):
-                    messages.warning(request,
-                        'You are using an organizational account.  You can only \
-                        import titles in the public domain.'
-                    )
+                    messages.warning(request, BookshareSearch.sponsor_warning_message)
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
                 if self.page <= pages_available:

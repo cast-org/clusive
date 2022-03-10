@@ -11,7 +11,7 @@ from .provider import BookshareProvider
 from .views import BookshareOAuth2Adapter, UserTypes, \
     is_organizational_account, get_organization_name, \
     get_organization_members, get_user_type, \
-    GENERIC_ORG_NAME, SINGLE_USER_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
+    GENERIC_ORG_NAME, INDIVIDUAL_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +103,7 @@ class BookshareTestCase(TestCase):
             self.keys = json.load(json_file)
         except Exception as e:
             self.keys = None
-            logger.debug('Error retrieving keys "%s""', e)
+            logger.debug('Error retrieving keys "%s"', e)
 
     def test_create(self):
         self.assertIsNotNone(self.single_user)
@@ -130,7 +130,7 @@ class BookshareTestCase(TestCase):
         soc_account = SocialAccount.objects.get(user=self.single_user)
         self.assertEqual(
             get_organization_name(soc_account),
-            SINGLE_USER_NOT_ORG
+            INDIVIDUAL_NOT_ORG
         )
 
     def test_adapter_get_organization_name(self):
@@ -138,7 +138,7 @@ class BookshareTestCase(TestCase):
         request.user = self.single_user
         self.assertEqual(
             BookshareOAuth2Adapter(request).organization_name,
-            SINGLE_USER_NOT_ORG
+            INDIVIDUAL_NOT_ORG
         )
         request.user = self.org_user
         self.assertEqual(
@@ -155,7 +155,7 @@ class BookshareTestCase(TestCase):
         name = UserTypes.display_name(UserTypes.INDIVIDUAL)
         self.assertEquals(name, 'Individual')
         name = UserTypes.display_name(UserTypes.ORGANIZATIONAL)
-        self.assertEquals(name, 'Organizational')
+        self.assertEquals(name, 'Sponsor')
         name = UserTypes.display_name(UserTypes.UNKNOWN)
         self.assertEquals(name, 'Unknown')
 
