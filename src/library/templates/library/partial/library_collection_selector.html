@@ -19,6 +19,11 @@
                         </li>
                         {% endfor %}
                         <li>
+                            <a href="{% url 'library' style=style sort=sort view='starred' %}"
+                               {% if current_view == 'starred' %}class="active" aria-current="true"{% endif %}>
+                            {{view_names.starred}}</a>
+                        </li>
+                        <li>
                             <a href="{% url 'library' style=style sort=sort view='public' %}"
                                {% if current_view == 'public' %}class="active" aria-current="true"{% endif %}>
                             {{view_names.public}}</a>
