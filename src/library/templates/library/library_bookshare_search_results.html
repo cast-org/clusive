@@ -32,7 +32,11 @@
                                       {% if book.bookshareId in imported_books %}
                                         <p>Already imported</p>
                                       {% elif book.clusive.epub %}
-                                        <button data-bookshare-id="{{book.bookshareId}}" class="btn btn-primary import-button">Import</button>
+                                        {% if is_organizational %}
+                                          <a href="{% url 'bookshare_import' bookshareId=book.bookshareId %}" class="btn btn-primary">Import</a>
+                                        {% else %}
+                                          <button data-bookshare-id="{{book.bookshareId}}" class="btn btn-primary import-button">Import</button>
+                                        {% endif %}
                                       {% else %}
                                         <p>Not available</p>
                                       {% endif %}
