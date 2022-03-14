@@ -175,6 +175,12 @@
     z-index: 1;
 }
 
+.card-toggle-btn {
+    &.link-above {
+        z-index: 1;
+    }
+}
+
 .card-library-tag {
     line-height: 1;
 }

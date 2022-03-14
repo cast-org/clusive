@@ -37,11 +37,6 @@
                         </h2>
                         {% endif %}
                         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
-                        <div class="card-library-favorite">
-                            {% with  book.paradata_list|first as paradata %}
-                                {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
-                            {% endwith %}
-                        </div>
                     </div>
                     <div class="col-auto card-toggle">
                         <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-{{ book.id }}">
@@ -52,6 +47,11 @@
                 </div>
             </div>
             <div id="card-collapse-{{ book.id }}" class="card-collapse collapse">
+                <div class="card-library-favorite">
+                    {% with  book.paradata_list|first as paradata %}
+                        {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
+                    {% endwith %}
+                </div>
                 <div class="card-body">
                     {% if book.description %}<p>{{ book.description|highlight:query }}</p>{% endif %}
                 </div>
