@@ -118,19 +118,27 @@ h2,
     }
 }
 
-// stylelint-disable-next-line selector-max-id
+// stylelint-disable selector-max-id
 #iframe-wrapper {
     height: calc(100vh - #{$header-height + $body-padding-y});
     outline: 0;
 
+    iframe {
+        min-height: calc(100vh - #{$header-height + $body-padding-y});
+    }
+
     @include media-breakpoint-up(md) {
         height: calc(100vh - #{$header-md-height + $body-padding-y});
+
+        iframe {
+            min-height: calc(100vh - #{$header-md-height + $body-padding-y});
+        }
     }
 }
-// stylelint-disable-next-line selector-max-id
 #divBefore + #iframe-wrapper {
     overflow: hidden !important; // stylelint-disable-line declaration-no-important
 }
+// stylelint-enable selector-max-id
 
 .d2-line-focus-container {
     position: absolute;
