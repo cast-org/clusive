@@ -152,6 +152,17 @@ class Book(models.Model):
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
+    def add_teacher_extra_info(self, periods):
+        """
+        Adds two fields of additional information for displaying a library card to teachers:
+        'assign_list' includes any BookAssignments for this book to the given Periods.
+        'custom_list' includes any Customizations for this book to the given Periods.
+        :param periods: list of Periods to consider.
+        :return: None
+        """
+        self.assign_list = list(BookAssignment.objects.filter(book=self, period__in=periods))
+        self.custom_list = list(Customization.objects.filter(book=self, periods__in=periods))
+
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)

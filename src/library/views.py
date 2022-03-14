@@ -204,9 +204,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             customization_query = Customization.objects.filter(Q(periods__in=periods) | Q(owner=self.clusive_user))
             q = q.prefetch_related(Prefetch('customization_set', queryset=customization_query, to_attr='custom_list'))
 
-        # All of paradata is attached to the book object.
-        # Note that in library.py the filter (for starred) is register so that it can be
-        # called in the html by the registered name.
+        # Any paradata for current user is attached to the book object.
         paradata_query = Paradata.objects.filter(user=self.clusive_user)
         q = q.prefetch_related(Prefetch('paradata_set', queryset=paradata_query, to_attr='paradata_list'))
 

@@ -3,16 +3,25 @@
 {% if show_assignments %}
     {% if book.assign_list or book.custom_list %}
         <div class="card-divider spaced-top"></div>
-        {% if book.assign_list %}
-            <div class="card-text">Assigned to: {{ book.assign_list | period_names | highlight:period_name }}</div>
-        {% endif %}
-        {% if book.custom_list %}
+    {% endif %}
+    {% if book.assign_list %}
+        <div class="card-text">Assigned to: {{ book.assign_list | period_names | highlight:period_name }}</div>
+    {% endif %}
+    <div class="row">
+        <div class="col">
+            {% if book.custom_list %}
             <div class="card-text">
                 <span class="badge badge-count">
                     <span class="icon-wrench" aria-hidden="true"></span>
                 </span>
                 Customized
             </div>
-        {% endif %}
-    {% endif %}
+            {% endif %}
+        </div>
+        {% include 'library/partial/library_action_menu.html' %}
+    </div>
+{% else %}
+    <div class="row">
+        {% include 'library/partial/library_action_menu.html' %}
+    </div>
 {% endif %}

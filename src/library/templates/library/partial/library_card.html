@@ -36,11 +36,10 @@
         {% if custom_question_data %}{% include 'library/partial/library_card_custom_question.html' %}{% endif %}
         {% if graph_data %}{% include 'library/partial/library_card_graph.html' %}{% endif %}
     </div>
-        <div class="card-footer">
-            <div class="row">
-                {% include 'library/partial/library_card_topics.html' %}
-                {% include 'library/partial/library_action_menu.html' %}
-            </div>
-            {% include 'library/partial/library_teacher_extra_info.html' %}
+    <div class="card-footer">
+        <div class="row">
+            {% include 'library/partial/library_card_topics.html' %}
         </div>
+        {% include 'library/partial/library_teacher_extra_info.html' %}
+    </div>
 </div>

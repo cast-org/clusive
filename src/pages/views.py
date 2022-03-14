@@ -187,17 +187,23 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             assigned_trends = BookTrend.top_assigned(self.current_period)[:3]
             assigned_trend_data = [{'trend': t} for t in assigned_trends]
 
-            # Look up customizations for any of the books displayed.
-            books: set
-            books = set(trend.book for trend in top_trends)
-            books = books.union(set(trend.book for trend in assigned_trends))
-            customizations = Customization.objects.filter(book__in=books, periods=self.current_period)
-            # Attach customization information to each trend data object
-            # The filter just looks for customizations that match the given book, and we record the first.
             for td in top_trend_data:
-                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
+                book = td['trend'].book
+                # Look up paradata, assignments & customizations for books so they can be shown in the cards.
+                book.paradata_list = list(Paradata.objects.filter(book=book, user=self.clusive_user))
+                book.add_teacher_extra_info(self.periods)
+                # Check if there is a customization for the current period.
+                for c in book.custom_list:
+                    if self.current_period in list(c.periods.all()):
+                        td['customization'] = c
             for td in assigned_trend_data:
-                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
+                book = td['trend'].book
+                book.paradata_list = list(Paradata.objects.filter(book=book, user=self.clusive_user))
+                book.add_teacher_extra_info(self.periods)
+                # Check if there is a customization for the current period.
+                for c in book.custom_list:
+                    if self.current_period in list(c.periods.all()):
+                        td['customization'] = c
 
             # Get comp check statistics for each distinct book, avoid querying twice.
             comp_data = {}
@@ -260,6 +266,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['period_name'] = self.current_period.name
         context['query'] = None
         context['panels'] = self.panels
         context['data'] = self.data
