@@ -890,6 +890,11 @@ clusiveTTS.updateSettings = function(settings) {
         clusiveTTS.setCurrentVoice(settings.voice);
     }
 
+    if (clusiveTTS.region.mode === 'Readium') {
+        console.debug('Readium updateSettings end');
+        return;
+    }
+
     // Prepend any current queue item back onto to reading queue if it does not match
     // the first item in the queue already, to reduce some potential repetition.
     if (clusiveTTS.currentQueueItem) {
