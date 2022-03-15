@@ -39,7 +39,7 @@
             {% if form.members %}
             <button data-bookshare-id="{{book.bookshareId}}" class="btn btn-primary import-button-sponsor">Import</button>
             {% else %}
-            <button class="btn btn-secondary" value="Import" disabled/>
+            <button class="btn btn-primary" value="Import" disabled>Import</button>
             {% endif %}
             <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
         </div>
@@ -58,7 +58,8 @@
                     <tbody>
                         {% for member in member_list.userAccounts %}
                         <tr>
-                            <td>{{ member.name.firstName }} {{ member.name.lastName }}</td>
+                            <td>
+                                <input type="radio" name="member_select_table"> {{ member.name.firstName }} {{ member.name.lastName }}</td>
                             <td>{{ member.emailAddress }}</td>
                         </tr>
                         {% empty %}
@@ -68,6 +69,8 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <button class="btn btn-primary" value="Import" disabled>Import</button>
+                <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
             </div>
         </div>
     </main>

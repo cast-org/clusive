@@ -1250,8 +1250,5 @@ $(window).ready(function() {
     $('body').on('click', 'a.delete-customization', configureConfirmDeletionPopup);
     $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
     $('body').on('click', 'button.import-button', bookshareStartImportProcess);
-//    $('body').on('click', 'input.import-button', bookshareStartImportProcess);
     $('body').on('click', 'button.import-button-sponsor', 'member_select', bookshareStartSponsorImportProcess);
-//    $('body').on('click', 'input.import-button-sponsor', 'member_select', bookshareStartSponsorImportProcess);
-//    $('#form-bookshare-org-import').submit('member_select', bookshareStartSponsorImportProcess);
 });

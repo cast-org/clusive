@@ -1108,10 +1108,9 @@ class BookshareImport(LoginRequiredMixin, View):
         # given
         if is_organizational_account(request):
             for_member = kwargs.get('memberId')
-#            for_member = 'AP5xvS9yGvTfMdgAqzqnEbnKJcRvvj2T0Wf1WV_yJYwWVCznhUfvaZsLcIXn0k_O'
             if for_member == None:
                 return HttpResponseRedirect(
-                redirect_to=reverse('bookshare_org_memberlist', kwargs={'bookshareId': bookshare_id})
+                    redirect_to=reverse('bookshare_org_memberlist', kwargs={'bookshareId': bookshare_id})
             )
         else:
             for_member = None
