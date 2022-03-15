@@ -202,9 +202,9 @@
                 args: ['rate', '{change}.value'],
                 excludeSource: "init"
             },
-            'readerPreferences.scroll': {
-                func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
-                args: ['scroll', '{change}.value'],
+            'readerPreferences.verticalScroll': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
+                args: ['verticalScroll', '{change}.value'],
                 excludeSource: "init"
             },
             'readerPreferences.glossary': {
@@ -259,14 +259,6 @@
                 [ttsSettingName]:settingValue
             };
             reader.applyTTSSettings(settingsObj);
-        }
-    };
-
-    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(scrollSettingName, settingValue) {
-        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", scrollSettingName, settingValue)
-        var reader = clusiveContext.reader.instance;
-        if (reader && reader.applyUserSettings) {
-            reader.scroll(settingValue);
         }
     };
 
