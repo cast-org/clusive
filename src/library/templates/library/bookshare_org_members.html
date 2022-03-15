@@ -19,6 +19,32 @@
                 {% endif %}
             </div>
         </div>
+        <div id="form-bookshare-org-import" data-bookshare-id="{{bookshare_id}}">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Select a member from the {{ account_name }} organization</legend>
+                <div class="form-group">
+                    {% for radio in form.member_select %}
+                        <div class="form-check form-checkradio mb-1">
+                            {{ radio.tag | formcontrol }} {{ radio.member.name.firstName }} {{ radio.member.name.lastName }}
+                            <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                        </div>
+                    {% empty %}
+                        <p>This is not an organizational account (no members).</p>
+                    {% endfor %}
+                </div>
+            </fieldset>
+            {% if form.members %}
+            <button data-bookshare-id="{{book.bookshareId}}" class="btn btn-primary import-button-sponsor">Import</button>
+            {% else %}
+            <button class="btn btn-secondary" value="Import" disabled/>
+            {% endif %}
+            <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
+        </div>
+        <hr>
+        <p>This is another way the members could be presented, closer to Bookshare's video demonstration</p>
         <div class="form-group mb-1">
             <div class="table-scroll">
                 <table class="table table-divided table-roster">
@@ -46,5 +72,6 @@
         </div>
     </main>
 </div>
+{% include "library/partial/modal_import_pending.html" %}
 {% endblock %}
 

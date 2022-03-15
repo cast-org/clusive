@@ -912,7 +912,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             'links': links,
             'totalResults': self.metadata.get('totalResults', 'Unknown'),
             'imported_books': self.imported_books,
-            'is_organizational': 'true' if self.is_organizational else 'false',
+            'is_organizational': self.is_organizational,
             'member_id': '',
         })
         return context
@@ -1063,7 +1063,6 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
         for aFormat in book.get('formats', []):
             if aFormat['formatId'] == 'EPUB3':
                 return True
-        return book.get('available', False)
 
     def get_imported_books(self, request):
         results = []
@@ -1125,7 +1124,6 @@ class BookshareImport(LoginRequiredMixin, View):
         the_params = { 'api_key': access_keys.get('api_key') }
         if for_member != None:
             the_params.update({ 'forUser': for_member })
-        pdb.set_trace()
         resp = requests.request(
             'GET',
             'https://api.bookshare.org/v2/titles/' + bookshare_id + '/EPUB3',
@@ -1187,13 +1185,13 @@ class BookshareImport(LoginRequiredMixin, View):
         return bv
 
 
-class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
+class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView, FormView):
     form_class = BookshareMembersForm
     template_name = 'library/bookshare_org_members.html'
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
-        return BookshareMembersForm(**kwargs, members = self.member_list)
+        return BookshareMembersForm(**kwargs, member_list=self.member_list)
 
     def dispatch(self, request, *args, **kwargs):
         logger.debug('BookhareId is: ' + str(kwargs.get('bookshareId')))
@@ -1203,6 +1201,7 @@ class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
                 redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_org_memberlist')
             )
         else:
+            self.bookshare_id = kwargs['bookshareId']
             bookshare = BookshareOAuth2Adapter(request)
             account = bookshare.social_account
             self.account_name = account.uid
@@ -1225,6 +1224,7 @@ class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
             'account_name': self.account_name,
             'org_name': self.org_name,
             'member_list': self.member_list,
+            'bookshare_id': kwargs['bookshareId'],
         })
         return context
 
