@@ -891,7 +891,7 @@ clusiveTTS.updateSettings = function(settings) {
     }
 
     if (clusiveTTS.region.mode === 'Readium') {
-        console.debug('Readium updateSettings end');
+        console.debug('updateSettings end D2Reader');
         return;
     }
 
