@@ -1109,8 +1109,10 @@ class BookshareImport(LoginRequiredMixin, View):
         if is_organizational_account(request):
             for_member = kwargs.get('memberId')
             if for_member == None:
-                return HttpResponseRedirect(
-                    redirect_to=reverse('bookshare_org_memberlist', kwargs={'bookshareId': bookshare_id})
+                return HttpResponseRedirect(redirect_to=reverse(
+                    'bookshare_org_memberlist',
+                    kwargs={'bookshareId': bookshare_id, 'fromSearchPage': 1}
+                )
             )
         else:
             for_member = None
@@ -1200,7 +1202,12 @@ class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView, FormView):
                 redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_org_memberlist')
             )
         else:
-            self.bookshare_id = kwargs['bookshareId']
+            # No book likely means no search results in the session.  Go back
+            # to the start of the search to get search results.
+            self.book = self.find_book_in_search_results(kwargs['bookshareId'])
+            if self.book == None:
+                return HttpResponseRedirect(redirect_to=reverse('bookshare_search'))
+
             bookshare = BookshareOAuth2Adapter(request)
             account = bookshare.social_account
             self.account_name = account.uid
@@ -1223,9 +1230,23 @@ class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView, FormView):
             'account_name': self.account_name,
             'org_name': self.org_name,
             'member_list': self.member_list,
-            'bookshare_id': kwargs['bookshareId'],
+            'book': self.book,
+            'search_page': kwargs['fromSearchPage'],
         })
         return context
+
+    def find_book_in_search_results(self, bookshare_id):
+        search_metadata = self.request.session.get('bookshare_search_metadata')
+        if search_metadata:
+            chunks = search_metadata.get('chunks', [])
+            book = None
+            for chunk in chunks:
+                book = next((title for title in chunk if title['bookshareId'] == bookshare_id), None)
+                if book:
+                    break
+            return book
+        else:
+            return None
 
 
 class ListCustomizationsView(LoginRequiredMixin, EventMixin, TemplateView):

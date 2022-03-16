@@ -10,19 +10,17 @@
 {% block content %}
 <div class="content">
     <main id="content" tabindex="-1">
-        <div class="row">
-            <div class="col">
-                {% if org_name == 'Individual Account' %}
-                <h1>Individual Account (no members)</h1>
-                {% else %}
-                <h1>{{ org_name }} Members:</h1>
-                {% endif %}
-            </div>
+        {% include "shared/partial/alerts.html" %}
+        <h1>Add from Bookshare</h1>
+        <div class="link-back ms-0">
+            <a href="/library/bookshare-results/page/{{search_page}}" class="link-prev">Back to Search Results</a>
         </div>
-        <div id="form-bookshare-org-import" data-bookshare-id="{{bookshare_id}}">
+        <h2>Step 3: Select Student</h2>
+        <p>Clusive will share <em>{{ book.title }}</em> with the student you select.</p>
+        <div id="form-bookshare-org-import" data-bookshare-id="{{book.bookshareId}}">
             {% csrf_token %}
             <fieldset>
-                <legend>Select a member from the {{ account_name }} organization</legend>
+                <legend>Select a member from {{ account_name }}</legend>
                 <div class="form-group">
                     {% for radio in form.member_select %}
                         <div class="form-check form-checkradio mb-1">
@@ -44,7 +42,7 @@
             <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
         </div>
         <hr>
-        <p>This is another way the members could be presented, closer to Bookshare's video demonstration</p>
+        <p>This is a mock-up of another way the members could be presented, closer to Bookshare's video demonstration</p>
         <div class="form-group mb-1">
             <div class="table-scroll">
                 <table class="table table-divided table-roster">
