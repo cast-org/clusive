@@ -1105,7 +1105,7 @@ class BookshareImport(LoginRequiredMixin, View):
 
         # Check if this is an organizational account and, if so, if a user has
         # been provided.  Redirect to choosing an org member is no user was
-        # given
+        # given.
         if is_organizational_account(request):
             for_member = kwargs.get('memberId')
             if for_member == None:
@@ -1118,9 +1118,9 @@ class BookshareImport(LoginRequiredMixin, View):
             for_member = None
         # The following request will return a status code of 202 meaning the
         # request to download has been acknowledged, and a package is being
-        # prepared for download.  Subsequent requests will either result in 202 again,
-        # or, when the package is ready, a 302 redirect to
-        # a URL that retrieves the epub content.
+        # prepared for download.  Subsequent requests will either result in 202
+        # again, or, when the package is ready, a 302 redirect to an URL that
+        # etrieves the epub content.
         # https://apidocs.bookshare.org/reference/index.html#_responses_3
         the_params = { 'api_key': access_keys.get('api_key') }
         if for_member != None:

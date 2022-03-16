@@ -979,10 +979,8 @@ function bookshareStartSponsorImportProcess(event) {
     'use strict';
 
     var trigger = $(event.currentTarget);
-    var form = trigger.parent();
-    var bookId = form.data('bookshare-id');
-    var memberInput = 'input[name="'+event.data+'"]:checked';
-    var memberId = form.find(memberInput).val();
+    var bookId = trigger.data('bookshare-id');
+    var memberId = trigger.data('member-id');
     bookshareDoImport(trigger, { bookId: bookId, forUser: memberId });
 }
 
@@ -999,8 +997,7 @@ function bookshareDoImport(trigger, bookAndUser) {
     }
     // Call API to trigger import immediately, and then check import status every 5 seconds.
     bookshareCheckImportProgress(bookAndUser);
-//    bookshareCheckImportProgress(bookId);
-    bookshareImportProgressTimer = setInterval(bookshareCheckImportProgress, 5000, bookAndUser.bookId);
+    bookshareImportProgressTimer = setInterval(bookshareCheckImportProgress, 5000, bookAndUser);
 };
 
 // Edit customization dialog: custom vocabulary words handling
@@ -1250,5 +1247,5 @@ $(window).ready(function() {
     $('body').on('click', 'a.delete-customization', configureConfirmDeletionPopup);
     $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
     $('body').on('click', 'button.import-button', bookshareStartImportProcess);
-    $('body').on('click', 'button.import-button-sponsor', 'member_select', bookshareStartSponsorImportProcess);
+    $('body').on('click', 'button.import-button-sponsor', bookshareStartSponsorImportProcess);
 });

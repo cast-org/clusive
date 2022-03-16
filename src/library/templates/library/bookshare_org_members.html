@@ -17,48 +17,23 @@
         </div>
         <h2>Step 3: Select Student</h2>
         <p>Clusive will share <em>{{ book.title }}</em> with the student you select.</p>
-        <div id="form-bookshare-org-import" data-bookshare-id="{{book.bookshareId}}">
-            {% csrf_token %}
-            <fieldset>
-                <legend>Select a member from {{ account_name }}</legend>
-                <div class="form-group">
-                    {% for radio in form.member_select %}
-                        <div class="form-check form-checkradio mb-1">
-                            {{ radio.tag | formcontrol }} {{ radio.member.name.firstName }} {{ radio.member.name.lastName }}
-                            <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                {{ radio.choice_label }}
-                            </label>
-                        </div>
-                    {% empty %}
-                        <p>This is not an organizational account (no members).</p>
-                    {% endfor %}
-                </div>
-            </fieldset>
-            {% if form.members %}
-            <button data-bookshare-id="{{book.bookshareId}}" class="btn btn-primary import-button-sponsor">Import</button>
-            {% else %}
-            <button class="btn btn-primary" value="Import" disabled>Import</button>
-            {% endif %}
-            <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
-        </div>
-        <hr>
-        <p>This is a mock-up of another way the members could be presented, closer to Bookshare's video demonstration</p>
         <div class="form-group mb-1">
             <div class="table-scroll">
                 <table class="table table-divided table-roster">
-                    <caption>({{ account_name }})</caption>
+                    <caption>(Teacher/District/School: {{ account_name }})</caption>
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Email</th>
+                            <th>Class</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for member in member_list.userAccounts %}
                         <tr>
-                            <td>
-                                <input type="radio" name="member_select_table"> {{ member.name.firstName }} {{ member.name.lastName }}</td>
-                            <td>{{ member.emailAddress }}</td>
+                            <td>{{ member.name.firstName }} {{ member.name.lastName }}</td>
+                            <td><em>Period goes here</em></td>
+                            <td><button data-bookshare-id="{{book.bookshareId}}" data-member-id="{{member.userAccountId}}" class="btn btn-primary import-button-sponsor">Select</button>
                         </tr>
                         {% empty %}
                         <tr>
@@ -67,8 +42,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <button class="btn btn-primary" value="Import" disabled>Import</button>
-                <a href="{% url 'bookshare_search' %}" class="btn btn-link">Cancel</a>
             </div>
         </div>
     </main>
