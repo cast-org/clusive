@@ -45,7 +45,7 @@ logger = logging.getLogger(__name__)
 #   Changing the style leaves all the other parameters unchanged.
 #   The links in the style menu therefore have a JS helper to add the current filter and page to the URL.
 #   The ClusiveUser model holds a default for style.
-# VIEW (which should perhaps have been called "collection"): [public, mine, or period]
+# VIEW (which should perhaps have been called "collection"): [public, mine, starred, or period]
 #   This is the third part of the library URL
 #   If view is "period", there is a fourth part of the URL which is the specific period being viewed.
 #   Changing the view resets QUERY, FILTER, and PAGE to their defaults.
@@ -157,6 +157,11 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             q = Book.objects.filter(assignments__period=self.period)
         elif self.view == 'mine':
             q = Book.objects.filter(owner=self.clusive_user)
+        elif self.view == 'starred':
+            # STARRED = books found in paradata where starred field is true for this user
+            q = Book.objects.filter(
+                Q(paradata__starred=True)
+                & Q(paradata__user=self.clusive_user))
         elif self.view == 'public':
             q = Book.objects.filter(owner=None)
         elif self.view == 'all':

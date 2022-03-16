@@ -132,12 +132,14 @@ class LibraryViews:
     ALL = 'all'
     PUBLIC = 'public'
     MINE = 'mine'
+    STARRED = 'starred'
     PERIOD = 'period'
 
     CHOICES = [
         (ALL, 'All readings'),
         (PUBLIC, 'Public readings'),
         (MINE, 'My readings'),
+        (STARRED, 'Starred readings'),
         (PERIOD, 'Period assignments')
     ]
 

@@ -757,13 +757,16 @@ function starredButtons() {
         var textMsg = isActive ? txtActive : txtDefault;
         var book = $trigger.data('clusive-book-id');
 
-        $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
-            $tip
-                .removeAttr('data-cfw-tooltip-title')
-                .CFW_Tooltip({
-                    title: textMsg
-                })
-                .CFW_Tooltip('show');
+         $tip.one('afterHide.cfw.tooltip', function() {
+            $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
+                $trigger.attr('aria-label', textMsg);
+                $tip
+                    .removeAttr('data-cfw-tooltip-title')
+                    .CFW_Tooltip({
+                        title: textMsg
+                    });
+            });
+            $tip.CFW_Tooltip('dispose');
         });
 
         $.ajax({
@@ -776,7 +779,12 @@ function starredButtons() {
         }).fail(function(err) {
             console.error('Failed sending star rating results: ', err);
         });
-        $tip.CFW_Tooltip('dispose');
+
+        $trigger.attr('aria-label', textMsg);
+        $tip.data('cfw.tooltip').$target.find('.tooltip-body').text(textMsg);
+        setTimeout(function() {
+            $tip.CFW_Tooltip('locateUpdate');
+        });
     });
 }
 

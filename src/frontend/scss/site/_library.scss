@@ -264,6 +264,16 @@
             padding-bottom: .75rem;
         }
     }
+
+    @include media-breakpoint-down(sm) {
+        .card-library-favorite {
+            top: .75rem;
+            right: 3rem;
+        }
+        .has-favorite .card-title {
+            margin-right: 1rem;
+        }
+    }
 }
 
 .library-list-options {
