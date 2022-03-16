@@ -23,8 +23,7 @@ from django.views.generic import ListView, FormView, UpdateView, TemplateView, R
 from eventlog.models import Event
 from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
-from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm, \
-    BookshareMembersForm
+from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
     CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
@@ -34,8 +33,6 @@ from oauth2.bookshare.views import BookshareOAuth2Adapter, has_bookshare_account
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
-
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -1156,8 +1153,7 @@ class BookshareImport(LoginRequiredMixin, View):
         else:
             bookshare_messages = ', '.join(resp.json().get('messages', []))
             message = f'Error importing the book (code = {resp.status_code}). {bookshare_messages}'
-            return JsonResponse(data={'status': 'error',
-                                      'message': message})
+            return JsonResponse(data={'status': 'error', 'message': message})
 
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.
@@ -1186,13 +1182,8 @@ class BookshareImport(LoginRequiredMixin, View):
         return bv
 
 
-class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView, FormView):
-    form_class = BookshareMembersForm
+class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
     template_name = 'library/bookshare_org_members.html'
-
-    def get_form(self, form_class=None):
-        kwargs = self.get_form_kwargs()
-        return BookshareMembersForm(**kwargs, member_list=self.member_list)
 
     def dispatch(self, request, *args, **kwargs):
         logger.debug('BookhareId is: ' + str(kwargs.get('bookshareId')))

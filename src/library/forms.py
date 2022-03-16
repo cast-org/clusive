@@ -147,25 +147,3 @@ class EditCustomizationForm(ModelForm):
         self.overridden_periods = conflicting_periods
         return instance
 
-class BookshareMembersForm(forms.Form):
-
-    def __init__(self, *args, **kwargs):
-        member_list = kwargs.pop('member_list')
-        self.members = member_list.get('userAccounts', [])
-        super().__init__(*args, **kwargs)
-        choices = self.create_choices()
-        self.fields['member_select'] = forms.ChoiceField(
-            choices=choices,
-            required=True,
-            widget=forms.RadioSelect,
-        )
-
-    def create_choices(self):
-        choices = []
-        for member in self.members:
-            first_name = member['name']['firstName']
-            last_name = member['name']['lastName']
-            email = member['emailAddress']
-            name = f'{first_name} {last_name} ({email})'
-            choices.append((member['userAccountId'], name))
-        return choices
