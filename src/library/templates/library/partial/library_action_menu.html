@@ -2,7 +2,8 @@
 {% if book.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
 <div class="col-auto card-library-action">
     <div class="dropdown link-above">
-        <button type="button" class="btn btn-flag" data-cfw="dropdown">
+        <button type="button" class="btn btn-flag" data-cfw="dropdown" data-clusive-tip-action="book_actions"
+                {% if forloop.first %}data-clusive-tip-id="book_actions" data-cfw-tooltip-placement="forward auto"{% endif %}>
             <span class="icon-ellipsis-vert" aria-hidden="true"></span>
             <span class="sr-only">More actions</span>
         </button>
@@ -11,8 +12,9 @@
             <li><a href="{% url 'metadata_edit' pk=book.id %}">Edit</a></li>
             <li><button type="button" class="dropdown-item" data-clusive="confirmPubDel" data-clusive-book-id="{{ book.id }}">Delete</button></li>
             {% endif %}
-            {% if request.clusive_user.can_manage_periods %}
+            {% if request.clusive_user.can_manage_periods and not book.bookshare_id %}
             <li><button type="button" class="dropdown-item" data-clusive="confirmSharing" data-clusive-book-id="{{ book.id }}">Assign</button></li>
+            <li><a href="{% url 'customize_book' pk=book.id %}">Customize</a></li>
             {% endif %}
         </ul>
     </div>

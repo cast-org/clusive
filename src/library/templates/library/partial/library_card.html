@@ -1,8 +1,30 @@
 {% load static library %}
 <div class="card card-library">
-    <div class="card-header">
-        <a href="#" class="link-stretch" onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"><h2 class="card-title">{{ book.title|highlight:query }}</h2></a>
+    <div {% if show_starred %}class="card-header has-favorite" {% else %}class="card-header" {% endif %}>
+        {% if unauthorized %}
+        <span class="d-block" tabindex="0" data-cfw="tooltip" title="Not authorized to view">
+            <h2 class="card-title">
+                <span class="icon-block" title="Not authorized to view"></span>
+                {{ book.title|highlight:query }}
+            </h2>
+        </span>
+        {% else %}
+        <h2 class="card-title">
+            <a href="{% url 'reader_default' book_id=book.id %}"
+            {% if link_stretch %}class="link-stretch"{% endif %}
+            {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
+                {{ book.title|highlight:query }}
+            </a>
+        </h2>
+        {% endif %}
         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
+        {% if show_starred %}
+            <div class="card-library-favorite">
+                {% with  book.paradata_list|first as paradata %}
+                    {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
+                {% endwith %}
+            </div>
+        {% endif %}
     </div>
     {% if book.cover %}
     <div class="card-img">
@@ -10,12 +32,15 @@
     </div>
     {% endif %}
     <div class="card-body">
-        {% if book.description %}<p class="card-text">{{ book.description|highlight:query }}</p>{% endif %}
+        {% if show_description and book.description %}<p class="card-text">{{ book.description|highlight:query }}</p>{% endif %}
+        {% if custom_question_data %}{% include 'library/partial/library_card_custom_question.html' %}{% endif %}
+        {% if graph_data %}{% include 'library/partial/library_card_graph.html' %}{% endif %}
     </div>
         <div class="card-footer">
             <div class="row">
                 {% include 'library/partial/library_card_topics.html' %}
-                {% include "library/partial/library_action_menu.html" %}
+                {% include 'library/partial/library_action_menu.html' %}
             </div>
+            {% include 'library/partial/library_teacher_extra_info.html' %}
         </div>
 </div>

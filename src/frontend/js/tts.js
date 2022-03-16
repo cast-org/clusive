@@ -2,13 +2,20 @@
 // and the more basic clusiveTTS defined here for other pages.
 //
 /* eslint-disable no-use-before-define */
-/* global D2Reader */
+/* global clusiveDebounce, D2Reader */
+
+// Initialize voices to trigger async update, so when it is called later
+// a list is returned (re: Chrome/Android)
+if (typeof window.speechSynthesis === 'object') {
+    window.speechSynthesis.getVoices();
+}
 
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
     region: {},
-    currentVoice: null,
+    voiceCurrent: null,
+    voiceLocal: null,
     voiceRate: 1,
     textElement: null,
     copiedElement: null,
@@ -16,6 +23,7 @@ var clusiveTTS = {
     userScrolled: false,
     readerReady: false,
     isPaused: false,
+    currentQueueItem: null,
     utterance: null
 };
 
@@ -24,7 +32,7 @@ $(document).ready(function() {
     'use strict';
 
     // Allow play button to have toggle behavior
-    $('.tts-play').on('click', function(e) {
+    $(document).on('click', '.tts-play', function(e) {
         clusiveTTS.setRegion(e.currentTarget);
 
         if (clusiveTTS.region.mode === 'Readium') {
@@ -39,8 +47,12 @@ $(document).ready(function() {
         } else {
             console.debug('read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
+                var selector = clusiveTTS.getSelectorFromElement(e.currentTarget);
+                if (clusiveTTS.region.mode === 'dialog') {
+                    selector = e.currentTarget.closest('.modal, .popover');
+                }
                 clusiveTTS.resetState();
-                clusiveTTS.read();
+                clusiveTTS.read(selector);
                 clusiveTTS.updateUI('play');
             } else {
                 clusiveTTS.stopReading();
@@ -49,24 +61,12 @@ $(document).ready(function() {
         }
     });
 
-    $('.tts-stop').on('click', function(e) {
-        clusiveTTS.setRegion(e.currentTarget);
-
-        if (clusiveTTS.region.mode === 'Readium') {
-            console.debug('Readium read aloud stop button clicked');
-            D2Reader.stopReadAloud();
-        } else {
-            console.debug('read aloud stop button clicked');
-            clusiveTTS.stopReading();
-            // Call resetElements since some browsers do not always get the `utterance.onend` event
-            clusiveTTS.resetElements();
-        }
+    $(document).on('click', '.tts-stop', function() {
+        clusiveTTS.stopReadingDetermineApi();
         clusiveTTS.updateUI('stop');
     });
 
-    $('.tts-pause').on('click', function(e) {
-        clusiveTTS.setRegion(e.currentTarget);
-
+    $(document).on('click', '.tts-pause', function() {
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud pause button clicked');
             D2Reader.pauseReadAloud();
@@ -79,9 +79,7 @@ $(document).ready(function() {
         clusiveTTS.updateUI('pause');
     });
 
-    $('.tts-resume').on('click', function(e) {
-        clusiveTTS.setRegion(e.currentTarget);
-
+    $(document).on('click', '.tts-resume', function() {
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud resume button clicked');
             D2Reader.resumeReadAloud();
@@ -89,13 +87,14 @@ $(document).ready(function() {
             console.debug('read aloud resume button clicked');
             clusiveTTS.userScrolled = false;
 
-            // Resume by speaking utterance if one is queued
-            if (clusiveTTS.utterance) {
-                clusiveTTS.synth.speak(clusiveTTS.utterance);
-                clusiveTTS.utterance = null;
-            }
-            clusiveTTS.synth.resume();
+            // Resume by speaking utterance if one is active
             clusiveTTS.isPaused = false;
+            if (!clusiveTTS.utterance) {
+                clusiveTTS.onEnd();
+            }
+            setTimeout(function() {
+                window.speechSynthesis.resume();
+            }, 110);
         }
         clusiveTTS.updateUI('resume');
     });
@@ -104,29 +103,94 @@ $(document).ready(function() {
 window.addEventListener('unload', function() {
     'use strict';
 
-    if (clusiveTTS.region.mode === 'Readium') {
-        D2Reader.stopReadAloud();
+    clusiveTTS.stopReadingDetermineApi();
+});
+
+// Stop reading if active region is in dialog being closed
+$(document).on('beforeHide.cfw.modal beforeHide.cfw.popover', function(event) {
+    'use strict';
+
+    var dialogElem = null;
+
+    if (event.isDefaultPrevented()) { return; }
+    if (event.namespace === 'cfw.popover') {
+        dialogElem = $(event.target).data('cfw.popover').$target[0];
     } else {
-        clusiveTTS.stopReading();
+        dialogElem = event.target;
+    }
+
+    if (dialogElem && dialogElem.contains(clusiveTTS.region.elm)) {
+        clusiveTTS.stopReadingDetermineApi();
     }
 });
+
+clusiveTTS.getSelectorFromElement = function(element) {
+    'use strict';
+
+    var selector = element.getAttribute('data-ctts-target');
+
+    if (!selector || selector === '#') {
+        var hrefAttr = element.getAttribute('href');
+
+        // Valid selector could be ID or class
+        if (!hrefAttr || (!hrefAttr.includes('#') && !hrefAttr.startsWith('.'))) {
+            return null;
+        }
+
+        // Just in case of a full URL with the anchor appended
+        if (hrefAttr.includes('#') && !hrefAttr.startsWith('#')) {
+            hrefAttr = '#' + hrefAttr.split('#')[1];
+        }
+
+        selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : null;
+    }
+
+    try {
+        return document.querySelector(selector) ? selector : null;
+    } catch (error) {
+        return null;
+    }
+};
+
+clusiveTTS.isElement = function(item) {
+    'use strict';
+
+    if (!item || typeof item !== 'object') {
+        return false;
+    }
+
+    if (typeof item.jquery !== 'undefined') {
+        item = item[0];
+    }
+
+    return typeof item.nodeType !== 'undefined';
+};
+
+clusiveTTS.getElement = function(item) {
+    'use strict';
+
+    // it's a jQuery object or a node element
+    if (clusiveTTS.isElement(item)) {
+        return item.jquery ? item[0] : item;
+    }
+
+    if (typeof item === 'string' && item.length > 0) {
+        return document.querySelector(item);
+    }
+
+    return null;
+};
 
 clusiveTTS.setRegion = function(ctl) {
     'use strict';
 
     var newRegion = {};
-    newRegion.elm = ctl.closest('.tts-region');
-    newRegion.mode = Object.prototype.hasOwnProperty.call(newRegion.elm.dataset, 'mode') ? newRegion.elm.dataset.mode : null;
+    newRegion.elm = ctl.closest('[role="region"]');
+    newRegion.mode = Object.prototype.hasOwnProperty.call(newRegion.elm.dataset, 'ttsMode') ? newRegion.elm.dataset.ttsMode : null;
 
     // Stop any previous region from reading
     if (Object.keys(clusiveTTS.region).length && (clusiveTTS.region.elm !== newRegion.elm)) {
-        if (clusiveTTS.region.mode === 'Readium') {
-            console.debug('Readium read aloud stop on region change');
-            D2Reader.stopReadAloud();
-        } else {
-            console.debug('read aloud stop on region change');
-            clusiveTTS.stopReading();
-        }
+        clusiveTTS.stopReadingDetermineApi();
         clusiveTTS.updateUI('stop');
     }
 
@@ -138,9 +202,15 @@ clusiveTTS.setRegion = function(ctl) {
 clusiveTTS.updateUI = function(mode) {
     'use strict';
 
-    if (!Object.keys(clusiveTTS.region).length) { return; }
+    // Update sidebar and dialog controls
+    var controls = document.querySelectorAll('.sidebar-tts, .dialog-tts');
+    controls.forEach(function(region) {
+        clusiveTTS.updateUIRegion(mode, region);
+    });
+};
 
-    var region = clusiveTTS.region.elm;
+clusiveTTS.updateUIRegion = function(mode, region) {
+    'use strict';
 
     switch (mode) {
         case 'resume':
@@ -161,6 +231,18 @@ clusiveTTS.updateUI = function(mode) {
     }
 };
 
+clusiveTTS.stopReadingDetermineApi = function() {
+    'use strict';
+
+    if (clusiveTTS.region.mode === 'Readium') {
+        console.debug('Readium read aloud stop called');
+        D2Reader.stopReadAloud();
+    } else {
+        console.debug('read aloud stop called');
+        clusiveTTS.stopReading();
+    }
+};
+
 // Stop an in-process reading
 clusiveTTS.stopReading = function(reset) {
     'use strict';
@@ -172,6 +254,7 @@ clusiveTTS.stopReading = function(reset) {
     }
     clusiveTTS.synth.cancel();
     clusiveTTS.resetState();
+    clusiveTTS.resetHighlight();
     clusiveTTS.updateUI();
 };
 
@@ -207,11 +290,46 @@ clusiveTTS.scrollWatchStop = function() {
     $(document).off('wheel keydown touchmove', clusiveTTS.scrollWatch);
 };
 
-clusiveTTS.isVisible = function(elem) {
+clusiveTTS.outerWidthMargin = function(el) {
     'use strict';
 
-    return Boolean(elem.offsetWidth || elem.offsetHeight
-        || elem.getClientRects().length && window.getComputedStyle(elem).visibility !== 'hidden');
+    var width = el.offsetWidth;
+    var style = getComputedStyle(el);
+
+    width += parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10);
+    return width;
+};
+
+clusiveTTS.outerHeightMargin = function(el) {
+    'use strict';
+
+    var height = el.offsetHeight;
+    var style = getComputedStyle(el);
+
+    height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
+    return height;
+};
+
+clusiveTTS.isVisuallyVisible = function(elem) {
+    'use strict';
+
+    if (!elem) {
+        return false;
+    }
+    return Boolean(clusiveTTS.outerWidthMargin(elem) > 0 && clusiveTTS.outerHeightMargin(elem) > 0 && elem.getClientRects().length && $(elem).outerHeight(true) > 0 && window.getComputedStyle(elem).visibility !== 'hidden');
+};
+
+clusiveTTS.isReadable = function(node) {
+    'use strict';
+
+    var element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+
+    // if (!clusiveTTS.isVisuallyVisible(element)) { return false; }
+    if (!node.data.trim().length > 0) { return false; }
+    if (/script|style|button|input|optgroup|option|select|textarea/i.test(element.tagName)) { return false; }
+    if (element.closest('[aria-hidden="true"]')) { return false; }
+
+    return true;
 };
 
 clusiveTTS.readQueuedElements = function() {
@@ -221,7 +339,8 @@ clusiveTTS.readQueuedElements = function() {
 
     while (clusiveTTS.elementsToRead.length && toRead === null) {
         toRead = clusiveTTS.elementsToRead.shift();
-        if (!clusiveTTS.isVisible(toRead.element)) {
+        // Check for hidden - allows items shown mid-read to be included
+        if (!clusiveTTS.isVisuallyVisible(toRead.element.parentElement)) {
             toRead = null;
         }
     }
@@ -231,28 +350,95 @@ clusiveTTS.readQueuedElements = function() {
         clusiveTTS.readElement(toRead.element, toRead.offset, end);
     } else {
         console.debug('Done reading elements');
+        clusiveTTS.resetState();
         clusiveTTS.updateUI('stop');
     }
 };
 
-clusiveTTS.readElement = function(textElement, offset, end) {
+clusiveTTS.wrap = function(toWrap, wrapper) {
+    'use strict';
+
+    wrapper = wrapper || document.createElement('div');
+    toWrap.after(wrapper);
+    wrapper.appendChild(toWrap);
+};
+
+clusiveTTS.createActive = function(textElement) {
+    'use strict';
+
+    var wrapperActive = document.createElement('cttsActive');
+    clusiveTTS.wrap(textElement, wrapperActive);
+    clusiveTTS.copiedElement = wrapperActive;
+};
+
+clusiveTTS.updateActive = function(preceding, middle, following) {
+    'use strict';
+
+    if (clusiveTTS.copiedElement === null) {
+        return;
+    }
+
+    if (!preceding.length > 0 && !middle.length > 0 && !following.length > 0) {
+        return;
+    }
+
+    // Short method for reference - Research indicates using documentFragment should be faster
+    // var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
+    // clusiveTTS.copiedElement.innerHTML = newText;
+
+    var newText = document.createDocumentFragment();
+    var newPrefix = document.createDocumentFragment();
+    var newMiddle = document.createElement('span');
+    var newFollowing = document.createDocumentFragment();
+
+    newPrefix.textContent = preceding;
+    newMiddle.classList.add('tts-currentWord');
+    if (typeof middle === 'object') {
+        newMiddle = middle;
+    } else {
+        newMiddle.textContent = middle;
+    }
+    newFollowing.textContent = following;
+    newText.append(newPrefix);
+    newText.append(newMiddle);
+    newText.append(newFollowing);
+
+    while (clusiveTTS.copiedElement.firstChild) {
+        clusiveTTS.copiedElement.removeChild(clusiveTTS.copiedElement.firstChild);
+    }
+    clusiveTTS.copiedElement.append(newText);
+};
+
+clusiveTTS.onEnd = function() {
+    'use strict';
+
+    clusiveTTS.utterance = null;
+    if (!clusiveTTS.isPaused) {
+        clusiveTTS.resetHighlight();
+        clusiveTTS.readQueuedElements();
+    }
+};
+
+clusiveTTS.readElement = clusiveDebounce(function(textElement, offset, end) {
     'use strict';
 
     var synth = clusiveTTS.synth;
-    clusiveTTS.textElement = $(textElement);
-    var elementText = clusiveTTS.textElement.text();
+    var elementText = textElement.textContent;
     var contentText = end ? elementText.slice(offset, end) : elementText.slice(offset);
 
-    // Preserve and hide the original element so we can handle the highlighting in an
-    // element without markup
-    // TODO: this needs improved implementation longer term
-    clusiveTTS.copiedElement = clusiveTTS.textElement.clone(false);
-    clusiveTTS.textElement.after(clusiveTTS.copiedElement);
-    clusiveTTS.textElement.hide();
+    // Store then wrap text node so content can be replaced
+    clusiveTTS.resetHighlight();
+    clusiveTTS.textElement = textElement;
+    clusiveTTS.createActive(textElement);
 
-    var utterance = clusiveTTS.makeUtterance(contentText);
+    // Determine any localized voice
+    var langIso = clusiveTTS.getLangAttribute(textElement);
+    console.debug('langIso', langIso);
+    var langVoices = clusiveTTS.getVoicesForLanguage(langIso);
+    clusiveTTS.voiceLocal = langVoices.length > 0 ? langVoices[0] : null;
+    clusiveTTS.utterance = clusiveTTS.makeUtterance(contentText);
 
-    utterance.onboundary = function(e) {
+    clusiveTTS.utterance.onboundary = function(e) {
         var preceding = '';
         var middle = '';
         var following = '';
@@ -290,13 +476,16 @@ clusiveTTS.readElement = function(textElement, offset, end) {
             }
         }
 
-        var newText = preceding + '<span class="tts-currentWord">' + middle + '</span>' + following;
-        clusiveTTS.copiedElement.html(newText);
+        clusiveTTS.currentQueueItem = {
+            element: textElement,
+            offset: offset + e.charIndex,
+            end: end
+        };
+
+        clusiveTTS.updateActive(preceding, middle, following);
 
         // Keep current word being read in view
         if (clusiveTTS.autoScroll && !clusiveTTS.userScrolled) {
-            // TODO: Investigate why can't hook into copiedElement
-            // var wordCurr = clusiveTTS.copiedElement.querySelector('.tts-currentWord');
             var wordCurr = document.querySelector('.tts-currentWord');
             if (wordCurr) {
                 wordCurr.scrollIntoView({
@@ -307,32 +496,40 @@ clusiveTTS.readElement = function(textElement, offset, end) {
         }
     };
 
-    utterance.onend = function() {
+    clusiveTTS.utterance.onend = function() {
         console.debug('utterance ended');
-        clusiveTTS.resetElements();
+        clusiveTTS.onEnd();
     };
 
     if (!clusiveTTS.isPaused) {
-        synth.speak(utterance);
-    } else {
-        clusiveTTS.utterance = utterance;
+        synth.speak(clusiveTTS.utterance);
+        clusiveTTS.updateUI('play');
     }
-};
+
+    if (!synth.speaking) {
+        synth.resume();
+        clusiveTTS.updateUI('resume');
+    }
+}, 100);
 
 clusiveTTS.resetState = function() {
     'use strict';
 
+    clusiveTTS.currentQueueItem = null;
     clusiveTTS.utterance = null;
     clusiveTTS.isPaused = false;
 };
 
-clusiveTTS.resetElements = function() {
+clusiveTTS.resetHighlight = function() {
     'use strict';
 
-    console.debug('read aloud reset elements');
-    clusiveTTS.copiedElement.remove();
-    clusiveTTS.textElement.show();
-    clusiveTTS.readQueuedElements();
+    console.debug('read aloud reset highlight');
+    // Replace current active text with stored textnode, and reset store
+    if (clusiveTTS.copiedElement && clusiveTTS.textElement) {
+        clusiveTTS.copiedElement.replaceWith(clusiveTTS.textElement);
+    }
+    clusiveTTS.copiedElement = null;
+    clusiveTTS.textElement = null;
 };
 
 clusiveTTS.makeUtterance = function(text) {
@@ -340,8 +537,10 @@ clusiveTTS.makeUtterance = function(text) {
 
     if (typeof SpeechSynthesisUtterance === 'function') {
         var utt = new SpeechSynthesisUtterance(text);
-        if (clusiveTTS.currentVoice) {
-            utt.voice = clusiveTTS.currentVoice;
+        if (clusiveTTS.voiceLocal) {
+            utt.voice = clusiveTTS.voiceLocal;
+        } else if (clusiveTTS.voiceCurrent) {
+            utt.voice = clusiveTTS.voiceCurrent;
         }
         if (clusiveTTS.voiceRate) {
             utt.rate = clusiveTTS.voiceRate;
@@ -358,7 +557,7 @@ clusiveTTS.readElements = function(textElements) {
     // Cancel any active reading
     clusiveTTS.stopReading(false);
 
-    $.each(textElements, function(i, e) {
+    textElements.forEach(function(e) {
         clusiveTTS.elementsToRead.push(e);
     });
 
@@ -372,6 +571,64 @@ clusiveTTS.getAllTextElements = function(documentBody) {
     return textElements;
 };
 
+clusiveTTS.getReadableTextNodes = function(elem) {
+    'use strict';
+
+    return clusiveTTS.getTextNodes(elem, clusiveTTS.isReadable);
+};
+
+/**
+ * Gets an array of the matching text nodes contained by the specified element.
+ * @param  {!Element} elem - DOM element to be traversed.
+ * @param  {function(!Node,!Element):boolean} [filter]
+ *     Optional function that if a true-ish value is returned will cause the
+ *     text node in question to be added to the array to be returned from
+ *     getTextNodes().  The first argument passed will be the text node in
+ *     question while the second will be the parent of the text node.
+ * @return {!Array.<!Node>} - Text nodes contained by the specified element.
+ *
+ * References:
+ *  - https://cwestblog.com/2014/03/14/javascript-getting-all-text-nodes/
+ *      - Updated to return proper DOM order.
+ *  - https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+ */
+clusiveTTS.getTextNodes = function(elem, filter) {
+    'use strict';
+
+    var textNodes = [];
+    if (elem) {
+        var nodes = elem.childNodes;
+        for (var i = nodes.length; i--;) {
+            var node = nodes[i];
+            var nodeType = node.nodeType;
+
+            if (nodeType === Node.TEXT_NODE) {
+                if (!filter || filter(node, elem)) {
+                    textNodes.push(node);
+                }
+            } else if (nodeType === Node.ELEMENT_NODE || nodeType === Node.DOCUMENT_NODE || nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+                textNodes = textNodes.concat(clusiveTTS.getTextNodes(node, filter).reverse());
+            }
+        }
+    }
+    return textNodes.reverse();
+};
+
+clusiveTTS.uniqueNodeList = function(list) {
+    'use strict';
+
+    var listLen = list.length;
+    var unique = [];
+
+    for (var i = 0; i < listLen; i++) {
+        if (unique.indexOf(list[i]) === -1) {
+            unique.push(list[i]);
+        }
+    }
+
+    return unique;
+};
+
 clusiveTTS.getReaderIFrameBody = function() {
     'use strict';
 
@@ -379,16 +636,10 @@ clusiveTTS.getReaderIFrameBody = function() {
     return readerIframe.contents().find('body');
 };
 
-clusiveTTS.getReaderIframeSelection = function() {
-    'use strict';
-
-    return $('#D2Reader-Container').find('iframe')[0].contentWindow.getSelection();
-};
-
 clusiveTTS.filterReaderTextElementsBySelection = function(textElements, userSelection) {
     'use strict';
 
-    var filteredElements = textElements.filter(function(i, elem) {
+    var filteredElements = textElements.filter(function(elem) {
         return userSelection.containsNode(elem, true);
     });
     return filteredElements;
@@ -400,29 +651,24 @@ clusiveTTS.isSelection = function(selection) {
     return !(selection.type === 'None' || selection.type === 'Caret');
 };
 
-clusiveTTS.read = function() {
+clusiveTTS.read = function(selector) {
     'use strict';
 
-    var isReader = $('#D2Reader-Container').length > 0;
-    var elementsToRead;
-    var isSelection;
-    var selection;
-
-    if (isReader) {
-        elementsToRead = clusiveTTS.getAllTextElements(clusiveTTS.getReaderIFrameBody());
-        selection = clusiveTTS.getReaderIframeSelection();
-    } else {
-        elementsToRead = clusiveTTS.getAllTextElements($('body'));
-        selection = window.getSelection();
+    if (typeof selector === 'undefined' || selector === null) {
+        selector = 'main';
     }
 
-    isSelection = clusiveTTS.isSelection(selection);
+    var elem = clusiveTTS.getElement(selector);
+
+    var nodesToRead = clusiveTTS.getReadableTextNodes(elem);
+    var selection = window.getSelection();
+    var isSelection = clusiveTTS.isSelection(selection);
 
     clusiveTTS.scrollWatchStart();
     if (isSelection) {
-        clusiveTTS.readSelection(elementsToRead, selection);
+        clusiveTTS.readSelection(nodesToRead, selection);
     } else {
-        clusiveTTS.readAll(elementsToRead);
+        clusiveTTS.readAll(nodesToRead);
     }
 };
 
@@ -430,7 +676,7 @@ clusiveTTS.readAll = function(elements) {
     'use strict';
 
     var toRead = [];
-    $.each(elements, function(i, elem) {
+    elements.forEach(function(elem) {
         var elementToRead = {
             element: elem,
             offset: 0
@@ -447,53 +693,86 @@ clusiveTTS.readSelection = function(elements, selection) {
     'use strict';
 
     var filteredElements = clusiveTTS.filterReaderTextElementsBySelection(elements, selection);
-    var selectionDirection = clusiveSelection.getSelectionDirection(selection, selectionTexts);
-    var firstNodeOffSet;
+    var selectionDirection = clusiveSelection.getSelectionDirection(elements, selection);
+    var focusNode = selection.focusNode;
+    var firstNodeOffset;
+    var lastNodeOffset;
+    var toRead = [];
 
     if (selectionDirection === clusiveSelection.directions.FORWARD) {
-        firstNodeOffSet = selection.anchorOffset;
-    } else if (selectionDirection === clusiveSelection.directions.BACKWARD) {
-        firstNodeOffSet = selection.focusOffset;
+        firstNodeOffset = selection.anchorOffset;
+        lastNodeOffset = selection.focusOffset;
+    } else {
+        firstNodeOffset = selection.focusOffset;
+        lastNodeOffset = selection.anchorOffset;
     }
 
-    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
-
-    // Check the selectionTexts against the filteredElements text, eliminate
-    // selectionTexts that don't appear in the element text (ALT text, hidden text elements, etc)
-
-    selectionTexts = selectionTexts.filter(function(selectionText) {
-        var trimmed = selectionText.trim();
-        var found = false;
-        $.each(filteredElements, function(i, elem) {
-            var elemText = $(elem).text();
-            if (elemText.includes(trimmed)) {
-                found = true;
-            }
-        });
-        return found;
-    });
-
-    var toRead = [];
-    $.each(filteredElements, function(i, elem) {
-        var fromIndex = i === 0 ? firstNodeOffSet : 0;
-        var selText = selectionTexts[i].trim();
-
-        var textOffset = $(elem).text().indexOf(selText, fromIndex);
-
-        var textEnd = selText.length;
-
-        console.debug('textOffset/textEnd', textOffset, textEnd);
-
-        var elementToRead = {
-            element: elem,
-            offset: textOffset,
-            end: textOffset + textEnd
-        };
-        toRead.push(elementToRead);
-    });
     // TODO: how to preserve ranges, while not selecting the substituted ones?
     selection.removeAllRanges();
-    clusiveTTS.readElements(toRead);
+
+    if (filteredElements.length) {
+        // Check first and last elements to see if they are hidden and reset offsets accordingly
+        if (!clusiveTTS.isVisuallyVisible(filteredElements[0].parentElement) && filteredElements.length > 1) {
+            firstNodeOffset = 0;
+        }
+        if (!clusiveTTS.isVisuallyVisible(filteredElements[filteredElements.length - 1].parentElement)) {
+            lastNodeOffset = null;
+        }
+        // Remove hidden text elements
+        filteredElements = filteredElements.filter(function(elem) {
+            return clusiveTTS.isVisuallyVisible(elem.parentElement);
+        });
+    }
+
+    // Still have items after filter?
+    if (filteredElements.length) {
+        filteredElements.forEach(function(elem, i) {
+            var textOffset = i === 0 ? firstNodeOffset : 0;
+            var textEnd = i === filteredElements.length - 1 ? lastNodeOffset : null;
+
+            // Reported last selected node (focusNode) might not be within filteredElements
+            // so we will need to adjust the focusOffset for the last readable filteredElement
+            if (elem !== focusNode) {
+                textEnd = null;
+            }
+
+            console.debug('textOffset/textEnd', textOffset, textEnd);
+
+            var elementToRead = {
+                element: elem,
+                offset: textOffset,
+                end: textEnd
+            };
+            if (textOffset !== textEnd) {
+                toRead.push(elementToRead);
+            }
+        });
+
+        clusiveTTS.readElements(toRead);
+    } else {
+        clusiveTTS.stopReading();
+    }
+};
+
+clusiveTTS.getLangAttribute = function(node) {
+    'use strict';
+
+    var element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+    element = element.closest('[lang]');
+    if (element && element.nodeName !== 'HTML') {
+        return element.getAttribute('lang');
+    }
+    return null;
+};
+
+clusiveTTS.getVoices = function() {
+    'use strict';
+
+    var voices =  window.speechSynthesis.getVoices();
+    voices = window.speechSynthesis.getVoices().filter(function(voice) {
+        return voice.localService === true;
+    });
+    return voices;
 };
 
 // Return all voices known to the system for the given language.
@@ -503,27 +782,35 @@ clusiveTTS.getVoicesForLanguage = function(language) {
     'use strict';
 
     var voices = [];
-    window.speechSynthesis.getVoices().forEach(function(voice) {
-        if (voice.lang.startsWith(language)) {
+    var defaultVoices = [];
+    if (!language) {
+        return voices;
+    }
+    clusiveTTS.getVoices().forEach(function(voice) {
+        // Handle inconsistent voice locale syntax on Android
+        var voiceLang = voice.lang.replace('_', '-').substring(0, language.length);
+        if (voiceLang === language) {
             if (voice.default) {
-                voices.unshift(voice); // Put system default voice at the beginning of the list
+                defaultVoices.push(voice);
             } else {
                 voices.push(voice);
             }
         }
     });
+
+    // Put system default voice at the beginning of the list
+    voices = defaultVoices.concat(voices);
+
     return voices;
 };
 
 clusiveTTS.setCurrentVoice = function(name) {
     'use strict';
 
-    // Eventually we may be able to switch voices mid-utterance, but for now have to stop speech
-    clusiveTTS.stopReading();
     if (name) {
         window.speechSynthesis.getVoices().forEach(function(voice) {
             if (voice.name === name) {
-                clusiveTTS.currentVoice = voice;
+                clusiveTTS.voiceCurrent = voice;
                 if (clusiveTTS.readerReady) {
                     var voiceSpecs = {
                         usePublication: true,
@@ -538,7 +825,7 @@ clusiveTTS.setCurrentVoice = function(name) {
             }
         });
     } else {
-        clusiveTTS.currentVoice = null;
+        clusiveTTS.voiceCurrent = null;
         if (clusiveTTS.readerReady) {
             console.debug('Unsetting D2Reader voice');
             D2Reader.applyTTSSettings({
@@ -546,6 +833,82 @@ clusiveTTS.setCurrentVoice = function(name) {
             });
         }
     }
+};
+
+// Force a 'default' voice
+// Assume base language of `en`
+// Check user languages for region specific `en` variant - otherwise default to `en-US`
+// Use first matching voice in list
+clusiveTTS.getDefaultVoice = function() {
+    'use strict';
+
+    // Reference: https://stackoverflow.com/questions/1043339/
+    // Possibly useful in future? - https://stackoverflow.com/a/29106129
+    // eslint-disable-next-line compat/compat
+    var userLanguages = window.navigator.languages || [window.navigator.language || window.navigator.userLanguage];
+    var defaultVoice = null;
+    var langVoices = [];
+
+    userLanguages.some(function(lang) {
+        if (lang.startsWith('en-')) {
+            langVoices = clusiveTTS.getVoicesForLanguage(lang);
+            defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
+            if (defaultVoice !== null) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    if (defaultVoice === null) {
+        langVoices = clusiveTTS.getVoicesForLanguage('en-US');
+        defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
+    }
+
+    if (defaultVoice === null) {
+        langVoices = clusiveTTS.getVoicesForLanguage('en');
+        defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
+    }
+
+    console.debug('getDefaultVoice', defaultVoice.name);
+
+    return defaultVoice.name;
+};
+
+clusiveTTS.updateSettings = function(settings) {
+    'use strict';
+
+    console.debug('updateSettings begin');
+
+    // Store queue and stop reading
+    var queue = clusiveTTS.elementsToRead;
+    clusiveTTS.elementsToRead = [];
+    if (Object.prototype.hasOwnProperty.call(settings, 'rate')) {
+        clusiveTTS.voiceRate = settings.rate;
+    }
+    if (Object.prototype.hasOwnProperty.call(settings, 'voice')) {
+        clusiveTTS.setCurrentVoice(settings.voice);
+    }
+
+    if (clusiveTTS.region.mode === 'Readium') {
+        console.debug('updateSettings end D2Reader');
+        return;
+    }
+
+    // Prepend any current queue item back onto to reading queue if it does not match
+    // the first item in the queue already, to reduce some potential repetition.
+    if (clusiveTTS.currentQueueItem) {
+        if (clusiveTTS.currentQueueItem.element !== queue.element && clusiveTTS.currentQueueItem.offset !== queue.offset) {
+            queue.unshift(clusiveTTS.currentQueueItem);
+        }
+        clusiveTTS.currentQueueItem = null;
+    }
+    clusiveTTS.elementsToRead = queue;
+    window.speechSynthesis.cancel();
+    clusiveTTS.utterance = null;
+    clusiveTTS.onEnd();
+
+    console.debug('updateSettings end');
 };
 
 clusiveTTS.readAloudSample = function() {
@@ -558,44 +921,34 @@ clusiveTTS.readAloudSample = function() {
 var clusiveSelection = {
     directions: {
         FORWARD: 'Forward',
-        BACKWARD: 'Backward',
-        UNCERTAIN: 'Uncertain'
+        BACKWARD: 'Backward'
     }
 };
 
-clusiveSelection.getSelectionDirection = function(selection) {
+clusiveSelection.getSelectionDirection = function(elements, selection) {
     'use strict';
 
     var selectionDirection;
-    var selectionTexts = clusiveSelection.getSelectionTextAsArray(selection);
-
     var anchorNode = selection.anchorNode;
-    var selectedAnchorText = selection.anchorNode.textContent.slice(selection.anchorOffset);
-
     var focusNode = selection.focusNode;
-    var selectedFocusText = selection.focusNode.textContent.slice(selection.focusOffset);
+    var anchorElement = selection.anchorNode.nodeType === Node.TEXT_NODE ? selection.anchorNode.parentElement : selection.anchorNode;
+    var focusElement = selection.focusNode.nodeType === Node.TEXT_NODE ? selection.focusNode.parentElement : selection.focusNode;
+    var anchorParent = selection.anchorNode.parentElement;
+    var focusParent = selection.focusNode.parentElement;
 
     // Selection within a single element, direction can be determined by comparing anchor and focus offset
-    if (anchorNode.textContent === focusNode.textContent) {
+    if (anchorNode === focusNode) {
         selectionDirection = selection.anchorOffset < selection.focusOffset ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
-    // The first block of selection text is matched in the anchor element; forward selection
-    } else if (selectedAnchorText === selectionTexts[0].trim()) {
-        selectionDirection = clusiveSelection.directions.FORWARD;
-    // The first block of selection text is matched in the focus element; backward selection
-    } else if (selectedFocusText === selectionTexts[0].trim()) {
+    // Nested node (test against parentElement due to Firefox)
+    } else if (anchorElement.contains(focusNode) || anchorParent.contains(focusNode)) {
         selectionDirection = clusiveSelection.directions.BACKWARD;
-    // This should eventually be eliminated as other scenarios get covered
-    // TODO: check for anchorText / focusText within larger elements - might be divided by inline tags, etc
-    } else { selectionDirection = clusiveSelection.directions.UNCERTAIN; }
+    } else if (focusElement.contains(anchorNode) || focusParent.contains(anchorNode)) {
+        selectionDirection = clusiveSelection.directions.FORWARD;
+    // Order of anchorNode/focusNode within document
+    } else {
+        selectionDirection = anchorNode.compareDocumentPosition(focusNode) === Node.DOCUMENT_POSITION_FOLLOWING ? clusiveSelection.directions.FORWARD : clusiveSelection.directions.BACKWARD;
+    }
 
+    console.debug('selectionDirection', selectionDirection);
     return selectionDirection;
-};
-
-// Get the selection text as an array, splitting by the newline character
-clusiveSelection.getSelectionTextAsArray = function(selection) {
-    'use strict';
-
-    return selection.toString().split('\n').filter(function(text) {
-        return text.length > 1;
-    });
 };

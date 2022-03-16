@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from glossary.models import WordModel
+
+
+@admin.register(WordModel)
+class WordModelAdmin(admin.ModelAdmin):
+    list_display = ('user', 'word', 'rating', 'cued')

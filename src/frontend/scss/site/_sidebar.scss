@@ -31,7 +31,7 @@
     width: $sidebar-width;
     max-width: $sidebar-width;
     height: calc(100vh - #{$header-height + $body-padding-y});
-    padding: $sidebar-padding;
+    padding: $sidebar-padding-y $sidebar-padding-x;
     background: var(--CT_sidebarStartBg);
     @include border-radius($sidebar-border-radius);
 
@@ -39,7 +39,7 @@
         flex-basis: $sidebar-sm-width;
         width: $sidebar-sm-width;
         max-width: $sidebar-sm-width;
-        padding: $sidebar-sm-padding;
+        padding: $sidebar-sm-padding-y $sidebar-sm-padding-x;
     }
 
     @include media-breakpoint-up(md) {
@@ -75,6 +75,22 @@
     }
 }
 
+.sidebar-divider-wrapper {
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+}
+.sidebar-divider {
+    position: absolute;
+    right: 0;
+    left: 0;
+    line-height: 1;
+    border-top: 2px solid var(--CT_sidebarStartDividerColor);
+
+    @include media-breakpoint-up(xl) {
+        left: -33vw;
+    }
+}
+
 .sidebar-start {
     flex-direction: column;
     margin-right: 1rem;
@@ -102,6 +118,20 @@
     .btn + .btn {
         margin-top: .75rem;
     }
+
+    .btn + .btn-starred {
+        margin-top: .25rem;
+    }
+
+    .btn-starred {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        @include border-radius(2.25rem);
+    }
 }
 
 .sidebar-end {
@@ -117,6 +147,15 @@
             right: auto;
             left: 0;
             background: var(--CT_sidebarEndBg);
+        }
+    }
+
+    .sidebar-divider {
+        border-color: var(--CT_sidebarEndDividerColor);
+
+        @include media-breakpoint-up(xl) {
+            right: -33vw;
+            left: 0;
         }
     }
 }
@@ -146,14 +185,14 @@
     }
 
     &.active {
-        background-color: var(--CT_sidebarTtsActiveBg);
+        background-color: var(--CT_ttsActiveBg);
 
-        .sidebar-tts-inactive {
+        .tts-inactive {
             display: none;
         }
     }
     &:not(.active) {
-        .sidebar-tts-active {
+        .tts-active {
             display: none;
         }
     }

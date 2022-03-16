@@ -28,9 +28,9 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: "src",
                         nonull: true,
-                        src: ["clusive_project/**", "assessment/**", "authoring/**", "eventlog/**", "glossary/**", "library/**",
-                            "messagequeue/**", "pages/**", "roster/**", "shared/**", "tips/**", "translation/**", "wordnet/**",
-                            "manage.py"],
+                        src: ["clusive_project/**", "assessment/**", "authoring/**", "eventlog/**", "glossary/**",
+                            "library/**", "messagequeue/**", "merriamwebster/**", "oauth2/**", "pages/**", "roster/**",
+                            "shared/**", "tips/**", "translation/**", "wordnet/**", "manage.py"],
                         dest: "target"
                     }
                 ]

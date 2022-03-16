@@ -6,6 +6,7 @@
 
     .active {
         font-weight: 700;
+        border-bottom: 4px solid var(--CT_readTimeFilterActiveBorderColor);
     }
 
     &.list-horizontal > .list-item {
@@ -53,6 +54,10 @@
         @include font-size(1rem);
         font-weight: 600;
         border-bottom: 3px solid var(--CT_boxDivderColor);
+
+        .active {
+            border-bottom: 4px solid var(--CT_readTimeFilterActiveBorderColor);
+        }
     }
     td {
         vertical-align: middle;
@@ -105,7 +110,7 @@
     overflow: hidden;
 
     .tooltip-body {
-        display: inline-flex;
+        //display: inline-flex;
 
         .tooltip-truncate {
             max-width: 12rem;
@@ -115,13 +120,20 @@
             white-space: nowrap;
         }
     }
+
+    .tooltip-link {
+        color: inherit;
+        text-decoration: underline;
+    }
 }
 .readtime-bar {
     position: relative;
     display: flex;
     margin-left: 4px;
     //overflow: hidden;
+    user-select: none;
     background-color: var(--CT_readTimeBarBg);
+    border: 0;
     @include border-radius($progress-border-radius);
 
     &:focus {

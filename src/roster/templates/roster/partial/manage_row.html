@@ -2,8 +2,7 @@
 <tr>
     <td>{{info.first_name}}</td>
     <td>{{info.email}}</td>
-    <td>{{info.username}}</td>
-    <td>****</td>
+    <td>{{info.role}}</td>
     <td>
         <a href="{% url 'manage_edit' period_id=current_period.id pk=info.id %}" class="btn btn-primary btn-xsmall">Edit</a>
     </td>

@@ -1,0 +1,145 @@
+{% extends "shared/base.html" %}
+{% load figuration %}
+
+{% block head_additional %}
+<script>
+    var all_words = {{ all_words | safe }};
+</script>
+{% endblock %}
+
+{% block bodyClass %}library{% endblock %}
+
+{% block title %}Customize | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=False lookup=False %}
+{% endblock %}
+
+{% load static figuration %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <h1>Edit Customization</h1>
+    <p>Customize questions and vocabulary words<!--, and word definitions--> for one or more classes.</p>
+    <div class="library-list">
+        {% include "library/partial/library_card_list.html" with direct_link=True show_assignments=True query=None %}
+    </div>
+
+    <div class="box">
+        <h2>Edit {{ customization.title }} {% if is_new == 'true' %}(New){% endif %}</h2>
+        <form method="post">
+                {% csrf_token %}
+            <div class="form-group">
+                <div class="d-flex">
+                    <span class="h3">{{ form.title.label_tag | formlabel }}</span>
+                    <span>*</span>
+                </div>
+                {{ form.title.errors }}
+                {{ form.title | formcontrol }}
+            </div>
+            <hr>
+            <div class="form-group">
+                <h3>{{ form.periods.label }}:</h3>
+                {{ form.periods.errors }}
+                <fieldset>
+                    <legend class="form-label p-0 mb-1">Students in selected class(es) will see this customization.</legend>
+                    <div class="container">
+                        <div class="row">
+                        {% for checkbox in form.periods %}
+                            <div class="col-lg-4">
+                                <div class="form-check form-checkradio">
+                                    {{ checkbox.tag | formcontrol }}
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <hr>
+            <h3>Words:</h3>
+            <p>
+                Vocabulary words typically show up underlined in the reading.
+                Use the dictionary form of words: for example “eat”, not “eats”,
+                “eating”, or “ate”.
+            </p>
+            <div class="container mb-1 custom-vocabulary-editor">
+                <div class="row row-cols-sm-2 row-cols-md-3 row-cols-lg-4 vocabulary-word-list">
+                {% for word in customization.word_list %}
+                    <div class="col vocabulary-word current-vocabulary-word">
+                        {{ word }}
+                        <button id="delete_{{ word }}" role="button" class="delete-word-button" data-word="{{ word }}"><span class="sr-only">remove {{ word }} from customization</span><span class="icon-cancel" aria-hidden="true"></span></button>
+                    </div>
+                {% empty %}
+                    <span id="empty-vocabulary-list">None</span>
+                {% endfor %}
+                </div>
+            </div>
+            {{ form.current_vocabulary_words }}
+            {{ form.new_vocabulary_words }}
+            {{ form.delete_vocabulary_words }}
+            <div class="form-inline">
+                <label for="id_word_to_add" class="form-control sr-only">Add a word</label>
+                <input type="text" id="id_word_to_add" list="suggestedWordCompletions" class="form-control me-0_5">
+                <datalist id="suggestedWordCompletions">
+                    {% for word_completion in all_words %}
+                        <option value="{{ word_completion }}"></option>
+                    {% endfor %}
+                </datalist>
+                <button id="add-word-button" class="btn btn-primary mt-0_5 mt-sm-0">Add</button>
+            </div>
+            <p id="worderror" class="errorlist mt-0_5" style="display:none;">That word does not occur in this reading.</p>
+            <p class="form-text"><a href="#" data-cfw="modal" data-cfw-modal-target="#modalWordSuggestions">See word suggestions</a></p>
+            <hr>
+            <div class="form-group">
+                <h3>{{ form.question.label }}:</h3>
+                <p>
+                    This will appear in addition to the general knowledge
+                    questions &quot;How much did you learn&quot; and
+                    &quot;What's one thing you learned or found
+                    interesting?&quot;
+                </p>
+                {{ form.question.errors }}
+                <div class="mb-0_5">
+                    <button type="button" class="btn btn-primary" data-cfw="dropdown">
+                        Question starters
+                        <span class="caret" aria-hidden="true"></span>
+                    </button>
+                    <ul class="dropdown-menu sentence-starter-menu" data-insert-into="{{ form.question.id_for_label }}">
+                        <li><button type="button" class="dropdown-item">Who is…</button></li>
+                        <li><button type="button" class="dropdown-item">What happened when…</button></li>
+                        <li><button type="button" class="dropdown-item">Where did…</button></li>
+                        <li><button type="button" class="dropdown-item">When did…</button></li>
+                        <li><button type="button" class="dropdown-item">Why do you think…</button></li>
+                        <li><button type="button" class="dropdown-item">What evidence is there for…</button></li>
+                        <li><button type="button" class="dropdown-item">What are you wondering about now?</button></li>
+                        {% if recent_custom_questions %}
+                        <li class="dropdown-divider"></li>
+                        {% for q in recent_custom_questions %}
+                        <li><button type="button" class="dropdown-item">{{ q }}</button></li>
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+                <span class="sr-only">{{ form.question.label_tag }}</span>
+                {{ form.question | formcontrol }}
+            </div>
+            <div>
+                <hr>
+                <input id="customization-edit-submit" type="submit" class="btn btn-secondary" value="Save"/>
+                {% if is_new == 'true' %}
+                <a href="{% url 'delete_customization' bk=customization.book.id ck=customization.id %}" class="btn btn-link">Cancel</a>
+                {% else %}
+                <a href="{% url 'customize_book' pk=customization.book.id %}" class="btn btn-link">Cancel</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    {% include "library/partial/modal_word_suggestions.html" %}
+</main>
+{% endblock %}

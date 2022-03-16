@@ -1,13 +1,22 @@
 .popover {
     min-width: $popover-max-width;
 
-    .close,
-    .drag {
-        position: relative;
+    .close {
+        position: absolute;
         top: .125rem;
+        right: -.0625rem;
     }
 
     .drag {
+        position: absolute;
+        top: .125rem;
+        right: 1.75rem;
+        width: 2rem;
+
+        *[aria-hidden] {
+            visibility: hidden;
+        }
+
         &::before {
             position: absolute;
             top: 50%;
@@ -22,13 +31,42 @@
             transform: translateX(-50%) translateY(-50%);
         }
     }
+
+    .dialog-tts {
+        margin-top: -.125rem;
+        margin-bottom: -.125rem;
+    }
 }
 
 .popover-header {
-    min-height: calc((#{$popover-header-font-size} * #{$line-height-base}) + (#{$popover-header-padding-y} * 2) + #{$popover-header-border-width});
+    display: flex;
+    //min-height: calc((#{$popover-header-font-size} * #{$line-height-base}) + (#{$popover-header-padding-y} * 2) + #{$popover-header-border-width});
+    // Increase size due to TTS
+    min-height: calc((#{$popover-header-font-size} * 1.75) + (#{$popover-header-padding-y} * 2) + #{$popover-header-border-width});
+    padding-right: 1.75rem;
+
+    h2,
+    .h2,
+    h3,
+    .h3,
+    h4,
+    .h4,
+    h5,
+    .h5,
+    h6,
+    .h6 {
+        margin-bottom: 0;
+        line-height: var(--CT_lineHeight);
+    }
 
     &:empty {
         display: block;
+    }
+}
+
+.draggable {
+    .popover-header {
+        padding-right: 3.75rem;
     }
 }
 
@@ -50,6 +88,15 @@
     &:empty {
         display: none;
     }
+}
+
+.popover-footer-divider {
+    padding-top: calc(1px + #{$popover-footer-padding-y});
+    margin-top: $popover-footer-padding-y;
+    margin-right: #{-$popover-footer-padding-x};
+    margin-left: #{-$popover-footer-padding-x};
+    line-height: 1;
+    border-top: 1px solid $popover-footer-border-color;
 }
 
 .popover-section {
@@ -78,35 +125,9 @@
         }
     }
 
-    .close {
-        position: absolute;
-        top: .125rem;
-        right: -.0625rem;
-    }
-
-    .drag {
-        position: absolute;
-        top: .0625rem;
-        right: 2rem;
-
-        *[aria-hidden] {
-            visibility: hidden;
-        }
-    }
-
     .popover-header,
     .popover-footer {
         flex-shrink: 0;
-    }
-
-    .popover-header {
-        padding-right: 1.75rem;
-    }
-
-    &.draggable {
-        .popover-header {
-            padding-right: 3.75rem;
-        }
     }
 
     .popover-body {

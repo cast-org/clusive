@@ -19,7 +19,7 @@
                         {% if data.days == 7 %}
                         <span class="active" aria-current="true">Past week</span>
                         {% else %}
-                        <a href="#" class="activity-panel-days" data-days="7"
+                        <a href="#" class="activity-panel-days" data-days="7" data-clusive-tip-action="activity"
                            data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="7">Past week</a>
                         {% endif %}
                     </li>
@@ -27,7 +27,7 @@
                         {% if data.days == 30 %}
                         <span class="active" aria-current="true">Month</span>
                         {% else %}
-                        <a href="#" class="activity-panel-days" data-days="30"
+                        <a href="#" class="activity-panel-days" data-days="30" data-clusive-tip-action="activity"
                            data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="30">Month</a>
                         {% endif %}
                     </li>
@@ -35,7 +35,7 @@
                         {% if data.days == 0 %}
                         <span class="active" aria-current="true">Overall</span>
                         {% else %}
-                        <a href="#" class="activity-panel-days" data-days="0"
+                        <a href="#" class="activity-panel-days" data-days="0" data-clusive-tip-action="activity"
                            data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="all">Overall</a>
                         {% endif %}
                     </li>
@@ -48,32 +48,84 @@
             <table class="table readtime-table">
                 <thead>
                 <tr>
-                    <th>Student</th>
-                    <th class="d-xs-down-none"><span class="sr-only">Reading time for books</span></th>
-                    <th>Hours</th>
-                    <th><span class="sr-only">Number of different </span>Reads</th>
+                    <th>
+                        {% if data.sort == 'name' %}
+                        <span class="active">Student</span>
+                        {% else %}
+                        <a class="activity-panel-sort" data-sort="name" href="#" data-clusive-tip-action="activity">Student</a>
+                        {% endif %}
+                    </th>
+                    <th class="d-xs-down-none text-center">
+                        <a href="#" tabindex="-1" {% if data.reading_data %}data-clusive-tip-id="activity" data-cfw-tooltip-placement="top auto"{% endif %}><span class="sr-only">Reading time for books</span></a>
+                    </th>
+                    <th>
+                        {% if data.sort == 'time' %}
+                        <span class="active">Hours</span>
+                        {% else %}
+                        <a class="activity-panel-sort" data-sort="time" href="#" data-clusive-tip-action="activity">Hours</a>
+                        {% endif %}
+                    </th>
+                    <th>
+                        {% if data.sort == 'count' %}
+                        <span class="active"><span class="sr-only">Number of different </span>Reads</span>
+                        {% else %}
+                        <a class="activity-panel-sort" data-sort="count" href="#" data-clusive-tip-action="activity"><span class="sr-only">Number of different </span>Reads</a>
+                        {% endif %}
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
+                <tr class="loading" style="display:none;">
+                    <td colspan="3" class="text-center">
+                        <strong>Loading...</strong> <div class="ms-2 loader-circle" role="status" aria-hidden="true"></div>
+                    </td>
+                </tr>
                 {% for info in data.reading_data %}
-                <tr>
+                <tr class="real-data">
                     <td>{{ info.clusive_user.user.first_name }}</td>
                     <td class="d-xs-down-none">
                         <div class="readtime-progress">
                             {% for p in info.books %}
-                            <div class="readtime-bar{% if p.is_other %} striped{% endif %}"
-                                 style="width:{{p.percent_time}}%;"
-                                 tabindex="0"
-                                 data-cfw="tooltip"
-                                 data-clusive-book-id="{{ p.book_id }}"
-                                 title="{{ p.title }}, {{ p.hours|floatformat:1}} hours">
-                                {% if p.is_assigned %}<span class="readtime-mark-shared"></span>{% endif %}
+                            <button class="readtime-bar{% if p.is_other %} striped{% endif %}"
+                                    style="width:{{p.percent_time}}%;"
+                                    tabindex="0"
+                                    data-clusive-tip-action="activity"
+                                    data-cfw="tooltip"
+                                    data-cfw-tooltip-target="#tooltipReadTime{{ info.clusive_user.user.id }}_{{ p.book_id }}"
+                                    data-cfw-tooltip-trigger="click hover"
+                                    data-cfw-tooltip-placement="top auto"
+                                    aria-expanded="false"
+                                    data-clusive-book-id="{{ p.book_id }}">
+                                <span class="sr-only">{{ p.title }}, {{ p.hours|floatformat:1}} hours</span>
+                                {% if p.is_assigned %}<span class="readtime-mark-shared" aria-label="Assigned"></span>{% endif %}
+                            </button>
+                            <div id="tooltipReadTime{{ info.clusive_user.user.id }}_{{ p.book_id }}" class="tooltip readtime-tooltip">
+                                <div class="tooltip-body">
+                                    <div aria-hidden="true">
+                                        {{ p.title }}<br />
+                                        {{ p.hours|floatformat:1}} hours
+                                    </div>
+                                    {% if not p.is_other %}
+                                    <a id="detailTrigger_{{ info.clusive_user.user.id }}_{{ p.book_id }}"
+                                       class="tooltip-link detailTrigger" href="#" role="button"
+                                       data-cle-handler="click" data-cle-control="dash_activity_detail" data-cle-value="{{ info.clusive_user.anon_id }}"
+                                       data-clusive-student-name="{{ info.clusive_user.user.first_name }}"
+                                       data-clusive-student-id="{{ info.clusive_user.id }}"
+                                       data-clusive-book-id="{{ p.book_id }}"><strong>More details</strong></a>
+                                    {% endif %}
+                                </div>
+                                <div class="tooltip-arrow"></div>
                             </div>
                             {% endfor %}
                         </div>
                     </td>
                     <td>{{ info.hours|floatformat:1 }}</td>
                     <td>{{ info.book_count }}</td>
+                </tr>
+                {% empty %}
+                <tr class="py-2">
+                    <td colspan="2">This panel will show how much time your students are spending on each reading.</td>
+                    <td colspan="2"></td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -82,3 +134,24 @@
     </div>
 </div>
 
+<div id="readDetailStudent" class="modal why-modal">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Student Reading Details: <span id="readDetailStudentName">Student Name</span></h2>
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="readDetailStudentLoading">
+                    <strong>Loading...</strong> <div class="ms-2 loader-circle" role="status" aria-hidden="true"></div>
+                </div>
+                <div id="readDetailStudentContent" style="display: none;">
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

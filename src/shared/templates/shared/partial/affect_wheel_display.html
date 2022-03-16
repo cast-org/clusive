@@ -8,6 +8,11 @@
             <div class="react-line react-line-3"></div>
             <div class="react-line react-line-4"></div>
             <div class="react-line react-line-5"></div>
+            <!-- quadrants -->
+            <div class="react-quad react-quad-0"></div>
+            <div class="react-quad react-quad-1"></div>
+            <div class="react-quad react-quad-2"></div>
+            <div class="react-quad react-quad-3"></div>
             <!-- wedges -->
             {% for w in data %}
             <div class="react-item react-item-{{ forloop.counter0 }}">
@@ -29,6 +34,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">{{w.word}} <span class="icon-thought" aria-hidden="true"></span></h2>
+                {% include "shared/partial/dialog_tts.html" %}
                 <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
                     <span class="icon-cancel-circled2" aria-hidden="true"></span>
                 </button>
@@ -47,6 +53,7 @@ $('.modal-react-detail').one('beforeShow.cfw.modal', function(e) {
     $.get('/assessment/affect_detail/'+ word)
         .done(function(data, status) {
             target.html(data);
+            target.CFW_Init();
         })
         .fail(function(err) {
             console.error(err);

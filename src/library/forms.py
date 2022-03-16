@@ -1,8 +1,10 @@
 import logging
 
 from django import forms
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 
-from library.models import Book
+from library.models import Book, Customization
 from roster.models import Period, ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -68,3 +70,79 @@ class ShareForm(forms.Form):
         periods = clusive_user.periods.all()
         self.fields['periods'].queryset = periods
 
+
+class BookshareSearchForm(forms.Form):
+    keyword = forms.CharField(
+        required = True,
+        initial = '',
+        widget = forms.TextInput(attrs={
+            'aria-label': 'Step 1: Search by title, author, or ISBN',
+            'class': 'form-control',
+        })
+    )
+
+    def clean_keyword(self):
+        if self.is_valid():
+            data = self.cleaned_data.get('keyword', '')
+            return data.strip()
+        else:
+            raise ValidationError(_('Invalid format for keyword'))
+
+
+class EditCustomizationForm(ModelForm):
+    overridden_periods = []
+    periods = PeriodModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+        queryset=Period.objects.all(),
+        required=False)
+    current_vocabulary_words = forms.CharField(
+        initial='',
+        required=False,
+        widget=forms.HiddenInput(attrs={
+            'name': 'current-vocabulary-words',
+            'class': 'vocabulary-word current-vocabulary-words',
+        }))
+    new_vocabulary_words = forms.CharField(
+        initial='',
+        required=False,
+        widget=forms.HiddenInput(attrs={
+            'name': 'new-vocabulary-words',
+            'class': 'vocabulary-word new-vocabulary-words',
+        }))
+    delete_vocabulary_words = forms.CharField(
+        initial='',
+        required=False,
+        widget=forms.HiddenInput(attrs={
+            'name': 'delete-vocabulary-words',
+            'class': 'vocabulary-word delete-vocabulary-words',
+        }))
+
+    class Meta:
+        model = Customization
+        fields = ['title', 'periods', 'question']
+
+    def __init__(self, *args, **kwargs):
+        clusive_user : ClusiveUser
+        clusive_user = kwargs.pop('clusive_user')
+        word_list = kwargs.pop('word_list', [])
+        super().__init__(*args, **kwargs)
+        self.fields['periods'].queryset = clusive_user.periods.all()
+        self.fields['periods'].label = 'Classes'
+        self.fields['question'].label = 'Custom question'
+        self.fields['current_vocabulary_words'].initial = '|'.join(self.instance.word_list)
+
+    def save(self, commit=True):
+        instance = super().save(commit)
+        # Determine if there are other customizations that this one is overriding - ones for the same book & period
+        instance_periods = set(instance.periods.all())
+        conflicting_customizations = Customization.objects.filter(book=instance.book, periods__in=instance_periods)
+        conflicting_periods = set()
+        for c in conflicting_customizations:
+            if c != instance:
+                c_periods = set(c.periods.all())
+                in_conflict = c_periods.intersection(instance_periods)
+                conflicting_periods = conflicting_periods.union(in_conflict)
+                c.periods.set(c_periods - in_conflict)
+                c.save()
+        self.overridden_periods = conflicting_periods
+        return instance

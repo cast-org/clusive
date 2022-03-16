@@ -9,6 +9,7 @@
 
     .modal-footer {
         display: block;
+        min-height: calc(#{$why-modal-footer-font-size} + #{$modal-footer-padding-y * 2});
         @include font-size($why-modal-footer-font-size);
     }
 }
@@ -125,9 +126,10 @@
 .switch-select {
     position: relative;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     justify-content: flex-end;
+    min-height: 9rem;
     margin-bottom: 1rem;
 
     @include media-breakpoint-only(sm) {
@@ -143,6 +145,11 @@
 }
 .switch-icon-active {
     display: none;
+}
+.switch-level-text {
+    margin-top: .25rem;
+    font-weight: 400;
+    @include font-size(.8125rem);
 }
 .link-stretch {
     @include hover-focus() {
@@ -160,6 +167,12 @@
     }
     .switch-icon-active {
         display: inline-block !important; // stylelint-disable-line declaration-no-important
+    }
+}
+.switch-col:not(.active) {
+    .switch-icon-default {
+        position: relative;
+        top: -.25rem;
     }
 }
 

@@ -27,6 +27,10 @@ clusiveAssessment.setAffectCheck = function(data) {
     'use strict';
 
     clusiveAssessment.checkDone = true;
+
+    $('textarea[name="affect-free"]').val(data.freeResponse);
+
+    var hasResponse = false;
     Object.keys(data).forEach(function(key) {
         if (key.includes('affect-option')) {
             var affectOptionName = key;
@@ -38,11 +42,16 @@ clusiveAssessment.setAffectCheck = function(data) {
 
             if (shouldCheck) {
                 reactDimAnimate(wedge, 100);
+                hasResponse = true;
             } else {
                 reactDimAnimate(wedge, 0);
             }
         }
     });
+    if (hasResponse) {
+        $('#affectFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
+    }
 };
 
 clusiveAssessment.setComprehensionCheck = function(data) {
@@ -51,10 +60,14 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     clusiveAssessment.checkDone = true;
     var scaleResponse = data.scaleResponse;
     var freeResponse = data.freeResponse;
+    var customResponse = data.customResponse;
     $('textarea[name="comprehension-free"]').val(freeResponse);
+    $('textarea[name="comprehension-custom"]').val(customResponse);
     $('input[name="comprehension-scale"]').val([scaleResponse]);
     if (freeResponse.length > 0) {
         $('#comprehensionFreeResponseArea').show();
+        clusiveAssessment.showAppropriateCompQuestion();
+        $('#compPop').CFW_Popover('locateUpdate');
     }
 };
 
@@ -66,7 +79,9 @@ clusiveAssessment.saveAffectCheck = function() {
     var affectResponse = {
         bookVersionId: clusiveContext.reader.info.publication.version_id,
         bookId: clusiveContext.reader.info.publication.id,
-        eventId: PAGE_EVENT_ID
+        eventId: PAGE_EVENT_ID,
+        freeQuestion: $('#affectFreeQuestion').text(),
+        freeResponse: $('textarea[name="affect-free"]').val()
     };
 
     // Get all affect inputs
@@ -85,16 +100,32 @@ clusiveAssessment.saveComprehensionCheck = function() {
     var bookId = clusiveContext.reader.info.publication.id;
     var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
     var freeResponse = $('textarea[name="comprehension-free"]').val();
+    var customResponse = $('textarea[name="comprehension-custom"]').val();
     var comprehensionResponse = {
         scaleQuestion: $('#compScaleQuestion').text(),
         scaleResponse: scaleResponse,
         freeQuestion: $('#compFreeQuestion').children(':visible').text(),
         freeResponse: freeResponse,
+        customQuestion: $('#customQuestion').text(),
+        customResponse: customResponse,
         bookVersionId: clusiveContext.reader.info.publication.version_id,
         bookId: clusiveContext.reader.info.publication.id,
         eventId: PAGE_EVENT_ID
     };
     clusiveAutosave.save('/assessment/comprehension_check/' + bookId, comprehensionResponse);
+};
+
+clusiveAssessment.showAppropriateCompQuestion = function() {
+    'use strict';
+
+    var curVal = $('input[name="comprehension-scale"]:checked').val();
+    if (curVal === '0') {
+        $('#compTextPromptYes').hide();
+        $('#compTextPromptNo').show();
+    } else {
+        $('#compTextPromptYes').show();
+        $('#compTextPromptNo').hide();
+    }
 };
 
 clusiveAssessment.setupAssessments = function() {
@@ -114,28 +145,29 @@ clusiveAssessment.setupAssessments = function() {
     // Set up autosave calls for change events on relevant inputs
 
     $('input[name^="affect-option"]').change(function() {
+        $('#affectFreeResponseArea').show();
+        $('#compPop').CFW_Popover('locateUpdate');
+        clusiveAssessment.saveAffectCheck();
+    });
+    $('textarea[name="affect-free"]').change(function() {
         clusiveAssessment.saveAffectCheck();
     });
 
-    $('input[name="comprehension-scale"]').change(function() {
+    $('textarea[name="comprehension-free"]').change(function() {
         clusiveAssessment.saveComprehensionCheck();
     });
-    $('textarea[name="comprehension-free"]').change(function() {
+    $('textarea[name="comprehension-custom"]').change(function() {
         clusiveAssessment.saveComprehensionCheck();
     });
 
     // When a radio button is selected, show the appropriate free-response prompt.
     $('input[name="comprehension-scale"]').change(
         function() {
+            clusiveAssessment.saveComprehensionCheck();
             if ($(this).is(':checked')) {
-                if ($(this).val() === '0') {
-                    $('#compTextPromptYes').hide();
-                    $('#compTextPromptNo').show();
-                } else {
-                    $('#compTextPromptYes').show();
-                    $('#compTextPromptNo').hide();
-                }
                 $('#comprehensionFreeResponseArea').show();
+                clusiveAssessment.showAppropriateCompQuestion();
+                $('#compPop').CFW_Popover('locateUpdate');
             }
         }
     );

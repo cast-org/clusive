@@ -5,6 +5,7 @@
     <div class="form-group">
         <div class="form-text">* = required</div>
     </div>
+    {% if not object.bookshare_id %}
     <div class="form-group">
         <div class="form-label">
             File *<br />
@@ -14,6 +15,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
     <div class="form-group">
         {{ form.title.label_tag | formlabel }} *
         {{ form.title.errors }}
@@ -75,12 +77,15 @@
         {% endif %}
     </div>
 </fieldset>
-{% if object.cover_path %}
     <div class="form-group">
         <div class="form-label">Cover image</div>
         <div class="row">
             <div class="col-sm-6">
+                {% if object.cover_path %}
                 <img id="new-cover" class="img-fluid" src="{% get_media_prefix %}{{ object.cover_path }}">
+                {% else %}
+                <p>No cover image in uploaded content</p>
+                {% endif %}
             </div>
         </div>
         {% if orig_book and orig_book.cover %}
@@ -96,10 +101,7 @@
         </div>
         {% endif %}
     </div>
-{% else %}
-<p>No cover image</p>
-{% endif %}
-{{ form.cover.errors }}
+    {{ form.cover.errors }}
 <div id="cover-input" class="form-file">
     <input type="file" class="form-file-input" accept="image/*" name="{{ form.cover.name }}" id="{{ form.cover.id_for_label }}">
     <label class="form-file-label" for="{{ form.cover.id_for_label }}">

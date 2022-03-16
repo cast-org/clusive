@@ -1,3 +1,4 @@
+import logging
 from contextlib import contextmanager
 from unittest import mock
 
@@ -9,9 +10,9 @@ from django.urls import reverse
 from eventlog.signals import preference_changed
 from .models import Preference, MailingListMember
 from .models import Site, Period, ClusiveUser, Roles, ResearchPermissions
-# TODO: make sure all tests have helpful messages
 from .signals import user_registered
 
+logger = logging.getLogger(__name__)
 
 def set_up_test_sites():
     Site.objects.create(name="CAST Collegiate", city="Wakefield", state_or_province="MA", country="USA").save()
@@ -234,7 +235,11 @@ class ClusiveUserTestCase(TestCase):
         self.assertEqual(Preference.convert_from_string("False"), False, "boolean:False as string was converted as expected")
         self.assertEqual(Preference.convert_from_string("True"), True, "boolean:True as string was converted as expected")
 
-    default_pref_set_json = '{"fluid_prefs_contrast":"default", "fluid_prefs_textFont":"default", "fluid_prefs_textSize":1, "fluid_prefs_lineSpace":1.6, "fluid_prefs_letterSpace":1, "cisl_prefs_glossary":true, "cisl_prefs_scroll":true, "cisl_prefs_readVoices": [], "cisl_prefs_readSpeed": 1.0, "cisl_prefs_translationLanguage": "default"}'
+    default_pref_set_json = '{"fluid_prefs_contrast":"default", "fluid_prefs_textFont":"default", ' \
+                            '"fluid_prefs_textSize":1, "fluid_prefs_lineSpace":1.6, "fluid_prefs_letterSpace":1, ' \
+                            '"cisl_prefs_glossary":true, "cisl_prefs_scroll":true, "cisl_prefs_readVoices": [], ' \
+                            '"cisl_prefs_readSpeed": 1.0, "cisl_prefs_translationLanguage": "default",' \
+                            '"cisl_prefs_animations": true}'
 
     def test_preference_sets(self):
         # delete any existing preferences so we're starting with a clean set

@@ -1,6 +1,14 @@
 <div class="box box-mascot-tipped">
     <h2>Student reading</h2>
-    <p>See what your students are reading and what they said they learned.</p>
+
+    <div class="row">
+        <div class="col">
+            <p>See what your students are reading and what they said they learned.</p>
+        </div>
+        <div class="col-12 col-md-3 col-lg-4 col-xl-3 mb-0_5">
+            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+ </span>Upload a new reading</a>
+        </div>
+    </div>
 
     {% if periods.count == 0 %}
 
@@ -22,8 +30,8 @@
     <div class="tab-content">
         <div class="tab-pane" id="popularTab0">
             <div class="library-grid dashboard-grid">
-                {% for trend in data.all %}
-                    {% include "library/partial/library_card.html" with book=trend.book show_menu=False show_topics=False %}
+                {% for item in data.all %}
+                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=False show_description=False show_menu=False show_topics=False %}
                 {% empty %}
                 <p class="mx-1">
                     Your students haven't done any reading, yet.
@@ -36,19 +44,47 @@
         </div>
         <div class="tab-pane" id="popularTab1">
             <div class="library-grid dashboard-grid">
-                {% for trend in data.assigned %}
-                {% include "library/partial/library_card.html" with book=trend.book show_menu=False show_topics=False %}
+                {% for item in data.assigned %}
+                {% include "library/partial/library_card.html" with book=item.trend.book graph_data=item.comp_check graph_link_prefix="comp-detail-assigned" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-assigned" custom_question_data=item.customization show_description=False show_menu=False show_topics=False %}
                 {% empty %}
                 <p class="mx-1">
                     Your students haven't done any assigned reading, yet.
                     Assign them something to read by clicking the <span class="icon-ellipsis-vert"></span>
                     (more actions) icon in the lower right of any reading panel in the library.
                 </p>
-                <a href="{% url 'reader_index' %}" class="btn btn-primary mx-1">Go to library</a>
+                <p><a href="{% url 'reader_index' %}" class="btn btn-primary mx-1">Go to library</a></p>
                 {% endfor %}
             </div>
+            <div class="box-divider"></div>
+            <p><a href="{% url 'library_style_redirect' view='period' %}">See all assigned readings</a> for this class in the library.</p>
         </div>
     </div>
 
     {% endif %}
 </div>
+
+{% for item in data.all %}
+  {% include "pages/partial/modal_comprehension_detail.html" with type="comp" id_prefix="comp-detail-all" id_serial=forloop.counter title_prefix="Student learning" %}
+  {% include "pages/partial/modal_comprehension_detail.html" with type="custom" id_prefix="custom-detail-all" id_serial=forloop.counter title_prefix="Custom question" %}
+{% endfor %}
+{% for item in data.assigned %}
+  {% include "pages/partial/modal_comprehension_detail.html" with type="comp" id_prefix="comp-detail-assigned" id_serial=forloop.counter title_prefix="Student learning"%}
+  {% include "pages/partial/modal_comprehension_detail.html" with type="custom" id_prefix="custom-detail-assigned" id_serial=forloop.counter title_prefix="Custom question" %}
+{% endfor %}
+<script>
+    $('.modal-comp-detail').one('beforeShow.cfw.modal', function(e) {
+        var $this = $(this);
+        var book = $this.data('clusive-book-id');
+        var type = $this.data('clusive-type');
+        var target = $this.find('.modal-body');
+        var url_stem = (type==='custom') ? '/assessment/custom_detail/' : '/assessment/comprehension_detail/';
+        $.get(url_stem + book)
+            .done(function(data, status) {
+                target.html(data);
+            })
+            .fail(function(err) {
+                console.error(err);
+                target.html('Sorry, there was an error getting the data.');
+            });
+    });
+</script>

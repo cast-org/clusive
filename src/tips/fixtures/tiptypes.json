@@ -48,5 +48,35 @@
       "max": 3,
       "interval": "7 00:00:00"
     }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 6,
+    "fields": {
+      "name": "view",
+      "priority": 6,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 7,
+    "fields": {
+      "name": "book_actions",
+      "priority": 7,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 8,
+    "fields": {
+      "name": "activity",
+      "priority": 8,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
   }
 ]

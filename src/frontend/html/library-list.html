@@ -175,17 +175,25 @@
             </div>
 
             <div class="library-list">
+                <div class="card card-special">
+                    <div class="card-body">
+                        <p>Have something to add to your library?</p>
+                        <p><a href="#" class="btn btn-primary"><span aria-hidden="true">+ </span>Upload a new reading</a></p>
+                        <p><a href="#" class="btn btn-primary"><span aria-hidden="true">+ </span>Upload from Bookshare</a></p>
+                    </div>
+                </div>
+
                 <div class="card card-library card-horizontal">
                     <div class="card-col col-12 col-sm-3 card-col-img">
                         <div class="card-img">
                             <img class="img-fluid" src="./img/sample-1.jpg" alt="">
                         </div>
                     </div>
-                    <div class="card-col col-12 col-sm-9">
-                        <div class="card-header">
+                    <div class="card-col col-12 col-sm">
+                        <div class="card-header has-favorite">
                             <div class="row">
                                 <div class="col">
-                                    <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                                    <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
                                     <div class="card-author">
                                         by Firstname Lastname
                                     </div>
@@ -193,12 +201,20 @@
                                 <div class="col-auto card-toggle">
                                     <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-0">
                                         <span class="icon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Publication settings</span>
+                                        <span class="sr-only">Expand card</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                         <div id="card-collapse-0" class="card-collapse collapse">
+                            <div class="card-library-favorite">
+                                <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+                                    <input id="starred0" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred">
+                                    <label for="starred0" class="btn btn-icon btn-starred link-above">
+                                        <span class="icon-starred" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
                             <div class="card-body">
                                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                             </div>
@@ -208,15 +224,22 @@
                                         <a href="#" class="btn btn-tag link-above">abolition</a>
                                         <a href="#" class="btn btn-tag link-above">autobiography</a>
                                         <a href="#" class="btn btn-tag link-above">United States History</a>
+                                        <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip" title="51 words, 6 images">
+                                            <span class="badge-item">
+                                                <span class="icon-tag-word" aria-hidden="true"></span>
+                                                51 <span class="sr-only">words</span>
+                                            </span>
+                                            <span class="badge-item">
+                                                <span class="icon-tag-img" aria-hidden="true"></span>
+                                                6 <span class="sr-only">images</span>
+                                            </span>
+                                        </span>
+                                        <span class="badge badge-count">
+                                            <span class="icon-user-o" aria-hidden="true"></span>
+                                            <span class="sr-only">Personal Content</span>
+                                        </span>
                                     </div>
                                     <div class="col-auto card-library-action">
-                                        <span class="btn-check link-above">
-                                            <input id="fav0" type="checkbox" class="btn-check-input">
-                                            <label for="fav0" class="btn btn-favorite">
-                                                <span class="icon-star-empty" aria-hidden="true"></span>
-                                                <span class="sr-only">Favorite</span>
-                                            </label>
-                                        </span>
                                         <span class="dropdown link-above">
                                             <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                                 <span class="icon-ellipsis-vert" aria-hidden="true"></span>
@@ -230,6 +253,16 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="card-divider spaced-top"></div>
+                                <div class="card-text">
+                                    Assigned to: Class One, Class Two, Class C
+                                </div>
+                                <div class="card-text">
+                                    <span class="badge badge-count">
+                                        <span class="icon-wrench" aria-hidden="true"></span>
+                                    </span>
+                                    Customized
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -240,11 +273,11 @@
                             <img class="img-fluid" src="./img/sample-2.jpg" alt="">
                         </div>
                     </div>
-                    <div class="card-col col-12 col-sm-9">
+                    <div class="card-col col-12 col-sm">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
-                                    <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
+                                    <h2 class="card-title"><a href="#" class="link-stretch">Some longer article title with question?</a></h2>
                                     <div class="card-author">
                                         by Firstname Lastname
                                     </div>
@@ -252,7 +285,7 @@
                                 <div class="col-auto card-toggle">
                                     <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-1">
                                         <span class="icon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Publication settings</span>
+                                        <span class="sr-only">Expand card</span>
                                     </button>
                                 </div>
                             </div>
@@ -288,11 +321,11 @@
                             <img class="img-fluid" src="./img/cover.svg" alt="">
                         </div>
                     </div>
-                    <div class="card-col col-12 col-sm-9">
+                    <div class="card-col col-12 col-sm">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
-                                    <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                                    <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
                                     <div class="card-author">
                                         by Firstname Lastname
                                     </div>
@@ -300,7 +333,7 @@
                                 <div class="col-auto card-toggle">
                                     <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-2">
                                         <span class="icon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Publication settings</span>
+                                        <span class="sr-only">Expand card</span>
                                     </button>
                                 </div>
                             </div>
@@ -336,11 +369,11 @@
                             <img class="img-fluid" src="./img/crane.jpg" alt="">
                         </div>
                     </div>
-                    <div class="card-col col-12 col-sm-9">
+                    <div class="card-col col-12 col-sm">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
-                                    <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                                    <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
                                     <div class="card-author">
                                         by Firstname Lastname
                                     </div>
@@ -348,7 +381,7 @@
                                 <div class="col-auto card-toggle">
                                     <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-3">
                                         <span class="icon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Publication settings</span>
+                                        <span class="sr-only">Expand card</span>
                                     </button>
                                 </div>
                             </div>
@@ -365,13 +398,6 @@
                                         <a href="#" class="btn btn-tag link-above">United States History</a>
                                     </div>
                                     <div class="col-auto card-library-action">
-                                        <span class="btn-check link-above">
-                                            <input id="fav0" type="checkbox" class="btn-check-input">
-                                            <label for="fav0" class="btn btn-favorite">
-                                                <span class="icon-star-empty" aria-hidden="true"></span>
-                                                <span class="sr-only">Favorite</span>
-                                            </label>
-                                        </span>
                                         <span class="dropdown link-above">
                                             <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                                 <span class="icon-ellipsis-vert" aria-hidden="true"></span>
@@ -395,11 +421,11 @@
                             <img class="img-fluid" src="./img/sample-4.jpg" alt="">
                         </div>
                     </div>
-                    <div class="card-col col-12 col-sm-9">
+                    <div class="card-col col-12 col-sm">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
-                                    <a href="#" class="link-stretch"><h2 class="card-title">Some longer article title with question?</h2></a>
+                                    <h2 class="card-title"><a href="#" class="link-stretch">Some longer article title with question?</a></h2>
                                     <div class="card-author">
                                         by Firstname Lastname
                                     </div>
@@ -407,7 +433,7 @@
                                 <div class="col-auto card-toggle">
                                     <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-4">
                                         <span class="icon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Publication settings</span>
+                                        <span class="sr-only">Expand card</span>
                                     </button>
                                 </div>
                             </div>
@@ -438,11 +464,11 @@
                     </div>
                 </div>
                 <div class="card card-library card-horizontal">
-                    <div class="card-col col-12">
+                    <div class="card-col col-12 col-sm">
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
-                                    <a href="#" class="link-stretch"><h2 class="card-title">Some article title</h2></a>
+                                    <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
                                     <div class="card-author">
                                         by Firstname Lastname
                                     </div>
@@ -450,7 +476,7 @@
                                 <div class="col-auto card-toggle">
                                     <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-5">
                                         <span class="icon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Publication settings</span>
+                                        <span class="sr-only">Expand card</span>
                                     </button>
                                 </div>
                             </div>
@@ -467,13 +493,6 @@
                                         <a href="#" class="btn btn-tag link-above">United States History</a>
                                     </div>
                                     <div class="col-auto card-library-action">
-                                        <span class="btn-check link-above">
-                                            <input id="fav0" type="checkbox" class="btn-check-input">
-                                            <label for="fav0" class="btn btn-favorite">
-                                                <span class="icon-star-empty" aria-hidden="true"></span>
-                                                <span class="sr-only">Favorite</span>
-                                            </label>
-                                        </span>
                                         <span class="dropdown link-above">
                                             <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                                 <span class="icon-ellipsis-vert" aria-hidden="true"></span>

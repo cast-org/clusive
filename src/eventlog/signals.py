@@ -18,16 +18,17 @@ logger = logging.getLogger(__name__)
 #
 
 page_timing = Signal(providing_args=['event_id', 'times'])
-vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source'])
-translation_action = Signal(providing_args=['request', 'language', 'text'])
+vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source', 'book'])
+translation_action = Signal(providing_args=['request', 'language', 'text', 'book'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
-control_used = Signal(providing_args=['request', 'event_id', 'control', 'object', 'value', 'event_type', 'action', 'timestamp', 'reader_info'])
+control_used = Signal(providing_args=['request', 'event_id', 'event_type', 'control', 'value', 'action', 'timestamp', 'reader_info'])
 word_rated = Signal(providing_args=['request', 'event_id', 'book_id', 'control', 'word', 'rating'])
 word_removed = Signal(providing_args=['request', 'event_id', 'word'])
 comprehension_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'key', 'question', 'answer', 'comprehension_check_response_id'])
-affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'answer', 'affect_check_response_id'])
+affect_check_completed = Signal(providing_args=['request', 'event_id', 'book_id', 'control', 'answer', 'affect_check_response_id'])
 star_rating_completed = Signal(providing_args=['request', 'question', 'answer'])
+book_starred = Signal(providing_args=['request', 'book_id', 'starred'])
 
 #
 # Signal handlers that log specific events
@@ -178,9 +179,10 @@ def log_comprehension_check_completed(sender, **kwargs):
 def log_affect_check_completed(sender, **kwargs):
     action = 'COMPLETED'
     event_type = 'ASSESSMENT_ITEM_EVENT'
-    control = 'affect_check'
+    control = kwargs.get('control')
+    question = kwargs.get('question')
     answer = kwargs.get('answer')
-    create_event(kwargs, control=control, value=answer, action=action, event_type=event_type)
+    create_event(kwargs, control=control, object=question, value=answer, action=action, event_type=event_type)
 
 @receiver(star_rating_completed)
 def log_star_rating_completed(sender, **kwargs):
@@ -338,3 +340,14 @@ def log_timeout(sender, **kwargs):
             logger.debug("Timeout user %s", clusive_user)
         except ClusiveUser.DoesNotExist:
             logger.debug("Timeout of non-Clusive user session: %s", kwargs['user'])
+
+
+@receiver(book_starred)
+def log_book_starred(sender, **kwargs):
+    value = 'add star' if kwargs['starred'] else 'remove star'
+    create_event(kwargs,
+        event_type='ANNOTATION_EVENT',
+        action='TAGGED',
+        control='star',
+        value=value)
+

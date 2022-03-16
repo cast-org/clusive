@@ -132,12 +132,14 @@ class LibraryViews:
     ALL = 'all'
     PUBLIC = 'public'
     MINE = 'mine'
+    STARRED = 'starred'
     PERIOD = 'period'
 
     CHOICES = [
         (ALL, 'All readings'),
         (PUBLIC, 'Public readings'),
         (MINE, 'My readings'),
+        (STARRED, 'Starred readings'),
         (PERIOD, 'Period assignments')
     ]
 
@@ -148,7 +150,6 @@ class LibraryViews:
         except StopIteration:
             logger.warning('Found no name for library view ' + view)
             return None
-
 
 class LibraryStyles:
     BRICKS = 'bricks'
@@ -161,6 +162,24 @@ class LibraryStyles:
         (LIST, 'list'),
     ]
 
+class StudentActivitySort:
+    NAME = 'name'
+    TIME = 'time'
+    COUNT = 'count'
+
+    CHOICES = [
+        (NAME, 'name'),
+        (TIME, 'time'),
+        (COUNT, 'count'),
+    ]
+
+def check_valid_choice(choices, value):
+    try:
+        next(x[1] for x in choices if x[0] == value)
+        return True
+    except StopIteration:
+        logger.warning('Found no match for choice ' + value)
+        return False
 
 class ClusiveUser(models.Model):
     guest_serial_number = 0
@@ -177,8 +196,9 @@ class ClusiveUser(models.Model):
     anon_id = models.CharField(max_length=30, unique=True, null=True)
 
     data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
+    external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
 
-# If True, user cannot log in until they have confirmed their email.
+    # If True, user cannot log in until they have confirmed their email.
     unconfirmed_email = models.BooleanField(default=False)
 
     # List of all class periods the user is part of
@@ -195,6 +215,14 @@ class ClusiveUser(models.Model):
     library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,
                                      choices=LibraryStyles.CHOICES)
 
+    # How many days worth of data are shown in the 'Student activity' display. 0 means no limit.
+    student_activity_days = models.SmallIntegerField(default=0)
+
+    # How the user has chosen to sort the 'Student activity' display. This choice is persistent.
+    student_activity_sort = models.CharField(max_length=10, default=StudentActivitySort.NAME,
+                                             choices=StudentActivitySort.CHOICES)
+
+    # Levels taught. Asked of teachers at registration.
     education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
                                         verbose_name='Education levels',
                                         blank=True, default=[])
@@ -360,7 +388,8 @@ class ClusiveUser(models.Model):
                                                   role=props.get('role'),
                                                   permission=props.get('permission'),
                                                   anon_id=props.get('anon_id'),
-                                                  data_source=props.get('data_source', RosterDataSource.CLUSIVE))
+                                                  data_source=props.get('data_source', RosterDataSource.CLUSIVE),
+                                                  external_id=props.get('external_id', ''))
         site_name = props.get('site', None)
         period_name = props.get('period', None)
         if site_name and period_name:
@@ -419,7 +448,7 @@ class Preference (models.Model):
 
     pref = models.CharField(max_length=32, db_index=True)
 
-    value = models.CharField(max_length=32, null=True)
+    value = models.CharField(max_length=64, null=True)
 
     @property
     def typed_value(self):
@@ -465,6 +494,11 @@ class Preference (models.Model):
     def get_theme_for_user(cls, user: ClusiveUser):
         pref = cls.objects.filter(user=user, pref='fluid_prefs_contrast').first() if user else None
         return pref.value if pref else 'default'
+
+    @classmethod
+    def get_glossary_pref_for_user(cls, user: ClusiveUser):
+        pref = cls.objects.filter(user=user, pref='cisl_prefs_glossary').first() if user else None
+        return pref.typed_value if pref else True
 
     def __str__(self):
         return 'Pref:%s/%s=%s' % (self.user, self.pref, self.value)

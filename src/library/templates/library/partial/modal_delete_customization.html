@@ -1,0 +1,21 @@
+<div id="modalDeleteCustomization" class="modal" aria-labelledby="modalConfirmDeleteTitle">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalConfirmDeleteTitle" class="modal-title">Delete Customization</h2>
+                {% include "shared/partial/dialog_tts.html" %}
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+                    <span class="icon-cancel-circled2" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to permanently delete <em id="deleteCustomizationTitle">Customization</em>?</p>
+                <p>This action cannot be undone, and will also delete custom vocabulary words and the custom question you or anyone else has added for this reading.</p>
+            </div>
+            <div class="modal-footer">
+                <a id="deleteCustomizationSubmit" href="#" class="btn btn-secondary" onclick="">Delete</a>
+                <button type="button" class="btn btn-link" data-cfw-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

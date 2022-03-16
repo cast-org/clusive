@@ -1,4 +1,4 @@
-/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT */
+/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT, D2Reader, clusiveTTS */
 
 /*
     This code defines canonical representations of the various preference settings,
@@ -43,8 +43,12 @@
             },
             glossary: {
                 type: 'cisl.prefs.glossary',
+                panel: null
+            },
+            animations: {
+                type: 'cisl.prefs.animations',
                 enactor: {
-                    type: 'cisl.prefs.enactor.glossary'
+                    type: 'cisl.prefs.enactor.animations'
                 },
                 panel: null
             },
@@ -120,32 +124,34 @@
             }
         },
         modelListeners: {
-            'readSpeed': {
+            readSpeed: {
                 listener: '{that}.enactReadSpeed',
                 args: ['{that}.model.readSpeed'],
                 namespace: 'enactReadSpeed'
             }
         },
         invokers: {
-            'enactReadSpeed': {
-                funcName: "cisl.prefs.enactor.readSpeed.enactReadSpeed",
-                args: "{arguments}.0"
+            enactReadSpeed: {
+                funcName: 'cisl.prefs.enactor.readSpeed.enactReadSpeed',
+                args: '{arguments}.0'
             }
         }
     });
 
-    cisl.prefs.enactor.readSpeed.enactReadSpeed = function (readSpeed) {
-        console.log("cisl.prefs.enactor.readSpeed.enactReadSpeed", readSpeed);
-        clusiveTTS.voiceRate = readSpeed;
-    }
+    cisl.prefs.enactor.readSpeed.enactReadSpeed = function(readSpeed) {
+        console.debug('cisl.prefs.enactor.readSpeed.enactReadSpeed', readSpeed);
+        clusiveTTS.updateSettings({
+            rate: readSpeed
+        });
+    };
 
     // Add a preferred voices preference for TTS
     fluid.defaults('cisl.prefs.schemas.readVoices', {
         gradeNames: ['fluid.prefs.schemas'],
         schema: {
             'cisl.prefs.readVoices': {
-            type: 'array',
-            default: []
+                type: 'array',
+                default: []
             }
         }
     });
@@ -183,43 +189,38 @@
         }
     });
 
-    fluid.defaults('cisl.prefs.enactor.glossary', {
-        gradeNames: ['fluid.prefs.enactor'],
-        preferenceMap: {
-            'cisl.prefs.glossary': {
-                'model.glossary': 'value'
-            }
-        },
-        modelListeners: {
-            glossary: {
-                listener: '{that}.enactGlossary',
-                args: ['{that}.model.glossary'],
-                namespace: 'enactGlossary'
-            }
-        },
-        invokers: {
-            enactGlossary: {
-                funcName: 'cisl.prefs.enactor.glossary.enactGlossary',
-                args: ['{arguments}.0', '{that}']
+    // Add a boolean preference for reducing motion effects
+    fluid.defaults('cisl.prefs.schemas.animations', {
+        gradeNames: ['fluid.prefs.schemas'],
+        schema: {
+            'cisl.prefs.animations': {
+                type: 'boolean',
+                default: true
             }
         }
     });
 
-    cisl.prefs.enactor.glossary.enactGlossary = function(enableGlossary, that) {
-        console.debug('enact glossary', enableGlossary, that);
-
-        var readerWindow = clusiveContext.reader.window;
-
-        if (readerWindow && readerWindow.markCuedWords && readerWindow.unmarkCuedWords) {
-            console.debug('readerWindow');
-            if (enableGlossary) {
-                console.debug('mark cued words');
-                readerWindow.markCuedWords();
-            } else {
-                console.debug('unmark cued words');
-                readerWindow.unmarkCuedWords();
+    fluid.defaults('cisl.prefs.enactor.animations', {
+        gradeNames: ['fluid.prefs.enactor.styleElements'],
+        cssClass: 'clusive-reduced-motion',
+        elementsToStyle: $('body'),     // must be a jquery instance
+        preferenceMap: {
+            'cisl.prefs.animations': {
+                'model.value': 'value'
+            }
+        },
+        invokers: {
+            // Override to flip the use of applyStyle() and removeStyle()
+            handleStyle: {
+                funcName: "cisl.prefs.enactor.animations.handleStyle",
+                args: ["{arguments}.0", "{that}.options.elementsToStyle", "{that}.options.cssClass", "{that}.applyStyle", "{that}.resetStyle"]
             }
         }
+    });
+
+    cisl.prefs.enactor.animations.handleStyle = function (value, elements, cssClass, applyStyleFunc, resetStyleFunc) {
+        var func = value ? resetStyleFunc : applyStyleFunc;
+        func(elements, cssClass);
     };
 
     fluid.defaults('cisl.prefs.composite.separatedPanel', {
@@ -252,4 +253,12 @@
         document.dispatchEvent(event);
     };
 
+    // Reduced motion interactions
+    cisl.prefs.userPrefersReducedMotion = function() {
+        // Clusive setting - check class
+        var setting = document.body.classList.contains('clusive-reduced-motion');
+        // System preference - check CSS media query
+        var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        return system || setting;
+    };
 }(fluid_3_0_0));

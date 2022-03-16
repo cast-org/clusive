@@ -1,0 +1,103 @@
+{% extends "shared/base.html" %}
+{% load i18n static figuration %}
+
+{% block bodyClass %}home sidebar-no-start sidebar-no-end{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header_home.html" with home_link=True %}
+{% endblock %}
+
+{% block sidebar_start %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    <div class="content-text mb-2">
+        <h1>About Clusive</h1>
+        <p>Clusive&reg; is an adaptive and accessible web-based reader designed to engage students in independent reading.
+            Based on the inclusive principles of Universal Design for Learning (UDL),
+            Clusive scaffolds the development of reading skills for students in grades 5 through 12.
+            Think of Clusive as a digital backpack of technology-supported reading materials
+            that students can take with them wherever they go.</p>
+
+        <h2>Features</h2>
+        <ul>
+            <li>
+                <strong>Choice of reading materials.</strong>
+                Students can choose to read assigned books and articles,
+                choose their own material and build personalized libraries,
+                and take advantage of Clusive’s growing public library.</li>
+            <li>
+                <strong>Flexible display options.</strong>
+                Students can discover settings that work best for their reading needs,
+                such as adjustable text size, line and letter spacing, font choice, and color and contrast.
+                Students build agency by finding their just-right-fit by testing and setting their own preferences.</li>
+            <li>
+                <strong>Read- aloud capabilities.</strong>
+                All of Clusive’s content can be read aloud by text-to-speech software.
+                Students can select the reading speed and voice.
+            </li>
+            <li>
+                <strong>Just-in-time prompts and learning tools.</strong>
+                Clusive has built in highlighting, note-taking, word knowledge and comprehension checks,
+                an embedded glossary, language translation,
+                and a personal word bank to support planning and meaning-making.
+            </li>
+            <li>
+                <strong>Social-emotional reflection opportunities.</strong>
+                Unique to Clusive are social-emotional supports that encourage students’ self-awareness
+                of their growing literacy skills.
+                There is adaptive content based on students’ prior actions and responses,
+                and the flexibility to opt out of support when students feel they are ready.
+            </li>
+            <li>
+                <strong>Progress-monitoring tools.</strong>
+                In addition to a dashboard where students can view their own progress,
+                there is also a robust dashboard for parents and teachers to see what their students have accomplished.
+            </li>
+            <li>
+                <strong>A growing public library.</strong>
+                Standards-aligned content is available on Clusive
+                through public-domain books and Open Educational Resources (OERs).
+                Many readings are available at multiple grade levels.
+                Teachers can also upload and share additional materials with students in this accessible,
+                supportive environment.
+            </li>
+        </ul>
+
+        <h2>Using Clusive</h2>
+        <ul>
+            <li>
+                <strong>Flexible accounts.</strong>
+                You can create an account using your email address, or log in with your existing Google account.
+            </li>
+            <li>
+                <strong>Set up accounts for your students or family.</strong>
+                Parents and teachers can create accounts for students.
+                If you're a Google Classroom user, you can easily import your classes from there.
+            </li>
+            <li>
+                <strong>We value your privacy.</strong>
+                We don't have any advertisers or share your information with others.
+                Full details of what information we do collect and how we use it are in our
+                <a href="{% url 'privacy' %}">Privacy Policy</a>.
+            </li>
+        </ul>
+
+        <h2>Free, really.</h2>
+        <p>Clusive is free to use. The public library content is free to read, copy, or modify.
+        And the software itself is free if you want to see how things are built or run your own server.
+        We are supported by a grant from the US Department of Education.
+        More information on the project is at our main site, the
+        <a href="https://cisl.cast.org">Center on Inclusive Software for Learning</a>.</p>
+
+        <p class="my-1">
+            <a href="{% url 'dashboard' %}" class="btn btn-primary">Ready to get in Clusive?</a>
+        </p>
+    </div>
+</main>
+{% include 'shared/partial/site_footer_home.html' %}
+{% endblock %}

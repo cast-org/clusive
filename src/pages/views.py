@@ -1,8 +1,12 @@
+import json
 import logging
+from datetime import date, timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect
+from django.db.models import Sum, Q
+from django.db.models.functions import Lower
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, RedirectView
@@ -10,12 +14,14 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
 from assessment.forms import ClusiveRatingForm
-from assessment.models import ClusiveRatingResponse, AffectiveUserTotal
+from assessment.models import ClusiveRatingResponse, AffectiveUserTotal, ComprehensionCheckResponse, \
+    AffectiveCheckResponse
 from eventlog.models import Event
 from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
-from library.models import Book, BookVersion, Paradata, Annotation, BookTrend
+from glossary.views import choose_words_to_cue
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.views import TranslateApiManager
@@ -66,7 +72,7 @@ class PeriodChoiceMixin(ContextMixin):
         if not self.current_period:
             clusive_user = request.clusive_user
             if self.periods is None:
-                self.periods = clusive_user.periods.all()
+                self.periods = clusive_user.periods.all().order_by(Lower('name'))
             if kwargs.get('period_id'):
                 # User is setting a new period
                 self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
@@ -113,6 +119,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.current_period = self.get_current_period(request, **kwargs)
         self.panels = {} # This will hold info on which panels are to be displayed.
         self.data = {} # This will hold panel-specific data
+
+        self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
 
         # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
@@ -173,9 +181,40 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # Popular Reads panel (teacher)
         self.panels['popular_reads'] = self.teacher
         if self.panels['popular_reads']:
+            # Find books that are trending out of full library & out of just assigned readings.
+            top_trends = BookTrend.top_trends(self.current_period)[:3]
+            top_trend_data = [{'trend': t} for t in top_trends]
+            assigned_trends = BookTrend.top_assigned(self.current_period)[:3]
+            assigned_trend_data = [{'trend': t} for t in assigned_trends]
+
+            # Look up customizations for any of the books displayed.
+            books: set
+            books = set(trend.book for trend in top_trends)
+            books = books.union(set(trend.book for trend in assigned_trends))
+            customizations = Customization.objects.filter(book__in=books, periods=self.current_period)
+            # Attach customization information to each trend data object
+            # The filter just looks for customizations that match the given book, and we record the first.
+            for td in top_trend_data:
+                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
+            for td in assigned_trend_data:
+                td['customization'] = next(filter(lambda c: c.book==td['trend'].book, customizations), None)
+
+            # Get comp check statistics for each distinct book, avoid querying twice.
+            comp_data = {}
+            for tdata in top_trend_data:
+                t = tdata['trend']
+                comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
+                tdata['comp_check'] = comp_data[t.book.id]
+                tdata['unauthorized'] = not t.book.is_visible_to(self.clusive_user)
+            for tdata in assigned_trend_data:
+                t = tdata['trend']
+                if t.book.id not in comp_data:
+                    comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
+                tdata['comp_check'] = comp_data[t.book.id]
+
             self.data['popular_reads'] = {
-                'all': BookTrend.top_trends(self.current_period)[:3],
-                'assigned': BookTrend.top_assigned(self.current_period)[:3],
+                'all': top_trend_data,
+                'assigned': assigned_trend_data,
             }
 
         # Getting Started panel
@@ -206,10 +245,15 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
         # Student Activity panel
         self.panels['student_activity'] = self.teacher
+        sa_days = self.clusive_user.student_activity_days
+        sa_sort = self.clusive_user.student_activity_sort
         if self.panels['student_activity']:
             self.data['student_activity'] = {
-                'days': 0,
-                'reading_data': Paradata.reading_data_for_period(self.current_period, days=0) if self.current_period else None
+                'days': sa_days,
+                'sort': sa_sort,
+                'reading_data':
+                    Paradata.reading_data_for_period(self.current_period, days=sa_days, sort=sa_sort)
+                    if self.current_period else None
             }
 
         return super().get(request, *args, **kwargs)
@@ -219,6 +263,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['query'] = None
         context['panels'] = self.panels
         context['data'] = self.data
+        context['tip_name'] = self.tip_shown.name if self.tip_shown else None
         return context
 
     def should_show_star_results(self, request):
@@ -231,6 +276,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
+        event.tip_type = self.tip_shown
 
 
 class DashboardActivityPanelView(TemplateView):
@@ -238,17 +284,82 @@ class DashboardActivityPanelView(TemplateView):
     template_name = 'pages/partial/dashboard_panel_student_activity.html'
 
     def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
         self.current_period = request.clusive_user.current_period
-        self.days = kwargs['days']
+
+        if 'days' in kwargs:
+            self.days = kwargs.get('days')
+            logger.debug('Setting student activity days = %d', self.days)
+            self.clusive_user.student_activity_days = self.days
+            self.clusive_user.save()
+        else:
+            self.days = self.clusive_user.student_activity_days
+
+        if 'sort' in kwargs:
+            self.sort = kwargs.get('sort')
+            logger.debug('Setting student activity sort = %s', self.sort)
+            self.clusive_user.student_activity_sort = self.sort
+            self.clusive_user.save()
+        else:
+            self.sort = self.clusive_user.student_activity_sort
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['data'] = {
             'days': self.days,
-            'reading_data': Paradata.reading_data_for_period(self.current_period, days=self.days),
+            'sort': self.sort,
+            'reading_data': Paradata.reading_data_for_period(self.current_period, days=self.days, sort=self.sort),
         }
         return context
+
+
+class DashboardActivityDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'shared/partial/modal_student_activity_detail.html'
+
+    def get_context_data(self, **kwargs):
+        user_id = kwargs['user_id']
+        book_id = kwargs['book_id']
+        data = super().get_context_data(**kwargs)
+
+        try:
+            clusive_user = ClusiveUser.objects.get(pk=user_id)
+            data['clusive_user'] = clusive_user
+            book = Book.objects.get(pk=book_id)
+            data['book'] = book
+            data['book_has_versions'] = book.versions.count() > 1
+
+            paras = Paradata.objects.filter(user=clusive_user, book=book)
+            # Annotate with the time total from the last week
+            start_date = date.today()-timedelta(days=7)
+            paras = paras.annotate(recent_time=Sum('paradatadaily__total_time',
+                                                           filter=Q(paradatadaily__date__gt=start_date)))
+            paradata = paras[0]
+            data['paradata'] = paradata
+            if paradata.first_version and paradata.first_version != paradata.last_version:
+                data['version_switched'] = True
+
+            # Affect and Comp check
+            affect_checks = AffectiveCheckResponse.objects.filter(user=clusive_user, book=book)
+            if affect_checks:
+                data['affect_check'] = affect_checks[0]
+            comp_checks = ComprehensionCheckResponse.objects.filter(user=clusive_user, book=book)
+            if comp_checks:
+                data['comp_check'] = comp_checks[0]
+
+            # Highlights and notes
+            data['highlight_count'] = Annotation.objects.filter(bookVersion__book=book, user=clusive_user, dateDeleted=None).count()
+            data['note_count'] = Annotation.objects.filter(bookVersion__book=book, user=clusive_user, dateDeleted=None,
+                                                           note__isnull=False).exclude(note='').count()
+
+            return data
+        except ClusiveUser.DoesNotExist:
+            logger.error('No clusive user %d', user_id)
+            raise Http404('No such user')
+        except Book.DoesNotExist:
+            logger.error('No such book %d', book_id)
+            raise Http404('No such book')
 
 
 class SetStarRatingView(LoginRequiredMixin, BaseCreateView):
@@ -405,19 +516,21 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         self.book_version = versions[version]
         self.book = book
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
+        cuelist_map = choose_words_to_cue(book_version=self.book_version, user=clusive_user)
+        # Make into format that R2D2BC wants for "definitions"
+        cuelist = [{ 'order': i, 'result': 1, 'terms': terms } for i, terms in enumerate(cuelist_map.values())]
+        logger.debug('Cuelist: %s', repr(cuelist))
         pdata = Paradata.record_view(book, version, clusive_user)
+        # See if user wants the cues to be initially shown or not
+        hide_cues = not Preference.get_glossary_pref_for_user(clusive_user)
 
         # See if there's a Tip that should be shown
-        available = TipHistory.available_tips(clusive_user, page=self.page_name, version_count=len(versions))
-        if available:
-            first_available = available[0]
-            logger.debug('Displaying tip: %s', first_available)
-            first_available.show()
-            self.tip_shown = first_available.type
-            tip_name = self.tip_shown.name
-        else:
-            self.tip_shown = None
-            tip_name = None
+        self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
+
+        # See if there's a custom question
+        customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
+            if clusive_user.current_period else None
+        logger.debug('Customization: %s', customizations)
 
         self.extra_context = {
             'pub': book,
@@ -426,7 +539,12 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'manifest_path': self.book_version.manifest_path,
             'last_position': pdata.last_location or "null",
             'annotations': annotationList,
-            'tip_name': tip_name,
+            'cuelist': json.dumps(cuelist),
+            'hide_cues': hide_cues,
+            'tip_name': self.tip_shown.name if self.tip_shown else None,
+            'customization': customizations[0] if customizations else None,
+            'starred': pdata.starred,
+            'book_id': book.id,
         }
         return super().get(request, *args, **kwargs)
 
@@ -450,9 +568,13 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPage
         event.page = 'Wordbank'
 
 
-class DebugView(TemplateView):
-    template_name = 'pages/debug.html'
+class AboutView(TemplateView):
+    template_name = 'pages/about.html'
 
 
 class PrivacyView(TemplateView):
     template_name = 'pages/privacy.html'
+
+
+class DebugView(TemplateView):
+    template_name = 'pages/debug.html'

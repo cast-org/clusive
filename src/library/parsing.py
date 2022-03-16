@@ -5,16 +5,20 @@ import posixpath
 import shutil
 from html.parser import HTMLParser
 from os.path import basename
+from tempfile import mkstemp
+from urllib.parse import urlparse
 from zipfile import ZipFile
 
 import dawn
-import wordfreq as wf
+import pypandoc
+import requests
 from dawn.epub import Epub
 from django.utils import timezone
 from nltk import RegexpTokenizer
 
 from glossary.util import base_form
 from library.models import Book, BookVersion, Subject
+from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +35,20 @@ class BookMalformed(Exception):
     pass
 
 
-def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
+def convert_and_unpack_docx_file(clusive_user, file):
+    """
+    Process an uploaded Word (docx) file. Converts to EPUB and then calls unpack_epub_file.
+    :param clusive_user: user that will own the resulting Book.
+    :param file: File, which should be a .docx.
+    :return: a new BookVersion
+    """
+    fd, tempfile = mkstemp()
+    output = pypandoc.convert_file(file, 'epub', outputfile=tempfile)
+    if output:
+        raise RuntimeError(output)
+    return unpack_epub_file(clusive_user, tempfile, omit_filename='title_page.xhtml')
+
+def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None, bookshare_metadata=None):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
@@ -43,6 +60,8 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     look for a matching Book. If there is no matching Book or BookVersion, they will be created.
     If a matching BookVersion already exists it will be overwritten only if
     the modification date in the EPUB metadata is newer.
+
+    If bookshare_metadata is provided, it will be used to fill in metadata fields and record the bookshare ID.
 
     This method will:
      * unzip the file into the user media area
@@ -60,11 +79,47 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
     If there are any errors (such as a non-EPUB file), an exception will be raised.
     """
     with open(file, 'rb') as f, dawn.open(f) as upload:
-        manifest = make_manifest(upload)
+        manifest = make_manifest(upload, omit_filename)
         title = get_metadata_item(upload, 'titles') or ''
         author = get_metadata_item(upload, 'creators') or ''
+        sort_author = ''
         description = get_metadata_item(upload, 'description') or ''
         language = get_metadata_item(upload, 'language') or ''
+        tempcover_info = None
+
+        if bookshare_metadata:
+            # Bookshare EPUBs don't seem to have much metadata embedded, but the API gives us some we can add.
+            logging.debug('Bookshare metadata was provided: %s', bookshare_metadata)
+            bookshare_id = bookshare_metadata['bookshareId']
+            if title == '':
+                logger.debug('Title was blank, set to value from bookshare_metadata')
+                title = bookshare_metadata.get('title', '')
+            if author == '':
+                logger.debug('Author was blank, set to value from bookshare_metadata')
+                authors = []
+                sort_authors = []
+                for contributor in bookshare_metadata.get('contributors', []):
+                    if contributor['type'] == 'author':
+                        authors.append(contributor['name']['displayName'])
+                        sort_authors.append(contributor['name']['indexName'])
+                if len(authors) > 2:
+                    author = ', '.join(authors[:-1]) + ', and ' + authors[-1]
+                    sort_author = ', '.join(sort_authors[:-1]) + ', and ' + sort_authors[-1]
+                else:
+                    author = ' and '.join(authors)
+                    sort_author = ' and '.join(sort_authors)
+            if description == '':
+                logger.debug('Description was blank, set to value from bookshare_metadata')
+                description = bookshare_metadata.get('synopsis', '')[:500]
+            # TODO language? { 'languages': ['eng'] }
+            # TODO subjects from eg { 'categories': [{'name': 'History', ...}...] }
+            if upload.cover is None:
+                for link in bookshare_metadata.get('links', []):
+                    if link['rel'] == 'coverimage':
+                        tempcover_info = download_and_save_cover(link['href'], bookshare_id)
+                        break
+        else:
+            bookshare_id = None
 
         mod_date = upload.meta.get('dates').get('modification') or None
         # Date, if provided should be UTC according to spec.
@@ -79,6 +134,8 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
             cover = adjust_href(upload, upload.cover.href)
             # For cover path, need to prefix this path with the directory holding this version of the book.
             cover = os.path.join(str(sort_order), cover)
+        elif tempcover_info is not None:
+            cover = tempcover_info['filename']
         else:
             cover = None
 
@@ -99,8 +156,10 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
             book = Book(owner=clusive_user,
                         title=title,
                         author=author,
+                        sort_author=sort_author,
                         description=description,
-                        cover=cover)
+                        cover=cover,
+                        bookshare_id=bookshare_id)
             book.save()
             logger.debug('Created new book for import: %s', book)
 
@@ -139,6 +198,12 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0):
             zf.extractall(path=dir)
         with open(os.path.join(dir, 'manifest.json'), 'w') as mf:
             mf.write(json.dumps(manifest, indent=4))
+
+        # If the cover image was retrieved and stored in a tmp file, move it to
+        # the new EPUB storage directory.
+        if tempcover_info and book.cover_storage:
+            shutil.copyfile(tempcover_info['tempfile'], book.cover_storage)
+
         logger.debug("Unpacked epub into %s", dir)
         return book_version, True
 
@@ -154,7 +219,14 @@ def get_metadata_item(book, name):
     return None
 
 
-def make_manifest(epub: Epub):
+def make_manifest(epub: Epub, omit_filename: str):
+    """
+    Create Readium manifest based on the given EPUB.
+    :param epub: EPUB file as parsed by Dawn.
+    :param omit_filename: If supplied, any file in the spine with the given name
+        will be omitted from the reading order in the manifest.
+    :return: object that can be written as JSON to form the manifest file.
+    """
     data = {
             '@context': 'https://readium.org/webpub-manifest/context.jsonld',
             'metadata': {
@@ -189,13 +261,13 @@ def make_manifest(epub: Epub):
 
     # READING ORDER
     ro = data['readingOrder']
-
     for s in epub.spine:
-        ro.append({
-            'href': adjust_href(epub, s.href),
-            'type': s.mimetype
-            # TODO properties.contains = ['svg']
-        })
+        if not (omit_filename and s.href.endswith('/'+omit_filename)):
+            ro.append({
+                'href': adjust_href(epub, s.href),
+                'type': s.mimetype
+                # TODO properties.contains = ['svg']
+            })
 
     # RESOURCES
     resources = data['resources']
@@ -284,7 +356,7 @@ def set_sort_fields(book):
                 # TODO: should make some simple default assumptions, like removing 'The'/'A'
                 logger.debug('Setting sort title to the title: %s', title)
                 sort_title = title
-            book.sort_title = sort_title
+            book.sort_title = sort_title or ''
 
             author_list = manifest['metadata'].get('author')
             if author_list:
@@ -295,7 +367,7 @@ def set_sort_fields(book):
                     # TODO: maybe should make some default assumptions, First Last -> Last first
                     logger.debug('Setting sort author to the author: %s', author )
                     sort_author = author
-                book.sort_author = sort_author
+                book.sort_author = sort_author or ''
 
 def set_subjects(book):
     # Get all valid subjects
@@ -354,7 +426,7 @@ def count_pictures(bv):
             manifest = json.load(file)
             pictures = 0
             for item in manifest['resources']:
-                logger.debug('Manifest item: %s', repr(item))
+                # logger.debug('Manifest item: %s', repr(item))
                 if item['type'] and item['type'].startswith('image/'):
                     pictures += 1
             bv.picture_count = pictures
@@ -383,6 +455,28 @@ def find_all_words(bv, glossary_words):
     else:
         logger.error("Book directory had no manifest: %s", bv.manifest_file)
 
+def download_and_save_cover(href, book_id):
+    """
+    Download and save the cover image to a tmp file, and return information
+    about that file: the intended cover filename, and the full path to the tmp
+    file.  Return None if if something goes wrong fails.
+    """
+    resp = requests.request('GET', href)
+    if resp.status_code == 200:
+        src_url = urlparse(href)
+        filename_from_url = os.path.basename(src_url.path)
+        file_ext = os.path.splitext(filename_from_url)
+        cover_filename = 'cover' + str(book_id)
+        fd, tempfile = mkstemp(suffix=file_ext[1], prefix=cover_filename)
+        with os.fdopen(fd, 'wb') as f:
+            f.write(resp.content)
+            f.close()
+        return {
+            'filename': cover_filename + file_ext[1],
+            'tempfile': tempfile,
+        }
+    else:
+        return None
 
 class TextExtractor(HTMLParser):
     element_stack = []
@@ -426,9 +520,7 @@ class TextExtractor(HTMLParser):
                         # Neither in glossary, nor in dictionary
                         non_word_set.add(t.lower())
         # Append frequency of each word, sort by it, then remove the frequencies from return value
-        word_list = [[w, self.sort_key(w)] for w in word_set]
-        word_list.sort(key=lambda p: p[1])
-        word_list = [p[0] for p in word_list]
+        word_list = sort_words_by_frequency(word_set, self.lang)
         # Glossary and non-dictionary words are just sorted alphabetically.
         glossary_list = list(glossary_set)
         glossary_list.sort()
@@ -440,16 +532,6 @@ class TextExtractor(HTMLParser):
             'non_dict_words': non_word_list,
             'word_count': word_count,
         }
-
-    # We sort the hardest (low-frequency) words to the front of our list.
-    # However, words that return '0' for frequency (aka non-words) should go to the end of the list,
-    # so give them a large sort key.
-    def sort_key(self, word):
-        freq = wf.word_frequency(word, self.lang)
-        if freq > 0:
-            return freq
-        else:
-            return 1
 
     def extract(self, html):
         self.feed(html)

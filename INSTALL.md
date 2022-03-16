@@ -139,6 +139,14 @@ Docker will run any pending database migrations and import the default books at 
 
 * `docker exec -it <container_id> python manage.py createsuperuser`
 
+## Running Cypress tests
+
+* Run the standard local install. This will install Cypress as a dev dependency.
+* In the Clusive\target directory, run `python manage.py createrostersamples` if you have not already.
+  The tests depend on logging in as one of these test users.
+* Run `npx cypress open` from the root to interactively run the tests.
+* For IntelliJ users, the "Cypress Support" plugin is helpful.
+
 ## Connecting Google Authentication
 
 To allow users to log in with their Google account, 
@@ -186,10 +194,26 @@ there are several additional steps.
       * You can change the `Display Name` from "example.com" to something more meaningful to your situation, but it
         does not really matter.
 
-## Running Cypress tests
+## Connecting to Bookshare
 
- * Run the standard local install. This will install Cypress as a dev dependency.
- * In the Clusive\target directory, run `python manage.py createrostersamples` if you have not already. 
-   The tests depend on logging in as one of these test users.
- * Run `npx cypress open` from the root to interactively run the tests.
- * For IntelliJ users, the "Cypress Support" plugin is helpful.
+Optional. In order to allow users to download books from their Bookshare accounts,
+you would need to obtain a Bookshare API key from Benetech. 
+If you have one, in Clusive's admin interface, go to "Social Applications", click Add, and set:
+* Provider: Bookshare
+* Name: bookshare
+* Client ID: your API key
+* Sites: add your site
+
+## Connecting to Merriam Webster
+
+Optional. A fallback to a custom dictionary entry includes definitions from the Merriam-Webster 
+Intermediate Dictionary.  To use Merriam-Webster your installation must apply for a Merriam-Webster 
+API key directly from [Merriam Webster](https://dictionaryapi.com/register/index).  
+The API key must be supplied into the settings file variable MERRIAM_WEBSTER_API_KEY.
+
+## Connecting to MailChimp
+
+Optional. [Mailchimp](https://mailchimp.com/) has been integrated to communicate via email with users
+of the application. To connect with Mailchimp the API key, the server, and the email list 
+must be provided.  These fields are supplied into the settings file as the variables: MAILCHIMP_API_KEY,
+MAILCHIMP_SERVER, and MAILCHIMP_EMAIL_LIST_ID.

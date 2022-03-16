@@ -54,6 +54,13 @@
     &:last-child {
         border-right: 1px solid var(--CT_wordbankBorderColor);
     }
+
+    &.active {
+        position: relative;
+        z-index: 1;
+        outline: 2px dashed currentColor;
+        outline-offset: -3px;
+    }
 }
 
 .wordbank-title {
@@ -125,6 +132,7 @@
 
 .wordbank-list {
     width: 100%;
+    margin-top: .5rem;
     margin-bottom: 1rem;
 }
 
@@ -132,6 +140,7 @@
     display: flex;
     flex: 1 1 auto;
     align-items: center;
+    height: 1.5rem;
     padding-left: calc(.25rem + 1px);
     margin: .5rem 0;
     white-space: nowrap;
@@ -157,17 +166,43 @@
             display: none;
         }
     }
+
+    &.dragging {
+        @include transition(none);
+    }
+}
+
+.wordbank-word {
+    padding: 0;
+    line-height: 1.5;
+    color: $link-color;
+    text-decoration: $link-decoration;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+
+    &:hover,
+    &:focus {
+        color: $link-hover-color;
+        text-decoration: $link-hover-decoration;
+    }
 }
 
 .wordbank-prev,
 .wordbank-next,
-.wordbank-del {
+.wordbank-del,
+.delete-word-button {
     padding: .125rem .25rem;
     @include font-size(.875rem);
     line-height: 1;
     color: var(--CT_wordbankControlColor);
     text-decoration: none;
     vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
 
     &:hover,
     &:focus {
@@ -182,4 +217,30 @@
 
 .wordbank-prev {
     order: -1;
+}
+
+.wordbank-drag {
+    display: inline-flex;
+    align-items: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+
+    a {
+        touch-action: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+
+    &.dragging {
+        outline: 2px solid currentColor;
+
+        button {
+            pointer-events: none;
+        }
+    }
+}
+
+.vocabulary-word {
+    display: flex;
 }

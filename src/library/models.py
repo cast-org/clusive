@@ -11,7 +11,8 @@ from django.db import models
 from django.db.models import Sum, Q
 from django.utils import timezone
 
-from roster.models import ClusiveUser, Period, Roles
+from roster.models import ClusiveUser, Period, Roles, StudentActivitySort
+from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
 
@@ -37,22 +38,33 @@ class Subject(models.Model):
 
 
 class Book(models.Model):
-    """Metadata about a single reading, to be represented as an item on the Library page.
-    There may be multiple versions of a single Book, which are separate EPUB files."""
-    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True)
-    title = models.CharField(max_length=256)
+    """
+    Metadata about a single reading, to be represented as an item on the Library page.
+    There may be multiple versions of a single Book, which are separate EPUB files.
+
+    If bookshare_id is not null, then this is a book imported from Bookshare.
+    These have more restrictive permissions.
+    Two Book records can point to the same Bookshare ID since multiple users can load it as their own.
+    """
+    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
+    title = models.CharField(max_length=256, db_index=True)
     sort_title = models.CharField(max_length=256)
-    author = models.CharField(max_length=256)
+    author = models.CharField(max_length=256, db_index=True)
     sort_author = models.CharField(max_length=256)
-    description = models.TextField(default="", blank=True)
+    description = models.TextField(default="", blank=True, db_index=True)
     cover = models.CharField(max_length=256, null=True)
-    word_count = models.PositiveIntegerField(null=True)
+    word_count = models.PositiveIntegerField(null=True, db_index=True)
     picture_count = models.PositiveIntegerField(null=True)
-    subjects = models.ManyToManyField(Subject)
+    subjects = models.ManyToManyField(Subject, db_index=True)
+    bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
 
     @property
     def is_public(self):
         return self.owner is None
+
+    @property
+    def is_bookshare(self):
+        return self.bookshare_id is not None
 
     def is_visible_to(self, user : ClusiveUser):
         if self.is_public:
@@ -63,6 +75,33 @@ class Book(models.Model):
         if BookAssignment.objects.filter(book=self, period__in=periods).exists():
             return True
         return False
+
+    @property
+    def all_word_list(self):
+        if not hasattr(self, '_all_word_list'):
+            versions = self.versions.all()
+            if len(versions) == 1:
+                self._all_word_list = versions[0].all_word_list
+            else:
+                words = set()
+                for v in versions:
+                    words.update(v.all_word_list)
+                self._all_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
+        return self._all_word_list
+
+    @property
+    def all_word_and_non_dict_word_list(self):
+        if not hasattr(self, '_all_word_and_non_dict_word_list'):
+            versions = self.versions.all()
+            if len(versions) == 1:
+                self._all_word_and_non_dict_word_list = versions[0].all_word_list + versions[0].non_dict_word_list
+            else:
+                words = set()
+                for v in versions:
+                    words.update(v.all_word_list)
+                    words.update(v.non_dict_word_list)
+                self._all_word_and_non_dict_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
+        return self._all_word_and_non_dict_word_list
 
     @property
     def path(self):
@@ -94,11 +133,30 @@ class Book(models.Model):
             return None
 
     @property
+    def cover_filename(self):
+        return os.path.basename(self.cover)
+
+    def set_cover_file(self, filename):
+        """
+        Updates book, setting the cover to be a given filename; returns the full path to this location.
+        Caller is responsible for actually putting a cover image in that location.
+        :param filename: name of the cover image file with no path
+        :return: full path to where the cover should be stored
+        """
+        path = os.path.join(self.storage_dir, filename)
+        self.cover = filename
+        self.save()
+        return path
+
+    @property
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
     def __str__(self):
-        return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
+        if self.is_bookshare:
+            return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
+        else:
+            return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
 
     @classmethod
     def get_featured_books(cls):
@@ -294,10 +352,24 @@ class Paradata(models.Model):
 
     view_count = models.SmallIntegerField(default=0, verbose_name='View count')
     last_view = models.DateTimeField(null=True, verbose_name='Last view time')
-    last_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True,
-                                     verbose_name='Last version viewed')
+    first_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True, blank=True,
+                                      verbose_name='Original version chosen by system', related_name='paradata_first_version_set')
+    last_version = models.ForeignKey(to=BookVersion, on_delete=models.SET_NULL, null=True, blank=True,
+                                     verbose_name='Last version viewed', related_name='paradata_last_version_set')
     last_location = models.TextField(null=True, verbose_name='Last reading location')
-    total_time = models.DurationField(null=True, verbose_name='Total time spent in book')
+    total_time = models.DurationField(null=True, verbose_name='Total active time spent in book')
+    words_looked_up = models.TextField(null=True, blank=True, verbose_name='JSON list of words looked up')
+    read_aloud_count = models.SmallIntegerField(default=0, verbose_name='Read-aloud use count')
+    translation_count = models.SmallIntegerField(default=0, verbose_name='Translation use count')
+    starred = models.BooleanField(null=False, default=False)
+
+    @property
+    def words_looked_up_list(self):
+        val = self.words_looked_up
+        if val:
+            return json.loads(val)
+        else:
+            return []
 
     @classmethod
     def record_view(cls, book, version_number, clusive_user):
@@ -306,6 +378,8 @@ class Paradata(models.Model):
         para, created = cls.objects.get_or_create(book=book, user=clusive_user)
         para.view_count += 1
         para.last_view = timezone.now()
+        if not para.first_version:
+            para.first_version = bv
         if para.last_version != bv:
             # If we're switching to a different version, clear out last reading location
             para.last_location = None
@@ -353,6 +427,42 @@ class Paradata(models.Model):
         parad.total_time += time
         parad.save()
 
+    @classmethod
+    def record_word_looked_up(cls, book, user, word):
+        """Update Paradata with the new lookup"""
+        para, created = cls.objects.get_or_create(book=book, user=user)
+        if para.words_looked_up:
+            words = json.loads(para.words_looked_up)
+        else:
+            words = []
+        if not word in words:
+            words.append(word)
+            words.sort()
+            para.words_looked_up = json.dumps(words)
+            logger.debug('Updated %s with new words_looked_up list: %s', para, para.words_looked_up)
+            para.save()
+
+    @classmethod
+    def record_starred(cls, book_id, clusive_user_id, starred):
+        # record the starred (favorite) value for this para
+        user_object = ClusiveUser.objects.get(pk=clusive_user_id)
+        book_object = Book.objects.get(pk=book_id)
+        para, created = cls.objects.get_or_create(book=book_object, user=user_object)
+        para.starred = starred
+        para.save()
+
+    @classmethod
+    def record_translation(cls, book, user):
+        para, created = cls.objects.get_or_create(book=book, user=user)
+        para.translation_count += 1
+        para.save()
+
+    @classmethod
+    def record_read_aloud(cls, book, user):
+        para, created = cls.objects.get_or_create(book=book, user=user)
+        para.read_aloud_count += 1
+        para.save()
+
     def __str__(self):
         return "%s@%s" % (self.user, self.book)
 
@@ -362,7 +472,7 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def reading_data_for_period(cls, period: Period, days=0):
+    def reading_data_for_period(cls, period: Period, days=0, sort='name'):
         """
         Calculate time, number of books, and individual book stats for each user in the given Period.
         :param period: group of students to consider
@@ -429,9 +539,16 @@ class Paradata(models.Model):
                             'is_assigned': False,
                             'is_other': True,
                         })
+
+        # Return value is a sorted list for display.
         result = list(map.values())
-        # TODO handle other sort options
-        result.sort(key=lambda item: item['clusive_user'].user.first_name)
+        # First sort by name, even if something else is the primary sort, so that zeros are alphabetical
+        result.sort(key=lambda item: item['clusive_user'].user.first_name.lower())
+        if sort == StudentActivitySort.COUNT:
+            result.sort(reverse=True, key=lambda item: item['book_count'])
+        elif sort == StudentActivitySort.TIME:
+            result.sort(reverse=True, key=lambda item: item['hours'])
+
         return result
 
     class Meta:
@@ -515,4 +632,47 @@ class Annotation(models.Model):
 
     class Meta:
         ordering = ['progression']
+
+class Customization(models.Model):
+    """Hold customizations for a Book as used in zero or more Periods"""
+    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
+    periods = models.ManyToManyField(Period, blank=True, related_name='customizations', db_index=True)
+    title = models.CharField(max_length=256, default='Customization', blank=True)
+    question = models.CharField(max_length=256, default='', blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def word_list(self):
+        words = []
+        for custom_vocabulary_word in self.customvocabularyword_set.all():
+            words.append(custom_vocabulary_word.word)
+        return words
+
+    @classmethod
+    def get_customization_for_user(cls, book, clusive_user):
+        result = cls.objects.filter(book=book, periods=clusive_user.current_period)
+        return result[0] if result else None
+
+    @classmethod
+    def get_customizations(cls, book, periods, owner):
+        return cls.objects \
+            .filter(Q(book=book)
+                    & (Q(periods__in=periods) | Q(owner=owner))) \
+            .distinct()
+
+    def __str__(self):
+        return '<Customization %s: %s %s>' % (self.pk, self.title, self.book)
+
+    class Meta:
+        ordering = ['book', 'title']
+
+class CustomVocabularyWord(models.Model):
+    """A word used in a Customization"""
+    customization = models.ForeignKey(to=Customization, on_delete=models.CASCADE, db_index=True)
+    word = models.CharField(max_length=256, default='', blank=True)
+
+    def __str__(self):
+        return '[CustomVocabularyWord %s for %s]' % (self.word, self.customization)
 

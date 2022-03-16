@@ -20,7 +20,7 @@
 <main id="content" tabindex="-1">
 
     <h1>Welcome to Clusive</h1>
-    <p>Clusive<sup>&trade;</sup> is a flexible, customizable learning environment that adapts to you. Clusive is part of the <a href="https://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>.</p>
+    <p>Clusive&reg; is a flexible, customizable learning environment that adapts to you. Clusive is part of the <a href="https://cisl.cast.org?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">Center on Inclusive Software for Learning</a>.</p>
 
     <div class="row">
         <div class="col-sm-6 col-lg-4">
@@ -28,17 +28,14 @@
                 <div class="card-body login-section">
                     <h2 class="mb-1">Log in to Clusive</h2>
                     <div class="socialaccount_ballot">
-                        {% get_providers as socialaccount_providers %}
                         <ul class="list-unstyled text-center mb-0_5">
-                            {% for provider in socialaccount_providers %}
                             <li class="mb-0_5">
-                            <form method="get" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                            <form method="get" action="{% provider_login_url 'google' process=process scope=scope auth_params=auth_params %}">
                                 <button type="submit" class="socialaccount_provider login-btn login-google">
-                                    <span class="sr-only">Sign in with {{provider.name}}</span>
+                                    <span class="sr-only">Sign in with Google</span>
                                 </button>
                             </form>
                             <li>
-                            {% endfor %}
                         </ul>
                         {% for message in messages %}
                             {% if message.level >= DEFAULT_MESSAGE_LEVELS.WARNING %}
@@ -121,13 +118,14 @@
         <div class="col-lg-4">
             <h2 class="mb-1">See a demo</h2>
             <div class="embed-fluid embed-fluid-16x9">
-                <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/BqhfDOuV4jE" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe class="embed-fluid-item" src="https://www.youtube.com/embed/0-6mBfWFDNs" title="YouTube video" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
             <h2 class="mb-1 pt-1 mt-1">Learn more</h2>
             <p>Volunteer as a co-designer or beta tester.
                 <a href="https://forms.gle/vv6vefWsX6HNznfN7">Contact us to sign up.</a></p>
             <p>Interested in learning more about CISL? <a href="https://cisl.cast.org/about/events?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=home">See project updates.</a></p>
+            <p><a href="https://cisl.cast.org/products/clusive-guides">Quick Start Guides</a></p>
             <p><a href="https://docs.google.com/document/d/1ACE8Qsk_v73vdZyyKPvOg5njWnAwN4ZNCE3UyHJKSZA/edit?usp=sharing">Clusive FAQs</a></p>
         </div>
     </div>

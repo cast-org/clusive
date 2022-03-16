@@ -8,6 +8,7 @@ from google.api_core.exceptions import Forbidden
 from google.cloud import translate_v2 as translate
 
 from eventlog.signals import translation_action
+from library.models import Book
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +18,18 @@ class TranslateTextView(LoginRequiredMixin, View):
     def post(self, request):
         text = request.POST.get('text')
         lang = request.POST.get('language')
+        book_id = request.POST.get('book_id')
+        book = Book.objects.get(pk=book_id) if book_id else None
+        error = None
         logger.debug("Received a translation request: %s" % text)
 
         translation_action.send(sender=TranslateTextView.__class__,
                                 request=request,
                                 language=lang,
-                                text=text)
+                                text=text,
+                                book=book)
         if not lang or lang == 'default':
-            result = 'What language do you want to translate to? Choose one in Settings under Reading Tools'
+            error = 'What language do you want to translate to? Choose one in Settings under Reading Tools'
         else:
             client = TranslateApiManager.get_google_translate_client()
             if client:
@@ -34,13 +39,18 @@ class TranslateTextView(LoginRequiredMixin, View):
                     result = answer['translatedText']
                 except Forbidden as e:
                     logger.warning('Translation failed, reason={}', e)
-                    result = 'Translation failed'
+                    error = 'Translation failed'
             else:
-                result = 'Sorry, translation feature is unavailable'
+                error = 'Sorry, translation feature is unavailable'
 
-        return JsonResponse({'result': result,
-                             'direction': TranslateApiManager.direction_for_language(lang)})
-
+        if error:
+            return JsonResponse({'result': error,
+                                 'lang': 'en',
+                                 'direction': 'ltr'})
+        else:
+            return JsonResponse({'result': result,
+                                 'lang': lang,
+                                 'direction': TranslateApiManager.direction_for_language(lang)})
 
 
 

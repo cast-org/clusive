@@ -5,6 +5,7 @@
         <div class="popover-header">
             <strong>Your thoughts?</strong>
             <span class="icon-thought" aria-hidden="true"></span>
+            {% include "shared/partial/dialog_tts.html" %}
         </div>
         <div class="popover-body">
             <p id="affectScaleQuestion">How did this reading make you feel?</p>
@@ -18,6 +19,11 @@
                         <div class="react-line react-line-3"></div>
                         <div class="react-line react-line-4"></div>
                         <div class="react-line react-line-5"></div>
+                        <!-- quadrants -->
+                        <div class="react-quad react-quad-0"></div>
+                        <div class="react-quad react-quad-1"></div>
+                        <div class="react-quad react-quad-2"></div>
+                        <div class="react-quad react-quad-3"></div>
                         <!-- wedges -->
                         <form id="affectCheckForm">
                             <div class="react-item react-item-0">
@@ -120,7 +126,26 @@
                     </div>
                 </div>
             </div>
+            <div id="affectFreeResponseArea" class="form-group" style="display:none;">
+                <label id="affectFreeQuestion" for="affectText0" class="form-label">Why did it make you feel this way?</label>
+                <div class="stt-wrapper">
+                    <textarea id="affectText0" class="form-control" name="affect-free"></textarea>
+                    <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#affectText0"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
+                </div>
+            </div>
+            <hr/>
+
             <form id="comprehensionCheckForm">
+                {% if customization.question %}
+                <div class="form-group">
+                    <label id="customQuestion" for="compText1" class="form-label">{{ customization.question }}</label>
+                    <div class="stt-wrapper">
+                        <textarea id="compText1" class="form-control" name="comprehension-custom"></textarea>
+                        <a href="#" role="button" class="stt-btn" data-cast="stt" data-target="#compText1"><span class="icon-mic" aria-hidden="true"></span><span class="sr-only">Use Speech to Text</span></a>
+                    </div>
+                </div>
+                <hr/>
+                {% endif %}
                 <p id="compScaleQuestion">How much did you learn from this reading?</p>
                 <div class="form-inline">
                     <div class="form-check form-checkradio me-1">
@@ -138,8 +163,8 @@
                 </div>
                 <div id="comprehensionFreeResponseArea" class="form-group" style="display:none;">
                     <label id="compFreeQuestion" for="compText0" class="form-label">
-                        <span id="compTextPromptYes" style="display:none;">What's one thing you learned?</span>
-                        <span id="compTextPromptNo" style="display:none;">Comments:</span>
+                        <span id="compTextPromptYes" style="display:none;">What is one thing that you learned or found interesting?</span>
+                        <span id="compTextPromptNo" style="display:none;">Why did you pick "Nothing"?</span>
                     </label>
                     <div class="stt-wrapper">
                         <textarea id="compText0" class="form-control" name="comprehension-free"></textarea>

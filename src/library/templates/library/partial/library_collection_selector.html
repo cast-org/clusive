@@ -5,7 +5,9 @@
                 <div class="dropdown">
                     <div class="d-flex">
                         <span class="library-filter-label">View:</span>
-                        <button type="button" class="link-btn text-wrap ms-0_25" data-cfw="dropdown" data-cfw-dropdown-target="#libraryView">{{ current_view_name }} <span class="caret aria-hidden="true"></span></button>
+                        <button type="button" class="link-btn text-wrap ms-0_25" data-cfw="dropdown" data-cfw-dropdown-target="#libraryView"
+                                data-clusive-tip-id="view" data-clusive-tip-action="view" data-cfw-tooltip-placement="bottom auto"
+                        >{{ current_view_name }} <span class="caret" aria-hidden="true"></span></button>
                     </div>
                     <ul id="libraryView" class="dropdown-menu">
                         {% for p in clusive_user.periods.all %}
@@ -16,6 +18,11 @@
                             </a>
                         </li>
                         {% endfor %}
+                        <li>
+                            <a href="{% url 'library' style=style sort=sort view='starred' %}"
+                               {% if current_view == 'starred' %}class="active" aria-current="true"{% endif %}>
+                            {{view_names.starred}}</a>
+                        </li>
                         <li>
                             <a href="{% url 'library' style=style sort=sort view='public' %}"
                                {% if current_view == 'public' %}class="active" aria-current="true"{% endif %}>

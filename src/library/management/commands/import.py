@@ -8,7 +8,7 @@ from zipfile import BadZipFile
 from django.core.management.base import BaseCommand, CommandError
 
 from glossary.util import test_glossary_file
-from library.parsing import unpack_epub_file, scan_book, BookNotUnique, BookMismatch
+from library.parsing import unpack_epub_file, scan_book, BookMismatch, convert_and_unpack_docx_file
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,10 @@ class Command(BaseCommand):
 
     def handle(self, *labels, **options):
         self.check_args(*labels)
-        # Unpack EPUB files first
+        # convert docx files first
+        for label in [l for l in labels if self.looks_like_docx(l)]:
+            self.handle_docx(label)
+        # Unpack EPUB files
         for label in [l for l in labels if self.looks_like_an_epub(l)]:
             self.handle_epub(label)
         # Then copy in the other items
@@ -46,6 +49,7 @@ class Command(BaseCommand):
 
     def check_args(self, *labels):
         epubs = 0
+        docxs = 0
         directories = 0
         glossary = 0
         for label in labels:
@@ -61,12 +65,15 @@ class Command(BaseCommand):
                         exit(1)
                 elif self.looks_like_an_epub(label):
                     epubs += 1
+                elif self.looks_like_docx(label):
+                    logger.debug('FOUND A DOCX IN CHECKING ARGS')
+                    docxs += 1
                 else:
                     raise CommandError('Do not know how to import file: %s' % label)
             else:
                 raise CommandError('File not found: %s' % label)
-        if epubs == 0:
-            raise CommandError('No .epub files provided, cannot import.')
+        if epubs == 0 and docxs == 0:
+            raise CommandError('No .epub or .docx files provided, cannot import.')
         if directories > 1:
             raise CommandError('At most one directory (of glossary images) should be included.')
         if glossary > 1:
@@ -77,12 +84,30 @@ class Command(BaseCommand):
     def looks_like_an_epub(self, label):
         return label.lower().endswith(('.epub', '.epub3'))
 
+    def looks_like_docx(self, label):
+        return label.lower().endswith(('.docx'))
+
     def looks_like_a_glossary(self, label):
         return label.lower().endswith('.json')
 
     def looks_like_glossary_image_directory(self, label):
         file = Path(label)
         return file.is_dir()
+
+    def handle_docx(self, label: str):
+        try:
+            logger.debug('handling A DOCX FILE: %s' % label)
+            (bv, changed) = convert_and_unpack_docx_file(None, label)
+            # Can't really check for newness in Word docs. Just assume it's new.
+            self.found_new_content = True
+            if bv and not self.book:
+                self.book = bv.book
+            self.version += 1
+        except FileNotFoundError:
+            raise CommandError('File not found')
+        except BookMismatch:
+            raise CommandError('Mismatched titles, stopping import')
+
 
     def handle_epub(self, label: str):
         try:
@@ -98,6 +123,7 @@ class Command(BaseCommand):
             raise CommandError('Not an EPUB file')
         except BookMismatch:
             raise CommandError('Mismatched titles, stopping import')
+
 
     def handle_copy(self, label: str):
         if self.looks_like_a_glossary(label):

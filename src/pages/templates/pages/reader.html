@@ -59,6 +59,7 @@ var manifest_path = "{{ manifest_path }}";
                     <div class="modal-header-block">
                         <h2 class="modal-title">Image Details</h2>
                     </div>
+                    {% include "shared/partial/dialog_tts.html" %}
                     <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close">
                         <span class="icon-cancel-circled2" aria-hidden="true"></span>
                     </button>
@@ -92,6 +93,8 @@ var manifest_path = "{{ manifest_path }}";
         {% for a in annotations %}
             annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
         {% endfor %}
+        var definitions = JSON.parse('{{cuelist|safe}}');
+        var definitionsSeen = {};
         var lastReadingPosition = {{ last_position|safe }};
 
         var selectionMenuItems = [
@@ -121,6 +124,7 @@ var manifest_path = "{{ manifest_path }}";
             },
             rights: {
                 enableAnnotations: true,
+                enableDefinitions: true,
                 enableTTS: true,
                 enableBookmarks: false,
                 enableMaterial: false,
@@ -130,7 +134,7 @@ var manifest_path = "{{ manifest_path }}";
                 autoGeneratePositions: false
             },
             tts: {
-                enableSplitter: true,
+                enableSplitter: false,
                 highlight: "words",
                 autoScroll: true,
                 rate: 1.0,
@@ -141,27 +145,30 @@ var manifest_path = "{{ manifest_path }}";
                 },
                 api: {
                     started: function() {
-                        console.log('api started');
+                        console.debug('D2Reader TTS started');
                         window.parent.clusiveTTS.updateUI('play');
                         return null;
                     },
                     stopped: function() {
-                        console.log('api stoped');
-                        window.parent.clusiveTTS.updateUI('stop');
+                        console.debug('D2Reader TTS stopped');
+                        // `stopped` is called when reader tts starts speaking,
+                        // after the `started` callback, resulting in incorrect control state
+                        // so ignore for the time being
+                        //window.parent.clusiveTTS.updateUI('stop');
                         return null;
                     },
                     paused: function() {
-                        console.log('api paused');
+                        console.debug('D2Reader TTS paused');
                         window.parent.clusiveTTS.updateUI('pause');
                         return null;
                     },
                     resumed: function() {
-                        console.log('api resumed');
+                        console.debug('D2Reader TTS resumed');
                         window.parent.clusiveTTS.updateUI('resume');
                         return null;
                     },
                     finished: function() {
-                        console.log('api finished');
+                        console.debug('D2Reader TTS finished');
                         window.parent.clusiveTTS.updateUI('stop');
                         return null;
                     }
@@ -184,15 +191,46 @@ var manifest_path = "{{ manifest_path }}";
                         return addNewAnnotation(annotation, pub_id, pub_version);
                     },
                     selectedAnnotation: function (annotation) {
-                        console.debug('Selected annotation: ', annotation.id);
-                        showExistingAnnotation(annotation);
-                        return Promise.resolve();
+                        if (annotation) {
+                            console.debug('Selected annotation: ', annotation.id);
+                            showExistingAnnotation(annotation);
+                            return Promise.resolve();
+                        } else {
+                            console.debug('selectedAnnotation called with no annotation');
+                            return Promise.resolve();
+                        }
                     },
                     deleteAnnotation: function (annotation) {
                         console.warn('Not implemented: Delete annotation: ', annotation.id);
                         return Promise.reject();
                     }
                 }
+            },
+            define: {
+                color: "transparent",
+                hideLayer: {{ hide_cues | yesno:"true,false" }},
+                fullWordSearch: true,
+                api: {
+                    click: function (item, element) {
+                        window.openGlossaryForWord(item.terms[0]);
+                    },
+                    success: function (item, element) {
+                        console.log("  define item " + item.terms + " was found " + element.length + " times");
+                    },
+                    visible: function (item, element) {
+                        var word = item.terms[0];
+                        if (!definitionsSeen[word]) {
+                            definitionsSeen[word] = 1;
+                            console.log("first time define visible: ", word);
+                            var message = {
+                                type: 'CV',
+                                word: word
+                            }
+                            clusiveEvents.messageQueue.add(message);
+                        }
+                    },
+                },
+                definitions: definitions
             },
             bookmarks: {
                 api: {
@@ -219,7 +257,9 @@ var manifest_path = "{{ manifest_path }}";
                             // Handle initial TTS setting
                             console.debug('doing initial tts setting');
                             var availablePreferredVoices = cisl.prefs.modalSettings.getAvailablePreferredVoices(clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_readVoices);
-                            clusiveTTS.setCurrentVoice(availablePreferredVoices[0]);
+                            clusiveTTS.updateSettings({
+                                voice: availablePreferredVoices[0]
+                            });
                             // Update additional TTS settings - such as rate
                             D2Reader.applyTTSSettings(readerOptions.userSettings.tts);
                             firstResourceLoaded = true;

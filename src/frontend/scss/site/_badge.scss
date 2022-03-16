@@ -29,7 +29,7 @@
     font-weight: $tag-font-weight;
     line-height: $btn-line-height;
     color: var(--CT_badgeCountColor);
-    vertical-align: middle;
+    //vertical-align: middle;
     background-color: var(--CT_badgeCountBg);
     border-color: var(--CT_badgeCountBorderColor);
     @include border-radius($btn-border-radius);

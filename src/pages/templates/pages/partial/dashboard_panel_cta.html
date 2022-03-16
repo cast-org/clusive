@@ -20,6 +20,17 @@
         {% if request.clusive_user.role == 'TE' %}
         <p>Create your classes and student accounts by clicking the "Manage" link in the navigation bar.</p>
         {% endif %}
+    {% elif data.type == 'bookshare' %}
+        {% if request.clusive_user.role == 'ST' %}
+            <h2>Are you a Bookshare user?</h2>
+            <p>Click your name in the menu and go to “My Account” to connect to Bookshare and import any book into Clusive!</p>
+        {% else %}
+            <h2>Are your students Bookshare users?</h2>
+            <p>Are you? Bookshare users can connect Clusive to Bookshare and import any book to read in Clusive.
+            To connect, click your name in the menu and go to “My Account”</p>
+        {% endif %}
+        <a href="{% url 'take_cta' cta=data.type %}" class="btn btn-primary mb-1">Go to My Account</a>
+        <a href="{% url 'decline_cta' cta=data.type %}" class="btn btn-link mb-1">No, thanks</a><br/>
     {% elif data.type == 'summer_reading_st' %}
         <h2>Congrats, {{ user.first_name }}! <span class="icon-star"></span></h2>
         <p>You read for 100 minutes! You can now enter a raffle for the chance to win a $10 Visa gift card.</p>

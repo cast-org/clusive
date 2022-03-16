@@ -48,5 +48,15 @@
       "enabled": true,
       "max": 10
     }
+  },
+  {
+    "model": "tips.calltoaction",
+    "pk": 6,
+    "fields": {
+      "name": "bookshare",
+      "priority": 4,
+      "enabled": true,
+      "max": 10
+    }
   }
 ]

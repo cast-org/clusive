@@ -64,18 +64,15 @@
             color: var(--RS__visitedColor);
         }
 
+        //stylelint-disable selector-max-id, selector-class-pattern, declaration-no-important
         svg,
         img {
             // Make sure the proper bg-color is used for the blend mode
-            // stylelint-disable-next-line declaration-no-important
             background-color: var(--RS__backgroundColor) !important;
             mix-blend-mode: var(--CRT_imgMixBlendMode);
         }
 
-
-        // stylelint-disable declaration-no-important
-        // stylelint-disable-next-line selector-class-pattern
-        .R2_CLASS_HIGHLIGHT_AREA {
+        #R2_ID_HIGHLIGHTS_CONTAINER .R2_CLASS_HIGHLIGHT_AREA {
             background-color: var(--CRT_highlightOverlayBg) !important;
             mix-blend-mode: var(--CRT_highlightOverlayMixBlendMode) !important;
 
@@ -84,6 +81,10 @@
                 background-color: var(--CRT_highlightOverlayHoverBg) !important;
             }
         }
-        // stylelint-enable declaration-no-important
+
+        #R2_ID_DEFINITIONS_CONTAINER .R2_CLASS_HIGHLIGHT_AREA {
+            //box-shadow: 0 .0625em 0 0 var(--CRT_glossaryUnderline), inset 0 -.125em 0 0 var(--CRT_glossaryUnderline);
+            border-bottom: .1875em solid var(--CRT_glossaryUnderline);
+        }
     }
 }

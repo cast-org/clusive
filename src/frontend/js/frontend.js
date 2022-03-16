@@ -1,5 +1,6 @@
-/* global Masonry, clusiveTTS, clusivePrefs, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation */
-/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate */
+/* global Masonry, cisl, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation, confetti */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate, confettiCannon */
+/*eslint quotes: ["error", "backtick"]*/
 
 // Set up common headers for Ajax requests for Clusive's event logging
 $.ajaxPrefilter(function(options) {
@@ -100,7 +101,7 @@ function libraryMasonryEnable() {
     elem.classList.add('has-masonry');
 
     libraryMasonryApi = new Masonry(elem, {
-        itemSelector: '.card-library',
+        itemSelector: '.card-library, .card-special',
         columnWidth: '.card-library',
         percentPosition: true,
         transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
@@ -306,6 +307,8 @@ function starsSelectedText() {
         }).done(function(html) {
             $('#star_rating_panel').replaceWith(html);
             starsSelectedTextUpdate($('#star_rating_panel .stars')[0]);
+            // eslint-disable-next-line no-use-before-define
+            confettiCannon(e.target);
         }).fail(function(err) {
             console.error('Failed sending star rating results: ', err);
         });
@@ -492,13 +495,16 @@ function showTooltip(name) {
                 }
             });
             setTimeout(function() {
-                tip_popover.attr({
-                    'role': 'status',
-                    'aria-live': 'assertive',
-                    'aria-atomic': 'true'
-                });
-                tip_control.CFW_Tooltip('show');
-                tip_popover.trigger('focus');
+                if (tip_control.is(':visible')) {
+                    tip_popover.attr({
+                        'role': 'status',
+                        'aria-live': 'assertive',
+                        'aria-atomic': 'true'
+                    });
+                    tip_control.CFW_Tooltip('show');
+                    tip_popover.trigger('focus');
+                    window.parent.clusiveEvents.addTipViewToQueue(name);
+                }
             }, 2000);
             tip_control.one('afterHide.cfw.tooltip', function() {
                 $(this).CFW_Tooltip('dispose');
@@ -565,10 +571,12 @@ function updateLibraryData(page) {
     uri = addFilterArgs(uri);
 
     return $.get(uri).done(function(data) {
-        $('#libraryData').html(data);
+        var $libraryData = $('#libraryData');
+        $libraryData.html(data);
         if (hasBricksLayout()) {
             libraryMasonryEnable();
         }
+        $libraryData.CFW_Init();
     });
 }
 
@@ -618,7 +626,7 @@ function filterAllUpdate() {
 function libraryPageLinkSetup() {
     'use strict';
 
-    $(document.body).on('click', 'a.page-link', function(e) {
+    $(document.body).on('click', 'a.ajax-page-link', function(e) {
         e.preventDefault();
         var $elm = $(e.currentTarget);
         updateLibraryData($elm.attr('href'))
@@ -654,11 +662,11 @@ function libraryStyleSortLinkSetup() {
     });
 }
 
-// Clicking one of the bars in the dashboard reading-time visualization highlights other bars for the same book.
 function dashboardSetup() {
     'use strict';
 
     var $body = $('body');
+    // Clicking one of the bars in the dashboard activity panel highlights other bars for the same book.
     $body.on('focus', '.readtime-bar', function() {
         var id = $(this).data('clusive-book-id');
         if (id) {
@@ -670,12 +678,65 @@ function dashboardSetup() {
         $('.readtime-bar.active').removeClass('active');
     });
 
+    // Timescale links in the dashboard activity panel
     $body.on('click', 'a.activity-panel-days', function(e) {
         e.preventDefault();
+        var $studentActivityPanel = $('#StudentActivityPanel');
+        $studentActivityPanel.find('table tr.loading').show();
+        $studentActivityPanel.find('table tr.real-data').hide();
         $.get('/dashboard-activity-panel/' + $(this).data('days'))
             .done(function(result) {
-                $('#StudentActivityPanel').replaceWith(result);
+                $studentActivityPanel.replaceWith(result);
                 $('#StudentActivityPanel').CFW_Init();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
+    });
+
+    // Sort links in the dashboard activity panel
+    $body.on('click', 'a.activity-panel-sort', function(e) {
+        e.preventDefault();
+        var $studentActivityPanel = $('#StudentActivityPanel');
+        $studentActivityPanel.find('table tr.loading').show();
+        $studentActivityPanel.find('table tr.real-data').hide();
+        $.get('/dashboard-activity-panel-sort/' + $(this).data('sort'))
+            .done(function(result) {
+                $studentActivityPanel.replaceWith(result);
+                $('#StudentActivityPanel').CFW_Init();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement dashboard panel: ', err);
+            });
+    });
+
+    $body
+        .on('click', '.readtime-bar[data-cfw="tooltip"]', function(e) {
+            $(e.currentTarget).attr('aria-expanded', 'true');
+        })
+        .on('beforeShow.cfw.tooltip', '.readtime-bar[data-cfw="tooltip"]', function() {
+            $('.readtime-tooltip:visible').CFW_Tooltip('hide');
+        })
+        .on('afterHide.cfw.tooltip', '.readtime-bar[data-cfw="tooltip"]', function(e) {
+            $(e.currentTarget).attr('aria-expanded', 'false');
+        });
+
+    $body.on('click', '.detailTrigger', function(e) {
+        e.preventDefault();
+        var $link = $(e.currentTarget);
+        // Fill in student name
+        $('#readDetailStudentName').text($link.data('clusive-student-name'));
+        $('#readDetailStudentLoading').show();
+        $('#readDetailStudentContent').hide();
+        $link.CFW_Modal({
+            target: '#readDetailStudent',
+            unlink: true,
+            show: true
+        });
+        $.get('/dashboard-activity-detail/' + $link.data('clusive-student-id') + '/' + $link.data('clusive-book-id'))
+            .done(function(result) {
+                $('#readDetailStudentContent').html(result).show();
+                $('#readDetailStudentLoading').hide();
             })
             .fail(function(err) {
                 console.error('Failed fetching replacement dashboard panel: ', err);
@@ -683,8 +744,51 @@ function dashboardSetup() {
     });
 }
 
-// Context (selection) menu methods
+// Starred button functionality
+function starredButtons() {
+    'use strict';
+    var txtDefault = 'Not Starred';
+    var txtActive = 'Starred';
 
+    $(document).on('click', '.btn-check-starred', function(e) {
+        var $trigger = $(e.currentTarget);
+        var $tip = $trigger.parents('.btn-check');
+        var isActive = $trigger.is(':checked');
+        var textMsg = isActive ? txtActive : txtDefault;
+        var book = $trigger.data('clusive-book-id');
+
+         $tip.one('afterHide.cfw.tooltip', function() {
+            $(document).one('afterUnlink.cfw.tooltip', $trigger, function() {
+                $trigger.attr('aria-label', textMsg);
+                $tip
+                    .removeAttr('data-cfw-tooltip-title')
+                    .CFW_Tooltip({
+                        title: textMsg
+                    });
+            });
+            $tip.CFW_Tooltip('dispose');
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/library/setstarred',
+            data: {
+                book: book,
+                starred: isActive
+            }
+        }).fail(function(err) {
+            console.error('Failed sending star rating results: ', err);
+        });
+
+        $trigger.attr('aria-label', textMsg);
+        $tip.data('cfw.tooltip').$target.find('.tooltip-body').text(textMsg);
+        setTimeout(function() {
+            $tip.CFW_Tooltip('locateUpdate');
+        });
+    });
+}
+
+// Context (selection) menu methods
 function contextLookup(selection) {
     'use strict';
 
@@ -708,6 +812,390 @@ function contextTranslate(selection) {
     load_translation(selection);
 }
 
+function originInViewport(elem) {
+    'use strict';
+
+    if (typeof elem === 'undefined') {
+        return null;
+    }
+
+    var elRect = elem.getBoundingClientRect();
+    var winHeight = window.innerHeight || document.documentElement.clientHeight;
+    var winWidth = window.innerWidth || document.documentElement.clientWidth;
+
+    return {
+        x: (elRect.left + (elRect.width / 2)) / winWidth,
+        y: (elRect.top + (elRect.height / 2)) / winHeight
+    };
+
+    /*
+    var inViewport = elRect.top >= 0 && elRect.left >= 0 && elRect.bottom <= winHeight && elRect.right <= winWidth;
+
+    if (inViewport) {
+        return {
+            x: (elRect.left + (elRect.width / 2)) / winWidth,
+            y: (elRect.top + (elRect.height / 2)) / winHeight
+        };
+    }
+
+    return null;
+    */
+}
+
+// See: https://github.com/catdad/canvas-confetti
+function confettiCannon(elem) {
+    'use strict';
+
+    if (cisl.prefs.userPrefersReducedMotion()) {
+        return;
+    }
+
+    var viewportOrigin = originInViewport(elem);
+    var count = 300;
+    var defaults = {
+        origin: {
+            y: 1
+        },
+        zIndex: 1100
+    };
+
+    function fire(particleRatio, opts) {
+        // eslint-disable-next-line compat/compat
+        confetti(Object.assign({}, defaults, opts, {
+            particleCount: Math.floor(count * particleRatio)
+        }));
+    }
+
+    if (viewportOrigin !== null) {
+        // Simplified cannon from single element
+        confetti({
+            origin: viewportOrigin,
+            particleCount: 75,
+            scalar: 0.75,
+            spread: 360,
+            startVelocity: 20,
+            zIndex: 1100
+        });
+    } else {
+        // Larger full-viewport cannon
+        fire(0.25, {
+            spread: 26,
+            startVelocity: 55
+        });
+        fire(0.2, {
+            spread: 60
+        });
+        fire(0.35, {
+            spread: 100,
+            decay: 0.91,
+            scalar: 0.8
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 25,
+            decay: 0.92,
+            scalar: 1.2
+        });
+        fire(0.1, {
+            spread: 120,
+            startVelocity: 45
+        });
+    }
+}
+
+function moreOrLess(event) {
+    'use strict';
+
+    var id = event.target.id.replace(/(more_|less_)/, '');
+    var action = event.target.id.replace(id, '');
+    if (action === 'more_') {
+        document.getElementById('long_' + id).style.display = 'block';
+        document.getElementById('short_' + id).style.display = 'none';
+    } else if (action === 'less_') {
+        document.getElementById('long_' + id).style.display = 'none';
+        document.getElementById('short_' + id).style.display = 'block';
+    }
+    event.preventDefault();
+}
+
+// Holds identifier of timer for polling while waiting for Bookshare import to be ready.
+var bookshareImportProgressTimer = null;
+
+// Flag to avoid sending a second request before the first has completed.
+var bookshareImportCheckInFlight = false;
+
+// Stop trying to import a Bookshare book
+function bookshareCancelImport() {
+    'use strict';
+
+    if (bookshareImportProgressTimer) {
+        clearInterval(bookshareImportProgressTimer);
+        bookshareImportProgressTimer = null;
+    }
+}
+
+// Called at the start of Bookshare import process, and then periodically to see if it's ready
+function bookshareCheckImportProgress(id) {
+    'use strict';
+
+    if (bookshareImportCheckInFlight) {
+        console.warn('Bookshare check already in-flight, skipping');
+        return;
+    }
+    console.debug('Checking progress of ' + id);
+    bookshareImportCheckInFlight = true;
+    $.getJSON('/library/bookshare-import/' + id)
+        .done(function(data) {
+            if (data.status === 'done') {
+                // When import is done, redirect to metadata editing page.
+                window.location.href = '/library/metadata/upload/' + data.id;
+            } else if (data.status === 'pending') {
+                console.debug('Import is still pending');
+                bookshareImportCheckInFlight = false;
+            } else if (data.status === 'error') {
+                bookshareCancelImport();
+                $('#importPendingModal .modal-body').html(
+                    '<p><strong>Import failed</strong></p><p>' +
+                    data.message +
+                    '</p>');
+                bookshareImportCheckInFlight = false;
+            } else {
+                console.warn('Unexpected return value from API: ', data);
+            }
+        })
+        .fail(function(err) {
+            console.warn('error calling bookshare import: ', err);
+        });
+}
+
+// When 'import' button is clicked, kick off the process of importing a book
+function bookshareStartImportProcess(event) {
+    'use strict';
+
+    var $trigger = $(event.currentTarget);
+    var id = $trigger.data('bookshare-id');
+    $trigger.CFW_Modal({
+        target: '#importPendingModal',
+        unlink: true,
+        show: true,
+        container: 'body'
+    });
+    // Cancel any active import timer - there really shouldn't be any
+    if (bookshareImportProgressTimer) {
+        bookshareCancelImport();
+    }
+    // Call API to trigger import immediately, and then check import status every 5 seconds.
+    bookshareCheckImportProgress(id);
+    bookshareImportProgressTimer = setInterval(bookshareCheckImportProgress, 5000, id);
+}
+
+// Edit customization dialog: custom vocabulary words handling
+function initEditCustomizations () {
+    'use strict';
+
+    // Local storage for tracking current words, words to be added, and words
+    // to delete.
+    cisl.customVocabs = {
+        currentList: $('#id_current_vocabulary_words').val().split('|'),
+        newList: [],
+        deleteList: []
+    };
+
+    $('.sentence-starter-menu button').click(function(e) {
+       var text = $(e.currentTarget).text().replace('…', ' ');
+       var $input = $('#'+$(e.currentTarget).closest('.sentence-starter-menu').data('insert-into'));
+       $input.val($input.val() + text);
+       $input.focus();
+    });
+
+    // Transfer the final add and remove word lists to their respective hidden
+    // <input>s when the user submits the form.
+    $('#customization-edit-submit').click(function (e) {
+        $('#id_new_vocabulary_words').val(cisl.customVocabs.newList.join('|').trim());
+        console.debug('On submit, <input> words to add: ' + $('#id_new_vocabulary_words').val());
+        $('#id_delete_vocabulary_words').val(cisl.customVocabs.deleteList.join('|').trim());
+        console.debug('On submit, <input> words to delete: ' + $('#id_delete_vocabulary_words').val());
+    });
+
+    // "Add" button for text field where user enters a custom vocabulary word
+    // -- click handler.
+    $('#add-word-button').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var inputField = $('#id_word_to_add');
+        addVocabularyWord(inputField.val().trim(), inputField);
+    });
+
+    // "Add action" for text field where user enters a custom vocabulary word
+    // -- keystroke handler.
+    $('#id_word_to_add').keypress(function (e) {
+        var keycode = (e.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            e.preventDefault();
+            e.stopPropagation();
+            var inputField = $('#id_word_to_add');
+            addVocabularyWord(inputField.val().trim(), inputField);
+        }
+    });
+
+    // "x" button beside each custom vocabulary word to allow user to remove
+    // that word
+    $('.vocabulary-word-list').on('click', 'button', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        deleteVocabularyWord(e);
+    });
+
+    // "Add" button on the custom vocabulary word suggestions dialog
+    $('#add-words-from-suggestions').click(function (e) {
+        $('#modalWordSuggestions [type="checkbox"]').each(addCustomVocabFromSuggestions);
+    });
+}
+
+function deleteVocabularyWord (e) {
+    'use strict';
+
+    var parentDiv = $(e.currentTarget).parent();
+    var wordToDelete= $(e.currentTarget).attr('data-word');
+    // Remove wordToDelete from the new words list, if present.
+    var newResult = isNewWord(wordToDelete);
+    if (newResult.index !== -1) {
+        newResult.wordArray.splice(newResult.index);
+    }
+    else {
+        // Note:  leave the current words list intact as it records the
+        // actual current words -- a current word can appear in both the
+        // current words list and the deleted words list, but a new word is
+        // either in the new words list or not, and never in the deleted
+        // words list.
+        // Add wordToDelete to deleted words, but only once.
+        var deleteResult = isDeletedWord(wordToDelete);
+        if (deleteResult.index === -1) {
+            deleteResult.wordArray.push(wordToDelete);
+        }
+    }
+    // In all cases, removed the <div> containing the wordToDelete from the
+    // document.  If all have been removed, put "None" instead.
+    $(parentDiv).remove();
+    if ($('div.vocabulary-word').length === 0) {
+        $('.vocabulary-word-list').append('<span id="empty-vocabulary-list">None</span>');
+    }
+}
+
+function addVocabularyWord(newWord, /*optional*/ inputField) {
+    'use strict';
+
+    if (newWord.length) {
+        if (!all_words.includes(newWord)) {
+            $('#worderror').show();
+            if (inputField) inputField.select();
+            return;
+        } else {
+            $('#worderror').hide();
+        }
+        var condition = addCondition(newWord);
+        if (condition === 'addNew' || condition === 'addAndRemoveFromDeleted') {
+            var deleteButtonId = 'delete_' + newWord.replace(' ', '_');
+            // Add the new <div> for the "new" vocabulary word.
+            $('.vocabulary-word-list').append(`
+                <div class="col vocabulary-word new-vocabulary-word">
+                    ${newWord}
+                    <button id="${deleteButtonId}" role="button" class="delete-word-button" data-word="${newWord}"><span class="sr-only">remove {{ word }} from customization</span><span class="icon-cancel" aria-hidden="true"></span></button>
+                </div>
+            `);
+            var noWordsIndicator = $('#empty-vocabulary-list');
+            if (noWordsIndicator[0]) {
+                noWordsIndicator.remove();
+            }
+            // Update word lists.
+            if (condition === 'addNew') {
+                cisl.customVocabs.newList.push(newWord.trim());
+            }
+            else {  // condition === addAndRemoveFromDeleted
+                cisl.customVocabs.deleteList.splice(
+                    cisl.customVocabs.deleteList.indexOf(newWord)
+                );
+            }
+        }
+        else {
+            console.log(`New word ${newWord} already added (condition is ${condition})`);
+        }
+    }
+    if (inputField) {
+        inputField.val('');
+        inputField.focus();
+    }
+}
+
+function isCurrentWord (word) {
+    'use strict';
+
+    return isWordListMember(word, cisl.customVocabs.currentList);
+}
+
+function isNewWord (word) {
+    'use strict';
+
+    return isWordListMember(word, cisl.customVocabs.newList);
+}
+
+function isDeletedWord (word) {
+    'use strict';
+
+    return isWordListMember(word, cisl.customVocabs.deleteList);
+}
+
+function isWordListMember (word, wordList) {
+    'use strict';
+
+    if (!wordList) {
+        return { wordArray: [], index: -1 };
+    }
+    else {
+        return { wordArray: wordList, index: wordList.indexOf(word) };
+    }
+}
+
+function addCondition (word) {
+    'use strict';
+
+    // If already in new word list, be done.
+    var newWord = isNewWord(word);
+    if (newWord.index !== -1) {
+        return 'dontAdd';
+    }
+    // Not in new word list.  Check the current words and the deleted words.
+    // If a current word but not deleted, be done.
+    var currentWord = isCurrentWord(word);
+    var deletedWord = isDeletedWord(word);
+    if (currentWord.index !== -1 && deletedWord.index === -1) {
+        return 'dontAdd';
+    }
+    // If a current word and in the deleted list, remove from deleted, and
+    // add back to display.
+    if (currentWord.index !== -1 && deletedWord.index !== -1) {
+        return 'addAndRemoveFromDeleted';
+    }
+    // Not in new list, nor a current word, simply add it.
+    return 'addNew';
+}
+
+// For custom vocabulary word suggestions modal dialog
+function addCustomVocabFromSuggestions (index, checkbox) {
+    if ($(checkbox).prop('checked')) {
+        addVocabularyWord($(checkbox).attr('data-word'));
+        $(checkbox).prop('checked', false);
+    }
+}
+
+// Configure the "Delete this Customization?" confirmation popup.
+function configureConfirmDeletionPopup (e) {
+    $('#deleteCustomizationTitle').text($(e.currentTarget).attr('data-title'));
+    $('#deleteCustomizationSubmit').attr(
+        'href', $(e.currentTarget).attr('data-delete-url')
+    );
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -727,6 +1215,7 @@ $(window).ready(function() {
     libraryPageLinkSetup();
     libraryStyleSortLinkSetup();
     dashboardSetup();
+    starredButtons();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {
@@ -737,4 +1226,14 @@ $(window).ready(function() {
     if (settingReadSpeed !== null) {
         formRangeTip(settingReadSpeed, formRangeReadSpeed);
     }
+
+    document.querySelectorAll('.more-or-less').forEach(function(aButton) {
+        aButton.addEventListener('click', moreOrLess);
+    });
+    if (document.querySelector('.custom-vocabulary-editor') !== null) {
+        initEditCustomizations();
+    }
+    $('body').on('click', 'a.delete-customization', configureConfirmDeletionPopup);
+    $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
+    $('body').on('click', 'button.import-button', bookshareStartImportProcess);
 });

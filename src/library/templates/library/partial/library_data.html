@@ -1,7 +1,8 @@
 <div id="libraryData">
-{% if object_list|length == 0 %}
-    <p class="my-1">No readings found with current search and filters.</p>
-{% else %}
+    {% if object_list|length == 0 %}
+        <p class="my-1">No readings found with current search and filters.</p>
+    {% endif %}
+
     {% if style == 'list' %}
         {% include "library/partial/library_list_content.html" %}
     {% else %}
@@ -12,7 +13,7 @@
         <div class="library-pagination-wrapper">
             <div class="pagination library-pagination">
                 {% if page_obj.has_previous %}
-                <a href="{{ page_obj.previous_page_number }}" class="page-link">
+                <a href="{{ page_obj.previous_page_number }}" class="page-link ajax-page-link">
                     <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
                     Previous
                 </a>
@@ -26,11 +27,11 @@
                     {% if pg == page_obj.number %}
                     <span class="page-link active" aria-current="page">{{pg}}</span>
                     {% else %}
-                    <a href="{{pg}}" class="page-link">{{pg}}</a>
+                    <a href="{{pg}}" class="page-link ajax-page-link">{{pg}}</a>
                     {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                <a href="{{ page_obj.next_page_number }}" class="page-link">
+                <a href="{{ page_obj.next_page_number }}" class="page-link ajax-page-link">
                     Next
                     <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
                 </a>
@@ -44,6 +45,5 @@
         </div>
     </nav>
     {% endif %}
-{% endif %}
 </div>
 <script> current_page_number = {{page_obj.number}};</script>

@@ -4,6 +4,7 @@ import os
 
 from lemminflect import getAllLemmas, getAllInflections
 
+import merriamwebster.util
 from wordnet import util as wordnetutil
 from .bookglossary import BookGlossary
 
@@ -16,27 +17,39 @@ logger = logging.getLogger(__name__)
 book_glossaries = {}
 
 
-def has_definition(book, word):
+def has_definition(book, word, priority_lookup):
     """Determine whether the given word exists in the book's glossary or dictionary.
-     We don't want to query or cue words when we don't have a definition."""
-    return lookup(book, word) is not None
+     We don't want to query or cue words when we don't have a definition.
+     priority lookups can attempt to use a priority dictionary """
+    return lookup(book, word, priority_lookup) is not None
 
 
-def lookup(book, word):
+def lookup(book, word, priority_lookup):
     defs = None
     if book:
         # First try to find in a book glossary
         book_id = book.id
         if not book_glossaries.get(book_id):
+            # Book glossary is in the content directory
+            # stored in memory on the server - persistent
+            # this is not in the database
             book_glossaries[book_id] = BookGlossary(book_id)
         defs = book_glossaries[book_id].lookup(word)
-        if (defs):
+        if defs:
             defs['source'] = 'Book'
-    if not defs:
-        # Next try Wordnet
-        defs = wordnetutil.lookup(word)
-        if (defs):
-            defs['source'] = 'Wordnet'
+            return defs
+
+    # Next try Merriam-Webster (if configured)
+    if priority_lookup:
+        defs = merriamwebster.util.lookup(word)
+        if defs:
+            defs['source'] = 'MW'
+            return defs
+
+    # Next try Wordnet
+    defs = wordnetutil.lookup(word)
+    if defs:
+        defs['source'] = 'Wordnet'
     return defs
 
 
@@ -75,12 +88,20 @@ def base_form_sort_key(word):
 
 
 def all_forms(word):
+    """
+    Return the given word and all its inflected forms as a list.
+    :param word: base form of word
+    :return: list of forms. The given base form will be first in the returned list.
+    """
     wl = word.lower()
     all_forms = set()
     all_forms.add(wl)
     for list in getAllInflections(wl).values():
         all_forms.update(list)
-    return all_forms
+    all_forms.remove(wl)
+    result = [wl]
+    result.extend(sorted(all_forms))
+    return result
 
 
 def test_glossary_file(glossfile):

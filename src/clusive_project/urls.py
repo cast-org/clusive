@@ -36,5 +36,6 @@ urlpatterns = [
     path('translation/', include('translation.urls')),
     path('progressbarupload/', include('progressbarupload.urls')),
     path('accounts/', include('allauth.socialaccount.providers.google.urls')),
+    path('accounts/', include('oauth2.bookshare.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

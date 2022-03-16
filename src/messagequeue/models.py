@@ -1,29 +1,27 @@
+import json
+import logging
 from enum import Enum
 
-from django.db import models
-
+import django.dispatch
 from django.urls import resolve
 
-import json
-
-import django.dispatch
-
 from eventlog.signals import control_used, page_timing
-
-import logging
-
-from tips.signals import tip_related_action
+from glossary.signals import cue_viewed
+from tips.signals import tip_related_action, tip_view
 
 logger = logging.getLogger(__name__)
 
 client_side_prefs_change = django.dispatch.Signal(providing_args=["timestamp", "content", "request"])
 
+
 class Message:
     class AllowedTypes(Enum):
         PREF_CHANGE = 'PC'
         CALIPER_EVENT = 'CE'
+        CUE_VIEW = 'CV'
         PAGE_TIMING = 'PT'
         TIP_RELATED_ACTION = 'TRA'
+        TIP_VIEW = 'TV'
         AUTOSAVE = 'AS'
 
     def __init__(self, message_type, timestamp, content, request):
@@ -38,19 +36,23 @@ class Message:
             self.send_client_side_prefs_change()
         if self.type == Message.AllowedTypes.CALIPER_EVENT:
             self.send_client_side_caliper_event()
+        if self.type == Message.AllowedTypes.CUE_VIEW:
+            self.send_cue_view()
         if self.type == Message.AllowedTypes.PAGE_TIMING:
             self.send_page_timing()
         if self.type == Message.AllowedTypes.TIP_RELATED_ACTION:
             self.send_tip_related_action()
+        if self.type == Message.AllowedTypes.TIP_VIEW:
+            self.send_tip_view()
         if self.type == Message.AllowedTypes.AUTOSAVE:
             self.send_autosave()
 
     def send_autosave(self):
         logger.debug("autosave request received: %s", self.content)
+        url = self.content['url']
         try:
-            url = self.content['url']
-            associated_view = resolve(url)                    
-            associated_view.func.view_class.create_from_request(self.request, json.loads(self.content['data']), **associated_view.kwargs)        
+            associated_view = resolve(url)
+            associated_view.func.view_class.create_from_request(self.request, json.loads(self.content['data']), **associated_view.kwargs)
         except django.urls.exceptions.Resolver404:
             logger.debug("autosave request had URL %s, but could not be resolved to a View", url)
 
@@ -65,7 +67,10 @@ class Message:
         action = self.content['caliperEvent']['action']
         reader_info = self.content['readerInfo']
         control_used.send(sender=self.__class__, timestamp=self.timestamp,
-                          request=self.request, event_id = event_id, event_type=event_type, control=control, value=value, action=action, reader_info=reader_info)
+                          request=self.request, event_id=event_id, event_type=event_type, control=control, value=value, action=action, reader_info=reader_info)
+
+    def send_cue_view(self):
+        cue_viewed.send(sender=self.__class__, request=self.request, word = self.content['word'])
 
     def send_page_timing(self):
         event_id = self.content['eventId']
@@ -74,6 +79,10 @@ class Message:
     def send_tip_related_action(self):
         tip_related_action.send(sender=self.__class__, timestamp=self.timestamp,
                                 request=self.request, action=self.content['action'])
+
+    def send_tip_view(self):
+        tip_view.send(sender=self.__class__, timestamp=self.timestamp,
+                      request=self.request, tip=self.content['tip'])
 
     def __str__(self):
         return '<%s: %s>' % (self.type.name, self.content)

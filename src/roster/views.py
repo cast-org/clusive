@@ -5,6 +5,8 @@ from datetime import timedelta
 from urllib.parse import urlencode
 
 import requests
+from allauth.account.models import EmailAddress
+from allauth.socialaccount import signals
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from django.contrib import messages
@@ -17,6 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
+from django.db.models.functions import Lower
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -34,7 +37,9 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from messagequeue.models import Message, client_side_prefs_change
-from pages.views import ThemedPageMixin, SettingsPageMixin
+from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
+    GENERIC_BOOKSHARE_ACCOUNT_NAMES
+from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
 from roster import csvparser
 from roster.csvparser import parse_file
 from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
@@ -408,50 +413,32 @@ def upload_csv(request):
     return render(request, template, context)
 
 
-class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin, TemplateView):
     template_name = 'roster/manage.html'
-    periods = None
-    current_period = None
 
     def get(self, request, *args, **kwargs):
         user = request.clusive_user
         if not user.can_manage_periods:
             self.handle_no_permission()
-        if self.periods is None:
-            self.periods = user.periods.all()
-        if kwargs.get('period_id'):
-            self.current_period = get_object_or_404(Period, pk=kwargs.get('period_id'))
-            # Make sure you can only edit a Period you are in.
-            if self.current_period not in self.periods:
-                self.handle_no_permission()
-        if self.current_period is None:
-            if user.current_period:
-                self.current_period = user.current_period
-            elif self.periods:
-                self.current_period = self.periods[0]
-            # else:
-            #     # No periods.  If this case actually happens, should have a better error message.
-            #     self.handle_no_permission()
-        if self.current_period != user.current_period and self.current_period is not None:
-            user.current_period = self.current_period
-            user.save()
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['periods'] = self.periods
-        context['current_period'] = self.current_period
         if self.current_period is not None:
-            context['students'] = self.make_student_info_list()
+            context['people'] = self.make_people_info_list(self.request.user)
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
-            context['allow_add_student'] = (self.current_period.data_source == RosterDataSource.CLUSIVE)
         return context
 
-    def make_student_info_list(self):
-        students = self.current_period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+    def make_people_info_list(self, current_user):
+        people = self.current_period.users.exclude(user=current_user).order_by(Lower('user__first_name'))
         return [{
-            'info': s.user,
-        } for s in students]
+            'info': {
+                'first_name': p.user.first_name,
+                'email': p.user.email,
+                'role' : Roles.display_name(p.role),
+                'id': p.user.id
+            }
+        } for p in people]
 
     def configure_event(self, event: Event):
         event.page = 'Manage'
@@ -539,7 +526,7 @@ class ManageEditUserView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settin
         form.save()
         target : User
         target = form.instance
-        new_pw = form.cleaned_data['password']
+        new_pw = form.cleaned_data.get('password')
         if new_pw:
             target.set_password(new_pw)
             target.save()
@@ -608,7 +595,6 @@ class ManageCreatePeriodView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Se
     def configure_event(self, event: Event):
         event.page = 'ManageCreatePeriod'
 
-
 def finish_login(request):
     """
     Called as the redirect after Google Oauth SSO login.
@@ -617,10 +603,27 @@ def finish_login(request):
     if request.user.is_staff:
         return HttpResponseRedirect('/admin')
     clusive_user = ClusiveUser.from_request(request)
-    # If you're logging in via Google, then you are marked as a Google user from now on.
-    if clusive_user.data_source != RosterDataSource.GOOGLE:
-        clusive_user.data_source = RosterDataSource.GOOGLE
-        clusive_user.save()
+    google_user = SocialAccount.objects.filter(user=request.user, provider='google')
+    if google_user:
+        # If you're logging in via Google, then you are marked as a Google user from now on.
+        if clusive_user.data_source != RosterDataSource.GOOGLE:
+            logger.debug("  Changing user to Google user")
+            clusive_user.data_source = RosterDataSource.GOOGLE
+            clusive_user.external_id = google_user[0].uid
+            clusive_user.save()
+    else:
+        # Not a Google user
+        if clusive_user.data_source != RosterDataSource.CLUSIVE:
+            logger.debug("  Changing user to non-google user")
+            clusive_user.data_source = RosterDataSource.CLUSIVE
+            clusive_user.save()
+
+    # Check for valid Bookshare access token for this user.
+    if is_bookshare_connected(request):
+        request.session['bookshare_connected'] = True
+    else:
+        request.session['bookshare_connected'] = False
+
     # If you haven't logged in before, your role will be UNKNOWN and we need to ask you for it.
     if clusive_user.role == Roles.UNKNOWN:
         request.session['sso'] = True
@@ -731,6 +734,12 @@ class GoogleCoursesView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Templat
     def configure_event(self, event: Event):
         event.page = 'ManageImportPeriodChoice'
 
+class GoogleRoleMap:
+    ROLE_MAP = { 'students': Roles.STUDENT, 'teachers': Roles.TEACHER }
+
+    @classmethod
+    def clusive_display_name(cls, google_role):
+        return Roles.display_name(GoogleRoleMap.ROLE_MAP[google_role])
 
 class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, TemplateView):
     """
@@ -739,16 +748,13 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
     The roster is saved in the session for use if the user confirms creation.
     """
     template_name = 'roster/manage_show_google_roster.html'
-    role_info = {
-        'students': { 'role': Roles.STUDENT, 'display_name': 'Student' },
-        'teachers': { 'role': Roles.TEACHER, 'display_name': 'Teacher' }
-    }
 
     def make_roster_tuples(self, google_roster):
         tuples = []
         for group in google_roster:
             for person in google_roster[group]:
                 email = person['profile']['emailAddress']
+                google_id = person['profile']['id']
                 users = User.objects.filter(email=email)
                 if users.exists():
                     user_with_that_email = users.first()
@@ -761,15 +767,17 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
                         'email': email,
                         'role': clusive_user.role,
                         'role_display': Roles.display_name(clusive_user.role),
-                        'exists': True
+                        'exists': True,
+                        'external_id': google_id
                     }
                 else:
                     a_person = {
                         'name': person['profile']['name']['givenName'],
                         'email': email,
-                        'role': self.role_info[group]['role'],
-                        'role_display': self.role_info[group]['display_name'],
-                        'exists': False
+                        'role': GoogleRoleMap.ROLE_MAP[group],
+                        'role_display': GoogleRoleMap.clusive_display_name(group),
+                        'exists': False,
+                        'external_id': google_id
                     }
                 tuples.append(a_person)
         return tuples
@@ -821,7 +829,6 @@ class GoogleRosterView(LoginRequiredMixin, ThemedPageMixin, EventMixin, Template
     def configure_event(self, event: Event):
         event.page = 'ManageImportPeriodConfirm'
 
-
 class GooglePeriodImport(LoginRequiredMixin, RedirectView):
     """
     Import new Period data that was just confirmed, then redirect to manage page.
@@ -840,7 +847,10 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
             else ResearchPermissions.PARENT_CREATED
         for person in session_data['people']:
             if person['exists']:
-                user_list.append(ClusiveUser.objects.get(user__email=person['email']))
+                clusive_user = ClusiveUser.objects.get(user__email=person['email'])
+                clusive_user.external_id = person['external_id']
+                clusive_user.save()
+                user_list.append(clusive_user)
             else:
                 properties = {
                     'username': person['email'],
@@ -850,6 +860,7 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
                     'permission': creating_permission,
                     'anon_id': ClusiveUser.next_anon_id(),
                     'data_source': RosterDataSource.GOOGLE,
+                    'external_id': person['external_id'],
                 }
                 user_list.append(ClusiveUser.create_from_properties(properties))
 
@@ -867,7 +878,6 @@ class GooglePeriodImport(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         # Redirect to newly created period
         return reverse('manage', kwargs={'period_id': self.period.id})
-
 
 class GetGoogleCourses(LoginRequiredMixin, View):
     """
@@ -936,7 +946,10 @@ class GetGoogleRoster(GetGoogleCourses):
     """
 
     def get(self, request, *args, **kwargs):
+        # There should always be a `course_id` which identifies a Google course,
+        # but the context may or may not include a Clusive `period_id`
         course_id = kwargs.get('course_id')
+        period_id = kwargs.get('period_id')
         db_access = OAuth2Database()
         user_credentials = self.make_credentials(request.user, self.classroom_scopes, db_access)
         service = build('classroom', 'v1', credentials=user_credentials)
@@ -957,6 +970,7 @@ class GetGoogleRoster(GetGoogleCourses):
             if e.status_code == 403:
                 request.session['add_scopes_return_uri'] = 'get_google_roster'
                 request.session['add_scopes_course_id'] = course_id
+                request.session['add_scopes_period_id'] = period_id
                 return HttpResponseRedirect(reverse('add_scope_access') + '?' + self.auth_parameters)
             else:
                 raise
@@ -966,12 +980,250 @@ class GetGoogleRoster(GetGoogleCourses):
         self.log_results(teachers, 'teachers')
 
         request.session['google_roster'] = { 'students': students, 'teachers': teachers }
-        return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}));
+        if period_id is not None:
+            return HttpResponseRedirect(reverse('google_roster_sync', kwargs=kwargs))
+        else:
+            return HttpResponseRedirect(reverse('manage_google_roster', kwargs={'course_id': course_id}))
 
     def log_results(self, group, role):
         logger.debug('Get Google roster: there are (%s) %s', len(group), role)
         for person in group:
             logger.debug('- %s, %s', person['profile']['name']['givenName'], person['profile']['emailAddress'])
+
+class GoogleRosterSyncView(LoginRequiredMixin, ThemedPageMixin, TemplateView):
+    """
+    Calls GetGoogleRoster to get the current google classroom roster associated
+    with the Period and displays what needs updating.
+    """
+    period = None
+    google_roster = {}
+    period_roster = None
+    roster_updates = []
+    any_changes = False
+    template_name = 'roster/manage_review_google_sync_roster.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        cu = request.clusive_user
+        self.period = get_object_or_404(Period, pk=kwargs.get('period_id'))
+
+        if not cu.can_manage_periods:
+            self.handle_no_permission()
+
+        # Extract a list of people from the Google roster and the Period's
+        # roster to make the list of updates.
+        self.google_roster = self.request.session.get('google_roster', {})
+        self.period_roster = self.period.users.exclude(user=request.user).order_by('user__first_name')
+        self.roster_updates = self.make_roster_updates(cu)
+        request.session['google_roster_updates'] = {
+            'period_id': self.period.id,
+            'roster_updates': self.roster_updates
+        }
+        logger.debug('Session data (roster updates) stored: %s', self.roster_updates)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_period'] = self.period
+        if self.period is not None:
+            context['roster_updates'] = self.roster_updates
+            context['any_changes'] = self.any_changes
+            context['course_id'] = kwargs['course_id']
+            context['current_period'] = self.period
+        return context
+
+    def make_roster_updates(self, teacher):
+        updates = []
+        # 1. Loop to find clusive_users in the Period that are either (1) in the
+        # google_roster whose email may have changed or (2) no longer in the
+        # google_roster
+        for clusive_user in self.period_roster:
+            google_user = None
+            google_id = clusive_user.external_id
+            clusive_email = clusive_user.user.email
+            for group in self.google_roster:
+                if google_id:
+                    google_user = next((person for person in self.google_roster[group] if person['profile']['id'] == google_id), None)
+                else:
+                    # In case an external_id was not stored in the clusive_user
+                    # when it was created, then use its email.  Also, take the
+                    # time to record the external_id now.
+                    google_user = next((person for person in self.google_roster[group] if person['profile']['emailAddress'] == clusive_email), None)
+                    if google_user:
+                        google_id = google_user['profile']['id']
+                        clusive_user.external_id = google_id
+                        clusive_user.save()
+
+                if google_user:     # google_user is a clusive_user
+                    break
+
+            if google_user is not None:
+                # Found clusive_user in the Period that is also in the
+                # google_roster.
+                an_update = {}
+                an_update['exists'] = True
+                an_update['in_period'] = True
+                an_update['name'] = clusive_user.user.first_name
+                an_update['role'] = clusive_user.role
+                an_update['role_display'] = Roles.display_name(clusive_user.role)
+                self.check_email(clusive_user, google_user, an_update)
+                an_update['google_id'] = google_id
+                updates.append(an_update)
+
+            else:
+                # clusive_user in Period but not in google_roster implies the
+                # google person left the google classroom.  The update is that
+                # the corrsponding clusive_user is to be removed from the
+                # Period.
+                an_update = {}
+                an_update['exists'] = True
+                an_update['in_period'] = True
+                an_update['remove'] = True
+                an_update['name'] = clusive_user.user.first_name
+                an_update['email'] = clusive_user.user.email
+                an_update['role'] = clusive_user.role
+                an_update['role_display'] = Roles.display_name(clusive_user.role)
+                an_update['google_id'] = clusive_user.external_id
+                self.any_changes = True
+                updates.append(an_update)
+
+        # 2. Loop through the google_roster to find people in the google class
+        # who need to be added to the Period
+        for group in self.google_roster:
+            for google_user in self.google_roster[group]:
+                google_id = google_user['profile']['id']
+                google_email = google_user['profile']['emailAddress']
+                clusive_user = None
+                if ClusiveUser.objects.filter(external_id=google_id).exists():
+                    clusive_user = ClusiveUser.objects.get(external_id=google_id)
+                elif User.objects.filter(email=google_email).exists():
+                    # In case an external_id was not stored in the clusive_user
+                    # when it was created, then use its email.  Also, record
+                    # the external_id for future use.
+                    user_via_email = User.objects.get(email=google_email)
+                    clusive_user = ClusiveUser.objects.get(user=user_via_email)
+                    clusive_user.external_id = google_id
+                    clusive_user.save()
+
+                if clusive_user:
+                    if clusive_user == teacher:
+                        continue
+                    try:
+                        self.period_roster.get(id=clusive_user.id)
+                        # Google person has a Clusive account and is in the
+                        # period.  Already dealt with in Loop #1
+                        continue
+                    except:
+                        # Google person in google class has a Clusive account,
+                        # but is not in Period, add them.
+                        an_update = {}
+                        an_update['exists'] = True
+                        an_update['in_period'] = False
+                        an_update['name'] = clusive_user.user.first_name
+                        an_update['role'] = clusive_user.role
+                        an_update['role_display'] = Roles.display_name(clusive_user.role)
+                        self.check_email(clusive_user, google_user, an_update)
+                        an_update['google_id'] = google_id
+                        self.any_changes = True
+                        updates.append(an_update)
+                else:
+                    # Google person in google class but does not even have a
+                    # Clusive account.
+                    an_update = {}
+                    an_update['exists'] = False
+                    an_update['in_period'] = False
+                    an_update['name'] = google_user['profile']['name']['givenName']
+                    an_update['email'] = google_user['profile']['emailAddress']
+                    an_update['role'] = GoogleRoleMap.ROLE_MAP[group]
+                    an_update['role_display'] = GoogleRoleMap.clusive_display_name(group)
+                    an_update['google_id'] = google_id
+                    self.any_changes = True
+                    updates.append(an_update)
+            # end google_user loop
+        # end google group loop
+        return updates
+
+    def check_email(self, clusive_user, google_user, an_update):
+        if clusive_user.user.email != google_user['profile']['emailAddress']:
+            an_update['new_email'] = True
+            an_update['email'] = google_user['profile']['emailAddress']
+            self.any_changes = True
+        else:
+            an_update['new_email'] = False
+            an_update['email'] = clusive_user.user.email
+
+class GooglePeriodRosterUpdate(LoginRequiredMixin, RedirectView):
+    """
+    Import updates to the Period roster that was just confirmed, then redirect
+    to manage page.
+    """
+    period = None
+
+    def get(self, request, *args, **kwargs):
+        period_id = kwargs['period_id']
+        period = get_object_or_404(Period, pk=period_id)
+
+        session_data = request.session.get('google_roster_updates', None)
+        if not session_data or session_data['period_id'] != period_id:
+            raise PermissionDenied('Roster updates are out of date')
+        creator = request.clusive_user
+        period_roster = period.users.exclude(user=request.user).order_by('user__first_name')
+        logger.debug('period_roster: %s', period_roster)
+
+        # Find or create user accounts, "remove" users from Period
+        creating_permission = ResearchPermissions.TEACHER_CREATED if creator.role == Roles.TEACHER \
+            else ResearchPermissions.PARENT_CREATED
+        for person in session_data['roster_updates']:
+            if not person.get('exists', False):
+                properties = {
+                    'username': person['email'],
+                    'email': person['email'],
+                    'first_name': person['name'],
+                    'role': person['role'],
+                    'permission': creating_permission,
+                    'anon_id': ClusiveUser.next_anon_id(),
+                    'data_source': RosterDataSource.GOOGLE,
+                    'external_id': person['google_id'],
+                }
+                clusive_user = ClusiveUser.create_from_properties(properties)
+                period.users.add(clusive_user)
+                clusive_user.save()
+
+            elif person.get('in_period', False) == False:
+                clusive_user = ClusiveUser.objects.get(external_id=person['google_id'])
+                period.users.add(clusive_user)
+                clusive_user.save()
+
+            elif person.get('remove', False):
+                user_to_remove = ClusiveUser.objects.get(external_id=person['google_id'])
+                period.users.remove(user_to_remove)
+                user_to_remove.save()
+
+            elif person.get('new_email', False):
+                # (Google) SSO users have an associated EmailAddress -- update
+                # both their User.email and their EmailAddress, if any.  There
+                # is no EmailAddress if `person` has yet to register with
+                # Clusive.
+                clusive_user = ClusiveUser.objects.get(external_id=person['google_id'])
+                clusive_user.user.email = person['email']
+                clusive_user.user.save()
+                try:
+                    email_address = EmailAddress.objects.get(user_id=clusive_user.user.id)
+                    email_address.email = person['email']
+                    email_address.save()
+                except EmailAddress.DoesNotExist:
+                    pass
+            else:
+                # Person already in period, with no changes -- nothing to add(),
+                # remove(), nor update.
+                logger.debug("User %s already in period %s", person['email'], period.name)
+
+        period.save()
+        self.period = period
+        return super().get(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        # Redirect to newly updated period
+        return reverse('manage', kwargs={'period_id': self.period.id})
 
 ########################################
 #
@@ -1035,7 +1287,6 @@ def add_scope_callback(request):
     dbAccess = OAuth2Database()
     # TODO: the provider is hard coded here -- how to parameterize?  Note that
     # this function is specific to google, so perhaps okay.
-    # Note: for production, replace the `redirect_uri` with the official uri
     client_info = dbAccess.retrieve_client_info('google')
     logger.debug('Token request to provider for larger scope access')
     resp = requests.request(
@@ -1059,10 +1310,11 @@ def add_scope_callback(request):
 
     # TODO:  There has to be a better way.
     return_uri = request.session['add_scopes_return_uri']
-    course_id = request.session['add_scopes_course_id']
+    course_id = request.session.get('add_scopes_course_id')
+    period_id = request.session.get('add_scopes_period_id')
     logger.debug('Larger scope access request complete, returning to %s, with course id %s', return_uri, course_id)
     if course_id:
-        return HttpResponseRedirect(reverse(return_uri, kwargs={'course_id': course_id}))
+        return HttpResponseRedirect(reverse(return_uri, kwargs={'course_id': course_id, 'period_id': period_id}))
     else:
         return HttpResponseRedirect(reverse(return_uri))
 
@@ -1076,3 +1328,79 @@ def get_add_scope_redirect_uri(request):
     if scheme == 'http' and request.META.get('HTTP_X_FORWARDED_PROTO') == 'https':
         scheme = 'https'
     return scheme + '://' + get_current_site(request).domain + '/account/add_scope_callback/'
+
+class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
+    template_name = 'roster/my_account.html'
+
+    def get(self, request, *args, **kwargs):
+        clusive_user: ClusiveUser
+        clusive_user = request.clusive_user
+        google_account = None
+        bookshare_account = None
+        for account in SocialAccount.objects.filter(user=request.user):
+            if account.provider=='google':
+                # Google account's `extra_data` contain the user's google email
+                google_account = account.extra_data.get('email')
+            if account.provider=='bookshare':
+                # For bookshare, uid is the email address registered with Bookshare.
+                # Organization is either a name of an organziational account or
+                # a single user account
+                bookshare_account = {
+                    'id': account.uid,
+                    'is_organizational': account.extra_data.get('organizational', False),
+                    'organization': self.organization_for_display(account),
+                }
+        self.extra_context = {
+            'can_edit_display_name': False,
+            'can_edit_email': False,
+            'can_edit_password': clusive_user.can_set_password,
+            'google_account': google_account,
+            'bookshare_account': bookshare_account,
+        }
+        return super().get(request, *args, **kwargs)
+
+    def organization_for_display(self, account):
+        """
+        Return an actual organization name, if any.  If the name
+        defaulted to one of the generic ones, return None
+        """
+        org_name = get_organization_name(account)
+        return f'({org_name})' if org_name not in GENERIC_BOOKSHARE_ACCOUNT_NAMES else None
+
+    def configure_event(self, event: Event):
+        event.page = 'MyAccount'
+
+def remove_social_account(request, *args, **kwargs):
+    clusive_user: ClusiveUser
+    clusive_user = request.clusive_user
+
+    # Currently, a Google SocialAccount is created for Google SSO, and not for
+    # an associated account.  Google SSO users cannot delete the SocialAccount
+    # since it is needed for logging into Clusive.  Use the
+    # `clusive_user.data_source` to detect this condition (see finish_login()
+    # above, where it is set for Google SSO users).
+    social_app_name = kwargs.get('provider')
+    if clusive_user.data_source == RosterDataSource.GOOGLE and social_app_name == 'google':
+        logger.debug('Google SSO user %s cannot remove their google SocialAccount', request.user.username)
+        return HttpResponseRedirect(reverse('my_account'))
+
+    # Find the SocialAccount for the user/provider and delete it.
+    # 03-Feb-2022:  there should only be one, but Q/A using the 'Sam' login
+    # found multiple SocialTokens and SocialAccounts.  To take that into account
+    # loop through all the user's SocialAccounts with the given provider.
+    social_accounts = SocialAccount.objects.filter(user=request.user, provider=social_app_name)
+    for social_account in social_accounts:
+        # Deletion and signal based on allauth's DisconnectForm, see github
+        # issue, "How to unlink an account from a social auth provider?":
+        # https://github.com/pennersr/django-allauth/issues/814
+        social_account.delete()
+        request.session.pop('bookshare_connected', None)
+        request.session.pop('bookshare_search_metadata', None)
+        messages.info(request, "Removed Bookshare account.")
+        signals.social_account_removed.send(
+            sender=SocialAccount, request=request, socialaccount=social_account
+        )
+    if social_accounts.count() == 0:
+        logger.debug('User %s does not have a %s account', request.user.username, social_app_name)
+
+    return HttpResponseRedirect(reverse('my_account'))

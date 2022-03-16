@@ -8,6 +8,7 @@
                     </span>
                     Settings
                 </h2>
+                {% include "shared/partial/dialog_tts.html" %}
                 <button type="button" class="close" data-cfw-dismiss="modal" data-cle-handler="click" data-cle-control="settings-sidebar" data-cle-value="closed" aria-label="Close" title="Close">
                     <span class="icon-cancel" aria-hidden="true"></span>
                 </button>
@@ -161,6 +162,18 @@
                             </div>
                             <div class="setting">
                                 <fieldset>
+                                    <legend class="setting-title">Animations</legend>
+                                    <div class="form-switch-dual">
+                                        <label for="option-reduce-motion" class="form-check-label-pre" aria-hidden="true">Off</label>
+                                        <div class="form-check form-switch">
+                                            <input id="option-reduce-motion" name="option-reduce-motion" class="form-check-input cislc-modalSettings-animations" type="checkbox">
+                                            <label for="option-reduce-motion" class="form-check-label">On</label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="setting">
+                                <fieldset>
                                     <legend class="setting-title">Content navigation</legend>
                                     <div class="setting-btn-row">
                                         <div class="btn-check option-page-view">
@@ -199,7 +212,6 @@
                                 <fieldset>
                                     <legend class="setting-title">Voice</legend>
                                     <select class="cislc-modalSettings-readVoice form-control">
-                                        <option value="default">Choose...</option>
                                     </select>
                                 </fieldset>
                             </div>
