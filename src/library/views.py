@@ -31,7 +31,8 @@ from oauth2.bookshare.views import BookshareOAuth2Adapter, has_bookshare_account
     is_bookshare_connected, get_access_keys, is_organizational_account, get_organization_name, \
     get_organization_members
 from pages.views import ThemedPageMixin, SettingsPageMixin
-from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
+from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles,\
+    BookshareOrgUserAccount, check_valid_choice
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
@@ -1186,7 +1187,7 @@ class BookshareImport(LoginRequiredMixin, View):
             raise Exception('unpack_epub_file did not find new content.')
         return bv
 
-
+import pdb
 class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
     template_name = 'library/bookshare_org_members.html'
 
@@ -1205,29 +1206,34 @@ class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
                 return HttpResponseRedirect(redirect_to=reverse('bookshare_search'))
 
             bookshare = BookshareOAuth2Adapter(request)
-            account = bookshare.social_account
-            self.account_name = account.uid
-            if is_organizational_account(request):
-                # TODO: function/method for getting all org info
-                # (keys, name, memberlist) in one call.
-                self.org_name = bookshare.organization_name
-                access_keys = bookshare.get_access_keys()
-                self.member_list = get_organization_members(
-                    access_keys.get('access_token').token, access_keys.get('api_key')
-                )
-            else:
-                self.org_name = 'Individual Account'
-                self.member_list = []
+            self.sponsor = bookshare.social_account.uid
+            member_accounts = BookshareOrgUserAccount.objects.filter(
+                org_user_id = self.sponsor
+            )
+            self.member_list = []
+            for member in member_accounts:
+                if member.clusive_user.role != 'ST':
+                    continue
+                student = {
+                    'pk': member.clusive_user.user.id,
+                    'name': {
+                        'firstName': member.clusive_user.user.first_name,
+                        'lastName': member.clusive_user.user.last_name,
+                    },
+                    'email': member.clusive_user.user.email,
+                    'period': member.clusive_user.current_period,
+                    'userAccountId': member.account_id
+                }
+                self.member_list.append(student)
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'account_name': self.account_name,
-            'org_name': self.org_name,
             'member_list': self.member_list,
             'book': self.book,
             'search_page': kwargs['fromSearchPage'],
+            'sponsor': self.sponsor,
         })
         return context
 

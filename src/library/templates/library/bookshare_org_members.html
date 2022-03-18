@@ -20,7 +20,7 @@
         <div class="form-group mb-1">
             <div class="table-scroll">
                 <table class="table table-divided table-roster">
-                    <caption>(Teacher/District/School: {{ account_name }})</caption>
+                    <caption><em>(Teacher/District/School: {{ sponsor }}</em></caption>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -29,15 +29,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for member in member_list.userAccounts %}
+                        {% for member in member_list %}
                         <tr>
                             <td>{{ member.name.firstName }} {{ member.name.lastName }}</td>
-                            <td><em>Period goes here</em></td>
-                            <td><button data-bookshare-id="{{book.bookshareId}}" data-member-id="{{member.userAccountId}}" class="btn btn-primary import-button-sponsor">Select</button>
+                            <td>{{ member.period }}</td>
+                            <td>
+                                {% if member.userAccountId == None %}
+                                (not a Bookshare member)
+                                {% else %}
+                                <button data-bookshare-id="{{book.bookshareId}}" data-member-id="{{member.userAccountId}}" class="btn btn-primary import-button-sponsor">Select</button>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td><p>This is not an organizational account (no members).</p></td>
+                            <td><p>No students.</p></td>
                         </tr>
                         {% endfor %}
                     </tbody>
