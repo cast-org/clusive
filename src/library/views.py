@@ -785,10 +785,6 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
     template_name = 'library/library_search_bookshare.html'
     form_class = BookshareSearchForm
     formlabel ='Step 1: Search by title, author, or ISBN'
-    sponsor_warning_message = '\
-        You are using a Sponsor (Teacher/District/School) Bookshare account. \
-        Your import of Bookshare titles for students is not yet implemented, \
-        but coming soon.'
 
     def dispatch(self, request, *args, **kwargs):
         if not is_bookshare_connected(request):
@@ -797,8 +793,6 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
                 redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_search')
             )
         elif request.clusive_user.can_upload:
-            if is_organizational_account(request):
-                messages.warning(request, self.sponsor_warning_message)
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -853,8 +847,6 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                     messages.error(request, search_results['error_message'])
                     self.search_error = search_results
             else:
-                if self.is_organizational:
-                    messages.warning(request, BookshareSearch.sponsor_warning_message)
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
                 if self.page <= pages_available:
@@ -1187,7 +1179,6 @@ class BookshareImport(LoginRequiredMixin, View):
             raise Exception('unpack_epub_file did not find new content.')
         return bv
 
-import pdb
 class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
     template_name = 'library/bookshare_org_members.html'
 
