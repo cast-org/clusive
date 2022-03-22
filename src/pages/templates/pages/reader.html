@@ -135,7 +135,7 @@ var manifest_path = "{{ manifest_path }}";
             url: new URL(url),
             userSettings: {
                 textAlignment:'start',
-                FcolumnCount: '1'
+                columnCount: '1'
 
             },
             lastReadingPosition: lastReadingPosition,
@@ -286,6 +286,7 @@ var manifest_path = "{{ manifest_path }}";
                             d2reader.applyTTSSettings(readerOptions.userSettings.tts);
                             // Line focus
                             d2reader.applyLineFocusSettings({lines: readerOptions.userSettings.lineFocusLines});
+console.log('USERSETTINGS', readerOptions.userSettings);
                             if (readerOptions.userSettings.lineFocus) {
                                 d2reader.enableLineFocus();
                             }
