@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load static figuration %}
+<html lang="en">
+<head>
+    <title>Simplification Proof of Concept</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% include "shared/partial/head.html" %}
+    <style>
+        .rep { font-style: italic; }
+        .hard { color: red; }
+        .easy { color: green; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Simplification Proof of Concept</h1>
+        </div>
+    </div>
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.text.label_tag | formlabel }} *
+                    {{ form.text.errors }}
+                    {{ form.text | formcontrol }}
+
+                    {{ form.percent.label_tag | formlabel }} *
+                    {{ form.percent.errors }}
+                    {{ form.percent | formcontrol }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Check" />
+            </div>
+        </div>
+    </form>
+    <div class="row mt-1">
+        <div class="col">
+            <h2>Simplified (best options)</h2>
+            <p>{{ best_text|safe }}</p>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col">
+            <h2>Simplified (all options)</h2>
+            <p class="text-muted">[This view is for checking the algorithms. Words in green are considered easier than the original; words in red harder]</p>
+            <p>{{ full_text|safe }}</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
