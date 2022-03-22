@@ -33,6 +33,7 @@
     {% endif %}
     <div class="card-body">
         {% if show_description and book.description %}<p class="card-text">{{ book.description|highlight:query }}</p>{% endif %}
+        {% if read_count_data %}<p>{{ read_count_data }}/{{ current_period.student_count }} students have read this.</p>{% endif %}
         {% if custom_question_data %}{% include 'library/partial/library_card_custom_question.html' %}{% endif %}
         {% if graph_data %}{% include 'library/partial/library_card_graph.html' %}{% endif %}
     </div>
