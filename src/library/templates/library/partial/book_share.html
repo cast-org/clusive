@@ -7,7 +7,7 @@
         <span class="icon-cancel-circled2" aria-hidden="true"></span>
     </button>
 </div>
-<form method="post" action="{% url 'share' pk=book.pk %}" class="form-inline">{% csrf_token %}
+<form id="ShareBookForm" method="post" action="{% url 'share' pk=book.pk %}" class="form-inline" data-clusive-book-id="{{book.id}}">{% csrf_token %}
     <div class="modal-body">
         <p><strong>Add or remove this reading from student library pages using the checkboxes below.</strong></p>
         <div class="media">

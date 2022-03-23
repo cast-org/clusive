@@ -1188,6 +1188,24 @@ function configureConfirmDeletionPopup (e) {
     );
 }
 
+// When new assignments are submitted, send form data to server via AJAX, and AJAX update the assignments indication
+// on the library card.
+function shareForm() {
+    $('body').on('submit', '#ShareBookForm', function(e) {
+       e.preventDefault();
+        var $form = $('#ShareBookForm');
+        var bookId = $(e.currentTarget).data('clusive-book-id');
+       $.post($form.attr('action'), $form.serialize())
+           .done(function(data) {
+               $('#AssignList-'+bookId).replaceWith(data);
+               $form.closest('.modal').CFW_Modal('hide');
+           })
+           .fail(function(err) {
+               console.error(err);
+           });
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -1208,6 +1226,7 @@ $(window).ready(function() {
     libraryStyleSortLinkSetup();
     dashboardSetup();
     starredButtons();
+    shareForm();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

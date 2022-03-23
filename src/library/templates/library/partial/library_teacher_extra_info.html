@@ -4,9 +4,7 @@
     {% if book.assign_list or book.custom_list %}
         <div class="card-divider spaced-top"></div>
     {% endif %}
-    {% if book.assign_list %}
-        <div class="card-text">Assigned to: {{ book.assign_list | period_names | highlight:period_name }}</div>
-    {% endif %}
+    {% include 'library/partial/library_teacher_assign_list.html' %}
     <div class="row">
         <div class="col">
             {% if book.custom_list %}
