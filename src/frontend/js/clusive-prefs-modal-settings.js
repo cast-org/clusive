@@ -43,16 +43,6 @@
                 true: 'scroll',
                 false: 'paged'
             },
-            modalLineFocusLinesToPreference: {
-                one: 1,
-                three: 3,
-                five: 5
-            },
-            preferenceLineFocusLinesToModal: {
-                1: 'one',
-                3: 'three',
-                5: 'five'
-            },
         },
         invokers: {
             setModalSettingsByPreferences: {
@@ -132,16 +122,6 @@
                     'preferences.cisl_prefs_scroll', '{that}'],
                 excludeSource: 'init'
             },
-            'modalSettings.lineFocus': {
-                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
-                args: ['{change}.value', 'preferences.cisl_prefs_lineFocus', '{that}'],
-                excludeSource: 'init'
-            },
-            'modalSettings.lineFocusLines': {
-                funcName: 'cisl.prefs.modalSettings.applyModalSettingToPreference',
-                args: ['@expand:cisl.prefs.modalSettings.getMappedValue({change}.value, {that}.options.mappedValues.modalLineFocusLinesToPreference)', 'preferences.cisl_prefs_lineFocusLines', '{that}'],
-                excludeSource: 'init'
-            },
             'preferences': {
                 func: '{that}.setModalSettingsByPreferences',
                 excludeSource: 'applyModalSettingToPreference'
@@ -161,8 +141,6 @@
             resetDisplay: '.cislc-modalSettings-reset-display',
             resetReading: '.cislc-modalSettings-reset-reading',
             languageSelect: '.cislc-modalSettings-languageSelect',
-            lineFocus: '.cislc-modalSettings-lineFocus',
-            lineFocusLines: '.cislc-modalSettings-lineFocusLines',
             voiceButton: '.voice-button'
         },
         bindings: {
@@ -218,30 +196,7 @@
                         }
                     }
                 }
-            },
-            lineFocusSwitch: {
-                selector: 'lineFocus',
-                path: 'modalSettings.lineFocus',
-                rules: {
-                    domToModel: {
-                        '': {
-                            transform: {
-                                type: 'fluid.binder.transforms.checkToBoolean',
-                                inputPath: ''
-                            }
-                        }
-                    },
-                    modelToDom: {
-                        '': {
-                            transform: {
-                                type: 'fluid.binder.transforms.booleanToCheck',
-                                inputPath: ''
-                            }
-                        }
-                    }
-                }
-            },
-            lineFocusLines: 'modalSettings.lineFocusLines'
+            }
         }
     });
 
@@ -277,10 +232,6 @@
         cisl.prefs.modalSettings.handleReadVoicesPreference(fluid.get(preferences, 'cisl_prefs_readVoices'), that);
 
         that.applier.change('modalSettings.translationLanguage', fluid.get(preferences, 'cisl_prefs_translationLanguage'));
-
-        that.applier.change('modalSettings.lineFocus', fluid.get(preferences, 'cisl_prefs_lineFocus'));
-
-        that.applier.change('modalSettings.lineFocusLines', cisl.prefs.modalSettings.getMappedValue(fluid.get(preferences, 'cisl_prefs_lineFocusLines'), that.options.mappedValues.preferenceLineFocusLinesToModal));
 
         cisl.prefs.dispatchPreferenceUpdateEvent();
     };

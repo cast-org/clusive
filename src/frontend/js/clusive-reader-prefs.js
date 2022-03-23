@@ -149,26 +149,6 @@
                     type: 'fluid.transforms.value',
                     input: '{that}.model.preferences.cisl_prefs_glossary'
                 }
-            },
-            'readerPreferences.lineFocus': {
-                target: 'readerPreferences.lineFocus',
-                backward: {
-                    excludeSource: '*'
-                },
-                singleTransform: {
-                    type: 'fluid.transforms.value',
-                    input: '{that}.model.preferences.cisl_prefs_lineFocus'
-                }
-            },
-            'readerPreferences.lineFocusLines': {
-                target: 'readerPreferences.lineFocusLines',
-                backward: {
-                    excludeSource: '*'
-                },
-                singleTransform: {
-                    type: 'fluid.transforms.value',
-                    input: '{that}.model.preferences.cisl_prefs_lineFocusLines'
-                }
             }
         },
         modelListeners: {
@@ -210,16 +190,6 @@
             'readerPreferences.glossary': {
                 func: 'cisl.prefs.readerPreferencesBridge.applyGlossarySetting',
                 args: ['show', '{change}.value'],
-                excludeSource: "init"
-            },
-            'readerPreferences.lineFocus': {
-                func: 'cisl.prefs.readerPreferencesBridge.applyLineFocusSetting',
-                args: ['lineFocus', '{change}.value'],
-                excludeSource: "init"
-            },
-            'readerPreferences.lineFocusLines': {
-                func: 'cisl.prefs.readerPreferencesBridge.applyLineFocusLinesSetting',
-                args: ['lineFocusLines', '{change}.value'],
                 excludeSource: "init"
             }
         },
@@ -271,25 +241,6 @@
             } else {
                 d2reader.hideLayer('definitions')
             }
-        }
-    }
-
-    cisl.prefs.readerPreferencesBridge.applyLineFocusSetting = function(settingName, settingValue) {
-        console.debug('cisl.prefs.readerPreferencesBridge.applyLineFocusSetting', settingName, settingValue)
-        var reader = clusiveContext.reader.instance;
-        if (reader) {
-            if (settingValue) {
-                d2reader.enableLineFocus();
-            } else {
-                d2reader.disableLineFocus();
-            }
-        }
-    }
-    cisl.prefs.readerPreferencesBridge.applyLineFocusLinesSetting = function(settingName, settingValue) {
-        console.debug('cisl.prefs.readerPreferencesBridge.applyLineFocusLinesSetting', settingName, settingValue)
-        var reader = clusiveContext.reader.instance;
-        if (reader && reader.applyUserSettings) {
-            reader.applyLineFocusSettings({lines: settingValue})
         }
     }
 

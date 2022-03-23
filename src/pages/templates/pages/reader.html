@@ -284,12 +284,7 @@ var manifest_path = "{{ manifest_path }}";
                             });
                             // Update additional TTS settings - such as rate
                             d2reader.applyTTSSettings(readerOptions.userSettings.tts);
-                            // Line focus
-                            d2reader.applyLineFocusSettings({lines: readerOptions.userSettings.lineFocusLines});
-console.log('USERSETTINGS', readerOptions.userSettings);
-                            if (readerOptions.userSettings.lineFocus) {
-                                d2reader.enableLineFocus();
-                            }
+
                             firstResourceLoaded = true;
                         }
                     });
