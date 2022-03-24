@@ -7,6 +7,8 @@ urlpatterns = [
     path('', LoginView.as_view(), name='index'),
     path('dashboard/<int:period_id>', views.DashboardView.as_view(), name='dashboard'),
     path('dashboard', views.DashboardView.as_view(), name='dashboard'),
+    path('dashboard-popular-panel/<view>', views.PopularReadsPanelView.as_view(),
+         name='dashboard_popular_panel'),
     path('dashboard-activity-panel/<int:days>', views.DashboardActivityPanelView.as_view(),
          name='dashboard_activity_panel'),
     path('dashboard-activity-panel-sort/<sort>', views.DashboardActivityPanelView.as_view(),

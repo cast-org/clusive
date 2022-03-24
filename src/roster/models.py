@@ -9,6 +9,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.functional import cached_property
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
 from multiselectfield import MultiSelectField
@@ -55,6 +56,12 @@ class Period(models.Model):
     anon_id = models.CharField(max_length=30, unique=True, null=True, verbose_name='Anonymous identifier')
     data_source = models.CharField(max_length=4, choices=RosterDataSource.CHOICES, default=RosterDataSource.CLUSIVE)
     external_id = models.CharField(max_length=100, null=True, blank=True, verbose_name='External ID')
+
+    @cached_property
+    def student_count(self):
+        """Query the number of students in this Period. Use property rather than function call for caching."""
+        logger.debug('Querying for number of students')
+        return ClusiveUser.objects.filter(periods=self, role=Roles.STUDENT).count()
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.anon_id)
