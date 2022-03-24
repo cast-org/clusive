@@ -1206,6 +1206,49 @@ function shareForm() {
     });
 }
 
+function dashboardStudentReadingViewButtons() {
+    $('body').on('click', '.popular-read-view-button', function(e) {
+        var $panel = $('#DashboardPopularReads');
+        var $target = $(e.currentTarget);
+        if ($target.hasClass('active')) {
+            console.debug('already active, ignoring click');
+            return;
+        }
+        var view = $target.data('clusive-view');
+        console.debug('Switching to view: ', view);
+        $.get('/dashboard-popular-panel/' + view)
+            .done(function (data, status) {
+                $panel.html(data);
+                $panel.CFW_Init();
+                setUpDeferredLoadOfCompDetails();
+            })
+            .fail(function (err) {
+                console.error(err);
+                target.html('Sorry, there was an error getting the data.');
+            });
+    });
+}
+
+// This needs to be called after modal-comp-detail modals are added to the page.
+// Each one gets a one-time action to fill in its content.
+function setUpDeferredLoadOfCompDetails() {
+    $('.modal-comp-detail').one('beforeShow.cfw.modal', function (e) {
+        var $this = $(this);
+        var book = $this.data('clusive-book-id');
+        var type = $this.data('clusive-type');
+        var target = $this.find('.modal-body');
+        var url_stem = (type === 'custom') ? '/assessment/custom_detail/' : '/assessment/comprehension_detail/';
+        $.get(url_stem + book)
+            .done(function (data, status) {
+                target.html(data);
+            })
+            .fail(function (err) {
+                console.error(err);
+                target.html('Sorry, there was an error getting the data.');
+            });
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -1227,6 +1270,7 @@ $(window).ready(function() {
     dashboardSetup();
     starredButtons();
     shareForm();
+    dashboardStudentReadingViewButtons();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

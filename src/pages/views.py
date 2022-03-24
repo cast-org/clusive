@@ -142,7 +142,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         if cta_name:
             self.panels['cta'] = True
             self.data['cta'] = {
-                'type': cta_name
+                'type': cta_name,
             }
             if cta_name == 'star_rating':
                 self.data['cta']['form'] = ClusiveRatingForm(initial={'star_rating': 0})
@@ -181,47 +181,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # Popular Reads panel (teacher)
         self.panels['popular_reads'] = self.teacher
         if self.panels['popular_reads']:
-            # Find books that are trending out of full library & out of just assigned readings.
-            top_trends = BookTrend.top_trends(self.current_period)[:3]
-            top_trend_data = [{'trend': t} for t in top_trends]
-            assigned_trends = BookTrend.top_assigned(self.current_period)[:3]
-            assigned_trend_data = [{'trend': t} for t in assigned_trends]
-
-            for td in top_trend_data:
-                book = td['trend'].book
-                # Look up paradata, assignments & customizations for books so they can be shown in the cards.
-                book.paradata_list = list(Paradata.objects.filter(book=book, user=self.clusive_user))
-                book.add_teacher_extra_info(self.periods)
-                # Check if there is a customization for the current period.
-                for c in book.custom_list:
-                    if self.current_period in list(c.periods.all()):
-                        td['customization'] = c
-            for td in assigned_trend_data:
-                book = td['trend'].book
-                book.paradata_list = list(Paradata.objects.filter(book=book, user=self.clusive_user))
-                book.add_teacher_extra_info(self.periods)
-                # Check if there is a customization for the current period.
-                for c in book.custom_list:
-                    if self.current_period in list(c.periods.all()):
-                        td['customization'] = c
-
-            # Get comp check statistics for each distinct book, avoid querying twice.
-            comp_data = {}
-            for tdata in top_trend_data:
-                t = tdata['trend']
-                comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
-                tdata['comp_check'] = comp_data[t.book.id]
-                tdata['unauthorized'] = not t.book.is_visible_to(self.clusive_user)
-            for tdata in assigned_trend_data:
-                t = tdata['trend']
-                if t.book.id not in comp_data:
-                    comp_data[t.book.id] = ComprehensionCheckResponse.get_counts(t.book, t.period)
-                tdata['comp_check'] = comp_data[t.book.id]
-
-            self.data['popular_reads'] = {
-                'all': top_trend_data,
-                'assigned': assigned_trend_data,
-            }
+            self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.periods, self.current_period,
+                                                                assigned_only=False)
 
         # Getting Started panel
         if not self.teacher:
@@ -284,6 +245,57 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
     def configure_event(self, event: Event):
         event.page = 'Dashboard'
         event.tip_type = self.tip_shown
+
+
+class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
+    """Used for AJAX request to switch between Popular and Assigned views of the student reading panel."""
+    template_name = 'pages/partial/dashboard_panel_popular_reads_data.html'
+
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.view = kwargs['view']
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        periods = list(self.clusive_user.periods.all())
+        current_period = self.clusive_user.current_period
+        assigned = self.view == 'assigned'
+        context.update({
+            'current_period': current_period,
+            'period_name': current_period.name,
+            'query': None,
+            'data': get_popular_reads_data(self.clusive_user, periods, current_period, assigned_only=assigned),
+        })
+        return context
+
+
+def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
+    # Gather data about books that are trending for dashboard view
+    if assigned_only:
+        trends = BookTrend.top_assigned(current_period)[:3]
+    else:
+        trends = BookTrend.top_trends(current_period)[:3]
+    trend_data = [{'trend': t} for t in trends]
+
+    for td in trend_data:
+        t = td['trend']
+        book = td['trend'].book
+        # Look up paradata, assignments & customizations for books so they can be shown in the cards.
+        book.paradata_list = list(Paradata.objects.filter(book=book, user=clusive_user))
+        book.add_teacher_extra_info(periods)
+        # Check if there is a customization for the current period.
+        for c in book.custom_list:
+            if current_period in list(c.periods.all()):
+                td['customization'] = c
+        # Get comp check statistics
+        td['comp_check'] = ComprehensionCheckResponse.get_counts(t.book, t.period)
+        td['unauthorized'] = not t.book.is_visible_to(clusive_user)
+
+    return {
+        'all': trend_data,
+        'view': 'assigned' if assigned_only else 'popular',
+    }
 
 
 class DashboardActivityPanelView(TemplateView):
