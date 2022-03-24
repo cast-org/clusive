@@ -1,5 +1,6 @@
 import logging
 from collections import OrderedDict
+from typing import List
 
 import wordfreq as wf
 from django.views.generic import FormView, TemplateView
@@ -7,6 +8,7 @@ from nltk.corpus import wordnet
 from nltk.corpus.reader import Synset
 from regex import regex
 from textstat import textstat
+from wordfreq.tokens import TOKEN_RE_WITH_PUNCTUATION
 
 from authoring.forms import TextInputForm, TextSimplificationForm
 from glossary.util import base_form
@@ -24,40 +26,56 @@ class SimplifyView(FormView):
         text = form.cleaned_data['text']
         percent = form.cleaned_data['percent']
         # Returns [ { 'hw' , 'alts', 'count', 'freq' }, ... ] sorted by freq
-        self.extra_context = {
-            'full_text': self.simplify_text(text, percent, include_all=True),
-            'best_text': self.simplify_text(text, percent, include_all=False),
-        }
+        data = self.simplify_text(text, percent)
+        self.extra_context = data
         # Don't do normal process of redirecting to success_url.  Just stay on this form page forever.
         return self.render_to_response(self.get_context_data(form=form))
 
-    def simplify_text(self, text:str, percent:int, include_all:bool):
-        word_list = wf.tokenize(text, self.lang, include_punctuation=True)
+    def simplify_text(self, text:str, percent:int):
+        word_list = self.tokenize_no_casefold(text)
+        # Returns frequency info about all distinct tokens, sorted by frequency
         word_info = analyze_words(word_list, self.lang)
-        # TODO: how many words should we replace?  Try 10%
+        # How many words should we replace?
         to_replace = int(len(word_info) * percent / 100)
+
+        # Now determine appropriate replacements for that many of the most difficult words.
         replacements = {}
         for i in word_info[0:to_replace]:
             hw = i['hw']
-
-            if include_all:
-                replacement_string = self.full_replacement_string(hw, i['freq'])
-            else:
-                replacement_string = self.best_replacement_string(hw, i['freq'])
+            replacement_string, errors = self.best_replacement_string(hw, i['freq'])
             if replacement_string:
                 replacements[hw] = replacement_string
+                i['replacement'] = replacement_string
+                i['full_replacement'] = self.full_replacement_string(hw, i['freq'])
+            else:
+                i['errors'] = errors
             if len(replacements) >= to_replace:
                 break
+
+        # Go through the full text again, adding in replacements where needed.
         out = ''
         for tok in word_list:
-            # base = base_form(tok)
-            # w = word_info.get(base)
-            if tok in replacements:
-                outword = '<strong>%s</strong> <span class="rep">[%s]</span>' % (tok, replacements[tok])
+            base = base_form(tok, return_word_if_not_found=True)
+            if base in replacements:
+                rep = replacements[base]
+                if tok[0].isupper():
+                    rep = rep.title()
+                outword = '<strong>%s</strong> <span class="text-muted">[%s]</span>' % (rep, tok)
             else:
                 outword = tok
-            out += ' ' + outword
-        return out
+            out += outword
+        return {
+            'to_replace': to_replace,
+            'word_info': word_info,
+            'result': out,
+        }
+
+    def tokenize_no_casefold(self, text : str) -> List[str]:
+        # This is wf.simple_tokenize but without casefolding.
+        # Note, it will not work for languages that don't work with simple_tokenize (eg,
+        tokenize_regexp = regex.compile(TOKEN_RE_WITH_PUNCTUATION.pattern + '|\\s+',
+                                        regex.V1 | regex.WORD | regex.VERBOSE)
+        return tokenize_regexp.findall(text)
 
     def full_replacement_string(self, hw, freq):
         alts = []
@@ -69,16 +87,25 @@ class SimplifyView(FormView):
         return ' / '.join(alts)
 
     def best_replacement_string(self, hw, orig_freq):
+        # Returns a tuple:  ( replacement string, error string )
         alts = []
-        for sset in wordnet.synsets(hw):
-            sgroup = [lem.name() for lem in sset.lemmas() if lem.name() != hw]
-            if sgroup:
-                best = self.easiest_word(sgroup)
-                if self.is_easier_than(best, orig_freq):
-                    alts.append(self.mark_up(best, orig_freq))
-        # Remove duplicates
-        alts = list(OrderedDict.fromkeys(alts))
-        return ' / '.join(alts)
+        synsets = wordnet.synsets(hw)
+        if synsets:
+            for sset in synsets:
+                sgroup = [lem.name() for lem in sset.lemmas() if lem.name() != hw]
+                if sgroup:
+                    best = self.easiest_word(sgroup)
+                    if self.is_easier_than(best, orig_freq):
+                        alts.append(self.mark_up(best, orig_freq))
+            # Remove duplicates
+            alts = list(OrderedDict.fromkeys(alts))
+            if alts:
+                altString = ' / '.join(alts)
+                return altString, ''
+            else:
+                return None, 'No easier synonyms'
+        else:
+            return None, 'Not in Wordnet'
 
     def mark_up(self, word:str, rel_to_freq):
         disp_word = word.replace('_', ' ')
@@ -190,7 +217,7 @@ class SynonymsView(TemplateView):
         context['synonyms'] = [ self.describe_synset(synset) for synset in synsets ]
         return context
 
-    def describe_synset(synset : Synset):
+    def describe_synset(self, synset : Synset):
         return "(%s) %s (%s)" % (synset.pos(), ', '.join([str(lemma.name()) for lemma in synset.lemmas()]), synset.definition())
 
 

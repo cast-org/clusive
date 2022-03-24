@@ -9,6 +9,8 @@
         .rep { font-style: italic; }
         .hard { color: red; }
         .easy { color: green; }
+        .text-muted { color: #888888; }
+        table th, table td { border: 1px solid #888888; padding: 1em; }
     </style>
 </head>
 <body>
@@ -42,14 +44,37 @@
     <div class="row mt-1">
         <div class="col">
             <h2>Simplified (best options)</h2>
-            <p>{{ best_text|safe }}</p>
+            <p>{{ result|safe }}</p>
         </div>
     </div>
     <div class="row mt-1">
         <div class="col">
-            <h2>Simplified (all options)</h2>
-            <p class="text-muted">[This view is for checking the algorithms. Words in green are considered easier than the original; words in red harder]</p>
-            <p>{{ full_text|safe }}</p>
+            <h2>Details</h2>
+            <p>Tried replacing {{ to_replace }} out of {{ word_info | length }} different words in text.</p>
+            <table>
+                <tr>
+                    <th>Word</th>
+                    <th>Word frequency</th>
+                    <th>Replacement</th>
+                </tr>
+                {% for info in word_info %}
+                <tr>
+                    <td>{{ info.hw }}</td>
+                    <td>{{ info.freq }}</td>
+                    <td>
+                        {% if info.full_replacement %}
+                        <p>All synonyms: {{ info.full_replacement | safe }}</p>
+                        {% endif %}
+                        {% if info.replacement %}
+                        <p>Replacement string: {{ info.replacement | safe }}</p>
+                        {% endif %}
+                        {% if info.errors %}
+                        <p class="hard">{{ info.errors }}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 </div>
