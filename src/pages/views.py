@@ -227,7 +227,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['period_name'] = self.current_period.name
+        context['period_name'] = self.current_period.name if self.current_period else None
         context['query'] = None
         context['panels'] = self.panels
         context['data'] = self.data
