@@ -17,6 +17,10 @@
     display: flex;
     justify-content: space-between;
     height: 0;
+
+    @include media-breakpoint-up(xl) {
+        margin: 0 -.25rem 0 -.5rem;
+    }
 }
 
 .sidebar {

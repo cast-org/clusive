@@ -21,12 +21,14 @@ function glossaryPop_focus($elm) {
     $('#glossaryPop').trigger('focus');
 }
 
-function openGlossaryForWord(word) {
+function openGlossaryForWord(word, elt) {
     'use strict';
 
     window.parent.load_definition(1, word);
+    window.parent.$('#glossaryLocator').one('afterShow.cfw.popover.refocus', function() {
+        glossaryPop_focus($(elt));
+    });
     window.parent.$('#glossaryLocator').CFW_Popover('show');
-    // window.parent.glossaryPop_focus($(elt));
 }
 
 function load_definition(cued, word) {
@@ -183,8 +185,10 @@ window.wordBank.wordClicked = function(elt) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
+    $('#glossaryLocator').one('afterShow.cfw.popover.refocus', function() {
+        glossaryPop_focus($(elt));
+    });
     $('#glossaryLocator').CFW_Popover('show');
-    glossaryPop_focus($(elt));
 };
 
 // Methods related to dragging word bank words between ratings

@@ -30,17 +30,6 @@ body {
     font-family: OpenDyslexicRegular, sans-serif !important;
 }
 
-#iframe-wrapper {
-    height: calc(100vh - #{$header-height + $body-padding-y});
-    //min-height: calc(100vh - #{$header-height + $body-padding-y});
-    //overflow: initial !important;
-
-    @include media-breakpoint-up(md) {
-        height: calc(100vh - #{$header-md-height + $body-padding-y});
-        //min-height: calc(100vh - #{$header-md-height + $body-padding-y});
-    }
-}
-
 // Special icon cases
 .icon-starred {
     &::before {
@@ -187,7 +176,6 @@ h2,
     bottom: 0;
     left: 0;
     height: 0;
-    height: 0;
     box-shadow: .125rem 0 .4375rem 0 rgba(0, 0, 0, .4);
 }
 .d2-line-focus-nav {
@@ -205,7 +193,6 @@ h2,
 .login-status {
     float: right;
     margin-top: 2em;
-    clear: right;
     clear: right;
 }
 
