@@ -13,6 +13,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q, QuerySet, Prefetch
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -212,9 +213,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             customization_query = Customization.objects.filter(Q(periods__in=periods) | Q(owner=self.clusive_user))
             q = q.prefetch_related(Prefetch('customization_set', queryset=customization_query, to_attr='custom_list'))
 
-        # All of paradata is attached to the book object.
-        # Note that in library.py the filter (for starred) is register so that it can be
-        # called in the html by the registered name.
+        # Any paradata for current user is attached to the book object.
         paradata_query = Paradata.objects.filter(user=self.clusive_user)
         q = q.prefetch_related(Prefetch('paradata_set', queryset=paradata_query, to_attr='paradata_list'))
 
@@ -548,7 +547,6 @@ class RemoveBookConfirmView(LoginRequiredMixin, View):
 class ShareDialogView(LoginRequiredMixin, FormView):
     form_class = ShareForm
     template_name = 'library/partial/book_share.html'
-    success_url = reverse_lazy('reader_index')
     clusive_user = None
     book = None
 
@@ -577,9 +575,9 @@ class ShareDialogView(LoginRequiredMixin, FormView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        self.request = request
         self.clusive_user = request.clusive_user
         self.book = get_object_or_404(Book, pk=kwargs['pk'])
-        logger.debug('Posted with user=%s and book=%s', self.clusive_user, self.book)
         return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -590,19 +588,23 @@ class ShareDialogView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         current_assignments = self.get_currently_assigned_periods()
         desired_assignments = form.cleaned_data['periods']
-        logger.debug('Submitted: %s', desired_assignments)
-        for period in self.clusive_user.periods.all():
+        all_periods = self.clusive_user.periods.all()
+        for period in all_periods:
             if period in desired_assignments:
                 if period not in current_assignments:
                     new_assignment = BookAssignment(book=self.book, period=period)
                     new_assignment.save()
-                    logger.debug('Added: %s', new_assignment)
             else:
                 if period in current_assignments:
                     old_assignment = BookAssignment.objects.get(book=self.book, period=period)
-                    logger.debug('Removed:  %s', old_assignment)
                     old_assignment.delete()
-        return super().form_valid(form)
+        self.book.assign_list = list(BookAssignment.objects.filter(book=self.book, period__in=all_periods))
+        context = {
+            'book': self.book,
+            'period_name': self.clusive_user.current_period.name,
+        }
+        return TemplateResponse(self.request, template='library/partial/library_teacher_assign_list.html',
+                                context=context)
 
     def form_invalid(self, form):
         # Any combination of periods is reasonable, so there isn't much reason it should come back invalid.

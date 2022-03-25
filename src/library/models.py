@@ -152,6 +152,17 @@ class Book(models.Model):
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
+    def add_teacher_extra_info(self, periods):
+        """
+        Adds two fields of additional information for displaying a library card to teachers:
+        'assign_list' includes any BookAssignments for this book to the given Periods.
+        'custom_list' includes any Customizations for this book to the given Periods.
+        :param periods: list of Periods to consider.
+        :return: None
+        """
+        self.assign_list = list(BookAssignment.objects.filter(book=self, period__in=periods))
+        self.custom_list = list(Customization.objects.filter(book=self, periods__in=periods))
+
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
@@ -282,15 +293,32 @@ class BookAssignment(models.Model):
 
 
 class BookTrend(models.Model):
-    """How popular a Book is for each Period where it has been used."""
+    """
+    How popular a Book is for each Period where it has been used.
+    The popularity scores is a metric that is increased with each unique user view,
+    and decays over time.
+    The user count is simply the number of users in this Period that have ever opened the Book.
+    It is calculated when requested for a bit of extra efficiency, since it requires a separate query.
+    """
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     period = models.ForeignKey(to=Period, on_delete=models.CASCADE, db_index=True)
     popularity = models.IntegerField(default=0)
+    _user_count = models.IntegerField(null=True, blank=True)
 
     def record_new_view(self):
         # Popularity points for a single user view are from 1 (14 days ago) to 2**14 = 16384 (today)
         self.popularity += 2**14
+        self._user_count = None   # Force recalculation when next accessed
         self.save()
+
+    @property
+    def user_count(self):
+        if self._user_count is None:
+            self._user_count = Paradata.objects.filter(user__periods=self.period, user__role=Roles.STUDENT,
+                                                       book=self.book, view_count__gt=0).count()
+            logger.debug('Calculated user count for %s = %d', self, self._user_count)
+            self.save()
+        return self._user_count
 
     def __str__(self):
         return '<BookTrend %s/%s>' % (self.book, self.period)

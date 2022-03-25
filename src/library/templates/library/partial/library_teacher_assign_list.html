@@ -1,0 +1,4 @@
+{% load library %}
+<div id="AssignList-{{book.id}}" class="card-text">
+    {% if book.assign_list %}Assigned to: {{ book.assign_list | period_names | highlight:period_name }}{% endif %}
+</div>
