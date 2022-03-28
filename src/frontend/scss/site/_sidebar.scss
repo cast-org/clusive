@@ -3,7 +3,6 @@
     top: $header-height;
     left: 50%;
     width: 100%;
-    max-width: map-get($container-max-widths, xl);
     height: 0;
     transform: translateX(-50%);
 
@@ -11,16 +10,16 @@
         top: $header-md-height;
         padding: 0 $body-padding-x;
     }
+
+    @include media-breakpoint-up(xl) {
+        max-width: map-get($container-max-widths, xl);
+    }
 }
 
 .sidebars {
     display: flex;
     justify-content: space-between;
     height: 0;
-
-    @include media-breakpoint-up(xl) {
-        margin: 0 -.25rem 0 -.5rem;
-    }
 }
 
 .sidebar {
