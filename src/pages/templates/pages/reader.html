@@ -212,7 +212,7 @@ var manifest_path = "{{ manifest_path }}";
                 fullWordSearch: true,
                 api: {
                     click: function (item, element) {
-                        window.openGlossaryForWord(item.terms[0]);
+                        window.openGlossaryForWord(item.terms[0], element);
                     },
                     success: function (item, element) {
                         console.log("  define item " + item.terms + " was found " + element.length + " times");
