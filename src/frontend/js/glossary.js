@@ -90,6 +90,9 @@ function load_translation(text) {
     $('#translateSource').text(text);
     var $translateOutput = $('#translateOutput');
     $translateOutput.text('Loading...');
+    $('#translateLocator').one('afterShow.cfw.popover', function() {
+        $('#translatePop').trigger('focus');
+    });
     $('#translateLocator').CFW_Popover('show');
     $.ajax('/translation/translate', {
         method: 'POST',
