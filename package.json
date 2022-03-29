@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/cast-org/clusive#readme",
   "dependencies": {
-    "@d-i-t-a/reader": "^2.0.0-beta.19",
+    "@d-i-t-a/reader": "^2.0.0-beta.20",
     "canvas-confetti": "^1.4.0",
     "expose-loader": "2.0.0",
     "figuration": "^4.2.0",
