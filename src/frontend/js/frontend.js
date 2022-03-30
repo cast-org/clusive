@@ -1,5 +1,5 @@
 /* global Masonry, cisl, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation, confetti */
-/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, contextLookup, contextTranslate, confettiCannon */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, confettiCannon */
 /*eslint quotes: ["error", "backtick"]*/
 
 // Set up common headers for Ajax requests for Clusive's event logging
@@ -786,30 +786,6 @@ function starredButtons() {
             $tip.CFW_Tooltip('locateUpdate');
         });
     });
-}
-
-// Context (selection) menu methods
-function contextLookup(selection) {
-    'use strict';
-
-    var match = selection.match('\\w+');
-    var word = '';
-    if (match) {
-        word = match[0];
-    } else {
-        console.info('Did not find any word in selection: %s', selection);
-    }
-    console.debug('looking up: ', word);
-    window.parent.load_definition(0, word);
-    window.parent.$('#glossaryLocator').CFW_Popover('show');
-    window.parent.glossaryPop_focus($('#lookupIcon'));
-}
-
-function contextTranslate(selection) {
-    'use strict';
-
-    console.info('translate: ' + selection);
-    load_translation(selection);
 }
 
 function originInViewport(elem) {

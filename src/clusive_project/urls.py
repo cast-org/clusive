@@ -31,6 +31,7 @@ urlpatterns = [
     path('sessions/', include('django_session_timeout.urls')),
     path('glossary/', include('glossary.urls')),
     path('library/', include('library.urls')),
+    path('simplification/', include('simplification.urls')),
     path('tips/', include('tips.urls')),
     path('messagequeue/', include('messagequeue.urls')),
     path('translation/', include('translation.urls')),

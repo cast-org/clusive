@@ -24,9 +24,10 @@ var manifest_path = "{{ manifest_path }}";
 {% endblock %}
 
 {% block sidebar_end %}
-<!-- Items needed to anchor the definition and translate popovers -->
+<!-- Items needed to anchor the toolbox-based popovers -->
 <button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
 <button id="translateLocator" class="sr-only" aria-hidden="true" tabindex="-1">Translate</button>
+<button id="simplifyLocator" class="sr-only" aria-hidden="true" tabindex="-1">Simplify text</button>
 
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}
@@ -100,11 +101,15 @@ var manifest_path = "{{ manifest_path }}";
         var selectionMenuItems = [
             {
                 id: 'translateIcon',
-                callback: function(selection) { contextTranslate(selection); }
+                callback: contextTranslate
             },
             {
                 id: 'lookupIcon',
-                callback: function(selection) { contextLookup(selection); }
+                callback: contextLookup
+            },
+            {
+                id: 'simplifyIcon',
+                callback: contextSimplify
             }
         ];
 
@@ -212,6 +217,7 @@ var manifest_path = "{{ manifest_path }}";
                 fullWordSearch: true,
                 api: {
                     click: function (item, element) {
+                        console.log('  click callback');
                         window.openGlossaryForWord(item.terms[0], element);
                     },
                     success: function (item, element) {
@@ -325,4 +331,5 @@ var manifest_path = "{{ manifest_path }}";
 
 {% include "shared/partial/modal_toc.html" %}
 {% include "shared/partial/popover_tip.html" %}
+{% include "shared/partial/popover_simplify.html" %}
 {% endblock %}
