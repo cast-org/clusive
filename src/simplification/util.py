@@ -44,7 +44,7 @@ class WordnetSimplifier:
                 rep = replacements[base]
                 if tok[0].isupper():
                     rep = rep.title()
-                outword = '<strong>%s</strong> <span class="text-muted">[%s]</span>' % (rep, tok)
+                outword = '%s <span class="text-replace">[%s]</span>' % (tok, rep)
             else:
                 outword = tok
             out += outword
@@ -80,7 +80,7 @@ class WordnetSimplifier:
                 if sgroup:
                     best = self.easiest_word(sgroup)
                     if self.is_easier_than(best, orig_freq):
-                        alts.append(self.mark_up(best, orig_freq))
+                        alts.append(best.replace('_', ' '))
             # Remove duplicates
             alts = list(OrderedDict.fromkeys(alts))
             if alts:
