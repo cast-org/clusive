@@ -1085,13 +1085,14 @@ function deleteVocabularyWord (e) {
 function addVocabularyWord(newWord, /*optional*/ inputField) {
     'use strict';
 
+    $('#wordduplicate').hide();
+    $('#worderror').hide();
+
     if (newWord.length) {
         if (!all_words.includes(newWord)) {
             $('#worderror').show();
             if (inputField) inputField.select();
             return;
-        } else {
-            $('#worderror').hide();
         }
         var condition = addCondition(newWord);
         if (condition === 'addNew' || condition === 'addAndRemoveFromDeleted') {
@@ -1119,6 +1120,11 @@ function addVocabularyWord(newWord, /*optional*/ inputField) {
         }
         else {
             console.log(`New word ${newWord} already added (condition is ${condition})`);
+            $('#wordduplicate').show();
+            if (inputField) {
+                inputfield.value = newWord;
+                inputField.select();
+            }
         }
     }
     if (inputField) {
