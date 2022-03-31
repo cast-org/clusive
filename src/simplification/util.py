@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from typing import List
 
+import profanity_check
 import regex
 from nltk.corpus import wordnet
 from wordfreq import zipf_frequency
@@ -10,6 +11,7 @@ from glossary.util import base_form
 
 
 class WordnetSimplifier:
+    max_frequency_to_simplify = 4.0
 
     def __init__(self, lang: str) -> None:
         super().__init__()
@@ -26,11 +28,14 @@ class WordnetSimplifier:
         replacements = {}
         for i in word_info[0:to_replace]:
             hw = i['hw']
-            replacement_string, errors = self.best_replacement_string(hw, i['freq'])
+            freq = i['freq']
+            if freq > self.max_frequency_to_simplify:
+                break
+            replacement_string, errors = self.best_replacement_string(hw, freq)
             if replacement_string:
                 replacements[hw] = replacement_string
                 i['replacement'] = replacement_string
-                i['full_replacement'] = self.full_replacement_string(hw, i['freq'])
+                i['full_replacement'] = self.full_replacement_string(hw, freq)
             else:
                 i['errors'] = errors
             if len(replacements) >= to_replace:
@@ -71,15 +76,20 @@ class WordnetSimplifier:
         return ' / '.join(alts)
 
     def best_replacement_string(self, hw, orig_freq):
-        # Returns a tuple:  ( replacement string, error string )
+        """
+        Determine a replacement for the given word.
+        Returns a tuple:  ( replacement string, error string )
+        """
         alts = []
+        # Query Wordnet for synonym sets that contain the given hw.
         synsets = wordnet.synsets(hw)
         if synsets:
             for sset in synsets:
+                # List words (lemmas) other than the original word
                 sgroup = [lem.name() for lem in sset.lemmas() if lem.name() != hw]
                 if sgroup:
                     best = self.easiest_word(sgroup)
-                    if self.is_easier_than(best, orig_freq):
+                    if best and self.is_easier_than(best, orig_freq):
                         alts.append(best.replace('_', ' '))
             # Remove duplicates
             alts = list(OrderedDict.fromkeys(alts))
@@ -93,24 +103,39 @@ class WordnetSimplifier:
 
     def mark_up(self, word:str, rel_to_freq):
         disp_word = word.replace('_', ' ')
+        if self.is_offensive(disp_word):
+            return '<span class="offensive">%s</span>' % disp_word
         if self.is_easier_than(word, rel_to_freq):
             return '<span class="easy">%s</span>' % disp_word
         else:
             return '<span class="hard">%s</span>' % disp_word
 
     def easiest_word(self, list):
+        """
+        Find the highest-frequency, non-offensive option from the given list of words.
+        :param list: list of words
+        :return: a single word, or None if all are offensive.
+        """
         best_so_far = None
         best_freq = None
         for word in list:
-            freq = self.get_freq(word)
-            if best_freq is None or freq > best_freq:
-                best_so_far = word
-                best_freq = freq
+            disp_word = word.replace('_', ' ')
+            if not self.is_offensive(disp_word):
+                freq = self.get_freq(word)
+                if best_freq is None or freq > best_freq:
+                    best_so_far = word
+                    best_freq = freq
         return best_so_far
 
-    def is_easier_than(self, word:str, rel_to_freq):
+    def is_easier_than(self, word: str, rel_to_freq):
         word_freq = self.get_freq(word)
         return word_freq > rel_to_freq
+
+    def is_offensive(self, word: str):
+        # We currently only have a profanity checker for English.
+        if self.lang != 'en':
+            return False
+        return profanity_check.predict([word])[0] == 1
 
     def get_freq(self, word: str):
         if word.find('_') >= 0:
