@@ -158,7 +158,6 @@ function contextSimplify(selection) {
     $simplifyLocator.one('afterShow.cfw.popover', function() {
         $('#simplifyPop').trigger('focus');
     });
-    $simplifyLocator.CFW_Popover('show');
     $.ajax('/simplification/simplify', {
         method: 'POST',
         headers: {
@@ -177,6 +176,7 @@ function contextSimplify(selection) {
             $simplifyOutput.html('Error loading simplified text');
         })
         .always(function() {
+            $simplifyLocator.CFW_Popover('show');
             var $simplifyPop = $('#simplifyPop');
             if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
                 $simplifyPop.CFW_Popover('locateUpdate');
