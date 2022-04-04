@@ -152,7 +152,6 @@ function contextTranslate(selection) {
 function contextSimplify(selection) {
     'use strict';
 
-    console.info('simplify: ' + selection);
     var $simplifyLocator = $('#simplifyLocator');
     var $simplifyOutput = $('#simplifyOutput');
     $simplifyLocator.one('afterShow.cfw.popover', function() {

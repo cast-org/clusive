@@ -18,12 +18,16 @@ class SimplifyView(FormView):
     form_class = TextSimplificationForm
     lang = 'en'
 
+    def post(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        return super().post(request, *args, **kwargs)
+
     def form_valid(self, form):
         text = form.cleaned_data['text']
         percent = form.cleaned_data['percent']
         simplifier = WordnetSimplifier(self.lang)
         # Returns [ { 'hw' , 'alts', 'count', 'freq' }, ... ] sorted by freq
-        data = simplifier.simplify_text(text, percent)
+        data = simplifier.simplify_text(text, clusive_user=self.clusive_user, percent=percent)
         self.extra_context = data
         # Don't do normal process of redirecting to success_url.  Just stay on this form page forever.
         return self.render_to_response(self.get_context_data(form=form))

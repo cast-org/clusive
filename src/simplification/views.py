@@ -16,7 +16,7 @@ class SimplifyTextView(LoginRequiredMixin, View):
         book_id = request.POST.get('book_id')
         book = Book.objects.get(pk=book_id) if book_id else None
         simplifier = WordnetSimplifier(lang)
-        simplified = simplifier.simplify_text(text, 15)
+        simplified = simplifier.simplify_text(text, clusive_user=request.clusive_user)
         logger.debug('simplification input: %s', text)
         logger.debug('simplification output: %s', simplified['result'])
         # translation_action.send(sender=SimplifyTextView.__class__,
