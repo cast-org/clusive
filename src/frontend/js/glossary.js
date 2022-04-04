@@ -1,12 +1,13 @@
 /* eslint-disable strict */
 /* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id, interact */
-/* exported openGlossaryForWord, load_translation */
+/* exported openGlossaryForWord, load_translation, contextLookup, contextTranslate, contextSimplify */
 
-// Glossary-related functionality
+// Handles glossary, translation, and simplification frontend events.
 
 var glossaryCurrentWord = null;
 var glossaryBeenDragged = false;
 var translateBeenDragged = false;
+var simplifyBeenDragged = false;
 
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
@@ -85,6 +86,23 @@ function load_definition(cued, word) {
     $('#glossaryBody').html(body);
 }
 
+// Context (selection) menu methods
+function contextLookup(selection) {
+    'use strict';
+
+    var match = selection.match('\\w+');
+    var word = '';
+    if (match) {
+        word = match[0];
+    } else {
+        console.info('Did not find any word in selection: %s', selection);
+    }
+    console.debug('looking up: ', word);
+    load_definition(0, word);
+    $('#glossaryLocator').CFW_Popover('show');
+    glossaryPop_focus($('#lookupIcon'));
+}
+
 function load_translation(text) {
     var lang = clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage;
     $('#translateSource').text(text);
@@ -118,6 +136,49 @@ function load_translation(text) {
             var $translatePop = $('#translatePop');
             if ($translatePop.is(':visible') && !translateBeenDragged) {
                 $translatePop.CFW_Popover('locateUpdate');
+            }
+        });
+}
+
+function contextTranslate(selection) {
+    'use strict';
+
+    console.info('translate: ' + selection);
+    load_translation(selection);
+}
+
+// Text Simplification
+
+function contextSimplify(selection) {
+    'use strict';
+
+    var $simplifyLocator = $('#simplifyLocator');
+    var $simplifyOutput = $('#simplifyOutput');
+    $simplifyLocator.one('afterShow.cfw.popover', function() {
+        $('#simplifyPop').trigger('focus');
+    });
+    $.ajax('/simplification/simplify', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            text: selection,
+            book_id: pub_id
+        }
+    })
+        .done(function(data) {
+            $simplifyOutput.html(data.result);
+        })
+        .fail(function(err) {
+            console.error(err);
+            $simplifyOutput.html('Error loading simplified text');
+        })
+        .always(function() {
+            $simplifyLocator.CFW_Popover('show');
+            var $simplifyPop = $('#simplifyPop');
+            if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
+                $simplifyPop.CFW_Popover('locateUpdate');
             }
         });
 }
@@ -480,6 +541,31 @@ $(function() {
             }
         });
     });
+
+    $('#simplifyLocator').CFW_Popover({
+        target: '#simplifyPop',
+        trigger: 'manual',
+        placement: 'reverse',
+        drag: true,
+        popperConfig: {
+            positionFixed: true,
+            eventsEnabled: false,
+            modifiers: {
+                preventOverflow: {
+                    boundariesElement: 'viewport'
+                },
+                computeStyle: {
+                    gpuAcceleration: false
+                }
+            }
+        }
+    })
+        .on('afterHide.cfw.popover', function() {
+            simplifyBeenDragged = false;
+        })
+        .on('dragStart.cfw.popover', function() {
+            simplifyBeenDragged = true;
+        });
 
     // When ranking in the check-in modal is selected, notify server
     $('#vocabCheckModal').on('change', 'input[type="radio"]', function(event) {

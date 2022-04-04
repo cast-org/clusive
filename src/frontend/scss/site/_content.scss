@@ -502,3 +502,14 @@ h2,
         color: var(--CT_formTextColor);
     }
 }
+
+//Text replacement
+.text-replace {
+    @include font-size(.9375rem);
+    color: var(--CT_textReplaceColor);
+    background: var(--CT_textReplaceBg);
+
+    .popover-body & {
+        @include font-size(.875rem);
+    }
+}

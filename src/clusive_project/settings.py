@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'tips.apps.TipsConfig',
     'assessment.apps.AssessmentConfig',
     'translation.apps.TranslationConfig',
+    'simplification.apps.SimplificationConfig',
     'django_session_timeout.apps.SessionTimeoutConfig',
     'progressbarupload',
     # added for django-allauth:
