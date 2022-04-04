@@ -69,7 +69,12 @@ class WordnetSimplifier:
             else:
                 outword = tok
             out += outword
+        if include_full:
+            total_word_count = sum([w['count'] for w in word_info])
+        else:
+            total_word_count = None
         return {
+            'word_count': total_word_count,
             'to_replace': to_replace,
             'word_info': word_info,
             'result': out,
