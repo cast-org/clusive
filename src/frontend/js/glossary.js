@@ -529,6 +529,13 @@ $(function() {
             translateBeenDragged = true;
         });
 
+    // Word definition links inside simplify popover
+    $('#simplifyPop').on('click', '.simplifyLookup', function(e) {
+        e.preventDefault();
+        var word = $(e.currentTarget).text();
+        openGlossaryForWord(word, e.currentTarget);
+    });
+
     // When ranking in the glossary popup is selected, notify server
     $('#glossaryInput').on('change', 'input', function() {
         var newValue = $(this).val();
@@ -545,7 +552,7 @@ $(function() {
     $('#simplifyLocator').CFW_Popover({
         target: '#simplifyPop',
         trigger: 'manual',
-        placement: 'reverse',
+        placement: 'forward',
         drag: true,
         popperConfig: {
             positionFixed: true,

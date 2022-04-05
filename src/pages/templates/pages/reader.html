@@ -20,6 +20,7 @@ var manifest_path = "{{ manifest_path }}";
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
+<button id="simplifyLocator" class="sr-only" aria-hidden="true" tabindex="-1">Simplify text</button>
 {% include "shared/partial/sidebar_start.html" with nav=True why=True %}
 {% endblock %}
 
@@ -27,7 +28,6 @@ var manifest_path = "{{ manifest_path }}";
 <!-- Items needed to anchor the toolbox-based popovers -->
 <button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
 <button id="translateLocator" class="sr-only" aria-hidden="true" tabindex="-1">Translate</button>
-<button id="simplifyLocator" class="sr-only" aria-hidden="true" tabindex="-1">Simplify text</button>
 
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}

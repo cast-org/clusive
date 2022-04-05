@@ -65,7 +65,7 @@ class WordnetSimplifier:
                 rep = replacements[base]
                 if tok[0].isupper():
                     rep = rep.title()
-                outword = '%s <span class="text-replace">[%s]</span>' % (tok, rep)
+                outword = '<a href="#" class="simplifyLookup">%s</a> <span class="text-replace">[%s]</span>' % (tok, rep)
             else:
                 outword = tok
             out += outword
