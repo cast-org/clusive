@@ -25,8 +25,6 @@
         --CT_bodyColor: #{$body-color};
 
         --CT_textMuted: #{$text-muted};
-        --CT_textReplaceBg: #{$text-replace-bg};
-        --CT_textReplaceColor: #{$text-replace-color};
 
         --CT_linkColor: #{$link-color};
         --CT_linkHoverColor: #{$link-hover-color};
@@ -310,6 +308,16 @@
         --CT_popoverFooterBorderColor: #{$popover-footer-border-color};
         --CT_popoverSectionBorderColor: #{$popover-section-border-color};
 
+        --CT_popoverTabBg: #{$popover-tab-bg};
+        --CT_popoverTabColor: #{$popover-tab-color};
+        --CT_popoverTabBorderColor: #{$popover-tab-border-color};
+        --CT_popoverTabHoverBg: #{$popover-tab-hover-bg};
+        --CT_popoverTabHoverColor: #{$popover-tab-hover-color};
+        --CT_popoverTabHoverBorderColor: #{$popover-tab-hover-border-color};
+        --CT_popoverTabActiveBg: #{$popover-tab-active-bg};
+        --CT_popoverTabActiveColor: #{$popover-tab-active-color};
+        --CT_popoverTabActiveBorderColor: #{$popover-tab-active-border-color};
+
         --CT_modalBackdropBg: #{$modal-backdrop-bg};
         --CT_modalBackdropOpacity: #{$modal-backdrop-opacity};
         --CT_modalContentBg: #{$modal-content-bg};
@@ -541,5 +549,11 @@
         --CT_alertSecondaryColor: #{$alert-secondary-color};
         --CT_alertSecondaryBorderColor: #{$alert-secondary-border-color};
         --CT_alertSecondaryHoverColor: #{$alert-secondary-hover-color};
+
+        // Text alternatives
+        --CT_simplifySourceColor: #{$simplify-source-color};
+        --CT_textReplaceBg: #{$text-replace-bg};
+        --CT_textReplaceColor: #{$text-replace-color};
+        --CT_textPictureImgFilter: #{$text-picture-img-filter};
     }
 }

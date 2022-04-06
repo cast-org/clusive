@@ -174,7 +174,7 @@ function loadSimplification(selection) {
         }
     })
         .done(function(data) {
-            $simplifyBody.html(data.result);
+            $simplifyBody.html('<div class="simplify-source">' + data.result + '</div>');
         })
         .fail(function(err) {
             console.error(err);

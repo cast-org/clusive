@@ -1,6 +1,10 @@
 .popover {
     min-width: $popover-max-width;
 
+    @include media-breakpoint-down(sm) {
+        max-width: calc(100vw - 7.625rem);
+    }
+
     .close {
         position: absolute;
         top: .125rem;
@@ -136,25 +140,81 @@
     }
 }
 
-.popover-glossary,
-.popover-translate {
-    @include media-breakpoint-down(sm) {
-        max-width: calc(100vw - 7.625rem);
-    }
-}
-
 .popover-comp {
     @include media-breakpoint-up(md) {
         width: $popover-comp-md-width;
         max-width: $popover-comp-md-width;
-    }
-    @include media-breakpoint-down(sm) {
-        max-width: calc(100vw - 7.625rem);
     }
 }
 
 .popover-translate {
     .gt-icon .svg-icon-primary {
         fill: var(--CT_translateLogoColor);
+    }
+}
+
+.popover-simplify {
+    @include media-breakpoint-up(md) {
+        width: $popover-simplify-md-width;
+        max-width: $popover-simplify-md-width;
+    }
+
+    .gt-icon .svg-icon-primary {
+        fill: var(--CT_translateLogoColor);
+    }
+}
+
+.nav-tabs-popover {
+    flex-basis: 100%;
+    flex-direction: column;
+    order: 1;
+    margin: .25rem 0;
+    line-height: 1.25;
+
+    .nav-link {
+        padding: .125rem .25rem .125rem calc(.25rem + 2px);
+        margin: 0 0 0 2px;
+        @include font-size(.9375rem);
+        color: var(--CT_popoverTabColor);
+        text-decoration: none;
+        background-color: var(--CT_popoverTabBg);
+        border-left: 1px solid var(--CT_popoverTabColor);
+
+        @include hover-focus() {
+            color: var(--CT_popoverTabHoverColor);
+            text-decoration: underline;
+            background-color: var(--CT_popoverTabHoverBg);
+            border-color: var(--CT_popoverTabHoverBorderColor);
+        }
+    }
+
+    .nav-link.active,
+    .nav-item.open .nav-link {
+        margin-left: 0;
+        font-weight: $font-weight-bold;
+        color: var(--CT_popoverTabActiveColor);
+        text-decoration: none;
+        background-color: var(--CT_popoverTabActiveBg);
+        border-color: var(--CT_popoverTabActiveBorderColor);
+        border-left-width: 5px;
+    }
+
+    @include media-breakpoint-up(md) {
+        flex-direction: row;
+        margin-left: -.25rem;
+
+        .nav-item + .nav-item::before {
+            display: inline-block;
+            padding-left: .125rem;
+            content: "|" / "";
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 0 .125rem;
+            white-space: nowrap;
+            border-bottom: 5px solid var(--CT_popoverTabBorderColor);
+            border-left: 0;
+        }
     }
 }

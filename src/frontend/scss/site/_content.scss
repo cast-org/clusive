@@ -270,6 +270,17 @@ h2,
     }
 }
 
+.simplifyLookup,
+.simplifyLookup:hover,
+.link-glossary,
+.link-glossry:hover {
+    font-weight: $font-weight-bold;
+    color: inherit !important; // stylelint-disable-line declaration-no-important
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 .0625em 0 0 var(--CT_glossaryUnderline), inset 0 -.125em 0 0 var(--CT_glossaryUnderline);
+}
+
 .definition-speech {
     @include font-size(.875rem);
     color: var(--CT_definitionSpeechColor);
@@ -286,6 +297,7 @@ h2,
     color: var(--CT_definitionSpeechColor);
 }
 
+// Translated text
 .translate-source {
     font-weight: $font-weight-bold;
     color: var(--CT_translateSourceColor);
@@ -293,6 +305,37 @@ h2,
 .translate-ouput {
     font-weight: $font-weight-normal;
     color: var(--CT_translateOutputColor);
+}
+
+// Text replacement
+.simplify-source {
+    font-weight: $font-weight-bold;
+    color: var(--CT_simplifySourceColor);
+}
+.text-replace {
+    font-weight: $font-weight-normal;
+    @include font-size(.9375rem);
+    color: var(--CT_textReplaceColor);
+    background: var(--CT_textReplaceBg);
+
+    .popover-body & {
+        @include font-size(.875rem);
+    }
+}
+
+// Text with pictures
+.text-picture {
+    line-height: 2;
+}
+// Uses CSS filters to convert from black to target hex color
+// Note may have to run 'Compute filter' numerous times as there is some randomization in the computation
+// https://codepen.io/sosuke/pen/Pjoqqp
+.text-picture-img {
+    width: auto;
+    height: 1.5rem;
+    line-height: 1;
+    vertical-align: baseline;
+    filter: var(--CT_textPictureImgFilter);
 }
 
 // Django error list
@@ -500,16 +543,5 @@ h2,
     }
     .result-muted {
         color: var(--CT_formTextColor);
-    }
-}
-
-//Text replacement
-.text-replace {
-    @include font-size(.9375rem);
-    color: var(--CT_textReplaceColor);
-    background: var(--CT_textReplaceBg);
-
-    .popover-body & {
-        @include font-size(.875rem);
     }
 }
