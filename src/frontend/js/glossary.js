@@ -111,8 +111,8 @@ function loadTranslation(text) {
     $('#translateFooter').show();
     $simplifyBody.html('<p>Loading...</p>');
     var $navLink = $('#translateNavLink');
-    $navLink.closest('.nav').find('.nav-link').removeClass('active');
-    $navLink.addClass('active');
+    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
+    $navLink.addClass('active').attr('aria-current', 'true');;
 
     $('#simplifyLocator').one('afterShow.cfw.popover', function() {
         $simplifyPop.trigger('focus');
@@ -158,8 +158,8 @@ function loadSimplification(selection) {
     $simplifyBody.html('<p>Loading...</p>');
     $('#translateFooter').hide();
     var $navLink = $('#simplifyNavLink');
-    $navLink.closest('.nav').find('.nav-link').removeClass('active');
-    $navLink.addClass('active');
+    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
+    $navLink.addClass('active').attr('aria-current', 'true');
     $simplifyLocator.one('afterShow.cfw.popover', function() {
         $('#simplifyPop').trigger('focus');
     });
