@@ -206,7 +206,8 @@
         .nav-item + .nav-item::before {
             display: inline-block;
             padding-left: .125rem;
-            content: "|" / "";
+            content: "|";
+            content: "|" / ""; // stylelint-disable-line declaration-block-no-duplicate-properties
         }
 
         .nav-link {

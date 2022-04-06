@@ -270,6 +270,7 @@ h2,
     }
 }
 
+// stylelint-disable selector-class-pattern
 .simplifyLookup,
 .simplifyLookup:hover,
 .link-glossary,
@@ -280,6 +281,7 @@ h2,
     cursor: pointer;
     box-shadow: 0 .0625em 0 0 var(--CT_glossaryUnderline), inset 0 -.125em 0 0 var(--CT_glossaryUnderline);
 }
+// stylelint-enable selector-class-pattern
 
 .definition-speech {
     @include font-size(.875rem);
