@@ -1,5 +1,5 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id, interact, simplificationOption:true */
+/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id, interact, simplificationTool:true */
 /* exported openGlossaryForWord, load_translation, contextLookup, contextSimplify */
 
 // Handles glossary, translation, and simplification frontend events.
@@ -105,14 +105,14 @@ function contextLookup(selection) {
 function loadTranslation(text) {
     var lang = clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage;
 
-    simplificationOption = 'translate';
+    simplificationTool = 'translate';
     var $simplifyPop = $('#simplifyPop');
     var $simplifyBody = $('#simplifyBody');
     $('#translateFooter').show();
     $simplifyBody.html('<p>Loading...</p>');
     var $navLink = $('#translateNavLink');
     $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
-    $navLink.addClass('active').attr('aria-current', 'true');;
+    $navLink.addClass('active').attr('aria-current', 'true');
 
     $('#simplifyLocator').one('afterShow.cfw.popover', function() {
         $simplifyPop.trigger('focus');
@@ -152,7 +152,7 @@ function loadTranslation(text) {
 function loadSimplification(selection) {
     'use strict';
 
-    simplificationOption = 'simplify';
+    simplificationTool = 'simplify';
     var $simplifyLocator = $('#simplifyLocator');
     var $simplifyBody = $('#simplifyBody');
     $simplifyBody.html('<p>Loading...</p>');
@@ -194,7 +194,7 @@ function contextSimplify(selection) {
     'use strict';
 
     $('#simplifyPop').data('text', selection);
-    if (simplificationOption === 'simplify') {
+    if (simplificationTool === 'simplify') {
         loadSimplification(selection);
     } else {
         loadTranslation(selection);

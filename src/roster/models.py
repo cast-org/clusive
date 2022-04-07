@@ -180,6 +180,15 @@ class StudentActivitySort:
         (COUNT, 'count'),
     ]
 
+class SimplificationTool:
+    SIMPLIFY = 'simplify'
+    TRANSLATE = 'translate'
+
+    CHOICES = [
+        (SIMPLIFY, 'simplify'),
+        (TRANSLATE, 'translate'),
+    ]
+
 def check_valid_choice(choices, value):
     try:
         next(x[1] for x in choices if x[0] == value)
@@ -228,6 +237,10 @@ class ClusiveUser(models.Model):
     # How the user has chosen to sort the 'Student activity' display. This choice is persistent.
     student_activity_sort = models.CharField(max_length=10, default=StudentActivitySort.NAME,
                                              choices=StudentActivitySort.CHOICES)
+
+    # How the user has chosen to simplify or translate text
+    simplification_tool = models.CharField(max_length=10, default=SimplificationTool.SIMPLIFY,
+                                           choices=SimplificationTool.CHOICES)
 
     # Levels taught. Asked of teachers at registration.
     education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
@@ -327,6 +340,11 @@ class ClusiveUser(models.Model):
 
         except PreferenceSet.DoesNotExist:
             logger.error("preference set named %s not found", prefset_name)
+
+    def set_simplification_tool(self, choice):
+        if self.simplification_tool != choice:
+            self.simplification_tool = choice
+            self.save()
 
     @classmethod
     def from_request(cls, request):

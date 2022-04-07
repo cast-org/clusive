@@ -9,6 +9,7 @@ from google.cloud import translate_v2 as translate
 
 from eventlog.signals import translation_action
 from library.models import Book
+from roster.models import SimplificationTool
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +21,10 @@ class TranslateTextView(LoginRequiredMixin, View):
         lang = request.POST.get('language')
         book_id = request.POST.get('book_id')
         book = Book.objects.get(pk=book_id) if book_id else None
+        clusive_user = request.clusive_user
         error = None
-        logger.debug("Received a translation request: %s" % text)
+
+        clusive_user.set_simplification_tool(SimplificationTool.TRANSLATE)
 
         translation_action.send(sender=TranslateTextView.__class__,
                                 request=request,
