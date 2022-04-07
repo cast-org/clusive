@@ -328,6 +328,11 @@ h2,
 // Text with pictures
 .text-picture {
     line-height: 2;
+    color: var(--CT_textPictureColor);
+}
+.text-picture-term {
+    font-weight: $font-weight-bold;
+    color: var(--CT_textPictureTermColor);
 }
 // Uses CSS filters to convert from black to target hex color
 // Note may have to run 'Compute filter' numerous times as there is some randomization in the computation
