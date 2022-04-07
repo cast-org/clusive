@@ -564,6 +564,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
             'book_id': book.id,
+            'simplification_tool': clusive_user.simplification_tool,
         }
         return super().get(request, *args, **kwargs)
 

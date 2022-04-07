@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text Replacement - Screen reader tests</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/figuration@4.3.0/dist/css/figuration.min.css">
+
+<style>
+.text-replace {
+    display: inline;
+    font-size: .9375rem;
+    color:  #696969;
+    background: #eee;
+}
+
+/* ---------------------- */
+
+.ul-replace {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.ul-replace li {
+    display: inline;
+    margin: 0;
+    font-size: .9375rem;
+    color:  #696969;
+    background: #eee;
+    white-space: nowrap;
+}
+.ul-replace li:first-of-type::before {
+    display: inline-block;
+    /* https://a11ysupport.io/tests/tech__css__css_generated_content_alt */
+    content: "[";
+    content: "[" / "";
+}
+.ul-replace li:last-of-type::after {
+    display: inline-block;
+    /* https://a11ysupport.io/tests/tech__css__css_generated_content_alt */
+    content: "]";
+    content: "]" / "";
+}
+.ul-replace li + li {
+  padding-left: 0.25rem;
+}
+.ul-replace li + li::before {
+  display: inline;
+  padding-right: 0.25rem;
+  color: inherit;
+  content: "/";
+  content: "/" / "";
+}
+/* https://blog.thomaspuppe.de/accessibility-pseudo-content */
+/* https://stackoverflow.com/questions/26634156/can-i-prevent-after-pseudo-element-from-being-read-by-screen-readers */
+@media aural, speech {
+    .ul-replace li::before,
+    .ul-replace li::after {
+        content: none;
+    }
+}
+
+/* ---------------------- */
+
+.replacement {
+  display: inline;
+  padding-left: 0;
+  margin: 0;
+}
+.replacement dt {
+    display: inline;
+    margin: 0;
+    font-weight: normal;
+}
+.replacement dd {
+    display: inline;
+    margin: 0;
+    font-size: .9375rem;
+    color:  #696969;
+    background: #eee;
+    white-space: nowrap;
+}
+.replacement dd:first-of-type {
+    margin-left: .25rem;
+}
+.replacement dd:first-of-type::before {
+    display: inline-block;
+    /* https://a11ysupport.io/tests/tech__css__css_generated_content_alt */
+    content: "[";
+    content: "[" / "";
+}
+.replacement dd:last-of-type::after {
+    display: inline-block;
+    content: "]";
+    content: "]" / "";
+}
+.replacement dd + dd {
+  padding-left: 0.25rem;
+}
+
+.replacement dd + dd::before {
+  display: inline;
+  padding-right: 0.25rem;
+  color: inherit;
+  content: "/";
+  content: "/" / "";
+}
+
+/* ---------------------- */
+
+.text-picture {
+    line-height: 2;
+}
+.text-picture-img {
+    width: auto;
+    height: 1.5rem;
+    line-height: 1;
+    vertical-align: baseline;
+}
+</style>
+
+</head>
+<body>
+<main>
+<div class="container">
+<h1>Text Replacement - Screen reader tests</h1>
+
+<h2>Image inclusion</h2>
+<div class="text-picture" style="width: 20rem;">
+TO Sherlock Holmes <img src="./img/icons/bug.svg" class="text-picture-img" alt="Sherlock Homes"> she is always the woman <img src="./img/icons/bell.svg" class="text-picture-img" alt="woman"> .
+I have seldom heard him <img src="./img/icons/cloudy.svg" class="text-picture-img" alt="him"> mention her under any other name.
+In his eyes she eclipses and predominates the whole <img src="./img/icons/cog.svg" class="text-picture-img" alt="whole"> of her sex.
+It was not that he felt any emotion akin to love for Irene Adler.
+</div>
+
+<h2>Text replacement</h2>
+TO Sherlock <span role="region" class="text-replace" aria-label="alternate words for Sherlock">[Private Eye]</span> Holmes she is always the woman.
+In his eyes she eclipses and predominates <span role="region" class="text-replace" aria-label="alternate words for predominates">[rule / tower / paramount]</span> the whole of her sex.
+
+
+<h2>ARIA role term and definition</h2>
+<p>
+TO <span role="term">Sherlock</span> <span role="definition" class="text-replace" aria-label="sherlock: alternate words">[Private Eye]</span> Holmes she is always the woman.
+I have <span role="term">seldom</span> <span role="definition" class="text-replace">[rarely]</span> heard him mention her under any other name.
+In his eyes she eclipses and <span role="term">predominates</span> <span role="definition" class="text-replace">[rule / tower / paramount]</span> the whole of her sex.
+It was not that he felt any emotion <span role="term">akin</span> <span role="definition" class="text-replace">[blood-related]</span> to love for Irene Adler.
+All emotions, and that one particularly, were <span role="term">abhorrent</span> <span role="definition" class="text-replace">[obscene]</span> to his cold, precise, but <span role="term">admirably</span> <span role="definition" class="text-replace">[commendable]</span> balanced mind.
+He was, I take it, the most perfect reasoning and observing machine that the world has seen; but, as a lover, he would have placed himself in a false position.
+He never spoke of the softer passions, save with a<span role="term">gibe</span> <span role="definition" class="text-replace">[shot / check / barrack]</span> and a sneer.
+</p>
+
+<h2>Definition list with ARIA attributes</h2>
+<ul class="text-muted">
+    <li>Cannot be used within &lt;p&gt; elements</li>
+    <li>VO read the [ and / items</li>
+    <li>VO has issues with / and the following word (tower -&gt; toe er, paramount -&gt; paramou n t)
+</ul>
+<div class="mb-1">
+TO <dl class="replacement" aria-label="sherlock: alternate words"><dt aria-hidden="true">Sherlock</dt><dd>Private Eye</dd></dl> Holmes she is always the woman.
+I have <dl class="replacement" aria-label="seldom: alternate words"><dt aria-hidden="true">seldom</dt><dd>rarely</dd></dl> heard him mention her under any other name.
+In his eyes she eclipses and <dl class="replacement" aria-label="predominates: alternate words"><dt aria-hidden="true">predominates</dt><dd>rule</dd><dd>tower</dd><dd>paramount</dd></dl> the whole of her sex.
+It was not that he felt any emotion <dl class="replacement" aria-label="akin: alternate words"><dt arai-hidden="true">akin</dt><dd>blood-related</dd></dl> to love for Irene Adler.
+All emotions, and that one particularly, were <dl class="replacement" aria-label="abhorrent: alternate words"><dt aria-hidden="true">abhorrent</dt><dd>obscene</dd></dl> to his cold, precise, but admirably <span class="text-replace">[commendable]</span> balanced mind.
+He was, I take it, the most perfect reasoning and observing machine that the world has seen; but, as a lover, he would have placed himself in a false position.
+He never spoke of the softer passions, save with a <dl class="replacement" aria-label="gibe: alternate words"><dt aria-hidden="true">gibe</dt><dd>shot</dd><dd>check</dd><dd>barrack</dd></dl> and a sneer.
+</div>
+
+<h2>Definition list</h2>
+<ul class="text-muted">
+    <li>Cannot be used within &lt;p&gt; elements</li>
+    <li>VO read the [ and / items</li>
+    <li>VO has issues with / and the following word (tower -&gt; toe er, paramount -&gt; paramou n t)
+</ul>
+<div class="mb-1">
+TO <dl class="replacement"><dt>Sherlock</dt><dd>Private Eye</dd></dl> Holmes she is always the woman.
+I have <dl class="replacement"><dt>seldom</dt><dd>rarely</dd></dl> heard him mention her under any other name.
+In his eyes she eclipses and <dl class="replacement"><dt>predominates</dt><dd>rule</dd><dd>tower</dd><dd>paramount</dd></dl> the whole of her sex.
+It was not that he felt any emotion <dl class="replacement"><dt>akin</dt><dd>blood-related</dd></dl> to love for Irene Adler.
+All emotions, and that one particularly, were <dl class="replacement"><dt>abhorrent</dt><dd>obscene</dd></dl> to his cold, precise, but admirably <span class="text-replace">[commendable]</span> balanced mind.
+He was, I take it, the most perfect reasoning and observing machine that the world has seen; but, as a lover, he would have placed himself in a false position.
+He never spoke of the softer passions, save with a <dl class="replacement"><dt>gibe</dt><dd>shot</dd><dd>check</dd><dd>barrack</dd></dl> and a sneer.
+</div>
+
+<h2>Unordered list with ARIA label</h2>
+<ul class="text-muted">
+    <li>Cannot be used within &lt;p&gt; elements</li>
+    <li>VO read the [ and / items</li>
+    <li>VO has issues with / and the following word (tower -&gt; toe, er, paramount -&gt; paramou, n, t)
+</ul>
+<div class="mb-1">
+TO Sherlock <ul class="ul-replace" aria-label="alternate words for Sherlock"><li>Private Eye</li></ul> Holmes she is always the woman.
+I have seldom <ul class="ul-replace" aria-label="alternate words for seldom"><li>rarely</li></ul> heard him mention her under any other name.
+In his eyes she eclipses and predominates <ul class="ul-replace" aria-label="alternate words for predominates"><li>rule</li><li>tower</li><li>paramount</li></ul> the whole of her sex.
+It was not that he felt any emotion akin <ul class="ul-replace" aria-label="alternate words for akin"><li>blood-related</li></ul> to love for Irene Adler.
+All emotions, and that one particularly, were abhorrent <ul class="ul-replace" aria-label="alternate words for abhorrent"><li>obscene</li></ul> to his cold, precise, but admirably <ul class="ul-replace" aria-label="alternate words for admirably"><li>commendable</li></ul> balanced mind.
+He was, I take it, the most perfect reasoning and observing machine that the world has seen; but, as a lover, he would have placed himself in a false position.
+He never spoke of the softer passions, save with a gibe <ul class="ul-replace" aria-label="alternate words for gibe"><li>shot</li><li>check</li><li>barrack</li></ul> and a sneer.
+</div>
+
+<h2>Wrapping span with ARIA label</h2>
+<ul class="text-muted">
+    <li>aria-label read by VO, not NVDA if no role, VO defaults to role="region" (?)</li>
+    <li>Ref: <a href="https://www.tpgi.com/short-note-on-aria-label-aria-labelledby-and-aria-describedby/">TPGi: Short note on aria-label, aria-labelledby, and aria-describedby</a>
+    <li>role="region" will announce 'region', but works for VO/NVDA</li>
+    <li>role="list" could work, but probably use real list instead</li>
+</ul>
+<p>
+TO Sherlock <span class="text-replace" role="region" aria-label="alternate words for Sherlock">[Private Eye]</span> Holmes she is always the woman.
+I have seldom <span class="text-replace" role="region" aria-label="alternate words for seldom">[rarely]</span> heard him mention her under any other name.
+In his eyes she eclipses and predominates <span class="text-replace" role="region" aria-label="alternate words for predominates">[rule / tower / paramount]</span> the whole of her sex.
+It was not that he felt any emotion akin <span class="text-replace" role="region" aria-label="alternate words for akin">[blood-related]</span> to love for Irene Adler.
+All emotions, and that one particularly, were abhorrent <span class="text-replace" role="region" aria-label="alternate words for abhorrent">[obscene]</span> to his cold, precise, but admirably <span class="text-replace" role="region" aria-label="alternate words for admirably">[commendable]</span> balanced mind.
+He was, I take it, the most perfect reasoning and observing machine that the world has seen; but, as a lover, he would have placed himself in a false position.
+He never spoke of the softer passions, save with a gibe <span class="text-replace" role="region" aria-label="alternate words for gibe">[shot / check / barrack]</span> and a sneer.
+</p>
+
+<h2>Wrapping span</h2>
+<p>
+TO Sherlock <span class="text-replace">[Private Eye]</span> Holmes she is always the woman.
+I have seldom <span class="text-replace">[rarely]</span> heard him mention her under any other name.
+In his eyes she eclipses and predominates <span class="text-replace">[rule / tower / paramount]</span> the whole of her sex.
+It was not that he felt any emotion akin <span class="text-replace">[blood-related]</span> to love for Irene Adler.
+All emotions, and that one particularly, were abhorrent <span class="text-replace">[obscene]</span> to his cold, precise, but admirably <span class="text-replace">[commendable]</span> balanced mind.
+He was, I take it, the most perfect reasoning and observing machine that the world has seen; but, as a lover, he would have placed himself in a false position.
+He never spoke of the softer passions, save with a gibe <span class="text-replace">[shot / check / barrack]</span> and a sneer.
+</p>
+
+<h2>Original text</h2>
+<p>
+TO Sherlock Holmes she is always the woman.
+I have seldom heard him mention her under any other name.
+In his eyes she eclipses and predominates the whole of her sex.
+It was not that he felt any emotion akin to love for Irene Adler.
+All emotions, and that one particularly, were abhorrent to his cold, precise, but admirably balanced mind.
+He was, I take it, the most perfect reasoning and observing machine that the world has seen; but, as a lover, he would have placed himself in a false position.
+He never spoke of the softer passions, save with a gibe and a sneer.
+</p>
+
+</div>
+</main>
+</body>
+</html>

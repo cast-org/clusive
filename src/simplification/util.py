@@ -65,11 +65,16 @@ class WordnetSimplifier:
                 rep = replacements[base]
                 if tok[0].isupper():
                     rep = rep.title()
-                outword = '%s <span class="text-replace">[%s]</span>' % (tok, rep)
+                outword = '<a href="#" class="simplifyLookup">%s</a> <span role="region" class="text-replace" aria-label="alternate words for %s">[%s]</span>' % (tok, tok, rep)
             else:
                 outword = tok
             out += outword
+        if include_full:
+            total_word_count = sum([w['count'] for w in word_info])
+        else:
+            total_word_count = None
         return {
+            'word_count': total_word_count,
             'to_replace': to_replace,
             'word_info': word_info,
             'result': out,

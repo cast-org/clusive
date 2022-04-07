@@ -8,6 +8,8 @@ var pub_id = "{{ pub.id }}";
 var pub_version = "{{ version }}";
 var pub_version_id = "{{ version_id }}";
 var manifest_path = "{{ manifest_path }}";
+// FIXME eventually this will be a per-user default
+var simplificationTool = "{{ simplification_tool }}";
 </script>
 <script src="{% static 'shared/js/lib/reader/reader.js' %}"></script>
 {% endblock %}
@@ -20,14 +22,13 @@ var manifest_path = "{{ manifest_path }}";
 
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
+<button id="simplifyLocator" class="sr-only" aria-hidden="true" tabindex="-1">Simplify text</button>
 {% include "shared/partial/sidebar_start.html" with nav=True why=True %}
 {% endblock %}
 
 {% block sidebar_end %}
 <!-- Items needed to anchor the toolbox-based popovers -->
 <button id="glossaryLocator" class="sr-only" aria-hidden="true" tabindex="-1">Lookup</button>
-<button id="translateLocator" class="sr-only" aria-hidden="true" tabindex="-1">Translate</button>
-<button id="simplifyLocator" class="sr-only" aria-hidden="true" tabindex="-1">Simplify text</button>
 
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}
@@ -101,15 +102,11 @@ var manifest_path = "{{ manifest_path }}";
         var selectionMenuItems = [
             {
                 id: 'translateIcon',
-                callback: contextTranslate
+                callback: contextSimplify
             },
             {
                 id: 'lookupIcon',
                 callback: contextLookup
-            },
-            {
-                id: 'simplifyIcon',
-                callback: contextSimplify
             }
         ];
 

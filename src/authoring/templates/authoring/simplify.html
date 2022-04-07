@@ -56,7 +56,8 @@
     <div class="row mt-1">
         <div class="col">
             <h2>Details</h2>
-            <p>Tried replacing {{ to_replace }} out of {{ word_info | length }} different words in text.</p>
+            <p>Text has {{ word_count }} total words, {{ word_info | length }} different words.</p>
+            <p>Will aim to find alternatives for {{ to_replace }} of these.</p>
             <ul>
                 <li class="hard">Red: synonym is less frequent than original, do not use.</li>
                 <li class="same">Orange: synonym is about the same frequency as original, do not use.</li>

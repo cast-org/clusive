@@ -1,15 +1,23 @@
-<div class="popover popover-translate popover-scrollable" id="simplifyPop">
+<div class="popover popover-simplify popover-scrollable" id="simplifyPop">
     <div role="document">
         <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
         <span role="button" tabindex="0" class="drag" data-cfw-drag="popover" aria-label="Move" title="Move"><span aria-hidden="true">+</span></span>
         <div class="popover-header">
-            <strong>
-                Simplify text
-            </strong>
+            <h2 class="modal-title sr-only">Text simplification options</h2>
+            <nav aria-label="text simplification">
+                <ul class="nav nav-tabs-popover">
+                    <li class="nav-item"><button id="simplifyNavLink" class="nav-link">Simplify text</button></li>
+                    <li class="nav-item"><button id="translateNavLink" class="nav-link">Translate</button></li>
+                </ul>
+            </nav>
             {% include "shared/partial/dialog_tts.html" %}
         </div>
-        <div class="popover-body">
-            <p id="simplifyOutput">Loading...</p>
+        <div id="simplifyBody" class="popover-body">
+        </div>
+        <div class="popover-footer">
+            <div id="translateFooter">
+                {% include "shared/partial/icons/translated-by-google.svg" with class="gt-icon" %}
+            </div>
         </div>
     </div>
 </div>
