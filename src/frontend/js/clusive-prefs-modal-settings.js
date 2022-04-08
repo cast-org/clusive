@@ -240,7 +240,7 @@
         console.debug("cisl.prefs.modalSettings.setupVoiceListing");
         clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
             console.debug("setupVoiceListing for ", voice);
-            var optionMarkup = "<option value=\"${voice.name}\">${voice.name}</option>";
+            var optionMarkup = '<option value="' + voice.name + '">' + voice.name + '</option>';
             var readVoiceSelect = that.locate("readVoice");
             readVoiceSelect.append(optionMarkup);
         });
