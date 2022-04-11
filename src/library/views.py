@@ -28,10 +28,12 @@ from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, Books
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
     CustomVocabularyWord
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
-from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
-    get_access_keys, is_organizational_account
+from oauth2.bookshare.views import BookshareOAuth2Adapter, has_bookshare_account, \
+    is_bookshare_connected, get_access_keys, is_organizational_account, get_organization_name, \
+    get_organization_members
 from pages.views import ThemedPageMixin, SettingsPageMixin
-from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
+from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles,\
+    BookshareOrgUserAccount, check_valid_choice
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
@@ -780,14 +782,11 @@ class BookshareConnect(LoginRequiredMixin, TemplateView):
             request.session['bookshare_connected'] = False
             return HttpResponseRedirect(redirect_to='/accounts/bookshare/login/?process=connect&next=/account/my_account')
 
+
 class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):
     template_name = 'library/library_search_bookshare.html'
     form_class = BookshareSearchForm
     formlabel ='Step 1: Search by title, author, or ISBN'
-    sponsor_warning_message = '\
-        You are using a Sponsor (Teacher/District/School) Bookshare account. \
-        Your import of Bookshare titles for students is not yet implemented, \
-        but coming soon.'
 
     def dispatch(self, request, *args, **kwargs):
         if not is_bookshare_connected(request):
@@ -796,8 +795,6 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
                 redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_search')
             )
         elif request.clusive_user.can_upload:
-            if is_organizational_account(request):
-                messages.warning(request, self.sponsor_warning_message)
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -830,8 +827,10 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
     metadata = {}
     imported_books = []
     search_error = {}
+    is_organizational = False
 
     def dispatch(self, request, *args, **kwargs):
+        self.is_organizational = is_organizational_account(request)
         if request.clusive_user.can_upload:
             self.imported_books = self.get_imported_books(request)
             # This view should be called with EITHER a keyword or a page, not both.
@@ -850,8 +849,6 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                     messages.error(request, search_results['error_message'])
                     self.search_error = search_results
             else:
-                if is_organizational_account(request):
-                    messages.warning(request, BookshareSearch.sponsor_warning_message)
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
                 if self.page <= pages_available:
@@ -905,7 +902,6 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             else:
                 page_links.append(p)
         links['pages'] = page_links
-
         context.update({
             'query_key' : keyword,
             'titles': chunks[current_page-1] if len(chunks) > 0 else [],
@@ -913,6 +909,8 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
             'links': links,
             'totalResults': self.metadata.get('totalResults', 'Unknown'),
             'imported_books': self.imported_books,
+            'is_organizational': self.is_organizational,
+            'member_id': '',
         })
         return context
 
@@ -1062,7 +1060,6 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
         for aFormat in book.get('formats', []):
             if aFormat['formatId'] == 'EPUB3':
                 return True
-        return False
 
     def get_imported_books(self, request):
         results = []
@@ -1089,7 +1086,7 @@ class BookshareImport(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         if not request.clusive_user.can_upload:
             raise PermissionDenied('User cannot upload')
-        bookshare_id = kwargs.get('bookshareId')
+        bookshare_id = str(kwargs.get('bookshareId'))
         try:
             access_keys = get_access_keys(request)
         except Exception as e:
@@ -1103,18 +1100,32 @@ class BookshareImport(LoginRequiredMixin, View):
             logger.debug("Bookshare import exists already: %s", existing)
             return JsonResponse(data={'status': 'done', 'id': existing.first().id})
 
+        # Check if this is an organizational account and, if so, if a user has
+        # been provided.  Redirect to choosing an org member is no user was
+        # given.
+        if is_organizational_account(request):
+            for_member = kwargs.get('memberId')
+            if for_member == None:
+                return HttpResponseRedirect(redirect_to=reverse(
+                    'bookshare_org_memberlist',
+                    kwargs={'bookshareId': bookshare_id, 'fromSearchPage': 1}
+                )
+            )
+        else:
+            for_member = None
         # The following request will return a status code of 202 meaning the
         # request to download has been acknowledged, and a package is being
-        # prepared for download.  Subsequent requests will either result in 202 again,
-        # or, when the package is ready, a 302 redirect to
-        # a URL that retrieves the epub content.
+        # prepared for download.  Subsequent requests will either result in 202
+        # again, or, when the package is ready, a 302 redirect to an URL that
+        # etrieves the epub content.
         # https://apidocs.bookshare.org/reference/index.html#_responses_3
+        the_params = { 'api_key': access_keys.get('api_key') }
+        if for_member != None:
+            the_params.update({ 'forUser': for_member })
         resp = requests.request(
             'GET',
             'https://api.bookshare.org/v2/titles/' + bookshare_id + '/EPUB3',
-            params = {
-                'api_key': access_keys.get('api_key')
-            },
+            params = the_params,
             headers = {
                 'Authorization': 'Bearer ' + access_keys.get('access_token').token
             }
@@ -1142,8 +1153,7 @@ class BookshareImport(LoginRequiredMixin, View):
         else:
             bookshare_messages = ', '.join(resp.json().get('messages', []))
             message = f'Error importing the book (code = {resp.status_code}). {bookshare_messages}'
-            return JsonResponse(data={'status': 'error',
-                                      'message': message})
+            return JsonResponse(data={'status': 'error', 'message': message})
 
     def save_book(self, downloaded_contents, bookshare_metadata, kwargs):
         # This is mostly a copy of UploadFormView.form_valid() from above.
@@ -1170,6 +1180,68 @@ class BookshareImport(LoginRequiredMixin, View):
         else:
             raise Exception('unpack_epub_file did not find new content.')
         return bv
+
+class BookshareShowOrgMembers(LoginRequiredMixin, TemplateView):
+    template_name = 'library/bookshare_org_members.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.debug('BookhareId is: ' + str(kwargs.get('bookshareId')))
+        if not is_bookshare_connected(request):
+            # Log into Bookshare and then come back here.
+            return HttpResponseRedirect(
+                redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_org_memberlist')
+            )
+        else:
+            # No book likely means no search results in the session.  Go back
+            # to the start of the search to get search results.
+            self.book = self.find_book_in_search_results(kwargs['bookshareId'])
+            if self.book == None:
+                return HttpResponseRedirect(redirect_to=reverse('bookshare_search'))
+
+            bookshare = BookshareOAuth2Adapter(request)
+            self.sponsor = bookshare.social_account.uid
+            member_accounts = BookshareOrgUserAccount.objects.filter(
+                org_user_id = self.sponsor
+            )
+            self.member_list = []
+            for member in member_accounts:
+                if member.clusive_user.role != 'ST':
+                    continue
+                student = {
+                    'pk': member.clusive_user.user.id,
+                    'name': {
+                        'firstName': member.clusive_user.user.first_name,
+                        'lastName': member.clusive_user.user.last_name,
+                    },
+                    'email': member.clusive_user.user.email,
+                    'period': member.clusive_user.current_period,
+                    'userAccountId': member.account_id
+                }
+                self.member_list.append(student)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'member_list': self.member_list,
+            'book': self.book,
+            'search_page': kwargs['fromSearchPage'],
+            'sponsor': self.sponsor,
+        })
+        return context
+
+    def find_book_in_search_results(self, bookshare_id):
+        search_metadata = self.request.session.get('bookshare_search_metadata')
+        if search_metadata:
+            chunks = search_metadata.get('chunks', [])
+            book = None
+            for chunk in chunks:
+                book = next((title for title in chunk if title['bookshareId'] == bookshare_id), None)
+                if book:
+                    break
+            return book
+        else:
+            return None
 
 
 class ListCustomizationsView(LoginRequiredMixin, EventMixin, TemplateView):

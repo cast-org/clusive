@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
-from roster.models import Site, Period, ClusiveUser
+from roster.models import Site, Period, ClusiveUser, BookshareOrgUserAccount
 
 sample_sites = {
     'cast_collegiate': {
@@ -121,6 +121,79 @@ sample_users = {
             ]
         }
     },
+    'sarah_student': {
+        'django_user': {
+            'first_name': 'Sal Student',
+            'username': 'salstudent',
+            'password': 'salstudent_pass'
+        },
+        'clusive_user': {
+            'anon_id': 'user5',
+            'permission': 'TA',
+            'role': 'ST',
+            'period_anon_ids': [
+                'period1'
+            ]
+        }
+    },
+    # Students that match the demo Bookshare organizational account members
+    'chris_student': {
+        'django_user': {
+            'first_name': 'Chris Student',
+            'username': 'chrisstudent',
+            'password': 'chrisstudent_pass'
+        },
+        'clusive_user': {
+            'anon_id': 'user6',
+            'permission': 'TA',
+            'role': 'ST',
+            'period_anon_ids': [
+                'period1'
+            ],
+        },
+        'bookshareOrgAccounts': [{
+            'org_user_id': 'partnerorgdemo@bookshare.org',
+            'account_id': 'AP5xvS-6c4EqBiN9y_mYfLhc_MKVStR51Gjk6ZkuwjMz-KlXAlpU1F3MYIngzcF8o-gC1IUInEBv'
+        }]
+    },
+    'pat_student': {
+        'django_user': {
+            'first_name': 'Pat Student',
+            'username': 'patstudent',
+            'password': 'patstudent_pass'
+        },
+        'clusive_user': {
+            'anon_id': 'user7',
+            'permission': 'TA',
+            'role': 'ST',
+            'period_anon_ids': [
+                'period1'
+            ],
+        },
+        'bookshareOrgAccounts': [{
+            'org_user_id': 'partnerorgdemo@bookshare.org',
+            'account_id': 'AP5xvS-hsqQ_DO6hlc7FBePAUwFBgowLQ-DhbFNHDr0ibrjLiWPu-QKCgGBNOScBOxaC1jv0rsmG'
+        }]
+    },
+    'sandy_student': {
+        'django_user': {
+            'first_name': 'Sandy Student',
+            'username': 'sandystudent',
+            'password': 'sandystudent_pass'
+        },
+        'clusive_user': {
+            'anon_id': 'user8',
+            'permission': 'TA',
+            'role': 'ST',
+            'period_anon_ids': [
+                'period1'
+            ],
+        },
+        'bookshareOrgAccounts': [{
+            'org_user_id': 'partnerorgdemo@bookshare.org',
+            'account_id': 'AP5xvS-A0e5OtsMfuGMa02CriX7AA2S2js1Bp3MjsypYWzLMnUEPfiAQAZsDP4lRWZp1z-qHvd_V'
+        }]
+    },
 }
 
 def create_sites_from_dict(sites_dict):
@@ -163,6 +236,28 @@ def create_users_from_dict(users_dict):
             clusive_user.periods.set(periods)
             clusive_user.save()
 
+# NOTE:  Run after Users and ClusiveUsers have been created 
+def create_bookshare_orgaccounts_from_dict(users_dict):
+    for user_id, user_values in users_dict.items():
+        bookshareOrgAccounts = user_values.get('bookshareOrgAccounts') 
+        if bookshareOrgAccounts == None:
+            continue
+
+        anon_id = user_values['clusive_user']['anon_id']
+        clusive_user = ClusiveUser.objects.get(anon_id=anon_id)
+        for bookshareOrgUser in bookshareOrgAccounts:
+            org_id = bookshareOrgUser['org_user_id']
+            try:
+                bookshare_account = BookshareOrgUserAccount.objects.get(
+                    clusive_user=clusive_user, org_user_id=org_id
+                )
+                print(f'Bookshare organizational account {org_id} for ClusiveUser {anon_id} already exists, skipping.')
+            except BookshareOrgUserAccount.DoesNotExist:
+                print(f'Creating Bookshare organizational account info for {anon_id}, member of {org_id}')
+                bookshare_account = BookshareOrgUserAccount.objects.create(clusive_user=clusive_user, **bookshareOrgUser)
+                bookshare_account.save()
+
+
 class Command(BaseCommand):
     help = 'Create sample objects for the Roster app, for testing purposes'
 
@@ -173,5 +268,7 @@ class Command(BaseCommand):
         create_periods_from_dict(sample_periods)
 
         create_users_from_dict(sample_users)
+
+        create_bookshare_orgaccounts_from_dict(sample_users)
 
 

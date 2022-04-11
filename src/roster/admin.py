@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.urls import path
 
 from . import views
-from .models import Site, Period, ClusiveUser, Preference, PreferenceSet, UserStats, MailingListMember
+from .models import Site, Period, ClusiveUser, Preference, PreferenceSet,\
+    UserStats, MailingListMember, BookshareOrgUserAccount
 
 
 class ClusiveUserInline(admin.StackedInline):
@@ -64,6 +65,13 @@ class UserStatsAdmin(admin.ModelAdmin):
     model = UserStats
     list_display = ('user', 'logins', 'reading_views', 'active_duration')
     ordering = ('user',)
+
+
+@admin.register(BookshareOrgUserAccount)
+class BookshareOrgUserAccount(admin.ModelAdmin):
+    model = BookshareOrgUserAccount
+    list_display = ('clusive_user', 'account_id', 'org_user_id')
+    ordering = ('clusive_user',)
 
 
 @admin.register(MailingListMember)

@@ -911,16 +911,21 @@ function bookshareCancelImport() {
 }
 
 // Called at the start of Bookshare import process, and then periodically to see if it's ready
-function bookshareCheckImportProgress(id) {
+function bookshareCheckImportProgress(bookAndUser) {
     'use strict';
-
     if (bookshareImportCheckInFlight) {
         console.warn('Bookshare check already in-flight, skipping');
         return;
     }
-    console.debug('Checking progress of ' + id);
+    var url = '/library/bookshare-import/' + bookAndUser.bookId;
+    var debugMsg = 'Checking progress of ' + bookAndUser.bookId;
+    if (bookAndUser.forUser) {
+        url += '/' + bookAndUser.forUser;
+        debugMsg += ' for ' + bookAndUser.forUser;
+    }
+    console.debug(debugMsg);
     bookshareImportCheckInFlight = true;
-    $.getJSON('/library/bookshare-import/' + id)
+    $.getJSON(url)
         .done(function(data) {
             if (data.status === 'done') {
                 // When import is done, redirect to metadata editing page.
@@ -948,9 +953,23 @@ function bookshareCheckImportProgress(id) {
 function bookshareStartImportProcess(event) {
     'use strict';
 
-    var $trigger = $(event.currentTarget);
-    var id = $trigger.data('bookshare-id');
-    $trigger.CFW_Modal({
+    var trigger = $(event.currentTarget);
+    bookshareDoImport(trigger, { bookId: trigger.data('bookshare-id') });
+}
+
+// When teacher imports on behalf of student, figure out which student, then
+// kick off the process of importing a book
+function bookshareStartSponsorImportProcess(event) {
+    'use strict';
+
+    var trigger = $(event.currentTarget);
+    var bookId = trigger.data('bookshare-id');
+    var memberId = trigger.data('member-id');
+    bookshareDoImport(trigger, { bookId: bookId, forUser: memberId });
+}
+
+function bookshareDoImport(trigger, bookAndUser) {
+    trigger.CFW_Modal({
         target: '#importPendingModal',
         unlink: true,
         show: true,
@@ -958,12 +977,12 @@ function bookshareStartImportProcess(event) {
     });
     // Cancel any active import timer - there really shouldn't be any
     if (bookshareImportProgressTimer) {
-        bookshareCancelImport();
+        bookshareCancelImport(bookAndUser.bookId);
     }
     // Call API to trigger import immediately, and then check import status every 5 seconds.
-    bookshareCheckImportProgress(id);
-    bookshareImportProgressTimer = setInterval(bookshareCheckImportProgress, 5000, id);
-}
+    bookshareCheckImportProgress(bookAndUser);
+    bookshareImportProgressTimer = setInterval(bookshareCheckImportProgress, 5000, bookAndUser);
+};
 
 // Edit customization dialog: custom vocabulary words handling
 function initEditCustomizations () {
@@ -1281,4 +1300,5 @@ $(window).ready(function() {
     $('body').on('click', 'a.delete-customization', configureConfirmDeletionPopup);
     $('#importPendingModal').on('afterHide.cfw.modal', bookshareCancelImport);
     $('body').on('click', 'button.import-button', bookshareStartImportProcess);
+    $('body').on('click', 'button.import-button-sponsor', bookshareStartSponsorImportProcess);
 });

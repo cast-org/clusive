@@ -1,0 +1,57 @@
+{% extends "shared/base.html" %}
+{% load static figuration %}
+
+{% block title %}Bookshare Members{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="manage" %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <main id="content" tabindex="-1">
+        {% include "shared/partial/alerts.html" %}
+        <h1>Add from Bookshare</h1>
+        <div class="link-back ms-0">
+            <a href="/library/bookshare-results/page/{{search_page}}" class="link-prev">Back to Search Results</a>
+        </div>
+        <h2>Step 3: Select Student</h2>
+        <p>Clusive will share <em>{{ book.title }}</em> with the student you select.</p>
+        <div class="form-group mb-1">
+            <div class="table-scroll">
+                <table class="table table-divided table-roster">
+                    <caption><em>(Teacher/District/School: {{ sponsor }})</em></caption>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in member_list %}
+                        <tr>
+                            <td>{{ member.name.firstName }} {{ member.name.lastName }}</td>
+                            <td>{{ member.period }}</td>
+                            <td>
+                                {% if member.userAccountId == None %}
+                                (not a Bookshare member)
+                                {% else %}
+                                <button data-bookshare-id="{{book.bookshareId}}" data-member-id="{{member.userAccountId}}" class="btn btn-primary import-button-sponsor">Select</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td><p>No students.</p></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% include "library/partial/modal_import_pending.html" %}
+{% endblock %}
+

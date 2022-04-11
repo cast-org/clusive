@@ -197,6 +197,7 @@ def check_valid_choice(choices, value):
         logger.warning('Found no match for choice ' + value)
         return False
 
+
 class ClusiveUser(models.Model):
     guest_serial_number = 0
     anon_id_serial_number = 0
@@ -595,6 +596,23 @@ class UserStats (models.Model):
         stats = cls.for_clusive_user(clusive_user)
         stats.logins += 1
         stats.save()
+
+
+class BookshareOrgUserAccount(models.Model):
+    """
+    A ClusiveUser's Bookshare organizational account information
+    """
+    clusive_user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
+
+    # The organization user id, usually an email, used to log into the account,
+    # e.g., partnerorgdemo@bookshare.org.
+    org_user_id = models.CharField(max_length=128, null=True, blank=True, verbose_name='Bookshare organization')
+
+    # The ClusiveUser's organization member id: `userAccountId`
+    account_id = models.CharField(max_length=128, null=True, blank=True, verbose_name='Bookshare account Id')
+
+    def __str__(self):
+        return '<BookshareOrgUserAccountId %s: %s (%s)>' % (self.pk, self.account_id, self.org_user_id)
 
 
 class MailingListMember (models.Model):
