@@ -305,11 +305,11 @@ h2,
 
 // Translated text
 .translate-source {
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-normal;
     color: var(--CT_translateSourceColor);
 }
-.translate-ouput {
-    font-weight: $font-weight-normal;
+.translate-output {
+    font-weight: $font-weight-bold;
     color: var(--CT_translateOutputColor);
 }
 
