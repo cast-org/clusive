@@ -180,7 +180,7 @@ class StudentActivitySort:
         (COUNT, 'count'),
     ]
 
-class SimplificationTool:
+class TransformTool:
     SIMPLIFY = 'simplify'
     TRANSLATE = 'translate'
 
@@ -239,8 +239,8 @@ class ClusiveUser(models.Model):
                                              choices=StudentActivitySort.CHOICES)
 
     # How the user has chosen to simplify or translate text
-    simplification_tool = models.CharField(max_length=10, default=SimplificationTool.SIMPLIFY,
-                                           choices=SimplificationTool.CHOICES)
+    transform_tool = models.CharField(max_length=10, default=TransformTool.TRANSLATE,
+                                      choices=TransformTool.CHOICES)
 
     # Levels taught. Asked of teachers at registration.
     education_levels = MultiSelectField(choices=EducationLevels.CHOICES,
@@ -342,8 +342,8 @@ class ClusiveUser(models.Model):
             logger.error("preference set named %s not found", prefset_name)
 
     def set_simplification_tool(self, choice):
-        if self.simplification_tool != choice:
-            self.simplification_tool = choice
+        if self.transform_tool != choice:
+            self.transform_tool = choice
             self.save()
 
     @classmethod
