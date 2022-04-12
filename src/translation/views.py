@@ -9,7 +9,7 @@ from google.cloud import translate_v2 as translate
 
 from eventlog.signals import translation_action
 from library.models import Book
-from roster.models import SimplificationTool
+from roster.models import TransformTool
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class TranslateTextView(LoginRequiredMixin, View):
         clusive_user = request.clusive_user
         error = None
 
-        clusive_user.set_simplification_tool(SimplificationTool.TRANSLATE)
+        clusive_user.set_simplification_tool(TransformTool.TRANSLATE)
 
         translation_action.send(sender=TranslateTextView.__class__,
                                 request=request,
