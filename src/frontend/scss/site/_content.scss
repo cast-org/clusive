@@ -281,6 +281,10 @@ h2,
     cursor: pointer;
     box-shadow: 0 .0625em 0 0 var(--CT_glossaryUnderline), inset 0 -.125em 0 0 var(--CT_glossaryUnderline);
 }
+.simplifyLookup,
+.simplifyLookup:hover {
+    font-weight: $font-weight-normal;
+}
 // stylelint-enable selector-class-pattern
 
 .definition-speech {
@@ -314,16 +318,16 @@ h2,
     font-weight: $font-weight-bold;
     color: var(--CT_simplifySourceColor);
 }
-.text-replace {
-    font-weight: $font-weight-normal;
-    @include font-size(.9375rem);
-    color: var(--CT_textReplaceColor);
-    background: var(--CT_textReplaceBg);
-
-    .popover-body & {
-        @include font-size(.875rem);
-    }
-}
+//.text-replace {
+//    font-weight: $font-weight-normal;
+//    @include font-size(.9375rem);
+//    color: var(--CT_textReplaceColor);
+//    background: var(--CT_textReplaceBg);
+//
+//    .popover-body & {
+//        @include font-size(.875rem);
+//    }
+//}
 
 // Text with pictures
 .text-picture {

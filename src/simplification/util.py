@@ -64,7 +64,7 @@ class WordnetSimplifier:
                 rep = replacements[base]
                 if tok[0].isupper():
                     rep = rep.title()
-                outword = '<span role="region" aria-label="alternate words for %s">%s</span> [<a href="#" class="simplifyLookup">%s</a>]' % (tok, rep, tok)
+                outword = '<span class="text-replace" role="region" aria-label="alternate term for %s">%s</span> [<a href="#" class="simplifyLookup">%s</a>]' % (tok, rep, tok)
             else:
                 outword = tok
             out += outword
