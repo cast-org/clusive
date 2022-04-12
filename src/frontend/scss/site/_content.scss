@@ -270,6 +270,9 @@ h2,
     }
 }
 
+// stylelint-disable selector-class-pattern
+.simplifyLookup,
+.simplifyLookup:hover,
 .link-glossary,
 .link-glossry:hover {
     font-weight: $font-weight-bold;
@@ -283,16 +286,6 @@ h2,
 .simplifyLookup,
 .simplifyLookup:hover {
     font-weight: $font-weight-normal;
-    @include font-size(.9375rem);
-    color: var(--CT_textReplaceColor);
-    text-decoration: none;
-    cursor: pointer;
-    background: var(--CT_textReplaceBg);
-    box-shadow: 0 .0625em 0 0 var(--CT_glossaryUnderline), inset 0 -.125em 0 0 var(--CT_glossaryUnderline);
-
-    .popover-body & {
-        @include font-size(.875rem);
-    }
 }
 // stylelint-enable selector-class-pattern
 
@@ -336,6 +329,16 @@ h2,
     //     .popover-body & {
     //         @include font-size(.875rem);
     //     }
+}
+.text-replace-src {
+    font-weight: $font-weight-normal;
+    @include font-size(.9375rem);
+    color: var(--CT_textReplaceColor);
+    background: var(--CT_textReplaceBg);
+
+    .popover-body & {
+        @include font-size(.875rem);
+    }
 }
 
 // Text with pictures
