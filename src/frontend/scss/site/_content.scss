@@ -288,6 +288,7 @@ h2,
     text-decoration: none;
     cursor: pointer;
     background: var(--CT_textReplaceBg);
+    box-shadow: 0 .0625em 0 0 var(--CT_glossaryUnderline), inset 0 -.125em 0 0 var(--CT_glossaryUnderline);
 
     .popover-body & {
         @include font-size(.875rem);
