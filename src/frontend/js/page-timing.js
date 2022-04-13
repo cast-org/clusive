@@ -55,6 +55,12 @@ PageTiming.trackPage = function(eventId) {
     }
 
     // Set up so that end time will be recorded
+    $(window).on('pagehide', function() {
+        if (DJANGO_USERNAME) {
+            console.debug("WINDOW PAGEHIDE DETECTED FOR '" + DJANGO_USERNAME + "'");
+            PageTiming.reportEndTime();
+        }
+    });
     document.addEventListener('visibilityChange', function() {
         if (document.visibilityState === 'hidden' && DJANGO_USERNAME) {
             console.debug("DOCUMENT HIDDEN DETECTED FOR '" + DJANGO_USERNAME + "'");
