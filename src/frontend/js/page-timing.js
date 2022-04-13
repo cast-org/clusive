@@ -12,7 +12,7 @@
  *
  */
 
-/* global PAGE_EVENT_ID, clusiveEvents */
+/* global PAGE_EVENT_ID, clusiveEvents, DJANGO_USERNAME */
 
 var PageTiming = {};
 
@@ -55,7 +55,12 @@ PageTiming.trackPage = function(eventId) {
     }
 
     // Set up so that end time will be recorded
-    $(window).on('pagehide', function() { PageTiming.reportEndTime(); });
+    document.addEventListener('visibilityChange', function() {
+        if (document.visibilityState === 'hidden' && DJANGO_USERNAME) {
+            console.debug("DOCUMENT HIDDEN DETECTED FOR '" + DJANGO_USERNAME + "'");
+            PageTiming.reportEndTime();
+        }
+    });
 
     // Save current time - end time will be calculated as an offset to this.
     PageTiming.pageStartTime = currentTime;
@@ -129,22 +134,32 @@ PageTiming.recordInactiveTime = function() {
     }
 };
 
-// Called in page's "pagehide" event
+// Called in document's "visibilityChange" event
 PageTiming.reportEndTime = function() {
     'use strict';
 
     if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
         PageTiming.recordInactiveTime();
         var duration = Date.now() - PageTiming.pageStartTime;
-        var data = {
+        var data = clusive.djangoMessageQueue.wrapMessage({
             type: 'PT',
             eventId: PageTiming.eventId,
             loadTime: PageTiming.pageloadTime,
             duration: duration,
             activeDuration: duration - PageTiming.totalInactiveTime
+        });
+        console.debug('Reporting page data: ', JSON.stringify(data));
+        var postBody = {
+            timestamp: new Date().toISOString(),
+            messages: [data],
+            username: DJANGO_USERNAME
         };
-        console.debug('Reporting page data: ', data);
-        clusiveEvents.messageQueue.add(data);
+        var beaconResult = navigator.sendBeacon(
+            '/messagequeue/', JSON.stringify(postBody)
+        );
+        console.debug('SENT VIA BEACON: (' + beaconResult + ')');
+        console.debug(JSON.stringify(data));
+        console.debug('--');
     } else {
         console.warn('Pagehide event received, but end time was already recorded');
     }

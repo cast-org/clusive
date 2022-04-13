@@ -5,7 +5,9 @@ from dateutil.parser import parse as dateutil_parse
 from dateutil.relativedelta import relativedelta
 from django.http import JsonResponse
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Message
 
@@ -43,7 +45,9 @@ def get_delta_from_now(compare_time):
     now = timezone.now()
     return relativedelta(now, compare_time)
 
+@method_decorator(csrf_exempt, name='dispatch')
 class MessageQueueView(View):
+    @csrf_exempt
     def post(self, request):
         try:
             receivedQueue = json.loads(request.body)
