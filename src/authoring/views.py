@@ -1,5 +1,6 @@
 import logging
 
+import requests
 import wordfreq as wf
 from django.views.generic import FormView, TemplateView
 from nltk.corpus import wordnet
@@ -26,11 +27,42 @@ class SimplifyView(FormView):
         text = form.cleaned_data['text']
         percent = form.cleaned_data['percent']
         simplifier = WordnetSimplifier(self.lang)
-        # Returns [ { 'hw' , 'alts', 'count', 'freq' }, ... ] sorted by freq
+        # Returns {
+        #             'word_count': total_word_count,
+        #             'to_replace': to_replace,
+        #             'word_info': word_info,
+        #             'result': out,
+        #         }
         data = simplifier.simplify_text(text, clusive_user=self.clusive_user, percent=percent, include_full=True)
+        # Try getting icon for first word.
+        logger.debug(data)
+        first_word = data['word_info'][0]['hw']
+        logger.debug('Icon for %s', first_word)
+        icon = get_flaticon(first_word)
         self.extra_context = data
+        self.extra_context.update({ 'icon_url': icon['images']['64'],
+                                    'icon_alt': icon['description'],
+                                    })
         # Don't do normal process of redirecting to success_url.  Just stay on this form page forever.
         return self.render_to_response(self.get_context_data(form=form))
+
+
+def get_flaticon(word: str):
+    api_base = 'https://api.flaticon.com/v3'
+    resp = requests.post(url=api_base+'/app/authentication', params={
+        'apikey': 'MOVE TO SETTINGS',
+    })
+    token = 'Bearer ' + resp.json()['data']['token']
+    logger.debug('Auth response key: %s', token)
+    params = {
+        'q': word,
+        'styleColor': 'black',
+        'limit': '1',
+    }
+    resp = requests.get(url=api_base+'/search/icons/priority', headers={ 'Authorization': token}, params=params).json()
+    logger.debug('search result: %s', resp)
+    icon = resp['data'][0]
+    return icon
 
 
 class LevelingView(FormView):
