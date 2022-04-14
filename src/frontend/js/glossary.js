@@ -1,6 +1,6 @@
 /* eslint-disable strict */
 /* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id, interact, simplificationTool:true */
-/* exported openGlossaryForWord, load_translation, contextLookup, contextSimplify */
+/* exported openGlossaryForWord, load_translation, contextLookup, contextTransform */
 
 // Handles glossary, translation, and simplification frontend events.
 
@@ -130,8 +130,8 @@ function loadTranslation(text) {
         }
     })
         .done(function(data) {
-            $simplifyBody.html('<div class="translate-source">' + text + '</div>' +
-                '<div class="translate-output popover-section" id="translateOutput">' + data.result + '</div>');
+            $simplifyBody.html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
+                + '<div class="translate-source popover-section">' + text + '</div>');
             var $translateOutput = $('#translateOutput');
             $translateOutput.attr('lang', data.lang);
             $translateOutput.css('direction', data.direction);
@@ -189,8 +189,8 @@ function loadSimplification(selection) {
         });
 }
 
-// Called by Readium when the 'simplify' button in the toolbox is clicked.
-function contextSimplify(selection) {
+// Called by Readium when the 'transform' button in the toolbox is clicked.
+function contextTransform(selection) {
     'use strict';
 
     $('#simplifyPop').data('text', selection);

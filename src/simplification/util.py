@@ -1,5 +1,4 @@
 import logging
-from collections import OrderedDict
 from typing import List
 
 import math
@@ -33,7 +32,7 @@ class WordnetSimplifier:
         if clusive_user:
             known_words = WordModel.objects.filter(user=clusive_user, word__in=[i['hw'] for i in word_info], rating__gte=2).values('word')
             known_word_list = [val['word'] for val in known_words]
-            logger.debug('Known words: %s', known_word_list)
+            logger.debug('Known words in simplification: %s', known_word_list)
             for i in word_info:
                 if i['hw'] in known_word_list:
                     i['known'] = True
@@ -65,7 +64,7 @@ class WordnetSimplifier:
                 rep = replacements[base]
                 if tok[0].isupper():
                     rep = rep.title()
-                outword = '<a href="#" class="simplifyLookup">%s</a> <span role="region" class="text-replace" aria-label="alternate words for %s">[%s]</span>' % (tok, tok, rep)
+                outword = '<span class="text-replace" role="region" aria-label="alternate term for %s">%s</span> <span class="text-replace-src">[<a href="#" class="simplifyLookup">%s</a>]</span>' % (tok, rep, tok)
             else:
                 outword = tok
             out += outword
@@ -113,7 +112,6 @@ class WordnetSimplifier:
         Determine a replacement for the given word.
         Returns a tuple:  ( replacement string, error string )
         """
-        alts = []
         # Query Wordnet for synonym sets that contain the given hw.
         synsets = wordnet.synsets(hw)
         if synsets:
@@ -125,14 +123,8 @@ class WordnetSimplifier:
                     if sgroup:
                         best = self.easiest_word(sgroup)
                         if best and self.compare_frequency(best, orig_freq) > 0:
-                            alts.append(best.replace('_', ' '))
-            # Remove duplicates
-            alts = list(OrderedDict.fromkeys(alts))
-            if alts:
-                altString = ' / '.join(alts)
-                return altString, ''
-            else:
-                return None, 'No easier synonyms'
+                            return best.replace('_', ' '), ''
+            return None, 'No easier synonyms'
         else:
             return None, 'Not in Wordnet'
 
