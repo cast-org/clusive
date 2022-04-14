@@ -54,13 +54,17 @@ PageTiming.trackPage = function(eventId) {
         PageTiming.pageloadTime = performance.timing.responseEnd - performance.timing.navigationStart;
     }
 
-    // Set up so that end time will be recorded
+    // Set up so that end time will be recorded when user turns pages.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event
     $(window).on('pagehide', function() {
         if (DJANGO_USERNAME) {
             console.debug("WINDOW PAGEHIDE DETECTED FOR '" + DJANGO_USERNAME + "'");
             PageTiming.reportEndTime();
         }
     });
+    // Record end time when session ends
+    // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+    // https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event.
     document.addEventListener('visibilityChange', function() {
         if (document.visibilityState === 'hidden' && DJANGO_USERNAME) {
             console.debug("DOCUMENT HIDDEN DETECTED FOR '" + DJANGO_USERNAME + "'");
@@ -140,7 +144,10 @@ PageTiming.recordInactiveTime = function() {
     }
 };
 
-// Called in document's "visibilityChange" event
+// Called in document's "visibilityChange" (hidden) event or window's "pageHide"
+// event, and usese the browser's asynchronous `sendBeacon()` function.
+// https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+
 PageTiming.reportEndTime = function() {
     'use strict';
 
