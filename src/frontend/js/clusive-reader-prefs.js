@@ -1,4 +1,4 @@
-/* global fluid_3_0_0, cisl, D2Reader */
+/* global fluid_3_0_0, cisl, d2reader */
 
 /*
     Defines interactions between Clusive preferences and Readium.
@@ -121,13 +121,23 @@
                 }
             },
             'readerPreferences.scroll': {
-                target: 'readerPreferences.scroll',
+                target: 'readerPreferences.verticalScroll',
                 backward: {
                     excludeSource: '*'
                 },
                 singleTransform: {
-                    type: 'fluid.transforms.value',
-                    input: '{that}.model.preferences.cisl_prefs_scroll'
+                    type: 'fluid.transforms.valueMapper',
+                    defaultInput: '{that}.model.preferences.cisl_prefs_scroll',
+                    match: [
+                        {
+                            inputValue: true,
+                            outputValue: 'readium-scroll-on'
+                        },
+                        {
+                            inputValue: false,
+                            outputValue: 'readium-scroll-off'
+                        }
+                    ]
                 }
             },
             'readerPreferences.glossary': {
@@ -172,9 +182,9 @@
                 args: ['rate', '{change}.value'],
                 excludeSource: "init"
             },
-            'readerPreferences.scroll': {
-                func: 'cisl.prefs.readerPreferencesBridge.applyScrollSetting',
-                args: ['scroll', '{change}.value'],
+            'readerPreferences.verticalScroll': {
+                func: 'cisl.prefs.readerPreferencesBridge.applyUserSetting',
+                args: ['verticalScroll', '{change}.value'],
                 excludeSource: "init"
             },
             'readerPreferences.glossary': {
@@ -222,23 +232,16 @@
         }
     };
 
-    cisl.prefs.readerPreferencesBridge.applyScrollSetting = function(scrollSettingName, settingValue) {
-        console.debug("cisl.prefs.readerPreferencesBridge.applyScrollSetting", scrollSettingName, settingValue)
-        var reader = clusiveContext.reader.instance;
-        if (reader && reader.applyUserSettings) {
-            reader.scroll(settingValue);
-        }
-    };
-
     cisl.prefs.readerPreferencesBridge.applyGlossarySetting = function(settingName, settingValue) {
         console.debug('cisl.prefs.readerPreferencesBridge.applyGlossarySetting', settingName, settingValue)
         var reader = clusiveContext.reader.instance;
         if (reader) {
             if (settingValue) {
-                D2Reader.showLayer('definitions')
+                d2reader.showLayer('definitions')
             } else {
-                D2Reader.hideLayer('definitions')
+                d2reader.hideLayer('definitions')
             }
         }
     }
+
 }(fluid_3_0_0));

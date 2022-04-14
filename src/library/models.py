@@ -646,7 +646,7 @@ class Annotation(models.Model):
             return 0
         try:
             locations = json.loads(jsonString).get('locations')
-            return locations.get('progression')
+            return locations.get('totalProgression')
         except (JSONDecodeError, AttributeError):
             logger.error('Can\'t find progression in JSON %s', jsonString)
             return 0

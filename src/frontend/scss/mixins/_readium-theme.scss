@@ -40,6 +40,12 @@
         // Forcing a reflow in Blink/Webkit so that blend mode can work
         --RS__maxLineLength: 40.01rem;
 
+        // Popup -- borrow from popover
+        --CT_popoverBg: #{$popover-bg};
+        --CT_popoverBorderWidth: #{$popover-border-width};
+        --CT_popoverBorderColor: #{$popover-border-color};
+        --CT_popoverBodyColor: #{$popover-body-color};
+
         // we don't need to redeclare bg-color and color for :root since we will inherit and update from day/default mode
 
         body {

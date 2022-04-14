@@ -724,7 +724,7 @@
     },
     {
       "uid": "7c0c29dec56e2d150ce2ec4c43a5d943",
-      "css": "logo-clusive-r",
+      "css": "logo-clusive",
       "code": 59454,
       "src": "custom_icons",
       "selected": true,
@@ -733,8 +733,20 @@
         "width": 4768
       },
       "search": [
-        "logo-clusive-r"
+        "logo-clusive"
       ]
+    },
+    {
+      "uid": "ccddff8e8670dcd130e3cb55fdfc2fd0",
+      "css": "chevron-down",
+      "code": 59455,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "fe6697b391355dec12f3d86d6d490397",
+      "css": "chevron-up",
+      "code": 59456,
+      "src": "fontawesome"
     }
   ]
 }

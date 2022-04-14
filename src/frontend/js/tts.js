@@ -2,7 +2,7 @@
 // and the more basic clusiveTTS defined here for other pages.
 //
 /* eslint-disable no-use-before-define */
-/* global clusiveDebounce, D2Reader */
+/* global clusiveDebounce, d2reader */
 
 // Initialize voices to trigger async update, so when it is called later
 // a list is returned (re: Chrome/Android)
@@ -38,10 +38,10 @@ $(document).ready(function() {
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud play button clicked');
             if (!clusiveTTS.synth.speaking) {
-                D2Reader.startReadAloud();
+                d2reader.startReadAloud();
                 clusiveTTS.updateUI('play');
             } else {
-                D2Reader.stopReadAloud();
+                d2reader.stopReadAloud();
                 clusiveTTS.updateUI('stop');
             }
         } else {
@@ -69,7 +69,7 @@ $(document).ready(function() {
     $(document).on('click', '.tts-pause', function() {
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud pause button clicked');
-            D2Reader.pauseReadAloud();
+            d2reader.pauseReadAloud();
         } else {
             console.debug('read aloud pause button clicked');
             // Don't reset `userScrolled` here, otherwise page might jump due to async reading
@@ -82,7 +82,7 @@ $(document).ready(function() {
     $(document).on('click', '.tts-resume', function() {
         if (clusiveTTS.region.mode === 'Readium') {
             console.debug('Readium read aloud resume button clicked');
-            D2Reader.resumeReadAloud();
+            d2reader.resumeReadAloud();
         } else {
             console.debug('read aloud resume button clicked');
             clusiveTTS.userScrolled = false;
@@ -236,7 +236,7 @@ clusiveTTS.stopReadingDetermineApi = function() {
 
     if (clusiveTTS.region.mode === 'Readium') {
         console.debug('Readium read aloud stop called');
-        D2Reader.stopReadAloud();
+        d2reader.stopReadAloud();
     } else {
         console.debug('read aloud stop called');
         clusiveTTS.stopReading();
@@ -818,7 +818,7 @@ clusiveTTS.setCurrentVoice = function(name) {
                         name: voice.name
                     };
                     console.debug('setting D2Reader voice to ', voiceSpecs);
-                    D2Reader.applyTTSSettings({
+                    d2reader.applyTTSSettings({
                         voice: voiceSpecs
                     });
                 }
@@ -828,7 +828,7 @@ clusiveTTS.setCurrentVoice = function(name) {
         clusiveTTS.voiceCurrent = null;
         if (clusiveTTS.readerReady) {
             console.debug('Unsetting D2Reader voice');
-            D2Reader.applyTTSSettings({
+            d2reader.applyTTSSettings({
                 voice: null
             });
         }
