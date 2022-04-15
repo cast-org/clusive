@@ -18,9 +18,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          add_git_labels: true
-          tag_with_ref: true
-          tags: castudl/clusive:${{ github.sha }} castudl/clusive:latest
+          tags: |
+            castudl/clusive:${{ github.sha }}
+            castudl/clusive:latest
       - name: Update QA
         uses: distributhor/workflow-webhook@v1
         env:
