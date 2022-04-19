@@ -151,7 +151,12 @@ PageTiming.recordInactiveTime = function() {
 PageTiming.reportEndTime = function() {
     'use strict';
 
-    if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
+    var thisEvent = 'pageEndTime.' + PageTiming.eventId;
+    if (!localStorage[thisEvent]) {
+        // Store that this event is being processed until it is queued via
+        // `sendBeacon()`.
+        localStorage.setItem(thisEvent, 'true');
+
         PageTiming.recordInactiveTime();
         var duration = Date.now() - PageTiming.pageStartTime;
         var data = clusive.djangoMessageQueue.wrapMessage({
@@ -170,7 +175,15 @@ PageTiming.reportEndTime = function() {
         var beaconResult = navigator.sendBeacon(
             '/messagequeue/', JSON.stringify(postBody)
         );
-        console.debug('SENT VIA BEACON: (' + beaconResult + ')');
+        // `beaconResult` is `true` or `false` depending on whether the browser
+        // successfully queued the request or not.  It will fail only if the
+        // size of `postBody`, exceeds the browser's limit, which is unlikely
+        // here.  In addition, there is no way to tell if the request is
+        // ultimately sent.  In any case, we are done with this event, so remove
+        // it from `localStorage`.
+        // https://www.w3.org/TR/beacon/#return-values
+        localStorage.removeItem(thisEvent);
+        console.debug(`Queued ${thisEvent} via sendBeacon(): (${beaconResult})`);
         console.debug(JSON.stringify(data));
         console.debug('--');
     } else {
