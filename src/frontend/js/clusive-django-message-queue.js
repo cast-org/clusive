@@ -137,7 +137,7 @@
                 function(e) {
                     $(logoutLinkSelector).text('Saving changes...').fadeIn();
                     e.preventDefault();
-                    PageTiming.reportEndTime();
+                    PageTiming.flushEndTimeEvents();
                     that.logoutFlush();
                 }
             );

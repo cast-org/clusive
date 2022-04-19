@@ -23,6 +23,7 @@ PageTiming.pageBlocked = false;
 PageTiming.lastSeenAwakeTime = null;
 PageTiming.awakeCheckInterval = 5000;  // Check for awakeness every 5 seconds
 PageTiming.awakeCheckTimer = null;
+PageTiming.prefix = 'pageEndTime.';
 
 /**
  * Call to initiate time tracking of this page.
@@ -151,7 +152,7 @@ PageTiming.recordInactiveTime = function() {
 PageTiming.reportEndTime = function() {
     'use strict';
 
-    var thisEvent = 'pageEndTime.' + PageTiming.eventId;
+    var thisEvent = PageTiming.prefix + PageTiming.eventId;
     if (!localStorage[thisEvent]) {
         // Store that this event is being processed until it is queued via
         // `sendBeacon()`.
@@ -176,19 +177,28 @@ PageTiming.reportEndTime = function() {
             '/messagequeue/', JSON.stringify(postBody)
         );
         // `beaconResult` is `true` or `false` depending on whether the browser
-        // successfully queued the request or not.  It will fail only if the
+        // successfully queued the request or not.  (It will fail only if the
         // size of `postBody`, exceeds the browser's limit, which is unlikely
-        // here.  In addition, there is no way to tell if the request is
-        // ultimately sent.  In any case, we are done with this event, so remove
-        // it from `localStorage`.
+        // here).  However, `true` does not mean that the request was sent nor
+        // successfully handled by Clusive.  And, there is no way to tell
+        // if Clusive stored the event -- see PageTiming.flushEndTimeEvents()
+        // below.
         // https://www.w3.org/TR/beacon/#return-values
-        localStorage.removeItem(thisEvent);
-        console.debug(`Queued ${thisEvent} via sendBeacon(): (${beaconResult})`);
-        console.debug(JSON.stringify(data));
+        console.debug(`Queued ${thisEvent} via sendBeacon(): ${beaconResult}`);
+        console.debug(thisEvent);
         console.debug('--');
     } else {
         console.warn('Pagehide event received, but end time was already recorded');
     }
+};
+
+// Called by clusive-message-queue's logout handler.
+PageTiming.flushEndTimeEvents = function() {
+    Object.keys(localStorage).forEach(function (aKey) {
+        if (aKey.indexOf(PageTiming.prefix) === 0) {
+            localStorage.removeItem(aKey);
+        }
+    });
 };
 
 // Test if browser supports the timing API
