@@ -3,7 +3,7 @@
 
 {% block head_additional %}
 <script>
-var exports = {};
+var d2reader = null;
 var pub_id = "{{ pub.id }}";
 var pub_version = "{{ version }}";
 var pub_version_id = "{{ version_id }}";
@@ -23,7 +23,7 @@ var simplificationTool = "{{ simplification_tool }}";
 {% block sidebar_start %}
 <!-- todo: nav should be true in paged mode, or for multi=chapter content -->
 <button id="simplifyLocator" class="sr-only" aria-hidden="true" tabindex="-1">Simplify text</button>
-{% include "shared/partial/sidebar_start.html" with nav=True why=True %}
+{% include "shared/partial/sidebar_start.html" with nav=True %}
 {% endblock %}
 
 {% block sidebar_end %}
@@ -33,11 +33,33 @@ var simplificationTool = "{{ simplification_tool }}";
 {% include "shared/partial/sidebar_end.html" with read_aloud="Readium" lookup=True %}
 {% endblock%}
 
+{% block sidebar_bottom_start %}
+{% include "shared/partial/sidebar_bottom_start.html" with why=True %}
+{% endblock %}
+
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
 
+{% block content_wrapper %}
+<div class="content" style="overflow: hidden;">
+{% endblock %}
+
 {% block content %}
-<div id="D2Reader-Container" style="position: relative;">
-    <main style="overflow: hidden" tabindex="-1" id="iframe-wrapper">
+<div id="D2Reader-Container">
+    <main tabindex="-1" id="iframe-wrapper">
+        <div id="lineFocusContainer" class="d2-line-focus-container" style="display: none">
+            <div id="lineFocusTopBlinder" class="d2-line-focus-top"></div>
+            <div id="lineFocusBottomBlinder" class="d2-line-focus-bottom"></div>
+            <nav id="lineFocusNav" class="d2-line-focus-nav" aria-label="Line focus">
+                <button id="lineFocusUp" onclick="d2reader.lineUp();" type="button" class="btn btn-nav btn-icon" aria-label="Line focus up" title="Previous page" data-cle-handler="click" data-cle-control="reader-navigation-linefocus" data-cle-value="up-linefocus">
+                    <span class="icon-chevron-up" aria-hidden="true"></span>
+                </button>
+                <button id="lineFocusDown" onclick="d2reader.lineDown();" type="button" class="btn btn-nav btn-icon" aria-label="Line focus down" title="Next page" data-cle-handler="click" data-cle-control="reader-navigation-linefocus" data-cle-value="down-linefocus">
+                    <span class="icon-chevron-down" aria-hidden="true"></span>
+                </button>
+            </nav>
+        </div>
+        {% include "shared/partial/toolbox_menu.html" %}
+
         <span id="content" tabindex="-1"></span>
         <h1 class="sr-only">Reading: {{ pub.title }}</h1>
 
@@ -49,7 +71,6 @@ var simplificationTool = "{{ simplification_tool }}";
         <iframe data-cy="reader-frame" sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
     </main>
 
-    {% include "shared/partial/toolbox_menu.html" %}
 
     <button id="image-info-trigger" style="display:none;" data-cfw="modal" data-cfw-modal-target="#image-info-modal">
         Show image details
@@ -116,7 +137,7 @@ var simplificationTool = "{{ simplification_tool }}";
             url: new URL(url),
             userSettings: {
                 textAlignment:'start',
-                verticalScroll: 'readium-scroll-on'
+                columnCount: '1'
 
             },
             lastReadingPosition: lastReadingPosition,
@@ -128,12 +149,16 @@ var simplificationTool = "{{ simplification_tool }}";
                 enableAnnotations: true,
                 enableDefinitions: true,
                 enableTTS: true,
+                autoGeneratePositions: true,
+                enableLineFocus: true,
                 enableBookmarks: false,
                 enableMaterial: false,
                 enableSearch: false,
                 enableTimeline: false,
-                enableContentProtection: false,
-                autoGeneratePositions: false
+                enableContentProtection: false
+            },
+            lineFocus: {
+                lines: 5,
             },
             tts: {
                 enableSplitter: false,
@@ -153,10 +178,7 @@ var simplificationTool = "{{ simplification_tool }}";
                     },
                     stopped: function() {
                         console.debug('D2Reader TTS stopped');
-                        // `stopped` is called when reader tts starts speaking,
-                        // after the `started` callback, resulting in incorrect control state
-                        // so ignore for the time being
-                        //window.parent.clusiveTTS.updateUI('stop');
+                        window.parent.clusiveTTS.updateUI('stop');
                         return null;
                     },
                     paused: function() {
@@ -214,7 +236,6 @@ var simplificationTool = "{{ simplification_tool }}";
                 fullWordSearch: true,
                 api: {
                     click: function (item, element) {
-                        console.log('  click callback');
                         window.openGlossaryForWord(item.terms[0], element);
                     },
                     success: function (item, element) {
@@ -264,21 +285,22 @@ var simplificationTool = "{{ simplification_tool }}";
                                 voice: availablePreferredVoices[0]
                             });
                             // Update additional TTS settings - such as rate
-                            D2Reader.applyTTSSettings(readerOptions.userSettings.tts);
+                            d2reader.applyTTSSettings(readerOptions.userSettings.tts);
+
                             firstResourceLoaded = true;
                         }
                     });
                 },
                 resourceAtEnd: function() {
-                    var currentResource = D2Reader.currentResource();
-                    var lastResource = (currentResource===D2Reader.totalResources()-1);
+                    var currentResource = d2reader.currentResource;
+                    var lastResource = (currentResource===d2reader.totalResources-1);
                     if (lastResource) {
                         clusiveAssessment.showCompCheck();
                     }
                 },
                 resourceFitsScreen: function() {
-                    var currentResource = D2Reader.currentResource();
-                    var lastResource = (currentResource===D2Reader.totalResources()-1);
+                    var currentResource = d2reader.currentResource;
+                    var lastResource = (currentResource===d2reader.totalResources-1);
                     if (lastResource) {
                         clusiveAssessment.showCompCheck();
                     }
@@ -291,11 +313,11 @@ var simplificationTool = "{{ simplification_tool }}";
                     // Grey out forward/back navigation buttons when necessary.
                     // This logic cannot be moved to resourceAtStart/resourceAtEnd since it also needs to know
                     // when you move away from the edge, so that the buttons can be re-enabled.
-                    var currentResource = D2Reader.currentResource();
+                    var currentResource = d2reader.currentResource;
                     var firstResource = (currentResource===0);
-                    var lastResource = (currentResource===D2Reader.totalResources()-1);
-                    var atBeginning = firstResource && D2Reader.atStart();
-                    var atEnd = lastResource && D2Reader.atEnd();
+                    var lastResource = (currentResource===d2reader.totalResources-1);
+                    var atBeginning = firstResource && d2reader.atStart;
+                    var atEnd = lastResource && d2reader.atEnd;
                     document.getElementById('prevResourceButton').disabled = atBeginning;
                     document.getElementById('nextResourceButton').disabled = atEnd;
                     return trackReadingLocation(pub_id, pub_version, locator);
@@ -313,11 +335,11 @@ var simplificationTool = "{{ simplification_tool }}";
             var readerPreferences = e.detail.readerPreferences;
 
             var mergedUserSettings = $.extend({}, readerOptions.userSettings, readerPreferences);
-            console.debug("mergedUserSettings", mergedUserSettings);
             readerOptions.userSettings = mergedUserSettings;
             console.debug("readerOptions", readerOptions);
             D2Reader.load(readerOptions).then(instance => {
                     console.debug("D2Reader began loading resource at: " +  new Date());
+                    d2reader = instance;
                     clusiveTTS.readerReady = true;
                 }).catch(error => {
                     console.error("error loading: ", error);

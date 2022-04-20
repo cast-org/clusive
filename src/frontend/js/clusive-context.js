@@ -1,11 +1,12 @@
-'use strict'
+/* global clusiveContext, d2reader, pub_id, pub_version, pub_version_id, manifest_path, LOC_LOC_KEY */
 
 /*
 Variables and functions for information about the current context
 */
 
 
-$(document).ready(function () { 
+$(document).ready(function() {
+    'use strict';
 
     window.clusiveContext = {
         reader: {
@@ -13,7 +14,7 @@ $(document).ready(function () {
                 var readerIframe = $('#D2Reader-Container').find('iframe');
                 var readerWindow;
                 if (readerIframe.length > 0) {
-                    readerWindow = readerIframe[0].contentWindow;            
+                    readerWindow = readerIframe[0].contentWindow;
                 }
                 return readerWindow;
             },
@@ -21,44 +22,43 @@ $(document).ready(function () {
                 return getReaderInfo();
             },
             get instance() {
-                var readerDefined = typeof D2Reader;
-
-                if (readerDefined !== 'undefined') {
-                    return D2Reader;
-                } return null;
+                if (typeof d2reader !== 'undefined') {
+                    return d2reader;
+                }
+                return null;
             }
-        }    
-    }
+        }
+    };
 
-    var getReaderInfo = function () {
+    var getReaderInfo = function() {
         var readerInfo = {};
-        if(clusiveContext.reader.window) {        
+        if (clusiveContext.reader.window) {
             // Include info from the HTML document
             readerInfo.document = {};
             readerInfo.document.title = clusiveContext.reader.window.document.title;
             readerInfo.document.baseURI = clusiveContext.reader.window.document.baseURI;
             // Include info from variables in reader.html
             readerInfo.publication = {};
-            if(pub_id) {
+            if (pub_id) {
                 readerInfo.publication.id = pub_id;
             }
-            if(pub_version) {
+            if (pub_version) {
                 readerInfo.publication.version = pub_version;
             }
-            if(pub_version_id) {
+            if (pub_version_id) {
                 readerInfo.publication.version_id = pub_version_id;
             }
-            if(manifest_path) {
+            if (manifest_path) {
                 readerInfo.publication.manifestPath = manifest_path;
-            }            
+            }
             if(window.sessionStorage.getItem(LOC_LOC_KEY)) {
-                readerInfo.location = {}
+                readerInfo.location = {};
                 var locationInfoRaw = window.sessionStorage.getItem(LOC_LOC_KEY);
                 var locationInfo = JSON.parse(locationInfoRaw);
                 readerInfo.location.href = locationInfo.href;
                 readerInfo.location.progression = locationInfo.locations.progression;
             }
         }
-        return readerInfo;    
-    }
+        return readerInfo;
+    };
 });

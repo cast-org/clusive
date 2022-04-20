@@ -788,6 +788,54 @@ function starredButtons() {
     });
 }
 
+// Adjust toolbox positioning
+function toolboxHandleUpdate() {
+    var $toolWrap = $('.toolbox-wrapper');
+    var $iframeWrap = $('#iframe-wrapper');
+    if (!$toolWrap || !$iframeWrap) { return; }
+
+    $iframeWrap.on('scroll', function() {
+        toolboxPosition();
+    });
+
+    var observer = new MutationObserver(function() {
+        setTimeout(function() {
+            toolboxPosition();
+        }, 25);
+    });
+    observer.observe(
+        document.querySelector('#highlight-toolbox'), {
+                attributes: true,
+                childList: false,
+                characterData: false,
+                subtree: false,
+                attributeFilter : [
+                    'style'
+                ]
+            }
+        );
+
+}
+function toolboxPosition() {
+    var $toolWrap = $('.toolbox-wrapper');
+    if (!$toolWrap) { return; }
+
+    var scrollTop = document.querySelector('#iframe-wrapper').scrollTop;
+    var boxTop = parseInt(document.querySelector('#highlight-toolbox').getBoundingClientRect().top, 10);
+    var boxHeight = document.querySelector('.toolbox-menu-group').offsetHeight;
+    var arrowHeight = document.querySelector('.toolbox-menu-arrow').offsetHeight;
+    if (boxTop - boxHeight - arrowHeight < 0) {
+        $toolWrap.css('position', 'absolute');
+        $toolWrap.css('top', parseInt(scrollTop, 10) * -1);
+        return;
+    }
+
+    $toolWrap.css({
+        position: '',
+        top: ''
+    });
+}
+
 function originInViewport(elem) {
     'use strict';
 
@@ -1261,6 +1309,7 @@ $(window).ready(function() {
     starredButtons();
     shareForm();
     dashboardStudentReadingViewButtons();
+    toolboxHandleUpdate();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

@@ -11,7 +11,10 @@
     flex-direction: column;
     width: 100%;
     min-width: 15rem;
-    margin-right: 2em;
+
+    @include media-breakpoint-down(sm) {
+        margin-right: 20%;
+    }
 }
 
 .wordbank-header  {

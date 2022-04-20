@@ -419,16 +419,10 @@ $logo-md-font-size:                     1.375rem;
 
 $sidebar-border-radius:                 $border-radius;
 $sidebar-width:                         3rem;
-$sidebar-padding-y:                     .75rem;
-$sidebar-padding-x:                     .25rem;
-$sidebar-gutter:                        1rem;
-$sidebar-sm-width:                      4rem;
-$sidebar-sm-padding-y:                  .75rem;
-$sidebar-sm-padding-x:                  .75rem;
-$sidebar-sm-gutter:                     2rem;
-// Sidebar stretched max width is half of:
-// vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)
-$sidebar-xl-width:                      calc((100vw - #{map-get($container-max-widths, xl)} + ((#{$sidebar-sm-width} - #{$body-padding-x}) * 2)) / 2);
+$sidebar-gutter:                        .5rem;
+$sidebar-md-width:                      4rem;
+$sidebar-md-gutter:                     1.5rem;
+$sidebar-xl-width:                      calc(50vw - #{map-get($container-max-widths, xl) / 2} + #{$sidebar-md-width} - #{$body-padding-x});
 
 $library-grid-gutter:                   2rem;
 
