@@ -792,7 +792,7 @@ function starredButtons() {
 function toolboxHandleUpdate() {
     var $toolWrap = $('.toolbox-wrapper');
     var $iframeWrap = $('#iframe-wrapper');
-    if (!$toolWrap || !$iframeWrap) { return; }
+    if (!$toolWrap.length || !$iframeWrap.length) { return; }
 
     $iframeWrap.on('scroll', function() {
         toolboxPosition();

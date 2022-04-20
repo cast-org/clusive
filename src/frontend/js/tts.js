@@ -844,7 +844,6 @@ clusiveTTS.getDefaultVoice = function() {
 
     // Reference: https://stackoverflow.com/questions/1043339/
     // Possibly useful in future? - https://stackoverflow.com/a/29106129
-    // eslint-disable-next-line compat/compat
     var userLanguages = window.navigator.languages || [window.navigator.language || window.navigator.userLanguage];
     var defaultVoice = null;
     var langVoices = [];
