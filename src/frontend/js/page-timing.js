@@ -12,7 +12,7 @@
  *
  */
 
-/* global PAGE_EVENT_ID, clusiveEvents, DJANGO_USERNAME */
+/* global PAGE_EVENT_ID, clusiveEvents, DJANGO_USERNAME, DJANGO_CSRF_TOKEN */
 
 var PageTiming = {};
 
@@ -154,8 +154,7 @@ PageTiming.reportEndTime = function() {
 
     var thisEvent = PageTiming.prefix + PageTiming.eventId;
     if (!localStorage[thisEvent]) {
-        // Store that this event is being processed until it is queued via
-        // `sendBeacon()`.
+        // Note that this event is being processed.
         localStorage.setItem(thisEvent, 'true');
 
         PageTiming.recordInactiveTime();
@@ -168,21 +167,20 @@ PageTiming.reportEndTime = function() {
             activeDuration: duration - PageTiming.totalInactiveTime
         });
         console.debug('Reporting page data: ', JSON.stringify(data));
-        var postBody = {
-            timestamp: new Date().toISOString(),
-            messages: [data],
-            username: DJANGO_USERNAME
-        };
-        var beaconResult = navigator.sendBeacon(
-            '/messagequeue/', JSON.stringify(postBody)
-        );
+        var postForm = new FormData();
+        postForm.append('csrfmiddlewaretoken', DJANGO_CSRF_TOKEN);
+        postForm.append('timestamp', new Date().toISOString());
+        postForm.append('messages', JSON.stringify([data]));
+        postForm.append('username', DJANGO_USERNAME);
+        var beaconResult = navigator.sendBeacon('/messagequeue/', postForm);
+
         // `beaconResult` is `true` or `false` depending on whether the browser
         // successfully queued the request or not.  (It will fail only if the
-        // size of `postBody`, exceeds the browser's limit, which is unlikely
+        // size of `postForm`, exceeds the browser's limit, which is unlikely
         // here).  However, `true` does not mean that the request was sent nor
         // successfully handled by Clusive.  And, there is no way to tell
-        // if Clusive stored the event -- see PageTiming.flushEndTimeEvents()
-        // below.
+        // if Clusive received the request.  PageTiming.flushEndTimeEvents()
+        // below is a way to remove these event IDs from `localStorage`. 
         // https://www.w3.org/TR/beacon/#return-values
         console.debug(`Queued ${thisEvent} via sendBeacon(): ${beaconResult}`);
         console.debug(thisEvent);
@@ -194,6 +192,8 @@ PageTiming.reportEndTime = function() {
 
 // Called by clusive-message-queue's logout handler.
 PageTiming.flushEndTimeEvents = function() {
+    'use strict';
+
     Object.keys(localStorage).forEach(function (aKey) {
         if (aKey.indexOf(PageTiming.prefix) === 0) {
             localStorage.removeItem(aKey);

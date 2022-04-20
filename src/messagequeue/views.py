@@ -45,12 +45,14 @@ def get_delta_from_now(compare_time):
     now = timezone.now()
     return relativedelta(now, compare_time)
 
-@method_decorator(csrf_exempt, name='dispatch')
 class MessageQueueView(View):
-    @csrf_exempt
     def post(self, request):
         try:
-            receivedQueue = json.loads(request.body)
+            if request.headers.get('Content-Type').startswith('multipart/form-data'):
+                receivedQueue = request.POST.dict()
+                receivedQueue['messages'] = json.loads(receivedQueue['messages'])
+            else:
+                receivedQueue = json.loads(request.body)
         except json.JSONDecodeError:
             logger.warning('Received malformed message queue: %s' % request.body)
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
