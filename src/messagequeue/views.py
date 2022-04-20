@@ -5,9 +5,7 @@ from dateutil.parser import parse as dateutil_parse
 from dateutil.relativedelta import relativedelta
 from django.http import JsonResponse
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
 from .models import Message
 

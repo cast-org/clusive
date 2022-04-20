@@ -13,6 +13,7 @@ from .views import get_delta_from_now, adjust_message_timestamp
 
 from eventlog.models import Event
 
+
 now = datetime.now(timezone.utc)
 first_pref_timestamp = now+relativedelta(seconds=-9)
 second_pref_timestamp = now+relativedelta(seconds=-6)
@@ -30,6 +31,24 @@ invalid_type_message_queue = '{"username": "user1", "timestamp":"%s","messages":
 wrong_username_message_queue = '{"username": "user2", "timestamp":"%s","messages":[{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_textFont":"comic","fluid_prefs_textSize":0.9}},"timestamp":"%s"},{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_textFont":"times","fluid_prefs_textSize":0.9}},"timestamp":"%s"},{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_contrast":"sepia","fluid_prefs_textFont":"times","fluid_prefs_textSize":0.9}},"timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
 
 wrong_username_individual_messages = '{"username": "user1", "timestamp":"%s","messages":[{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_textFont":"comic","fluid_prefs_textSize":0.9}},"username": "user2", "timestamp":"%s"},{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_textFont":"times","fluid_prefs_textSize":0.9}},"username": "user2", "timestamp":"%s"},{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_contrast":"sepia","fluid_prefs_textFont":"times","fluid_prefs_textSize":0.9}},"username": "user2", "timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
+
+content_for_multipart_form = [{
+    'content': {
+        'type': 'PT',
+        'eventId': '915f752c-e2dd-47d9-8aa7-7ed7b07193e9?',
+        'loadTime': 1967,
+        'duration': 36577,
+        'activeDuration': 180089
+    },
+    'timestamp': now_str,
+    'username': 'user1'
+}]
+multipart_form_message = {
+    'csrfmiddlewaretoken': 'dummycsrftoken',
+    'timestamp': now_str,
+    'messages': json.dumps(content_for_multipart_form),
+    'username': 'user1'
+}
 
 class MessageQueueTestCase(TestCase):
 
@@ -106,3 +125,7 @@ class MessageQueueTestCase(TestCase):
 
         response = self.client.post('/messagequeue/', preference_change_message_queue.replace("[eventId]", self.event_id), content_type='application/json')                
         self.assertTrue(self.signal_was_called)
+
+    def test_send_form_message(self):
+        response = self.client.post('/messagequeue/', multipart_form_message)
+        self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')
