@@ -503,7 +503,9 @@ function showTooltip(name) {
                     });
                     tip_control.CFW_Tooltip('show');
                     tip_popover.trigger('focus');
-                    window.parent.clusiveEvents.addTipViewToQueue(name);
+                    if (typeof window.parent.clusiveEvents === 'object' && window.parent.clusiveEvents.addTipViewToQueue === 'function') {
+                        window.parent.clusiveEvents.addTipViewToQueue(name);
+                    }
                 }
             }, 2000);
             tip_control.one('afterHide.cfw.tooltip', function() {
