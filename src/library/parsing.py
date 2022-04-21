@@ -35,15 +35,19 @@ class BookMalformed(Exception):
     pass
 
 
-def convert_and_unpack_docx_file(clusive_user, file):
+def convert_and_unpack_docx_file(clusive_user, file, filename):
     """
     Process an uploaded Word (docx) file. Converts to EPUB and then calls unpack_epub_file.
     :param clusive_user: user that will own the resulting Book.
     :param file: File, which should be a .docx.
+    :param filename: user's original filename, used as a default for the EPUB title
     :return: a new BookVersion
     """
     fd, tempfile = mkstemp()
-    output = pypandoc.convert_file(file, 'epub', outputfile=tempfile)
+    # Pass the filename as title metadata. This is what pandoc does anyway by default, but due to a bug in pandoc
+    # special characters in the filename (eg &) will not be escaped without this workaround.
+    # See https://github.com/jgm/pandoc/issues/8033
+    output = pypandoc.convert_file(file, 'epub', outputfile=tempfile, extra_args=['--metadata=title:'+filename])
     if output:
         raise RuntimeError(output)
     return unpack_epub_file(clusive_user, tempfile, omit_filename='title_page.xhtml')
