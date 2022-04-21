@@ -23,7 +23,7 @@ PageTiming.pageBlocked = false;
 PageTiming.lastSeenAwakeTime = null;
 PageTiming.awakeCheckInterval = 5000;  // Check for awakeness every 5 seconds
 PageTiming.awakeCheckTimer = null;
-PageTiming.prefix = 'pageEndTime.';
+PageTiming.localStorageKey = 'pageEndTime';
 
 /**
  * Call to initiate time tracking of this page.
@@ -152,10 +152,13 @@ PageTiming.recordInactiveTime = function() {
 PageTiming.reportEndTime = function() {
     'use strict';
 
-    var thisEvent = PageTiming.prefix + PageTiming.eventId;
-    if (!localStorage[thisEvent]) {
-        // Note that this event is being processed.
-        localStorage.setItem(thisEvent, 'true');
+    var pageTimingEvents = PageTiming.getEndTimesProcessed();
+    console.log('PageTiming.reportEndTime() events so far: ', pageTimingEvents + ', adding ' + PageTiming.eventId);
+    if (pageTimingEvents.indexOf(PageTiming.eventId) === -1) {
+        // Record that this event is being processed.
+        pageTimingEvents.push(PageTiming.eventId);
+        console.log('PageTiming.reportEndTime() added new one: ', pageTimingEvents);
+        localStorage.setItem(PageTiming.localStorageKey, JSON.stringify(pageTimingEvents));
 
         PageTiming.recordInactiveTime();
         var duration = Date.now() - PageTiming.pageStartTime;
@@ -182,8 +185,8 @@ PageTiming.reportEndTime = function() {
         // if Clusive received the request.  PageTiming.flushEndTimeEvents()
         // below is a way to remove these event IDs from `localStorage`. 
         // https://www.w3.org/TR/beacon/#return-values
-        console.debug(`Queued ${thisEvent} via sendBeacon(): ${beaconResult}`);
-        console.debug(thisEvent);
+        console.debug(`Queued ${PageTiming.eventId} via sendBeacon(): ${beaconResult}`);
+        console.debug(PageTiming.eventId);
         console.debug('--');
     } else {
         console.warn('Pagehide event received, but end time was already recorded');
@@ -191,14 +194,29 @@ PageTiming.reportEndTime = function() {
 };
 
 // Called by clusive-message-queue's logout handler.
-PageTiming.flushEndTimeEvents = function() {
+PageTiming.flushEndTimeEvents = async function() {
     'use strict';
 
-    Object.keys(localStorage).forEach(function (aKey) {
-        if (aKey.indexOf(PageTiming.prefix) === 0) {
-            localStorage.removeItem(aKey);
-        }
-    });
+    var flushResponse = null;
+    var pageTimingEvents = PageTiming.getEndTimesProcessed();
+    if (pageTimingEvents.length > 0) {
+        var lastEvent = pageTimingEvents[pageTimingEvents.length-1];
+        flushResponse = await $.ajax('/messagequeue/' + lastEvent, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+        });
+        console.debug(`flushEndTimeEvents(${lastEvent}): ` + JSON.stringify(flushResponse));
+    }
+    localStorage.removeItem(PageTiming.localStorageKey);
+    return flushResponse;
+};
+
+// Utility for retrieving the list of page end times from window.localStorage
+PageTiming.getEndTimesProcessed = function () {
+    var eventsString = localStorage.getItem(PageTiming.localStorageKey);
+    return ( eventsString ? JSON.parse(eventsString) : [] );
 };
 
 // Test if browser supports the timing API

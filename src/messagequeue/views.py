@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.views import View
 
 from .models import Message
+from eventlog.models import Event
 
 logger = logging.getLogger(__name__)
 
@@ -72,3 +73,17 @@ class MessageQueueView(View):
                          queue_username, username)
             return JsonResponse(status=501, data={'message': 'Invalid user'})
         return JsonResponse({'success': 1})
+
+    def get(self, request, *args, **kwargs):
+        """
+        Was the message persisted?  Check using the event id.
+        """
+        event_id = "unknown id" # safe since real ids are UUIDs.
+        try:
+            event_id = kwargs['event_id']
+            the_event = Event.objects.get(id=event_id)
+        except:
+            logger.warning('Event %s not found', event_id)
+            return JsonResponse(status=501, data={'message': 'No such event'})
+        return JsonResponse({'success': 1})
+

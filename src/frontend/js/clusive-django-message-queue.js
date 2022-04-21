@@ -101,8 +101,10 @@
         window.localStorage.setItem(lastQueueFlushInfoKey, JSON.stringify(flushInfo));
     }
 
-    clusive.djangoMessageQueue.logoutFlush = function (that) {      
-        console.debug("calling logout flush for djangoMessageQueue", that);           
+    clusive.djangoMessageQueue.logoutFlush = async function (that) {
+        console.debug("calling logout flush for djangoMessageQueue", that);
+        var lastPageTimingSaved = await PageTiming.flushEndTimeEvents();
+        console.log('logoutFlush(): ' + JSON.stringify(lastPageTimingSaved));
         if(that.isQueueEmpty()) {            
             // Mark flush for this queue complete on the logoutFlushManager
             that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
@@ -137,7 +139,6 @@
                 function(e) {
                     $(logoutLinkSelector).text('Saving changes...').fadeIn();
                     e.preventDefault();
-                    PageTiming.flushEndTimeEvents();
                     that.logoutFlush();
                 }
             );
