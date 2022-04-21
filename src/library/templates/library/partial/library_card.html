@@ -33,14 +33,14 @@
     {% endif %}
     <div class="card-body">
         {% if show_description and book.description %}<p class="card-text">{{ book.description|highlight:query }}</p>{% endif %}
+        {% if read_count_data %}<p>Read by {{ read_count_data }} of {{ current_period.student_count }} students.</p>{% endif %}
         {% if custom_question_data %}{% include 'library/partial/library_card_custom_question.html' %}{% endif %}
         {% if graph_data %}{% include 'library/partial/library_card_graph.html' %}{% endif %}
     </div>
-        <div class="card-footer">
-            <div class="row">
-                {% include 'library/partial/library_card_topics.html' %}
-                {% include 'library/partial/library_action_menu.html' %}
-            </div>
-            {% include 'library/partial/library_teacher_extra_info.html' %}
+    <div class="card-footer">
+        <div class="row">
+            {% include 'library/partial/library_card_topics.html' %}
         </div>
+        {% include 'library/partial/library_teacher_extra_info.html' %}
+    </div>
 </div>

@@ -1,16 +1,36 @@
 import logging
 
-from django.views.generic import FormView, TemplateView
 import wordfreq as wf
+from django.views.generic import FormView, TemplateView
 from nltk.corpus import wordnet
 from nltk.corpus.reader import Synset
 from textstat import textstat
 
-from authoring.forms import TextInputForm
-from glossary.util import base_form
+from authoring.forms import TextInputForm, TextSimplificationForm
 from library.models import Book
+from simplification.util import WordnetSimplifier
 
 logger = logging.getLogger(__name__)
+
+
+class SimplifyView(FormView):
+    template_name = 'authoring/simplify.html'
+    form_class = TextSimplificationForm
+    lang = 'en'
+
+    def post(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        text = form.cleaned_data['text']
+        percent = form.cleaned_data['percent']
+        simplifier = WordnetSimplifier(self.lang)
+        # Returns [ { 'hw' , 'alts', 'count', 'freq' }, ... ] sorted by freq
+        data = simplifier.simplify_text(text, clusive_user=self.clusive_user, percent=percent, include_full=True)
+        self.extra_context = data
+        # Don't do normal process of redirecting to success_url.  Just stay on this form page forever.
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class LevelingView(FormView):
@@ -43,26 +63,8 @@ class LevelingView(FormView):
                                           100*textstat.difficult_words(text)/textstat.lexicon_count(text),
                                           ', '.join(textstat.difficult_words_list(text))) },
         ]
-        word_info = {}
-        for word in word_list:
-            base = base_form(word)
-            w = word_info.get(base)
-            if w:
-                w['count'] += 1
-                if word != base and word not in w['alts']:
-                    w['alts'].append(word)
-            else:
-                w = {
-                    'hw' : base,
-                    'alts' : [],
-                    'count' : 1,
-                    'freq' : wf.zipf_frequency(base, self.lang)
-                }
-                if word != base:
-                    w['alts'].append(word)
-                word_info[base] = w
-        self.words = sorted(word_info.values(), key=lambda x: x.get('freq'))
-        logger.debug('words: %s', self.words)
+        simplifier = WordnetSimplifier(self.lang)
+        self.words = simplifier.analyze_words(word_list)
         # Don't do normal process of redirecting to success_url.  Just stay on this form page forever.
         return self.render_to_response(self.get_context_data(form=form))
 
@@ -86,7 +88,7 @@ class SynonymsView(TemplateView):
         context['synonyms'] = [ self.describe_synset(synset) for synset in synsets ]
         return context
 
-    def describe_synset(synset : Synset):
+    def describe_synset(self, synset : Synset):
         return "(%s) %s (%s)" % (synset.pos(), ', '.join([str(lemma.name()) for lemma in synset.lemmas()]), synset.definition())
 
 

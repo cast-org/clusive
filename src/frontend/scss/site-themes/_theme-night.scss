@@ -316,6 +316,17 @@ $popover-footer-color:                  #fbfbfb;
 $popover-footer-border-color:           #363740;
 $popover-section-border-color:          #363740;
 
+// Popover header tabs
+$popover-tab-bg:                        transparent;
+$popover-tab-color:                     #fbfbfb;
+$popover-tab-border-color:              transparent;
+$popover-tab-hover-bg:                  #6268ad;
+$popover-tab-hover-color:               #fbfbfb;
+$popover-tab-hover-border-color:        transparent;
+$popover-tab-active-bg:                 transparent;
+$popover-tab-active-color:              #fbfbfb;
+$popover-tab-active-border-color:       #ff554d;
+
 // Modals
 $modal-backdrop-bg:                     #343e48;
 $modal-backdrop-opacity:                .25;
@@ -476,10 +487,10 @@ $tts-active-bg:                         #ff554d;
 
 // Glossary/definitions
 $glossary-underline:                    #ff554d;
-$definition-speech-color:               #eceff5;
+$definition-speech-color:               #fbfbfb;
 
 // Translated text
-$translate-source-color:                #eceff5;
+$translate-source-color:                #fbfbfb;
 $translate-output-color:                #fbfbfb;
 $translate-logo-color:                  #fff;
 
@@ -597,3 +608,12 @@ $alert-secondary-bg:                    #fd6;
 $alert-secondary-color:                 #333;
 $alert-secondary-border-color:          transparent;
 $alert-secondary-hover-color:           $link-hover-color;
+
+// Text alternatives
+$simplify-source-color:                 #fbfbfb;
+$text-replace-bg:                       transparent;
+$text-replace-color:                    #eceff5;
+
+$text-picture-color:                    #fbfbfb;
+$text-picture-term-color:               #fbfbfb;
+$text-picture-img-filter:               brightness(0) saturate(100%) invert(100%) sepia(86%) saturate(309%) hue-rotate(246deg) brightness(113%) contrast(97%);

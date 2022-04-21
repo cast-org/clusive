@@ -1,12 +1,12 @@
 /* eslint-disable strict */
-/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id, interact */
-/* exported openGlossaryForWord, load_translation */
+/* global vocabCheck, clusiveEvents, clusivePrefs, confettiCannon, DJANGO_CSRF_TOKEN, pub_id, interact, simplificationTool:true */
+/* exported openGlossaryForWord, load_translation, contextLookup, contextTransform */
 
-// Glossary-related functionality
+// Handles glossary, translation, and simplification frontend events.
 
 var glossaryCurrentWord = null;
 var glossaryBeenDragged = false;
-var translateBeenDragged = false;
+var simplifyBeenDragged = false;
 
 // Ensure focus for glossary popover on open,
 // and re-focus on word when popover closed
@@ -21,12 +21,14 @@ function glossaryPop_focus($elm) {
     $('#glossaryPop').trigger('focus');
 }
 
-function openGlossaryForWord(word) {
+function openGlossaryForWord(word, elt) {
     'use strict';
 
     window.parent.load_definition(1, word);
+    window.parent.$('#glossaryLocator').one('afterShow.cfw.popover.refocus', function() {
+        glossaryPop_focus($(elt));
+    });
     window.parent.$('#glossaryLocator').CFW_Popover('show');
-    // window.parent.glossaryPop_focus($(elt));
 }
 
 function load_definition(cued, word) {
@@ -83,12 +85,39 @@ function load_definition(cued, word) {
     $('#glossaryBody').html(body);
 }
 
-function load_translation(text) {
+// Context (selection) menu methods
+function contextLookup(selection) {
+    'use strict';
+
+    var match = selection.match('\\w+');
+    var word = '';
+    if (match) {
+        word = match[0];
+    } else {
+        console.info('Did not find any word in selection: %s', selection);
+    }
+    console.debug('looking up: ', word);
+    load_definition(0, word);
+    $('#glossaryLocator').CFW_Popover('show');
+    glossaryPop_focus($('#lookupIcon'));
+}
+
+function loadTranslation(text) {
     var lang = clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage;
-    $('#translateSource').text(text);
-    var $translateOutput = $('#translateOutput');
-    $translateOutput.text('Loading...');
-    $('#translateLocator').CFW_Popover('show');
+
+    simplificationTool = 'translate';
+    var $simplifyPop = $('#simplifyPop');
+    var $simplifyBody = $('#simplifyBody');
+    $('#translateFooter').show();
+    $simplifyBody.html('<p>Loading...</p>');
+    var $navLink = $('#translateNavLink');
+    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
+    $navLink.addClass('active').attr('aria-current', 'true');
+
+    $('#simplifyLocator').one('afterShow.cfw.popover', function() {
+        $simplifyPop.trigger('focus');
+    });
+    $simplifyPop.CFW_Popover('show');
     $.ajax('/translation/translate', {
         method: 'POST',
         headers: {
@@ -101,20 +130,75 @@ function load_translation(text) {
         }
     })
         .done(function(data) {
-            $translateOutput.html(data.result);
+            $simplifyBody.html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
+                + '<div class="translate-source popover-section">' + text + '</div>');
+            var $translateOutput = $('#translateOutput');
             $translateOutput.attr('lang', data.lang);
             $translateOutput.css('direction', data.direction);
         })
         .fail(function(err) {
             console.error(err);
-            $translateOutput.html(err.responseText);
+            $simplifyBody.html(err.responseText);
         })
         .always(function() {
-            var $translatePop = $('#translatePop');
-            if ($translatePop.is(':visible') && !translateBeenDragged) {
-                $translatePop.CFW_Popover('locateUpdate');
+            if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
+                $simplifyPop.CFW_Popover('locateUpdate');
             }
         });
+}
+
+// Text Simplification
+
+function loadSimplification(selection) {
+    'use strict';
+
+    simplificationTool = 'simplify';
+    var $simplifyLocator = $('#simplifyLocator');
+    var $simplifyBody = $('#simplifyBody');
+    $simplifyBody.html('<p>Loading...</p>');
+    $('#translateFooter').hide();
+    var $navLink = $('#simplifyNavLink');
+    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
+    $navLink.addClass('active').attr('aria-current', 'true');
+    $simplifyLocator.one('afterShow.cfw.popover', function() {
+        $('#simplifyPop').trigger('focus');
+    });
+    $.ajax('/simplification/simplify', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            text: selection,
+            book_id: pub_id
+        }
+    })
+        .done(function(data) {
+            $simplifyBody.html('<div class="simplify-source">' + data.result + '</div>');
+        })
+        .fail(function(err) {
+            console.error(err);
+            $simplifyBody.html('<p>Error loading simplified text</p>');
+        })
+        .always(function() {
+            $simplifyLocator.CFW_Popover('show');
+            var $simplifyPop = $('#simplifyPop');
+            if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
+                $simplifyPop.CFW_Popover('locateUpdate');
+            }
+        });
+}
+
+// Called by Readium when the 'transform' button in the toolbox is clicked.
+function contextTransform(selection) {
+    'use strict';
+
+    $('#simplifyPop').data('text', selection);
+    if (simplificationTool === 'simplify') {
+        loadSimplification(selection);
+    } else {
+        loadTranslation(selection);
+    }
 }
 
 // Methods related to the wordbank page
@@ -183,8 +267,10 @@ window.wordBank.wordClicked = function(elt) {
     var item = $(elt).closest('div.wordbank-item');
     var word = item.find('.wordbank-word').text();
     load_definition(1, word);
+    $('#glossaryLocator').one('afterShow.cfw.popover.refocus', function() {
+        glossaryPop_focus($(elt));
+    });
     $('#glossaryLocator').CFW_Popover('show');
-    glossaryPop_focus($(elt));
 };
 
 // Methods related to dragging word bank words between ratings
@@ -436,10 +522,39 @@ $(function() {
             glossaryBeenDragged = true;
         });
 
-    $('#translateLocator').CFW_Popover({
-        target: '#translatePop',
+    // Tabs in simplify popover
+    $('#simplifyNavLink').on('click', function() {
+        loadSimplification($('#simplifyPop').data('text'));
+    });
+
+    $('#translateNavLink').on('click', function() {
+        loadTranslation($('#simplifyPop').data('text'));
+    });
+
+    // Word definition links inside simplify popover
+    $('#simplifyPop').on('click', '.simplifyLookup', function(e) {
+        e.preventDefault();
+        var word = $(e.currentTarget).text();
+        openGlossaryForWord(word, e.currentTarget);
+    });
+
+    // When ranking in the glossary popup is selected, notify server
+    $('#glossaryInput').on('change', 'input', function() {
+        var newValue = $(this).val();
+        $.get('/glossary/rating/defpanel/' + glossaryCurrentWord + '/' + newValue);
+        // If we're on the word bank page, need to update the word's position as well
+        $('div.wordbank-item .wordbank-word').each(function() {
+            var wbw = $(this);
+            if (wbw.text() === glossaryCurrentWord) {
+                window.wordBank.displayNewWordRating(wbw.closest('div.wordbank-item'), newValue);
+            }
+        });
+    });
+
+    $('#simplifyLocator').CFW_Popover({
+        target: '#simplifyPop',
         trigger: 'manual',
-        placement: 'reverse',
+        placement: 'forward',
         drag: true,
         popperConfig: {
             positionFixed: true,
@@ -455,24 +570,11 @@ $(function() {
         }
     })
         .on('afterHide.cfw.popover', function() {
-            translateBeenDragged = false;
+            simplifyBeenDragged = false;
         })
         .on('dragStart.cfw.popover', function() {
-            translateBeenDragged = true;
+            simplifyBeenDragged = true;
         });
-
-    // When ranking in the glossary popup is selected, notify server
-    $('#glossaryInput').on('change', 'input', function() {
-        var newValue = $(this).val();
-        $.get('/glossary/rating/defpanel/' + glossaryCurrentWord + '/' + newValue);
-        // If we're on the word bank page, need to update the word's position as well
-        $('div.wordbank-item .wordbank-word').each(function() {
-            var wbw = $(this);
-            if (wbw.text() === glossaryCurrentWord) {
-                window.wordBank.displayNewWordRating(wbw.closest('div.wordbank-item'), newValue);
-            }
-        });
-    });
 
     // When ranking in the check-in modal is selected, notify server
     $('#vocabCheckModal').on('change', 'input[type="radio"]', function(event) {

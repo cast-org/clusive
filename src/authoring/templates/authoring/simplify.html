@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% load static figuration %}
+<html lang="en">
+<head>
+    <title>Simplification Proof of Concept</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% include "shared/partial/head.html" %}
+    <style>
+        .text-replace { color: #888888; }
+        .text-muted { color: #888888; }
+        .hard { color: red; }
+        .hard:before { content: "▲" }
+        .same { color: darkorange; }
+        .same:before { content: "◼︎" }
+        .easy { color: green; }
+        .easy:before { content: "▼" }
+        .offensive { color: blue; }
+        .offensive:before { content: "✖︎" }
+        table th, table td { border: 1px solid #888888; padding: 1em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Simplification Proof of Concept</h1>
+        </div>
+    </div>
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.text.label_tag | formlabel }} *
+                    {{ form.text.errors }}
+                    {{ form.text | formcontrol }}
+
+                    {{ form.percent.label_tag | formlabel }} *
+                    {{ form.percent.errors }}
+                    {{ form.percent | formcontrol }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Check" />
+            </div>
+        </div>
+    </form>
+    <div class="row mt-1">
+        <div class="col">
+            <h2>Simplified (best options)</h2>
+            <p>{{ result|safe }}</p>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col">
+            <h2>Details</h2>
+            <p>Text has {{ word_count }} total words, {{ word_info | length }} different words.</p>
+            <p>Will aim to find alternatives for {{ to_replace }} of these.</p>
+            <ul>
+                <li class="hard">Red: synonym is less frequent than original, do not use.</li>
+                <li class="same">Orange: synonym is about the same frequency as original, do not use.</li>
+                <li class="offensive">Blue: synonym is potentially offensive, do not use.</li>
+                <li class="easy">Green: simpler synonym, can be used in simplification.</li>
+            </ul>
+            <table>
+                <tr>
+                    <th>Word</th>
+                    <th>Word frequency</th>
+                    <th>Replacement</th>
+                </tr>
+                {% for info in word_info %}
+                <tr>
+                    <td>{{ info.hw }}</td>
+                    <td>{{ info.freq }}</td>
+                    <td>
+                        {% if info.full_replacement %}
+                        <p><strong>All synonyms:</strong> {{ info.full_replacement | safe }}</p>
+                        {% endif %}
+                        {% if info.replacement %}
+                        <p><strong>Replacement string:</strong> {{ info.replacement | safe }}</p>
+                        {% endif %}
+                        {% if info.errors %}
+                        <p>{{ info.errors }}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

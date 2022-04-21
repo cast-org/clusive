@@ -316,6 +316,17 @@ $popover-footer-color:                  #333;
 $popover-footer-border-color:           #d3cfca;
 $popover-section-border-color:          #d3cfca;
 
+// Popover header tabs
+$popover-tab-bg:                        transparent;
+$popover-tab-color:                     #333;
+$popover-tab-border-color:              transparent;
+$popover-tab-hover-bg:                  #acfdf0;
+$popover-tab-hover-color:               #333;
+$popover-tab-hover-border-color:        transparent;
+$popover-tab-active-bg:                 transparent;
+$popover-tab-active-color:              #333;
+$popover-tab-active-border-color:       #ff554d;
+
 // Modals
 $modal-backdrop-bg:                     #343e48;
 $modal-backdrop-opacity:                .25;
@@ -476,10 +487,10 @@ $tts-active-bg:                         #ff554d;
 
 // Glossary/definitions
 $glossary-underline:                    #a0abfd;
-$definition-speech-color:               #666;
+$definition-speech-color:               #333;
 
 // Translated text
-$translate-source-color:                #666;
+$translate-source-color:                #333;
 $translate-output-color:                #333;
 $translate-logo-color:                  #555;
 
@@ -597,3 +608,12 @@ $alert-secondary-bg:                    #fd6;
 $alert-secondary-color:                 $body-color;
 $alert-secondary-border-color:          transparent;
 $alert-secondary-hover-color:           $link-hover-color;
+
+// Text alternatives
+$simplify-source-color:                 #333;
+$text-replace-bg:                       transparent;
+$text-replace-color:                    #666;
+
+$text-picture-color:                    #333;
+$text-picture-term-color:               #333;
+$text-picture-img-filter:               brightness(0) saturate(100%) invert(18%) sepia(37%) saturate(0%) hue-rotate(139deg) brightness(99%) contrast(96%);
