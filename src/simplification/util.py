@@ -97,7 +97,7 @@ class WordnetSimplifier:
         alts = []
         logger.debug(hw)
         for sset in wordnet.synsets(hw):
-            if not sset.definition().find('obscene')>=0 and sset.name() not in self.censored_synsets:
+            if not self.is_offensive_synset(sset):
                 logger.debug('  %s: %s', sset.name(), sset.definition())
                 sgroup = [lem.name() for lem in sset.lemmas() if lem.name() != hw]
                 # logger.debug('  synset %s group=%s', sset, sgroup)
@@ -116,8 +116,7 @@ class WordnetSimplifier:
         synsets = wordnet.synsets(hw)
         if synsets:
             for sset in synsets:
-                # We don't want to suggest even euphemisms that are part of obscene synsets.
-                if not sset.definition().find('obscene')>=0 and sset.name() not in self.censored_synsets:
+                if not self.is_offensive_synset(sset):
                     # List words (lemmas) other than the original word
                     sgroup = [lem.name() for lem in sset.lemmas() if lem.name() != hw]
                     if sgroup:
@@ -167,6 +166,18 @@ class WordnetSimplifier:
         else:
             return -1
 
+    def is_offensive_synset(self, sset):
+        # We don't want to use obscene or offensive synsets for generating synonyms.
+        # But things like 'offensive military maneuver' are ok.
+        definition = sset.definition()
+        if definition.startswith('obscene') or definition.startswith('(ethnic slur)') \
+                or definition.find('offensive term')>=0 or definition.find('offensive name')>=0 \
+                or definition.find('sometimes offensive')>=0 or definition.find('considered offensive')>=0 \
+                or definition.find('offensive and insulting')>=0:
+            return True
+        # Then there are a couple of synsets that don't match the above but we don't want them used.
+        return sset.name() in self.censored_synsets
+
     def is_offensive(self, word: str):
         # We currently only have a profanity checker for English.
         if self.lang != 'en':
@@ -209,7 +220,6 @@ class WordnetSimplifier:
 
     # Some miscellaneous places where Wordnet has a lot of synonyms listed that can lead to unfortunate replacements
     # even though we have a filter for outright obscenities.  For example 'do it' suggested as synonym for 'love'.
-    # These are the synset names from Wordnet that we ban
-    # (in addition to anything that has 'obscene' in its definition string).
+    # These are the synset names from Wordnet that we ban.
     censored_synsets = ['asshole.n.01', 'breast.n.02', 'fuck.n.01', 'sexual_love.n.02', 'shit.n.04',
                         'sleep_together.v.01', 'stool.v.04']
