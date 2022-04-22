@@ -98,6 +98,7 @@ var simplificationTool = "{{ simplification_tool }}";
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
+            {type: 'style', url: 'https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700', r2before: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-before.css" %}', r2before: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-default.css" %}', r2default: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-after.css" %}', r2after: true},
@@ -106,7 +107,7 @@ var simplificationTool = "{{ simplification_tool }}";
             {type: 'style', systemFont: true, fontFamily: 'Arial, Helvetica'},
             {type: 'style', systemFont: true, fontFamily: 'Georgia, Times, Times New Roman, serif'},
             {type: 'style', systemFont: true, fontFamily: 'Verdana'},
-            {type: 'style', systemFont: true, fontFamily: 'Comic Sans MS, sans-serif'},
+            {type: 'style', systemFont: true, fontFamily: 'Comic Sans MS, Comic Sans, Comic Neue, cursive'},
             {type: 'style', url: '{% static "shared/css/clusive-reader-theme-sepia.min.css" %}', r2after: true, appearance: 'clusive-sepia'},
             {type: 'style', url: '{% static "shared/css/clusive-reader-theme-night.min.css" %}', r2after: true, appearance: 'clusive-night'},
             // {type:'script', url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML&latest'},
