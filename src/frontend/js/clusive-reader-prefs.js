@@ -56,7 +56,7 @@
                         },
                         {
                             inputValue: 'comic',
-                            outputValue: 'Comic Sans MS, sans-serif'
+                            outputValue: 'Comic Sans MS, Comic Sans, Comic Neue, cursive'
                         }, {
                             inputValue: 'open-dyslexic',
                             outputValue: 'OpenDyslexicRegular'

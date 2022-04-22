@@ -13,9 +13,11 @@ body {
 .ff-times {
     font-family: Georgia, Times, "Times New Roman", serif !important;
 }
+.fl-font-comic-sans:not([class*='icon']),
+.fl-font-comic-sans *:not([class*='icon']), // Override Infusion
 #ff-comic,
 .ff-comic {
-    font-family: "Comic Sans MS", sans-serif !important;
+    font-family: "Comic Sans MS", "Comic Sans", "Comic Neue", cursive !important;
 }
 #ff-arial,
 .ff-arial {
