@@ -3,7 +3,7 @@ import logging
 
 from dateutil.parser import parse as dateutil_parse
 from dateutil.relativedelta import relativedelta
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.views import View
 
@@ -78,6 +78,11 @@ class MessageQueueView(View):
         """
         Was the message persisted?  Check using the event id.
         """
+        clusive_user = request.clusive_user
+        if clusive_user is None:
+            logger.warning('Rejected request for event existence, no current session')
+            return HttpResponseRedirect('/')
+
         event_id = "unknown id" # safe since real ids are UUIDs.
         try:
             event_id = kwargs['event_id']

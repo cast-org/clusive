@@ -1,3 +1,4 @@
+import django.dispatch
 from django.test import TestCase
 
 import json
@@ -12,6 +13,7 @@ from .models import Message, client_side_prefs_change
 from .views import get_delta_from_now, adjust_message_timestamp
 
 from eventlog.models import Event
+from eventlog.signals import page_timing
 
 
 now = datetime.now(timezone.utc)
@@ -32,20 +34,21 @@ wrong_username_message_queue = '{"username": "user2", "timestamp":"%s","messages
 
 wrong_username_individual_messages = '{"username": "user1", "timestamp":"%s","messages":[{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_textFont":"comic","fluid_prefs_textSize":0.9}},"username": "user2", "timestamp":"%s"},{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_textFont":"times","fluid_prefs_textSize":0.9}},"username": "user2", "timestamp":"%s"},{"content":{"eventId": "[eventId]", "type":"PC","preferences":{"fluid_prefs_contrast":"sepia","fluid_prefs_textFont":"times","fluid_prefs_textSize":0.9}},"username": "user2", "timestamp":"%s"}]}' % (now_str, first_pref_timestamp_str, second_pref_timestamp_str, third_pref_timestamp_str)
 
+message_event_id = '915f752c-e2dd-47d9-8aa7-7ed7b07193e9'
 content_for_multipart_form = [{
     'content': {
         'type': 'PT',
-        'eventId': '915f752c-e2dd-47d9-8aa7-7ed7b07193e9?',
+        'eventId': message_event_id,
         'loadTime': 1967,
         'duration': 36577,
         'activeDuration': 180089
     },
-    'timestamp': now_str,
+    'timestamp': now.isoformat(),
     'username': 'user1'
 }]
 multipart_form_message = {
     'csrfmiddlewaretoken': 'dummycsrftoken',
-    'timestamp': now_str,
+    'timestamp': now.isoformat(),
     'messages': json.dumps(content_for_multipart_form),
     'username': 'user1'
 }
@@ -61,6 +64,16 @@ class MessageQueueTestCase(TestCase):
         library_page_response = self.client.get('/library/public')
         page_view_event = Event.objects.latest('event_time')
         self.event_id = page_view_event.id
+        self.page_message_event = Event(pk=message_event_id,
+            type='VIEW_EVENT',
+            action='VIEWED',
+            session=page_view_event.session,
+            event_time=now_str,
+            membership='ST',
+            page='MyAccount',
+            actor_id=1,
+        )
+        self.page_message_event.save()
 
     def test_catch_invalid_message_type(self):
         response = self.client.post('/messagequeue/', preference_change_message_queue.replace("[eventId]", self.event_id), content_type='application/json')
@@ -115,7 +128,6 @@ class MessageQueueTestCase(TestCase):
         self.assertEqual(latest_textSize_event.value, '0.9', "value recorded in textFont change event was not as expected")        
 
     def test_send_message_signal(self):            
-
         # Following pattern for testing signals described at https://www.freecodecamp.org/news/how-to-testing-django-signals-like-a-pro-c7ed74279311/
         self.signal_was_called = False;
         def handler(sender, timestamp, content, request, **kwargs):            
@@ -127,5 +139,27 @@ class MessageQueueTestCase(TestCase):
         self.assertTrue(self.signal_was_called)
 
     def test_send_form_message(self):
+        self.signal_was_called = False;
+        def handler(sender, **kwargs):
+            self.signal_was_called = True;
+
+        page_timing.connect(handler)
+
         response = self.client.post('/messagequeue/', multipart_form_message)
-        self.assertJSONEqual(response.content, {'success': 1}, 'Sending messages did not return expected response')
+        self.assertJSONEqual(response.content, {'success': 1}, 'Sending multi-part form message did not return expected response')
+        self.assertTrue(self.signal_was_called)
+
+    def test_get_message_id_success(self):
+        # TODO: self.client.get() initially returns an HttpRedirectResponse.
+        # Why?  The `follow=True` forces it to follow that redirect to the
+        # MessageQueueView.get() handler, but why is it necessary?
+        response = self.client.get('/messagequeue/' + message_event_id, follow=True)
+        self.assertJSONEqual(response.content, {'success': 1}, 'Checking known message ID did not return successful response')
+
+    def test_get_message_id_no_such_id(self):
+        response = self.client.get('/messagequeue/no-such-id', follow=True)
+        self.assertJSONEqual(response.content, {'message': 'No such event'}, 'Checking unknown message ID; did not return faliure response')
+
+    def test_get_message_id_no_id(self):
+        response = self.client.get('/messagequeue/', follow=True)
+        self.assertJSONEqual(response.content, {'message': 'No such event'}, 'Checking lack of message ID; did not return faliure response')
