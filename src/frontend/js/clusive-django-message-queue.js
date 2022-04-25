@@ -103,11 +103,13 @@
 
     clusive.djangoMessageQueue.logoutFlush = async function (that) {
         console.debug("calling logout flush for djangoMessageQueue", that);
-        var lastPageTimingSaved = await PageTiming.flushEndTimeEvents();
-        console.log('logoutFlush(): ' + JSON.stringify(lastPageTimingSaved));
         if(that.isQueueEmpty()) {            
             // Mark flush for this queue complete on the logoutFlushManager
             that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
+            if (that.logoutFlushManager.completedFlushes >= that.logoutFlushManager.numberOfQueues) {
+                var lastPageTimingSaved = await PageTiming.flushEndTimeEvents();
+                console.log('logoutFlush(): ' + JSON.stringify(lastPageTimingSaved));
+            }
             // Fire that the logout flush for this queue is complete
             that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
         } else {
