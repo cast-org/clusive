@@ -33,10 +33,10 @@
   },
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
-    "autoprefixer": "^10.4.4",
+    "autoprefixer": "^10.4.5",
     "cypress": "^9.5.4",
     "cypress-iframe": "^1.0.1",
-    "eslint": "^8.13.0",
+    "eslint": "^8.14.0",
     "eslint-plugin-compat": "^4.0.2",
     "grunt": "^1.5.2",
     "grunt-cli": "^1.4.3",
