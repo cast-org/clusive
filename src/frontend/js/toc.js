@@ -388,7 +388,7 @@ function goToAnnotation(event) {
 
     // Trigger hide modal and focus on highlight
     var readerBody = getReaderBody();
-    TOC_focusSelector = json.highlight.id;
+    TOC_focusSelector = '#' + json.highlight.id;
     $(TOC_MODAL).CFW_Modal('hide');
 }
 
@@ -515,7 +515,6 @@ $(document).on('updateCurrentLocation.d2reader', function(event) {
 
     setTimeout(function() {
         if (selector === null) {
-console.log('BODY FOCUS');
             // No specific element - focus on body
             setTimeout(function() {
                 readerBody.setAttribute('tabindex', -1);
@@ -523,15 +522,13 @@ console.log('BODY FOCUS');
                     readerBody.focus();
                 });
             });
-        } else if (selector.startsWith('R2_HIGHLIGHT_')) {
-console.log('HIGHLIGHT FOCUS');
-            // Focus on higlight item
+        } else if (selector.startsWith('#R2_HIGHLIGHT_')) {
+            // Focus on highlight item
             var highlightItem = readerBody.querySelector(selector + ' .R2_CLASS_HIGHLIGHT_AREA');
             setTimeout(function() {
                 highlightItem.focus();
             });
         } else {
-console.log('ELEMENT FOCUS');
             // Focus on content element
             var readerItem = readerBody.querySelector(selector);
             setTimeout(function() {
