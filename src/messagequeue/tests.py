@@ -64,16 +64,6 @@ class MessageQueueTestCase(TestCase):
         library_page_response = self.client.get('/library/public')
         page_view_event = Event.objects.latest('event_time')
         self.event_id = page_view_event.id
-        self.page_message_event = Event(pk=message_event_id,
-            type='VIEW_EVENT',
-            action='VIEWED',
-            session=page_view_event.session,
-            event_time=now_str,
-            membership='ST',
-            page='MyAccount',
-            actor_id=1,
-        )
-        self.page_message_event.save()
 
     def test_catch_invalid_message_type(self):
         response = self.client.post('/messagequeue/', preference_change_message_queue.replace("[eventId]", self.event_id), content_type='application/json')
@@ -149,17 +139,3 @@ class MessageQueueTestCase(TestCase):
         self.assertJSONEqual(response.content, {'success': 1}, 'Sending multi-part form message did not return expected response')
         self.assertTrue(self.signal_was_called)
 
-    def test_get_message_id_success(self):
-        # TODO: self.client.get() initially returns an HttpRedirectResponse.
-        # Why?  The `follow=True` forces it to follow that redirect to the
-        # MessageQueueView.get() handler, but why is it necessary?
-        response = self.client.get('/messagequeue/' + message_event_id, follow=True)
-        self.assertJSONEqual(response.content, {'success': 1}, 'Checking known message ID did not return successful response')
-
-    def test_get_message_id_no_such_id(self):
-        response = self.client.get('/messagequeue/no-such-id', follow=True)
-        self.assertJSONEqual(response.content, {'message': 'No such event'}, 'Checking unknown message ID; did not return faliure response')
-
-    def test_get_message_id_no_id(self):
-        response = self.client.get('/messagequeue/', follow=True)
-        self.assertJSONEqual(response.content, {'message': 'No such event'}, 'Checking lack of message ID; did not return faliure response')

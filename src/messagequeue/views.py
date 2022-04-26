@@ -74,21 +74,3 @@ class MessageQueueView(View):
             return JsonResponse(status=501, data={'message': 'Invalid user'})
         return JsonResponse({'success': 1})
 
-    def get(self, request, *args, **kwargs):
-        """
-        Was the message persisted?  Check using the event id.
-        """
-        clusive_user = request.clusive_user
-        if clusive_user is None:
-            logger.warning('Rejected request for event existence, no current session')
-            return HttpResponseRedirect('/')
-
-        event_id = "unknown id" # safe since real ids are UUIDs.
-        try:
-            event_id = kwargs['event_id']
-            the_event = Event.objects.get(id=event_id)
-        except:
-            logger.warning('Event %s not found', event_id)
-            return JsonResponse(status=501, data={'message': 'No such event'})
-        return JsonResponse({'success': 1})
-
