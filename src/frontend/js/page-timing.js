@@ -57,24 +57,29 @@ PageTiming.trackPage = function(eventId) {
 
     // Set up so that end time will be recorded when user turns pages.
     // https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event
-    $(window).on('pagehide', function() {
-        if (DJANGO_USERNAME) {
-            console.debug("WINDOW PAGEHIDE DETECTED FOR '" + DJANGO_USERNAME + "'");
-            PageTiming.reportEndTime();
-        }
-    });
-    // Record end time when session ends
+    $(window).on('pagehide', PageTiming.windowEventListener);
+
+    // Record end time when document is hidden.
     // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
     // https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event.
-    document.addEventListener('visibilityChange', function() {
-        if (document.visibilityState === 'hidden' && DJANGO_USERNAME) {
-            console.debug("DOCUMENT HIDDEN DETECTED FOR '" + DJANGO_USERNAME + "'");
-            PageTiming.reportEndTime();
-        }
-    });
+    document.addEventListener('visibilityChange', PageTiming.docEventListener);
 
     // Save current time - end time will be calculated as an offset to this.
     PageTiming.pageStartTime = currentTime;
+};
+
+PageTiming.windowEventListener = function (event) {
+    if (DJANGO_USERNAME) {
+        console.debug("WINDOW PAGEHIDE DETECTED FOR '" + DJANGO_USERNAME + "'");
+        PageTiming.reportEndTime();
+    }
+};
+
+PageTiming.docEventListener = function (event) {
+    if (document.visibilityState === 'hidden' && DJANGO_USERNAME) {
+        console.debug("DOCUMENT HIDDEN DETECTED FOR '" + DJANGO_USERNAME + "'");
+        PageTiming.reportEndTime();
+    }
 };
 
 PageTiming.checkAwakeness = function() {
@@ -145,10 +150,21 @@ PageTiming.recordInactiveTime = function() {
     }
 };
 
-// Called in document's "visibilityChange" (hidden) event or window's "pageHide"
-// event, and usese the browser's asynchronous `sendBeacon()` function.
-// https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+PageTiming.createEndTimeMessage = function () {
+    PageTiming.recordInactiveTime();
+    var duration = Date.now() - PageTiming.pageStartTime;
+    return {
+        type: 'PT',
+        eventId: PageTiming.eventId,
+        loadTime: PageTiming.pageloadTime,
+        duration: duration,
+        activeDuration: duration - PageTiming.totalInactiveTime
+    };
+};
 
+// Called in document's "visibilityChange" (hidden) event or window's "pageHide"
+// event, and uses the browser's asynchronous `sendBeacon()` function.
+// https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
 PageTiming.reportEndTime = function() {
     'use strict';
 
@@ -160,20 +176,12 @@ PageTiming.reportEndTime = function() {
         console.log('PageTiming.reportEndTime() added new one: ', pageTimingEvents);
         localStorage.setItem(PageTiming.localStorageKey, JSON.stringify(pageTimingEvents));
 
-        PageTiming.recordInactiveTime();
-        var duration = Date.now() - PageTiming.pageStartTime;
-        var data = clusive.djangoMessageQueue.wrapMessage({
-            type: 'PT',
-            eventId: PageTiming.eventId,
-            loadTime: PageTiming.pageloadTime,
-            duration: duration,
-            activeDuration: duration - PageTiming.totalInactiveTime
-        });
-        console.debug('Reporting page data: ', JSON.stringify(data));
+        var message = clusive.djangoMessageQueue.wrapMessage(PageTiming.createEndTimeMessage());
+        console.debug('Reporting page data: ', JSON.stringify(message));
         var postForm = new FormData();
         postForm.append('csrfmiddlewaretoken', DJANGO_CSRF_TOKEN);
         postForm.append('timestamp', new Date().toISOString());
-        postForm.append('messages', JSON.stringify([data]));
+        postForm.append('messages', JSON.stringify([message]));
         postForm.append('username', DJANGO_USERNAME);
         var beaconResult = navigator.sendBeacon('/messagequeue/', postForm);
 
@@ -186,37 +194,44 @@ PageTiming.reportEndTime = function() {
         // below is a way to remove these event IDs from `localStorage`. 
         // https://www.w3.org/TR/beacon/#return-values
         console.debug(`Queued ${PageTiming.eventId} via sendBeacon(): ${beaconResult}`);
-        console.debug(PageTiming.eventId);
-        console.debug('--');
     } else {
         console.warn('Pagehide event received, but end time was already recorded');
     }
 };
 
-// Called by clusive-message-queue's logout handler.
-PageTiming.flushEndTimeEvents = async function() {
+// For clusive-message-queue's logout handler.
+PageTiming.logoutEndTime = function() {
     'use strict';
 
-    var flushResponse = null;
+    // Stop event handling via sendBeacon()
+    $(window).off('pagehide', PageTiming.windowEventListener);
+    document.removeEventListener('visibilityChange', PageTiming.docEventListener);
+
     var pageTimingEvents = PageTiming.getEndTimesProcessed();
-    if (pageTimingEvents.length > 0) {
-        var lastEvent = pageTimingEvents[pageTimingEvents.length-1];
-        flushResponse = await $.ajax('/messagequeue/' + lastEvent, {
-            method: 'GET',
-            headers: {
-                'X-CSRFToken': DJANGO_CSRF_TOKEN
-            },
-        });
-        console.debug(`flushEndTimeEvents(${lastEvent}): ` + JSON.stringify(flushResponse));
+    if (pageTimingEvents.indexOf(PageTiming.eventId) === -1) {
+        // Record that this event is being processed.
+        pageTimingEvents.push(PageTiming.eventId);
+        console.log('PageTiming.reportEndTime() added new one: ', pageTimingEvents);
+        localStorage.setItem(PageTiming.localStorageKey, JSON.stringify(pageTimingEvents));
+
+        // Add the PageEnd event to the messagequeue.
+        clusiveEvents.messageQueue.add(PageTiming.createEndTimeMessage());
+        console.debug(`Queued ${PageTiming.eventId} via clusiveEvents.messageQueue.`);
+    } else {
+        console.warn('Pagehide event received, but end time was already recorded');
     }
-    localStorage.removeItem(PageTiming.localStorageKey);
-    return flushResponse;
 };
 
-// Utility for retrieving the list of page end times from window.localStorage
+// Utility for retrieving the list of PageEnd times from window.localStorage
 PageTiming.getEndTimesProcessed = function () {
     var eventsString = localStorage.getItem(PageTiming.localStorageKey);
     return ( eventsString ? JSON.parse(eventsString) : [] );
+};
+
+// Utility for removing the list of PageEnd times from window.localStorage
+PageTiming.removeEndTimesProcessed = function () {
+    console.debug('Removing PageEnd times list: ' + localStorage.getItem(PageTiming.localStorageKey));
+    localStorage.removeItem(PageTiming.localStorageKey);
 };
 
 // Test if browser supports the timing API

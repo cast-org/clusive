@@ -106,10 +106,6 @@
         if(that.isQueueEmpty()) {            
             // Mark flush for this queue complete on the logoutFlushManager
             that.logoutFlushManager.completedFlushes = that.logoutFlushManager.completedFlushes+1;
-            if (that.logoutFlushManager.completedFlushes >= that.logoutFlushManager.numberOfQueues) {
-                var lastPageTimingSaved = await PageTiming.flushEndTimeEvents();
-                console.log('logoutFlush(): ' + JSON.stringify(lastPageTimingSaved));
-            }
             // Fire that the logout flush for this queue is complete
             that.events.logoutFlushComplete.fire(that.logoutFlushManager.numberOfQueues, that.logoutFlushManager.completedFlushes);                
         } else {
@@ -141,6 +137,7 @@
                 function(e) {
                     $(logoutLinkSelector).text('Saving changes...').fadeIn();
                     e.preventDefault();
+                    PageTiming.logoutEndTime();
                     that.logoutFlush();
                 }
             );
@@ -150,6 +147,7 @@
     clusive.djangoMessageQueue.doLogout = function (that, numberOfQueues, completedFlushes) {
         console.debug("doLogout attempt, numberOfQueues/completedFlushes", numberOfQueues, completedFlushes);
         if (completedFlushes >= numberOfQueues) {
+            PageTiming.removeEndTimesProcessed();
             var logoutLinkSelector = that.options.config.logoutLinkSelector;
             $(logoutLinkSelector).text('Logging out').fadeIn();
             window.location = $(logoutLinkSelector).attr('href');
