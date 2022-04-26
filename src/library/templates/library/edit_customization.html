@@ -131,6 +131,7 @@
                 {{ form.question | formcontrol }}
             </div>
             <div>
+                {{ form.non_field_errors }}
                 <hr>
                 <input id="customization-edit-submit" type="submit" class="btn btn-secondary" value="Save"/>
                 {% if is_new == 'true' %}
