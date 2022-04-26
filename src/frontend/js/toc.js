@@ -14,8 +14,6 @@ var NOTES_TAB = '#notesTab';  // links to #notesPanel
 var NOTES_CONTAINER = '#notesList';
 
 var TOC_focusSelector = null;
-var readerBody = null;
-
 
 // eslint-disable-next-line no-unused-vars
 function showTocPanel() {
@@ -377,17 +375,7 @@ function goToAnnotation(event) {
     markAnnotationActive(json);
     d2reader.goTo(json);
 
-    // Check to see if we should close the TOC modal based on current browser breakpoint
-    //var bpVal = window.getBreakpointByName('xs');
-    //if (bpVal) {
-    //    var mediaQuery = window.matchMedia('(max-width: ' + bpVal.max + ')');
-    //    if (mediaQuery.matches) {
-    //        $(TOC_MODAL).CFW_Modal('hide');
-    //    }
-    //}
-
     // Trigger hide modal and focus on highlight
-    var readerBody = getReaderBody();
     TOC_focusSelector = '#' + json.highlight.id;
     $(TOC_MODAL).CFW_Modal('hide');
 }
@@ -492,7 +480,7 @@ function getReaderBody() {
     return readerDocument.body;
 }
 
-$(document).on('updateCurrentLocation.d2reader', function(event) {
+$(document).on('updateCurrentLocation.d2reader', function() {
     'use strict';
 
     if (TOC_focusSelector === null) { return; }
@@ -509,7 +497,7 @@ $(document).on('updateCurrentLocation.d2reader', function(event) {
         } catch (error) {
             return null;
         }
-    }
+    };
     var readerBody = getReaderBody();
     var selector = _getValidSelector(TOC_focusSelector, readerBody);
 
@@ -538,8 +526,6 @@ $(document).on('updateCurrentLocation.d2reader', function(event) {
                 });
             });
         }
-
-        TOC_focusSelector = null;
     });
 });
 
@@ -573,6 +559,7 @@ $(document).ready(function() {
         .on('beforeHide.cfw.modal', function() {
             if (TOC_focusSelector === null) {
                 $(TOC_MODAL_BUTTON).trigger('focus');
+                TOC_focusSelector = null;
             }
         });
 
