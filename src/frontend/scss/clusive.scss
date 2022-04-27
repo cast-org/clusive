@@ -25,6 +25,7 @@
 @import "../../../node_modules/figuration/scss/core/buttons";
 
 // Components - additional functionality and layout
+@import "../../../node_modules/figuration/scss/component/container";
 @import "../../../node_modules/figuration/scss/component/grid";
 @import "../../../node_modules/figuration/scss/component/animation";
 @import "../../../node_modules/figuration/scss/component/caret";
@@ -44,8 +45,11 @@
 @import "../../../node_modules/figuration/scss/component/media";
 @import "../../../node_modules/figuration/scss/component/card";
 @import "../../../node_modules/figuration/scss/component/alert";
+@import "../../../node_modules/figuration/scss/component/loader";
+@import "../../../node_modules/figuration/scss/component/placeholder";
 
 // Components w/ JavaScript
+@import "../../../node_modules/figuration/scss/component/offcanvas";
 @import "../../../node_modules/figuration/scss/component/modal";
 @import "../../../node_modules/figuration/scss/component/tooltip";
 @import "../../../node_modules/figuration/scss/component/popover";
@@ -61,6 +65,7 @@
 
 // =====
 // Themes - build out each via mixin
+// stylelint-disable no-invalid-position-at-import-rule
 @import "site-themes/theme-default";
 @include site-theme();
 
@@ -69,3 +74,4 @@
 
 @import "site-themes/theme-night";
 @include site-theme(".clusive-theme-night");
+// stylelint-enable no-invalid-position-at-import-rule

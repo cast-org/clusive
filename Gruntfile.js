@@ -184,8 +184,8 @@ module.exports = function (grunt) {
         eslint: {
             frontend: {
                 options: {
-                    config: 'src/frontend/.eslintrc.json',
-                    reportUnusedDisableDirectives: 'true',
+                    overrideConfigFile: 'src/frontend/js/.eslintrc.json',
+                    reportUnusedDisableDirectives: 'error'
                 },
                 src: 'src/frontend/js/*.js'
             }

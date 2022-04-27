@@ -215,6 +215,7 @@
     --reactW9: var(--CT_reactW9);
     --reactW10: var(--CT_reactW10);
     --reactW11: var(--CT_reactW11);
+    // stylelint-disable-next-line number-max-precision
     --sideLen: 28.8675134595; // c = (50 * sin(30))) / sin(60)
 
     position: relative;

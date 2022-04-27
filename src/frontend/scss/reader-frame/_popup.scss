@@ -17,9 +17,9 @@
     background: var(--CT_popoverBg);
     border: var(--CT_popoverBorderWidth) solid var(--CT_popoverBorderColor);
     @include border-radius($popover-border-radius);
+    box-shadow: none;
     opacity: 0;
     transform: translateX(-50%);
-    box-shadow: none;
 
     *,
     *::before,
