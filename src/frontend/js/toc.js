@@ -527,6 +527,8 @@ $(document).on('updateCurrentLocation.d2reader', function() {
             });
         }
     });
+
+    TOC_focusSelector = null;
 });
 
 //  Initial setup
@@ -559,7 +561,6 @@ $(document).ready(function() {
         .on('beforeHide.cfw.modal', function() {
             if (TOC_focusSelector === null) {
                 $(TOC_MODAL_BUTTON).trigger('focus');
-                TOC_focusSelector = null;
             }
         });
 
