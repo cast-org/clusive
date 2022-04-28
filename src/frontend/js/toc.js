@@ -138,28 +138,31 @@ function buildTableOfContents() {
 
     if (typeof d2reader === 'object') {
         var items = d2reader.tableOfContents;
-        var has_structure = items.length > 1;
+        var has_structure = items.length > 0;
         if (items.length === 1 && items[0].children && items[0].children.length > 1) {
             has_structure = true;
         }
-        if (has_structure) {
-            $(TOC_EMPTY).hide();
-            var out = buildTocLevel(items, 0, 'toc');
-            $(TOC_CONTAINER).html(out).CFW_Init();
-
-            var navLinks = $(TOC_CONTAINER).find('.nav-link');
-            // Add click event to update menu when new page selected
-            navLinks.on('click', function() {
-                // Use timeout delay until we can get a callback from reader
-                setTimeout(function() {
-                    resetCurrentTocItem(false);
-                    markTocItemActive();
-                }, 100);
-            });
-        } else {
-            // Empty TOC
-            $(TOC_CONTAINER).hide();
+        if (!has_structure) {
+            // Use title and locator to create a single entry
+            items = [{
+                title: document.querySelector('#tocPubTitle').innerHTML,
+                href: d2reader.currentLocator.href
+            }];
         }
+
+        var out = buildTocLevel(items, 0, 'toc');
+        $(TOC_EMPTY).hide();
+        $(TOC_CONTAINER).html(out).CFW_Init();
+
+        var navLinks = $(TOC_CONTAINER).find('.nav-link');
+        // Add click event to update menu when new page selected
+        navLinks.on('click', function() {
+            // Use timeout delay until we can get a callback from reader
+            setTimeout(function() {
+                resetCurrentTocItem(false);
+                markTocItemActive();
+            }, 100);
+        });
     } else {
         console.warn('d2reader not initialized');
     }
