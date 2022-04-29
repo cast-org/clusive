@@ -64,6 +64,8 @@ This creates the compiled, runnable server in the Clusive/target directory.
 Run in the Clusive directory:
 * `pip install -r requirements.txt`
 * If necessary, refer to these possible solutions for [psycopg2 library issues](https://stackoverflow.com/questions/26288042/error-installing-psycopg2-library-not-found-for-lssl) on Mac
+* For instance, as suggested in the answers on that page, you might need to use:
+  * `LDFLAGS="-L/usr/local/opt/openssl/lib" pip install -r requirements.txt`
 
 ### Download WordNet Data
 
