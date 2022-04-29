@@ -20,7 +20,7 @@
     "@d-i-t-a/reader": "^2.0.2",
     "canvas-confetti": "^1.5.1",
     "figuration": "^4.3.2",
-    "fluid-binder": "git+https://github.com/fluid-project/fluid-binder.git#3283b44cd915f8c8c6a432fa60ccc0983ff547b7",
+    "fluid-binder": "2.0.0",
     "infusion": "4.0.0",
     "interactjs": "^1.10.11",
     "jquery": "^3.6.0",
