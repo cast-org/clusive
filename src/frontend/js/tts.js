@@ -869,6 +869,11 @@ clusiveTTS.getDefaultVoice = function() {
         defaultVoice = langVoices.length > 0 ? langVoices[0] : null;
     }
 
+    // Case where browser does not return any voices - (Safari v15.4)
+    if (defaultVoice === null) {
+        return false;
+    }
+
     console.debug('getDefaultVoice', defaultVoice.name);
 
     return defaultVoice.name;

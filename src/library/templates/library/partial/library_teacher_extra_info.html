@@ -2,9 +2,11 @@
 
 {% if show_assignments %}
     {% if book.assign_list or book.custom_list %}
-        <div class="card-divider spaced-top"></div>
-    {% endif %}
+    </div>
+    <div class="card-divider spaced-top"></div>
+    {% if book.assign_list %}
     {% include 'library/partial/library_teacher_assign_list.html' %}
+    {% endif %}
     <div class="row">
         <div class="col">
             {% if book.custom_list %}
@@ -16,10 +18,6 @@
             </div>
             {% endif %}
         </div>
-        {% include 'library/partial/library_action_menu.html' %}
-    </div>
-{% else %}
-    <div class="row">
-        {% include 'library/partial/library_action_menu.html' %}
-    </div>
+    {% endif %}
 {% endif %}
+{% include 'library/partial/library_action_menu.html' %}

@@ -11,9 +11,7 @@ Note: all steps between **Create/Activitate Virtual Environment** and **Create a
 ### Prerequisites
 
 * [Python 3](https://www.python.org/downloads/)
-  * Version 3.7.4 or later, but less than 3.9. On Mac, Homebrew is the easiest way to install.
-  * Note: Version 3.9 removes member `tp_print` from `PyTypeObject` which is
-    used by some of Clusive's dependencies; see "[What’s New In Python 3.9](https://docs.python.org/3.9/whatsnew/3.9.html#id3)".
+  * Version 3.7.4 up to 3.9. (3.10+ not tested yet). On Mac, Homebrew is the easiest way to install.
 * [virtualenv](https://virtualenv.pypa.io/en/latest/) 
   * Not required, but highly recommended for maintaining an isolated environment and dependencies.
 * [Postgres](https://www.postgresql.org/) 
