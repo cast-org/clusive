@@ -12,6 +12,11 @@
     var HOTKEY_SETTINGS_READ = 'alt+.';
     var HOTKEY_TTS_TOGGLE = 'alt+a';
     var HOTKEY_TTS_PAUSE = 'space';
+    var HOTKEY_SEARCH = 'alt+f';
+    //var HOTKEY_PAGE_PREV = 'left';
+    //var HOTKEY_PAGE_NEXT = 'right';
+    var HOTKEY_SECTION_PREV = 'alt+pageup';
+    var HOTKEY_SECTION_NEXT = 'alt+pagedown';
 
     var SELECTOR_READER_FRAME = '#frameReader';
 
@@ -146,6 +151,24 @@
             $(modalBtn).CFW_Modal('show');
         },
 
+        getReaderBody : function() {
+            var readerIframe = document.querySelector('#D2Reader-Container iframe');
+            var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
+            return readerDocument.body;
+        },
+
+        focusReaderBody : function() {
+            var readerBody = this.getReaderBody();
+            if (!$.CFW_isFocusable(readerBody)) {
+                readerBody.setAttribute('tabindex', -1);
+                    setTimeout(function() {
+                        readerBody.focus();
+                    });
+            } else {
+                readerBody.focus();
+            }
+        },
+
         _execute : function(callback) {
             if (typeof callback === 'function') {
                 callback();
@@ -239,6 +262,52 @@
             } else {
                 clusiveTTS.pause();
             }
+        }
+    });
+
+    // Search - focus on search field
+    // - currently only library and bookshare - not at same time
+    hotkeys(HOTKEY_SEARCH, function(event) {
+        var searchElm = document.querySelector('input[type="search"]');
+        if (searchElm !== null) {
+            event.preventDefault();
+            searchElm.focus();
+        }
+    });
+
+    /*
+    // Reader navigation - previous page
+    hotkeys(HOTKEY_PAGE_PREV, function(event) {
+        if (typeof d2reader === 'object') {
+            event.preventDefault();
+            d2reader.previousPage();
+        }
+    });
+
+    // Reader navigation - next page
+    hotkeys(HOTKEY_PAGE_NEXT, function(event) {
+        if (typeof d2reader === 'object') {
+            event.preventDefault();
+            d2reader.nextPage();
+        }
+    });
+    */
+
+    // Reader navigation - previous section/resource
+    hotkeys(HOTKEY_SECTION_PREV, function(event) {
+        if (typeof d2reader === 'object') {
+            event.preventDefault();
+            d2reader.previousResource();
+            shortcut.focusReaderBody();
+        }
+    });
+
+    // Reader navigation - next section/resource
+    hotkeys(HOTKEY_SECTION_NEXT, function(event) {
+        if (typeof d2reader === 'object') {
+            event.preventDefault();
+            d2reader.nextResource();
+            shortcut.focusReaderBody();
         }
     });
 
