@@ -12,7 +12,8 @@
     var HOTKEY_SETTINGS_READ = 'alt+.';
     var HOTKEY_TTS_TOGGLE = 'alt+a';
     var HOTKEY_TTS_PAUSE = 'space';
-    var HOTKEY_SEARCH = 'alt+f';
+    var HOTKEY_SEARCH_FOCUS = 'alt+f';
+    var HOTKEY_READER_FOCUS = 'alt+r';
     //var HOTKEY_PAGE_PREV = 'left';
     //var HOTKEY_PAGE_NEXT = 'right';
     var HOTKEY_SECTION_PREV = 'alt+pageup';
@@ -109,7 +110,8 @@
                 return;
             }
             $(tabBtn)
-                .one('afterShow.cfw.tab', function() {
+                .off('afterShow.cfw.tab.shortcut')
+                .one('afterShow.cfw.tab.shortcut', function() {
                     panel.focus();
                 })
                 .CFW_Tab('show');
@@ -129,26 +131,38 @@
             return $.CFW_getElement(result[0]);
         },
 
-        modalCloseOther : function(selector) {
+        modalCloseOther : function(selector, callback) {
+            var that = this;
             var modalVis = this.getVisibleModal();
-            if (modalVis && !modalVis.matches(selector)) {
-                $(modalVis).CFW_Modal('hide');
+            if (modalVis && (!modalVis.matches(selector) || selector === null)) {
+                $(modalVis)
+                    .off('afterHide.cfw.modal.shortcut')
+                    .one('afterHide.cfw.modal.shortcut', function() {
+                        that._execute(callback);
+                    })
+                    .CFW_Modal('hide');
             }
+            this._execute(callback);
         },
 
         modalOpen : function(modalBtn, modalDialog, callback) {
             var that = this;
-            this.modalCloseOther(modalDialog);
-            var dialog = document.querySelector(modalDialog);
-            if (dialog.classList.contains('in')) {
-                this._execute(callback);
-                return;
-            }
-            $(dialog)
-                .one('afterShow.cfw.modal', function() {
+
+            var modalOpenCallback = function() {
+                var dialog = document.querySelector(modalDialog);
+                if (dialog.classList.contains('in')) {
                     that._execute(callback);
-                });
-            $(modalBtn).CFW_Modal('show');
+                    return;
+                }
+                $(dialog)
+                    .off('afterShow.cfw.modal.shortcut')
+                    .one('afterShow.cfw.modal.shortcut', function() {
+                        that._execute(callback);
+                    });
+                $(modalBtn).CFW_Modal('show');
+            };
+
+            this.modalCloseOther(modalDialog, modalOpenCallback);
         },
 
         getReaderBody : function() {
@@ -158,15 +172,22 @@
         },
 
         focusReaderBody : function() {
-            var readerBody = this.getReaderBody();
-            if (!$.CFW_isFocusable(readerBody)) {
-                readerBody.setAttribute('tabindex', -1);
-                    setTimeout(function() {
-                        readerBody.focus();
-                    });
-            } else {
-                readerBody.focus();
-            }
+            var that = this;
+            var focusReaderCallback = function() {
+                var readerBody = that.getReaderBody();
+                var tabindex = null;
+                if (readerBody.hasAttribute('tabindex')) {
+                    tabindex = readerBody.getAttribute('tabindex');
+                }
+                if (tabindex === null) {
+                    readerBody.setAttribute('tabindex', -1);
+                }
+                setTimeout(function() {
+                    readerBody.focus();
+                });
+            };
+
+            this.modalCloseOther(null, focusReaderCallback);
         },
 
         _execute : function(callback) {
@@ -267,11 +288,19 @@
 
     // Search - focus on search field
     // - currently only library and bookshare - not at same time
-    hotkeys(HOTKEY_SEARCH, function(event) {
+    hotkeys(HOTKEY_SEARCH_FOCUS, function(event) {
         var searchElm = document.querySelector('input[type="search"]');
         if (searchElm !== null) {
             event.preventDefault();
             searchElm.focus();
+        }
+    });
+
+    // Reader - focus content
+    hotkeys(HOTKEY_READER_FOCUS, function(event) {
+        if (typeof d2reader === 'object') {
+            event.preventDefault();
+            shortcut.focusReaderBody();
         }
     });
 
