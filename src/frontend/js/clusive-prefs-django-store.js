@@ -1,4 +1,4 @@
-/* global cisl, clusive, fluid_3_0_0, gpii, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global cisl, clusive, fluid, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
 
 (function(fluid) {
     'use strict';
@@ -177,4 +177,4 @@
         messageQueue.add({"type": "PC", "preferences": prefsToSave, "readerInfo": clusiveContext.reader.info, "eventId": PAGE_EVENT_ID});
     };
     
-}(fluid_3_0_0));
+}(fluid));

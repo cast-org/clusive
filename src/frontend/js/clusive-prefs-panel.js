@@ -1,4 +1,4 @@
-/* global cisl, fluid_3_0_0, DJANGO_STATIC_ROOT, clusiveTTS */
+/* global cisl, fluid, DJANGO_STATIC_ROOT, clusiveTTS */
 
 /*
     This code defines canonical representations of the various preference settings,
@@ -261,4 +261,4 @@
         var system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         return system || setting;
     };
-}(fluid_3_0_0));
+}(fluid));

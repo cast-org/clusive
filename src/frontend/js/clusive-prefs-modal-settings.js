@@ -1,4 +1,4 @@
-/* global cisl, fluid_3_0_0 */
+/* global cisl, fluid */
 
 /*
     Defines the behavior of the preferences panel and how its markup relates to the defined Fluid preferences.
@@ -370,4 +370,4 @@
         gradeNames: ['fluid.standardTransformFunction', 'fluid.lens'],
         invertConfiguration: 'fluid.binder.transforms.booleanToCheck.invert'
     });
-}(fluid_3_0_0));
+}(fluid));

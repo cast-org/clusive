@@ -1,4 +1,4 @@
-/* global fluid_3_0_0, cisl, d2reader */
+/* global fluid, cisl, d2reader */
 
 /*
     Defines interactions between Clusive preferences and Readium.
@@ -244,4 +244,4 @@
         }
     }
 
-}(fluid_3_0_0));
+}(fluid));

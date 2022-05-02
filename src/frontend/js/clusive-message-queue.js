@@ -1,4 +1,4 @@
-/* global cisl, clusive, fluid_3_0_0, gpii, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
+/* global cisl, clusive, fluid, DJANGO_STATIC_ROOT, DJANGO_CSRF_TOKEN */
 
 (function(fluid) {
     'use strict';
@@ -194,4 +194,4 @@
         that.syncToLocalStorage();        
     }
 
-}(fluid_3_0_0));
+}(fluid));

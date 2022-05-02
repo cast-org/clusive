@@ -1,4 +1,4 @@
-/* global clusive, fluid_3_0_0, DJANGO_CSRF_TOKEN, PageTiming */
+/* global clusive, fluid, DJANGO_CSRF_TOKEN, PageTiming */
 
 (function(fluid) {
     'use strict';
@@ -189,4 +189,4 @@
         return (that.queue.length === 0 && $.isEmptyObject(that.sendingQueue));
     };
 
-}(fluid_3_0_0));
+}(fluid));
