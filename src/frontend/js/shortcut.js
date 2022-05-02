@@ -1,4 +1,4 @@
-/* global hotkeys, shortcut */
+/* global clusiveTTS, hotkeys, shortcut */
 
 // Uses `hotkeys-js`
 // Repo: https://github.com/jaywcjlove/hotkeys
@@ -10,6 +10,8 @@
     var HOTKEY_HIGHLIGHT = 'alt+h';
     var HOTKEY_SETTINGS_DISPLAY = 'alt+,';
     var HOTKEY_SETTINGS_READ = 'alt+.';
+    var HOTKEY_TTS_TOGGLE = 'alt+a';
+    var HOTKEY_TTS_PAUSE = 'space';
 
     var SELECTOR_READER_FRAME = '#frameReader';
 
@@ -26,6 +28,8 @@
     var SELECTOR_SETTINGS_DISPLAY_PANEL = '#setting0';
     var SELECTOR_SETTINGS_READ_TAB = '[data-cfw-tab-target="#setting1"]';
     var SELECTOR_SETTINGS_READ_PANEL = '#setting1';
+
+    var SELECTOR_READ_ALOUD_REGIONS = '.sidebar-tts, .dialog-tts';
 
     var shortcutModule = function() {
         this.readerFound = false;
@@ -106,12 +110,17 @@
                 .CFW_Tab('show');
         },
 
-        getVisibleModal : function() {
-            var items = document.querySelectorAll('.modal');
+        filterElementsForVisible : function(items) {
             var itemsArr = Array.from(items);
             var result = itemsArr.filter(function(element) {
                 return $.CFW_isVisible(element);
             });
+            return result;
+        },
+
+        getVisibleModal : function() {
+            var items = document.querySelectorAll('.modal');
+            var result = this.filterElementsForVisible(items);
             return $.CFW_getElement(result[0]);
         },
 
@@ -188,6 +197,50 @@
         }
     });
 
+    // Read-aloud - play/stop
+    hotkeys(HOTKEY_TTS_TOGGLE, function(event) {
+        var ttsRegions = document.querySelectorAll(SELECTOR_READ_ALOUD_REGIONS);
+        var result = shortcut.filterElementsForVisible(ttsRegions);
+        event.preventDefault();
+
+        if (result.length) {
+            // Default to 'global' play button
+            var ttsBtn = document.querySelector('.sidebar-end .tts-play');
+            if (!$.CFW_isVisible(ttsBtn)) {
+                ttsBtn = null;
+            }
+            // Find current activeElement to determine location
+            var activeElm = document.activeElement;
+            // Check for parent dialog and find it's play button
+            var dialog = activeElm.closest('.modal, .popover');
+            if (dialog !== null) {
+                ttsBtn = dialog.querySelector('.tts-play');
+            }
+            if (ttsBtn !== null) {
+                clusiveTTS.toggle({
+                    currentTarget: ttsBtn
+                });
+                return;
+            }
+        }
+
+        clusiveTTS.stop();
+    });
+
+    // Read-aloud - pause/resume
+    hotkeys(HOTKEY_TTS_PAUSE, function(event) {
+        var ttsRegions = document.querySelectorAll(SELECTOR_READ_ALOUD_REGIONS);
+        var result = shortcut.filterElementsForVisible(ttsRegions);
+
+        if (result.length && clusiveTTS.isReadingState) {
+            event.preventDefault();
+            if (clusiveTTS.isPausedState) {
+                clusiveTTS.resume();
+            } else {
+                clusiveTTS.pause();
+            }
+        }
+    });
+
     window.shortcut = shortcutModule.prototype;
 }(jQuery));
-
