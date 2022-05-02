@@ -68,7 +68,7 @@ var simplificationTool = "{{ simplification_tool }}";
         <div id="reader-info-top" class="info top">
             <span class="book-title"></span>
         </div>
-        <iframe data-cy="reader-frame" sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
+        <iframe id="frameReader" data-cy="reader-frame" sandbox="allow-scripts allow-same-origin" allowtransparency="true" title="ePub Reader" scrolling="no" style="max-width: 100%; Border: 0; display: block;" width="100%" height="100%"></iframe>
     </main>
 
 
@@ -285,6 +285,8 @@ var simplificationTool = "{{ simplification_tool }}";
                             clusiveTTS.updateSettings({
                                 voice: availablePreferredVoices[0]
                             });
+                            // Attach shortcut handler
+                            shortcut.attachReaderFrame();
                             // Update additional TTS settings - such as rate
                             d2reader.applyTTSSettings(readerOptions.userSettings.tts);
 
