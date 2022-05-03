@@ -6,6 +6,7 @@
 (function($) {
     'use strict';
 
+    var HOTKEY_SHORTCUTS = 'alt+k';
     var HOTKEY_TOC = 'alt+t';
     var HOTKEY_HIGHLIGHT = 'alt+h';
     var HOTKEY_SETTINGS_DISPLAY = 'alt+,';
@@ -21,6 +22,9 @@
     var HOTKEY_LIBRARY = 'alt+l';
     var HOTKEY_CONTEXT_LOOKUP = 'alt+d';
     var HOTKEY_CONTEXT_TRANSFORM = 'alt+s';
+
+    var SELECTOR_SHORTCUTS_BTN = '#shortcutsLocator';
+    var SELECTOR_SHORTCUTS_DIALOG = '#shortcutsPop';
 
     var SELECTOR_READER_FRAME = '#frameReader';
 
@@ -170,6 +174,22 @@
             this.modalCloseOther(modalDialog, modalOpenCallback);
         },
 
+        popoverOpen : function(popoverBtn, popoverDialog, callback) {
+            var that = this;
+
+            var dialog = document.querySelector(popoverDialog);
+            if (dialog.classList.contains('in')) {
+                that._execute(callback);
+                return;
+            }
+            $(popoverBtn)
+                .off('afterShow.cfw.popover.shortcut')
+                .one('afterShow.cfw.popover.shortcut', function() {
+                    that._execute(callback);
+                })
+                .CFW_Popover('show');
+        },
+
         getReaderBody : function() {
             var readerIframe = document.querySelector('#D2Reader-Container iframe');
             var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
@@ -230,6 +250,18 @@
             }
         }
     };
+
+    // Keyboard shortcuts popover
+    hotkeys(HOTKEY_SHORTCUTS, function(event) {
+        if (document.querySelector(SELECTOR_SHORTCUTS_BTN)) {
+            event.preventDefault();
+            shortcut.addEvent('hotkey-shortcuts-dialog', HOTKEY_SHORTCUTS);
+            var callback = function() {
+                document.querySelector(SELECTOR_SHORTCUTS_DIALOG).focus();
+            };
+            shortcut.popoverOpen(SELECTOR_SHORTCUTS_BTN, SELECTOR_SHORTCUTS_DIALOG, callback);
+        }
+    });
 
     // TOC list
     hotkeys(HOTKEY_TOC, function(event) {
