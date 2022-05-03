@@ -215,6 +215,15 @@
             return this.isSelection(this.getReaderSelection());
         },
 
+        addEvent : function(eventControl, eventValue) {
+            window.clusiveEvents.addCaliperEventToQueue(
+                window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT,
+                eventControl,
+                eventValue,
+                window.clusiveEvents.caliperEventActions.USED
+            );
+        },
+
         _execute : function(callback) {
             if (typeof callback === 'function') {
                 callback();
@@ -226,6 +235,7 @@
     hotkeys(HOTKEY_TOC, function(event) {
         if (document.querySelector(SELECTOR_TOC_BTN)) {
             event.preventDefault();
+            shortcut.addEvent('hotkey-toc-panel', HOTKEY_TOC);
             var callback = function() {
                 shortcut.tabOpenFocus(SELECTOR_TOC_TAB, SELECTOR_TOC_PANEL);
             };
@@ -239,11 +249,13 @@
             // Create highlight
             if (typeof d2reader === 'object') {
                 event.preventDefault();
+                shortcut.addEvent('hotkey-highlight-create', HOTKEY_HIGHLIGHT);
                 d2reader.highlighter.doHighlight();
             }
         } else if (document.querySelector(SELECTOR_TOC_BTN)) {
             // Open highlight panel
             event.preventDefault();
+            shortcut.addEvent('hotkey-highlight-panel', HOTKEY_HIGHLIGHT);
             var callback = function() {
                 shortcut.tabOpenFocus(SELECTOR_HIGHLIGHT_TAB, SELECTOR_HIGHLIGHT_PANEL);
             };
@@ -255,6 +267,7 @@
     hotkeys(HOTKEY_SETTINGS_DISPLAY, function(event) {
         if (document.querySelector(SELECTOR_SETTINGS_BTN)) {
             event.preventDefault();
+            shortcut.addEvent('hotkey-settings-display', HOTKEY_SETTINGS_DISPLAY);
             var callback = function() {
                 shortcut.tabOpenFocus(SELECTOR_SETTINGS_DISPLAY_TAB, SELECTOR_SETTINGS_DISPLAY_PANEL);
             };
@@ -266,6 +279,7 @@
     hotkeys(HOTKEY_SETTINGS_READ, function(event) {
         if (document.querySelector(SELECTOR_SETTINGS_BTN)) {
             event.preventDefault();
+            shortcut.addEvent('hotkey-settings-read-aloud', HOTKEY_SETTINGS_READ);
             var callback = function() {
                 shortcut.tabOpenFocus(SELECTOR_SETTINGS_READ_TAB, SELECTOR_SETTINGS_READ_PANEL);
             };
@@ -280,6 +294,7 @@
             // Read only selected text
             if (typeof d2reader === 'object') {
                 event.preventDefault();
+                shortcut.addEvent('hotkey-tts-play-reader-selection', HOTKEY_TTS_TOGGLE);
                 d2reader.highlighter.speak();
                 return;
             }
@@ -303,6 +318,7 @@
                 ttsBtn = dialog.querySelector('.tts-play');
             }
             if (ttsBtn !== null) {
+                shortcut.addEvent('hotkey-tts-toggle', HOTKEY_TTS_TOGGLE);
                 clusiveTTS.toggle({
                     currentTarget: ttsBtn
                 });
@@ -310,6 +326,7 @@
             }
         }
 
+        shortcut.addEvent('hotkey-tts-stop', HOTKEY_TTS_TOGGLE);
         clusiveTTS.stop();
     });
 
@@ -321,8 +338,10 @@
         if (result.length && clusiveTTS.isReadingState) {
             event.preventDefault();
             if (clusiveTTS.isPausedState) {
+                shortcut.addEvent('hotkey-tts-resume', HOTKEY_TTS_PAUSE);
                 clusiveTTS.resume();
             } else {
+                shortcut.addEvent('hotkey-tts-pause', HOTKEY_TTS_PAUSE);
                 clusiveTTS.pause();
             }
         }
@@ -334,6 +353,7 @@
         var searchElm = document.querySelector('input[type="search"]');
         if (searchElm !== null) {
             event.preventDefault();
+            shortcut.addEvent('hotkey-search-focus', HOTKEY_SEARCH_FOCUS);
             searchElm.focus();
         }
     });
@@ -342,6 +362,7 @@
     hotkeys(HOTKEY_READER_FOCUS, function(event) {
         if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
+            shortcut.addEvent('hotkey-reader-focus', HOTKEY_READER_FOCUS);
             shortcut.focusReaderBody();
         }
     });
@@ -351,6 +372,7 @@
     hotkeys(HOTKEY_PAGE_PREV, function(event) {
         if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
+            shortcut.addEvent('hotkey-reader-navigation-pagination-previous', HOTKEY_PAGE_PREV);
             d2reader.previousPage();
         }
     });
@@ -359,6 +381,7 @@
     hotkeys(HOTKEY_PAGE_NEXT, function(event) {
         if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
+            shortcut.addEvent('hotkey-reader-navigation-pagination-next', HOTKEY_PAGE_NEXT);
             d2reader.nextPage();
         }
     });
@@ -368,6 +391,7 @@
     hotkeys(HOTKEY_SECTION_PREV, function(event) {
         if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
+            shortcut.addEvent('hotkey-reader-navigation-section-previous', HOTKEY_SECTION_PREV);
             d2reader.previousResource();
             shortcut.focusReaderBody();
         }
@@ -377,6 +401,7 @@
     hotkeys(HOTKEY_SECTION_NEXT, function(event) {
         if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
+            shortcut.addEvent('hotkey-reader-navigation-section-next', HOTKEY_SECTION_NEXT);
             d2reader.nextResource();
             shortcut.focusReaderBody();
         }
@@ -385,13 +410,15 @@
     // Library
     hotkeys(HOTKEY_LIBRARY, function(event) {
         event.preventDefault();
+        shortcut.addEvent('hotkey-library', HOTKEY_LIBRARY);
         window.location.href = '/reader';
     });
 
     // Context menu - word lookup (definition)
     hotkeys(HOTKEY_CONTEXT_LOOKUP, function(event) {
         if (shortcut.readerFound && shortcut.hasReaderSelection()) {
-            event.preventDefault(shortcut.getReaderSelection());
+            event.preventDefault();
+            shortcut.addEvent('hotkey-lookup', HOTKEY_CONTEXT_LOOKUP);
             contextLookup(shortcut.getReaderSelection().toString());
         }
     });
@@ -400,6 +427,7 @@
     hotkeys(HOTKEY_CONTEXT_TRANSFORM, function(event) {
         if (shortcut.readerFound && shortcut.hasReaderSelection()) {
             event.preventDefault();
+            shortcut.addEvent('hotkey-transform', HOTKEY_CONTEXT_TRANSFORM);
             contextTransform(shortcut.getReaderSelection().toString());
         }
     });
