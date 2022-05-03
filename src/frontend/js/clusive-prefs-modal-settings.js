@@ -61,7 +61,7 @@
             },
             'onCreate.setupVoicesChangedListener': {
                 funcName: 'cisl.prefs.modalSettings.setupVoicesChangedListener',
-                args: ['{that'],
+                args: ['{that}'],
                 "after": "setupVoiceListing"
             }
         },
