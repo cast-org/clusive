@@ -1,4 +1,4 @@
-/* global clusiveTTS, hotkeys, shortcut */
+/* global clusiveTTS, contextLookup, contextTransform, d2reader, hotkeys, shortcut */
 
 // Uses `hotkeys-js`
 // Repo: https://github.com/jaywcjlove/hotkeys
@@ -14,10 +14,13 @@
     var HOTKEY_TTS_PAUSE = 'space';
     var HOTKEY_SEARCH_FOCUS = 'alt+f';
     var HOTKEY_READER_FOCUS = 'alt+r';
-    //var HOTKEY_PAGE_PREV = 'left';
-    //var HOTKEY_PAGE_NEXT = 'right';
+    // var HOTKEY_PAGE_PREV = 'left';
+    // var HOTKEY_PAGE_NEXT = 'right';
     var HOTKEY_SECTION_PREV = 'alt+pageup';
     var HOTKEY_SECTION_NEXT = 'alt+pagedown';
+    var HOTKEY_LIBRARY = 'alt+l';
+    var HOTKEY_CONTEXT_LOOKUP = 'alt+d';
+    var HOTKEY_CONTEXT_TRANSFORM = 'alt+s';
 
     var SELECTOR_READER_FRAME = '#frameReader';
 
@@ -38,6 +41,7 @@
     var SELECTOR_READ_ALOUD_REGIONS = '.sidebar-tts, .dialog-tts';
 
     var shortcutModule = function() {
+        this.readerDocument = null;
         this.readerFound = false;
         this.readerFrame = null;
         this.readerOwner = null;
@@ -52,7 +56,8 @@
                 this.readerFound = true;
                 // Pass keydown and keyup from reader frame to parent document
                 this.readerOwner = this.readerFrame.ownerDocument;
-                $(this.readerFrame.contentWindow.document)
+                this.readerDocument = this.readerFrame.contentDocument;
+                $(this.readerDocument)
                     .off('keydown.clusive.shortcut  keyup.clusive.shortcut')
                     .on('keydown.clusive.shortcut keyup.clusive.shortcut', function(event) {
                         that.ownerDispatchEvent(event);
@@ -190,6 +195,26 @@
             this.modalCloseOther(null, focusReaderCallback);
         },
 
+        isSelection : function(selection) {
+            return !(selection.type === 'None' || selection.type === 'Caret');
+        },
+
+        getClusiveSelection : function() {
+            return window.getSelection();
+        },
+
+        hasClusiveSelection : function() {
+            return this.isSelection(this.getClusiveSelection());
+        },
+
+        getReaderSelection : function() {
+            return this.readerDocument.getSelection();
+        },
+
+        hasReaderSelection : function() {
+            return this.isSelection(this.getReaderSelection());
+        },
+
         _execute : function(callback) {
             if (typeof callback === 'function') {
                 callback();
@@ -208,9 +233,16 @@
         }
     });
 
-    // Highlight list
+    // Highlight list - or create highlight
     hotkeys(HOTKEY_HIGHLIGHT, function(event) {
-        if (document.querySelector(SELECTOR_TOC_BTN)) {
+        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
+            // Create highlight
+            if (typeof d2reader === 'object') {
+                event.preventDefault();
+                d2reader.highlighter.doHighlight();
+            }
+        } else if (document.querySelector(SELECTOR_TOC_BTN)) {
+            // Open highlight panel
             event.preventDefault();
             var callback = function() {
                 shortcut.tabOpenFocus(SELECTOR_HIGHLIGHT_TAB, SELECTOR_HIGHLIGHT_PANEL);
@@ -243,6 +275,16 @@
 
     // Read-aloud - play/stop
     hotkeys(HOTKEY_TTS_TOGGLE, function(event) {
+        // Check for selection within reader
+        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
+            // Read only selected text
+            if (typeof d2reader === 'object') {
+                event.preventDefault();
+                d2reader.highlighter.speak();
+                return;
+            }
+        }
+
         var ttsRegions = document.querySelectorAll(SELECTOR_READ_ALOUD_REGIONS);
         var result = shortcut.filterElementsForVisible(ttsRegions);
         event.preventDefault();
@@ -298,7 +340,7 @@
 
     // Reader - focus content
     hotkeys(HOTKEY_READER_FOCUS, function(event) {
-        if (typeof d2reader === 'object') {
+        if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
             shortcut.focusReaderBody();
         }
@@ -307,7 +349,7 @@
     /*
     // Reader navigation - previous page
     hotkeys(HOTKEY_PAGE_PREV, function(event) {
-        if (typeof d2reader === 'object') {
+        if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
             d2reader.previousPage();
         }
@@ -315,7 +357,7 @@
 
     // Reader navigation - next page
     hotkeys(HOTKEY_PAGE_NEXT, function(event) {
-        if (typeof d2reader === 'object') {
+        if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
             d2reader.nextPage();
         }
@@ -324,7 +366,7 @@
 
     // Reader navigation - previous section/resource
     hotkeys(HOTKEY_SECTION_PREV, function(event) {
-        if (typeof d2reader === 'object') {
+        if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
             d2reader.previousResource();
             shortcut.focusReaderBody();
@@ -333,10 +375,32 @@
 
     // Reader navigation - next section/resource
     hotkeys(HOTKEY_SECTION_NEXT, function(event) {
-        if (typeof d2reader === 'object') {
+        if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
             d2reader.nextResource();
             shortcut.focusReaderBody();
+        }
+    });
+
+    // Library
+    hotkeys(HOTKEY_LIBRARY, function(event) {
+        event.preventDefault();
+        window.location.href = '/reader';
+    });
+
+    // Context menu - word lookup (definition)
+    hotkeys(HOTKEY_CONTEXT_LOOKUP, function(event) {
+        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
+            event.preventDefault(shortcut.getReaderSelection());
+            contextLookup(shortcut.getReaderSelection().toString());
+        }
+    });
+
+    // Context menu - transform (simplifiy, translate, ...)
+    hotkeys(HOTKEY_CONTEXT_TRANSFORM, function(event) {
+        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
+            event.preventDefault();
+            contextTransform(shortcut.getReaderSelection().toString());
         }
     });
 
