@@ -50,7 +50,6 @@ PageTiming.trackPage = function(eventId) {
         }
     }
     var currentTime = Date.now();
-    var timingSupported = PageTiming.isTimingSupported();
 
     // Tracking for visible/invisible time
     if (document.hasFocus !== 'undefined') {
@@ -141,13 +140,9 @@ PageTiming.recordInactiveTime = function() {
 // Called in page's "pagehide" event
 PageTiming.reportEndTime = function() {
     'use strict';
-    console.log(`Page tracking: reportEndTime(start) for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
-    if (PageTiming.pageloadTime === null) {
-        PageTiming.pageloadTime = PageTiming.getPageLoadTime();
-    };
+    console.debug(`Page tracking: reportEndTime() for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
     if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
         PageTiming.recordInactiveTime();
-        console.log(`Page tracking: reportEndTime(record event) for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
         var duration = Date.now() - PageTiming.pageStartTime;
         var data = {
             type: 'PT',
@@ -161,29 +156,10 @@ PageTiming.reportEndTime = function() {
     } else {
         console.warn('Page tracking: Pagehide event received, but end time was already recorded');
     }
-};
-
-// Test if browser supports a timing API
-PageTiming.isTimingSupported = function() {
-    'use strict';
-
-    // First choice:  dheck for recommended PageNavigationTiming API.
-    // Note: as of 04-May-2022, MDN notes that this is experimental -- use if
-    // present.  See:
-    // https://developer.mozilla.org/en-US/docs/Web/API/PerformanceNavigationTiming
-    try {
-        return window.performance.getEntriesByType('navigation').length !== 0;
-    }
-    catch (e) { ; }
-
-    // Second choice:  Check for deprecated Performance.timing and use if
-    // available.
-    // https://developer.mozilla.org/en-US/docs/Web/API/Performance/timing
-    try {
-        return 'timing' in window.performance;
-    }
-    catch (e) {
-        return false;
+    // Done with the observer, if any.
+    if (PageTiming.performanceObserver) {
+        PageTiming.performanceObserver.disconnect();
+        PageTiming.performanceObserver = null;
     }
 };
 
@@ -204,6 +180,7 @@ PageTiming.usePerformanceObserver = function () {
 };
 
 // Called from the PerformanceObserver callback to get the page load time.
+// See PageTiming.usePerformanceObserver(), above.
 PageTiming.processNavEntries = function (perfEntries) {
     'use strict';
 
@@ -218,39 +195,6 @@ PageTiming.processNavEntries = function (perfEntries) {
         }
     });
 };
-
-// If browser supports either the PerformanceNavigationTiming API or
-// Performance.timing, get the load time for it.  Otherwise, return `null`.
-PageTiming.getPageLoadTime = function () {
-    'use strict';
-
-    var loadTime = null;
-    if ('performance' in window) {
-        // First choice:  use recommended PageNavigationTiming API.
-        // Note: as of 04-May-2022, MDN notes that this is experimental -- use
-        // if present.  See:
-        // https://developer.mozilla.org/en-US/docs/Web/API/PerformanceNavigationTiming
-        var navEntries = window.performance.getEntriesByName('navigation');
-        navEntries.some(function (entry) {
-            if (entry.name === document.URL) {  // TODO: is check needed?
-                loadTime = entry.duration;
-                console.log("Page tracking: getPageLoadTimeI() via PerformanceNavigationTiming: <loadTime>" + loadTime);
-                return true;
-            } else {
-                return false;
-            }
-        });
-        // Second choice:  Check for deprecated Performance.timing and use if
-        // available.
-        // https://developer.mozilla.org/en-US/docs/Web/API/Performance/timing
-        if (loadTime === null && 'timing' in window.performance) {
-            loadTime = window.performance.timing.responseEnd - window.performance.timing.navigationStart;
-            console.log("Page tracking: getPageLoadTimeI() via Performance.timing: " + loadTime);
-        }
-    }
-    return loadTime;
-};
-
 
 $(document).ready(function() {
     'use strict';
