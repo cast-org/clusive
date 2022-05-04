@@ -1292,6 +1292,13 @@ function setUpDeferredLoadOfCompDetails() {
 $(window).ready(function() {
     'use strict';
 
+    // Work around Android font issue
+    var userAgent = navigator.userAgent || navigator.vendor;
+    var isAndroid = /android/i.test(userAgent);
+    if (isAndroid)  {
+        document.body.classList.add('isAndroid');
+    }
+
     document.addEventListener('update.cisl.prefs', updateCSSVars, {
         passive: true
     });
