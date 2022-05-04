@@ -504,11 +504,22 @@ $(document).on('updateCurrentLocation.d2reader', function() {
     var readerBody = getReaderBody();
     var selector = _getValidSelector(TOC_focusSelector, readerBody);
 
+    var updateTabindex = function(element) {
+        var tabindex = null;
+        if (element.hasAttribute('tabindex')) {
+            tabindex = element.getAttribute('tabindex');
+        }
+        if (tabindex === null) {
+            element.setAttribute('tabindex', -1);
+        }
+    };
+
     setTimeout(function() {
         if (selector === null) {
             // No specific element - focus on body
+
             setTimeout(function() {
-                readerBody.setAttribute('tabindex', -1);
+                updateTabindex(readerBody);
                 setTimeout(function() {
                     readerBody.focus();
                 });
@@ -523,7 +534,7 @@ $(document).on('updateCurrentLocation.d2reader', function() {
             // Focus on content element
             var readerItem = readerBody.querySelector(selector);
             setTimeout(function() {
-                readerItem.setAttribute('tabindex', -1);
+                updateTabindex(readerItem);
                 setTimeout(function() {
                     readerItem.focus();
                 });
