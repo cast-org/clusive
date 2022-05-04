@@ -517,7 +517,6 @@ $(document).on('updateCurrentLocation.d2reader', function() {
     setTimeout(function() {
         if (selector === null) {
             // No specific element - focus on body
-
             setTimeout(function() {
                 updateTabindex(readerBody);
                 setTimeout(function() {
