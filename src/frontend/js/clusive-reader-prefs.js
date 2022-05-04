@@ -12,7 +12,6 @@
     var fontFamilyArial = isAndroid ? '"Helvetica Neue", Arimo, Arial' : '"Helvetica Neue", Arial, Arimo'
     var fontFamilyVerdana = isAndroid ? 'Roboto, Verdana' : 'Verdana, Roboto';
 
-
     fluid.defaults('cisl.prefs.readerPreferencesBridge', {
         gradeNames: ['fluid.modelComponent'],
         model: {
