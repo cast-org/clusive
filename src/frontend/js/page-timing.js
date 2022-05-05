@@ -144,12 +144,17 @@ PageTiming.reportEndTime = function() {
     if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
         PageTiming.recordInactiveTime();
         var duration = Date.now() - PageTiming.pageStartTime;
+        var activeTime = duration - PageTiming.totalInactiveTime;
+        if (activeTime < 0) {
+            activeTime = 0;
+            console.log("Page tracking: reportEndTime() detected negative activeDuration");
+        }
         var data = {
             type: 'PT',
             eventId: PageTiming.eventId,
             loadTime: PageTiming.pageloadTime,
             duration: duration,
-            activeDuration: duration - PageTiming.totalInactiveTime
+            activeDuration: activeTime
         };
         console.debug('Page tracking: Reporting page data: ', data);
         clusiveEvents.messageQueue.add(data);
@@ -163,7 +168,7 @@ PageTiming.reportEndTime = function() {
     }
 };
 
-// If browser supports both of the the PerformanceObserver and the
+// If browser supports both of the PerformanceObserver and the
 // PerformanceNavigationTiming APIs, set up a PerformanceObserver to observe the
 // navigation events to get the page's load time.
 // https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver
