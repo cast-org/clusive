@@ -93,21 +93,26 @@ var simplificationTool = "{{ simplification_tool }}";
     </div>
 
     <script>
+        var userAgent = navigator.userAgent || navigator.vendor;
+        var isAndroid = /android/i.test(userAgent);
+        var fontFamilyArial = isAndroid ? '"Helvetica Neue", Arimo, Arial' : '"Helvetica Neue", Arial, Arimo';
+        var fontFamilyVerdana = isAndroid ? 'Roboto, Verdana' : 'Verdana, Roboto';
+
         var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port +
             '{% get_media_prefix %}' + manifest_path;
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
-            {type: 'style', url: 'https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700', r2before: true},
+            {type: 'style', url: 'https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Comic+Neue:wght@400;700&family=Roboto:wght@400;700&family=Source+Sans+Pro:wght@400;700&display=swap', r2before: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-before.css" %}', r2before: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-default.css" %}', r2default: true},
             {type: 'style', url: '{% static "shared/js/lib/readium-css/ReadiumCSS-after.css" %}', r2after: true},
             {type: 'style', url: '{% static "shared/css/reader-frame.min.css" %}'},
             {type: 'style', url: '{% static "shared/js/lib/reader/fonts/open-dyslexic/open-dyslexic-regular.css" %}', fontFamily: 'OpenDyslexicRegular'},
-            {type: 'style', systemFont: true, fontFamily: 'Arial, Helvetica'},
-            {type: 'style', systemFont: true, fontFamily: 'Georgia, Times, Times New Roman, serif'},
-            {type: 'style', systemFont: true, fontFamily: 'Verdana'},
-            {type: 'style', systemFont: true, fontFamily: 'Comic Sans MS, Comic Sans, Comic Neue, cursive'},
+            {type: 'style', systemFont: true, fontFamily: fontFamilyArial},
+            {type: 'style', systemFont: true, fontFamily: 'Georgia, Times, "Times New Roman", serif'},
+            {type: 'style', systemFont: true, fontFamily: fontFamilyVerdana},
+            {type: 'style', systemFont: true, fontFamily: '"Comic Sans MS", "Comic Sans", "Comic Neue", cursive'},
             {type: 'style', url: '{% static "shared/css/clusive-reader-theme-sepia.min.css" %}', r2after: true, appearance: 'clusive-sepia'},
             {type: 'style', url: '{% static "shared/css/clusive-reader-theme-night.min.css" %}', r2after: true, appearance: 'clusive-night'},
             // {type:'script', url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML&latest'},

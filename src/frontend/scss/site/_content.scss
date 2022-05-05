@@ -14,18 +14,34 @@ body {
     font-family: Georgia, Times, "Times New Roman", serif !important;
 }
 .fl-font-comic-sans:not([class*='icon']),
-.fl-font-comic-sans *:not([class*='icon']), // Override Infusion
+.fl-font-comic-sans *:not([class*='icon']),
 #ff-comic,
 .ff-comic {
     font-family: "Comic Sans MS", "Comic Sans", "Comic Neue", cursive !important;
 }
+.fl-font-arial:not([class*='icon']),
+.fl-font-arial *:not([class*='icon']),
 #ff-arial,
 .ff-arial {
-    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font-family: "Helvetica Neue", Arial, Arimo, sans-serif !important;
 }
+.isAndroid.fl-font-arial:not([class*='icon']),
+.isAndroid.fl-font-arial *:not([class*='icon']),
+.isAndroid #ff-arial,
+.isAndroid .ff-arial {
+    font-family: "Helvetica Neue", Arimo, Arial, sans-serif !important;
+}
+.fl-font-verdana:not([class*='icon']),
+.fl-font-verdana *:not([class*='icon']),
 #ff-verdana,
 .ff-verdana {
-    font-family: Verdana, sans-serif !important;
+    font-family: Verdana, Roboto, sans-serif !important;
+}
+.isAndroid.fl-font-verdana:not([class*='icon']),
+.isAndroid.fl-font-verdana *:not([class*='icon']),
+.isAndroid #ff-verdana,
+.isAndroid .ff-verdana {
+    font-family: Roboto, Verdana, sans-serif !important;
 }
 #ff-dyslexic,
 .ff-dyslexic {
