@@ -1,4 +1,4 @@
-@keyframes toolsAnimateIn {
+@keyframes tools-animate-in {
     from {
         opacity: 0;
         transform: translate(-50%, -50%) scale(.5);
@@ -13,7 +13,7 @@
     user-select: none;
     transform: translate(-50%, -100%) translateY($toolbox-menu-arrow-height * -1);
     //transform-origin: bottom;
-    animation: toolsAnimateIn 100ms ease-out both;
+    animation: tools-animate-in 100ms ease-out both;
 }
 
 .toolbox-wrapper {

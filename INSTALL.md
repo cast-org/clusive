@@ -11,9 +11,7 @@ Note: all steps between **Create/Activitate Virtual Environment** and **Create a
 ### Prerequisites
 
 * [Python 3](https://www.python.org/downloads/)
-  * Version 3.7.4 or later, but less than 3.9. On Mac, Homebrew is the easiest way to install.
-  * Note: Version 3.9 removes member `tp_print` from `PyTypeObject` which is
-    used by some of Clusive's dependencies; see "[What’s New In Python 3.9](https://docs.python.org/3.9/whatsnew/3.9.html#id3)".
+  * Version 3.7.4 up to 3.9. (3.10+ not tested yet). On Mac, Homebrew is the easiest way to install.
 * [virtualenv](https://virtualenv.pypa.io/en/latest/) 
   * Not required, but highly recommended for maintaining an isolated environment and dependencies.
 * [Postgres](https://www.postgresql.org/) 
@@ -66,6 +64,8 @@ This creates the compiled, runnable server in the Clusive/target directory.
 Run in the Clusive directory:
 * `pip install -r requirements.txt`
 * If necessary, refer to these possible solutions for [psycopg2 library issues](https://stackoverflow.com/questions/26288042/error-installing-psycopg2-library-not-found-for-lssl) on Mac
+* For instance, as suggested in the answers on that page, you might need to use:
+  * `LDFLAGS="-L/usr/local/opt/openssl/lib" pip install -r requirements.txt`
 
 ### Download WordNet Data
 
