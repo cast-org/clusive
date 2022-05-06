@@ -108,7 +108,6 @@ function loadTranslation(text) {
     simplificationTool = 'translate';
     var $simplifyPop = $('#simplifyPop');
     var $simplifyBody = $('#simplifyBody');
-    $('#translateFooter').show();
     $simplifyBody.html('<p>Loading...</p>');
     var $navLink = $('#translateNavLink');
     $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
@@ -117,34 +116,45 @@ function loadTranslation(text) {
     $('#simplifyLocator').one('afterShow.cfw.popover', function() {
         $simplifyPop.trigger('focus');
     });
-    $simplifyPop.CFW_Popover('show');
-    $.ajax('/translation/translate', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': DJANGO_CSRF_TOKEN
-        },
-        data: {
-            text: text,
-            language: lang,
-            book_id: pub_id
-        }
-    })
-        .done(function(data) {
-            $simplifyBody.html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
-                + '<div class="translate-source popover-section">' + text + '</div>');
-            var $translateOutput = $('#translateOutput');
-            $translateOutput.attr('lang', data.lang);
-            $translateOutput.css('direction', data.direction);
-        })
-        .fail(function(err) {
-            console.error(err);
-            $simplifyBody.html(err.responseText);
-        })
-        .always(function() {
-            if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
-                $simplifyPop.CFW_Popover('locateUpdate');
+
+    if (lang && lang !== 'default') {
+        $('#simplifyLanguageSetting').hide();
+        $('#translateFooter').show();
+        $simplifyPop.CFW_Popover('show');
+        $.ajax('/translation/translate', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: {
+                text: text,
+                language: lang,
+                book_id: pub_id
             }
-        });
+        })
+            .done(function (data) {
+                $simplifyBody.html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
+                    + '<div class="translate-source popover-section">' + text + '</div>');
+                var $translateOutput = $('#translateOutput');
+                $translateOutput.attr('lang', data.lang);
+                $translateOutput.css('direction', data.direction);
+            })
+            .fail(function (err) {
+                console.error(err);
+                $simplifyBody.html(err.responseText);
+            })
+            .always(function () {
+                if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
+                    $simplifyPop.CFW_Popover('locateUpdate');
+                }
+            });
+    } else {
+        // No translation language is set in preferences.
+        $('#simplifyLanguageSetting').show();
+        $simplifyBody.html('');
+        $simplifyPop.CFW_Popover('show');
+        $simplifyPop.CFW_Popover('locateUpdate');
+    }
 }
 
 // Text Simplification
