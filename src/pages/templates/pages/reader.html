@@ -273,6 +273,14 @@ var simplificationTool = "{{ simplification_tool }}";
             api: {
                 resourceReady: function() {
                     console.debug("D2Reader finished loading the resource at: " + new Date());
+
+                    // Attach shortcut handler
+                    // Due to how Firefox handles iframes, need to re-attach every time
+                    // the resource changes, because the iframe document changes
+                    shortcut.attachReaderFrame();
+                    // Call to continue shortcut processing
+                    shortcut.process();
+
                     $(document).ready(function () {
                         // Do things that only need to be done once
                         if(!firstResourceLoaded) {
@@ -285,8 +293,6 @@ var simplificationTool = "{{ simplification_tool }}";
                             clusiveTTS.updateSettings({
                                 voice: availablePreferredVoices[0]
                             });
-                            // Attach shortcut handler
-                            shortcut.attachReaderFrame();
                             // Update additional TTS settings - such as rate
                             d2reader.applyTTSSettings(readerOptions.userSettings.tts);
 

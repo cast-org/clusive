@@ -44,6 +44,9 @@
 
     var SELECTOR_READ_ALOUD_REGIONS = '.sidebar-tts, .dialog-tts';
 
+    var SELECTOR_GLOSSARY_DIALOG = '#glossaryPop';
+    var SELECTOR_SIMPLIFY_DIALOG = '#simplifyPop';
+
     var shortcutModule = function() {
         this.readerDocument = null;
         this.readerFound = false;
@@ -58,15 +61,28 @@
             this.readerFrame = document.querySelector(SELECTOR_READER_FRAME);
             if (this.readerFrame !== null) {
                 this.readerFound = true;
-                // Pass keydown and keyup from reader frame to parent document
+                // Pass keydown from reader frame to parent document
                 this.readerOwner = this.readerFrame.ownerDocument;
                 this.readerDocument = this.readerFrame.contentDocument;
                 $(this.readerDocument)
-                    .off('keydown.clusive.shortcut  keyup.clusive.shortcut')
-                    .on('keydown.clusive.shortcut keyup.clusive.shortcut', function(event) {
+                    .off('keydown.clusive.shortcut')
+                    .on('keydown.clusive.shortcut', function(event) {
                         that.ownerDispatchEvent(event);
                     });
             }
+        },
+
+        process : function() {
+            $(document.body).trigger('process.shortcut');
+        },
+
+        processAdd : function(callback) {
+            var that = this;
+            $(document.body)
+                .off('process.shortcut')
+                .one('process.shortcut', function() {
+                    that._execute(callback);
+                });
         },
 
         hasReader : function() {
@@ -103,7 +119,12 @@
                     getModifierState: event.getModifierState
                 };
 
-                this.triggerKeyboardEvent(this.readerOwner, event.type, eventProperties);
+                this.triggerKeyboardEvent(this.readerOwner, 'keydown', eventProperties);
+                // Force keyup to 'clear' the presses  in hotkeys-js.
+                // Needed for Firefox due to frame document changing on reader resource change.
+                // When document changes, keyup is not typically not dispatched before change
+                // or after keyup handler is re-attached, causing loss of update to hotkey-js.
+                this.triggerKeyboardEvent(this.readerOwner, 'keyup', eventProperties);
             }
         },
 
@@ -220,6 +241,9 @@
         },
 
         isSelection : function(selection) {
+            if (selection === null) {
+                return false;
+            }
             return !(selection.type === 'None' || selection.type === 'Caret');
         },
 
@@ -231,12 +255,25 @@
             return this.isSelection(this.getClusiveSelection());
         },
 
+        clearClusiveSelection : function() {
+            window.getSelection().removeAllRanges();
+        },
+
         getReaderSelection : function() {
             return this.readerDocument.getSelection();
         },
 
         hasReaderSelection : function() {
             return this.isSelection(this.getReaderSelection());
+        },
+
+        clearReaderSelection : function() {
+            this.readerDocument.getSelection().removeAllRanges();
+        },
+
+        clearAllSelection : function() {
+            this.clearClusiveSelection();
+            this.clearReaderSelection();
         },
 
         addEvent : function(eventControl, eventValue) {
@@ -287,6 +324,8 @@
                 event.preventDefault();
                 shortcut.addEvent('hotkey-highlight-create', HOTKEY_HIGHLIGHT);
                 d2reader.highlighter.doHighlight();
+                shortcut.clearAllSelection();
+                d2reader.highlighter.toolboxHide();
             }
         } else if (document.querySelector(SELECTOR_TOC_BTN)) {
             // Open highlight panel
@@ -332,6 +371,8 @@
                 event.preventDefault();
                 shortcut.addEvent('hotkey-tts-play-reader-selection', HOTKEY_TTS_TOGGLE);
                 d2reader.highlighter.speak();
+                shortcut.clearAllSelection();
+                d2reader.highlighter.toolboxHide();
                 return;
             }
         }
@@ -428,8 +469,10 @@
         if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
             shortcut.addEvent('hotkey-reader-navigation-section-previous', HOTKEY_SECTION_PREV);
+            shortcut.processAdd(function() {
+                shortcut.focusReaderBody();
+            });
             d2reader.previousResource();
-            shortcut.focusReaderBody();
         }
     });
 
@@ -438,8 +481,10 @@
         if (shortcut.readerFound && typeof d2reader === 'object') {
             event.preventDefault();
             shortcut.addEvent('hotkey-reader-navigation-section-next', HOTKEY_SECTION_NEXT);
+            shortcut.processAdd(function() {
+                shortcut.focusReaderBody();
+            });
             d2reader.nextResource();
-            shortcut.focusReaderBody();
         }
     });
 
@@ -452,19 +497,41 @@
 
     // Context menu - word lookup (definition)
     hotkeys(HOTKEY_CONTEXT_LOOKUP, function(event) {
-        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-lookup', HOTKEY_CONTEXT_LOOKUP);
-            contextLookup(shortcut.getReaderSelection().toString());
+        if (shortcut.readerFound) {
+            if (shortcut.hasReaderSelection()) {
+                // Do lookup
+                event.preventDefault();
+                shortcut.addEvent('hotkey-lookup', HOTKEY_CONTEXT_LOOKUP);
+                contextLookup(shortcut.getReaderSelection().toString());
+                shortcut.clearReaderSelection();
+                if (typeof d2reader === 'object') {
+                    d2reader.highlighter.toolboxHide();
+                }
+            } else if ($.CFW_isVisible(document.querySelector(SELECTOR_GLOSSARY_DIALOG))) {
+                // Focus the glossary popover
+                event.preventDefault();
+                document.querySelector(SELECTOR_GLOSSARY_DIALOG).focus();
+            }
         }
     });
 
     // Context menu - transform (simplifiy, translate, ...)
     hotkeys(HOTKEY_CONTEXT_TRANSFORM, function(event) {
-        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-transform', HOTKEY_CONTEXT_TRANSFORM);
-            contextTransform(shortcut.getReaderSelection().toString());
+        if (shortcut.readerFound) {
+            if (shortcut.hasReaderSelection()) {
+                // Do transform
+                event.preventDefault();
+                shortcut.addEvent('hotkey-transform', HOTKEY_CONTEXT_TRANSFORM);
+                contextTransform(shortcut.getReaderSelection().toString());
+                shortcut.clearReaderSelection();
+                if (typeof d2reader === 'object') {
+                    d2reader.highlighter.toolboxHide();
+                }
+            } else if ($.CFW_isVisible(document.querySelector(SELECTOR_SIMPLIFY_DIALOG))) {
+                // Focus the simplify/transform popover
+                event.preventDefault();
+                document.querySelector(SELECTOR_SIMPLIFY_DIALOG).focus();
+            }
         }
     });
 
