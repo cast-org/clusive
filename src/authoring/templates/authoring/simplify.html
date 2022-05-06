@@ -56,7 +56,9 @@
     <div class="row mt-1">
         <div class="col">
             <h2>Details</h2>
-            <p>An icon:   <img alt="{{icon_alt}}" src="{{icon_url}}"/>> </p>
+            <!--
+                        <p>An icon:   <img alt="{{icon_alt}}" src="{{icon_url}}"/> </p>
+            -->
             <p>Text has {{ word_count }} total words, {{ word_info | length }} different words.</p>
             <p>Will aim to find alternatives for {{ to_replace }} of these.</p>
             <ul>
@@ -70,6 +72,7 @@
                     <th>Word</th>
                     <th>Word frequency</th>
                     <th>Replacement</th>
+                    <th>Flaticon</th>
                 </tr>
                 {% for info in word_info %}
                 <tr>
@@ -85,6 +88,9 @@
                         {% if info.errors %}
                         <p>{{ info.errors }}</p>
                         {% endif %}
+                    </td>
+                    <td>
+                        <p><img alt="{{ info.icon_alt }}" src="{{ info.icon_url }}"/></p>
                     </td>
                 </tr>
                 {% endfor %}

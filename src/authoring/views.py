@@ -34,35 +34,70 @@ class SimplifyView(FormView):
         #             'result': out,
         #         }
         data = simplifier.simplify_text(text, clusive_user=self.clusive_user, percent=percent, include_full=True)
-        # Try getting icon for first word.
-        logger.debug(data)
-        first_word = data['word_info'][0]['hw']
-        logger.debug('Icon for %s', first_word)
-        icon = get_flaticon(first_word)
         self.extra_context = data
-        self.extra_context.update({ 'icon_url': icon['images']['64'],
-                                    'icon_alt': icon['description'],
-                                    })
         # Don't do normal process of redirecting to success_url.  Just stay on this form page forever.
+        r = 0
+
+        # get the image replacements
+        num_replace = data['to_replace']
+        token = get_flaticon_token()
+        if token:
+            for index in range(len(data['word_info'])):
+                temp_word = data['word_info'][index]['hw']
+                logger.debug('CHECKING THE WORD %s', temp_word)
+                temp_icon = get_flaticon(temp_word, token)
+                if temp_icon:
+                    data['word_info'][index].update({ 'icon_url': temp_icon['images']['64'],
+                                                      'icon_alt': temp_icon['description'],
+                                                      })
+                    logger.debug("UPDATED WORD INFO = %s", data['word_info'][index])
+                    r = r + 1
+                    if r == num_replace:
+                        break
+                else:
+                    data['word_info'][index].update({ 'icon_url': None,
+                                                      'icon_alt': None,
+                                                      })
+                    logger.debug("UPDATED WORD INFO with NULL = %s", data['word_info'][index])
+
         return self.render_to_response(self.get_context_data(form=form))
 
-
-def get_flaticon(word: str):
+def get_flaticon_token():
+    # TODO: move api key to settings
     api_base = 'https://api.flaticon.com/v3'
-    resp = requests.post(url=api_base+'/app/authentication', params={
-        'apikey': 'MOVE TO SETTINGS',
-    })
-    token = 'Bearer ' + resp.json()['data']['token']
-    logger.debug('Auth response key: %s', token)
-    params = {
-        'q': word,
-        'styleColor': 'black',
-        'limit': '1',
-    }
-    resp = requests.get(url=api_base+'/search/icons/priority', headers={ 'Authorization': token}, params=params).json()
-    logger.debug('search result: %s', resp)
-    icon = resp['data'][0]
-    return icon
+    # this may be a temp token and can be reused for this call
+    try:
+        token_resp = requests.post(url=api_base+'/app/authentication', params={
+            'apikey': ICON_API_KEY,
+        })
+        if token_resp.json():
+            token = 'Bearer ' + token_resp.json()['data']['token']
+            return token
+            #logger.debug('Auth response key: %s', token)
+    except ValueError:
+        logger.error('No token for Flaticon returned', token_resp)
+        return None
+
+def get_flaticon(word: str, token: str):
+    api_base = 'https://api.flaticon.com/v3'
+    # use the token to check the api for an icon
+    try:
+        params = {
+            'q': word,
+            'styleShape' : 'outline',
+            'styleColor': 'black',
+            'limit': '1',
+        }
+        resp = requests.get(url=api_base+'/search/icons/priority', headers={ 'Authorization': token}, params=params).json()
+        #logger.debug('search result: %s', resp)
+        if  resp['data']:
+            icon = resp['data'][0]
+            return icon
+        else:
+            return None
+    except ValueError:
+        logger.warning('No icon for Flaticon returned', resp)
+        return None
 
 
 class LevelingView(FormView):
