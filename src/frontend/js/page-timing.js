@@ -35,7 +35,7 @@ PageTiming.trackPage = function(eventId) {
 
     PageTiming.eventId = eventId;
 
-    console.debug('Started tracking page ', eventId);
+    console.debug('PageTiming: Started tracking page ', eventId);
 
     var currentTime = Date.now();
     var timingSupported = PageTiming.isTimingSupported();
@@ -45,7 +45,7 @@ PageTiming.trackPage = function(eventId) {
         PageTiming.handleFocusChange();
         $(window).on('focusin focusout', PageTiming.handleFocusChange);
     } else {
-        console.warn('Browser doesn\'t support focus checking; hidden time won\'t be reported.');
+        console.warn('PageTiming: Browser doesn\'t support focus checking; hidden time won\'t be reported.');
     }
 
     // Interval timer to monitor laptop going to sleep.
@@ -70,14 +70,14 @@ PageTiming.trackPage = function(eventId) {
 
 PageTiming.windowEventListener = function (event) {
     if (DJANGO_USERNAME) {
-        console.debug("WINDOW PAGEHIDE DETECTED FOR '" + DJANGO_USERNAME + "'");
+        console.debug("PageTiming: window pagehide detected for '" + DJANGO_USERNAME + "'");
         PageTiming.reportEndTime();
     }
 };
 
 PageTiming.docEventListener = function (event) {
     if (document.visibilityState === 'hidden' && DJANGO_USERNAME) {
-        console.debug("DOCUMENT HIDDEN DETECTED FOR '" + DJANGO_USERNAME + "'");
+        console.debug("PageTiming: document hidden detected for '" + DJANGO_USERNAME + "'");
         PageTiming.reportEndTime();
     }
 };
@@ -94,13 +94,13 @@ PageTiming.checkAwakeness = function() {
         //     ' blocked? ', PageTiming.pageBlocked, '; blurred? ', !document.hasFocus());
     } else {
         // Last awake time was too long ago, record preceding interval as having been asleep.
-        console.debug('Computer woke up from sleep that started around ' + PageTiming.fmt(lastAwake));
+        console.debug('PageTiming: Computer woke up from sleep that started around ' + PageTiming.fmt(lastAwake));
         if (PageTiming.startInactiveTime === null) {
             //   do we need this?:  || PageTiming.startInactiveTime > lastAwake
             PageTiming.startInactiveTime = lastAwake; // might want to add a fraction of interval
-            console.debug('Set startInactiveTime to ', PageTiming.fmt(lastAwake));
+            console.debug('PageTiming: Set startInactiveTime to ', PageTiming.fmt(lastAwake));
         } else {
-            console.debug('startInactiveTime is already set to ', PageTiming.fmt(PageTiming.startInactiveTime),
+            console.debug('PageTiming: startInactiveTime is already set to ', PageTiming.fmt(PageTiming.startInactiveTime),
                 ' so not resetting to ', PageTiming.fmt(lastAwake));
         }
         PageTiming.handleFocusChange();
@@ -123,7 +123,7 @@ PageTiming.handleFocusChange = function() {
     } else if (PageTiming.startInactiveTime === null) {
         // Page is either blocked or blurred.  Record start of inactive time if this is new.
         PageTiming.startInactiveTime = Date.now();
-        console.debug('Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
+        console.debug('PageTiming: Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
             ' with cumulative ', PageTiming.totalInactiveTime / 1000, 's');
     }
 };
@@ -143,7 +143,7 @@ PageTiming.recordInactiveTime = function() {
     if (PageTiming.startInactiveTime !== null) {
         var now = Date.now();
         PageTiming.totalInactiveTime += now - PageTiming.startInactiveTime;
-        console.debug('Window reactivated. Was inactive from ', PageTiming.fmt(PageTiming.startInactiveTime),
+        console.debug('PageTiming: Window reactivated. Was inactive from ', PageTiming.fmt(PageTiming.startInactiveTime),
             ' to ', PageTiming.fmt(now),
             '; Cumulative inactive time = ', PageTiming.totalInactiveTime / 1000, 's');
         PageTiming.startInactiveTime = null;
@@ -168,35 +168,23 @@ PageTiming.createEndTimeMessage = function () {
 PageTiming.reportEndTime = function() {
     'use strict';
 
-    var pageTimingEvents = PageTiming.getEndTimesProcessed();
-    console.log('PageTiming.reportEndTime() events so far: ', pageTimingEvents + ', adding ' + PageTiming.eventId);
-    if (pageTimingEvents.indexOf(PageTiming.eventId) === -1) {
-        // Record that this event is being processed.
-        pageTimingEvents.push(PageTiming.eventId);
-        console.log('PageTiming.reportEndTime() added new one: ', pageTimingEvents);
-        localStorage.setItem(PageTiming.localStorageKey, JSON.stringify(pageTimingEvents));
+    var message = clusive.djangoMessageQueue.wrapMessage(PageTiming.createEndTimeMessage());
+    console.debug('PageTiming: Reporting page data: ', JSON.stringify(message));
+    var postForm = new FormData();
+    postForm.append('csrfmiddlewaretoken', DJANGO_CSRF_TOKEN);
+    postForm.append('timestamp', new Date().toISOString());
+    postForm.append('messages', JSON.stringify([message]));
+    postForm.append('username', DJANGO_USERNAME);
+    var beaconResult = navigator.sendBeacon('/messagequeue/', postForm);
 
-        var message = clusive.djangoMessageQueue.wrapMessage(PageTiming.createEndTimeMessage());
-        console.debug('Reporting page data: ', JSON.stringify(message));
-        var postForm = new FormData();
-        postForm.append('csrfmiddlewaretoken', DJANGO_CSRF_TOKEN);
-        postForm.append('timestamp', new Date().toISOString());
-        postForm.append('messages', JSON.stringify([message]));
-        postForm.append('username', DJANGO_USERNAME);
-        var beaconResult = navigator.sendBeacon('/messagequeue/', postForm);
-
-        // `beaconResult` is `true` or `false` depending on whether the browser
-        // successfully queued the request or not.  (It will fail only if the
-        // size of `postForm`, exceeds the browser's limit, which is unlikely
-        // here).  However, `true` does not mean that the request was sent nor
-        // successfully handled by Clusive.  And, there is no way to tell
-        // if Clusive received the request.  PageTiming.flushEndTimeEvents()
-        // below is a way to remove these event IDs from `localStorage`. 
-        // https://www.w3.org/TR/beacon/#return-values
-        console.debug(`Queued ${PageTiming.eventId} via sendBeacon(): ${beaconResult}`);
-    } else {
-        console.warn('Pagehide event received, but end time was already recorded');
-    }
+    // `beaconResult` is `true` or `false` depending on whether the browser
+    // successfully queued the request or not.  (It will fail only if the
+    // size of `postForm`, exceeds the browser's limit, which is unlikely
+    // here).  However, `true` does not mean that the request was sent nor
+    // successfully handled by Clusive.  And, there is no way to tell
+    // if Clusive received the request.
+    // https://www.w3.org/TR/beacon/#return-values
+    console.debug(`PageTiming: Queued ${PageTiming.eventId} via sendBeacon(): ${beaconResult}`);
 };
 
 // For clusive-message-queue's logout handler.
@@ -207,31 +195,9 @@ PageTiming.logoutEndTime = function() {
     $(window).off('pagehide', PageTiming.windowEventListener);
     document.removeEventListener('visibilityChange', PageTiming.docEventListener);
 
-    var pageTimingEvents = PageTiming.getEndTimesProcessed();
-    if (pageTimingEvents.indexOf(PageTiming.eventId) === -1) {
-        // Record that this event is being processed.
-        pageTimingEvents.push(PageTiming.eventId);
-        console.log('PageTiming.reportEndTime() added new one: ', pageTimingEvents);
-        localStorage.setItem(PageTiming.localStorageKey, JSON.stringify(pageTimingEvents));
-
-        // Add the PageEnd event to the messagequeue.
-        clusiveEvents.messageQueue.add(PageTiming.createEndTimeMessage());
-        console.debug(`Queued ${PageTiming.eventId} via clusiveEvents.messageQueue.`);
-    } else {
-        console.warn('Pagehide event received, but end time was already recorded');
-    }
-};
-
-// Utility for retrieving the list of PageEnd times from window.localStorage
-PageTiming.getEndTimesProcessed = function () {
-    var eventsString = localStorage.getItem(PageTiming.localStorageKey);
-    return ( eventsString ? JSON.parse(eventsString) : [] );
-};
-
-// Utility for removing the list of PageEnd times from window.localStorage
-PageTiming.removeEndTimesProcessed = function () {
-    console.debug('Removing PageEnd times list: ' + localStorage.getItem(PageTiming.localStorageKey));
-    localStorage.removeItem(PageTiming.localStorageKey);
+    // Add the PageEnd event to the messagequeue.
+    clusiveEvents.messageQueue.add(PageTiming.createEndTimeMessage());
+    console.debug(`PageTiming: Queued ${PageTiming.eventId} via clusiveEvents.messageQueue.`);
 };
 
 // Test if browser supports the timing API
