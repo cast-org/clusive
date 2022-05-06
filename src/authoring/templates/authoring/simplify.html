@@ -90,7 +90,9 @@
                         {% endif %}
                     </td>
                     <td>
+                        {% if info.icon_url %}
                         <p><img alt="{{ info.icon_alt }}" src="{{ info.icon_url }}"/></p>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

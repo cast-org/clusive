@@ -42,24 +42,18 @@ class SimplifyView(FormView):
         num_replace = data['to_replace']
         if flaticon_is_configured():
             icon_mgr = FlaticonManager()
+            icon_session = icon_mgr.get_session()
             for index in range(len(data['word_info'])):
                 temp_word = data['word_info'][index]['hw']
-                logger.debug('CHECKING THE WORD %s', temp_word)
-                temp_icon = icon_mgr.get_icon(temp_word)
-                if temp_icon:
-                    data['word_info'][index].update({ 'icon_url': temp_icon['images']['64'],
-                                                      'icon_alt': temp_icon['description'],
-                                                      })
-                    logger.debug("UPDATED WORD INFO = %s", data['word_info'][index])
+                (icon_url, icon_desc) = icon_mgr.get_icon(icon_session, temp_word)
+                data['word_info'][index].update({ 'icon_url': icon_url,
+                                                  'icon_alt': icon_desc,
+                                                  })
+                if icon_url is not None:
+                    # logger.debug("UPDATED WORD INFO = %s", data['word_info'][index])
                     r = r + 1
                     if r == num_replace:
                         break
-                else:
-                    data['word_info'][index].update({ 'icon_url': None,
-                                                      'icon_alt': None,
-                                                      })
-                    logger.debug("UPDATED WORD INFO with NULL = %s", data['word_info'][index])
-
         return self.render_to_response(self.get_context_data(form=form))
 
 
