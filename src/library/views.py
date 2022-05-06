@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import shutil
+import traceback
 from tempfile import mkstemp
 from urllib.parse import urlencode
 
@@ -303,7 +304,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
                 for chunk in upload.chunks():
                     f.write(chunk)
             if upload.name.endswith('.docx'):
-                (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile)
+                (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile, upload.name)
                 event_control = 'upload_docx'
             else:
                 (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
@@ -328,6 +329,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
         except Exception as e:
             logger.warning('Could not process uploaded file, filename=%s, error=%s',
                            str(upload), e)
+            logger.warning(traceback.format_exc())
             form.add_error('file', 'Could not process uploaded file. Only DOCX and EPUB are allowed.')
             return super().form_invalid(form)
 

@@ -13,17 +13,35 @@ body {
 .ff-times {
     font-family: Georgia, Times, "Times New Roman", serif !important;
 }
+.fl-font-comic-sans:not([class*='icon']),
+.fl-font-comic-sans *:not([class*='icon']),
 #ff-comic,
 .ff-comic {
-    font-family: "Comic Sans MS", sans-serif !important;
+    font-family: "Comic Sans MS", "Comic Sans", "Comic Neue", cursive !important;
 }
+.fl-font-arial:not([class*='icon']),
+.fl-font-arial *:not([class*='icon']),
 #ff-arial,
 .ff-arial {
-    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font-family: "Helvetica Neue", Arial, Arimo, sans-serif !important;
 }
+.isAndroid.fl-font-arial:not([class*='icon']),
+.isAndroid.fl-font-arial *:not([class*='icon']),
+.isAndroid #ff-arial,
+.isAndroid .ff-arial {
+    font-family: "Helvetica Neue", Arimo, Arial, sans-serif !important;
+}
+.fl-font-verdana:not([class*='icon']),
+.fl-font-verdana *:not([class*='icon']),
 #ff-verdana,
 .ff-verdana {
-    font-family: Verdana, sans-serif !important;
+    font-family: Verdana, Roboto, sans-serif !important;
+}
+.isAndroid.fl-font-verdana:not([class*='icon']),
+.isAndroid.fl-font-verdana *:not([class*='icon']),
+.isAndroid #ff-verdana,
+.isAndroid .ff-verdana {
+    font-family: Roboto, Verdana, sans-serif !important;
 }
 #ff-dyslexic,
 .ff-dyslexic {
@@ -91,30 +109,103 @@ h2,
     font-weight: 900;
 }
 
+//.content-container {
+//    padding-right: $body-padding-x;
+//    padding-left: $body-padding-x;
+//}
+
 .content {
-    //max-width: calc(100vw - 8rem);
-    padding-top: $header-height + $content-offset-top;
-    padding-right: $sidebar-width + $sidebar-gutter;
-    padding-bottom: $body-padding-x;
-    padding-left: $sidebar-width + $sidebar-gutter;
-    margin-right: ($grid-gutter-width / -2);
-    margin-left: ($grid-gutter-width / -2);
+    position: relative;
+    margin-right: $sidebar-width + $sidebar-gutter;
+    margin-left: $sidebar-width + $sidebar-gutter;
     outline: 0;
 
-    @include media-breakpoint-up(sm) {
-        //max-width: calc(100vw - 10.625rem);
-        padding-right: $sidebar-sm-width + $sidebar-sm-gutter;
-        padding-left: $sidebar-sm-width + $sidebar-sm-gutter;
-    }
-
     @include media-breakpoint-up(md) {
-        padding-top: $header-md-height + $content-offset-top;
+        margin-right: $sidebar-md-width + $sidebar-md-gutter;
+        margin-left: $sidebar-md-width + $sidebar-md-gutter;
     }
 }
 
 // stylelint-disable-next-line selector-max-id
-#D2Reader-Container iframe {
-    //padding-bottom: 2rem;
+#D2Reader-Container {
+    height: calc(100vh - #{$header-height + $body-padding-y});
+    overflow: hidden;
+
+    @include media-breakpoint-up(md) {
+        height: calc(100vh - #{$header-md-height + $body-padding-y});
+    }
+}
+
+// stylelint-disable selector-max-id
+#iframe-wrapper {
+    height: calc(100vh - #{$header-height + $body-padding-y});
+    outline: 0;
+
+    iframe {
+        min-height: calc(100vh - #{$header-height + $body-padding-y});
+    }
+
+    @include media-breakpoint-up(md) {
+        height: calc(100vh - #{$header-md-height + $body-padding-y});
+
+        iframe {
+            min-height: calc(100vh - #{$header-md-height + $body-padding-y});
+        }
+    }
+}
+#divBefore + #iframe-wrapper {
+    overflow: hidden !important; // stylelint-disable-line declaration-no-important
+}
+// stylelint-enable selector-max-id
+
+.d2-line-focus-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    //width: 100%;
+    //height: calc(100vh - #{$header-height + $body-padding-y});
+    pointer-events: none;
+
+    //@include media-breakpoint-up(md) {
+    //    height: calc(100vh - #{$header-md-height + $body-padding-y});
+    //}
+}
+.d2-line-focus-bottom,
+.d2-line-focus-top {
+    position: absolute;
+    height: 0;
+    min-height: 0;
+    pointer-events: all;
+    background-color: rgba(0, 0, 0, .9);
+    transition-property: height;
+}
+.d2-line-focus-top {
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 0;
+    box-shadow: 0 .125rem .4375rem 0 rgba(0, 0, 0, .4);
+    transform: translateY(-.125rem);
+}
+.d2-line-focus-bottom {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 0;
+    box-shadow: .125rem 0 .4375rem 0 rgba(0, 0, 0, .4);
+}
+.d2-line-focus-nav {
+    position: absolute;
+    right: .5rem;
+    bottom: .5rem;
+    z-index: 1;
+    pointer-events: auto;
+
+    .btn {
+        margin-left: .5rem;
+    }
 }
 
 .login-status {
@@ -282,7 +373,6 @@ h2,
     box-shadow: 0 .0625em 0 0 var(--CT_glossaryUnderline), inset 0 -.125em 0 0 var(--CT_glossaryUnderline);
 }
 
-// stylelint-disable selector-class-pattern
 .simplifyLookup,
 .simplifyLookup:hover {
     font-weight: $font-weight-normal;
@@ -408,8 +498,8 @@ h2,
     outline: 0;
     @include sr-only();
 
-    @include media-breakpoint-up(sm) {
-        left: $sidebar-sm-width;
+    @include media-breakpoint-up(md) {
+        left: $sidebar-md-width;
     }
 }
 

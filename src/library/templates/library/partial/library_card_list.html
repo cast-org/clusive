@@ -58,13 +58,8 @@
                 <div class="card-footer">
                     <div class="row">
                         {% include 'library/partial/library_card_topics.html' %}
-                        {% if book.owner == request.clusive_user or request.clusive_user.can_manage_periods %}
-                        <div class="col-auto card-library-action">
-                            {% include "library/partial/library_action_menu.html" %}
-                        </div>
-                        {% endif %}
+                        {% include 'library/partial/library_teacher_extra_info.html' %}
                     </div>
-                    {% include 'library/partial/library_teacher_extra_info.html' %}
                 </div>
             </div>
         </div>

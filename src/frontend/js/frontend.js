@@ -503,7 +503,9 @@ function showTooltip(name) {
                     });
                     tip_control.CFW_Tooltip('show');
                     tip_popover.trigger('focus');
-                    window.parent.clusiveEvents.addTipViewToQueue(name);
+                    if (typeof window.parent.clusiveEvents === 'object' && window.parent.clusiveEvents.addTipViewToQueue === 'function') {
+                        window.parent.clusiveEvents.addTipViewToQueue(name);
+                    }
                 }
             }, 2000);
             tip_control.one('afterHide.cfw.tooltip', function() {
@@ -785,6 +787,54 @@ function starredButtons() {
         setTimeout(function() {
             $tip.CFW_Tooltip('locateUpdate');
         });
+    });
+}
+
+// Adjust toolbox positioning
+function toolboxHandleUpdate() {
+    var $toolWrap = $('.toolbox-wrapper');
+    var $iframeWrap = $('#iframe-wrapper');
+    if (!$toolWrap.length || !$iframeWrap.length) { return; }
+
+    $iframeWrap.on('scroll', function() {
+        toolboxPosition();
+    });
+
+    var observer = new MutationObserver(function() {
+        setTimeout(function() {
+            toolboxPosition();
+        }, 25);
+    });
+    observer.observe(
+        document.querySelector('#highlight-toolbox'), {
+                attributes: true,
+                childList: false,
+                characterData: false,
+                subtree: false,
+                attributeFilter : [
+                    'style'
+                ]
+            }
+        );
+
+}
+function toolboxPosition() {
+    var $toolWrap = $('.toolbox-wrapper');
+    if (!$toolWrap) { return; }
+
+    var scrollTop = document.querySelector('#iframe-wrapper').scrollTop;
+    var boxTop = parseInt(document.querySelector('#highlight-toolbox').getBoundingClientRect().top, 10);
+    var boxHeight = document.querySelector('.toolbox-menu-group').offsetHeight;
+    var arrowHeight = document.querySelector('.toolbox-menu-arrow').offsetHeight;
+    if (boxTop - boxHeight - arrowHeight < 0) {
+        $toolWrap.css('position', 'absolute');
+        $toolWrap.css('top', parseInt(scrollTop, 10) * -1);
+        return;
+    }
+
+    $toolWrap.css({
+        position: '',
+        top: ''
     });
 }
 
@@ -1242,6 +1292,13 @@ function setUpDeferredLoadOfCompDetails() {
 $(window).ready(function() {
     'use strict';
 
+    // Work around Android font issue
+    var userAgent = navigator.userAgent || navigator.vendor;
+    var isAndroid = /android/i.test(userAgent);
+    if (isAndroid)  {
+        document.body.classList.add('isAndroid');
+    }
+
     document.addEventListener('update.cisl.prefs', updateCSSVars, {
         passive: true
     });
@@ -1261,6 +1318,7 @@ $(window).ready(function() {
     starredButtons();
     shareForm();
     dashboardStudentReadingViewButtons();
+    toolboxHandleUpdate();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

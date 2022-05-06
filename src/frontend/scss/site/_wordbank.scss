@@ -11,7 +11,10 @@
     flex-direction: column;
     width: 100%;
     min-width: 15rem;
-    margin-right: 2em;
+
+    @include media-breakpoint-down(sm) {
+        margin-right: 20%;
+    }
 }
 
 .wordbank-header  {
@@ -58,7 +61,7 @@
     &.active {
         position: relative;
         z-index: 1;
-        outline: 2px dashed currentColor;
+        outline: 2px dashed currentcolor;
         outline-offset: -3px;
     }
 }
@@ -233,7 +236,7 @@
     }
 
     &.dragging {
-        outline: 2px solid currentColor;
+        outline: 2px solid currentcolor;
 
         button {
             pointer-events: none;

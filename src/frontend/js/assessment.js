@@ -1,5 +1,5 @@
 /* Code for comprehension and affect assessments */
-/* global clusiveContext, PAGE_EVENT_ID, fluid, D2Reader, clusiveAutosave, reactDimAnimate */
+/* global clusiveContext, PAGE_EVENT_ID, fluid, d2reader, clusiveAutosave, reactDimAnimate */
 /* exported clusiveAssessment */
 
 var clusiveAssessment = {
@@ -13,7 +13,7 @@ clusiveAssessment.showCompCheck = function() {
     if (!clusiveAssessment.checkDone && !clusiveAssessment.tooEarly) {
         // Set timer. Don't show comp check if user immediately moves away from the bottom.
         window.setTimeout(function() {
-            if (D2Reader.atEnd()) {
+            if (d2reader && d2reader.atEnd) {
                 $('#compPop').CFW_Popover('show');
                 clusiveAssessment.checkDone = true;
             } else {

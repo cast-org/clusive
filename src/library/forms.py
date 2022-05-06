@@ -131,9 +131,21 @@ class EditCustomizationForm(ModelForm):
         self.fields['question'].label = 'Custom question'
         self.fields['current_vocabulary_words'].initial = '|'.join(self.instance.word_list)
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Signal an error if there are no vocab words and no custom question
+        # We can determine there are no words if (a) there are no added words and (b) any current words are deleted.
+        if not cleaned_data.get('question') \
+            and not cleaned_data.get('new_vocabulary_words') \
+            and len(cleaned_data.get('current_vocabulary_words')) == len(cleaned_data.get('delete_vocabulary_words')):
+            raise ValidationError('Customization must include vocabulary words and/or a custom question.')
+
+        return self.cleaned_data
+
     def save(self, commit=True):
         instance = super().save(commit)
-        # Determine if there are other customizations that this one is overriding - ones for the same book & period
+        # Determine if there are other customizations for the same book & period, in which case this one overrides.
         instance_periods = set(instance.periods.all())
         conflicting_customizations = Customization.objects.filter(book=instance.book, periods__in=instance_periods)
         conflicting_periods = set()

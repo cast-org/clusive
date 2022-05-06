@@ -97,7 +97,7 @@ class Command(BaseCommand):
     def handle_docx(self, label: str):
         try:
             logger.debug('handling A DOCX FILE: %s' % label)
-            (bv, changed) = convert_and_unpack_docx_file(None, label)
+            (bv, changed) = convert_and_unpack_docx_file(None, label, os.path.basename(label))
             # Can't really check for newness in Word docs. Just assume it's new.
             self.found_new_content = True
             if bv and not self.book:

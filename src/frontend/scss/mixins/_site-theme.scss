@@ -2,22 +2,6 @@
     @return red($value), green($value), blue($value);
 }
 
-// Check to see if a color meets minimum contrast ratio and use it,
-// otherwise get the best color contrast possible.
-@function color-if-contrast($colorfore, $colorback, $light: $color-contrast-base-light, $dark: $color-contrast-base-dark) {
-    @if type-of($colorfore) != color or type-of($colorback) != color {
-        @return $colorfore;
-    }
-
-    @if (color-get-contrast-ratio($colorfore, $colorback) >= $color-contrast-min-ratio) {
-        @return $colorfore;
-    }
-    @if $enable-color-warnings {
-        @warn "Foreground color (#{$colorfore}) does not meet the defined minimum contrast ratio (#{$color-contrast-min-ratio}:1) against the background color (#{$colorback})! Now auto-selecting a color that should meet minimum contrast.";
-    }
-    @return color-auto-contrast($colorback, $light, $dark);
-}
-
 // stylelint-disable custom-property-empty-line-before
 @mixin site-theme($theme-name: unquote(":root")) {
     #{$theme-name} {
