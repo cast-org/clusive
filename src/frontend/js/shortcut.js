@@ -6,22 +6,74 @@
 (function($) {
     'use strict';
 
-    var HOTKEY_SHORTCUTS = 'alt+k';
-    var HOTKEY_TOC = 'alt+t';
-    var HOTKEY_HIGHLIGHT = 'alt+h';
-    var HOTKEY_SETTINGS_DISPLAY = 'alt+,';
-    var HOTKEY_SETTINGS_READ = 'alt+.';
-    var HOTKEY_TTS_TOGGLE = 'alt+a';
-    var HOTKEY_TTS_PAUSE = 'space';
-    var HOTKEY_SEARCH_FOCUS = 'alt+f';
-    var HOTKEY_READER_FOCUS = 'alt+r';
-    // var HOTKEY_PAGE_PREV = 'left';
-    // var HOTKEY_PAGE_NEXT = 'right';
-    var HOTKEY_SECTION_PREV = 'alt+pageup';
-    var HOTKEY_SECTION_NEXT = 'alt+pagedown';
-    var HOTKEY_LIBRARY = 'alt+l';
-    var HOTKEY_CONTEXT_LOOKUP = 'alt+d';
-    var HOTKEY_CONTEXT_TRANSFORM = 'alt+s';
+    var HOTKEYS = [
+        {
+            keys: 'alt+k',
+            routine: 'shortcutDialog'
+        },
+        {
+            keys: 'alt+t',
+            routine: 'tocDialog'
+        },
+        {
+            keys: 'alt+h',
+            routine: 'highlightDialog'
+        },
+        {
+            keys: 'alt+,',
+            routine: 'settingsDisplayDialog'
+        },
+        {
+            keys: 'alt+.',
+            routine: 'settingsReadAloudDialog'
+        },
+        {
+            keys: 'alt+a',
+            routine: 'ttsToggle'
+        },
+        {
+            keys: 'space',
+            routine: 'ttsPause'
+        },
+        {
+            keys: 'alt+f',
+            routine: 'searchFocus'
+        },
+        {
+            keys: 'alt+r',
+            routine: 'readerFocus'
+        },
+        /*
+        {
+            keys: 'left',
+            routine: 'pagePrev'
+        },
+        {
+            keys: 'right',
+            routine: 'pageNext'
+        },
+        */
+        {
+            keys: 'alt+pageup',
+            routine: 'sectionPrev'
+        },
+        {
+            keys: 'alt+pagedown',
+            routine: 'sectionNext'
+        },
+        {
+            keys: 'alt+l',
+            routine: 'libraryPage'
+        },
+        {
+            keys: 'alt+d',
+            routine: 'contextLookup'
+        },
+        {
+            keys: 'alt+s',
+            routine: 'contextTransform'
+        }
+    ];
 
     var SELECTOR_SHORTCUTS_BTN = '#shortcutsLocator';
     var SELECTOR_SHORTCUTS_DIALOG = '#shortcutsPop';
@@ -54,6 +106,256 @@
         this.readerOwner = null;
     };
 
+    shortcutModule.ROUTINE = {
+        // Show keyboard shortcuts dialog
+        shortcutDialog : function(event, keys) {
+            if ($.CFW_isVisible(document.querySelector(SELECTOR_SHORTCUTS_DIALOG))) {
+                if (event) { event.preventDefault(); }
+                document.querySelector(SELECTOR_SHORTCUTS_DIALOG).focus();
+                return;
+            }
+            if (document.querySelector(SELECTOR_SHORTCUTS_BTN)) {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-shortcuts-dialog', keys);
+                var callback = function() {
+                    document.querySelector(SELECTOR_SHORTCUTS_DIALOG).focus();
+                };
+                shortcut.popoverOpen(SELECTOR_SHORTCUTS_BTN, SELECTOR_SHORTCUTS_DIALOG, callback);
+            }
+        },
+
+        // TOC list
+        tocDialog : function(event, keys) {
+            if (document.querySelector(SELECTOR_TOC_BTN)) {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-toc-panel', keys);
+                var callback = function() {
+                    shortcut.tabOpenFocus(SELECTOR_TOC_TAB, SELECTOR_TOC_PANEL);
+                };
+                shortcut.modalOpen(SELECTOR_TOC_BTN, SELECTOR_TOC_MODAL, callback);
+            }
+        },
+
+        // Highlight dialog
+        highlightDialog : function(event, keys) {
+            if (shortcut.readerFound && shortcut.hasReaderSelection()) {
+                // Create highlight
+                if (typeof d2reader === 'object') {
+                    if (event) { event.preventDefault(); }
+                    shortcut.addEvent('hotkey-highlight-create', keys);
+                    d2reader.highlighter.doHighlight();
+                    shortcut.clearAllSelection();
+                    d2reader.highlighter.toolboxHide();
+                }
+            } else if (document.querySelector(SELECTOR_TOC_BTN)) {
+                // Open highlight panel
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-highlight-panel', keys);
+                var callback = function() {
+                    shortcut.tabOpenFocus(SELECTOR_HIGHLIGHT_TAB, SELECTOR_HIGHLIGHT_PANEL);
+                };
+                shortcut.modalOpen(SELECTOR_TOC_BTN, SELECTOR_TOC_MODAL, callback);
+            }
+        },
+
+        // Settings: Display dialog
+        settingsDisplayDialog : function(event, keys) {
+            if (document.querySelector(SELECTOR_SETTINGS_BTN)) {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-settings-display', keys);
+                var callback = function() {
+                    shortcut.tabOpenFocus(SELECTOR_SETTINGS_DISPLAY_TAB, SELECTOR_SETTINGS_DISPLAY_PANEL);
+                };
+                shortcut.modalOpen(SELECTOR_SETTINGS_BTN, SELECTOR_SETTINGS_MODAL, callback);
+            }
+        },
+
+        // Settings: Read-aloud dialog
+        settingsReadAloudDialog : function(event, keys) {
+            if (document.querySelector(SELECTOR_SETTINGS_BTN)) {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-settings-read-aloud', keys);
+                var callback = function() {
+                    shortcut.tabOpenFocus(SELECTOR_SETTINGS_READ_TAB, SELECTOR_SETTINGS_READ_PANEL);
+                };
+                shortcut.modalOpen(SELECTOR_SETTINGS_BTN, SELECTOR_SETTINGS_MODAL, callback);
+            }
+        },
+
+        // Read-aloud - play/stop
+        ttsToggle : function(event, keys) {
+            // Check for selection within reader
+            if (shortcut.readerFound && shortcut.hasReaderSelection()) {
+                // Read only selected text
+                if (typeof d2reader === 'object') {
+                    if (event) { event.preventDefault(); }
+                    shortcut.addEvent('hotkey-tts-play-reader-selection', keys);
+                    d2reader.highlighter.speak();
+                    shortcut.clearAllSelection();
+                    d2reader.highlighter.toolboxHide();
+                    return;
+                }
+            }
+
+            var ttsRegions = document.querySelectorAll(SELECTOR_READ_ALOUD_REGIONS);
+            var result = shortcut.filterElementsForVisible(ttsRegions);
+            if (event) { event.preventDefault(); }
+
+            if (result.length) {
+                // Default to 'global' play button
+                var ttsBtn = document.querySelector('.sidebar-end .tts-play');
+                if (!$.CFW_isVisible(ttsBtn)) {
+                    ttsBtn = null;
+                }
+                // Find current activeElement to determine location
+                var activeElm = document.activeElement;
+                // Check for parent dialog and find it's play button
+                var dialog = activeElm.closest('.modal, .popover');
+                if (dialog !== null) {
+                    ttsBtn = dialog.querySelector('.tts-play');
+                }
+                if (ttsBtn !== null) {
+                    shortcut.addEvent('hotkey-tts-toggle', keys);
+                    clusiveTTS.toggle({
+                        currentTarget: ttsBtn
+                    });
+                    return;
+                }
+            }
+
+            shortcut.addEvent('hotkey-tts-stop', keys);
+            clusiveTTS.stop();
+        },
+
+        // Read-aloud - pause/resume
+        ttsPause : function(event, keys) {
+            var ttsRegions = document.querySelectorAll(SELECTOR_READ_ALOUD_REGIONS);
+            var result = shortcut.filterElementsForVisible(ttsRegions);
+
+            if (result.length && clusiveTTS.isReadingState) {
+                if (event) { event.preventDefault(); }
+                if (clusiveTTS.isPausedState) {
+                    shortcut.addEvent('hotkey-tts-resume', keys);
+                    clusiveTTS.resume();
+                } else {
+                    shortcut.addEvent('hotkey-tts-pause', keys);
+                    clusiveTTS.pause();
+                }
+            }
+        },
+
+        // Search - focus on search field
+        // - currently only library and bookshare - not at same time
+        searchFocus: function(event, keys) {
+            var searchElm = document.querySelector('input[type="search"]');
+            if (searchElm !== null) {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-search-focus', keys);
+                searchElm.focus();
+            }
+        },
+
+        // Reader - focus content
+        readerFocus: function(event, keys) {
+            if (shortcut.readerFound && typeof d2reader === 'object') {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-reader-focus', keys);
+                shortcut.focusReaderBody();
+            }
+        },
+
+        /*
+        // Reader navigation - previous page
+        pagePrev: function(event, keys) {
+            if (shortcut.readerFound && typeof d2reader === 'object') {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-reader-navigation-pagination-previous', keys);
+                d2reader.previousPage();
+            }
+        },
+
+        // Reader navigation - next page
+        pageNext: function(event, keys) {
+            if (shortcut.readerFound && typeof d2reader === 'object') {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-reader-navigation-pagination-next', keys);
+                d2reader.nextPage();
+            }
+        },
+        */
+
+        // Reader navigation - previous section/resource
+        sectionPrev: function(event, keys) {
+            if (shortcut.readerFound && typeof d2reader === 'object') {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-reader-navigation-section-previous', keys);
+                shortcut.processAdd(function() {
+                    shortcut.focusReaderBody();
+                });
+                d2reader.previousResource();
+            }
+        },
+
+        // Reader navigation - next section/resource
+        sectionNext: function(event, keys) {
+            if (shortcut.readerFound && typeof d2reader === 'object') {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-reader-navigation-section-next', keys);
+                shortcut.processAdd(function() {
+                    shortcut.focusReaderBody();
+                });
+                d2reader.nextResource();
+            }
+        },
+
+        // Library page
+        libraryPage: function(event, keys) {
+            if (event) { event.preventDefault(); }
+            shortcut.addEvent('hotkey-library', keys);
+            window.location.href = '/reader';
+        },
+
+        // Context menu - word lookup (definition)
+        contextLookup: function(event, keys) {
+            if (shortcut.readerFound) {
+                if (shortcut.hasReaderSelection()) {
+                    // Do lookup
+                    if (event) { event.preventDefault(); }
+                    shortcut.addEvent('hotkey-lookup', keys);
+                    contextLookup(shortcut.getReaderSelection().toString());
+                    shortcut.clearReaderSelection();
+                    if (typeof d2reader === 'object') {
+                        d2reader.highlighter.toolboxHide();
+                    }
+                } else if ($.CFW_isVisible(document.querySelector(SELECTOR_GLOSSARY_DIALOG))) {
+                    // Focus the glossary popover
+                    if (event) { event.preventDefault(); }
+                    document.querySelector(SELECTOR_GLOSSARY_DIALOG).focus();
+                }
+            }
+        },
+
+        // Context menu - transform (simplifiy, translate, ...)
+        contextTransform: function(event, keys) {
+            if (shortcut.readerFound) {
+                if (shortcut.hasReaderSelection()) {
+                    // Do transform
+                    if (event) { event.preventDefault(); }
+                    shortcut.addEvent('hotkey-transform', keys);
+                    contextTransform(shortcut.getReaderSelection().toString());
+                    shortcut.clearReaderSelection();
+                    if (typeof d2reader === 'object') {
+                        d2reader.highlighter.toolboxHide();
+                    }
+                } else if ($.CFW_isVisible(document.querySelector(SELECTOR_SIMPLIFY_DIALOG))) {
+                    // Focus the simplify/transform popover
+                    if (event) { event.preventDefault(); }
+                    document.querySelector(SELECTOR_SIMPLIFY_DIALOG).focus();
+                }
+            }
+        }
+    };
+
     shortcutModule.prototype = {
         attachReaderFrame : function() {
             var that = this;
@@ -64,12 +366,21 @@
                 // Pass keydown from reader frame to parent document
                 this.readerOwner = this.readerFrame.ownerDocument;
                 this.readerDocument = this.readerFrame.contentDocument;
+
+                // Pass keydown from reader frame to parent document
                 $(this.readerDocument)
                     .off('keydown.clusive.shortcut')
                     .on('keydown.clusive.shortcut', function(event) {
                         that.ownerDispatchEvent(event);
                     });
+
+                // Block all hotkey combos at reader level
+                this.readerFrame.contentWindow.blockHotkeys(HOTKEYS);
             }
+        },
+
+        invokeRoutine : function(keysList, routineName, event) {
+            shortcut.routine[routineName](event, keysList);
         },
 
         process : function() {
@@ -277,6 +588,9 @@
         },
 
         addEvent : function(eventControl, eventValue) {
+            if (typeof eventControl === 'undefined' || typeof eventValue === 'undefined') {
+                return;
+            }
             window.clusiveEvents.addCaliperEventToQueue(
                 window.clusiveEvents.caliperEventTypes.TOOL_USE_EVENT,
                 eventControl,
@@ -289,250 +603,15 @@
             if (typeof callback === 'function') {
                 callback();
             }
-        }
+        },
+
+        routine : shortcutModule.ROUTINE
     };
 
-    // Keyboard shortcuts popover
-    hotkeys(HOTKEY_SHORTCUTS, function(event) {
-        if (document.querySelector(SELECTOR_SHORTCUTS_BTN)) {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-shortcuts-dialog', HOTKEY_SHORTCUTS);
-            var callback = function() {
-                document.querySelector(SELECTOR_SHORTCUTS_DIALOG).focus();
-            };
-            shortcut.popoverOpen(SELECTOR_SHORTCUTS_BTN, SELECTOR_SHORTCUTS_DIALOG, callback);
-        }
-    });
-
-    // TOC list
-    hotkeys(HOTKEY_TOC, function(event) {
-        if (document.querySelector(SELECTOR_TOC_BTN)) {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-toc-panel', HOTKEY_TOC);
-            var callback = function() {
-                shortcut.tabOpenFocus(SELECTOR_TOC_TAB, SELECTOR_TOC_PANEL);
-            };
-            shortcut.modalOpen(SELECTOR_TOC_BTN, SELECTOR_TOC_MODAL, callback);
-        }
-    });
-
-    // Highlight list - or create highlight
-    hotkeys(HOTKEY_HIGHLIGHT, function(event) {
-        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
-            // Create highlight
-            if (typeof d2reader === 'object') {
-                event.preventDefault();
-                shortcut.addEvent('hotkey-highlight-create', HOTKEY_HIGHLIGHT);
-                d2reader.highlighter.doHighlight();
-                shortcut.clearAllSelection();
-                d2reader.highlighter.toolboxHide();
-            }
-        } else if (document.querySelector(SELECTOR_TOC_BTN)) {
-            // Open highlight panel
-            event.preventDefault();
-            shortcut.addEvent('hotkey-highlight-panel', HOTKEY_HIGHLIGHT);
-            var callback = function() {
-                shortcut.tabOpenFocus(SELECTOR_HIGHLIGHT_TAB, SELECTOR_HIGHLIGHT_PANEL);
-            };
-            shortcut.modalOpen(SELECTOR_TOC_BTN, SELECTOR_TOC_MODAL, callback);
-        }
-    });
-
-    // Settings - display panel
-    hotkeys(HOTKEY_SETTINGS_DISPLAY, function(event) {
-        if (document.querySelector(SELECTOR_SETTINGS_BTN)) {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-settings-display', HOTKEY_SETTINGS_DISPLAY);
-            var callback = function() {
-                shortcut.tabOpenFocus(SELECTOR_SETTINGS_DISPLAY_TAB, SELECTOR_SETTINGS_DISPLAY_PANEL);
-            };
-            shortcut.modalOpen(SELECTOR_SETTINGS_BTN, SELECTOR_SETTINGS_MODAL, callback);
-        }
-    });
-
-    // Settings - reading panel
-    hotkeys(HOTKEY_SETTINGS_READ, function(event) {
-        if (document.querySelector(SELECTOR_SETTINGS_BTN)) {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-settings-read-aloud', HOTKEY_SETTINGS_READ);
-            var callback = function() {
-                shortcut.tabOpenFocus(SELECTOR_SETTINGS_READ_TAB, SELECTOR_SETTINGS_READ_PANEL);
-            };
-            shortcut.modalOpen(SELECTOR_SETTINGS_BTN, SELECTOR_SETTINGS_MODAL, callback);
-        }
-    });
-
-    // Read-aloud - play/stop
-    hotkeys(HOTKEY_TTS_TOGGLE, function(event) {
-        // Check for selection within reader
-        if (shortcut.readerFound && shortcut.hasReaderSelection()) {
-            // Read only selected text
-            if (typeof d2reader === 'object') {
-                event.preventDefault();
-                shortcut.addEvent('hotkey-tts-play-reader-selection', HOTKEY_TTS_TOGGLE);
-                d2reader.highlighter.speak();
-                shortcut.clearAllSelection();
-                d2reader.highlighter.toolboxHide();
-                return;
-            }
-        }
-
-        var ttsRegions = document.querySelectorAll(SELECTOR_READ_ALOUD_REGIONS);
-        var result = shortcut.filterElementsForVisible(ttsRegions);
-        event.preventDefault();
-
-        if (result.length) {
-            // Default to 'global' play button
-            var ttsBtn = document.querySelector('.sidebar-end .tts-play');
-            if (!$.CFW_isVisible(ttsBtn)) {
-                ttsBtn = null;
-            }
-            // Find current activeElement to determine location
-            var activeElm = document.activeElement;
-            // Check for parent dialog and find it's play button
-            var dialog = activeElm.closest('.modal, .popover');
-            if (dialog !== null) {
-                ttsBtn = dialog.querySelector('.tts-play');
-            }
-            if (ttsBtn !== null) {
-                shortcut.addEvent('hotkey-tts-toggle', HOTKEY_TTS_TOGGLE);
-                clusiveTTS.toggle({
-                    currentTarget: ttsBtn
-                });
-                return;
-            }
-        }
-
-        shortcut.addEvent('hotkey-tts-stop', HOTKEY_TTS_TOGGLE);
-        clusiveTTS.stop();
-    });
-
-    // Read-aloud - pause/resume
-    hotkeys(HOTKEY_TTS_PAUSE, function(event) {
-        var ttsRegions = document.querySelectorAll(SELECTOR_READ_ALOUD_REGIONS);
-        var result = shortcut.filterElementsForVisible(ttsRegions);
-
-        if (result.length && clusiveTTS.isReadingState) {
-            event.preventDefault();
-            if (clusiveTTS.isPausedState) {
-                shortcut.addEvent('hotkey-tts-resume', HOTKEY_TTS_PAUSE);
-                clusiveTTS.resume();
-            } else {
-                shortcut.addEvent('hotkey-tts-pause', HOTKEY_TTS_PAUSE);
-                clusiveTTS.pause();
-            }
-        }
-    });
-
-    // Search - focus on search field
-    // - currently only library and bookshare - not at same time
-    hotkeys(HOTKEY_SEARCH_FOCUS, function(event) {
-        var searchElm = document.querySelector('input[type="search"]');
-        if (searchElm !== null) {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-search-focus', HOTKEY_SEARCH_FOCUS);
-            searchElm.focus();
-        }
-    });
-
-    // Reader - focus content
-    hotkeys(HOTKEY_READER_FOCUS, function(event) {
-        if (shortcut.readerFound && typeof d2reader === 'object') {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-reader-focus', HOTKEY_READER_FOCUS);
-            shortcut.focusReaderBody();
-        }
-    });
-
-    /*
-    // Reader navigation - previous page
-    hotkeys(HOTKEY_PAGE_PREV, function(event) {
-        if (shortcut.readerFound && typeof d2reader === 'object') {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-reader-navigation-pagination-previous', HOTKEY_PAGE_PREV);
-            d2reader.previousPage();
-        }
-    });
-
-    // Reader navigation - next page
-    hotkeys(HOTKEY_PAGE_NEXT, function(event) {
-        if (shortcut.readerFound && typeof d2reader === 'object') {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-reader-navigation-pagination-next', HOTKEY_PAGE_NEXT);
-            d2reader.nextPage();
-        }
-    });
-    */
-
-    // Reader navigation - previous section/resource
-    hotkeys(HOTKEY_SECTION_PREV, function(event) {
-        if (shortcut.readerFound && typeof d2reader === 'object') {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-reader-navigation-section-previous', HOTKEY_SECTION_PREV);
-            shortcut.processAdd(function() {
-                shortcut.focusReaderBody();
-            });
-            d2reader.previousResource();
-        }
-    });
-
-    // Reader navigation - next section/resource
-    hotkeys(HOTKEY_SECTION_NEXT, function(event) {
-        if (shortcut.readerFound && typeof d2reader === 'object') {
-            event.preventDefault();
-            shortcut.addEvent('hotkey-reader-navigation-section-next', HOTKEY_SECTION_NEXT);
-            shortcut.processAdd(function() {
-                shortcut.focusReaderBody();
-            });
-            d2reader.nextResource();
-        }
-    });
-
-    // Library
-    hotkeys(HOTKEY_LIBRARY, function(event) {
-        event.preventDefault();
-        shortcut.addEvent('hotkey-library', HOTKEY_LIBRARY);
-        window.location.href = '/reader';
-    });
-
-    // Context menu - word lookup (definition)
-    hotkeys(HOTKEY_CONTEXT_LOOKUP, function(event) {
-        if (shortcut.readerFound) {
-            if (shortcut.hasReaderSelection()) {
-                // Do lookup
-                event.preventDefault();
-                shortcut.addEvent('hotkey-lookup', HOTKEY_CONTEXT_LOOKUP);
-                contextLookup(shortcut.getReaderSelection().toString());
-                shortcut.clearReaderSelection();
-                if (typeof d2reader === 'object') {
-                    d2reader.highlighter.toolboxHide();
-                }
-            } else if ($.CFW_isVisible(document.querySelector(SELECTOR_GLOSSARY_DIALOG))) {
-                // Focus the glossary popover
-                event.preventDefault();
-                document.querySelector(SELECTOR_GLOSSARY_DIALOG).focus();
-            }
-        }
-    });
-
-    // Context menu - transform (simplifiy, translate, ...)
-    hotkeys(HOTKEY_CONTEXT_TRANSFORM, function(event) {
-        if (shortcut.readerFound) {
-            if (shortcut.hasReaderSelection()) {
-                // Do transform
-                event.preventDefault();
-                shortcut.addEvent('hotkey-transform', HOTKEY_CONTEXT_TRANSFORM);
-                contextTransform(shortcut.getReaderSelection().toString());
-                shortcut.clearReaderSelection();
-                if (typeof d2reader === 'object') {
-                    d2reader.highlighter.toolboxHide();
-                }
-            } else if ($.CFW_isVisible(document.querySelector(SELECTOR_SIMPLIFY_DIALOG))) {
-                // Focus the simplify/transform popover
-                event.preventDefault();
-                document.querySelector(SELECTOR_SIMPLIFY_DIALOG).focus();
-            }
-        }
+    HOTKEYS.forEach(function(item) {
+        hotkeys(item.keys, function(event) {
+            shortcut.invokeRoutine(item.keys, item.routine, event);
+        });
     });
 
     window.shortcut = shortcutModule.prototype;
