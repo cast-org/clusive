@@ -147,6 +147,46 @@ function loadTranslation(text) {
         });
 }
 
+function loadPictures(selection) {
+    'use strict';
+
+    simplificationTool = 'pictures';
+    var $simplifyLocator = $('#simplifyLocator');
+    var $simplifyBody = $('#simplifyBody');
+    $simplifyBody.html('<p>Loading...</p>');
+    $('#translateFooter').hide();
+    var $navLink = $('#picturesNavLink');
+    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
+    $navLink.addClass('active').attr('aria-current', 'true');
+    $simplifyLocator.one('afterShow.cfw.popover', function() {
+        $('#simplifyPop').trigger('focus');
+    });
+    $.ajax('/icons/pictures', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            text: selection,
+            book_id: pub_id
+        }
+    })
+        .done(function(data) {
+            $simplifyBody.html('<div class="text-picture text-picture-vertical">' + data.result + '</div>');
+        })
+        .fail(function(err) {
+            console.error(err);
+            $simplifyBody.html('<p>Error loading picturized text</p>');
+        })
+        .always(function() {
+            $simplifyLocator.CFW_Popover('show');
+            var $simplifyPop = $('#simplifyPop');
+            if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
+                $simplifyPop.CFW_Popover('locateUpdate');
+            }
+        });
+}
+
 // Text Simplification
 
 function loadSimplification(selection) {
@@ -196,6 +236,8 @@ function contextTransform(selection) {
     $('#simplifyPop').data('text', selection);
     if (simplificationTool === 'simplify') {
         loadSimplification(selection);
+    } else if (simplificationTool === 'pictures') {
+        loadPictures(selection);
     } else {
         loadTranslation(selection);
     }
@@ -523,12 +565,16 @@ $(function() {
         });
 
     // Tabs in simplify popover
+    $('#translateNavLink').on('click', function() {
+        loadTranslation($('#simplifyPop').data('text'));
+    });
+
     $('#simplifyNavLink').on('click', function() {
         loadSimplification($('#simplifyPop').data('text'));
     });
 
-    $('#translateNavLink').on('click', function() {
-        loadTranslation($('#simplifyPop').data('text'));
+    $('#picturesNavLink').on('click', function() {
+        loadPictures($('#simplifyPop').data('text'));
     });
 
     // Word definition links inside simplify popover

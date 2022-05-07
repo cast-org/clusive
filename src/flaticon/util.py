@@ -1,7 +1,11 @@
 import logging
+import math
 
 import requests
 from django.conf import settings
+
+from glossary.util import base_form
+from simplification.util import WordnetSimplifier
 
 logger = logging.getLogger(__name__)
 
@@ -89,3 +93,43 @@ class FlaticonManager:
         except ValueError:
             logger.warning('No icon for Flaticon returned', resp)
             return (None, None)
+
+    def add_pictures(self, text, clusive_user=None, percent=15):
+        if not flaticon_is_configured():
+            return text
+        session = self.get_session()
+        wns = WordnetSimplifier('en')
+        word_list = wns.tokenize_no_casefold(text)
+        word_info = wns.analyze_words(word_list, clusive_user=clusive_user)
+        to_replace = math.ceil(len(word_info) * percent / 100)
+
+        # Find some pictures to use
+        pictures = {}
+        for i in word_info:
+            hw = i['hw']
+            if not 'known' in i:
+                url, desc = self.get_icon(session, hw)
+                if url:
+                    logger.debug('Found icon for %s', hw)
+                    pictures[hw] = (url, desc)
+                    to_replace -= 1
+                    if to_replace <= 0:
+                        break
+        logger.debug('Done looking for icons, to_replace=%d', to_replace)
+
+        # Insert them into the text
+        out = ''
+        for tok in word_list:
+            base = base_form(tok, return_word_if_not_found=True)
+            if base in pictures:
+                url, desc = pictures[base]
+                logger.debug('Found picture for %s (%s)', tok, base)
+                rep = '<span class="text-picture-pair"><span class="text-picture-term">%s</span> ' \
+                      '<img src="%s" class="text-picture-img" alt="%s"></span>' \
+                      % (tok, url, desc)
+            else:
+                logger.debug('No picture for %s (%s)', tok, base)
+                rep = tok
+            out += rep
+        logger.debug('output: %s', out)
+        return out
