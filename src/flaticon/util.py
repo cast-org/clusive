@@ -27,26 +27,28 @@ class FlaticonManager:
     api_base = 'https://api.flaticon.com/v3'
     api_key = settings.FLATICON_API_KEY
 
-    def get_token(self, session: requests.Session):
+    def get_token(self, session: requests.Session, force_refresh=False):
         """
         Fetch a token from the API if we don't already have one.
         :return: existing or new token, or None if a token can't be obtained.
         """
-        if self.api_key is None:
+        if FlaticonManager.api_key is None:
+            logger.warning('No API key, get_token fails')
             return None
-        if self.token is None:
+        if FlaticonManager.token is None or force_refresh:
+            logger.debug('Requesting new Flaticon API token')
             try:
-                resp = session.post(url=self.api_base+'/app/authentication', timeout=3, params={
-                    'apikey': self.api_key,
+                resp = session.post(url=FlaticonManager.api_base+'/app/authentication', timeout=3, params={
+                    'apikey': FlaticonManager.api_key,
                 })
                 if resp.status_code == requests.codes.ok:
                     if resp.json():
-                        self.token = 'Bearer ' + resp.json()['data']['token']
+                        FlaticonManager.token = 'Bearer ' + resp.json()['data']['token']
                 else:
                     logger.warning('Error status from Flaticon: %s', resp.status_code)
             except (KeyError, ValueError) as error:
                 logger.error('Error while requesting Flaticon token', error)
-        return self.token
+        return FlaticonManager.token
 
     def get_session(self):
         """
@@ -73,10 +75,14 @@ class FlaticonManager:
                 'styleColor': 'black',
                 'limit': '1',
             }
-            headers = {
-                'Authorization': token,
-            }
+            headers = {'Authorization': token}
             resp = session.get(url=self.api_base+'/search/icons/priority', timeout=3, headers=headers, params=params)
+            if resp.status_code == requests.codes.unauthorized:
+                # Returns a 401 status if token has expired. Request a new one and try again.
+                logger.debug('Flaticon token expired, refreshing it...')
+                token = self.get_token(session, force_refresh=True)
+                headers = {'Authorization': token}
+                resp = session.get(url=self.api_base+'/search/icons/priority', timeout=3, headers=headers, params=params)
             if resp.status_code == requests.codes.ok:
                 json = resp.json()
                 icons = json.get('data', [])
@@ -87,12 +93,11 @@ class FlaticonManager:
                         return (url, desc)
                     else:
                         logger.warning('Flaticon response did not include expected fields: %s', json)
-                        return (None, None)
-                else:
-                    return (None, None)
+            else:
+                logger.warning('Error searching for icons. Status %s, response %s', resp.status_code, resp.text)
         except ValueError:
             logger.warning('No icon for Flaticon returned', resp)
-            return (None, None)
+        return (None, None)
 
     def add_pictures(self, text, clusive_user=None, percent=15):
         if not flaticon_is_configured():
@@ -110,12 +115,10 @@ class FlaticonManager:
             if not 'known' in i:
                 url, desc = self.get_icon(session, hw)
                 if url:
-                    logger.debug('Found icon for %s', hw)
                     pictures[hw] = (url, desc)
                     to_replace -= 1
                     if to_replace <= 0:
                         break
-        logger.debug('Done looking for icons, to_replace=%d', to_replace)
 
         # Insert them into the text
         out = ''
@@ -123,13 +126,10 @@ class FlaticonManager:
             base = base_form(tok, return_word_if_not_found=True)
             if base in pictures:
                 url, desc = pictures[base]
-                logger.debug('Found picture for %s (%s)', tok, base)
                 rep = '<span class="text-picture-pair"><span class="text-picture-term">%s</span> ' \
                       '<img src="%s" class="text-picture-img" alt="%s"></span>' \
                       % (tok, url, desc)
             else:
-                logger.debug('No picture for %s (%s)', tok, base)
                 rep = tok
             out += rep
-        logger.debug('output: %s', out)
         return out

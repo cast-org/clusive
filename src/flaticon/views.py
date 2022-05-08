@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 
+from eventlog.signals import pictures_action
 from flaticon.util import FlaticonManager
 from library.models import Book
 from roster.models import TransformTool
@@ -22,9 +23,9 @@ class ShowPicturesView(LoginRequiredMixin, View):
         icon_mgr = FlaticonManager()
         output = icon_mgr.add_pictures(text, clusive_user)
 
-        # simplification_action.send(sender=SimplifyTextView.__class__,
-        #                            request=request,
-        #                            text=text,
-        #                            book=book)
+        pictures_action.send(sender=ShowPicturesView.__class__,
+                                   request=request,
+                                   text=text,
+                                   book=book)
 
         return JsonResponse({'result': output})
