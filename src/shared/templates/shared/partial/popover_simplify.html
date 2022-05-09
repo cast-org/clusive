@@ -8,11 +8,14 @@
                 <ul class="nav nav-tabs-popover">
                     <li class="nav-item"><button id="translateNavLink" class="nav-link">Translate</button></li>
                     <li class="nav-item"><button id="simplifyNavLink" class="nav-link">Simplify text</button></li>
+                    <li class="nav-item"><button id="picturesNavLink" class="nav-link">Show pictures</button></li>
                 </ul>
             </nav>
             {% include "shared/partial/dialog_tts.html" %}
         </div>
-        <div id="simplifyBody" class="popover-body">
+        <div class="popover-body">
+            <div id="simplifyLoading" class="text-center"><strong>Loading...</strong> <div class="ms-2 loader-circle" role="status" aria-hidden="true"></div></div>
+            <div id="simplifyBody"></div>
         </div>
         <div class="popover-footer">
             <div id="translateFooter">

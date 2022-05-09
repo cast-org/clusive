@@ -102,49 +102,82 @@ function contextLookup(selection) {
     glossaryPop_focus($('#lookupIcon'));
 }
 
-function loadTranslation(text) {
-    var lang = clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage;
+// Transform/simplify modal methods
 
-    simplificationTool = 'translate';
-    var $simplifyPop = $('#simplifyPop');
+function setUpSimplifyModal(toolName, loadDataPromise) {
+    'use strict';
+
+    var $simplifyLocator = $('#simplifyLocator');
     var $simplifyBody = $('#simplifyBody');
-    $('#translateFooter').show();
-    $simplifyBody.html('<p>Loading...</p>');
-    var $navLink = $('#translateNavLink');
+    var $simplifyLoading = $('#simplifyLoading');
+    $simplifyBody.hide();
+    $simplifyLoading.show();
+    var $navLink = $('#' + toolName + 'NavLink');
     $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
     $navLink.addClass('active').attr('aria-current', 'true');
-
-    $('#simplifyLocator').one('afterShow.cfw.popover', function() {
-        $simplifyPop.trigger('focus');
+    $simplifyLocator.one('afterShow.cfw.popover', function() {
+        $('#simplifyPop').trigger('focus');
     });
-    $simplifyPop.CFW_Popover('show');
-    $.ajax('/translation/translate', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': DJANGO_CSRF_TOKEN
-        },
-        data: {
-            text: text,
-            language: lang,
-            book_id: pub_id
-        }
-    })
-        .done(function(data) {
-            $simplifyBody.html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
-                + '<div class="translate-source popover-section">' + text + '</div>');
-            var $translateOutput = $('#translateOutput');
-            $translateOutput.attr('lang', data.lang);
-            $translateOutput.css('direction', data.direction);
-        })
+    $simplifyLocator.CFW_Popover('show');
+    loadDataPromise
         .fail(function(err) {
             console.error(err);
-            $simplifyBody.html(err.responseText);
+            $simplifyBody.html('<p>Error loading this content</p>');
         })
         .always(function() {
+            $simplifyBody.show();
+            $simplifyLoading.hide();
+            var $simplifyPop = $('#simplifyPop');
             if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
                 $simplifyPop.CFW_Popover('locateUpdate');
             }
         });
+
+}
+
+function loadTranslation(text) {
+    var lang = clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage;
+    $('#translateFooter').show();
+    setUpSimplifyModal('translate',
+        $.ajax('/translation/translate', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: {
+                text: text,
+                language: lang,
+                book_id: pub_id
+            }
+        })
+            .done(function(data) {
+                $('#simplifyBody').html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
+                    + '<div class="translate-source popover-section">' + text + '</div>');
+                var $translateOutput = $('#translateOutput');
+                $translateOutput.attr('lang', data.lang);
+                $translateOutput.css('direction', data.direction);
+            })
+    );
+}
+
+function loadPictures(selection) {
+    'use strict';
+
+    $('#translateFooter').hide();
+    setUpSimplifyModal('pictures',
+        $.ajax('/icons/pictures', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: {
+                text: selection,
+                book_id: pub_id
+            }
+        })
+            .done(function(data) {
+                $('#simplifyBody').html('<div class="text-picture text-picture-vertical">' + data.result + '</div>');
+            }));
 }
 
 // Text Simplification
@@ -152,41 +185,22 @@ function loadTranslation(text) {
 function loadSimplification(selection) {
     'use strict';
 
-    simplificationTool = 'simplify';
-    var $simplifyLocator = $('#simplifyLocator');
-    var $simplifyBody = $('#simplifyBody');
-    $simplifyBody.html('<p>Loading...</p>');
     $('#translateFooter').hide();
-    var $navLink = $('#simplifyNavLink');
-    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
-    $navLink.addClass('active').attr('aria-current', 'true');
-    $simplifyLocator.one('afterShow.cfw.popover', function() {
-        $('#simplifyPop').trigger('focus');
-    });
-    $.ajax('/simplification/simplify', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': DJANGO_CSRF_TOKEN
-        },
-        data: {
-            text: selection,
-            book_id: pub_id
-        }
-    })
-        .done(function(data) {
-            $simplifyBody.html('<div class="simplify-source">' + data.result + '</div>');
-        })
-        .fail(function(err) {
-            console.error(err);
-            $simplifyBody.html('<p>Error loading simplified text</p>');
-        })
-        .always(function() {
-            $simplifyLocator.CFW_Popover('show');
-            var $simplifyPop = $('#simplifyPop');
-            if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
-                $simplifyPop.CFW_Popover('locateUpdate');
+    setUpSimplifyModal('simplify',
+        $.ajax('/simplification/simplify', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: {
+                text: selection,
+                book_id: pub_id
             }
-        });
+        })
+            .done(function(data) {
+                $('#simplifyBody').html('<div class="simplify-source">' + data.result + '</div>');
+            })
+    );
 }
 
 // Called by Readium when the 'transform' button in the toolbox is clicked.
@@ -196,6 +210,8 @@ function contextTransform(selection) {
     $('#simplifyPop').data('text', selection);
     if (simplificationTool === 'simplify') {
         loadSimplification(selection);
+    } else if (simplificationTool === 'pictures') {
+        loadPictures(selection);
     } else {
         loadTranslation(selection);
     }
@@ -523,12 +539,16 @@ $(function() {
         });
 
     // Tabs in simplify popover
+    $('#translateNavLink').on('click', function() {
+        loadTranslation($('#simplifyPop').data('text'));
+    });
+
     $('#simplifyNavLink').on('click', function() {
         loadSimplification($('#simplifyPop').data('text'));
     });
 
-    $('#translateNavLink').on('click', function() {
-        loadTranslation($('#simplifyPop').data('text'));
+    $('#picturesNavLink').on('click', function() {
+        loadPictures($('#simplifyPop').data('text'));
     });
 
     // Word definition links inside simplify popover

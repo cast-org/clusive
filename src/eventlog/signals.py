@@ -21,6 +21,7 @@ page_timing = Signal(providing_args=['event_id', 'times'])
 vocab_lookup = Signal(providing_args=['request', 'word', 'cued', 'source', 'book'])
 translation_action = Signal(providing_args=['request', 'language', 'text', 'book'])
 simplification_action = Signal(providing_args=['request', 'text', 'book'])
+pictures_action = Signal(providing_args=['request', 'text', 'book'])
 preference_changed = Signal(providing_args=['request', 'event_id', 'preference', 'timestamp', 'reader_info'])
 annotation_action = Signal(providing_args=['request', 'action', 'annotation'])
 control_used = Signal(providing_args=['request', 'event_id', 'event_type', 'control', 'value', 'action', 'timestamp', 'reader_info'])
@@ -237,6 +238,13 @@ def log_simplification_action(sender, **kwargs):
     """User requests simplification of some text"""
     # provides: 'request', 'text', 'book'
     create_event(kwargs, control='simplification', value=kwargs['text'])
+
+
+@receiver(pictures_action)
+def log_pictures_action(sender, **kwargs):
+    """User requests 'show pictures' simplification of text"""
+    # provides: 'request', 'text', 'book'
+    create_event(kwargs, control='show_pictures', value=kwargs['text'])
 
 
 @receiver(control_used)
