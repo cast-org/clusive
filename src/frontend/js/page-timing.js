@@ -35,7 +35,7 @@ PageTiming.trackPage = function(eventId) {
 
     PageTiming.eventId = eventId;
 
-    console.debug('Page tracking: Started tracking page ', eventId);
+    console.debug('PageTiming: Started tracking page ', eventId);
 
     // First choice:  Use PerformanceObserver and PerformanceNavigationTiming
     // APIs if available -- check is made in usePerformanceObserver() and
@@ -46,7 +46,7 @@ PageTiming.trackPage = function(eventId) {
         // it to acquire the page load time.
         if ('performance' in window && 'timing' in window.performance) {
             PageTiming.pageloadTime = window.performance.timing.responseEnd - window.performance.timing.navigationStart;
-            console.log("Page tracking: LOAD TIME VIA Performance.timing: " + PageTiming.pageloadTime);
+            console.log("PageTiming: LOAD TIME VIA Performance.timing: " + PageTiming.pageloadTime);
         }
     }
     var currentTime = Date.now();
@@ -56,7 +56,7 @@ PageTiming.trackPage = function(eventId) {
         PageTiming.handleFocusChange();
         $(window).on('focusin focusout', PageTiming.handleFocusChange);
     } else {
-        console.warn('Page tracking: Browser doesn\'t support focus checking; hidden time won\'t be reported.');
+        console.warn('PageTiming: Browser doesn\'t support focus checking; hidden time won\'t be reported.');
     }
 
     // Interval timer to monitor laptop going to sleep.
@@ -81,13 +81,13 @@ PageTiming.checkAwakeness = function() {
         //     ' blocked? ', PageTiming.pageBlocked, '; blurred? ', !document.hasFocus());
     } else {
         // Last awake time was too long ago, record preceding interval as having been asleep.
-        console.debug('Page tracking: Computer woke up from sleep that started around ' + PageTiming.fmt(lastAwake));
+        console.debug('PageTiming: Computer woke up from sleep that started around ' + PageTiming.fmt(lastAwake));
         if (PageTiming.startInactiveTime === null) {
             //   do we need this?:  || PageTiming.startInactiveTime > lastAwake
             PageTiming.startInactiveTime = lastAwake; // might want to add a fraction of interval
-            console.debug('Page tracking: Set startInactiveTime to ', PageTiming.fmt(lastAwake));
+            console.debug('PageTiming: Set startInactiveTime to ', PageTiming.fmt(lastAwake));
         } else {
-            console.debug('Page tracking: startInactiveTime is already set to ', PageTiming.fmt(PageTiming.startInactiveTime),
+            console.debug('PageTiming: startInactiveTime is already set to ', PageTiming.fmt(PageTiming.startInactiveTime),
                 ' so not resetting to ', PageTiming.fmt(lastAwake));
         }
         PageTiming.handleFocusChange();
@@ -110,7 +110,7 @@ PageTiming.handleFocusChange = function() {
     } else if (PageTiming.startInactiveTime === null) {
         // Page is either blocked or blurred.  Record start of inactive time if this is new.
         PageTiming.startInactiveTime = Date.now();
-        console.debug('Page tracking: Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
+        console.debug('PageTiming: Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
             ' with cumulative ', PageTiming.totalInactiveTime / 1000, 's');
     }
 };
@@ -130,7 +130,7 @@ PageTiming.recordInactiveTime = function() {
     if (PageTiming.startInactiveTime !== null) {
         var now = Date.now();
         PageTiming.totalInactiveTime += now - PageTiming.startInactiveTime;
-        console.debug('Page tracking: Window reactivated. Was inactive from ', PageTiming.fmt(PageTiming.startInactiveTime),
+        console.debug('PageTiming: Window reactivated. Was inactive from ', PageTiming.fmt(PageTiming.startInactiveTime),
             ' to ', PageTiming.fmt(now),
             '; Cumulative inactive time = ', PageTiming.totalInactiveTime / 1000, 's');
         PageTiming.startInactiveTime = null;
@@ -140,32 +140,42 @@ PageTiming.recordInactiveTime = function() {
 // Called in page's "pagehide" event
 PageTiming.reportEndTime = function() {
     'use strict';
-    console.debug(`Page tracking: reportEndTime() for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
+    console.debug(`PageTiming: reportEndTime() for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
     if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
         PageTiming.recordInactiveTime();
         var duration = Date.now() - PageTiming.pageStartTime;
-        var activeTime = duration - PageTiming.totalInactiveTime;
-        if (activeTime < 0) {
-            activeTime = 0;
-            console.log("Page tracking: reportEndTime() detected negative activeDuration");
-        }
         var data = {
             type: 'PT',
             eventId: PageTiming.eventId,
             loadTime: PageTiming.pageloadTime,
             duration: duration,
-            activeDuration: activeTime
+            activeDuration: PageTiming.checkNegActiveTime(duration, PageTiming.totalInactiveTime),
         };
-        console.debug('Page tracking: Reporting page data: ', data);
+        console.debug('PageTiming: Reporting page data: ', data);
         clusiveEvents.messageQueue.add(data);
     } else {
-        console.warn('Page tracking: Pagehide event received, but end time was already recorded');
+        console.warn('PageTiming: Pagehide event received, but end time was already recorded');
     }
     // Done with the observer, if any.
     if (PageTiming.performanceObserver) {
         PageTiming.performanceObserver.disconnect();
         PageTiming.performanceObserver = null;
     }
+};
+
+// Check for negative active time and return something more reasonable.
+PageTiming.checkNegActiveTime = function (duration, inactiveTime) {
+    var activeDuration = duration - inactiveTime;
+    if (activeDuration < 0) {
+        console.log(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${inactiveTime}`);
+        // Try half of the inactiveTime in case it was accidentally doubled.
+        activeDuration = duration - inactiveTime/2;
+        if (activeDuration < 0) {
+            // If inactive time is still too large, set activeDuration to duration.
+            activeDuration = duration;
+        }
+    }
+    return activeDuration;
 };
 
 // If browser supports both of the PerformanceObserver and the
@@ -193,7 +203,7 @@ PageTiming.processNavEntries = function (perfEntries) {
     navEntries.some(function (entry) {
         if (entry.name === document.URL) {  // TODO: is check needed?
             PageTiming.pageloadTime = entry.duration;
-            console.log(`Page tracking: LOAD TIME VIA PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
+            console.log(`PageTiming: LOAD TIME VIA PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
             return true;
         } else {
             return false;
