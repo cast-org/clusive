@@ -139,9 +139,6 @@ function buildTableOfContents() {
     if (typeof d2reader === 'object') {
         var items = d2reader.tableOfContents;
         var has_structure = items.length > 0;
-        if (items.length === 1 && items[0].children && items[0].children.length > 1) {
-            has_structure = true;
-        }
         if (!has_structure) {
             // Use title and locator to create a single entry
             items = [{
@@ -156,7 +153,18 @@ function buildTableOfContents() {
 
         var navLinks = $(TOC_CONTAINER).find('.nav-link');
         // Add click event to update menu when new page selected
-        navLinks.on('click', function() {
+        navLinks.on('click', function(event) {
+            // Accessibility addition to close TOC and move focus to selected item within the reader frame.
+            // Uses click event because screen readers since they use simulated click events,
+            // even if keyboard navigation is used.
+            if (event) {
+                var selector = event.target.getAttribute('href') || '';
+                if (selector.length !== 0) {
+                    TOC_focusSelector = selector;
+                    $(TOC_MODAL).CFW_Modal('hide');
+                }
+            }
+
             // Use timeout delay until we can get a callback from reader
             setTimeout(function() {
                 resetCurrentTocItem(false);
@@ -460,21 +468,6 @@ function setUpNotes() {
     });
 }
 
-// Accessibility addition to close TOC and move focus to selected item within the reader frame.
-// Uses click event because screen readers since they use simulated click events,
-// even if keyboard navigation is used.
-function tocClickHandler() {
-    'use strict';
-
-    $(TOC_CONTAINER).on('click', 'a:not([data-cfw="collapse"])', function(event) {
-        var item = event.target;
-        var selector = item.getAttribute('href') || '';
-        if (selector.length === 0) { return; }
-        TOC_focusSelector = selector;
-        $(TOC_MODAL).CFW_Modal('hide');
-    });
-}
-
 function getReaderBody() {
     'use strict';
 
@@ -550,7 +543,6 @@ $(document).ready(function() {
 
     savePendingLocationUpdate();
     setUpNotes();
-    tocClickHandler();
 
     $(NOTES_CONTAINER)
         .on('click touchstart', '.delete-highlight', deleteAnnotation)
