@@ -658,3 +658,11 @@ h2,
         color: var(--CT_formTextColor);
     }
 }
+
+// Increase loader animation duration
+.clusive-reduced-motion {
+    .loader-circle::after,
+    .loader-double::after {
+        animation-duration: $loader-circle-animation-speed * 2;
+    }
+}
