@@ -144,12 +144,17 @@ PageTiming.reportEndTime = function() {
     if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
         PageTiming.recordInactiveTime();
         var duration = Date.now() - PageTiming.pageStartTime;
+        var activeTime = duration - PageTiming.totalInactiveTime;
+        if (activeTime < 0) {
+            activeTime = 0;
+            console.debug(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${PageTiming.totalInactiveTime}`);
+        }
         var data = {
             type: 'PT',
             eventId: PageTiming.eventId,
             loadTime: PageTiming.pageloadTime,
             duration: duration,
-            activeDuration: PageTiming.checkNegActiveTime(duration, PageTiming.totalInactiveTime),
+            activeDuration: activeTime,
         };
         console.debug('PageTiming: Reporting page data: ', data);
         clusiveEvents.messageQueue.add(data);
@@ -161,21 +166,6 @@ PageTiming.reportEndTime = function() {
         PageTiming.performanceObserver.disconnect();
         PageTiming.performanceObserver = null;
     }
-};
-
-// Check for negative active time and return something more reasonable.
-PageTiming.checkNegActiveTime = function (duration, inactiveTime) {
-    var activeDuration = duration - inactiveTime;
-    if (activeDuration < 0) {
-        console.log(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${inactiveTime}`);
-        // Try half of the inactiveTime in case it was accidentally doubled.
-        activeDuration = duration - inactiveTime/2;
-        if (activeDuration < 0) {
-            // If inactive time is still too large, set activeDuration to duration.
-            activeDuration = duration;
-        }
-    }
-    return activeDuration;
 };
 
 // If browser supports both of the PerformanceObserver and the
