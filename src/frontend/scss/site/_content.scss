@@ -450,6 +450,21 @@ h2,
     vertical-align: baseline;
     filter: var(--CT_textPictureImgFilter);
 }
+.text-picture-vertical {
+    margin-top: .5rem;
+    line-height: 2.75;
+
+    .text-picture-pair {
+        display: inline-flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        line-height: 1;
+    }
+    .text-picture-img {
+        margin-top: -.5rem;
+    }
+}
+
 
 // Django error list
 .errorlist {
@@ -656,5 +671,13 @@ h2,
     }
     .result-muted {
         color: var(--CT_formTextColor);
+    }
+}
+
+// Increase loader animation duration
+.clusive-reduced-motion {
+    .loader-circle::after,
+    .loader-double::after {
+        animation-duration: $loader-circle-animation-speed * 2;
     }
 }

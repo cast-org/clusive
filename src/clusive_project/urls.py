@@ -32,6 +32,7 @@ urlpatterns = [
     path('glossary/', include('glossary.urls')),
     path('library/', include('library.urls')),
     path('simplification/', include('simplification.urls')),
+    path('icons/', include('flaticon.urls')),
     path('tips/', include('tips.urls')),
     path('messagequeue/', include('messagequeue.urls')),
     path('translation/', include('translation.urls')),

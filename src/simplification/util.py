@@ -1,7 +1,7 @@
 import logging
+import math
 from typing import List
 
-import math
 import profanity_check
 import regex
 from nltk.corpus import wordnet
@@ -25,17 +25,9 @@ class WordnetSimplifier:
         word_list = self.tokenize_no_casefold(text)
         # Returns frequency info about all distinct tokens, sorted by frequency
         # Each element of word_info returned is a dict with keys hw, alts, count, freq
-        word_info = self.analyze_words(word_list)
+        word_info = self.analyze_words(word_list, clusive_user=clusive_user)
         # How many words should we replace?
         to_replace = math.ceil(len(word_info) * percent / 100)
-        # Has user indicated that they "know" or "use" any of these words?
-        if clusive_user:
-            known_words = WordModel.objects.filter(user=clusive_user, word__in=[i['hw'] for i in word_info], rating__gte=2).values('word')
-            known_word_list = [val['word'] for val in known_words]
-            logger.debug('Known words in simplification: %s', known_word_list)
-            for i in word_info:
-                if i['hw'] in known_word_list:
-                    i['known'] = True
 
         # Now determine appropriate replacements for that many of the most difficult words.
         replacements = {}
@@ -195,7 +187,7 @@ class WordnetSimplifier:
         else:
             return zipf_frequency(word, self.lang)
 
-    def analyze_words(self, word_list):
+    def analyze_words(self, word_list, clusive_user=None):
         word_info = {}
         for word in word_list:
             if not regex.match('^[a-zA-Z]+$', word):
@@ -216,6 +208,16 @@ class WordnetSimplifier:
                 if word != base:
                     w['alts'].append(word)
                 word_info[base] = w
+
+        # Has user indicated that they "know" or "use" any of these words?
+        if clusive_user is not None:
+            all_words = word_info.keys()
+            known_words = WordModel.objects.filter(user=clusive_user, word__in=all_words, rating__gte=2).values('word')
+            known_word_list = [val['word'] for val in known_words]
+            logger.debug('Known words in simplification: %s', known_word_list)
+            for w in known_word_list:
+                word_info[w]['known'] = True
+
         return sorted(word_info.values(), key=lambda x: x.get('freq'))
 
     # Some miscellaneous places where Wordnet has a lot of synonyms listed that can lead to unfortunate replacements

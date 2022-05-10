@@ -183,10 +183,12 @@ class StudentActivitySort:
 class TransformTool:
     SIMPLIFY = 'simplify'
     TRANSLATE = 'translate'
+    PICTURES = 'pictures'
 
     CHOICES = [
         (SIMPLIFY, 'simplify'),
         (TRANSLATE, 'translate'),
+        (PICTURES, 'pictures'),
     ]
 
 def check_valid_choice(choices, value):
