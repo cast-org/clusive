@@ -228,6 +228,9 @@ LOGIN_URL = '/account/login'
 # To use Merriam-Webster dictionary for definition lookup, set environment variable to your API key here
 MERRIAM_WEBSTER_API_KEY = os.environ.get('MERRIAM_WEBSTER_API_KEY', None)
 
+# To use 'show images' feature, set environment variable to an API key from flaticon.com
+FLATICON_API_KEY = os.environ.get('FLATICON_API_KEY', None)
+
 # If new registrants should be synced to a MailChimp mailing list, set these to valid values.
 MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', None)
 MAILCHIMP_SERVER = os.environ.get('MAILCHIMP_SERVER', None)
