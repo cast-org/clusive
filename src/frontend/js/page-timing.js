@@ -46,7 +46,7 @@ PageTiming.trackPage = function(eventId) {
         // it to acquire the page load time.
         if ('performance' in window && 'timing' in window.performance) {
             PageTiming.pageloadTime = window.performance.timing.responseEnd - window.performance.timing.navigationStart;
-            console.log("PageTiming: LOAD TIME VIA Performance.timing: " + PageTiming.pageloadTime);
+            console.debug('PageTiming: LOAD TIME VIA Performance.timing: ' + PageTiming.pageloadTime);
         }
     }
     var currentTime = Date.now();
@@ -140,6 +140,7 @@ PageTiming.recordInactiveTime = function() {
 // Called in page's "pagehide" event
 PageTiming.reportEndTime = function() {
     'use strict';
+
     console.debug(`PageTiming: reportEndTime() for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
     if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
         PageTiming.recordInactiveTime();
@@ -154,7 +155,7 @@ PageTiming.reportEndTime = function() {
             eventId: PageTiming.eventId,
             loadTime: PageTiming.pageloadTime,
             duration: duration,
-            activeDuration: activeTime,
+            activeDuration: activeTime
         };
         console.debug('PageTiming: Reporting page data: ', data);
         clusiveEvents.messageQueue.add(data);
@@ -173,31 +174,35 @@ PageTiming.reportEndTime = function() {
 // navigation events to get the page's load time.
 // https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver
 // https://developer.mozilla.org/en-US/docs/Web/API/PerformanceNavigationTiming
-PageTiming.usePerformanceObserver = function () {
+PageTiming.usePerformanceObserver = function() {
+    'use strict';
+
     var observer = null;
     if (window.PerformanceObserver && window.PerformanceNavigationTiming) {
-        observer = new PerformanceObserver(function (perfEntries) {
+        observer = new PerformanceObserver(function(perfEntries) {
             PageTiming.processNavEntries(perfEntries);
         });
-        observer.observe({ type: "navigation", buffered: true });
-    };
+        observer.observe({
+            type: 'navigation',
+            buffered: true
+        });
+    }
     return observer;
 };
 
 // Called from the PerformanceObserver callback to get the page load time.
 // See PageTiming.usePerformanceObserver(), above.
-PageTiming.processNavEntries = function (perfEntries) {
+PageTiming.processNavEntries = function(perfEntries) {
     'use strict';
 
     var navEntries = perfEntries.getEntries();
-    navEntries.some(function (entry) {
+    navEntries.some(function(entry) {
         if (entry.name === document.URL) {  // TODO: is check needed?
             PageTiming.pageloadTime = entry.duration;
-            console.log(`PageTiming: LOAD TIME VIA PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
+            console.debug(`PageTiming: LOAD TIME VIA PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
             return true;
-        } else {
-            return false;
         }
+        return false;
     });
 };
 
