@@ -1,3 +1,6 @@
+var userAgent = navigator.userAgent || navigator.vendor;
+var isAndroid = /android/i.test(userAgent);
+
 var readerSelector = 'iframe[data-cy="reader-frame"]'
 
     var openPanel = function() {
@@ -43,16 +46,19 @@ var setPref = function (pref, value) {
     preferenceControls[pref].setAction(selector);
 }
 
+    var fontFamilyArial = isAndroid ? '"Helvetica Neue", Arimo, Arial' : '"Helvetica Neue", Arial, Arimo'
+    var fontFamilyVerdana = isAndroid ? 'Roboto, Verdana' : 'Verdana, Roboto';
+
     var preferenceExpects = {
         fontFamily: {
             reader: {
                 prop: '--USER__fontFamily',
                 values: {
                     default: 'Original',
-                    times: 'Georgia, Times, Times New Roman, serif',
-                    comic: 'Comic Sans MS, sans-serif',
-                    arial: 'Arial, Helvetica',
-                    verdana: 'Verdana',
+                    times: 'Georgia, Times, "Times New Roman", serif',
+                    comic: '"Comic Sans MS", "Comic Sans", "Comic Neue", cursive',
+                    arial: fontFamilyArial,
+                    verdana: fontFamilyVerdana,
                     openDyslexic: 'OpenDyslexicRegular'
                 }
             },
