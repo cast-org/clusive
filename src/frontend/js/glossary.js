@@ -157,6 +157,16 @@ function loadTranslation(text) {
     }
 }
 
+function setupSimplifyLanguageSave() {
+    'use strict';
+
+    $('body').on('click', '#simplifyLanguageSave', function() {
+        var value = $('#simplifyLanguageSelect').val();
+        console.debug('setting value ', value);
+        clusivePrefs.prefsEditorLoader.applier.change('preferences.cisl_prefs_translationLanguage', value);
+    });
+}
+
 // Text Simplification
 
 function loadSimplification(selection) {
@@ -585,6 +595,7 @@ $(function() {
         .on('dragStart.cfw.popover', function() {
             simplifyBeenDragged = true;
         });
+    setupSimplifyLanguageSave();
 
     // When ranking in the check-in modal is selected, notify server
     $('#vocabCheckModal').on('change', 'input[type="radio"]', function(event) {

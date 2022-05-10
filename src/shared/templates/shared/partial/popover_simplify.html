@@ -15,13 +15,13 @@
         <div class="popover-body">
             <div id="simplifyLanguageSetting">
                 <legend class="setting-title">Translation language</legend>
-                    <select class="cislc-modalSettings-languageSelect form-control">
+                    <select id="simplifyLanguageSelect" class="cislc-modalSettings-languageSelect form-control">
                     <option value="default">Choose...</option>
                     {% for lang in translation_languages %}
                     <option value="{{lang.language}}">{{lang.name}}</option>
                     {% endfor %}
                 </select>
-                <button type="button" class="btn btn-secondary my-1">Save</button>
+                <button id="simplifyLanguageSave" type="button" class="btn btn-secondary my-1">Save</button>
             </div>
             <div id="simplifyBody">
 
