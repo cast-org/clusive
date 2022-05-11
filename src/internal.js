@@ -69,8 +69,10 @@ function blockHotkeys(keyArray) {
     // keydown/keyup creation provided for in `shortcut.js`
     keyArray.forEach(function(item) {
         window.hotkeys(item.keys, function(event) {
-            event.preventDefault();
-            event.stopPropagation();
+            if (window.parent.shortcut.doBlockInternal(item.blocker)) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
         });
     });
 }

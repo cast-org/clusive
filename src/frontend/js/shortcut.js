@@ -6,72 +6,91 @@
 (function($) {
     'use strict';
 
+    // keys:  key combination used to trigger hotkey routine
+    // routine: logic used to determine course of action when hotkey is pressed
+    // blocker: logic used to determine if `keys` should be blocked at reader level - boolean value of true is always block
     var HOTKEYS = [
         {
             keys: 'alt+k',
-            routine: 'shortcutDialog'
+            routine: 'shortcutDialog',
+            blocker: true
         },
         {
             keys: 'alt+t',
-            routine: 'tocDialog'
+            routine: 'tocDialog',
+            blocker: true
         },
         {
             keys: 'alt+h',
-            routine: 'highlightDialog'
+            routine: 'highlightDialog',
+            blocker: true
         },
         {
             keys: 'alt+,',
-            routine: 'settingsDisplayDialog'
+            routine: 'settingsDisplayDialog',
+            blocker: true
         },
         {
             keys: 'alt+.',
-            routine: 'settingsReadAloudDialog'
+            routine: 'settingsReadAloudDialog',
+            blocker: true
         },
         {
             keys: 'alt+a',
-            routine: 'ttsToggle'
+            routine: 'ttsToggle',
+            blocker: true
         },
         {
             keys: 'space',
-            routine: 'ttsPause'
+            routine: 'ttsPause',
+            blocker: 'ttsPauseBlocker',
         },
         {
             keys: 'alt+f',
-            routine: 'searchFocus'
+            routine: 'searchFocus',
+            blocker: true
         },
         {
             keys: 'alt+r',
-            routine: 'readerFocus'
+            routine: 'readerFocus',
+            blocker: true
         },
         /*
         {
             keys: 'left',
-            routine: 'pagePrev'
+            routine: 'pagePrev',
+            blocker: true
         },
         {
             keys: 'right',
-            routine: 'pageNext'
+            routine: 'pageNext',
+            blocker: true
         },
         */
         {
             keys: 'alt+pageup',
-            routine: 'sectionPrev'
+            routine: 'sectionPrev',
+            blocker: true
         },
         {
             keys: 'alt+pagedown',
-            routine: 'sectionNext'
+            routine: 'sectionNext',
+            blocker: true
         },
         {
             keys: 'alt+l',
-            routine: 'libraryPage'
+            routine: 'libraryPage',
+            blocker: true
         },
         {
             keys: 'alt+d',
-            routine: 'contextLookup'
+            routine: 'contextLookup',
+            blocker: 'contextLookupBlocker'
         },
         {
             keys: 'alt+s',
-            routine: 'contextTransform'
+            routine: 'contextTransform',
+            blocker: 'contextTransformBlocker'
         }
     ];
 
@@ -95,6 +114,8 @@
     var SELECTOR_SETTINGS_READ_PANEL = '#setting1';
 
     var SELECTOR_READ_ALOUD_REGIONS = '.sidebar-tts, .dialog-tts';
+    var SELECTOR_READ_ALOUD_GLOBAL_PLAY = '.sidebar-end .tts-play';
+    var SELECTOR_READ_ALOUD_ACTIVE = '.sidebar-tts.active';
 
     var SELECTOR_GLOSSARY_DIALOG = '#glossaryPop';
     var SELECTOR_SIMPLIFY_DIALOG = '#simplifyPop';
@@ -203,7 +224,7 @@
 
             if (result.length) {
                 // Default to 'global' play button
-                var ttsBtn = document.querySelector('.sidebar-end .tts-play');
+                var ttsBtn = document.querySelector(SELECTOR_READ_ALOUD_GLOBAL_PLAY);
                 if (!$.CFW_isVisible(ttsBtn)) {
                     ttsBtn = null;
                 }
@@ -310,9 +331,11 @@
 
         // Library page
         libraryPage: function(event, keys) {
-            if (event) { event.preventDefault(); }
-            shortcut.addEvent('hotkey-library', keys);
-            window.location.href = '/reader';
+            if (!window.location.pathname.includes('/library/')) {
+                if (event) { event.preventDefault(); }
+                shortcut.addEvent('hotkey-library', keys);
+                window.location.href = '/reader';
+            }
         },
 
         // Context menu - word lookup (definition)
@@ -356,6 +379,27 @@
         }
     };
 
+    // Internal reader blocker checks
+    // No need for `readerFound` check as reader will always exist for internal blockers
+    shortcutModule.BLOCKER = {
+        ttsPauseBlocker: function() {
+            var ttsActive = document.querySelector(SELECTOR_READ_ALOUD_ACTIVE);
+            if (ttsActive !== null) {
+                return true;
+            }
+        },
+        contextLookupBlocker: function() {
+            if (shortcut.hasReaderSelection() || $.CFW_isVisible(document.querySelector(SELECTOR_GLOSSARY_DIALOG))) {
+                return true;
+            }
+        },
+        contextTransformBlocker: function() {
+            if (shortcut.hasReaderSelection() || $.CFW_isVisible(document.querySelector(SELECTOR_SIMPLIFY_DIALOG))) {
+                return true;
+            }
+        }
+    };
+
     shortcutModule.prototype = {
         attachReaderFrame : function() {
             var that = this;
@@ -367,20 +411,36 @@
                 this.readerOwner = this.readerFrame.ownerDocument;
                 this.readerDocument = this.readerFrame.contentDocument;
 
+                // Block all hotkey combos at reader level
+                this.readerFrame.contentWindow.blockHotkeys(HOTKEYS);
+
                 // Pass keydown from reader frame to parent document
                 $(this.readerDocument)
                     .off('keydown.clusive.shortcut')
                     .on('keydown.clusive.shortcut', function(event) {
                         that.ownerDispatchEvent(event);
                     });
-
-                // Block all hotkey combos at reader level
-                this.readerFrame.contentWindow.blockHotkeys(HOTKEYS);
             }
         },
 
         invokeRoutine : function(keysList, routineName, event) {
             shortcut.routine[routineName](event, keysList);
+        },
+
+        doBlockInternal : function(blockerName) {
+            if (typeof blockerName === 'undefined') {
+                blockerName = null;
+            }
+            if (blockerName === true) {
+                return true;
+            }
+            if (blockerName !== null && shortcut.blocker.hasOwnProperty(blockerName)) {
+                if (shortcut.blocker[blockerName]() === true) {
+                    return true;
+                }
+            }
+            // Keydown event should not be blocked by default
+            return false;
         },
 
         process : function() {
@@ -605,7 +665,8 @@
             }
         },
 
-        routine : shortcutModule.ROUTINE
+        routine : shortcutModule.ROUTINE,
+        blocker : shortcutModule.BLOCKER
     };
 
     HOTKEYS.forEach(function(item) {
