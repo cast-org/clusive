@@ -7,6 +7,11 @@
 (function(fluid) {
     'use strict';
 
+    var userAgent = navigator.userAgent || navigator.vendor;
+    var isAndroid = /android/i.test(userAgent);
+    var fontFamilyArial = isAndroid ? '"Helvetica Neue", Arimo, Arial' : '"Helvetica Neue", Arial, Arimo'
+    var fontFamilyVerdana = isAndroid ? 'Roboto, Verdana' : 'Verdana, Roboto';
+
     fluid.defaults('cisl.prefs.readerPreferencesBridge', {
         gradeNames: ['fluid.modelComponent'],
         model: {
@@ -45,19 +50,21 @@
                         },
                         {
                             inputValue: 'times',
-                            outputValue: 'Georgia, Times, Times New Roman, serif'
+                            outputValue: 'Georgia, Times, "Times New Roman", serif'
                         },
                         {
                             inputValue: 'arial',
-                            outputValue: 'Arial, Helvetica'
-                        }, {
+                            outputValue: fontFamilyArial
+                        },
+                        {
                             inputValue: 'verdana',
-                            outputValue: 'Verdana'
+                            outputValue: fontFamilyVerdana
                         },
                         {
                             inputValue: 'comic',
-                            outputValue: 'Comic Sans MS, Comic Sans, Comic Neue, cursive'
-                        }, {
+                            outputValue: '"Comic Sans MS", "Comic Sans", "Comic Neue", cursive'
+                        },
+                        {
                             inputValue: 'open-dyslexic',
                             outputValue: 'OpenDyslexicRegular'
                         }

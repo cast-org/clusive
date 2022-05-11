@@ -102,68 +102,44 @@ function contextLookup(selection) {
     glossaryPop_focus($('#lookupIcon'));
 }
 
-function loadTranslation(text) {
+// Transform/simplify modal methods
+
+function fetchTranslation(text) {
     var lang = clusivePrefs.prefsEditorLoader.model.preferences.cisl_prefs_translationLanguage;
-
-    simplificationTool = 'translate';
-    var $simplifyPop = $('#simplifyPop');
-    var $simplifyBody = $('#simplifyBody');
-    $('#translateFooter').show();
-    $simplifyBody.html('<p>Loading...</p>');
-    var $navLink = $('#translateNavLink');
-    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
-    $navLink.addClass('active').attr('aria-current', 'true');
-
-    $('#simplifyLocator').one('afterShow.cfw.popover', function() {
-        $simplifyPop.trigger('focus');
-    });
-    $simplifyPop.CFW_Popover('show');
-    $.ajax('/translation/translate', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': DJANGO_CSRF_TOKEN
-        },
-        data: {
-            text: text,
-            language: lang,
-            book_id: pub_id
-        }
-    })
-        .done(function(data) {
-            $simplifyBody.html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
-                + '<div class="translate-source popover-section">' + text + '</div>');
-            var $translateOutput = $('#translateOutput');
-            $translateOutput.attr('lang', data.lang);
-            $translateOutput.css('direction', data.direction);
-        })
-        .fail(function(err) {
-            console.error(err);
-            $simplifyBody.html(err.responseText);
-        })
-        .always(function() {
-            if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
-                $simplifyPop.CFW_Popover('locateUpdate');
+    if (lang && lang !== 'default') {
+        $('#translateFooter').show();
+        return $.ajax('/translation/translate', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': DJANGO_CSRF_TOKEN
+            },
+            data: {
+                text: text,
+                language: lang,
+                book_id: pub_id
             }
-        });
+        })
+            .done(function(data) {
+                $('#simplifyBody').html('<div class="translate-output" id="translateOutput">' + data.result + '</div>'
+                    + '<div class="translate-source popover-section">' + text + '</div>');
+                var $translateOutput = $('#translateOutput');
+                $translateOutput.attr('lang', data.lang);
+                $translateOutput.css('direction', data.direction);
+            });
+    }
+    // No translation language is set in preferences.
+    // We don't need to do any AJAX call in this case - just construct Deferred to return and resolve it at once.
+    return $.Deferred()
+        .done(function() {
+            $('#simplifyLanguageSetting').show();
+            $('#simplifyBody').html('');
+        }).resolve();
 }
 
-// Text Simplification
-
-function loadSimplification(selection) {
+function fetchPictures(selection) {
     'use strict';
 
-    simplificationTool = 'simplify';
-    var $simplifyLocator = $('#simplifyLocator');
-    var $simplifyBody = $('#simplifyBody');
-    $simplifyBody.html('<p>Loading...</p>');
-    $('#translateFooter').hide();
-    var $navLink = $('#simplifyNavLink');
-    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
-    $navLink.addClass('active').attr('aria-current', 'true');
-    $simplifyLocator.one('afterShow.cfw.popover', function() {
-        $('#simplifyPop').trigger('focus');
-    });
-    $.ajax('/simplification/simplify', {
+    return $.ajax('/icons/pictures', {
         method: 'POST',
         headers: {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
@@ -174,15 +150,71 @@ function loadSimplification(selection) {
         }
     })
         .done(function(data) {
-            $simplifyBody.html('<div class="simplify-source">' + data.result + '</div>');
-        })
+            $('#simplifyBody').html('<div class="text-picture text-picture-vertical">' + data.result + '</div>');
+        });
+}
+
+// Text Simplification
+
+function fetchTextSimplification(selection) {
+    'use strict';
+
+    return $.ajax('/simplification/simplify', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': DJANGO_CSRF_TOKEN
+        },
+        data: {
+            text: selection,
+            book_id: pub_id
+        }
+    })
+        .done(function(data) {
+            $('#simplifyBody').html('<div class="simplify-source">' + data.result + '</div>');
+        });
+}
+
+function loadSimplification(tool) {
+    'use strict';
+
+    // Standard setup for all three types of transforms.
+    simplificationTool = tool;
+    var $simplifyPop = $('#simplifyPop');
+    var $simplifyLocator = $('#simplifyLocator');
+    var $simplifyBody = $('#simplifyBody');
+    var $simplifyLoading = $('#simplifyLoading');
+    var selection = $simplifyPop.data('text');
+    $simplifyLoading.show();
+    $simplifyBody.hide();
+    $('#simplifyLanguageSetting').hide();
+    $('#translateFooter').hide();
+    var $navLink = $('#' + simplificationTool + 'NavLink');
+    $navLink.closest('.nav').find('.nav-link').removeClass('active').removeAttr('aria-current');
+    $navLink.addClass('active').attr('aria-current', 'true');
+    $simplifyLocator.one('afterShow.cfw.popover', function() {
+        $simplifyPop.trigger('focus');
+    });
+    $simplifyLocator.CFW_Popover('show');
+
+    // Run the specific type of simplification requested.
+    // These methods each return a jQuery "Deferred" object.
+    var deferred;
+    if (simplificationTool === 'simplify') {
+        deferred = fetchTextSimplification(selection);
+    } else if (simplificationTool === 'pictures') {
+        deferred = fetchPictures(selection);
+    } else {
+        deferred = fetchTranslation(selection);
+    }
+    // Common processing for AJAX failures and post-processing.
+    deferred
         .fail(function(err) {
             console.error(err);
-            $simplifyBody.html('<p>Error loading simplified text</p>');
+            $simplifyBody.html('<p>Error loading this content</p>');
         })
         .always(function() {
-            $simplifyLocator.CFW_Popover('show');
-            var $simplifyPop = $('#simplifyPop');
+            $simplifyBody.show();
+            $simplifyLoading.hide();
             if ($simplifyPop.is(':visible') && !simplifyBeenDragged) {
                 $simplifyPop.CFW_Popover('locateUpdate');
             }
@@ -194,11 +226,36 @@ function contextTransform(selection) {
     'use strict';
 
     $('#simplifyPop').data('text', selection);
-    if (simplificationTool === 'simplify') {
-        loadSimplification(selection);
-    } else {
-        loadTranslation(selection);
-    }
+    loadSimplification(simplificationTool);
+}
+
+function setupSimplificationButtons() {
+    'use strict';
+
+    $('body').on('click', '#simplifyLanguageSave', function() {
+        var value = $('#simplifyLanguageSelect').val();
+        console.debug('setting language preference: ', value);
+        clusivePrefs.prefsEditorLoader.applier.change('preferences.cisl_prefs_translationLanguage', value);
+        loadSimplification('translate');
+    });
+
+    // Tabs in simplify popover
+    $('#translateNavLink').on('click', function() {
+        loadSimplification('translate');
+    });
+    $('#simplifyNavLink').on('click', function() {
+        loadSimplification('simplify');
+    });
+    $('#picturesNavLink').on('click', function() {
+        loadSimplification('pictures');
+    });
+
+    // Word definition links inside simplify popover
+    $('#simplifyPop').on('click', '.simplifyLookup', function(e) {
+        e.preventDefault();
+        var word = $(e.currentTarget).text();
+        openGlossaryForWord(word, e.currentTarget);
+    });
 }
 
 // Methods related to the wordbank page
@@ -256,10 +313,8 @@ window.wordBank.updateColumnCounts = function() {
         if (msgElmPersonalize !== null) {
             msgElmPersonalize.classList.add('d-none');
         }
-    } else {
-        if (msgElmPersonalize !== null) {
-            msgElmPersonalize.classList.remove('d-none');
-        }
+    } else if (msgElmPersonalize !== null) {
+        msgElmPersonalize.classList.remove('d-none');
     }
 };
 
@@ -522,22 +577,6 @@ $(function() {
             glossaryBeenDragged = true;
         });
 
-    // Tabs in simplify popover
-    $('#simplifyNavLink').on('click', function() {
-        loadSimplification($('#simplifyPop').data('text'));
-    });
-
-    $('#translateNavLink').on('click', function() {
-        loadTranslation($('#simplifyPop').data('text'));
-    });
-
-    // Word definition links inside simplify popover
-    $('#simplifyPop').on('click', '.simplifyLookup', function(e) {
-        e.preventDefault();
-        var word = $(e.currentTarget).text();
-        openGlossaryForWord(word, e.currentTarget);
-    });
-
     // When ranking in the glossary popup is selected, notify server
     $('#glossaryInput').on('change', 'input', function() {
         var newValue = $(this).val();
@@ -575,6 +614,7 @@ $(function() {
         .on('dragStart.cfw.popover', function() {
             simplifyBeenDragged = true;
         });
+    setupSimplificationButtons();
 
     // When ranking in the check-in modal is selected, notify server
     $('#vocabCheckModal').on('change', 'input[type="radio"]', function(event) {

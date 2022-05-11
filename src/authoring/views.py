@@ -7,6 +7,7 @@ from nltk.corpus.reader import Synset
 from textstat import textstat
 
 from authoring.forms import TextInputForm, TextSimplificationForm
+from flaticon.util import FlaticonManager, flaticon_is_configured
 from library.models import Book
 from simplification.util import WordnetSimplifier
 
@@ -26,10 +27,33 @@ class SimplifyView(FormView):
         text = form.cleaned_data['text']
         percent = form.cleaned_data['percent']
         simplifier = WordnetSimplifier(self.lang)
-        # Returns [ { 'hw' , 'alts', 'count', 'freq' }, ... ] sorted by freq
+        # Returns {
+        #             'word_count': total_word_count,
+        #             'to_replace': to_replace,
+        #             'word_info': word_info,
+        #             'result': out,
+        #         }
         data = simplifier.simplify_text(text, clusive_user=self.clusive_user, percent=percent, include_full=True)
         self.extra_context = data
         # Don't do normal process of redirecting to success_url.  Just stay on this form page forever.
+        r = 0
+
+        # get the image replacements
+        num_replace = data['to_replace']
+        if flaticon_is_configured():
+            icon_mgr = FlaticonManager()
+            icon_session = icon_mgr.get_session()
+            for index in range(len(data['word_info'])):
+                temp_word = data['word_info'][index]['hw']
+                (icon_url, icon_desc) = icon_mgr.get_icon(icon_session, temp_word)
+                data['word_info'][index].update({ 'icon_url': icon_url,
+                                                  'icon_alt': icon_desc,
+                                                  })
+                if icon_url is not None:
+                    # logger.debug("UPDATED WORD INFO = %s", data['word_info'][index])
+                    r = r + 1
+                    if r == num_replace:
+                        break
         return self.render_to_response(self.get_context_data(form=form))
 
 
