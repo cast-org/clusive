@@ -191,7 +191,8 @@ PageTiming.processNavEntries = function (perfEntries) {
 
     var navEntries = perfEntries.getEntries();
     navEntries.some(function (entry) {
-        if (entry.name === document.URL) {  // TODO: is check needed?
+        // Only interested in navigation entries for this page.
+        if (entry.name === document.URL) {
             PageTiming.pageloadTime = entry.duration;
             console.log(`PageTiming: LOAD TIME VIA PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
             return true;
