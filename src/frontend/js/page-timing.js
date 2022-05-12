@@ -12,7 +12,7 @@
  *
  */
 
-/* global PAGE_EVENT_ID, clusiveEvents, DJANGO_USERNAME, DJANGO_CSRF_TOKEN */
+/* global PAGE_EVENT_ID, DJANGO_USERNAME, DJANGO_CSRF_TOKEN, clusive, clusiveEvents */
 
 var PageTiming = {};
 
@@ -71,7 +71,9 @@ PageTiming.trackPage = function(eventId) {
     PageTiming.pageStartTime = currentTime;
 };
 
-PageTiming.windowEventListener = function (event) {
+PageTiming.windowEventListener = function() {
+    'use strict';
+
     if (DJANGO_USERNAME) {
         console.debug("PageTiming: window pagehide detected for '" + DJANGO_USERNAME + "'");
         PageTiming.reportEndTime();
@@ -146,7 +148,9 @@ PageTiming.recordInactiveTime = function() {
     }
 };
 
-PageTiming.createEndTimeMessage = function () {
+PageTiming.createEndTimeMessage = function() {
+    'use strict';
+
     PageTiming.recordInactiveTime();
     var duration = Date.now() - PageTiming.pageStartTime;
     var activeTime = duration - PageTiming.totalInactiveTime;
@@ -168,7 +172,7 @@ PageTiming.createEndTimeMessage = function () {
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
 PageTiming.reportEndTime = function() {
     'use strict';
-    
+
     console.debug(`PageTiming: reportEndTime() for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
     var message = clusive.djangoMessageQueue.wrapMessage(PageTiming.createEndTimeMessage());
     console.debug('PageTiming: Reporting page data: ', JSON.stringify(message));
