@@ -46,7 +46,7 @@ PageTiming.trackPage = function(eventId) {
         // it to acquire the page load time.
         if ('performance' in window && 'timing' in window.performance) {
             PageTiming.pageloadTime = window.performance.timing.responseEnd - window.performance.timing.navigationStart;
-            console.log("PageTiming: LOAD TIME VIA Performance.timing: " + PageTiming.pageloadTime);
+            console.log(`PageTiming: load time via Performance.timing for ${eventId}: ${PageTiming.pageloadTime}`);
         }
     }
     var currentTime = Date.now();
@@ -193,8 +193,8 @@ PageTiming.processNavEntries = function (perfEntries) {
     navEntries.some(function (entry) {
         // Only interested in navigation entries for this page.
         if (entry.name === document.URL) {
-            PageTiming.pageloadTime = entry.duration;
-            console.log(`PageTiming: LOAD TIME VIA PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
+            PageTiming.pageloadTime = entry.responseEnd - entry.startTime;
+            console.log(`PageTiming: load time via PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
             return true;
         } else {
             return false;
