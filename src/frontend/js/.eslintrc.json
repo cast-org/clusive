@@ -2,6 +2,7 @@
   "root": true,
   "env": {
     "browser": true,
+    "es6": true,
     "jquery": true
   },
   "extends": "eslint:recommended",
@@ -202,7 +203,10 @@
     "padded-blocks": ["error", "never"],
     "padding-line-between-statements": "off",
     "quote-props": ["error", "consistent-as-needed"],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "single", {
+            "allowTemplateLiterals": true,
+            "avoidEscape": true
+    }],
     "require-jsdoc": "off",
     "semi": ["error", "always"],
     "semi-spacing": ["error", {
