@@ -55,10 +55,6 @@ PageTiming.trackPage = function(eventId) {
     // Tracking for visible/invisible time
     if (document.hasFocus !== 'undefined') {
         PageTiming.handleFocusChange();
-//         document.onvisibilitychange = function() {
-//             console.debug(`PageTiming: document.onvisibilityChange(), visibilityState is ${document.visibilityState}`);
-//             PageTiming.handleFocusChange();
-//         }; 
         $(window).on('focusin focusout', PageTiming.handleFocusChange);
     } else {
         console.warn('PageTiming: Browser doesn\'t support focus checking; hidden time won\'t be reported.');
@@ -116,7 +112,7 @@ PageTiming.blocked = function(isBlocked) {
     PageTiming.handleFocusChange();
 };
 
-PageTiming.handleFocusChange = function (event) {
+PageTiming.handleFocusChange = function(event) {
     'use strict';
 
     if (event) {
