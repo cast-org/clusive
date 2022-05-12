@@ -594,7 +594,13 @@
 
         focusReaderBody : function() {
             var that = this;
+
+            // Clean hotkey-js _downKeys[]
+            var eventFocus = new Event('focus');
+            window.dispatchEvent(eventFocus);
+
             var focusReaderCallback = function() {
+                var readerFrame = document.querySelector(SELECTOR_READER_FRAME);
                 var readerBody = that.getReaderBody();
                 that.updateTabIndex(readerBody);
                 setTimeout(function() {

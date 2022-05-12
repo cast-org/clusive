@@ -505,6 +505,10 @@ $(document).on('updateCurrentLocation.d2reader', function() {
     };
 
     setTimeout(function() {
+        // Clean hotkey-js _downKeys[]
+        var eventFocus = new Event('focus');
+        window.dispatchEvent(eventFocus);
+
         if (selector === null) {
             // No specific element - focus on body
             setTimeout(function() {
