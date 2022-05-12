@@ -23,7 +23,7 @@ PageTiming.pageBlocked = false;
 PageTiming.lastSeenAwakeTime = null;
 PageTiming.awakeCheckInterval = 5000;  // Check for awakeness every 5 seconds
 PageTiming.awakeCheckTimer = null;
-PageTiming.localStorageKey = 'pageEndTime';
+PageTiming.performanceObserver = null;
 
 /**
  * Call to initiate time tracking of this page.
@@ -38,7 +38,19 @@ PageTiming.trackPage = function(eventId) {
     console.debug('PageTiming: Started tracking page ', eventId);
 
     var currentTime = Date.now();
-    var timingSupported = PageTiming.isTimingSupported();
+
+    // First choice:  Use PerformanceObserver and PerformanceNavigationTiming
+    // APIs if available -- check is made in usePerformanceObserver() and
+    // observer is returned if check succeeds.
+    PageTiming.performanceObserver = PageTiming.usePerformanceObserver();
+    if (!PageTiming.performanceObserver) {
+        // Second choice: if deprecated Performance.timing is available, use
+        // it to acquire the page load time.
+        if ('performance' in window && 'timing' in window.performance) {
+            PageTiming.pageloadTime = window.performance.timing.responseEnd - window.performance.timing.navigationStart;
+            console.debug(`PageTiming: load time via Performance.timing for ${eventId}: ${PageTiming.pageloadTime}`);
+        }
+    }
 
     // Tracking for visible/invisible time
     if (document.hasFocus !== 'undefined') {
@@ -50,10 +62,6 @@ PageTiming.trackPage = function(eventId) {
 
     // Interval timer to monitor laptop going to sleep.
     PageTiming.awakeCheckTimer = setInterval(PageTiming.checkAwakeness, PageTiming.awakeCheckInterval);
-
-    if (timingSupported) {
-        PageTiming.pageloadTime = performance.timing.responseEnd - performance.timing.navigationStart;
-    }
 
     // Set up so that end time will be recorded when user turns pages.
     // https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event
@@ -141,21 +149,27 @@ PageTiming.recordInactiveTime = function() {
 PageTiming.createEndTimeMessage = function () {
     PageTiming.recordInactiveTime();
     var duration = Date.now() - PageTiming.pageStartTime;
+    var activeTime = duration - PageTiming.totalInactiveTime;
+    if (activeTime < 0) {
+        activeTime = 0;
+        console.debug(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${PageTiming.totalInactiveTime}`);
+    }
     return {
         type: 'PT',
         eventId: PageTiming.eventId,
         loadTime: PageTiming.pageloadTime,
         duration: duration,
-        activeDuration: duration - PageTiming.totalInactiveTime
+        activeDuration: activeTime
     };
 };
 
-// Called in document's "visibilityChange" (hidden) event or window's "pageHide"
-// event, and uses the browser's asynchronous `sendBeacon()` function.
+// Called for window's "pageHide" event, and uses the browser's asynchronous
+// `sendBeacon()` function.
 // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
 PageTiming.reportEndTime = function() {
     'use strict';
-
+    
+    console.debug(`PageTiming: reportEndTime() for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
     var message = clusive.djangoMessageQueue.wrapMessage(PageTiming.createEndTimeMessage());
     console.debug('PageTiming: Reporting page data: ', JSON.stringify(message));
     var postForm = new FormData();
@@ -173,6 +187,12 @@ PageTiming.reportEndTime = function() {
     // if Clusive received the request.
     // https://www.w3.org/TR/beacon/#return-values
     console.debug(`PageTiming: Queued ${PageTiming.eventId} via sendBeacon(): ${beaconResult}`);
+
+    // Done with the observer, if any.
+    if (PageTiming.performanceObserver) {
+        PageTiming.performanceObserver.disconnect();
+        PageTiming.performanceObserver = null;
+    }
 };
 
 // For clusive-message-queue's logout handler.
@@ -187,15 +207,42 @@ PageTiming.logoutEndTime = function() {
     console.debug(`PageTiming: Queued ${PageTiming.eventId} via clusiveEvents.messageQueue.`);
 };
 
-// Test if browser supports the timing API
-PageTiming.isTimingSupported = function() {
+// If browser supports both of the PerformanceObserver and the
+// PerformanceNavigationTiming APIs, set up a PerformanceObserver to observe the
+// navigation events to get the page's load time.
+// https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver
+// https://developer.mozilla.org/en-US/docs/Web/API/PerformanceNavigationTiming
+PageTiming.usePerformanceObserver = function() {
     'use strict';
 
-    try {
-        return 'performance' in window && 'timing' in window.performance;
-    } catch (e) {
-        return false;
+    var observer = null;
+    if (window.PerformanceObserver && window.PerformanceNavigationTiming) {
+        observer = new PerformanceObserver(function(perfEntries) {
+            PageTiming.processNavEntries(perfEntries);
+        });
+        observer.observe({
+            type: 'navigation',
+            buffered: true
+        });
     }
+    return observer;
+};
+
+// Called from the PerformanceObserver callback to get the page load time.
+// See PageTiming.usePerformanceObserver(), above.
+PageTiming.processNavEntries = function(perfEntries) {
+    'use strict';
+
+    var navEntries = perfEntries.getEntries();
+    navEntries.some(function(entry) {
+        // Only interested in navigation entries for this page.
+        if (entry.name === document.URL) {
+            PageTiming.pageloadTime = entry.responseEnd - entry.startTime;
+            console.debug(`PageTiming: load time via PerformanceNavigationTiming for ${PageTiming.eventId}: ${PageTiming.pageloadTime}`);
+            return true;
+        }
+        return false;
+    });
 };
 
 $(document).ready(function() {

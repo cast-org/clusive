@@ -4,6 +4,7 @@
 }
 .modal-footer {
     flex-grow: 1; // Fix footer not full width when inside a form
+    justify-content: flex-start;
     color: $modal-footer-color;
     background-color: $modal-footer-bg;
 }
