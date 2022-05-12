@@ -32,7 +32,7 @@
         },
         {
             keys: 'alt+.',
-            routine: 'settingsReadAloudDialog',
+            routine: 'settingsReadingToolsDialog',
             blocker: true
         },
         {
@@ -190,11 +190,11 @@
             }
         },
 
-        // Settings: Read-aloud dialog
-        settingsReadAloudDialog : function(event, keys) {
+        // Settings: Reading tools dialog
+        settingsReadingToolsDialog : function(event, keys) {
             if (document.querySelector(SELECTOR_SETTINGS_BTN)) {
                 if (event) { event.preventDefault(); }
-                shortcut.addEvent('hotkey-settings-read-aloud', keys);
+                shortcut.addEvent('hotkey-settings-reading-tools', keys);
                 var callback = function() {
                     shortcut.tabOpenFocus(SELECTOR_SETTINGS_READ_TAB, SELECTOR_SETTINGS_READ_PANEL);
                 };
@@ -235,7 +235,7 @@
                     ttsBtn = dialog.querySelector('.tts-play');
                 }
                 if (ttsBtn !== null) {
-                    shortcut.addEvent('hotkey-tts-toggle', keys);
+                    shortcut.addEvent('hotkey-tts-play', keys);
                     clusiveTTS.toggle({
                         currentTarget: ttsBtn
                     });
