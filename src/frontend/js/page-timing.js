@@ -59,11 +59,6 @@ PageTiming.trackPage = function(eventId) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event
     $(window).on('pagehide', PageTiming.windowEventListener);
 
-    // Record end time when document is hidden.
-    // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
-    // https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event.
-    document.addEventListener('visibilityChange', PageTiming.docEventListener);
-
     // Save current time - end time will be calculated as an offset to this.
     PageTiming.pageStartTime = currentTime;
 };
@@ -71,13 +66,6 @@ PageTiming.trackPage = function(eventId) {
 PageTiming.windowEventListener = function (event) {
     if (DJANGO_USERNAME) {
         console.debug("PageTiming: window pagehide detected for '" + DJANGO_USERNAME + "'");
-        PageTiming.reportEndTime();
-    }
-};
-
-PageTiming.docEventListener = function (event) {
-    if (document.visibilityState === 'hidden' && DJANGO_USERNAME) {
-        console.debug("PageTiming: document hidden detected for '" + DJANGO_USERNAME + "'");
         PageTiming.reportEndTime();
     }
 };
@@ -193,7 +181,6 @@ PageTiming.logoutEndTime = function() {
 
     // Stop event handling via sendBeacon()
     $(window).off('pagehide', PageTiming.windowEventListener);
-    document.removeEventListener('visibilityChange', PageTiming.docEventListener);
 
     // Add the PageEnd event to the messagequeue.
     clusiveEvents.messageQueue.add(PageTiming.createEndTimeMessage());
