@@ -499,10 +499,7 @@ $(document).on('updateCurrentLocation.d2reader', function() {
 
     var updateTabindex = function(element) {
         var tabindex = null;
-        if (element.hasAttribute('tabindex')) {
-            tabindex = element.getAttribute('tabindex');
-        }
-        if (tabindex === null) {
+        if (!element.hasAttribute('tabindex')) {
             element.setAttribute('tabindex', -1);
         }
     };

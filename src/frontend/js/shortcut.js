@@ -55,7 +55,6 @@
             routine: 'readerFocus',
             blocker: true
         },
-        /*
         {
             keys: 'left',
             routine: 'pagePrev',
@@ -66,7 +65,6 @@
             routine: 'pageNext',
             blocker: true
         },
-        */
         {
             keys: 'alt+pageup',
             routine: 'sectionPrev',
@@ -98,6 +96,7 @@
     var SELECTOR_SHORTCUTS_DIALOG = '#shortcutsPop';
 
     var SELECTOR_READER_FRAME = '#frameReader';
+    var SELECTOR_READER_BODY_FOCUSER = "#frameBody";
 
     var SELECTOR_TOC_BTN = '#tocButton';
     var SELECTOR_TOC_MODAL = '#modalToc';
@@ -285,7 +284,6 @@
             }
         },
 
-        /*
         // Reader navigation - previous page
         pagePrev: function(event, keys) {
             if (shortcut.readerFound && typeof d2reader === 'object') {
@@ -303,7 +301,6 @@
                 d2reader.nextPage();
             }
         },
-        */
 
         // Reader navigation - previous section/resource
         sectionPrev: function(event, keys) {
@@ -409,7 +406,7 @@
                 this.readerFound = true;
                 // Pass keydown from reader frame to parent document
                 this.readerOwner = this.readerFrame.ownerDocument;
-                this.readerDocument = this.readerFrame.contentDocument;
+                this.readerDocument = this.readerFrame.contentDocument || this.readerFrame.contentWindow.document;
 
                 // Block all hotkey combos at reader level
                 this.readerFrame.contentWindow.blockHotkeys(HOTKEYS);
@@ -584,17 +581,14 @@
 
         updateTabIndex : function(element) {
             var tabindex = null;
-            if (element.hasAttribute('tabindex')) {
-                tabindex = element.getAttribute('tabindex');
-            }
-            if (tabindex === null) {
+            if (!element.hasAttribute('tabindex')) {
                 element.setAttribute('tabindex', -1);
             }
         },
 
         getReaderBody : function() {
-            var readerIframe = document.querySelector('#D2Reader-Container iframe');
-            var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
+            var readerFrame = document.querySelector(SELECTOR_READER_FRAME);
+            var readerDocument = readerFrame.contentDocument || readerFrame.contentWindow.document;
             return readerDocument.body;
         },
 
