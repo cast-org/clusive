@@ -42,6 +42,10 @@ PageTiming.trackPage = function(eventId) {
     // Tracking for visible/invisible time
     if (document.hasFocus !== 'undefined') {
         PageTiming.handleFocusChange();
+//         document.onvisibilitychange = function() {
+//             console.debug(`PageTiming: document.onvisibilityChange(), visibilityState is ${document.visibilityState}`);
+//             PageTiming.handleFocusChange();
+//         }; 
         $(window).on('focusin focusout', PageTiming.handleFocusChange);
     } else {
         console.warn('Browser doesn\'t support focus checking; hidden time won\'t be reported.');
@@ -93,16 +97,21 @@ PageTiming.blocked = function(isBlocked) {
     PageTiming.handleFocusChange();
 };
 
-PageTiming.handleFocusChange = function() {
+PageTiming.handleFocusChange = function (event) {
     'use strict';
 
+    if (event) {
+        console.debug(`PageTiming: handleFocusChange() due to ${event.type}`);
+    } else {
+        console.debug('PageTiming: handleFocusChange() not invoked via an event');
+    }
     if (!PageTiming.pageBlocked && document.hasFocus()) {
         // page is active.  If it was inactive before, record duration of inactivity.
         PageTiming.recordInactiveTime();
     } else if (PageTiming.startInactiveTime === null) {
         // Page is either blocked or blurred.  Record start of inactive time if this is new.
         PageTiming.startInactiveTime = Date.now();
-        console.debug('Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
+        console.debug('PageTiming: Window went inactive at ', PageTiming.fmt(PageTiming.startInactiveTime),
             ' with cumulative ', PageTiming.totalInactiveTime / 1000, 's');
     }
 };
@@ -122,7 +131,7 @@ PageTiming.recordInactiveTime = function() {
     if (PageTiming.startInactiveTime !== null) {
         var now = Date.now();
         PageTiming.totalInactiveTime += now - PageTiming.startInactiveTime;
-        console.debug('Window reactivated. Was inactive from ', PageTiming.fmt(PageTiming.startInactiveTime),
+        console.debug('PageTiming: Window reactivated. Was inactive from ', PageTiming.fmt(PageTiming.startInactiveTime),
             ' to ', PageTiming.fmt(now),
             '; Cumulative inactive time = ', PageTiming.totalInactiveTime / 1000, 's');
         PageTiming.startInactiveTime = null;
@@ -164,5 +173,7 @@ PageTiming.isTimingSupported = function() {
 $(document).ready(function() {
     'use strict';
 
+    $(document.body).attr('tabindex', '-1');
+    $(document.body).focus();
     PageTiming.trackPage(PAGE_EVENT_ID);
 });
