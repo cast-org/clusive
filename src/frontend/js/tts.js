@@ -10,6 +10,8 @@ if (typeof window.speechSynthesis === 'object') {
     window.speechSynthesis.getVoices();
 }
 
+var ATTRIBUTE_FORCE_READ = 'ra-read';
+
 var clusiveTTS = {
     synth: window.speechSynthesis,
     elementsToRead: [],
@@ -272,6 +274,10 @@ clusiveTTS.isVisuallyVisible = function(elem) {
 
     if (!elem) {
         return false;
+    }
+    // Special case to keep element as readable
+    if (elem.hasAttribute(ATTRIBUTE_FORCE_READ)) {
+        return true;
     }
     return Boolean(clusiveTTS.outerWidthMargin(elem) > 0 && clusiveTTS.outerHeightMargin(elem) > 0 && elem.getClientRects().length && $(elem).outerHeight(true) > 0 && window.getComputedStyle(elem).visibility !== 'hidden');
 };
