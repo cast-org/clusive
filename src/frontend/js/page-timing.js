@@ -12,7 +12,7 @@
  *
  */
 
-/* global PAGE_EVENT_ID, clusiveEvents */
+/* global PAGE_EVENT_ID, DJANGO_USERNAME, DJANGO_CSRF_TOKEN, clusive, clusiveEvents */
 
 var PageTiming = {};
 
@@ -37,6 +37,8 @@ PageTiming.trackPage = function(eventId) {
 
     console.debug('PageTiming: Started tracking page ', eventId);
 
+    var currentTime = Date.now();
+
     // First choice:  Use PerformanceObserver and PerformanceNavigationTiming
     // APIs if available -- check is made in usePerformanceObserver() and
     // observer is returned if check succeeds.
@@ -49,7 +51,6 @@ PageTiming.trackPage = function(eventId) {
             console.debug(`PageTiming: load time via Performance.timing for ${eventId}: ${PageTiming.pageloadTime}`);
         }
     }
-    var currentTime = Date.now();
 
     // Tracking for visible/invisible time
     if (document.hasFocus !== 'undefined') {
@@ -62,11 +63,21 @@ PageTiming.trackPage = function(eventId) {
     // Interval timer to monitor laptop going to sleep.
     PageTiming.awakeCheckTimer = setInterval(PageTiming.checkAwakeness, PageTiming.awakeCheckInterval);
 
-    // Set up so that end time will be recorded
-    $(window).on('pagehide', function() { PageTiming.reportEndTime(); });
+    // Set up so that end time will be recorded when user turns pages.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event
+    $(window).on('pagehide', PageTiming.windowEventListener);
 
     // Save current time - end time will be calculated as an offset to this.
     PageTiming.pageStartTime = currentTime;
+};
+
+PageTiming.windowEventListener = function() {
+    'use strict';
+
+    if (DJANGO_USERNAME) {
+        console.debug("PageTiming: window pagehide detected for '" + DJANGO_USERNAME + "'");
+        PageTiming.reportEndTime();
+    }
 };
 
 PageTiming.checkAwakeness = function() {
@@ -137,36 +148,67 @@ PageTiming.recordInactiveTime = function() {
     }
 };
 
-// Called in page's "pagehide" event
+PageTiming.createEndTimeMessage = function() {
+    'use strict';
+
+    PageTiming.recordInactiveTime();
+    var duration = Date.now() - PageTiming.pageStartTime;
+    var activeTime = duration - PageTiming.totalInactiveTime;
+    if (activeTime < 0) {
+        activeTime = 0;
+        console.debug(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${PageTiming.totalInactiveTime}`);
+    }
+    return {
+        type: 'PT',
+        eventId: PageTiming.eventId,
+        loadTime: PageTiming.pageloadTime,
+        duration: duration,
+        activeDuration: activeTime
+    };
+};
+
+// Called for window's "pageHide" event, and uses the browser's asynchronous
+// `sendBeacon()` function.
+// https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
 PageTiming.reportEndTime = function() {
     'use strict';
 
     console.debug(`PageTiming: reportEndTime() for ${PageTiming.eventId}, load time is ${PageTiming.pageloadTime}`);
-    if (!localStorage['pageEndTime.' + PageTiming.eventId]) {
-        PageTiming.recordInactiveTime();
-        var duration = Date.now() - PageTiming.pageStartTime;
-        var activeTime = duration - PageTiming.totalInactiveTime;
-        if (activeTime < 0) {
-            activeTime = 0;
-            console.debug(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${PageTiming.totalInactiveTime}`);
-        }
-        var data = {
-            type: 'PT',
-            eventId: PageTiming.eventId,
-            loadTime: PageTiming.pageloadTime,
-            duration: duration,
-            activeDuration: activeTime
-        };
-        console.debug('PageTiming: Reporting page data: ', data);
-        clusiveEvents.messageQueue.add(data);
-    } else {
-        console.warn('PageTiming: Pagehide event received, but end time was already recorded');
-    }
+    var message = clusive.djangoMessageQueue.wrapMessage(PageTiming.createEndTimeMessage());
+    console.debug('PageTiming: Reporting page data: ', JSON.stringify(message));
+    var postForm = new FormData();
+    postForm.append('csrfmiddlewaretoken', DJANGO_CSRF_TOKEN);
+    postForm.append('timestamp', new Date().toISOString());
+    postForm.append('messages', JSON.stringify([message]));
+    postForm.append('username', DJANGO_USERNAME);
+    var beaconResult = navigator.sendBeacon('/messagequeue/', postForm);
+
+    // `beaconResult` is `true` or `false` depending on whether the browser
+    // successfully queued the request or not.  (It will fail only if the
+    // size of `postForm`, exceeds the browser's limit, which is unlikely
+    // here).  However, `true` does not mean that the request was sent nor
+    // successfully handled by Clusive.  And, there is no way to tell
+    // if Clusive received the request.
+    // https://www.w3.org/TR/beacon/#return-values
+    console.debug(`PageTiming: Queued ${PageTiming.eventId} via sendBeacon(): ${beaconResult}`);
+
     // Done with the observer, if any.
     if (PageTiming.performanceObserver) {
         PageTiming.performanceObserver.disconnect();
         PageTiming.performanceObserver = null;
     }
+};
+
+// For clusive-message-queue's logout handler.
+PageTiming.logoutEndTime = function() {
+    'use strict';
+
+    // Stop event handling via sendBeacon()
+    $(window).off('pagehide', PageTiming.windowEventListener);
+
+    // Add the PageEnd event to the messagequeue.
+    clusiveEvents.messageQueue.add(PageTiming.createEndTimeMessage());
+    console.debug(`PageTiming: Queued ${PageTiming.eventId} via clusiveEvents.messageQueue.`);
 };
 
 // If browser supports both of the PerformanceObserver and the
