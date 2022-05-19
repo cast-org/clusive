@@ -1,15 +1,10 @@
-import csv
 import logging
 
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import StreamingHttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic.base import ContextMixin
 
 from eventlog.models import Event
-from library.models import BookVersion
-from roster.models import ResearchPermissions
 
 logger = logging.getLogger(__name__)
 
@@ -50,81 +45,3 @@ class EventMixin(ContextMixin):
 
     def configure_event(self, event: Event):
         raise NotImplementedError('View must define the configure_event method')
-
-
-@staff_member_required
-def event_log_report(request):
-    # TODO: get actor in same query
-    events = Event.objects \
-        .filter(actor__permission__in=ResearchPermissions.RESEARCHABLE) \
-        .select_related('actor', 'session', 'group')
-
-    response = StreamingHttpResponse(row_generator(events), content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="event-log.csv"'
-    return response
-
-
-def row_generator(events):
-    pseudo_buffer = Echo()
-    writer = csv.writer(pseudo_buffer)
-    yield writer.writerow(['Start Time', 'User', 'Role', 'Permission', 'Period', 'Site',
-                           'Type', 'Action', 'Page', 'Control', 'Object', 'Value',
-                           'Book Title', 'Book Version', 'Book Owner',
-                           'Duration', 'Active Duration',
-                           'Event ID', 'Session ID', 'Book ID', 'Book Version ID'])
-    period_site = {}
-    book_info = {}
-    for e in events:
-        yield writer.writerow(row_for_event(e, period_site, book_info))
-
-
-def row_for_event(e: Event, period_site, book_info):
-    period = e.group.anon_id if e.group else None
-    # period_site map caches lookups of the site anon_id for each period.
-    if period:
-        site = period_site.get(period)
-        if not site:
-            site = e.group.site.anon_id
-            period_site[period] = site
-    else:
-        site = None
-    if e.book_version_id:
-        info = book_info.get(e.book_version_id)
-        if not info:
-            try:
-                bv: BookVersion
-                bv = BookVersion.objects.get(id=e.book_version_id)
-                info = {
-                    'title': bv.book.title,
-                    'version': bv.sortOrder,
-                    'owner': bv.book.owner.anon_id if bv.book.owner else None
-                }
-            except BookVersion.DoesNotExist:
-                info = {
-                    'title': '[deleted]',
-                    'version': None,
-                    'owner': None
-                }
-            book_info[e.book_version_id] = info
-    else:
-        info = {
-            'title': None,
-            'version': None,
-            'owner': None
-        }
-    duration_s = e.duration.total_seconds() if e.duration else ''
-    active_s = e.active_duration.total_seconds() if e.active_duration else ''
-    return [e.event_time, e.actor.anon_id, e.membership, e.actor.permission, period, site,
-            e.type, e.action, e.page, e.control, e.object, e.value,
-            info['title'], info['version'], info['owner'],
-            duration_s, active_s, e.id, e.session.id, e.book_id, e.book_version_id]
-
-
-class Echo:
-    """An object that implements just the write method of the file-like
-    interface.
-    """
-
-    def write(self, value):
-        """Write the value by returning it, instead of storing in a buffer."""
-        return value
