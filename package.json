@@ -17,10 +17,11 @@
   },
   "homepage": "https://github.com/cast-org/clusive#readme",
   "dependencies": {
-    "@d-i-t-a/reader": "^2.0.2",
+    "@d-i-t-a/reader": "^2.0.4",
     "canvas-confetti": "^1.5.1",
     "figuration": "^4.3.2",
     "fluid-binder": "^1.1.2",
+    "hotkeys-js": "^3.9.2",
     "infusion": "^3.0.0",
     "interactjs": "^1.10.11",
     "jquery": "^3.6.0",
