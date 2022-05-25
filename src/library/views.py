@@ -752,7 +752,7 @@ class SwitchModalContentView(LoginRequiredMixin, TemplateView):
         versions = book.versions.all()
         # Count annotations and choose some example words to show
         for v in versions:
-            v.annotation_count = Annotation.objects.filter(bookVersion=v, user=request.clusive_user).count()
+            v.annotation_count = Annotation.get_list(user=request.clusive_user, book_version=v).count()
             if v.sortOrder == 0:
                 v.example_words = v.all_word_list[:3]
             else:
