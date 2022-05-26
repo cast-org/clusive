@@ -427,7 +427,7 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
 
         else:
             logger.debug('Form valid, no cover image')
-        messages.success(self.request, 'Reading added. Your readings are indicated by a personal icon ({icon:user-o}) on your library card.')
+        messages.success(self.request, 'Reading added. Your uploaded readings are indicated by a personal icon ({icon:user-o}) on your library card.')
         return super().form_valid(form)
 
     def configure_event(self, event: Event):

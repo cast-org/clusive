@@ -145,7 +145,7 @@ class LibraryViews:
     CHOICES = [
         (ALL, 'All readings'),
         (PUBLIC, 'Public readings'),
-        (MINE, 'My readings'),
+        (MINE, 'Uploaded readings'),
         (STARRED, 'Starred readings'),
         (PERIOD, 'Period assignments')
     ]
