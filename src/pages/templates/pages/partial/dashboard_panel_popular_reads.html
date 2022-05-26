@@ -5,9 +5,13 @@
         <div class="col">
             <p>See what your students are reading and what they said they learned.</p>
         </div>
-        <div class="col-12 col-md-4 col-xl-3 mb-0_5">
-            <p><a href="{% url 'upload' %}" class="btn btn-primary btn-xsmall"><span aria-hidden="true">+ </span>Upload a new reading</a></p>
-            <p><a href="{% url 'reader_index' %}" class="btn btn-primary btn-xsmall">Go to library</a></p>
+        <div class="col-12 col-md-5 text-md-center">
+            <div class="mb-0_75">
+                <a href="{% url 'upload' %}" class="btn btn-primary btn-small"><span aria-hidden="true">+ </span>Upload a new reading</a>
+            </div>
+            <div class="mb-0_75">
+                <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
+            </div>
         </div>
     </div>
 

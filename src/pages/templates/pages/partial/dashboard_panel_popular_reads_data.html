@@ -19,7 +19,9 @@
                 Assign them something to read by clicking the <span class="icon-ellipsis-vert"></span>
                 (more actions) icon in the lower right of any reading panel in the library.
             </p>
-            <a href="{% url 'reader_index' %}" class="btn btn-primary mx-1">Go to library</a>
+            <div class="mx-1">
+                <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
+            </div>
             {% endfor %}
         </div>
         {% if data.view == 'assigned' %}
