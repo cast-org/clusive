@@ -197,7 +197,7 @@
 
     }
 
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(sm) {
         margin-right: -.25rem;
         margin-left: 0;
         text-align: right;
