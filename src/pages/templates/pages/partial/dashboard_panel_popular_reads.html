@@ -1,18 +1,9 @@
 <div class="box box-mascot-tipped">
     <h2>Student reading</h2>
-
-    <div class="row">
-        <div class="col">
-            <p>See what your students are reading and what they said they learned.</p>
-        </div>
-        <div class="col-12 col-md-5 text-md-center">
-            <div class="mb-0_75">
-                <a href="{% url 'upload' %}" class="btn btn-primary btn-small"><span aria-hidden="true">+ </span>Upload a new reading</a>
-            </div>
-            <div class="mb-0_75">
-                <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
-            </div>
-        </div>
+    <p>See what your students are reading and what they said they learned.</p>
+    <div class="dashboard-reading-btns">
+        <a href="{% url 'upload' %}" class="btn btn-primary btn-small"><span aria-hidden="true">+ </span>Upload a new reading</a>
+        <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
     </div>
 
     {% if periods.count == 0 %}
