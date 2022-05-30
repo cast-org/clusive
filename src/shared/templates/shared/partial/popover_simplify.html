@@ -6,9 +6,13 @@
             <h2 class="modal-title sr-only">Text transformation</h2>
             <nav aria-label="text simplification">
                 <ul class="nav nav-tabs-popover">
+                    {% if simplification_show_translate %}
                     <li class="nav-item"><button id="translateNavLink" class="nav-link">Translate</button></li>
+                    {% endif %}
                     <li class="nav-item"><button id="simplifyNavLink" class="nav-link">Simplify text</button></li>
+                    {% if simplification_show_pictures %}
                     <li class="nav-item"><button id="picturesNavLink" class="nav-link">Show pictures</button></li>
+                    {% endif %}
                 </ul>
             </nav>
             {% include "shared/partial/dialog_tts.html" %}

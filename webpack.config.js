@@ -22,7 +22,7 @@ module.exports = {
     },
     resolve: {
         alias: {
-            infusion: "infusion/dist/infusion-uio-no-jquery.min.js",
+            infusion: "infusion/dist/infusion-uio-no-jquery.js",
             "popper.js": "popper.js/dist/umd/popper.min.js",
             figuration: "figuration/dist/js/figuration.min.js",
             "masonry-layout": "masonry-layout/dist/masonry.pkgd.min.js",

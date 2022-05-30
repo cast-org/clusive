@@ -5,6 +5,7 @@
 
     fluid.defaults('clusive.prefs.djangoStore', {
         gradeNames: ['fluid.dataSource'],
+        writableGrade: 'clusive.prefs.djangoStore.writable',
         storeConfig: {
             getURL: '/account/prefs',
             setURL: '/account/prefs',
@@ -72,8 +73,6 @@
             }
         }
     });
-
-    fluid.makeGradeLinkage('clusive.prefs.djangoStore.linkage', ['fluid.dataSource.writable', 'clusive.prefs.djangoStore'], 'clusive.prefs.djangoStore.writable');
 
     clusive.prefs.djangoStore.getUserPreferences = function(directModel, messageQueue, lastRequestTime, that) {
         var djangoStorePromise = fluid.promise();

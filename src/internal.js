@@ -1,5 +1,7 @@
 // This is the Javascript file that is injected into all R2D2BC frames.
 
+import hotkeys from 'script-loader!hotkeys-js/dist/hotkeys.js';
+
 // Reference from within the iframe to the clusivePrefs global in the parent window
 var clusivePrefs = window.parent.window.clusivePrefs;
 
@@ -59,3 +61,20 @@ if(clusivePrefs && clusivePrefs.prefsEditorLoader && clusivePrefs.prefsEditorLoa
         console.error('error fetching prefs', e)
     })
 }
+
+function blockHotkeys(keyArray) {
+    // Unbind all hotkeys
+    window.hotkeys.unbind();
+    // Block each hotkey - will propagate artificially through
+    // keydown/keyup creation provided for in `shortcut.js`
+    keyArray.forEach(function(item) {
+        window.hotkeys(item.keys, function(event) {
+            if (window.parent.shortcut.doBlockInternal(item.blocker)) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });
+    });
+}
+// Keep webpack from removing the function
+window.blockHotkeys = blockHotkeys;

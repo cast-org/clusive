@@ -16,6 +16,7 @@
         {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=False %} {% endblock %}
     {% endif %}
     <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
+    <button id="shortcutsLocator" class="skiplink sr-only-focusable">Keyboard shortcuts</button>
 
     {% block header %}
     {% include "shared/partial/site_header.html" %}
@@ -59,6 +60,7 @@
     {% include "shared/partial/modal_settings.html" %}
     {% include "shared/partial/modal_switch.html" %}
     {% include "shared/partial/popover_glossary.html" %}
+    {% include "shared/partial/popover_shortcuts.html" %}
     {% if not user.is_anonymous %}
         {% include "shared/partial/modal_timeout.html" %}
         <button id="modalTimeoutTrigger" type="button" data-cfw="modal" data-cfw-modal-target="#modalTimeout" class="d-none fixed-center">

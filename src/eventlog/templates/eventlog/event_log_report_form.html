@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &gt; <a href="{% url 'admin:app_list' app_label='eventlog' %}">Eventlog</a>
+    &gt; <a href="{% url 'admin:eventlog_event_changelist' %}">Events</a>
+    &gt; Configure event log report
+</div>
+{% endblock %}
+
+{% block content %}
+
+<h2>Download an event report</h2>
+
+<form method="post" action="/admin/eventlog/event/download_report_form/">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Generate"/>
+</form>
+
+<p><a href="{% url 'admin:eventlog_event_changelist' %}">Back to Events</a></p>
+
+{% endblock %}
