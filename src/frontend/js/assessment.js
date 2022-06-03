@@ -71,9 +71,20 @@ clusiveAssessment.setComprehensionCheck = function(data) {
     }
 };
 
+// Briefly displays a "saving..." message to reassure users that their work is auto-saved.
+// Since the changes go into the queue for later transmission to the server, there is not any real timing here.
+clusiveAssessment.showSavingIndicator = function() {
+    'use strict';
+
+    const $status = $('#yourThoughtsStatus');
+    $status.text('Saving...');
+    setTimeout(function() { $status.text('Saved.'); }, 2000);
+};
+
 clusiveAssessment.saveAffectCheck = function() {
     'use strict';
 
+    clusiveAssessment.showSavingIndicator();
     var bookId = clusiveContext.reader.info.publication.id;
     // Create basic affect response structure
     var affectResponse = {
@@ -97,6 +108,7 @@ clusiveAssessment.saveAffectCheck = function() {
 clusiveAssessment.saveComprehensionCheck = function() {
     'use strict';
 
+    clusiveAssessment.showSavingIndicator();
     var bookId = clusiveContext.reader.info.publication.id;
     var scaleResponse = $('input[name="comprehension-scale"]:checked').val();
     var freeResponse = $('textarea[name="comprehension-free"]').val();
