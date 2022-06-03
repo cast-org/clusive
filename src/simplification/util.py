@@ -21,7 +21,7 @@ class WordnetSimplifier:
         super().__init__()
         self.lang = lang
 
-    def simplify_text(self, text: str, clusive_user: ClusiveUser = None, percent: int = 10, include_full=True):
+    def simplify_text(self, text: str, clusive_user: ClusiveUser = None, percent: int = 10, include_full=False):
         word_list = self.tokenize_no_casefold(text)
         # Returns frequency info about all distinct tokens, sorted by frequency
         # Each element of word_info returned is a dict with keys hw, alts, count, freq

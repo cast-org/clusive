@@ -139,7 +139,7 @@ function fetchTranslation(text) {
 function fetchPictures(selection) {
     'use strict';
 
-    return $.ajax('/icons/pictures', {
+    return $.ajax('/simplification/pictures', {
         method: 'POST',
         headers: {
             'X-CSRFToken': DJANGO_CSRF_TOKEN
