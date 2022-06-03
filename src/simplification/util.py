@@ -56,7 +56,9 @@ class WordnetSimplifier:
                 rep = replacements[base]
                 if tok[0].isupper():
                     rep = rep.title()
-                outword = '<span class="text-replace" role="region" aria-label="alternate term for %s">%s</span> <span class="text-replace-src">[<a href="#" class="simplifyLookup">%s</a>]</span>' % (tok, rep, tok)
+                outword = '<span class="text-alt-pair"><span class="text-alt-src"><a href="#" class="simplifyLookup" role="button">%s</a></span><span class="text-alt-out" aria-label="%s: alternate word">%s</span></span>' % (tok, tok, rep)
+                # Alternate markup for showing replacements inline, rather than above the original word
+                # outword = '<span class="text-replace" role="region" aria-label="alternate term for %s">%s</span> <span class="text-replace-src">[<a href="#" class="simplifyLookup">%s</a>]</span>' % (tok, rep, tok)
             else:
                 outword = tok
             out += outword
@@ -64,11 +66,12 @@ class WordnetSimplifier:
             total_word_count = sum([w['count'] for w in word_info])
         else:
             total_word_count = None
+
         return {
             'word_count': total_word_count,
             'to_replace': to_replace,
             'word_info': word_info,
-            'result': out,
+            'result': '<div class="text-alt-vertical">' + out + '</div>',
         }
 
     def tokenize_no_casefold(self, text : str) -> List[str]:
