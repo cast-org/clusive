@@ -76,9 +76,15 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         # organizational account; otherwise, it isn't.
         if extra_data['studentStatus'] == None:
             members = get_organization_members(token.token, app.client_id)
-            extra_data.update ( {'organizational': members != None})
+            if members != None:
+                # Organizational Sponsor
+                extra_data.update ({ 'organizational': True })
+            else:
+                # Individual Member
+                extra_data.update ({'organizational': False })
         else:
-            extra_data.update( { 'organizational': True } )
+            # Organizational Member
+            extra_data.update({ 'organizational': False })
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
         return login
@@ -127,7 +133,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
 
     def is_organizational_account(self):
         try:
-            return self.social_account.extra_data.get('organizational');
+            return self.social_account.extra_data.get('organizational')
         except SocialAccount.DoesNotExist:
             return False
 
