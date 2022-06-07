@@ -9,7 +9,7 @@ from allauth.socialaccount.models import SocialAccount
 
 from .provider import BookshareProvider
 from .views import BookshareOAuth2Adapter, UserTypes, \
-    is_organizational_account, get_organization_name, \
+    is_organization_sponsor, get_organization_name, \
     get_organization_members, get_user_type, \
     GENERIC_ORG_NAME, INDIVIDUAL_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
 
@@ -28,11 +28,11 @@ SINGLE_USER_EXTRADATA = {
     },
     'proofOfDisabilityStatus': 'active',
     'studentStatus': None,
-    'organizational': False
+    'organizational': UserTypes.INDIVIDUAL
 }
 
-ORGANIZATIONAL_EXTRADATA = {
-    'username': 'user@somewhere.org',
+ORG_SPONSOR_EXTRADATA = {
+    'username': 'sponsor@somewhere.org',
     'links': [],
     'name': {
         'firstName': 'Organizational',
@@ -46,7 +46,25 @@ ORGANIZATIONAL_EXTRADATA = {
     'studentStatus': {
         'organizationName': 'Anonymous Organization'
     },
-    'organizational': True
+    'organizational': UserTypes.ORG_SPONSOR
+}
+
+ORG_MEMBER_EXTRADATA = {
+    'username': 'member@somewhere.org',
+    'links': [],
+    'name': {
+        'firstName': 'Organizational',
+        'lastName': 'Member',
+        'middle': None,
+        'prefix': None,
+        'suffix': None,
+        'links': []
+    },
+    'proofOfDisabilityStatus': 'active',
+    'studentStatus': {
+        'organizationName': 'Anonymous Organization'
+    },
+    'organizational': UserTypes.ORG_MEMBER
 }
 
 
@@ -64,15 +82,25 @@ class BookshareTestCase(TestCase):
         self.single_user_account = single_account
         self.single_user_account.save()
 
-        # Create a user that has an organizational Bookshare account
-        org_user = User.objects.create_user(username='bookshareOrganizational', password='password2')
-        self.org_user = org_user
-        self.org_user.save()
-        org_account = SocialAccount.objects.create(user=org_user, provider=BookshareProvider.id)
-        org_account.uid = ORGANIZATIONAL_EXTRADATA['username']
-        org_account.extra_data = ORGANIZATIONAL_EXTRADATA
-        self.org_account = org_account
-        self.org_account.save()
+        # Create a user that has an organization sponsor Bookshare account
+        org_sponsor = User.objects.create_user(username='bookshareOrganizational', password='password2')
+        self.org_sponsor = org_sponsor
+        self.org_sponsor.save()
+        org_sponsor_account = SocialAccount.objects.create(user=org_sponsor, provider=BookshareProvider.id)
+        org_sponsor_account.uid = ORG_SPONSOR_EXTRADATA['username']
+        org_sponsor_account.extra_data = ORG_SPONSOR_EXTRADATA
+        self.org_sponsor_account = org_sponsor_account
+        self.org_sponsor_account.save()
+
+        # Create a user that has an organization member Bookshare account
+        org_member = User.objects.create_user(username='bookshareOrgMember', password='password3')
+        self.org_member = org_member
+        self.org_member.save()
+        org_member_account = SocialAccount.objects.create(user=org_member, provider=BookshareProvider.id)
+        org_member_account.uid = ORG_MEMBER_EXTRADATA['username']
+        org_member_account.extra_data = ORG_MEMBER_EXTRADATA
+        self.org_member_account = org_member_account
+        self.org_member_account.save()
 
         # Create a non-bookshare user
         user_no_bookshare = User.objects.create_user(username='userNoBookshare', password='password3')
@@ -108,24 +136,28 @@ class BookshareTestCase(TestCase):
     def test_create(self):
         self.assertIsNotNone(self.single_user)
         self.assertIsNotNone(self.single_user_account)
-        self.assertIsNotNone(self.org_user)
-        self.assertIsNotNone(self.org_account)
+        self.assertIsNotNone(self.org_sponsor)
+        self.assertIsNotNone(self.org_sponsor_account)
+        self.assertIsNotNone(self.org_member)
+        self.assertIsNotNone(self.org_member_account)
         self.assertIsNotNone(self.user_no_bookshare)
 
-    def test_is_organizational_account(self):
+    def test_is_organizational_sponsor(self):
         request = self.request_factory.get('/my_account')
-        request.user = self.org_user
-        self.assertTrue(is_organizational_account(request))
+        request.user = self.org_sponsor
+        self.assertTrue(is_organization_sponsor(request))
+        request.user = self.org_member
+        self.assertFalse(is_organization_sponsor(request))
         request.user = self.single_user
-        self.assertFalse(is_organizational_account(request))
+        self.assertFalse(is_organization_sponsor(request))
         request.user = self.user_no_bookshare
-        self.assertFalse(is_organizational_account(request))
+        self.assertFalse(is_organization_sponsor(request))
 
     def test_get_organization_name(self):
-        soc_account = SocialAccount.objects.get(user=self.org_user)
+        soc_account = SocialAccount.objects.get(user=self.org_sponsor)
         self.assertEqual(
             get_organization_name(soc_account),
-            ORGANIZATIONAL_EXTRADATA['studentStatus']['organizationName']
+            ORG_SPONSOR_EXTRADATA['studentStatus']['organizationName']
         )
         soc_account = SocialAccount.objects.get(user=self.single_user)
         self.assertEqual(
@@ -140,10 +172,10 @@ class BookshareTestCase(TestCase):
             BookshareOAuth2Adapter(request).organization_name,
             INDIVIDUAL_NOT_ORG
         )
-        request.user = self.org_user
+        request.user = self.org_sponsor
         self.assertEqual(
             BookshareOAuth2Adapter(request).organization_name,
-            ORGANIZATIONAL_EXTRADATA['studentStatus']['organizationName']
+            ORG_SPONSOR_EXTRADATA['studentStatus']['organizationName']
         )
         request.user = self.user_no_bookshare
         self.assertEqual(
@@ -154,8 +186,10 @@ class BookshareTestCase(TestCase):
     def test_display_user_type(self):
         name = UserTypes.display_name(UserTypes.INDIVIDUAL)
         self.assertEquals(name, 'Individual')
-        name = UserTypes.display_name(UserTypes.ORGANIZATIONAL)
+        name = UserTypes.display_name(UserTypes.ORG_SPONSOR)
         self.assertEquals(name, 'Sponsor')
+        name = UserTypes.display_name(UserTypes.ORG_MEMBER)
+        self.assertEquals(name, 'Organization Member')
         name = UserTypes.display_name(UserTypes.UNKNOWN)
         self.assertEquals(name, 'Unknown')
 
@@ -167,9 +201,9 @@ class BookshareTestCase(TestCase):
                 organization['accessToken'],
                 organization['apiKey']
             )
+            self.assertIsNotNone(member_list)
             # Test individual account
             individual = self.keys['individualUserKeys']
-            self.assertIsNotNone(member_list)
             member_list = get_organization_members(
                 individual['accessToken'],
                 individual['apiKey']
@@ -195,7 +229,7 @@ class BookshareTestCase(TestCase):
                 organization['accessToken'],
                 organization['apiKey']
             )
-            self.assertEqual(user_type, UserTypes.ORGANIZATIONAL)
+            self.assertEqual(user_type, UserTypes.ORG_SPONSOR)
             # Test for unknown.
             user_type = get_user_type('foo', 'bar', individual['apiKey'])
             self.assertEqual(user_type, UserTypes.UNKNOWN)
