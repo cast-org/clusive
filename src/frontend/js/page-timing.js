@@ -34,10 +34,8 @@ PageTiming.trackPage = function(eventId) {
     'use strict';
 
     PageTiming.eventId = eventId;
-
-    console.debug('PageTiming: Started tracking page ', eventId);
-
     var currentTime = Date.now();
+    console.debug(`PageTiming: Started tracking page ${eventId}, at %s`, PageTiming.fmt(currentTime));
 
     // First choice:  Use PerformanceObserver and PerformanceNavigationTiming
     // APIs if available -- check is made in usePerformanceObserver() and
@@ -57,7 +55,7 @@ PageTiming.trackPage = function(eventId) {
         PageTiming.handleFocusChange();
         $(window).on('focusin focusout', PageTiming.handleFocusChange);
     } else {
-        console.warn('PageTiming: Browser doesn\'t support focus checking; hidden time won\'t be reported.');
+        console.warn('PageTiming: Browser doesn\'t support focus checking; inactive time won\'t be reported.');
     }
 
     // Interval timer to monitor laptop going to sleep.
@@ -112,9 +110,14 @@ PageTiming.blocked = function(isBlocked) {
     PageTiming.handleFocusChange();
 };
 
-PageTiming.handleFocusChange = function() {
+PageTiming.handleFocusChange = function(event) {
     'use strict';
 
+    if (event) {
+        console.debug(`PageTiming: handleFocusChange() due to ${event.type}`);
+    } else {
+        console.debug('PageTiming: handleFocusChange() not invoked via an event');
+    }
     if (!PageTiming.pageBlocked && document.hasFocus()) {
         // page is active.  If it was inactive before, record duration of inactivity.
         PageTiming.recordInactiveTime();
@@ -156,7 +159,8 @@ PageTiming.createEndTimeMessage = function() {
     var activeTime = duration - PageTiming.totalInactiveTime;
     if (activeTime < 0) {
         activeTime = 0;
-        console.debug(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${PageTiming.totalInactiveTime}`);
+        var startTime = PageTiming.fmt(PageTiming.pageStartTime);
+        console.debug(`PageTiming: detected negative active duration, duration is ${duration}, inactive time is ${PageTiming.totalInactiveTime}, started tracking at ${startTime}`);
     }
     return {
         type: 'PT',
@@ -252,5 +256,10 @@ PageTiming.processNavEntries = function(perfEntries) {
 $(document).ready(function() {
     'use strict';
 
+    // Move focus to the body if nothing has focus on page load.
+    if (!document.activeElement || document.activeElement === document.body) {
+        $(document.body).attr('tabindex', '-1');
+        $(document.body).focus();
+    }
     PageTiming.trackPage(PAGE_EVENT_ID);
 });
