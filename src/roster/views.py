@@ -1297,7 +1297,7 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
                 # a single user account
                 bookshare_account = {
                     'id': account.uid,
-                    'is_organizational': account.extra_data.get('organizational', False),
+                    'organization_type': account.extra_data.get('organizational', ''),
                     'organization': self.organization_for_display(account),
                 }
         self.extra_context = {

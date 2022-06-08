@@ -790,6 +790,9 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
         You are using a Sponsor (Teacher/District/School) Bookshare account. \
         Your import of Bookshare titles for students is not yet implemented, \
         but coming soon.'
+    member_warning_message = '\
+        You are using a member organization account.  Your import of Bookshare \
+        titles is limited to titles assigned to you by your sponsor.'
 
     def dispatch(self, request, *args, **kwargs):
         if not is_bookshare_connected(request):
@@ -800,6 +803,9 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
         elif request.clusive_user.can_upload:
             if is_organization_sponsor(request):
                 messages.warning(request, self.sponsor_warning_message)
+            elif is_organization_member(request):
+                messages.warning(request, self.member_warning_message)
+
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
