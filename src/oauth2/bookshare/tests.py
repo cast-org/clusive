@@ -43,10 +43,26 @@ ORG_SPONSOR_EXTRADATA = {
         'links': []
     },
     'proofOfDisabilityStatus': 'active',
-    'studentStatus': {
-        'organizationName': 'Anonymous Organization'
-    },
+    'studentStatus': None,
     'organizational': UserTypes.ORG_SPONSOR
+}
+
+# Old way of designating organizational accounts with boolean value, for
+# testing update code.
+OLD_ORG_SPONSOR_EXTRADATA = {
+    'username': 'anotherSponsor@somewhere.org',
+    'links': [],
+    'name': {
+        'firstName': 'Another',
+        'lastName': 'Sponsor',
+        'middle': None,
+        'prefix': None,
+        'suffix': None,
+        'links': []
+    },
+    'proofOfDisabilityStatus': 'active',
+    'studentStatus': None,
+    'organizational': True
 }
 
 ORG_MEMBER_EXTRADATA = {
@@ -102,6 +118,18 @@ class BookshareTestCase(TestCase):
         self.org_member_account = org_member_account
         self.org_member_account.save()
 
+        # Create a user that has an organization sponsor Bookshare account, but
+        # using the old way to designate that it is an organizational account
+        # (true vs. false)
+        old_org_sponsor = User.objects.create_user(username='oldBookshareOrganizational', password='password2')
+        self.old_org_sponsor = old_org_sponsor
+        self.old_org_sponsor.save()
+        old_org_sponsor_account = SocialAccount.objects.create(user=old_org_sponsor, provider=BookshareProvider.id)
+        old_org_sponsor_account.uid = OLD_ORG_SPONSOR_EXTRADATA['username']
+        old_org_sponsor_account.extra_data = OLD_ORG_SPONSOR_EXTRADATA
+        self.old_org_sponsor_account = old_org_sponsor_account
+        self.old_org_sponsor_account.save()
+
         # Create a non-bookshare user
         user_no_bookshare = User.objects.create_user(username='userNoBookshare', password='password3')
         self.user_no_bookshare = user_no_bookshare
@@ -138,6 +166,8 @@ class BookshareTestCase(TestCase):
         self.assertIsNotNone(self.single_user_account)
         self.assertIsNotNone(self.org_sponsor)
         self.assertIsNotNone(self.org_sponsor_account)
+        self.assertIsNotNone(self.old_org_sponsor)
+        self.assertIsNotNone(self.old_org_sponsor_account)
         self.assertIsNotNone(self.org_member)
         self.assertIsNotNone(self.org_member_account)
         self.assertIsNotNone(self.user_no_bookshare)
@@ -154,10 +184,18 @@ class BookshareTestCase(TestCase):
         self.assertFalse(is_organization_sponsor(request))
 
     def test_get_organization_name(self):
+        # self.org_sponsor has no student status; hence, no organization
+        # name.
         soc_account = SocialAccount.objects.get(user=self.org_sponsor)
         self.assertEqual(
             get_organization_name(soc_account),
-            ORG_SPONSOR_EXTRADATA['studentStatus']['organizationName']
+            GENERIC_ORG_NAME
+        )
+        # self.org_member has a student status; and an organization naem
+        soc_account = SocialAccount.objects.get(user=self.org_member)
+        self.assertEqual(
+            get_organization_name(soc_account),
+            ORG_MEMBER_EXTRADATA['studentStatus']['organizationName']
         )
         soc_account = SocialAccount.objects.get(user=self.single_user)
         self.assertEqual(
@@ -172,10 +210,18 @@ class BookshareTestCase(TestCase):
             BookshareOAuth2Adapter(request).organization_name,
             INDIVIDUAL_NOT_ORG
         )
+        # self.org_sponsor has no student status; hence, no organization
+        # name.
         request.user = self.org_sponsor
         self.assertEqual(
             BookshareOAuth2Adapter(request).organization_name,
-            ORG_SPONSOR_EXTRADATA['studentStatus']['organizationName']
+            GENERIC_ORG_NAME
+        )
+        # self.org_member has a student status; and an organization naem
+        request.user = self.org_member
+        self.assertEqual(
+            BookshareOAuth2Adapter(request).organization_name,
+            ORG_MEMBER_EXTRADATA['studentStatus']['organizationName']
         )
         request.user = self.user_no_bookshare
         self.assertEqual(
@@ -235,3 +281,33 @@ class BookshareTestCase(TestCase):
             self.assertEqual(user_type, UserTypes.UNKNOWN)
         else:
             logger.debug('Ignoring "test_get_user_type()", no access keys.')
+
+    def test_adapter_update_org_status(self):
+        if self.keys:
+            request = self.request_factory.get('/my_account')
+            # Test old organizational account -- should switch from true
+            # (= Organizational) to '2' (= Sponsor Organization)
+            soc_account = SocialAccount.objects.get(user=self.old_org_sponsor)
+            self.assertTrue(soc_account.extra_data['organizational'])
+            org_keys = self.keys['organizationalUserKeys']
+            request.user = self.old_org_sponsor
+            BookshareOAuth2Adapter(request).update_org_status(
+                org_keys['accessToken'],
+                org_keys['apiKey']
+            )
+            soc_account = SocialAccount.objects.get(user=self.old_org_sponsor)
+            self.assertEquals(soc_account.extra_data['organizational'], '2')
+
+            # Test member organizational account -- should not switch
+            soc_account = SocialAccount.objects.get(user=self.org_member)
+            org_status_before_update = soc_account.extra_data['organizational']
+            request.user = self.org_member
+            BookshareOAuth2Adapter(request).update_org_status(
+                org_keys['accessToken'],
+                org_keys['apiKey']
+            )
+            soc_account = SocialAccount.objects.get(user=self.org_member)
+            org_status_after_update = soc_account.extra_data['organizational']
+            self.assertEquals(org_status_before_update, org_status_after_update)
+        else:
+            logger.debug('Ignoring "test_adapter_update_org_status()", no access keys.')
