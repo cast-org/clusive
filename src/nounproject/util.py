@@ -26,37 +26,16 @@ def nounproject_is_configured() -> bool:
 class NounProjectManager:
 
     api = API(key=settings.NOUNPROJECT_API_KEY, secret=settings.NOUNPROJECT_API_SECRET)
+    pro_account = False
     words_without_icons = set()
-
-    def get_icon(self, word: str):
-        """
-        Tries to get an icon from The Noun Project for the given word.
-        :param word: word to look up
-        :return: (icon_url, icon_description)  or (None, None) if one can't be found or an error occurs while trying.
-        """
-
-        if word in NounProjectManager.words_without_icons:
-            logger.debug('Skipping lookup for word %s, it is known to not have an icon', word)
-            return (None, None)
-        try:
-            icons = self.api.get_icons_by_term(word, public_domain_only=True, limit=1)
-            if len(icons) > 0:
-                icon = icons[0]
-                logger.debug('Retrieved icon: %s -> %s', word, icon.term)
-                return (icon.icon_url, icon.term)
-            else:
-                logger.debug('No icons returned for word %s', word)
-        except NotFound:
-            logger.debug('No icon found for term %s', word)
-            NounProjectManager.words_without_icons.add(word)
-        except Exception as e:
-            logger.warning('API Error for %s: [%s] %s', word, e.__class__, e)
-        return (None, None)
 
     def check_usage(self):
         # Make sure we are under our allowed usage, so we don't incur overage fees.
+        # Sets pro_account flag if the limits are in that range - means we can also get non-public-domain icons
         usage: UsageModel
         usage = self.api.get_usage()
+        if usage.limits.monthly > 5000:
+            self.pro_account = True
         logger.debug('Noun Project API usage. Hourly %s/%s, Daily %s/%s, Monthly %s/%s',
                      usage.usage.hourly, usage.limits.hourly,
                      usage.usage.daily, usage.limits.daily,
@@ -72,6 +51,32 @@ class NounProjectManager:
             logger.warning('Noun Project API monthly usage is too high')
             ok = False
         return ok
+
+    def get_icon(self, word: str):
+        """
+        Tries to get an icon from The Noun Project for the given word.
+        :param word: word to look up
+        :return: (icon_url, icon_description)  or (None, None) if one can't be found or an error occurs while trying.
+        """
+
+        if word in NounProjectManager.words_without_icons:
+            logger.debug('Skipping lookup for word %s, it is known to not have an icon', word)
+            return (None, None)
+        try:
+            pub_domain_only = not self.pro_account
+            icons = self.api.get_icons_by_term(word, public_domain_only=pub_domain_only, limit=1)
+            if len(icons) > 0:
+                icon = icons[0]
+                logger.debug('Retrieved icon: %s -> %s', word, icon.term)
+                return (icon.icon_url, icon.term)
+            else:
+                logger.debug('No icons returned for word %s', word)
+        except NotFound:
+            logger.debug('No icon found for term %s', word)
+            NounProjectManager.words_without_icons.add(word)
+        except Exception as e:
+            logger.warning('API Error for %s: [%s] %s', word, e.__class__, e)
+        return (None, None)
 
     def add_pictures(self, text, clusive_user=None, percent=15):
         if not nounproject_is_configured():
