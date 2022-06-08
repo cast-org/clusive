@@ -14,6 +14,7 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
 import flaticon.util
+import nounproject.util
 import translation
 from assessment.forms import ClusiveRatingForm
 from assessment.models import ClusiveRatingResponse, AffectiveUserTotal, ComprehensionCheckResponse, \
@@ -568,7 +569,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'book_id': book.id,
             'simplification_tool': clusive_user.transform_tool,
             'simplification_show_translate': translation.util.translation_is_configured(),
-            'simplification_show_pictures': flaticon.util.flaticon_is_configured(),
+            'simplification_show_pictures': flaticon.util.flaticon_is_configured() or nounproject.util.nounproject_is_configured(),
         }
         return super().get(request, *args, **kwargs)
 
