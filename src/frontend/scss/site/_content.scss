@@ -499,6 +499,8 @@ h2,
     }
     .text-alt-out {
         margin-top: -.5rem;
+        @include font-size(.9375rem);
+        color: var(--CT_textReplaceColor);
     }
 }
 
