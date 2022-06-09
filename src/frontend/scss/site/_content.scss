@@ -479,7 +479,7 @@ h2,
 
 .text-alt-vertical {
     margin-top: .5rem;
-    line-height: 2.25;
+    line-height: 2.75;
 
     .text-alt-pair {
         display: inline-flex;
@@ -499,6 +499,8 @@ h2,
     }
     .text-alt-out {
         margin-top: -.5rem;
+        @include font-size(.875rem);
+        color: var(--CT_textReplaceColor);
     }
 }
 
