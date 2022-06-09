@@ -282,7 +282,13 @@ class LibraryDataView(LoginRequiredMixin, ListView):
                        + '<a href="%s">All readings</a>.' % (self.make_all_link())
 
         if self.view == LibraryViews.PERIOD:
-            return 'No readings have been assigned to this class.'
+            if self.clusive_user.can_manage_periods:
+                return 'No readings have been assigned to this class. ' \
+                       '<br/>Assign them something to read by tapping the ' \
+                       '<span class="icon-ellipsis-vert" aria-hidden="true"></span>(more actions) '\
+                       'icon in the lower right of any reading panel in the library.'
+            else:
+                return 'No readings have been assigned to this class.'
         if self.view == LibraryViews.STARRED:
             return 'No starred readings. Add a reading to “Starred” by tapping the star in the upper right of the reading tile.'
         if self.view == LibraryViews.MINE:
