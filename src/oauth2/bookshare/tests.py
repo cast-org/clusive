@@ -282,6 +282,42 @@ class BookshareTestCase(TestCase):
         else:
             logger.debug('Ignoring "test_get_user_type()", no access keys.')
 
+    def test_adapter_set_org_status(self):
+        if self.keys:
+            request = self.request_factory.get('/my_account')
+            # Test the sponsor and individual test accounts.  Since the test
+            # accounts are already properly set, calling set_org_status() will
+            # reset to the correct value; hence, asserting equality.
+            soc_account = SocialAccount.objects.get(user=self.org_sponsor)
+            extra_data = soc_account.extra_data
+            pre_set_org_status = extra_data['organizational']
+            account_keys = self.keys['organizationalUserKeys']
+            request.user = self.org_sponsor
+            BookshareOAuth2Adapter(request).set_org_status(
+                extra_data,
+                account_keys['accessToken'],
+                account_keys['apiKey']
+            )
+            soc_account = SocialAccount.objects.get(user=self.org_sponsor)
+            post_set_org_status = soc_account.extra_data['organizational']
+            self.assertEquals(pre_set_org_status, post_set_org_status)
+
+            soc_account = SocialAccount.objects.get(user=self.single_user)
+            extra_data = soc_account.extra_data
+            pre_set_org_status = extra_data['organizational']
+            account_keys = self.keys['individualUserKeys']
+            request.user = self.single_user
+            BookshareOAuth2Adapter(request).set_org_status(
+                extra_data,
+                account_keys['accessToken'],
+                account_keys['apiKey']
+            )
+            soc_account = SocialAccount.objects.get(user=self.single_user)
+            post_set_org_status = soc_account.extra_data['organizational']
+            self.assertEquals(pre_set_org_status, post_set_org_status)
+        else:
+            logger.debug('Ignoring "test_adapter_set_org_status()", no access keys.')
+
     def test_adapter_update_org_status(self):
         if self.keys:
             request = self.request_factory.get('/my_account')
