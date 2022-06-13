@@ -53,10 +53,13 @@ $(document).ready(function() {
     });
 
     // Stop reading on interaction
-    $(document).on('click beforeShow.cfw.tab', '[data-tts-stop]', function(event) {
+    $(document).on('beforeShow.cfw.tab click', '[data-tts-stop]', function(event) {
         if (event.type === 'beforeShow' && event.stopPropagation) { return; }
         if (!clusiveTTS.isReadingState) { return; }
-        if (clusiveTTS.region.mode !== 'Readium') {
+        if (clusiveTTS.region.mode === 'Readium') { return; }
+
+        var dialogParent = event.target.closest('.modal, .popover');
+        if (typeof dialogParent !== 'undefined' && clusiveTTS.elementsToRead.length > 0 && dialogParent.contains(clusiveTTS.elementsToRead[0].element.parentElement)) {
             clusiveTTS.stop();
         }
     });
