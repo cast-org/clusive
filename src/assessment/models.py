@@ -58,7 +58,7 @@ class ComprehensionCheck:
 # Common abstract model characteristics of check responses
 class CheckResponse(models.Model):
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.PROTECT)
-    book = models.ForeignKey(to=Book, on_delete=models.PROTECT)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
