@@ -43,7 +43,7 @@
         {
             keys: 'space',
             routine: 'ttsPause',
-            blocker: 'ttsPauseBlocker',
+            blocker: 'ttsPauseBlocker'
         },
         {
             keys: 'alt+f',
@@ -96,7 +96,6 @@
     var SELECTOR_SHORTCUTS_DIALOG = '#shortcutsPop';
 
     var SELECTOR_READER_FRAME = '#frameReader';
-    var SELECTOR_READER_BODY_FOCUSER = "#frameBody";
 
     var SELECTOR_TOC_BTN = '#tocButton';
     var SELECTOR_TOC_MODAL = '#modalToc';
@@ -107,9 +106,9 @@
 
     var SELECTOR_SETTINGS_BTN = '#settingsButton';
     var SELECTOR_SETTINGS_MODAL = '#modalSettings';
-    var SELECTOR_SETTINGS_DISPLAY_TAB = '[data-cfw-tab-target="#setting0"]';
+    var SELECTOR_SETTINGS_DISPLAY_TAB = '#settingsDisplayTab';
     var SELECTOR_SETTINGS_DISPLAY_PANEL = '#setting0';
-    var SELECTOR_SETTINGS_READ_TAB = '[data-cfw-tab-target="#setting1"]';
+    var SELECTOR_SETTINGS_READ_TAB = '#settingsReadingTab';
     var SELECTOR_SETTINGS_READ_PANEL = '#setting1';
 
     var SELECTOR_READ_ALOUD_REGIONS = '.sidebar-tts, .dialog-tts';
@@ -384,16 +383,19 @@
             if (ttsActive !== null) {
                 return true;
             }
+            return false;
         },
         contextLookupBlocker: function() {
             if (shortcut.hasReaderSelection() || $.CFW_isVisible(document.querySelector(SELECTOR_GLOSSARY_DIALOG))) {
                 return true;
             }
+            return false;
         },
         contextTransformBlocker: function() {
             if (shortcut.hasReaderSelection() || $.CFW_isVisible(document.querySelector(SELECTOR_SIMPLIFY_DIALOG))) {
                 return true;
             }
+            return false;
         }
     };
 
@@ -431,7 +433,7 @@
             if (blockerName === true) {
                 return true;
             }
-            if (blockerName !== null && shortcut.blocker.hasOwnProperty(blockerName)) {
+            if (blockerName !== null && Object.prototype.hasOwnProperty.call(shortcut, blockerName)) {
                 if (shortcut.blocker[blockerName]() === true) {
                     return true;
                 }
@@ -580,7 +582,6 @@
         },
 
         updateTabIndex : function(element) {
-            var tabindex = null;
             if (!element.hasAttribute('tabindex')) {
                 element.setAttribute('tabindex', -1);
             }
@@ -600,7 +601,6 @@
             window.dispatchEvent(eventFocus);
 
             var focusReaderCallback = function() {
-                var readerFrame = document.querySelector(SELECTOR_READER_FRAME);
                 var readerBody = that.getReaderBody();
                 that.updateTabIndex(readerBody);
                 setTimeout(function() {
