@@ -864,7 +864,7 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                 if is_organization_sponsor(request):
                     messages.warning(request, BookshareSearch.sponsor_warning_message)
                 elif is_organization_member(request):
-                    message.warning(request, BookshareSearch.member_warning_message)
+                    messages.warning(request, BookshareSearch.member_warning_message)
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
                 if self.page <= pages_available:
