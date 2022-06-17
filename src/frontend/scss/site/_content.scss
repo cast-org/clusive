@@ -477,6 +477,33 @@ h2,
     }
 }
 
+.text-alt-vertical {
+    margin-top: .5rem;
+    line-height: 2.75;
+
+    .text-alt-pair {
+        display: inline-flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        line-height: 1;
+    }
+    .text-alt-src {
+        //font-weight: bold;
+
+        // stylelint-disabled selector-class-pattern
+        .simplifyLookup,
+        .simplifyLookup:hover {
+            font-weight: $font-weight-bold;
+        }
+        // stylelint-enable selector-class-pattern
+    }
+    .text-alt-out {
+        margin-top: -.5rem;
+        @include font-size(.875rem);
+        color: var(--CT_textReplaceColor);
+    }
+}
+
 
 // Django error list
 .errorlist {

@@ -207,7 +207,24 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
-        }
+        },
+        # Make these modules less noisy
+        'requests': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'requests_oauthlib': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'oauthlib': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+
     }
 }
 
@@ -228,7 +245,11 @@ LOGIN_URL = '/account/login'
 # To use Merriam-Webster dictionary for definition lookup, set environment variable to your API key here
 MERRIAM_WEBSTER_API_KEY = os.environ.get('MERRIAM_WEBSTER_API_KEY', None)
 
-# To use 'show images' feature, set environment variable to an API key from flaticon.com
+# To use 'show images' feature, you need to sign up with either thenounproject.com or flaticon.com,
+# and set the appropriate environment variables or settings.
+NOUNPROJECT_API_KEY = os.environ.get('NOUNPROJECT_API_KEY', None)
+NOUNPROJECT_API_SECRET = os.environ.get('NOUNPROJECT_API_SECRET', None)
+
 FLATICON_API_KEY = os.environ.get('FLATICON_API_KEY', None)
 
 # If new registrants should be synced to a MailChimp mailing list, set these to valid values.

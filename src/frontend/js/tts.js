@@ -51,6 +51,18 @@ $(document).ready(function() {
     $(document).on('click', '.tts-resume', function() {
         clusiveTTS.resume();
     });
+
+    // Stop reading on interaction
+    $(document).on('beforeShow.cfw.tab click', '[data-tts-stop]', function(event) {
+        if (event.type === 'beforeShow' && event.stopPropagation) { return; }
+        if (!clusiveTTS.isReadingState) { return; }
+        if (clusiveTTS.region.mode === 'Readium') { return; }
+
+        var dialogParent = event.target.closest('.modal, .popover');
+        if (typeof dialogParent !== 'undefined' && clusiveTTS.elementsToRead.length > 0 && dialogParent.contains(clusiveTTS.elementsToRead[0].element.parentElement)) {
+            clusiveTTS.stop();
+        }
+    });
 });
 
 window.addEventListener('unload', function() {

@@ -22,10 +22,6 @@
     {% endif %}
 </div>
 
-{% for item in data.all %}
-  {% include "pages/partial/modal_comprehension_detail.html" with type="comp" id_prefix="comp-detail-all" id_serial=forloop.counter title_prefix="Student learning" %}
-  {% include "pages/partial/modal_comprehension_detail.html" with type="custom" id_prefix="custom-detail-all" id_serial=forloop.counter title_prefix="Custom question" %}
-{% endfor %}
 <script>
     setUpDeferredLoadOfCompDetails();
 </script>
