@@ -11,7 +11,7 @@ from allauth.socialaccount.models import SocialAccount
 from .provider import BookshareProvider
 from .views import BookshareOAuth2Adapter, UserTypes, \
     is_organization_sponsor, get_organization_name, \
-    get_organization_members, get_user_type, \
+    get_organization_members, get_user_type, date_of_birth, \
     GENERIC_ORG_NAME, INDIVIDUAL_NOT_ORG, NOT_A_BOOKSHARE_ACCOUNT
 
 logger = logging.getLogger(__name__)
@@ -352,22 +352,21 @@ class BookshareTestCase(TestCase):
         else:
             logger.debug('Ignoring "test_adapter_update_org_status()", no access keys.')
 
-    def test_adapter_date_of_birth(self):
+    def test_date_of_birth(self):
         # Test case where the user's date of birth is in the database
-        request = self.request_factory.get('/my_account')
-        request.user = self.org_member
-        birthday = BookshareOAuth2Adapter(request).date_of_birth()
+        soc_account = SocialAccount.objects.get(user=self.org_member)
+        birthday = date_of_birth(soc_account.extra_data)
         expected = datetime.strptime(
-            ORG_MEMBER_EXTRADATA.get('dateOfBirth', ''), '%Y-%m-%d'
+            ORG_MEMBER_EXTRADATA.get('dateOfBirth'), '%Y-%m-%d'
         )
         self.assertEquals(expected, birthday)
 
         # Test case where date of birth is explicitly "null"
-        request.user = self.org_sponsor
-        birthday = BookshareOAuth2Adapter(request).date_of_birth()
+        soc_account = SocialAccount.objects.get(user=self.org_sponsor)
+        birthday = date_of_birth(soc_account.extra_data)
         self.assertEquals(datetime.now().date(), birthday.date())
 
         # Test case where date of birth is missing.
-        request.user = self.old_org_sponsor
-        birthday = BookshareOAuth2Adapter(request).date_of_birth()
+        soc_account = SocialAccount.objects.get(user=self.old_org_sponsor)
+        birthday = date_of_birth(soc_account.extra_data)
         self.assertEquals(datetime.now().date(), birthday.date())

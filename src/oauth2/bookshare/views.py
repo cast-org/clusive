@@ -151,19 +151,6 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         except SocialAccount.DoesNotExist:
             return 'missing'
 
-    def date_of_birth(self):
-        """
-        Return the Bookshare user's date of birth as a datetime instance.  If no
-        date of birth given (or any other error), return "now".
-        """
-        try:
-            return datetime.strptime(
-                self.social_account.extra_data.get('dateOfBirth', ''),
-                '%Y-%m-%d'
-            )
-        except:
-            return datetime.now()
-
     def is_organization_sponsor(self):
         try:
             return self.social_account.extra_data.get('organizational') == UserTypes.ORG_SPONSOR
@@ -288,6 +275,16 @@ def get_user_type(user_id, access_token, api_key):
         return user_type
     except:
         return UserTypes.UNKNOWN
+
+def date_of_birth(extra_data):
+    """
+    Return the Bookshare user's date of birth as a datetime instance.  If no
+    date of birth given (or any other error), return "now".
+    """
+    try:
+        return datetime.strptime(extra_data.get('dateOfBirth', ''), '%Y-%m-%d')
+    except:
+        return datetime.now()
 
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
