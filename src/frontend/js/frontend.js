@@ -1,5 +1,5 @@
 /* global Masonry, cisl, clusiveContext, PAGE_EVENT_ID, fluid, TOOLTIP_NAME, load_translation, confetti */
-/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryMasonryDisable, libraryListExpand, libraryListCollapse, clearVoiceListing, confettiCannon */
+/* exported updateLibraryData, getBreakpointByName, libraryMasonryEnable, libraryListExpand, libraryListCollapse, clearVoiceListing, confettiCannon */
 /*eslint quotes: ["error", "backtick"]*/
 
 // Set up common headers for Ajax requests for Clusive's event logging
@@ -22,7 +22,6 @@ $.ajaxPrefilter(function(options) {
 });
 
 var clusiveBreakpoints = ['xs', 'sm', 'md', 'lg', 'xl'];
-var libraryMasonryApi = null;
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
@@ -83,38 +82,41 @@ function getBreakpointByName(name) {
     };
 }
 
-var libraryMasonryLayout = clusiveDebounce(function() {
-    'use strict';
-
-    if (libraryMasonryApi !== null) {
-        libraryMasonryApi.layout();
-    }
-}, 150);
-
 function libraryMasonryEnable() {
     'use strict';
 
-    var elem = document.querySelector('.library-grid');
+    var grids = document.querySelectorAll('.library-grid');
+    if (grids.length === 0) { return; }
 
-    if (elem === null) { return; }
 
-    elem.classList.add('has-masonry');
+    grids.forEach(function(grid) {
+        grid.classList.add('has-masonry');
 
-    libraryMasonryApi = new Masonry(elem, {
-        itemSelector: '.card-library, .card-special',
-        columnWidth: '.card-library',
-        percentPosition: true,
-        transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
-    });
+        var hasResource = grid.querySelector('.card-resource') !== null;
+        var libraryMasonryApi = null
 
-    document.addEventListener('update.cisl.prefs', libraryMasonryLayout, {
-        passive: true
-    });
+        var libraryMasonryLayout = clusiveDebounce(function() {
+            if (libraryMasonryApi !== null) {
+                libraryMasonryApi.layout();
+            }
+        }, 150);
 
-    var imgs = elem.querySelectorAll('img');
-    imgs.forEach(function(img) {
-        $.CFW_imageLoaded($(img), null, function() {
-            libraryMasonryLayout();
+        libraryMasonryApi = new Masonry(grid, {
+            itemSelector: hasResource ? '.card-resource, .card-important' : '.card-library, .card-special',
+            columnWidth: hasResource ? '.card-resource' : '.card-library',
+            percentPosition: true,
+            transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
+        });
+
+        document.addEventListener('update.cisl.prefs', libraryMasonryLayout, {
+            passive: true
+        });
+
+        var imgs = grid.querySelectorAll('img');
+        imgs.forEach(function(img) {
+            $.CFW_imageLoaded($(img), null, function() {
+                libraryMasonryLayout();
+            });
         });
     });
 }

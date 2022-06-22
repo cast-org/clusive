@@ -21,7 +21,6 @@
         background-color: var(--CT_boxDivderColor);
         opacity: 1;
     }
-
 }
 
 .box-divider {
@@ -137,4 +136,9 @@
         background-color: var(--CT_boxTabActiveBg);
         border-color: var(--CT_boxTabActiveBorderColor);
     }
+}
+
+.box-secondary {
+    color: var(--CT_boxSecondaryColor);
+    background-color: var(--CT_boxSecondaryBg);
 }

@@ -636,29 +636,6 @@
 
 <script>
 libraryMasonryEnable();
-
-function libraryMasonryDisable() {
-    'use strict';
-
-    var elem = document.querySelector('.library-grid');
-    elem.classList.remove('has-masonry');
-
-    document.removeEventListener('update.cisl.prefs', libraryMasonryLayout);
-
-    if (libraryMasonryApi !== null) {
-        libraryMasonryApi.destroy();
-        libraryMasonryApi = null;
-    }
-}
-
-$(document.body).one('themeControls', function() {
-    var html = '</br>';
-    html += 'Masonry: ';
-    html += '<a href="#" role="button" style="color: #009 !important;" onclick="libraryMasonryDisable(); return false;">Disable</a> |';
-    html += '<a href="#" role="button" style="color: #009 !important;" onclick="libraryMasonryEnable(); return false;">Enable</a>';
-    html += '</br>';
-    $('#themeTest').append(html);
-});
 </script>
 
 </body>

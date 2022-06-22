@@ -250,6 +250,8 @@ $figure-caption-color:                  #eceff5;
 $box-bg:                                #2b2d34;
 $box-color:                             $body-color;
 $box-divider-color:                     #636b82;
+$box-secondary-bg:                      #363740;
+$box-secondary-color:                   $body-color;
 
 // Box tabs
 $box-tab-bg:                            transparent;
@@ -275,6 +277,13 @@ $card-special-bg:                       #424653;
 $card-special-color:                    $body-color;
 $card-divider-color:                    #363740;
 $card-progress-bar-bg:                  #636b82;
+
+$card-important-bg:                     #272727;
+$card-important-border-color:           #636b82;
+$card-important-box-shadow:             .125rem .5rem 0 .125rem #fec133, .125rem .125rem 0 .125rem #fec133;
+$card-resource-bg:                      #272727;
+$card-resource-border-color:            #636b82;
+$card-resource-box-shadow:              .125rem .5rem 0 .125rem #636b82, .125rem .125rem 0 .125rem #636b82;
 
 // Tables
 $table-active-bg:                       #272727;
