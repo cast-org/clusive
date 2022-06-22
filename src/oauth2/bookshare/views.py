@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
 from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
                                                           OAuth2LoginView,
@@ -64,6 +65,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         extra_data = resp.json()
 
         # 2. Get "proofOfDisability" and "studentStatus" (organizational account)
+        # and date of birth
         resp = requests.get(
             self.account_summary_url,
             headers = { "Authorization": "Bearer " + token.token },
@@ -73,6 +75,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         json_resp = resp.json()
         extra_data.update( {'proofOfDisabilityStatus': json_resp['proofOfDisabilityStatus']} )
         extra_data.update( {'studentStatus': json_resp['studentStatus']} )
+        extra_data.update( {'dateOfBirth': json_resp['dateOfBirth']})
 
         # 3. Determine whether the Bookshare account is a Sponsor or Member 
         # organizational account vs. an Individual account, and set the 
@@ -147,6 +150,19 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
             return self.social_account.extra_data.get('proofOfDisabilityStatus', 'missing')
         except SocialAccount.DoesNotExist:
             return 'missing'
+
+    def date_of_birth(self):
+        """
+        Return the Bookshare user's date of birth as a datetime instance.  If no
+        date of birth given (or any other error), return "now".
+        """
+        try:
+            return datetime.strptime(
+                self.social_account.extra_data.get('dateOfBirth', ''),
+                '%Y-%m-%d'
+            )
+        except:
+            return datetime.now()
 
     def is_organization_sponsor(self):
         try:

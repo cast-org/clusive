@@ -2,6 +2,7 @@ import json
 import logging
 import os
 
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -28,7 +29,8 @@ SINGLE_USER_EXTRADATA = {
     },
     'proofOfDisabilityStatus': 'active',
     'studentStatus': None,
-    'organizational': UserTypes.INDIVIDUAL
+    'organizational': UserTypes.INDIVIDUAL,
+    'dateOfBirth': '1990-01-01'
 }
 
 ORG_SPONSOR_EXTRADATA = {
@@ -44,7 +46,8 @@ ORG_SPONSOR_EXTRADATA = {
     },
     'proofOfDisabilityStatus': 'active',
     'studentStatus': None,
-    'organizational': UserTypes.ORG_SPONSOR
+    'organizational': UserTypes.ORG_SPONSOR,
+    'dateOfBirth': None
 }
 
 # Old way of designating organizational accounts with boolean value, for
@@ -80,7 +83,8 @@ ORG_MEMBER_EXTRADATA = {
     'studentStatus': {
         'organizationName': 'Anonymous Organization'
     },
-    'organizational': UserTypes.ORG_MEMBER
+    'organizational': UserTypes.ORG_MEMBER,
+    'dateOfBirth': '2001-02-14'
 }
 
 
@@ -347,3 +351,23 @@ class BookshareTestCase(TestCase):
             self.assertEquals(org_status_before_update, org_status_after_update)
         else:
             logger.debug('Ignoring "test_adapter_update_org_status()", no access keys.')
+
+    def test_adapter_date_of_birth(self):
+        # Test case where the user's date of birth is in the database
+        request = self.request_factory.get('/my_account')
+        request.user = self.org_member
+        birthday = BookshareOAuth2Adapter(request).date_of_birth()
+        expected = datetime.strptime(
+            ORG_MEMBER_EXTRADATA.get('dateOfBirth', ''), '%Y-%m-%d'
+        )
+        self.assertEquals(expected, birthday)
+
+        # Test case where date of birth is explicitly "null"
+        request.user = self.org_sponsor
+        birthday = BookshareOAuth2Adapter(request).date_of_birth()
+        self.assertEquals(datetime.now().date(), birthday.date())
+
+        # Test case where date of birth is missing.
+        request.user = self.old_org_sponsor
+        birthday = BookshareOAuth2Adapter(request).date_of_birth()
+        self.assertEquals(datetime.now().date(), birthday.date())
