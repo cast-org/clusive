@@ -142,3 +142,52 @@
     color: var(--CT_boxSecondaryColor);
     background-color: var(--CT_boxSecondaryBg);
 }
+
+.box-mascot-tipped-text {
+    position: relative;
+    max-width: rem(800px);
+    min-height: calc(var(--CT_boxMascotSize) * #{$img-ratio-mascot-tipped});
+    padding-left: calc(var(--CT_boxMascotSize) + 2rem);
+
+    p {
+        margin-bottom: .75rem;
+    }
+
+    &::before {
+        position: absolute;
+        bottom: -.75rem;
+        left: 1rem;
+        display: block;
+        width: var(--CT_boxMascotSize);
+        height: calc(var(--CT_boxMascotSize) * #{$img-ratio-mascot-tipped});
+        content: "";
+        background-image: var(--CT_imgMascotTippedAnimated);
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    @include media-breakpoint-down(md) {
+        padding-left: 0;
+        padding-bottom: calc(var(--CT_boxMascotSize) * #{$img-ratio-mascot-tipped});
+
+        &::before {
+            bottom: 0;
+        }
+    }
+}
+
+// stylelint-disable-next-line no-duplicate-selectors
+.clusive-reduced-motion {
+    .box-mascot-tipped-text {
+        &::before {
+            background-image: var(--CT_imgMascotTipped);
+        }
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .box-mascot-tipped-text {
+        &::before {
+            background-image: var(--CT_imgMascotTipped);
+        }
+    }
+}
