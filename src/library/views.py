@@ -856,14 +856,12 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
     formlabel ='Step 1: Search by title, author, or ISBN'
     sponsor_warning_message = '\
         You are using a Sponsor (Teacher/District/School) Bookshare account. \
-        Go to Bookshare to assign books to students that you want them to be \
-        able to import into Clusive. Students will only see the Bookshare \
-        titles you assign to them.'
+        Your import of Bookshare titles for students through Clusive is not \
+        yet implemented, but you can assign titles to students through the \
+        Bookshare site.'
     member_warning_message = '\
-        Your Bookshare account lets you add books into Clusive, but only those \
-        books that your teacher or sponsor have assigned to you or titles \
-        available to everyone. If a book is not available to add to Clusive, \
-        ask your teacher or sponsor to add it to your Bookshare list.'
+        Your Bookshare account will let you import Bookshare readings assigned \
+        to you by your school or organization.'
 
     def dispatch(self, request, *args, **kwargs):
         if not is_bookshare_connected(request):
