@@ -36,3 +36,7 @@ class PictureUsage(models.Model):
         record, created = cls.objects.get_or_create(date=date.today(), source=source, word=word, icon_id=None)
         record.count += 1
         record.save()
+
+    @classmethod
+    def daily_usage(cls, source, date):
+        return cls.objects.filter(date=date, source=source, icon_id__isnull=False)

@@ -1,9 +1,10 @@
 import logging
 import math
+from typing import Union
 
 from TheNounProjectAPI import API
 from TheNounProjectAPI.exceptions import NotFound
-from TheNounProjectAPI.models import UsageModel
+from TheNounProjectAPI.models import UsageModel, EnterpriseModel
 from django.conf import settings
 
 from glossary.util import base_form
@@ -52,6 +53,12 @@ class NounProjectManager:
             logger.warning('Noun Project API monthly usage is too high')
             ok = False
         return ok
+
+    def report_usage(self, icons: Union[list, set, str, int]):
+        result: EnterpriseModel
+        result = self.api.report_usage(test=False, icons=icons)
+        logger.debug('Report usage result: %s', result)
+        return result.result == 'success'
 
     def get_icon(self, word: str):
         """

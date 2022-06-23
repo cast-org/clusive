@@ -1,4 +1,5 @@
 import logging
+from datetime import date, timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
@@ -9,6 +10,7 @@ from flaticon.util import flaticon_is_configured, FlaticonManager
 from library.models import Book
 from nounproject.util import NounProjectManager, nounproject_is_configured
 from roster.models import TransformTool
+from simplification.models import PictureUsage, PictureSource
 from simplification.util import WordnetSimplifier
 
 logger = logging.getLogger(__name__)
@@ -58,3 +60,26 @@ class ShowPicturesView(LoginRequiredMixin, View):
                                    book=book)
 
         return JsonResponse({'result': output})
+
+
+class ReportUsageView(View):
+    """
+    Looks up list of icons that were displayed to users yesterday, and reports that to the API.
+    """
+    def get(self, request):
+        if nounproject_is_configured():
+            icon_mgr = NounProjectManager()
+            icon_ids = []
+            for u in PictureUsage.daily_usage(source=PictureSource.NOUN_PROJECT, date=date.today() - timedelta(days=1)):
+                for i in range(u.count):
+                    icon_ids.append(u.icon_id)
+            ok = icon_mgr.report_usage(icon_ids)
+            if ok:
+                return JsonResponse({'status': 'ok',
+                                     'ids': icon_ids})
+            else:
+                return JsonResponse({'status': 'error',
+                                     'message': 'Noun project API returned an error'})
+        else:
+            return JsonResponse({'status': 'error',
+                                 'message': 'Noun Project API not configured'})
