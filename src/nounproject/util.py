@@ -7,6 +7,7 @@ from TheNounProjectAPI.models import UsageModel
 from django.conf import settings
 
 from glossary.util import base_form
+from simplification.models import PictureUsage, PictureSource
 from simplification.util import WordnetSimplifier
 
 logger = logging.getLogger(__name__)
@@ -68,11 +69,13 @@ class NounProjectManager:
             if len(icons) > 0:
                 icon = icons[0]
                 logger.debug('Retrieved icon: %s -> %s', word, icon.term)
+                PictureUsage.log_usage(source=PictureSource.NOUN_PROJECT, word=word, icon_id=icon.id)
                 return (icon.icon_url, icon.term)
             else:
                 logger.debug('No icons returned for word %s', word)
         except NotFound:
             logger.debug('No icon found for term %s', word)
+            PictureUsage.log_missing(source=PictureSource.NOUN_PROJECT, word=word)
             NounProjectManager.words_without_icons.add(word)
         except Exception as e:
             logger.warning('API Error for %s: [%s] %s', word, e.__class__, e)
