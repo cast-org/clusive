@@ -69,6 +69,7 @@ class NounProjectManager:
 
         if word in NounProjectManager.words_without_icons:
             logger.debug('Skipping lookup for word %s, it is known to not have an icon', word)
+            PictureUsage.log_missing(source=PictureSource.NOUN_PROJECT, word=word)
             return (None, None)
         try:
             pub_domain_only = not self.pro_account
