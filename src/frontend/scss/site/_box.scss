@@ -167,8 +167,8 @@
     }
 
     @include media-breakpoint-down(md) {
-        padding-left: 0;
         padding-bottom: calc(var(--CT_boxMascotSize) * #{$img-ratio-mascot-tipped});
+        padding-left: 0;
 
         &::before {
             bottom: 0;

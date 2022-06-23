@@ -241,11 +241,15 @@
 .card-important {
     background-color: var(--CT_cardImportantBg);
     border-color: var(--CT_cardImportantBorderColor);
+    border-right: 0;
+    border-bottom: 0;
     box-shadow: var(--CT_cardImportantBoxShadow);
 }
 .card-resource {
     background-color: var(--CT_cardResourceBg);
     border-color: var(--CT_cardResourceBorderColor);
+    border-right: 0;
+    border-bottom: 0;
     box-shadow: var(--CT_cardResourceBoxShadow);
 }
 .card-important,
