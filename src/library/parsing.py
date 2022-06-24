@@ -216,11 +216,6 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
         return book_version, True
 
 
-def save_json_files(dir, file_names, dicts):
-    for file_name in file_names:
-        with open(os.path.join(dir, file_name), 'w') as json_file:
-            json_file.write(json.dumps())
-
 def get_metadata_item(book, name):
     item = book.meta.get(name)
     if item:
