@@ -342,30 +342,35 @@ def make_positions_and_weight(epub: Epub, zip_file: ZipFile, manifest: dict):
     # 2. track the `total_content_length`,
     # 3. build up the `positions` array containing `locator` structs
     for link in manifest['readingOrder']:
-        zip_entry = zip_file.getinfo(link['href'])
-        entry_length = zip_entry.file_size # or compress_size?
-        link['contentLength'] = entry_length
-        total_content_length += entry_length
-        position_count = max(1, math.ceil(entry_length / POSITION_LENGTH))
+        try:
+            zip_entry = zip_file.getinfo(link['href'])
+            entry_length = zip_entry.file_size # or compress_size?
+            link['contentLength'] = entry_length
+            total_content_length += entry_length
+            position_count = max(1, math.ceil(entry_length / POSITION_LENGTH))
 
-        # Load the `positions` array `positions_count` locator structs
-        for position in range(position_count):
-            locator = {
-                'href': link['href'],
-                'locations': {
-                    'progression': position / position_count,
-                    'position': start_position + (position + 1)
-                },
-                'type': link['type']
-            }
-            positions.append(locator)
-        start_position += position_count
+            # Load the `positions` array `positions_count` locator structs
+            for position in range(position_count):
+                locator = {
+                    'href': link['href'],
+                    'locations': {
+                        'progression': position / position_count,
+                        'position': start_position + (position + 1)
+                    },
+                    'type': link['type']
+                }
+                positions.append(locator)
+            start_position += position_count
+        except KeyError:
+            logger.debug('No entry in %s for %s', zip_file.filename, link['href'])
 
     # Loop through the reading order again, using the just calculated `positions`
     # to calculate the weight of each linked item
     total_content_percent = 100 / total_content_length
     for link in manifest['readingOrder']:
-        weight[link['href']] = total_content_percent * link['contentLength']
+        content_length = link.get('contentLength')
+        if content_length:
+            weight[link['href']] = total_content_percent * content_length
 
     # Loop through the `positions` to update its locators with progress and
     # position info.
