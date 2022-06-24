@@ -1,5 +1,6 @@
 import json
 import logging
+import math
 import os
 import posixpath
 import shutil
@@ -200,8 +201,11 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
         os.makedirs(dir)
         with ZipFile(file) as zf:
             zf.extractall(path=dir)
-        with open(os.path.join(dir, 'manifest.json'), 'w') as mf:
-            mf.write(json.dumps(manifest, indent=4))
+            position_list, weight = make_positions_and_weight(upload, zf, manifest)
+
+        for json_file in (manifest, 'manifest.json'), (position_list, 'positions.json'), (weight, 'weight.json'):
+            with open(os.path.join(dir, json_file[1]), 'w') as jf:
+                jf.write(json.dumps(json_file[0], indent=4))
 
         # If the cover image was retrieved and stored in a tmp file, move it to
         # the new EPUB storage directory.
@@ -211,6 +215,11 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
         logger.debug("Unpacked epub into %s", dir)
         return book_version, True
 
+
+def save_json_files(dir, file_names, dicts):
+    for file_name in file_names:
+        with open(os.path.join(dir, file_name), 'w') as json_file:
+            json_file.write(json.dumps())
 
 def get_metadata_item(book, name):
     item = book.meta.get(name)
@@ -315,6 +324,70 @@ def make_toc_item(epub, it):
     if it.children:
         res['children'] = [make_toc_item(epub, c) for c in it.children]
     return res
+
+def make_positions_and_weight(epub: Epub, zip_file: ZipFile, manifest: dict):
+    """
+    :param epub: EPUB file as parsed by Dawn.
+    :param zip_file: the EPUB file packaged in a zipfile
+    :manifest: JSON (dict) created by make_manifest() above.
+    """
+    POSITION_LENGTH = 1024
+    start_position = 0
+    total_content_length = 0
+    positions = []
+    weight = {}
+
+    # Loop through the link structs in the manifest's `readingOrder`, adding
+    # 1. a `contentLength` property to each,
+    # 2. track the `total_content_length`,
+    # 3. build up the `positions` array containing `locator` structs
+    for link in manifest['readingOrder']:
+        zip_entry = zip_file.getinfo(link['href'])
+        entry_length = zip_entry.file_size # or compress_size?
+        link['contentLength'] = entry_length
+        total_content_length += entry_length
+        position_count = max(1, math.ceil(entry_length / POSITION_LENGTH))
+
+        # Load the `positions` array `positions_count` locator structs
+        for position in range(position_count):
+            locator = {
+                'href': link['href'],
+                'locations': {
+                    'progression': position / position_count,
+                    'position': start_position + (position + 1)
+                },
+                'type': link['type']
+            }
+            positions.append(locator)
+        start_position += position_count
+
+    # Loop through the reading order again, using the just calculated `positions`
+    # to calculate the weight of each linked item
+    total_content_percent = 100 / total_content_length
+    for link in manifest['readingOrder']:
+        weight[link['href']] = total_content_percent * link['contentLength']
+
+    # Loop through the `positions` to update its locators with progress and
+    # position info.
+    num_positions = len(positions)
+    for locator in positions:
+        resources = [loc for loc in positions if loc['href'] == locator['href']]
+        num_resources = len(resources)
+        locations = locator['locations']
+        progression = locations['progression']
+        position = locations['position']
+        position_index = math.ceil(progression * (num_resources - 1))
+        locations.update({
+            'totalProgression': (position - 1) / num_positions,
+            'remainingPositions': abs(position_index - (num_resources - 1)),
+            'totalRemainingPositions': abs(position - 1 - (num_positions - 1))
+        })
+
+    position_list = {
+        'total': num_positions,
+        'positions': positions
+    }
+    return position_list, weight
 
 
 def scan_all_books():
