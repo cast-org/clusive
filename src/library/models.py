@@ -204,6 +204,16 @@ class BookVersion(models.Model):
         return '%s/manifest.json' % (self.path)
 
     @property
+    def positions_path(self):
+        """Relative, URL-style path from MEDIA_URL to the manifest for this book version."""
+        return '%s/positions.json' % (self.path)
+
+    @property
+    def weight_path(self):
+        """Relative, URL-style path from MEDIA_URL to the manifest for this book version."""
+        return '%s/weight.json' % (self.path)
+
+    @property
     def storage_dir(self):
         """Absolute filesystem location of this book version's content."""
         return os.path.join(self.book.storage_dir, str(self.sortOrder))

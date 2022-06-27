@@ -559,6 +559,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
+            'positions_path': self.book_version.positions_path,
+            'weight_path': self.book_version.weight_path,
             'last_position': pdata.last_location or "null",
             'annotations': annotationList,
             'cuelist': json.dumps(cuelist),

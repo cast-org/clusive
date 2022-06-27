@@ -357,7 +357,7 @@ def make_positions_and_weight(epub: Epub, zip_file: ZipFile, manifest: dict):
                 positions.append(locator)
             start_position += position_count
         except KeyError:
-            logger.debug('No entry in %s for %s', zip_file.filename, link['href'])
+            logger.debug('No entry in %s for %s, ignoring', zip_file.filename, link['href'])
 
     # Loop through the reading order again, using the just calculated `positions`
     # to calculate the weight of each linked item
