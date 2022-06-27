@@ -73,13 +73,19 @@ class ReportUsageView(View):
             for u in PictureUsage.daily_usage(source=PictureSource.NOUN_PROJECT, date=date.today() - timedelta(days=1)):
                 for i in range(u.count):
                     icon_ids.append(u.icon_id)
-            ok = icon_mgr.report_usage(icon_ids)
-            if ok:
-                return JsonResponse({'status': 'ok',
-                                     'ids': icon_ids})
+            if icon_ids:
+                logger.debug('Reporting icon usage: %s', icon_ids)
+                ok = icon_mgr.report_usage(icon_ids)
+                if ok:
+                    return JsonResponse({'status': 'ok',
+                                         'ids': icon_ids})
+                else:
+                    return JsonResponse({'status': 'error',
+                                         'message': 'Noun project API returned an error'})
             else:
-                return JsonResponse({'status': 'error',
-                                     'message': 'Noun project API returned an error'})
+                logger.debug('No Noun Project usage to report')
+                return JsonResponse({'status': 'ok',
+                                     'ids': None})
         else:
             return JsonResponse({'status': 'error',
                                  'message': 'Noun Project API not configured'})
