@@ -1288,12 +1288,12 @@ class MyAccountView(EventMixin, ThemedPageMixin, TemplateView):
         google_account = None
         bookshare_account = None
         for account in SocialAccount.objects.filter(user=request.user):
-            if account.provider=='google':
+            if account.provider == 'google':
                 # Google account's `extra_data` contain the user's google email
                 google_account = account.extra_data.get('email')
-            if account.provider=='bookshare':
+            if account.provider == 'bookshare':
                 # For bookshare, uid is the email address registered with Bookshare.
-                # Organization is either a name of an organziational account or
+                # Organization is either a name of an organizational account or
                 # a single user account
                 bookshare_account = {
                     'id': account.uid,
