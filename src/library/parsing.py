@@ -71,7 +71,7 @@ def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=
     This method will:
      * unzip the file into the user media area
      * find the most basic metadata
-     * create the manifest.json
+     * create the manifest.json, positions.json, and weight.json files
      * make a database record
 
     It does NOT look for glossary words or parse the text content for vocabulary lists,
@@ -322,9 +322,15 @@ def make_toc_item(epub, it):
 
 def make_positions_and_weight(epub: Epub, zip_file: ZipFile, manifest: dict):
     """
+    Calculate the positions within and weight of "chapters" in the
+    `readingOrder` section of the `manifest`.  This uses the compressed size of
+    the chapters in the calculations.
+    Note: The `epub` document is passed to determine if it has a fixed layout
+    and to alter the calculations accordingly.  It is currently unused.
     :param epub: EPUB file as parsed by Dawn.
     :param zip_file: the EPUB file packaged in a zipfile
-    :manifest: JSON (dict) created by make_manifest() above.
+    :param manifest: JSON (dict) created by make_manifest() above.
+    :return: a tuple of position_list and weight JSON objects.
     """
     POSITION_LENGTH = 1024
     start_position = 0
@@ -339,7 +345,7 @@ def make_positions_and_weight(epub: Epub, zip_file: ZipFile, manifest: dict):
     for link in manifest['readingOrder']:
         try:
             zip_entry = zip_file.getinfo(link['href'])
-            entry_length = zip_entry.file_size # or compress_size?
+            entry_length = zip_entry.compress_size
             link['contentLength'] = entry_length
             total_content_length += entry_length
             position_count = max(1, math.ceil(entry_length / POSITION_LENGTH))
