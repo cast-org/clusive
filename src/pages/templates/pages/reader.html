@@ -101,8 +101,8 @@ var simplificationTool = "{{ simplification_tool }}";
         var fontFamilyVerdana = isAndroid ? 'Roboto, Verdana' : 'Verdana, Roboto';
         var baseMediaUrl = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% get_media_prefix %}'
         var url = baseMediaUrl + manifest_path;
-        var positionsUrl = ( positions_path ? baseMediaUrl + positions_path : null );
-        var weightUrl = ( weight_path ? baseMediaUrl + weight_path : null );
+        var positionsUrl = ( positions_path === 'False' ? null : baseMediaUrl + positions_path );
+        var weightUrl = ( weight_path === 'False' ? null : baseMediaUrl + weight_path );
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
@@ -351,7 +351,7 @@ var simplificationTool = "{{ simplification_tool }}";
                 }
             }
         };
-        if (positions_path) {
+        if (positionsUrl) {
             readerOptions.services = {
                 positions: { href: new URL(positionsUrl) },
                 weight: { href: new URL(weightUrl) }
