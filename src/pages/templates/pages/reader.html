@@ -101,8 +101,8 @@ var simplificationTool = "{{ simplification_tool }}";
         var fontFamilyVerdana = isAndroid ? 'Roboto, Verdana' : 'Verdana, Roboto';
         var baseMediaUrl = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% get_media_prefix %}'
         var url = baseMediaUrl + manifest_path;
-        var positionsUrl = baseMediaUrl + positions_path;
-        var weightUrl = baseMediaUrl + weight_path;
+        var positionsUrl = ( positions_path ? baseMediaUrl + positions_path : null );
+        var weightUrl = ( weight_path ? baseMediaUrl + weight_path : null );
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
@@ -144,8 +144,6 @@ var simplificationTool = "{{ simplification_tool }}";
 
         var readerOptions = {
             url: new URL(url),
-            positionsUrl: new URL(positionsUrl),
-            weightUrl: new URL(weightUrl),
             userSettings: {
                 textAlignment:'start',
                 columnCount: '1'
@@ -160,7 +158,7 @@ var simplificationTool = "{{ simplification_tool }}";
                 enableAnnotations: true,
                 enableDefinitions: true,
                 enableTTS: true,
-                autoGeneratePositions: true,
+                autoGeneratePositions: !positions_path,
                 enableLineFocus: true,
                 enableBookmarks: false,
                 enableMaterial: false,
@@ -353,6 +351,12 @@ var simplificationTool = "{{ simplification_tool }}";
                 }
             }
         };
+        if (positions_path) {
+            readerOptions.services = {
+                positions: { href: new URL(positionsUrl) },
+                weight: { href: new URL(weightUrl) }
+            }
+        }
 
         // Wait for the reader preferences bridge to be created, then create the Reader
         document.addEventListener("cisl.prefs.readerPreferencesBridge.onCreate", function (e) {
