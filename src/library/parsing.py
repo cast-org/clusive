@@ -345,7 +345,7 @@ def make_positions_and_weight(epub: Epub, zip_file: ZipFile, manifest: dict):
     for link in manifest['readingOrder']:
         try:
             zip_entry = zip_file.getinfo(link['href'])
-            entry_length = zip_entry.compress_size
+            entry_length = zip_entry.file_size
             link['contentLength'] = entry_length
             total_content_length += entry_length
             position_count = max(1, math.ceil(entry_length / POSITION_LENGTH))
