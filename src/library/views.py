@@ -27,7 +27,7 @@ from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
-    CustomVocabularyWord
+    CustomVocabularyWord, EducatorResourceCategory
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
     get_access_keys, is_organizational_account
@@ -358,6 +358,16 @@ class LibraryStyleRedirectView(View):
         if request.clusive_user and request.clusive_user.current_period:
             kwargs['period_id'] = request.clusive_user.current_period.id
         return HttpResponseRedirect(redirect_to=reverse('library', kwargs=kwargs))
+
+
+class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+    template_name = 'library/resources.html'
+
+    def get(self, request, *args, **kwargs):
+        self.extra_context = {
+            'categories': EducatorResourceCategory.objects.all().prefetch_related('resources')
+        }
+        return super().get(request, *args, **kwargs)
 
 
 class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):

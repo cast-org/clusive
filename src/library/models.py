@@ -37,7 +37,89 @@ class Subject(models.Model):
         return cls.cached_list
 
 
-class Book(models.Model):
+class EducatorResourceCategory(models.Model):
+    name = models.CharField(max_length=256)
+    sort_order = models.SmallIntegerField(unique=True)
+
+    class Meta:
+        ordering = ['sort_order']
+
+
+class AbstractReading(models.Model):
+    title = models.CharField(max_length=256, db_index=True)
+    sort_title = models.CharField(max_length=256)
+    author = models.CharField(max_length=256, db_index=True)
+    sort_author = models.CharField(max_length=256)
+    description = models.TextField(default="", blank=True, db_index=True)
+    cover = models.CharField(max_length=256, null=True)
+    featured = models.BooleanField(default=False)
+    word_count = models.PositiveIntegerField(null=True, db_index=True)
+    picture_count = models.PositiveIntegerField(null=True)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def path(self):
+        return 'resource/%d' % self.pk
+
+    @property
+    def cover_path(self):
+        """URL-style path to the book's cover image."""
+        if self.cover:
+            return self.path + '/' + str(self.cover)
+        else:
+            return None
+
+    @property
+    def storage_dir(self):
+        """Path to the filesystem location where this book's files are stored."""
+        return default_storage.path(self.path)
+
+    @property
+    def cover_storage(self):
+        """Path to the place where the cover image for this book is stored."""
+        if self.cover:
+            return os.path.join(self.storage_dir, str(self.cover))
+        else:
+            return None
+
+    @property
+    def cover_filename(self):
+        return os.path.basename(self.cover)
+
+    def set_cover_file(self, filename):
+        """
+        Updates book, setting the cover to be a given filename; returns the full path to this location.
+        Caller is responsible for actually putting a cover image in that location.
+        :param filename: name of the cover image file with no path
+        :return: full path to where the cover should be stored
+        """
+        path = os.path.join(self.storage_dir, filename)
+        self.cover = filename
+        self.save()
+        return path
+
+
+class EducatorResource(AbstractReading):
+    """
+    An item shown in the "Resources" section of the site for teachers and parents.
+    """
+    identifier = models.CharField(max_length=256, unique=True, db_index=True)
+    category = models.ForeignKey(to=EducatorResourceCategory, related_name='resources',
+                                 on_delete=models.SET_NULL, null=True, blank=True)
+    sort_order = models.SmallIntegerField() # This is the display order within the category
+    tags = models.TextField(default='[]')
+
+    @property
+    def tag_list(self):
+        """Decode JSON format and return tags as a list."""
+        if not hasattr(self, '_tag_list'):
+            self._tag_list = json.loads(self.tags)
+        return self._tag_list
+
+
+class Book(AbstractReading):
     """
     Metadata about a single reading, to be represented as an item on the Library page.
     There may be multiple versions of a single Book, which are separate EPUB files.
@@ -47,16 +129,16 @@ class Book(models.Model):
     Two Book records can point to the same Bookshare ID since multiple users can load it as their own.
     """
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
-    title = models.CharField(max_length=256, db_index=True)
-    sort_title = models.CharField(max_length=256)
-    author = models.CharField(max_length=256, db_index=True)
-    sort_author = models.CharField(max_length=256)
-    description = models.TextField(default="", blank=True, db_index=True)
-    cover = models.CharField(max_length=256, null=True)
-    word_count = models.PositiveIntegerField(null=True, db_index=True)
-    picture_count = models.PositiveIntegerField(null=True)
     subjects = models.ManyToManyField(Subject, db_index=True)
     bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
+
+    @property
+    def path(self):
+        """URL-style path to the book's location."""
+        if self.owner:
+            return '%d/%d' % (self.owner.pk, self.pk)
+        else:
+            return 'public/%d' % self.pk
 
     @property
     def is_public(self):
@@ -104,51 +186,6 @@ class Book(models.Model):
         return self._all_word_and_non_dict_word_list
 
     @property
-    def path(self):
-        """URL-style path to the book's location."""
-        if self.owner:
-            return '%d/%d' % (self.owner.pk, self.pk)
-        else:
-            return 'public/%d' % self.pk
-
-    @property
-    def cover_path(self):
-        """URL-style path to the book's cover image."""
-        if self.cover:
-            return self.path + '/' + str(self.cover)
-        else:
-            return None
-
-    @property
-    def storage_dir(self):
-        """Path to the filesystem location where this book's files are stored."""
-        return default_storage.path(self.path)
-
-    @property
-    def cover_storage(self):
-        """Path to the place where the cover image for this book is stored."""
-        if self.cover:
-            return os.path.join(self.storage_dir, str(self.cover))
-        else:
-            return None
-
-    @property
-    def cover_filename(self):
-        return os.path.basename(self.cover)
-
-    def set_cover_file(self, filename):
-        """
-        Updates book, setting the cover to be a given filename; returns the full path to this location.
-        Caller is responsible for actually putting a cover image in that location.
-        :param filename: name of the cover image file with no path
-        :return: full path to where the cover should be stored
-        """
-        path = os.path.join(self.storage_dir, filename)
-        self.cover = filename
-        self.save()
-        return path
-
-    @property
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
@@ -181,7 +218,10 @@ class Book(models.Model):
 
 class BookVersion(models.Model):
     """Database representation of metadata about a single EPUB file."""
-    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='versions')
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='versions',
+                             null=True, blank=True)
+    resource = models.ForeignKey(to=EducatorResource, on_delete=models.CASCADE, db_index=True, related_name='versions',
+                                 null=True, blank=True)
     sortOrder = models.SmallIntegerField()
     word_count = models.PositiveIntegerField(null=True)
     picture_count = models.PositiveIntegerField(null=True)
@@ -194,9 +234,18 @@ class BookVersion(models.Model):
     filename = models.TextField(null=True) # The filename of the EPUB that was uploaded.
 
     @property
+    def reading(self):
+        if self.book:
+            return self.book
+        elif self.resource:
+            return self.resource
+        else:
+            return None
+
+    @property
     def path(self):
         """Relative, URL-style path from MEDIA_URL to this book version."""
-        return '%s/%d' % (self.book.path, self.sortOrder)
+        return '%s/%d' % (self.reading.path, self.sortOrder)
 
     @property
     def manifest_path(self):
@@ -206,7 +255,7 @@ class BookVersion(models.Model):
     @property
     def storage_dir(self):
         """Absolute filesystem location of this book version's content."""
-        return os.path.join(self.book.storage_dir, str(self.sortOrder))
+        return os.path.join(self.reading.storage_dir, str(self.sortOrder))
 
     @property
     def manifest_file(self):
@@ -267,12 +316,16 @@ class BookVersion(models.Model):
         return cls.objects.get(book__pk=book_id, sortOrder=version_number)
 
     def __str__(self):
-        return '<BV %d: %s[%d]>' % (self.pk, self.book, self.sortOrder)
+        if self.book:
+            return '<BV %d: %s[%d]>' % (self.pk, self.book, self.sortOrder)
+        else:
+            return '<BV %d: resource %s>' % (self.pk, self.resource)
 
     class Meta:
-        ordering = ['book', 'sortOrder']
+        ordering = ['book', 'resource', 'sortOrder']
         constraints = [
-            models.UniqueConstraint(fields=['book', 'sortOrder'], name='unique_book_version')
+            models.UniqueConstraint(fields=['book', 'sortOrder'], name='unique_book_version'),
+            models.UniqueConstraint(fields=['resource', 'sortOrder'], name='unique_resource_version'),
         ]
 
 

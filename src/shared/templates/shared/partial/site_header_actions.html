@@ -8,6 +8,14 @@
     </li>
 
     <li class="nav-item">
+        {% if page_group == 'resources' %}
+        <span class="nav-link current" aria-current="true">Resources</span>
+        {% else %}
+        <a href="{% url 'resources' %}" class="nav-link">Resources</a>
+        {% endif %}
+    </li>
+
+    <li class="nav-item">
         {% if page_group == 'library' %}
         <span class="nav-link current" aria-current="true">Library</span>
         {% else %}

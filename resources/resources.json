@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Getting started",
+    "resources": [
+      {
+        "identifier": "CLUES",
+        "file": "clues.epub",
+        "tags": ["Video", "Audio"]
+      },
+      {
+        "identifier": "CLUES2",
+        "file": "clues.epub",
+        "tags": []
+      }
+    ]
+  },
+  {
+    "name": "Teaching with Clusive",
+    "resources": [
+      {
+        "identifier": "CLUES3",
+        "file": "clues.epub",
+        "tags": ["Video"]
+      }
+    ]
+  }
+]

@@ -24,7 +24,7 @@ from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from glossary.views import choose_words_to_cue
-from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization, EducatorResource
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.util import TranslateApiManager
@@ -577,6 +577,40 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         event.page = self.page_name
         event.book_version_id = self.book_version.id
         event.book_id = self.book.id
+        event.tip_type = self.tip_shown
+
+
+class ResourceReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+    """Reader page showing a page of an EducatorResource"""
+    template_name = 'pages/reader.html'
+    page_name = 'ResourceReading'
+
+    def get(self, request, *args, **kwargs):
+        res_id = kwargs.get('resource_id')
+        self.resource = EducatorResource.objects.get(pk=res_id)
+        self.book_version = self.resource.versions.all()[0]
+        clusive_user = request.clusive_user
+        # See if there's a Tip that should be shown
+        self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=1)
+
+        self.extra_context = {
+            'pub': self.resource,
+            'version_id': self.book_version.id,
+            'version_count': 1,
+            'manifest_path': self.book_version.manifest_path,
+            # 'last_position': pdata.last_location or "null",
+            # 'annotations': annotationList,
+            'tip_name': self.tip_shown.name if self.tip_shown else None,
+            'simplification_tool': clusive_user.transform_tool,
+            'simplification_show_translate': translation.util.translation_is_configured(),
+            'simplification_show_pictures': flaticon.util.flaticon_is_configured() or nounproject.util.nounproject_is_configured(),
+        }
+        return super().get(request, *args, **kwargs)
+
+    def configure_event(self, event: Event):
+        event.page = self.page_name
+        event.book_version_id = self.book_version.id
+        # event.book_id = self.book.id
         event.tip_type = self.tip_shown
 
 

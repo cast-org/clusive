@@ -2,16 +2,16 @@ import logging
 import os
 import shutil
 
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_delete
 from django.dispatch import receiver
 
 from eventlog.signals import vocab_lookup, translation_action, control_used
-from library.models import BookVersion, Book, Paradata
+from library.models import BookVersion, Book, Paradata, EducatorResource
 
 logger = logging.getLogger(__name__)
 
 
-@receiver(post_delete, sender=BookVersion)
+@receiver(pre_delete, sender=BookVersion) # Has to be before delete since we need access to related models
 def delete_bookversion_files(sender, **kwargs):
     """When BookVersion is deleted, also delete its uploaded files"""
     instance : BookVersion
@@ -31,6 +31,16 @@ def delete_book_files(sender, **kwargs):
         shutil.rmtree(instance.storage_dir)
 
 
+@receiver(post_delete, sender=EducatorResource)
+def delete_book_files(sender, **kwargs):
+    """When EducatorResource is deleted, also delete its uploaded files"""
+    instance : EducatorResource
+    instance = kwargs['instance']
+    logger.debug('EducatorResource was deleted, cleaning up files: %s', instance)
+    if os.path.exists(instance.storage_dir):
+        shutil.rmtree(instance.storage_dir)
+
+
 @receiver(vocab_lookup)
 def record_vocab_lookup(sender, **kwargs):
     """Record word lookups in Paradata"""
@@ -43,6 +53,7 @@ def record_vocab_lookup(sender, **kwargs):
 def record_translation(sender, **kwargs):
     if kwargs['book']:
         Paradata.record_translation(user=kwargs['request'].clusive_user, book=kwargs['book'])
+
 
 @receiver(control_used)
 def record_read_aloud(sender, **kwargs):

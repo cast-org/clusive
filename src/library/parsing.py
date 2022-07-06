@@ -5,6 +5,7 @@ import posixpath
 import shutil
 from html.parser import HTMLParser
 from os.path import basename
+from pathlib import Path
 from tempfile import mkstemp
 from urllib.parse import urlparse
 from zipfile import ZipFile
@@ -17,7 +18,7 @@ from django.utils import timezone
 from nltk import RegexpTokenizer
 
 from glossary.util import base_form
-from library.models import Book, BookVersion, Subject
+from library.models import Book, BookVersion, Subject, AbstractReading, EducatorResource
 from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,65 @@ def convert_and_unpack_docx_file(clusive_user, file, filename):
         raise RuntimeError(output)
     return unpack_epub_file(clusive_user, tempfile, omit_filename='title_page.xhtml')
 
-def unpack_epub_file(clusive_user, file, book=None, sort_order=0, omit_filename=None, bookshare_metadata=None):
+
+def update_resource_from_epub_file(resource:EducatorResource, file:Path):
+    book_version:BookVersion
+    book_version, bv_created = BookVersion.objects.get_or_create(resource=resource, sortOrder=0)
+    with open(file, 'rb') as f, dawn.open(f) as dawn_epub:
+        mod_date = get_epub_mod_date(dawn_epub)
+        if bv_created or mod_date > book_version.mod_date:
+            # EPUB file is new or updated
+            unpack_to_storage_dir(file, book_version)
+            # Update fields that are stored on BookVersion
+            book_version.mod_date = mod_date
+            book_version.language = get_metadata_item(dawn_epub, 'language') or ''
+            book_version.filename = basename(file)
+            book_version.save()
+            # Update fields that are stored on EducatorResource
+            resource.title = get_metadata_item(dawn_epub, 'titles') or ''
+            resource.author = get_metadata_item(dawn_epub, 'creators') or ''
+            resource.description = get_metadata_item(dawn_epub, 'description') or ''
+            if dawn_epub.cover:
+                cover = adjust_href(dawn_epub, dawn_epub.cover.href)
+                # For cover path, need to prefix this path with the directory holding this version of the book.
+                resource.cover = os.path.join(str(0), cover)
+            set_sort_fields(resource)
+            resource.save()
+            # Create manifest
+            with open(book_version.manifest_file, 'w') as mf:
+                mf.write(json.dumps(make_manifest(dawn_epub), indent=4))
+        else:
+            logger.debug('No changes to educator resource %s', resource.identifier)
+
+
+def get_epub_mod_date(dawn_epub:Epub):
+    """
+    Get the modification-date metadata from the given Epub object.
+    If there is none, assumes "now".
+    :param dawn_epub:
+    :return: modification date, or "now".
+    """
+    file_date = dawn_epub.meta.get('dates').get('modification')
+    # Per spec, date should be in UTC.
+    if file_date:
+        return timezone.make_aware(file_date, timezone=timezone.utc)
+    else:
+        logger.warn('No modification date metadata, assuming "now"')
+        return timezone.now()
+
+
+def unpack_to_storage_dir(file:Path, book_version:BookVersion):
+    dir = book_version.storage_dir
+    if os.path.isdir(dir):
+        logger.debug('Erasing existing content in %s', dir)
+        shutil.rmtree(dir)
+    os.makedirs(dir)
+    with ZipFile(file) as zf:
+        zf.extractall(path=dir)
+
+
+def unpack_epub_file(clusive_user, file, book:Book=None, resource:EducatorResource=None,
+                     sort_order=0, omit_filename=None, bookshare_metadata=None):
     """
     Process an uploaded EPUB file, returns BookVersion.
 
@@ -223,7 +282,7 @@ def get_metadata_item(book, name):
     return None
 
 
-def make_manifest(epub: Epub, omit_filename: str):
+def make_manifest(epub: Epub, omit_filename: str = None):
     """
     Create Readium manifest based on the given EPUB.
     :param epub: EPUB file as parsed by Dawn.
@@ -347,9 +406,9 @@ def scan_book(b):
                 bv.save()
 
 
-def set_sort_fields(book):
+def set_sort_fields(ar:AbstractReading):
     # Read the title and sort_title out of the first version. THey should all be the same.
-    bv = book.versions.all()[0]
+    bv = ar.versions.all()[0]
     if os.path.exists(bv.manifest_file):
         with open(bv.manifest_file, 'r') as file:
             manifest = json.load(file)
@@ -360,7 +419,7 @@ def set_sort_fields(book):
                 # TODO: should make some simple default assumptions, like removing 'The'/'A'
                 logger.debug('Setting sort title to the title: %s', title)
                 sort_title = title
-            book.sort_title = sort_title or ''
+            ar.sort_title = sort_title or ''
 
             author_list = manifest['metadata'].get('author')
             if author_list:
@@ -371,7 +430,8 @@ def set_sort_fields(book):
                     # TODO: maybe should make some default assumptions, First Last -> Last first
                     logger.debug('Setting sort author to the author: %s', author )
                     sort_author = author
-                book.sort_author = sort_author or ''
+                ar.sort_author = sort_author or ''
+
 
 def set_subjects(book):
     # Get all valid subjects

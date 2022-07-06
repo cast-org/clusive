@@ -4,7 +4,8 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import path
 
-from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend, Customization, CustomVocabularyWord
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend, \
+    Customization, CustomVocabularyWord, EducatorResource, EducatorResourceCategory
 from library.parsing import scan_all_books
 
 logger = logging.getLogger(__name__)
@@ -44,9 +45,21 @@ class BookAdmin(admin.ModelAdmin):
         return HttpResponseRedirect("../")
 
 
+@admin.register(EducatorResourceCategory)
+class EducatorResourceCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'sort_order',)
+    list_display_links = ('name',)
+
+
+@admin.register(EducatorResource)
+class EducatorResourceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'identifier', 'title', 'author',)
+    inlines = [VersionsInline]
+
+
 @admin.register(BookVersion)
 class BookVersionAdmin(admin.ModelAdmin):
-    list_display = ('book', 'sortOrder')
+    list_display = ('book', 'resource', 'sortOrder')
 
 
 @admin.register(BookAssignment)
