@@ -1,18 +1,23 @@
-@keyframes toolsAnimateIn {
+@keyframes tools-animate-in {
     from {
         opacity: 0;
         transform: translate(-50%, -50%) scale(.5);
     }
 }
 
-.toolbox {
-    position: absolute;
-    z-index: 1100;
+.highlight-toolbox {
+    //position: absolute !important; //stylelint-disable-line declaration-no-important
+    z-index: 1025;
     display: none;
+    width: fit-content;
     user-select: none;
     transform: translate(-50%, -100%) translateY($toolbox-menu-arrow-height * -1);
-    transform-origin: bottom;
-    animation: toolsAnimateIn 100ms ease-out both;
+    //transform-origin: bottom;
+    animation: tools-animate-in 100ms ease-out both;
+}
+
+.toolbox-wrapper {
+    height: 0;
 }
 
 .toolbox-menu-group {

@@ -1,0 +1,58 @@
+<div class="popover popover-simplify popover-scrollable" id="shortcutsPop">
+    <div role="document">
+        <button type="button" class="close" data-cfw-dismiss="popover" aria-label="Close" title="Close"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+        <div class="popover-header">
+            <div class="popover-title"><strong>Keyboard shortcuts</strong></div>
+            {% include "shared/partial/dialog_tts.html" %}
+        </div>
+        <div class="popover-body" style="line-height: 1.5;">
+            <ul class="list list-bulleted list-keys">
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>k</kbd> - Keyboard shortcut list (this dialog)</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>t</kbd> - Show Table of Contents</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>h</kbd> - Show Highlights and Notes dialog</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd><span class="sr-only" ra-read>comma</span><span class="aria-hidden">,</span></kbd> - Show Display settings</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd><span class="sr-only" ra-read>period</span><span class="aria-hidden">.</span></kbd> - Show Reading tools settings</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>a</kbd> - Start/stop Read-aloud</li>
+                <li class="list-item"><kbd>space</kbd> - Pause Read-aloud (while reading)</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>f</kbd> - Focus search input (if one is available)</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>r</kbd> - Focus the reader document</li>
+                <li class="list-item"><kbd>left</kbd> - Previous page</li>
+                <li class="list-item"><kbd>right</kbd> - Next page</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>pageUp</kbd> - Previous chapter/section</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>pageDown</kbd> - Next chapter/section</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>l</kbd> - Go to the Library page</li>
+            </ul>
+
+            <p>When text is selected within a reading:</p>
+            <ul class="list list-bulleted list-keys">
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>d</kbd> - Word lookup</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>h</kbd> - Create highlight from selection</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>s</kbd> - Transform content in selection</li>
+                <li class="list-item"><kbd class="meta"></kbd> + <kbd>a</kbd> - Read text in selection</li>
+            </ul>
+        </div>
+        <div class="popover-footer">
+        </div>
+    </div>
+</div>
+<script>
+(function($) {
+    'use strict';
+
+    var platformIsMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+    var metaKey = (platformIsMacLike) ? 'option' : 'alt';
+    var metaKbd =  document.querySelector('#shortcutsPop').querySelectorAll('kbd.meta');
+    metaKbd.forEach(function(kbdElm) {
+        kbdElm.innerText = metaKey;
+    });
+}());
+
+$('#shortcutsLocator').CFW_Popover({
+    target: '#shortcutsPop',
+    placement: 'bottom',
+    drag: true,
+    popperConfig: {
+        positionFixed: true
+    }
+});
+</script>

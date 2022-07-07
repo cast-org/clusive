@@ -33,32 +33,6 @@
             @include font-size(2.25rem);
         }
     }
-
-    .sidebar {
-        pointer-events: none;
-        background-color: transparent;
-        background-image: none;
-
-        &::before,
-        &::after {
-            content: none;
-        }
-
-        @include media-breakpoint-down(sm) {
-            display: none;
-        }
-    }
-
-    .content {
-        padding-top: 0;
-        padding-right: 1rem;
-        padding-left: 1rem;
-
-        @include media-breakpoint-up(sm) {
-            padding-right: $sidebar-sm-width + 1rem;
-            padding-left: $sidebar-sm-width + 1rem;
-        }
-    }
 }
 
 .home-section {

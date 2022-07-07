@@ -1,7 +1,7 @@
 import logging
+import math
 from typing import List
 
-import math
 import profanity_check
 import regex
 from nltk.corpus import wordnet
@@ -21,21 +21,13 @@ class WordnetSimplifier:
         super().__init__()
         self.lang = lang
 
-    def simplify_text(self, text: str, clusive_user: ClusiveUser = None, percent: int = 10, include_full=True):
+    def simplify_text(self, text: str, clusive_user: ClusiveUser = None, percent: int = 10, include_full=False):
         word_list = self.tokenize_no_casefold(text)
         # Returns frequency info about all distinct tokens, sorted by frequency
         # Each element of word_info returned is a dict with keys hw, alts, count, freq
-        word_info = self.analyze_words(word_list)
+        word_info = self.analyze_words(word_list, clusive_user=clusive_user)
         # How many words should we replace?
         to_replace = math.ceil(len(word_info) * percent / 100)
-        # Has user indicated that they "know" or "use" any of these words?
-        if clusive_user:
-            known_words = WordModel.objects.filter(user=clusive_user, word__in=[i['hw'] for i in word_info], rating__gte=2).values('word')
-            known_word_list = [val['word'] for val in known_words]
-            logger.debug('Known words in simplification: %s', known_word_list)
-            for i in word_info:
-                if i['hw'] in known_word_list:
-                    i['known'] = True
 
         # Now determine appropriate replacements for that many of the most difficult words.
         replacements = {}
@@ -64,7 +56,9 @@ class WordnetSimplifier:
                 rep = replacements[base]
                 if tok[0].isupper():
                     rep = rep.title()
-                outword = '<span class="text-replace" role="region" aria-label="alternate term for %s">%s</span> <span class="text-replace-src">[<a href="#" class="simplifyLookup">%s</a>]</span>' % (tok, rep, tok)
+                outword = '<span class="text-alt-pair"><span class="text-alt-src"><a href="#" class="simplifyLookup" role="button">%s</a></span><span class="text-alt-out" aria-label="%s: alternate word">%s</span></span>' % (tok, tok, rep)
+                # Alternate markup for showing replacements inline, rather than above the original word
+                # outword = '<span class="text-replace" role="region" aria-label="alternate term for %s">%s</span> <span class="text-replace-src">[<a href="#" class="simplifyLookup">%s</a>]</span>' % (tok, rep, tok)
             else:
                 outword = tok
             out += outword
@@ -72,11 +66,12 @@ class WordnetSimplifier:
             total_word_count = sum([w['count'] for w in word_info])
         else:
             total_word_count = None
+
         return {
             'word_count': total_word_count,
             'to_replace': to_replace,
             'word_info': word_info,
-            'result': out,
+            'result': '<div class="text-alt-vertical">' + out + '</div>',
         }
 
     def tokenize_no_casefold(self, text : str) -> List[str]:
@@ -195,7 +190,7 @@ class WordnetSimplifier:
         else:
             return zipf_frequency(word, self.lang)
 
-    def analyze_words(self, word_list):
+    def analyze_words(self, word_list, clusive_user=None):
         word_info = {}
         for word in word_list:
             if not regex.match('^[a-zA-Z]+$', word):
@@ -216,6 +211,16 @@ class WordnetSimplifier:
                 if word != base:
                     w['alts'].append(word)
                 word_info[base] = w
+
+        # Has user indicated that they "know" or "use" any of these words?
+        if clusive_user is not None:
+            all_words = word_info.keys()
+            known_words = WordModel.objects.filter(user=clusive_user, word__in=all_words, rating__gte=2).values('word')
+            known_word_list = [val['word'] for val in known_words]
+            logger.debug('Known words in simplification: %s', known_word_list)
+            for w in known_word_list:
+                word_info[w]['known'] = True
+
         return sorted(word_info.values(), key=lambda x: x.get('freq'))
 
     # Some miscellaneous places where Wordnet has a lot of synonyms listed that can lead to unfortunate replacements

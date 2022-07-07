@@ -1,6 +1,7 @@
 <div id="toolbox-backdrop" class="toolbox-backdrop"></div>
 
-<div id="highlight-toolbox" class="toolbox">
+<div class="toolbox-wrapper">
+  <div id="highlight-toolbox" class="highlight-toolbox">
     <div id="highlight-toolbox-mode-colors">
         <button id="dismissIcon">Close</button>
     </div>
@@ -19,7 +20,8 @@
                 <span class="icon-switch" aria-hidden="true"></span>
                 <span class="sr-only">Transform</span>
             </button>
-            <button id="speakIcon" type="button" class="btn toolbox-btn" title="Read aloud">
+            <button id="speakIcon" type="button" class="btn toolbox-btn" title="Read aloud"
+                    data-cle-handler="click" data-cle-control="tts-play-reader-selection" data-cle-value="clicked">
                 <span class="icon-play-circled2" aria-hidden="true"></span>
                 <span class="sr-only">Read aloud</span>
             </button>
@@ -29,4 +31,5 @@
 
     <div id="highlight-toolbox-mode-edit">
     </div>
+  </div>
 </div>

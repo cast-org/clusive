@@ -3,11 +3,12 @@ import logging
 
 from dateutil.parser import parse as dateutil_parse
 from dateutil.relativedelta import relativedelta
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.views import View
 
 from .models import Message
+from eventlog.models import Event
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,11 @@ def get_delta_from_now(compare_time):
 class MessageQueueView(View):
     def post(self, request):
         try:
-            receivedQueue = json.loads(request.body)
+            if request.headers.get('Content-Type').startswith('multipart/form-data'):
+                receivedQueue = request.POST.dict()
+                receivedQueue['messages'] = json.loads(receivedQueue['messages'])
+            else:
+                receivedQueue = json.loads(request.body)
         except json.JSONDecodeError:
             logger.warning('Received malformed message queue: %s' % request.body)
             return JsonResponse(status=501, data={'message': 'Invalid JSON in request body'})
@@ -68,3 +73,4 @@ class MessageQueueView(View):
                          queue_username, username)
             return JsonResponse(status=501, data={'message': 'Invalid user'})
         return JsonResponse({'success': 1})
+

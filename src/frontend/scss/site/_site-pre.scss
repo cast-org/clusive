@@ -10,15 +10,16 @@ $enable-shadows:                        true;
 // Content
 $enable-root-colors:                    false;
 $enable-root-fonts:                     false;
-$enable-grid-responsive-containers:     true;
 $enable-typography-lead:                false;
 $enable-typography-mark:                false;
 $enable-typography-initialism:          false;
 $enable-typography-blockquote:          false;
-$enable-code:                           false;
+$enable-code-code:                      false;
+$enable-code-pre:                       false;
 $enable-img-thumbnail:                  false;
 $enable-figure:                         false;
 $enable-table-striped:                  false;
+$enable-table-striped-cols:             false;
 $enable-table-hover:                    false;
 $enable-table-colors:                   false;
 $enable-table-scroll-responsive:        false;
@@ -29,6 +30,7 @@ $enable-btn-icon-sizing:                true;
 $enable-btn-block:                      false;
 $enable-form-control-sizing:            false;
 $enable-form-control-static:            false;
+$enable-form-check-reverse:             false;
 $enable-form-label-sizing:              false;
 $enable-form-text:                      true;
 $enable-form-file:                      true;
@@ -65,6 +67,7 @@ $enable-list-ordered:                   false;
 $enable-list-marker-inner:              false;
 $enable-list-group:                     false;
 $enable-list-item-colors:               false;
+$enable-loader-double:                  false;
 $enable-media:                          true;
 $enable-navbar-text:                    false;
 $enable-navbar-divider:                 false;
@@ -79,6 +82,7 @@ $enable-nav-fill:                       false;
 $enable-nav-justify:                    false;
 $enable-tab-content:                    true;
 $enable-pagination:                     true;
+$enable-placeholder:                    false;
 $enable-progress:                       true;
 $enable-progress-striped:               false;
 $enable-progress-animated:              false;
@@ -89,6 +93,7 @@ $enable-modal-side-bottom:              false;
 $enable-modal-fullscreen:               false;
 $enable-modal-fullscreen-responsive:    false;
 $enable-dropdown:                       true;
+$enable-offcanvas:                      false;
 $enable-tooltip:                        true;
 
 // Utilities
@@ -107,10 +112,10 @@ $enable-utility-flex-items:             true;
 $enable-utility-flex-content:           false;
 $enable-utility-flex-self:              false;
 $enable-utility-flex-sizing:            false;
-
-
 $enable-utility-float:                  false;
 $enable-utility-overflow:               false;
+$enable-utility-opacity:                false;
+$enable-utility-orientation:            false;
 $enable-utility-position:               false;
 $enable-utility-shadow:                 false;
 $enable-utility-sizing:                 false;
@@ -119,6 +124,7 @@ $enable-utility-spacing-padding:        true;
 $enable-utility-spacing-margin:         true;
 $enable-utility-spacing-margin-auto:    false;
 $enable-utility-spacing-margin-negative:    true;
+$enable-utility-stacks:                 false;
 $enable-utility-text-justify:           false;
 $enable-utility-text-wrap:              true;
 $enable-utility-text-nowrap:            false;
@@ -138,7 +144,7 @@ $enable-utility-text-height:            true;
 $enable-utility-text-size:              false;
 $enable-utility-valign:                 false;
 $enable-utility-visibility:             false;
-
+$enable-utility-vr:                     false;
 
 // Default Figuration setting overrides
 // =====
@@ -314,6 +320,11 @@ $dropdown-link-hover-color:                 var(--CT_dropdownLinkHoverColor);
 $dropdown-link-active-bg:                   var(--CT_dropdownLinkActiveBg);
 $dropdown-link-active-color:                var(--CT_dropdownLinkActiveColor);
 
+$dropdown-font-size:                        $font-size-base;
+$dropdown-line-height:                      $line-height-base;
+$dropdown-caret-spacer-y:                   calc(#{$dropdown-line-height} * #{$dropdown-font-size} * .5);
+$dropdown-back-spacer-y:                    calc(#{$dropdown-line-height} * #{$dropdown-font-size} * .5);
+
 $nav-tabs-hover-bg:                         rgba(0, 0, 0, .1);
 $nav-tabs-active-color:                     var(--CT_bodyColor);
 
@@ -364,7 +375,7 @@ $popover-section-border-color:          var(--CT_popoverSectionBorderColor);
 $popover-comp-md-width:                 22rem;
 $popover-control-padding-y:             .25rem;
 $popover-control-padding-x:             .25rem;
-$popover-simplify-md-width:             25rem;
+$popover-simplify-md-width:             29rem;
 
 $modal-backdrop-bg:                     var(--CT_modalBackdropBg);
 $modal-backdrop-opacity:                var(--CT_modalBackdropOpacity);
@@ -419,16 +430,10 @@ $logo-md-font-size:                     1.375rem;
 
 $sidebar-border-radius:                 $border-radius;
 $sidebar-width:                         3rem;
-$sidebar-padding-y:                     .75rem;
-$sidebar-padding-x:                     .25rem;
-$sidebar-gutter:                        1rem;
-$sidebar-sm-width:                      4rem;
-$sidebar-sm-padding-y:                  .75rem;
-$sidebar-sm-padding-x:                  .75rem;
-$sidebar-sm-gutter:                     2rem;
-// Sidebar stretched max width is half of:
-// vieport width - max container width + ((sidebar width - sidebar horizontal margin) * 2)
-$sidebar-xl-width:                      calc((100vw - #{map-get($container-max-widths, xl)} + ((#{$sidebar-sm-width} - #{$body-padding-x}) * 2)) / 2);
+$sidebar-gutter:                        .5rem;
+$sidebar-md-width:                      4rem;
+$sidebar-md-gutter:                     1rem;
+$sidebar-xl-width:                      calc(50vw - #{map-get($container-max-widths, xl) / 2} + #{$sidebar-md-width} - #{$body-padding-x});
 
 $library-grid-gutter:                   2rem;
 
@@ -525,8 +530,6 @@ $tag-font-weight:                       400;
 
 $sort-border-width:                     .3125rem;
 
-$loader-width:                          2em;
-$loader-height:                         $loader-width;
-$loader-animation-speed:                1s;
+$loader-circle-size:                    2em;
 $loader-circle-border-width:            .25em;
 $loader-circle-vertical-align:          middle;

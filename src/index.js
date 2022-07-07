@@ -20,6 +20,7 @@ import execInfusion from 'script-loader!infusion';
 var Popper = require('script-loader!popper.js').default;
 var Masonry = require('script-loader!masonry-layout');
 import execFiguration from 'script-loader!figuration';
+import hotkeys from 'script-loader!hotkeys-js/dist/hotkeys.js';
 var confetti = require('script-loader!canvas-confetti/dist/confetti.browser.js');
 var interact = require('script-loader!interactjs/dist/interact.js');
 
@@ -46,3 +47,4 @@ import execToC from "script-loader!../src/frontend/js/toc.js";
 import execTTS from "script-loader!../src/frontend/js/tts.js";
 import execSTT from "script-loader!../src/frontend/js/stt.js";
 import execWhy from "script-loader!../src/frontend/js/why.js";
+import execShortcut from "script-loader!../src/frontend/js/shortcut.js";

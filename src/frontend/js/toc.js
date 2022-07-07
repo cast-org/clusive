@@ -1,4 +1,4 @@
-/* global D2Reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
+/* global d2reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
 /* exported buildTableOfContents, trackReadingLocation,
    buildAnnotationList, addNewAnnotation, showExistingAnnotation */
 
@@ -12,6 +12,8 @@ var TOC_EMPTY = '#tocEmpty';
 
 var NOTES_TAB = '#notesTab';  // links to #notesPanel
 var NOTES_CONTAINER = '#notesList';
+
+var TOC_focusSelector = null;
 
 // eslint-disable-next-line no-unused-vars
 function showTocPanel() {
@@ -41,7 +43,7 @@ function buildTocLevel(list, level, id) {
         var toc_depth = 'toc-depth-' + level;
         var li_class = 'nav-link ' + toc_depth;
         // eslint-disable-next-line no-script-url
-        var click = 'javascript:D2Reader.goTo({\'href\':\'' + element.href + '\'}); return false;';
+        var click = 'javascript:d2reader.goTo({\'href\':\'' + element.href + '\'}); return false;';
         var twiddle = '';
         var submenu = '';
         var submenu_id = id + '_' + index;
@@ -103,7 +105,7 @@ function resetCurrentTocItem(collapse) {
 function markTocItemActive() {
     'use strict';
 
-    var current = D2Reader.mostRecentNavigatedTocItem();
+    var current = d2reader.mostRecentNavigatedTocItem;
     if (current.startsWith('/')) {
         current = current.substr(1);
     }
@@ -134,31 +136,43 @@ function scrollToCurrentTocItem() {
 function buildTableOfContents() {
     'use strict';
 
-    if (typeof D2Reader === 'object') {
-        D2Reader.tableOfContents().then(function(items) {
-            var has_structure = items.length > 1;
-            if (items.length === 1 && items[0].children && items[0].children.length > 1) {
-                has_structure = true;
-            }
-            if (has_structure) {
-                $(TOC_EMPTY).hide();
-                var out = buildTocLevel(items, 0, 'toc');
-                $(TOC_CONTAINER).html(out).CFW_Init();
+    if (typeof d2reader === 'object') {
+        var items = d2reader.tableOfContents;
+        var has_structure = items.length > 0;
+        if (!has_structure) {
+            // Use title and locator to create a single entry
+            items = [{
+                title: document.querySelector('#tocPubTitle').innerHTML,
+                href: d2reader.currentLocator.href
+            }];
+        }
 
-                var navLinks = $(TOC_CONTAINER).find('.nav-link');
-                // Add click event to update menu when new page selected
-                navLinks.on('click', function() {
-                    // Use timeout delay until we can get a callback from reader
-                    setTimeout(function() {
-                        resetCurrentTocItem(false);
-                        markTocItemActive();
-                    }, 100);
-                });
-            } else {
-                // Empty TOC
-                $(TOC_CONTAINER).hide();
+        var out = buildTocLevel(items, 0, 'toc');
+        $(TOC_EMPTY).hide();
+        $(TOC_CONTAINER).html(out).CFW_Init();
+
+        var navLinks = $(TOC_CONTAINER).find('.nav-link');
+        // Add click event to update menu when new page selected
+        navLinks.on('click', function(event) {
+            // Accessibility addition to close TOC and move focus to selected item within the reader frame.
+            // Uses click event because screen readers since they use simulated click events,
+            // even if keyboard navigation is used.
+            if (event) {
+                var selector = event.target.getAttribute('href') || '';
+                if (selector.length !== 0) {
+                    TOC_focusSelector = selector;
+                    $(TOC_MODAL).CFW_Modal('hide');
+                }
             }
+
+            // Use timeout delay until we can get a callback from reader
+            setTimeout(function() {
+                resetCurrentTocItem(false);
+                markTocItemActive();
+            }, 100);
         });
+    } else {
+        console.warn('d2reader not initialized');
     }
 }
 
@@ -302,7 +316,7 @@ function deleteAnnotation(e) {
     var $container = $(this).closest('.annotation-container');
     var id = $container.data('annotation-id');
     console.debug('Deleting annotation: ', id);
-    D2Reader.deleteAnnotation({
+    d2reader.deleteAnnotation({
         id: id
     });
     $container.html('<div class="highlight-undelete">Deleted' +
@@ -331,7 +345,7 @@ function undeleteAnnotation(event) {
     var encoded = $container.data('annotation');
     var annotation = JSON.parse(atob(encoded));
     console.debug('Undeleting annotation id=', annotation.id);
-    D2Reader.addAnnotation(annotation);
+    d2reader.addAnnotation(annotation);
     $.ajax('/library/annotation', {
         method: 'POST',
         headers: {
@@ -370,16 +384,11 @@ function goToAnnotation(event) {
     // Decode base-64 encoded JSON attribute value
     var json = JSON.parse(atob(encoded));
     markAnnotationActive(json);
-    D2Reader.goTo(json);
+    d2reader.goTo(json);
 
-    // Check to see if we should close the TOC modal based on current browser breakpoint
-    var bpVal = window.getBreakpointByName('xs');
-    if (bpVal) {
-        var mediaQuery = window.matchMedia('(max-width: ' + bpVal.max + ')');
-        if (mediaQuery.matches) {
-            $(TOC_MODAL).CFW_Modal('hide');
-        }
-    }
+    // Trigger hide modal and focus on highlight
+    TOC_focusSelector = '#' + json.highlight.id;
+    $(TOC_MODAL).CFW_Modal('hide');
 }
 
 // For any changes to the 'note' of an annotation, keep display text updated and invoke auto-save.
@@ -459,8 +468,77 @@ function setUpNotes() {
     });
 }
 
-//  Initial setup
+function getReaderBody() {
+    'use strict';
 
+    var readerIframe = document.querySelector('#D2Reader-Container iframe');
+    var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
+    return readerDocument.body;
+}
+
+$(document).on('updateCurrentLocation.d2reader', function() {
+    'use strict';
+
+    if (TOC_focusSelector === null) { return; }
+
+    var _getValidSelector = function(selector, rootElement) {
+        // Split at #
+        if (selector.indexOf('#') > -1) {
+            selector = selector.substring(selector.indexOf('#'));
+        }
+
+        if (typeof rootElement === 'undefined') { rootElement = document; }
+        try {
+            return rootElement.querySelector(selector) ? selector : null;
+        } catch (error) {
+            return null;
+        }
+    };
+    var readerBody = getReaderBody();
+    var selector = _getValidSelector(TOC_focusSelector, readerBody);
+
+    var updateTabindex = function(element) {
+        var tabindex = null;
+        if (!element.hasAttribute('tabindex')) {
+            element.setAttribute('tabindex', -1);
+        }
+    };
+
+    setTimeout(function() {
+        // Clean hotkey-js _downKeys[]
+        var eventFocus = new Event('focus');
+        window.dispatchEvent(eventFocus);
+
+        if (selector === null) {
+            // No specific element - focus on body
+            setTimeout(function() {
+                updateTabindex(readerBody);
+                setTimeout(function() {
+                    readerBody.focus();
+                });
+            });
+        } else if (selector.startsWith('#R2_HIGHLIGHT_')) {
+            // Focus on highlight item
+            var highlightItem = readerBody.querySelector(selector + ' .R2_CLASS_HIGHLIGHT_AREA');
+            setTimeout(function() {
+                highlightItem.focus();
+            });
+        } else {
+            // Focus on content element
+            var readerItem = readerBody.querySelector(selector);
+            setTimeout(function() {
+                updateTabindex(readerItem);
+                setTimeout(function() {
+                    readerItem.focus();
+                });
+            });
+        }
+    });
+
+    TOC_focusSelector = null;
+});
+
+//  Initial setup
 $(document).ready(function() {
     'use strict';
 
@@ -472,6 +550,12 @@ $(document).ready(function() {
         .on('click touchstart', '.goto-highlight', goToAnnotation)
         .on('click touchstart', '.link-undelete-annotation', undeleteAnnotation);
 
+    $(TOC_MODAL_BUTTON)
+        .on('click', function() {
+            TOC_focusSelector = null;
+            $(TOC_MODAL_BUTTON).CFW_Modal('show');
+        });
+
     $(TOC_MODAL)
         .on('beforeShow.cfw.modal', function() {
             resetCurrentTocItem(true);
@@ -479,6 +563,11 @@ $(document).ready(function() {
         })
         .on('afterShow.cfw.modal', function() {
             scrollToCurrentTocItem();
+        })
+        .on('beforeHide.cfw.modal', function() {
+            if (TOC_focusSelector === null) {
+                $(TOC_MODAL_BUTTON).trigger('focus');
+            }
         });
 
     $(TOC_TAB)

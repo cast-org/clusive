@@ -6,13 +6,31 @@
             <h2 class="modal-title sr-only">Text transformation</h2>
             <nav aria-label="text simplification">
                 <ul class="nav nav-tabs-popover">
-                    <li class="nav-item"><button id="translateNavLink" class="nav-link">Translate</button></li>
-                    <li class="nav-item"><button id="simplifyNavLink" class="nav-link">Simplify text</button></li>
+                    {% if simplification_show_translate %}
+                    <li class="nav-item"><button id="translateNavLink" class="nav-link" data-tts-stop>Translate</button></li>
+                    {% endif %}
+                    <li class="nav-item"><button id="simplifyNavLink" class="nav-link" data-tts-stop>Simplify text</button></li>
+                    {% if simplification_show_pictures %}
+                    <li class="nav-item"><button id="picturesNavLink" class="nav-link" data-tts-stop>Show pictures</button></li>
+                    {% endif %}
                 </ul>
             </nav>
             {% include "shared/partial/dialog_tts.html" %}
         </div>
-        <div id="simplifyBody" class="popover-body">
+        <div class="popover-body">
+            <div id="simplifyLoading" class="text-center"><strong>Loading...</strong> <div class="ms-2 loader-circle" role="status" aria-hidden="true"></div></div>
+            <div id="simplifyLanguageSetting">
+                <legend class="setting-title">Translation language</legend>
+                <select id="simplifyLanguageSelect" class="cislc-modalSettings-languageSelect form-control">
+                    <option value="default">Choose...</option>
+                    {% for lang in translation_languages %}
+                    <option value="{{lang.language}}">{{lang.name}}</option>
+                    {% endfor %}
+                </select>
+                <button id="simplifyLanguageSave" type="button" class="btn btn-secondary mt-1">Save</button>
+                <div class="form-text">Change your language any time in the settings panel.</div>
+            </div>
+            <div id="simplifyBody"></div>
         </div>
         <div class="popover-footer">
             <div id="translateFooter">

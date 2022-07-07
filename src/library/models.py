@@ -646,7 +646,7 @@ class Annotation(models.Model):
             return 0
         try:
             locations = json.loads(jsonString).get('locations')
-            return locations.get('progression')
+            return locations.get('totalProgression')
         except (JSONDecodeError, AttributeError):
             logger.error('Can\'t find progression in JSON %s', jsonString)
             return 0
@@ -666,7 +666,7 @@ class Customization(models.Model):
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
     periods = models.ManyToManyField(Period, blank=True, related_name='customizations', db_index=True)
-    title = models.CharField(max_length=256, default='Customization', blank=True)
+    title = models.CharField(max_length=256, default='Customization', blank=False)
     question = models.CharField(max_length=256, default='', blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

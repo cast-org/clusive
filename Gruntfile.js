@@ -28,8 +28,9 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: "src",
                         nonull: true,
-                        src: ["clusive_project/**", "assessment/**", "authoring/**", "eventlog/**", "glossary/**",
-                            "library/**", "messagequeue/**", "merriamwebster/**", "oauth2/**", "pages/**", "roster/**",
+                        src: ["clusive_project/**", "assessment/**", "authoring/**", "eventlog/**", "flaticon/**",
+                            "glossary/**", "library/**", "nounproject/**",
+                            "messagequeue/**", "merriamwebster/**", "oauth2/**", "pages/**", "roster/**",
                             "shared/**", "simplification/**", "tips/**", "translation/**", "wordnet/**", "manage.py"],
                         dest: "target"
                     }
@@ -184,8 +185,8 @@ module.exports = function (grunt) {
         eslint: {
             frontend: {
                 options: {
-                    config: 'src/frontend/.eslintrc.json',
-                    reportUnusedDisableDirectives: 'true',
+                    overrideConfigFile: 'src/frontend/js/.eslintrc.json',
+                    reportUnusedDisableDirectives: 'error'
                 },
                 src: 'src/frontend/js/*.js'
             }

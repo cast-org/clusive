@@ -1,13 +1,9 @@
 <div class="box box-mascot-tipped">
     <h2>Student reading</h2>
-
-    <div class="row">
-        <div class="col">
-            <p>See what your students are reading and what they said they learned.</p>
-        </div>
-        <div class="col-12 col-md-3 col-lg-4 col-xl-3 mb-0_5">
-            <a href="{% url 'upload' %}" class="btn btn-primary"><span aria-hidden="true">+ </span>Upload a new reading</a>
-        </div>
+    <p>See what your students are reading and what they said they learned.</p>
+    <div class="dashboard-reading-btns">
+        <a href="{% url 'upload' %}" class="btn btn-primary btn-small"><span aria-hidden="true">+ </span>Upload a new reading</a>
+        <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
     </div>
 
     {% if periods.count == 0 %}
@@ -26,10 +22,6 @@
     {% endif %}
 </div>
 
-{% for item in data.all %}
-  {% include "pages/partial/modal_comprehension_detail.html" with type="comp" id_prefix="comp-detail-all" id_serial=forloop.counter title_prefix="Student learning" %}
-  {% include "pages/partial/modal_comprehension_detail.html" with type="custom" id_prefix="custom-detail-all" id_serial=forloop.counter title_prefix="Custom question" %}
-{% endfor %}
 <script>
     setUpDeferredLoadOfCompDetails();
 </script>

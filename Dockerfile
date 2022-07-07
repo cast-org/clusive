@@ -13,16 +13,17 @@
 ### The builder image (first of two stages)
 ###
 
-FROM python:3.7-slim-buster as base
+FROM python:3.9-slim-bullseye as base
 
+# OS repositories only have node 12; we want 16.  Use nodesource script to add newer repo.
 RUN apt-get update && \
-  apt-get -y install --no-install-recommends libpq5 libpq-dev python3-dev gcc g++ git nodejs npm && \
+  apt-get -y install curl
+
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+
+RUN apt-get -y install --no-install-recommends bzip2 g++ gcc git libpq5 libpq-dev nodejs python3-dev && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
-
-# Apt installs node 10 and npm 5, which are incompatible. Upgrade npm.
-# This will output an error message when it runs.
-RUN npm install npm@6 -g
 
 COPY requirements.txt /
 RUN python -m pip wheel -r /requirements.txt --no-cache-dir --no-deps --wheel-dir /wheels
@@ -46,7 +47,7 @@ RUN rm -rf node_modules Grunt* package*
 ### Construct the slim image for deployment (second stage)
 ###
 
-FROM python:3.7-slim-buster
+FROM python:3.9-slim-bullseye
 
 RUN apt-get update && \
   apt-get -y install --no-install-recommends libpq5 netcat-traditional wget gosu pandoc && \

@@ -32,7 +32,8 @@
     <div class="box">
         <h2>Edit {{ customization.title }} {% if is_new == 'true' %}(New){% endif %}</h2>
         <form method="post">
-                {% csrf_token %}
+            {% csrf_token %}
+            {{ form.non_field_errors }}
             <div class="form-group">
                 <div class="d-flex">
                     <span class="h3">{{ form.title.label_tag | formlabel }}</span>
@@ -62,9 +63,11 @@
                 </fieldset>
             </div>
             <hr>
-            <h3>Words:</h3>
+            <h3>Vocabulary words:</h3>
             <p>
-                Vocabulary words typically show up underlined in the reading.
+                You can customize the vocabulary words that are underlined in the reading.
+                In the box below, type the vocabulary word you would like underlined in the reading,
+                or use our word suggestions.
                 Use the dictionary form of words: for example “eat”, not “eats”,
                 “eating”, or “ate”.
             </p>
@@ -100,10 +103,9 @@
             <div class="form-group">
                 <h3>{{ form.question.label }}:</h3>
                 <p>
-                    This will appear in addition to the general knowledge
-                    questions &quot;How much did you learn&quot; and
-                    &quot;What's one thing you learned or found
-                    interesting?&quot;
+                    Add your own custom open-ended question to the reading.
+                    This will be shown to students in addition to the general knowledge questions
+                    "How much did you learn" and "What's one thing you learned or found interesting?"
                 </p>
                 {{ form.question.errors }}
                 <div class="mb-0_5">

@@ -61,7 +61,7 @@
             },
             'onCreate.setupVoicesChangedListener': {
                 funcName: 'cisl.prefs.modalSettings.setupVoicesChangedListener',
-                args: ['{that'],
+                args: ['{that}'],
                 "after": "setupVoiceListing"
             }
         },
@@ -197,8 +197,6 @@
                     }
                 }
             }
-
-
         }
     });
 
@@ -241,8 +239,8 @@
     cisl.prefs.modalSettings.setupVoiceListing = function (that) {
         console.debug("cisl.prefs.modalSettings.setupVoiceListing");
         clusiveTTS.getVoicesForLanguage('en').forEach(function (voice) {
-            console.debug("setupVoiceListing for ", voice);
-            var optionMarkup = `<option value="${voice.name}">${voice.name}</option>`
+            // console.debug("setupVoiceListing for ", voice);
+            var optionMarkup = '<option value="' + voice.name + '">' + voice.name + '</option>';
             var readVoiceSelect = that.locate("readVoice");
             readVoiceSelect.append(optionMarkup);
         });

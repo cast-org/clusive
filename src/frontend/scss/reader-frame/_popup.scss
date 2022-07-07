@@ -1,0 +1,44 @@
+// Simplified version of:
+// https://github.com/d-i-t-a/R2D2BC/blob/v2/injectables/style/popup.css
+
+// Borrow visuals from popover
+
+.d2-popup {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    box-sizing: border-box;
+    display: block;
+    max-width: 90%;
+    padding: 0;
+    margin: 0;
+    color: var(--CT_popoverBodyColor);
+    background: var(--CT_popoverBg);
+    border: var(--CT_popoverBorderWidth) solid var(--CT_popoverBorderColor);
+    @include border-radius($popover-border-radius);
+    box-shadow: none;
+    opacity: 0;
+    transform: translateX(-50%);
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    &.is-active {
+        opacity: 1;
+    }
+}
+
+.d2-popup-wrapper {
+    // placeholder
+}
+
+.d2-popup-content {
+    max-height: 12em;
+    padding: $popover-body-padding-y $popover-body-padding-x;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}

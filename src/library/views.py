@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import shutil
+import traceback
 from tempfile import mkstemp
 from urllib.parse import urlencode
 
@@ -107,9 +108,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             s = Subject.objects.filter(subject__in=subject_strings)
             self.subjects = s
 
-        lengths = request.GET.get('words')
-        if lengths:
-            self.lengths = lengths.split(',')
+        self.lengths_string = request.GET.get('words')
+        if self.lengths_string:
+            self.lengths = self.lengths_string.split(',')
         else:
             self.lengths = None
 
@@ -230,6 +231,71 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             return Q(word_count__gt=30000)
         raise Exception('invalid input')
 
+    def make_all_link(self):
+        args = {}
+        if self.query:
+            args['query'] = self.query
+        if self.subjects:
+            args['subjects'] = self.subjects_string
+        if self.lengths:
+            args['words'] = self.lengths_string
+        return reverse('library', kwargs={
+            'style': self.style,
+            'sort': self.sort,
+            'view': LibraryViews.ALL,
+        }) + '?' + urlencode(args)
+
+    def make_clear_filters_link(self):
+        args = {}
+        if self.query:
+            args['query'] = self.query
+        return '?' + urlencode(args)
+
+    def create_empty_message(self):
+        has_query = self.query
+        has_filter = self.subjects or self.lengths
+        if has_query and has_filter:
+            if self.view == LibraryViews.ALL:
+                return 'No readings found with this search. Check your spelling or ' \
+                       '<a href="%s">clear filters</a>.' % (self.make_clear_filters_link())
+            else:
+                return 'No readings found with this search. Check your spelling, ' \
+                       + '<a href="%s">clear filters</a>, ' % (self.make_clear_filters_link()) \
+                       + 'or search in ' \
+                       + '<a href="%s">All readings</a>.' % (self.make_all_link())
+
+        if has_query:
+            if self.view == LibraryViews.ALL:
+                return 'No readings found with this search. Check your spelling.'
+            else:
+                return 'No readings found with this search. Check your spelling or search in ' \
+                       '<a href="%s">All readings</a>.' % (self.make_all_link())
+        if has_filter:
+            if self.view == LibraryViews.ALL:
+                return 'No readings found. Try ' \
+                       + '<a href="%s">clearing filters</a>.' % (self.make_clear_filters_link())
+
+            else:
+                return 'No readings found. ' \
+                       + '<a href="%s">clear filters</a>, ' % (self.make_clear_filters_link()) \
+                       + 'or try ' \
+                       + '<a href="%s">All readings</a>.' % (self.make_all_link())
+
+        if self.view == LibraryViews.PERIOD:
+            if self.clusive_user.can_manage_periods:
+                return 'No readings have been assigned to this class. ' \
+                       '<br/>Assign them something to read by tapping the ' \
+                       '<span class="icon-ellipsis-vert" aria-hidden="true"></span>(more actions) '\
+                       'icon in the lower right of any reading panel in the library.'
+            else:
+                return 'No readings have been assigned to this class.'
+        if self.view == LibraryViews.STARRED:
+            return 'No starred readings. Add a reading to “Starred” by tapping the star in the upper right of the reading tile.'
+        if self.view == LibraryViews.MINE:
+            return 'You have not uploaded any readings.'
+        # Looking at ALL or PUBLIC with no search and no filters... DB must be pretty empty.
+        return 'There are no readings available'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['clusive_user'] = self.clusive_user
@@ -245,6 +311,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['view_names'] = dict(LibraryViews.CHOICES)
         context['topics'] = Subject.get_list()
         context['show_assignments'] = self.show_assignments
+
+        if len(self.object_list) == 0:
+            context['empty_message'] = self.create_empty_message()
         return context
 
 
@@ -303,7 +372,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
                 for chunk in upload.chunks():
                     f.write(chunk)
             if upload.name.endswith('.docx'):
-                (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile)
+                (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile, upload.name)
                 event_control = 'upload_docx'
             else:
                 (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
@@ -328,6 +397,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
         except Exception as e:
             logger.warning('Could not process uploaded file, filename=%s, error=%s',
                            str(upload), e)
+            logger.warning(traceback.format_exc())
             form.add_error('file', 'Could not process uploaded file. Only DOCX and EPUB are allowed.')
             return super().form_invalid(form)
 
@@ -425,7 +495,7 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
 
         else:
             logger.debug('Form valid, no cover image')
-        messages.success(self.request, 'Reading added. Your readings are indicated by a personal icon ({icon:user-o}) on your library card.')
+        messages.success(self.request, 'Reading added. Your uploaded readings are indicated by a personal icon ({icon:user-o}) on your library card.')
         return super().form_valid(form)
 
     def configure_event(self, event: Event):
@@ -750,7 +820,7 @@ class SwitchModalContentView(LoginRequiredMixin, TemplateView):
         versions = book.versions.all()
         # Count annotations and choose some example words to show
         for v in versions:
-            v.annotation_count = Annotation.objects.filter(bookVersion=v, user=request.clusive_user).count()
+            v.annotation_count = Annotation.get_list(user=request.clusive_user, book_version=v).count()
             if v.sortOrder == 0:
                 v.example_words = v.all_word_list[:3]
             else:

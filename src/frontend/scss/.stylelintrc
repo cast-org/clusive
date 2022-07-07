@@ -7,6 +7,7 @@
     "stylelint-order"
   ],
   "rules": {
+    'alpha-value-notation': null,
     "at-rule-empty-line-before": [null, {
       "except": ["first-nested"]
     }],
@@ -17,7 +18,9 @@
     "block-closing-brace-empty-line-before": null,
     "block-closing-brace-newline-after": null,
     "block-opening-brace-space-before": null,
+    'color-function-notation': null,
     "color-named": "never",
+    'custom-property-pattern': null,
     "declaration-block-no-duplicate-properties": true,
     "declaration-block-semicolon-newline-after": "always-multi-line",
     "declaration-block-semicolon-newline-before": "never-multi-line",
@@ -45,6 +48,7 @@
     "no-descending-specificity": null,
     "no-duplicate-selectors": true,
     "number-leading-zero": "never",
+    'number-max-precision': 6,
     "order/properties-order": [
       "direction",
       "position",
@@ -270,11 +274,13 @@
     "property-no-vendor-prefix": true,
     "rule-empty-line-before": null,
     "scss/at-function-parentheses-space-before": "never",
+    'scss/at-if-no-null': null,
     "scss/at-import-no-partial-leading-underscore": true,
     "scss/at-mixin-argumentless-call-parentheses": "always",
     "scss/at-mixin-named-arguments": null,
     "scss/at-mixin-parentheses-space-before": "never",
     "scss/at-rule-no-unknown": true,
+    'scss/comment-no-empty': null,
     "scss/dollar-variable-colon-space-after": "at-least-one-space",
     "scss/dollar-variable-colon-space-before": "never",
     "scss/dollar-variable-default": null,
@@ -283,11 +289,13 @@
     "scss/no-duplicate-dollar-variables": [ null, {
         "ignoreInsideAtRules": [ "if", "mixin" ]
     }],
+    'scss/no-global-function-names': null,
     "scss/operator-no-newline-after": true,
     "scss/operator-no-newline-before": true,
     "scss/operator-no-unspaced": true,
     "selector-attribute-quotes": "always",
     "selector-class-pattern": "^[a-z][a-z0-9\\-]*[a-z0-9]$",
+    'selector-id-pattern': null,
     "selector-list-comma-newline-after": "always",
     "selector-list-comma-newline-before": "never-multi-line",
     "selector-list-comma-space-after": "always-single-line",

@@ -13,6 +13,9 @@ from django.views.generic import TemplateView, RedirectView
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import BaseCreateView
 
+import flaticon.util
+import nounproject.util
+import translation
 from assessment.forms import ClusiveRatingForm
 from assessment.models import ClusiveRatingResponse, AffectiveUserTotal, ComprehensionCheckResponse, \
     AffectiveCheckResponse
@@ -24,7 +27,7 @@ from glossary.views import choose_words_to_cue
 from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
-from translation.views import TranslateApiManager
+from translation.util import TranslateApiManager
 
 logger = logging.getLogger(__name__)
 
@@ -565,6 +568,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'starred': pdata.starred,
             'book_id': book.id,
             'simplification_tool': clusive_user.transform_tool,
+            'simplification_show_translate': translation.util.translation_is_configured(),
+            'simplification_show_pictures': flaticon.util.flaticon_is_configured() or nounproject.util.nounproject_is_configured(),
         }
         return super().get(request, *args, **kwargs)
 
