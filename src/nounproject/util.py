@@ -1,12 +1,14 @@
 import logging
 import math
+from typing import Union
 
 from TheNounProjectAPI import API
 from TheNounProjectAPI.exceptions import NotFound
-from TheNounProjectAPI.models import UsageModel
+from TheNounProjectAPI.models import UsageModel, EnterpriseModel
 from django.conf import settings
 
 from glossary.util import base_form
+from simplification.models import PictureUsage, PictureSource
 from simplification.util import WordnetSimplifier
 
 logger = logging.getLogger(__name__)
@@ -52,6 +54,12 @@ class NounProjectManager:
             ok = False
         return ok
 
+    def report_usage(self, icons: Union[list, set, str, int]):
+        result: EnterpriseModel
+        result = self.api.report_usage(test=False, icons=icons)
+        logger.debug('Report usage result: %s', result)
+        return result.result == 'success'
+
     def get_icon(self, word: str):
         """
         Tries to get an icon from The Noun Project for the given word.
@@ -61,6 +69,7 @@ class NounProjectManager:
 
         if word in NounProjectManager.words_without_icons:
             logger.debug('Skipping lookup for word %s, it is known to not have an icon', word)
+            PictureUsage.log_missing(source=PictureSource.NOUN_PROJECT, word=word)
             return (None, None)
         try:
             pub_domain_only = not self.pro_account
@@ -68,11 +77,13 @@ class NounProjectManager:
             if len(icons) > 0:
                 icon = icons[0]
                 logger.debug('Retrieved icon: %s -> %s', word, icon.term)
+                PictureUsage.log_usage(source=PictureSource.NOUN_PROJECT, word=word, icon_id=icon.id)
                 return (icon.icon_url, icon.term)
             else:
                 logger.debug('No icons returned for word %s', word)
         except NotFound:
             logger.debug('No icon found for term %s', word)
+            PictureUsage.log_missing(source=PictureSource.NOUN_PROJECT, word=word)
             NounProjectManager.words_without_icons.add(word)
         except Exception as e:
             logger.warning('API Error for %s: [%s] %s', word, e.__class__, e)

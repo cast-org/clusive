@@ -1,11 +1,13 @@
 import csv
 
 from django.contrib import admin, messages
+from django.contrib.admin import TabularInline
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.urls import path
+from django.utils.safestring import mark_safe
 
 from . import csvparser
 from .csvparser import parse_file
@@ -53,11 +55,35 @@ class PreferenceAdmin(admin.ModelAdmin):
     ordering = ('user', 'pref')
 
 
+class UserInPeriodInline(TabularInline):
+    model = ClusiveUser.periods.through
+    verbose_name = 'User in Period'
+    fields = ()
+    exclude = ('clusiveuser',)
+    readonly_fields = ( 'role', 'username', 'first_name', 'anon_id')
+    extra = 0
+
+    def username(self, obj):
+        user = obj.clusiveuser.user
+        return mark_safe(u"<a href='/admin/auth/user/%d/change/'>%s</a>" % (user.pk, user.username))
+
+    def first_name(self, obj):
+        return obj.clusiveuser.user.first_name
+
+    def role(self, obj):
+        return obj.clusiveuser.role
+
+    def anon_id(self, obj):
+        return obj.clusiveuser.anon_id
+
+
 @admin.register(Period)
 class PeriodAdmin(admin.ModelAdmin):
     model = Period
     list_display = ('name', 'site', 'id', 'anon_id', 'data_source')
-
+    inlines = [
+        UserInPeriodInline,
+    ]
 
 @admin.register(PreferenceSet)
 class PreferenceSetAdmin(admin.ModelAdmin):

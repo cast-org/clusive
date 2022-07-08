@@ -5,6 +5,7 @@ import requests
 from django.conf import settings
 
 from glossary.util import base_form
+from simplification.models import PictureUsage, PictureSource
 from simplification.util import WordnetSimplifier
 
 logger = logging.getLogger(__name__)
@@ -87,16 +88,19 @@ class FlaticonManager:
                 json = resp.json()
                 icons = json.get('data', [])
                 if icons is not None and len(icons) > 0:
-                    url = icons[0].get('images', {}).get('64')
-                    desc = icons[0].get('description')
+                    icon = icons[0]
+                    url = icon.get('images', {}).get('64')
+                    desc = icon.get('description')
                     if url is not None and desc is not None:
+                        PictureUsage.log_usage(source=PictureSource.FLATICON, word=word, icon_id=icon.get('id'))
                         return (url, desc)
                     else:
                         logger.warning('Flaticon response did not include expected fields: %s', json)
             else:
                 logger.warning('Error searching for icons. Status %s, response %s', resp.status_code, resp.text)
         except ValueError:
-            logger.warning('No icon for Flaticon returned', resp)
+            logger.debug('No icon for Flaticon returned', resp)
+        PictureUsage.log_missing(source=PictureSource.FLATICON, word=word)
         return (None, None)
 
     def add_pictures(self, text, clusive_user=None, percent=15):
