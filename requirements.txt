@@ -15,7 +15,7 @@ python-lorem==1.1.2
 mailchimp-marketing==3.0.42
 marisa-trie==0.7.7
 nltk==3.4.5
-numpy==1.17.4
+numpy==1.23.1
 # Note, 2.9+ not compatible with Django 2.2. https://stackoverflow.com/questions/68024060/assertionerror-database-connection-isnt-set-to-utc
 psycopg2==2.8.6
 pypandoc==1.7.5
