@@ -22,21 +22,21 @@ def init_argparse() -> argparse.ArgumentParser:
 
 def uploads_folder_loop(uploads, uploads_full_path) -> None:
     print(f"Using {uploads} as the root of the uploaded books")
-    print(f"uploads_folder_loop({uploads_full_path})")
     manifests = list(uploads_full_path.glob('**/manifest.json'))
     for manifest in manifests:
         # Check for existing positions.  If present, skip.
         positions = manifest.joinpath(manifest.parent, 'positions.json')
         if positions.exists():
-            print(f"{positions} already calculated, skipping...")
+            print(f"{positions} already calculated, skipping.")
             continue
         else:
-            print(f"Calculating positions and weight for ({manifest})")
+            print(f"Calculating positions and weight for ({manifest})...")
             with open(manifest, 'r', encoding='utf-8') as f:
                 manifest_json = json.load(f)
                 position_list, weight = make_positions_and_weight(manifest_json, manifest.parent)
 
             # Re-write manifest.json, and add positions.json and weight.json
+            print(f"Saving positions and weight and updating ({manifest})...")
             for json_file in (manifest_json, 'manifest.json'), (position_list, 'positions.json'), (weight, 'weight.json'):
                 with open(manifest.parent.joinpath(json_file[1]), 'w') as jf:
                     jf.write(json.dumps(json_file[0], indent=4))
