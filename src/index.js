@@ -48,3 +48,4 @@ import execTTS from "script-loader!../src/frontend/js/tts.js";
 import execSTT from "script-loader!../src/frontend/js/stt.js";
 import execWhy from "script-loader!../src/frontend/js/why.js";
 import execShortcut from "script-loader!../src/frontend/js/shortcut.js";
+import execNotify from "script-loader!../src/frontend/js/notify.js";

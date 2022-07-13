@@ -89,6 +89,11 @@
             keys: 'alt+s',
             routine: 'contextTransform',
             blocker: 'contextTransformBlocker'
+        },
+        {
+            keys: 'alt+w',
+            routine: 'whereAmI',
+            blocker: true
         }
     ];
 
@@ -372,6 +377,27 @@
                     document.querySelector(SELECTOR_SIMPLIFY_DIALOG).focus();
                 }
             }
+        },
+
+        // 'Where am I?'
+        whereAmI: function(event, keys) {
+            var title = null;
+            var percent = null;
+            var msg = '';
+            if (shortcut.readerFound) {
+                // Give location within reader document
+                title = getTocTitle();
+                percent = Math.round(parseFloat(d2reader.currentLocator.locations.totalProgression) * 100);
+            } else {
+                title = document.title.replace(' | Clusive', '');
+            }
+
+            if (percent) {
+                msg = 'You are ' + percent + '% through ' + title;
+            } else {
+                msg = 'You are on Clusive\'s ' + title + ' page'
+            }
+            notify.show(msg);
         }
     };
 

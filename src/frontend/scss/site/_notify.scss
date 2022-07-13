@@ -1,0 +1,38 @@
+.notify {
+    width: $notify-width;
+    max-width: 100%;
+    padding: $notify-padding-y $notify-padding-x;
+    @include font-size($notify-font-size);
+    color: var(--CT_notifyColor);
+    text-align: $notify-text-align;
+    word-wrap: break-word;
+    pointer-events: auto;
+    background-color: var(--CT_notifyBg);
+    @include border-radius($notify-border-radius);
+
+    &:not(.in) {
+        display: none;
+    }
+    &.in {
+        opacity: 1;
+    }
+}
+
+.notify-container {
+    position: fixed;
+    bottom: $notify-container-bottom;
+    left: 50%;
+    z-index: $notify-container-zindex;
+    width: max-content;
+    max-width: 100%;
+    pointer-events: none;
+    transform: translateX(calc(#{$notify-width} * -.5));
+
+    > * {
+        margin: 0 auto;
+    }
+
+    > :not(:last-child) {
+        margin-bottom: $notify-spacing;
+    }
+}

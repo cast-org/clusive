@@ -1,4 +1,4 @@
-/* global d2reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
+/* global d2reader, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
 /* exported buildTableOfContents, trackReadingLocation,
    buildAnnotationList, addNewAnnotation, showExistingAnnotation */
 
@@ -113,6 +113,13 @@ function markTocItemActive() {
     var top = $(TOC_CONTAINER);
     var elt = top.find('a[href$=\'' + current + '\']');
 
+    if (elt.length === 0) {
+        elt = top.find('a[href*=\'' + current + '\']');
+    }
+
+    // Use only first matching item if mutliple matching TOC entries
+    elt = elt.eq(0);
+
     // Add active class to current element and any related 'parent' sections
     elt.addClass('active').attr('aria-current', true);
     elt.parents('li').children('.nav-link').addClass('active');
@@ -132,20 +139,33 @@ function scrollToCurrentTocItem() {
     }
 }
 
+function getTocTitle() {
+    'use strict';
+
+    return document.querySelector('#tocPubTitle').innerHTML;
+}
+
+// Get TOC contents reported from reader, otherwise create a single TOC entry
+function getTocItems() {
+    'use strict';
+
+    var items = d2reader.tableOfContents;
+    if (items.length === 0) {
+        // Use title and locator to create a single entry
+        items = [{
+            title: getTocTitle(),
+            href: d2reader.currentLocator.href
+        }];
+    }
+    return items;
+}
+
 // Creates TOC contents for the current book.
 function buildTableOfContents() {
     'use strict';
 
     if (typeof d2reader === 'object') {
-        var items = d2reader.tableOfContents;
-        var has_structure = items.length > 0;
-        if (!has_structure) {
-            // Use title and locator to create a single entry
-            items = [{
-                title: document.querySelector('#tocPubTitle').innerHTML,
-                href: d2reader.currentLocator.href
-            }];
-        }
+        var items = getTocItems();
 
         var out = buildTocLevel(items, 0, 'toc');
         $(TOC_EMPTY).hide();
@@ -498,7 +518,6 @@ $(document).on('updateCurrentLocation.d2reader', function() {
     var selector = _getValidSelector(TOC_focusSelector, readerBody);
 
     var updateTabindex = function(element) {
-        var tabindex = null;
         if (!element.hasAttribute('tabindex')) {
             element.setAttribute('tabindex', -1);
         }
