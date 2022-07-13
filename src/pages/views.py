@@ -1,6 +1,7 @@
 import json
 import logging
 from datetime import date, timedelta
+from os.path import exists
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -554,11 +555,21 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             if clusive_user.current_period else None
         logger.debug('Customization: %s', customizations)
 
+        if exists(self.book_version.storage_dir + '/positions.json'):
+            positions_path = self.book_version.positions_path
+            weight_path = self.book_version.weight_path
+            logger.debug('Positions: %s, Weight: %s', positions_path, weight_path)
+        else:
+            positions_path = weight_path = False
+            logger.debug('No pre-calculated positions or weight')
+
         self.extra_context = {
             'pub': book,
             'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
+            'positions_path': positions_path,
+            'weight_path': weight_path,
             'last_position': pdata.last_location or "null",
             'annotations': annotationList,
             'cuelist': json.dumps(cuelist),

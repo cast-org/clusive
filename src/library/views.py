@@ -30,7 +30,7 @@ from library.models import Paradata, Book, Annotation, BookVersion, BookAssignme
     CustomVocabularyWord, EducatorResourceCategory
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
-    get_access_keys, is_organizational_account
+    get_access_keys, is_organization_sponsor, is_organization_member
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
@@ -866,8 +866,12 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
     formlabel ='Step 1: Search by title, author, or ISBN'
     sponsor_warning_message = '\
         You are using a Sponsor (Teacher/District/School) Bookshare account. \
-        Your import of Bookshare titles for students is not yet implemented, \
-        but coming soon.'
+        Your import of Bookshare titles for students through Clusive is not \
+        yet implemented, but you can assign titles to students through the \
+        Bookshare site.'
+    member_warning_message = '\
+        Your Bookshare account will let you import Bookshare readings assigned \
+        to you by your school or organization.'
 
     def dispatch(self, request, *args, **kwargs):
         if not is_bookshare_connected(request):
@@ -876,8 +880,11 @@ class BookshareSearch(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateV
                 redirect_to='/accounts/bookshare/login?process=connect&next=' + reverse('bookshare_search')
             )
         elif request.clusive_user.can_upload:
-            if is_organizational_account(request):
+            if is_organization_sponsor(request):
                 messages.warning(request, self.sponsor_warning_message)
+            elif is_organization_member(request):
+                messages.warning(request, self.member_warning_message)
+
             self.search_form = BookshareSearchForm(request.POST)
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -930,8 +937,10 @@ class BookshareSearchResults(LoginRequiredMixin, EventMixin, ThemedPageMixin, Te
                     messages.error(request, search_results['error_message'])
                     self.search_error = search_results
             else:
-                if is_organizational_account(request):
+                if is_organization_sponsor(request):
                     messages.warning(request, BookshareSearch.sponsor_warning_message)
+                elif is_organization_member(request):
+                    messages.warning(request, BookshareSearch.member_warning_message)
                 self.metadata = request.session['bookshare_search_metadata']
                 pages_available = len(self.metadata['chunks'])
                 if self.page <= pages_available:

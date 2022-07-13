@@ -17,7 +17,7 @@ Note: all steps between **Create/Activitate Virtual Environment** and **Create a
 * [Postgres](https://www.postgresql.org/) 
   * Version 11.5 or later. Used in the deployment configuration.
 * [Node.js](https://nodejs.org/)
-  * Not required to run the Clusive server, but for development it is needed 
+  * Version 16 or later. Not required to run the Clusive server, but for development it is needed. 
     since we use:
     * [npm](https://www.npmjs.com/get-npm) - Package manager
     * [Grunt](https://gruntjs.com/) - Task runner

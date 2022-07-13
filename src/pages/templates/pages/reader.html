@@ -8,6 +8,8 @@ var pub_id = "{{ pub.id }}";
 var pub_version = "{{ version }}";
 var pub_version_id = "{{ version_id }}";
 var manifest_path = "{{ manifest_path }}";
+var positions_path = "{{ positions_path }}";
+var weight_path = "{{ weight_path }}";
 // FIXME eventually this will be a per-user default
 var simplificationTool = "{{ simplification_tool }}";
 </script>
@@ -97,9 +99,10 @@ var simplificationTool = "{{ simplification_tool }}";
         var isAndroid = /android/i.test(userAgent);
         var fontFamilyArial = isAndroid ? '"Helvetica Neue", Arimo, Arial' : '"Helvetica Neue", Arial, Arimo';
         var fontFamilyVerdana = isAndroid ? 'Roboto, Verdana' : 'Verdana, Roboto';
-
-        var url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port +
-            '{% get_media_prefix %}' + manifest_path;
+        var baseMediaUrl = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '{% get_media_prefix %}'
+        var url = baseMediaUrl + manifest_path;
+        var positionsUrl = ( positions_path === 'False' ? null : baseMediaUrl + positions_path );
+        var weightUrl = ( weight_path === 'False' ? null : baseMediaUrl + weight_path );
         var injectables = [
             {type: 'script', url: 'https://code.jquery.com/jquery-3.5.1.min.js'},
             {type: 'script', url: '{% static "shared/js/lib/internal.js" %}'},
@@ -156,7 +159,7 @@ var simplificationTool = "{{ simplification_tool }}";
                 enableAnnotations: true,
                 enableDefinitions: true,
                 enableTTS: true,
-                autoGeneratePositions: true,
+                autoGeneratePositions: !positionsUrl,
                 enableLineFocus: true,
                 enableBookmarks: false,
                 enableMaterial: false,
@@ -349,6 +352,12 @@ var simplificationTool = "{{ simplification_tool }}";
                 }
             }
         };
+        if (positionsUrl) {
+            readerOptions.services = {
+                positions: { href: new URL(positionsUrl) },
+                weight: { href: new URL(weightUrl) }
+            }
+        }
 
         // Wait for the reader preferences bridge to be created, then create the Reader
         document.addEventListener("cisl.prefs.readerPreferencesBridge.onCreate", function (e) {
