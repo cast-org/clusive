@@ -136,7 +136,18 @@ function attemptFindCurrentHash(current) {
             }
         });
     } else {
-console.log('TODO: (TOC) PAGED MODE NOT HANDLED YET');
+        var pageWidth = iframeWrapper.getBoundingClientRect().width;
+
+        hashes.forEach(function(hash) {
+            var node = readerBody.querySelector(hash);
+            if (node) {
+                var nodeOffset = node.getBoundingClientRect().left;
+                if(nodeOffset < pageWidth) {
+                    // Should be visible on page
+                    lastPassedHash = hash;
+                }
+            }
+        });
     }
 
     return lastPassedHash;
