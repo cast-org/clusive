@@ -1,6 +1,7 @@
 /* global d2reader, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
 /* exported buildTableOfContents, trackReadingLocation,
-   buildAnnotationList, addNewAnnotation, showExistingAnnotation */
+   buildAnnotationList, addNewAnnotation, showExistingAnnotation,
+   getCurrentTocEntryTitle */
 
 // Some IDs are required to be used in the side modal:
 var TOC_MODAL_BUTTON = '#tocButton';
@@ -163,8 +164,8 @@ function attemptFindCurrentHash(current) {
     return lastPassedHash;
 }
 
-// Called when TOC modal is opened - activates the current location
-function markTocItemActive() {
+// Return jQuery element for current TOC location
+function getCurrentTocElement() {
     'use strict';
 
     var current = d2reader.mostRecentNavigatedTocItem;
@@ -172,31 +173,40 @@ function markTocItemActive() {
         current = current.substr(1);
     }
 
-    var top = $(TOC_CONTAINER);
-    var elt = [];
+    var $top = $(TOC_CONTAINER);
+    var $elt = [];
     var currentHash = attemptFindCurrentHash(current);
 
     if (currentHash) {
-        elt = top.find('a[href*=\'' + current + currentHash + '\']');
+        $elt = $top.find('a[href*=\'' + current + currentHash + '\']');
     }
 
-    if (elt.length === 0) {
-        elt = top.find('a[href$=\'' + current + '\']');
+    if ($elt.length === 0) {
+        $elt = $top.find('a[href$=\'' + current + '\']');
     }
 
-    if (elt.length === 0) {
-        elt = top.find('a[href*=\'' + current + '\']');
+    if ($elt.length === 0) {
+        $elt = $top.find('a[href*=\'' + current + '\']');
     }
 
     // Use only first matching item if mutliple matching TOC entries
-    elt = elt.eq(0);
+    $elt = $elt.eq(0);
+
+    return $elt;
+}
+
+// Called when TOC modal is opened - activates the current location
+function markTocItemActive() {
+    'use strict';
+
+    var $elt = getCurrentTocElement();
 
     // Add active class to current element and any related 'parent' sections
-    elt.addClass('active').attr('aria-current', true);
-    elt.parents('li').children('.nav-link').addClass('active');
+    $elt.addClass('active').attr('aria-current', true);
+    $elt.parents('li').children('.nav-link').addClass('active');
 
     // Open collapsers to show the current section
-    elt.parents('li').children('a[data-cfw="collapse"]').attr('aria-current', true).CFW_Collapse('show');
+    $elt.parents('li').children('a[data-cfw="collapse"]').attr('aria-current', true).CFW_Collapse('show');
 }
 
 // Scroll the TOC display so that the active item can be seen.
@@ -229,6 +239,34 @@ function getTocItems() {
         }];
     }
     return items;
+}
+
+// Get the current TOC entry title
+// Return a entry name as text string that includes ancestor entries
+// Don't rely on active markers from TOC as they may not be current
+function getCurrentTocEntryTitle(doNested) {
+    'use strict';
+
+    doNested = typeof doNested === 'undefined' ? false : doNested;
+
+    var output = '';
+    var $elt = getCurrentTocElement();
+
+    // Add active class to current element and any related 'parent' sections
+    if ($elt.length) {
+        output += $elt[0].innerHTML;
+    }
+
+    if (doNested) {
+        var $ancestors = $elt.parents('li').children('.nav-link');
+        $ancestors.each(function() {
+            if (this !== $elt[0]) {
+                output = this.innerHTML + ', ' + output;
+            }
+        });
+    }
+
+    return output;
 }
 
 // Creates TOC contents for the current book.
