@@ -101,6 +101,47 @@ function resetCurrentTocItem(collapse) {
     }
 }
 
+function attemptFindCurrentHash(current) {
+    var top = $(TOC_CONTAINER);
+    var $elt = top.find('a[href*=\'' + current + '\']');
+    var hashes = [];
+    var isScrollMode = d2reader.currentSettings.verticalScroll;
+    var readerBody = getReaderBody();
+    var iframeWrapper = document.querySelector('#iframe-wrapper')
+    var lastPassedHash = null;
+
+    $elt.each(function() {
+        var href = $(this).attr('href');
+        var url = new URL(href, 'http://localhost');
+        if (url.hash !== '') {
+            hashes.push(url.hash);
+        }
+    });
+
+    if (!hashes.length) {
+        return null;
+    }
+
+    if (isScrollMode) {
+        var scrollTop = iframeWrapper.scrollTop;
+        var pageMid = iframeWrapper.getBoundingClientRect().height / 2;
+
+        hashes.forEach(function(hash) {
+            var node = readerBody.querySelector(hash);
+            if (node) {
+                if (node.offsetTop < scrollTop + pageMid) {
+                    // Passed the page midpoint
+                    lastPassedHash = hash;
+                }
+            }
+        });
+    } else {
+console.log('TODO: (TOC) PAGED MODE NOT HANDLED YET');
+    }
+
+    return lastPassedHash;
+}
+
 // Called when TOC modal is opened - activates the current location
 function markTocItemActive() {
     'use strict';
