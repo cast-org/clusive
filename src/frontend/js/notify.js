@@ -10,6 +10,7 @@
     var CLASS_IN = 'in';
 
     var notifyModule = function() {
+        // placeholder
     };
 
     notifyModule.prototype = {
@@ -33,12 +34,12 @@
         hide : function($item) {
             var complete = function() {
                 $item.remove();
-            }
+            };
 
             $item.removeClass(CLASS_IN);
             $item.CFW_transition(null, complete);
         }
-    }
+    };
 
     window.notify = notifyModule.prototype;
 }(jQuery));

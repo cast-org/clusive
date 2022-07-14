@@ -1,4 +1,4 @@
-/* global clusiveTTS, contextLookup, contextTransform, d2reader, hotkeys, shortcut */
+/* global clusiveTTS, contextLookup, contextTransform, d2reader, getTocTitle, hotkeys, notify, shortcut */
 
 // Uses `hotkeys-js`
 // Repo: https://github.com/jaywcjlove/hotkeys
@@ -384,19 +384,20 @@
             var title = null;
             var percent = null;
             var msg = '';
+
+            if (event) { event.preventDefault(); }
+            shortcut.addEvent('hotkey-whereami', keys);
+
             if (shortcut.readerFound) {
                 // Give location within reader document
                 title = getTocTitle();
                 percent = Math.round(parseFloat(d2reader.currentLocator.locations.totalProgression) * 100);
-            } else {
-                title = document.title.replace(' | Clusive', '');
-            }
-
-            if (percent) {
                 msg = 'You are ' + percent + '% through ' + title;
             } else {
-                msg = 'You are on Clusive\'s ' + title + ' page'
+                title = document.title.replace(' | Clusive', '');
+                msg = 'You are on Clusive\'s ' + title + ' page';
             }
+
             notify.show(msg);
         }
     };

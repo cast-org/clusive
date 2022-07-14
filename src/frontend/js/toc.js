@@ -34,6 +34,14 @@ function showNotesPanel() {
  * Functions dealing with location tracking and the Table of Contents modal.
  */
 
+function getReaderBody() {
+    'use strict';
+
+    var readerIframe = document.querySelector('#D2Reader-Container iframe');
+    var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
+    return readerDocument.body;
+}
+
 // Create HTML for a single level of TOC structure
 function buildTocLevel(list, level, id) {
     'use strict';
@@ -102,17 +110,19 @@ function resetCurrentTocItem(collapse) {
 }
 
 function attemptFindCurrentHash(current) {
+    'use strict';
+
     var top = $(TOC_CONTAINER);
     var $elt = top.find('a[href*=\'' + current + '\']');
     var hashes = [];
     var isScrollMode = d2reader.currentSettings.verticalScroll;
     var readerBody = getReaderBody();
-    var iframeWrapper = document.querySelector('#iframe-wrapper')
+    var iframeWrapper = document.querySelector('#iframe-wrapper');
     var lastPassedHash = null;
 
     $elt.each(function() {
         var href = $(this).attr('href');
-        var url = new URL(href, 'http://localhost');
+        var url = new URL(href, 'http://localhost'); // eslint-disable-line compat/compat
         if (url.hash !== '') {
             hashes.push(url.hash);
         }
@@ -142,7 +152,7 @@ function attemptFindCurrentHash(current) {
             var node = readerBody.querySelector(hash);
             if (node) {
                 var nodeOffset = node.getBoundingClientRect().left;
-                if(nodeOffset < pageWidth) {
+                if (nodeOffset < pageWidth) {
                     // Should be visible on page
                     lastPassedHash = hash;
                 }
@@ -163,7 +173,16 @@ function markTocItemActive() {
     }
 
     var top = $(TOC_CONTAINER);
-    var elt = top.find('a[href$=\'' + current + '\']');
+    var elt = [];
+    var currentHash = attemptFindCurrentHash(current);
+
+    if (currentHash) {
+        elt = top.find('a[href*=\'' + current + currentHash + '\']');
+    }
+
+    if (elt.length === 0) {
+        elt = top.find('a[href$=\'' + current + '\']');
+    }
 
     if (elt.length === 0) {
         elt = top.find('a[href*=\'' + current + '\']');
@@ -538,14 +557,6 @@ function setUpNotes() {
     $area.on('change', '.note textarea', function(e) {
         handleNoteTextChange($(e.target).closest('.annotation-container'));
     });
-}
-
-function getReaderBody() {
-    'use strict';
-
-    var readerIframe = document.querySelector('#D2Reader-Container iframe');
-    var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
-    return readerDocument.body;
 }
 
 $(document).on('updateCurrentLocation.d2reader', function() {
