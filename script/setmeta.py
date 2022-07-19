@@ -4,10 +4,8 @@ import argparse
 import datetime
 import os
 import tempfile
-import zipfile
-
-import dawn
 import xml.etree.ElementTree as ET
+import zipfile
 
 
 def init_argparse() -> argparse.ArgumentParser:
@@ -85,6 +83,7 @@ def update_metadata(xmlstr: str, args) -> str:
         if args.title:
             if update_simple_metadata_item(metadata, 'title', title, args.title, '{http://purl.org/dc/elements/1.1/}title', {'id': 'title'}):
                 modified = True
+                title = metadata.find('dc:title', namesp)
             if 'id' not in title.attrib:
                 print('  title needs an id attribute')
                 if add_attribute(title, {'id': 'title'}):
@@ -95,6 +94,7 @@ def update_metadata(xmlstr: str, args) -> str:
         if args.author:
             if update_simple_metadata_item(metadata, 'author', author, args.author,'{http://purl.org/dc/elements/1.1/}creator', {'id': 'author'}):
                 modified = True
+                author = metadata.find('dc:creator', namesp)
             if 'id' not in author.attrib:
                 print('  author needs an id attribute')
                 if add_attribute(author, {'id': 'author'}):

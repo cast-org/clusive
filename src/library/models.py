@@ -41,11 +41,23 @@ class EducatorResourceCategory(models.Model):
     name = models.CharField(max_length=256)
     sort_order = models.SmallIntegerField(unique=True)
 
+    def __str__(self):
+        return '<EducatorResourceCategory %s:%s>' % (self.sort_order, self.name)
+
     class Meta:
         ordering = ['sort_order']
 
 
-class AbstractReading(models.Model):
+class Book(models.Model):
+    """
+    Metadata about a single reading, to be represented as an item on the Library page.
+    There may be multiple versions of a single Book, which are separate EPUB files.
+
+    If bookshare_id is not null, then this is a book imported from Bookshare.
+    These have more restrictive permissions.
+    Two Book records can point to the same Bookshare ID since multiple users can load it as their own.
+    """
+    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     title = models.CharField(max_length=256, db_index=True)
     sort_title = models.CharField(max_length=256)
     author = models.CharField(max_length=256, db_index=True)
@@ -55,13 +67,84 @@ class AbstractReading(models.Model):
     featured = models.BooleanField(default=False)
     word_count = models.PositiveIntegerField(null=True, db_index=True)
     picture_count = models.PositiveIntegerField(null=True)
+    subjects = models.ManyToManyField(Subject, db_index=True)
+    bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
+    # Educator-resource-specific fields.
+    # Existence of a non-null resource_identifier marks this as a Resource rather than a Library Book
+    resource_identifier = models.CharField(max_length=256, unique=True, db_index=True, null=True, blank=True)
+    resource_category = models.ForeignKey(to=EducatorResourceCategory, related_name='resources',
+                                          on_delete=models.SET_NULL, null=True, blank=True)
+    resource_sort_order = models.SmallIntegerField(null=True, blank=True) # Display order within the category
+    resource_tags = models.TextField(null=True, blank=True)
 
-    class Meta:
-        abstract = True
+    @property
+    def is_educator_resource(self):
+        return self.resource_identifier is not None
+
+    @property
+    def is_public(self):
+        return self.owner is None
+
+    @property
+    def is_bookshare(self):
+        return self.bookshare_id is not None
+
+    def is_visible_to(self, user : ClusiveUser):
+        if self.is_public:
+            return True
+        if self.owner == user:
+            return True
+        periods = user.periods.all()
+        if BookAssignment.objects.filter(book=self, period__in=periods).exists():
+            return True
+        return False
+
+    @property
+    def resource_tag_list(self):
+        """Decode JSON format and return tags as a list."""
+        if not hasattr(self, '_resource_tag_list'):
+            if self.resource_tags:
+                self._resource_tag_list = json.loads(self.resource_tags)
+            else:
+                self._resource_tag_list = None
+        return self._resource_tag_list
+
+    @property
+    def all_word_list(self):
+        if not hasattr(self, '_all_word_list'):
+            versions = self.versions.all()
+            if len(versions) == 1:
+                self._all_word_list = versions[0].all_word_list
+            else:
+                words = set()
+                for v in versions:
+                    words.update(v.all_word_list)
+                self._all_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
+        return self._all_word_list
+
+    @property
+    def all_word_and_non_dict_word_list(self):
+        if not hasattr(self, '_all_word_and_non_dict_word_list'):
+            versions = self.versions.all()
+            if len(versions) == 1:
+                self._all_word_and_non_dict_word_list = versions[0].all_word_list + versions[0].non_dict_word_list
+            else:
+                words = set()
+                for v in versions:
+                    words.update(v.all_word_list)
+                    words.update(v.non_dict_word_list)
+                self._all_word_and_non_dict_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
+        return self._all_word_and_non_dict_word_list
 
     @property
     def path(self):
-        return 'resource/%d' % self.pk
+        """URL-style path to the book's location."""
+        if self.owner:
+            return '%d/%d' % (self.owner.pk, self.pk)
+        elif self.is_educator_resource:
+            return 'resource/%d' % self.pk
+        else:
+            return 'public/%d' % self.pk
 
     @property
     def cover_path(self):
@@ -100,91 +183,6 @@ class AbstractReading(models.Model):
         self.save()
         return path
 
-
-class EducatorResource(AbstractReading):
-    """
-    An item shown in the "Resources" section of the site for teachers and parents.
-    """
-    identifier = models.CharField(max_length=256, unique=True, db_index=True)
-    category = models.ForeignKey(to=EducatorResourceCategory, related_name='resources',
-                                 on_delete=models.SET_NULL, null=True, blank=True)
-    sort_order = models.SmallIntegerField() # This is the display order within the category
-    tags = models.TextField(default='[]')
-
-    @property
-    def tag_list(self):
-        """Decode JSON format and return tags as a list."""
-        if not hasattr(self, '_tag_list'):
-            self._tag_list = json.loads(self.tags)
-        return self._tag_list
-
-
-class Book(AbstractReading):
-    """
-    Metadata about a single reading, to be represented as an item on the Library page.
-    There may be multiple versions of a single Book, which are separate EPUB files.
-
-    If bookshare_id is not null, then this is a book imported from Bookshare.
-    These have more restrictive permissions.
-    Two Book records can point to the same Bookshare ID since multiple users can load it as their own.
-    """
-    owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
-    subjects = models.ManyToManyField(Subject, db_index=True)
-    bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
-
-    @property
-    def path(self):
-        """URL-style path to the book's location."""
-        if self.owner:
-            return '%d/%d' % (self.owner.pk, self.pk)
-        else:
-            return 'public/%d' % self.pk
-
-    @property
-    def is_public(self):
-        return self.owner is None
-
-    @property
-    def is_bookshare(self):
-        return self.bookshare_id is not None
-
-    def is_visible_to(self, user : ClusiveUser):
-        if self.is_public:
-            return True
-        if self.owner == user:
-            return True
-        periods = user.periods.all()
-        if BookAssignment.objects.filter(book=self, period__in=periods).exists():
-            return True
-        return False
-
-    @property
-    def all_word_list(self):
-        if not hasattr(self, '_all_word_list'):
-            versions = self.versions.all()
-            if len(versions) == 1:
-                self._all_word_list = versions[0].all_word_list
-            else:
-                words = set()
-                for v in versions:
-                    words.update(v.all_word_list)
-                self._all_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
-        return self._all_word_list
-
-    @property
-    def all_word_and_non_dict_word_list(self):
-        if not hasattr(self, '_all_word_and_non_dict_word_list'):
-            versions = self.versions.all()
-            if len(versions) == 1:
-                self._all_word_and_non_dict_word_list = versions[0].all_word_list + versions[0].non_dict_word_list
-            else:
-                words = set()
-                for v in versions:
-                    words.update(v.all_word_list)
-                    words.update(v.non_dict_word_list)
-                self._all_word_and_non_dict_word_list = sort_words_by_frequency(words, 'en') # FIXME language of book
-        return self._all_word_and_non_dict_word_list
-
     @property
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
@@ -203,6 +201,8 @@ class Book(AbstractReading):
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
+        elif self.is_educator_resource:
+            return '<Book %d: Resource %s>' % (self.pk, self.resource_identifier)
         else:
             return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
 
@@ -218,10 +218,7 @@ class Book(AbstractReading):
 
 class BookVersion(models.Model):
     """Database representation of metadata about a single EPUB file."""
-    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='versions',
-                             null=True, blank=True)
-    resource = models.ForeignKey(to=EducatorResource, on_delete=models.CASCADE, db_index=True, related_name='versions',
-                                 null=True, blank=True)
+    book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='versions')
     sortOrder = models.SmallIntegerField()
     word_count = models.PositiveIntegerField(null=True)
     picture_count = models.PositiveIntegerField(null=True)
@@ -234,18 +231,9 @@ class BookVersion(models.Model):
     filename = models.TextField(null=True) # The filename of the EPUB that was uploaded.
 
     @property
-    def reading(self):
-        if self.book:
-            return self.book
-        elif self.resource:
-            return self.resource
-        else:
-            return None
-
-    @property
     def path(self):
         """Relative, URL-style path from MEDIA_URL to this book version."""
-        return '%s/%d' % (self.reading.path, self.sortOrder)
+        return '%s/%d' % (self.book.path, self.sortOrder)
 
     @property
     def manifest_path(self):
@@ -265,7 +253,7 @@ class BookVersion(models.Model):
     @property
     def storage_dir(self):
         """Absolute filesystem location of this book version's content."""
-        return os.path.join(self.reading.storage_dir, str(self.sortOrder))
+        return os.path.join(self.book.storage_dir, str(self.sortOrder))
 
     @property
     def manifest_file(self):
@@ -326,16 +314,15 @@ class BookVersion(models.Model):
         return cls.objects.get(book__pk=book_id, sortOrder=version_number)
 
     def __str__(self):
-        if self.book:
+        if self.book: #FIXME
             return '<BV %d: %s[%d]>' % (self.pk, self.book, self.sortOrder)
         else:
             return '<BV %d: resource %s>' % (self.pk, self.resource)
 
     class Meta:
-        ordering = ['book', 'resource', 'sortOrder']
+        ordering = ['book', 'sortOrder']
         constraints = [
-            models.UniqueConstraint(fields=['book', 'sortOrder'], name='unique_book_version'),
-            models.UniqueConstraint(fields=['resource', 'sortOrder'], name='unique_resource_version'),
+            models.UniqueConstraint(fields=['book', 'sortOrder'], name='unique_book_version')
         ]
 
 

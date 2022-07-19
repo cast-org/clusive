@@ -16,7 +16,6 @@ urlpatterns = [
     path('dashboard-activity-detail/<int:user_id>/<int:book_id>', views.DashboardActivityDetailView.as_view(),
          name='dashboard_activity_detail'),
     path('reader', views.ReaderIndexView.as_view(), name='reader_index'),
-    path('resreader/<int:resource_id>', views.ResourceReaderView.as_view(), name='resource_reader'),
     path('reader/<int:book_id>/<int:version>', views.ReaderView.as_view(), name='reader'),
     path('reader/<int:book_id>', views.ReaderChooseVersionView.as_view(pattern_name='reader'), name='reader_default'),
     path('wordbank', views.WordBankView.as_view(), name='word_bank'),

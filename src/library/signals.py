@@ -6,7 +6,7 @@ from django.db.models.signals import post_delete, pre_delete
 from django.dispatch import receiver
 
 from eventlog.signals import vocab_lookup, translation_action, control_used
-from library.models import BookVersion, Book, Paradata, EducatorResource
+from library.models import BookVersion, Book, Paradata
 
 logger = logging.getLogger(__name__)
 
@@ -27,16 +27,6 @@ def delete_book_files(sender, **kwargs):
     instance : Book
     instance = kwargs['instance']
     logger.debug('Book was deleted, cleaning up files: %s', instance)
-    if os.path.exists(instance.storage_dir):
-        shutil.rmtree(instance.storage_dir)
-
-
-@receiver(post_delete, sender=EducatorResource)
-def delete_book_files(sender, **kwargs):
-    """When EducatorResource is deleted, also delete its uploaded files"""
-    instance : EducatorResource
-    instance = kwargs['instance']
-    logger.debug('EducatorResource was deleted, cleaning up files: %s', instance)
     if os.path.exists(instance.storage_dir):
         shutil.rmtree(instance.storage_dir)
 

@@ -3,14 +3,19 @@
     "name": "Getting started",
     "resources": [
       {
-        "identifier": "CLUES",
-        "file": "clues.epub",
-        "tags": ["Video", "Audio"]
+        "identifier": "START",
+        "file": "getting-started-with-students.epub",
+        "tags": []
       },
       {
-        "identifier": "CLUES2",
-        "file": "clues.epub",
-        "tags": []
+        "identifier": "CLUES",
+        "file": "cast-teacher-clues-to-clusive.epub",
+        "tags": ["Video", "Interactive"]
+      },
+      {
+        "identifier": "FAQ",
+        "file": "faq.epub",
+        "tags": ["FAQ"]
       }
     ]
   },
@@ -18,9 +23,14 @@
     "name": "Teaching with Clusive",
     "resources": [
       {
-        "identifier": "CLUES3",
-        "file": "clues.epub",
-        "tags": ["Video"]
+        "identifier": "REACT",
+        "file": "reactions.epub",
+        "tags": ["Feature"]
+      },
+      {
+        "identifier": "TIME",
+        "file": "active-reading-time.epub",
+        "tags": ["Feature"]
       }
     ]
   }

@@ -19,7 +19,11 @@ var simplificationTool = "{{ simplification_tool }}";
 {% block title %}{{ pub.title }} | Clusive{% endblock %}
 
 {% block header %}
-{% include "shared/partial/site_header.html" %}
+{% if pub.is_educator_resource %}
+{% include "shared/partial/site_header.html" with page_group="resources" %}
+{% else %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endif %}
 {% endblock %}
 
 {% block sidebar_start %}

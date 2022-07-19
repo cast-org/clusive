@@ -154,20 +154,22 @@ class LibraryDataView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         q: QuerySet
+        # Base QuerySet makes sure this is a Library, not Resources, item.
+        q = Book.objects.filter(resource_identifier__isnull=True)
         if self.view == 'period' and self.period:
-            q = Book.objects.filter(assignments__period=self.period)
+            q = q.filter(assignments__period=self.period)
         elif self.view == 'mine':
-            q = Book.objects.filter(owner=self.clusive_user)
+            q = q.filter(owner=self.clusive_user)
         elif self.view == 'starred':
             # STARRED = books found in paradata where starred field is true for this user
-            q = Book.objects.filter(
+            q = q.filter(
                 Q(paradata__starred=True)
                 & Q(paradata__user=self.clusive_user))
         elif self.view == 'public':
-            q = Book.objects.filter(owner=None)
+            q = q.filter(owner=None)
         elif self.view == 'all':
             # ALL = assigned in one of my periods, or public, or owned by me.
-            q = Book.objects.filter(
+            q = q.filter(
                 Q(assignments__period__in=self.clusive_user.periods.all())
                 | Q(owner=None)
                 | Q(owner=self.clusive_user)).distinct()
@@ -365,7 +367,8 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
 
     def get(self, request, *args, **kwargs):
         self.extra_context = {
-            'categories': EducatorResourceCategory.objects.all().prefetch_related('resources')
+            'categories': EducatorResourceCategory.objects.all()
+                .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order')))
         }
         return super().get(request, *args, **kwargs)
 
