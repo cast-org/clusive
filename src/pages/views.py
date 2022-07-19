@@ -528,9 +528,14 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
     template_name = 'pages/reader.html'
 
     def get(self, request, *args, **kwargs):
+        resource_identifier = kwargs.get('resource_id')
         book_id = kwargs.get('book_id')
-        version = kwargs.get('version')
-        book = Book.objects.get(pk=book_id)
+        version = kwargs.get('version') or 0
+        if resource_identifier:
+            logger.debug('id=%s', resource_identifier)
+            book = Book.objects.get(resource_identifier=resource_identifier)
+        else:
+            book = Book.objects.get(pk=book_id)
         self.page_name = 'ResourceReading' if book.is_educator_resource else 'Reading'
 
         if not book.is_visible_to(request.clusive_user):

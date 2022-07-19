@@ -375,11 +375,14 @@ class BookTrend(models.Model):
 
     @classmethod
     def top_trends(cls, period):
-        return cls.objects.filter(period=period).order_by('-popularity')
+        return cls.objects.filter(period=period, book__resource_identifier__isnull=True)\
+            .order_by('-popularity')
 
     @classmethod
     def top_assigned(cls, period):
-        return cls.objects.filter(period=period, book__assignments__period=period).order_by('-popularity')
+        return cls.objects.filter(period=period, book__resource_identifier__isnull=True,
+                                  book__assignments__period=period)\
+            .order_by('-popularity')
 
     @classmethod
     def update_all_trends(cls):

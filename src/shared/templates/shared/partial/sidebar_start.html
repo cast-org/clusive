@@ -4,6 +4,7 @@
         <span class="icon-th-list" aria-hidden="true"></span>
     </button>
 
+    {% if not pub.is_educator_resource %}
     {% if version_count == 1 %}
     <span class="d-inline-block mt-0_75" tabindex="0" title="Can't switch: there is only one version of this content."
           data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="forward">
@@ -30,6 +31,7 @@
             {% endif %}
         </button>
     </span>
+    {% endif %}
     {% endif %}
 
     <div class="sidebar-divider-wrapper sidebar-divider-small">

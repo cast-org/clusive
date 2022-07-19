@@ -1,7 +1,7 @@
 {% load static %}
 <div class="card card-library {% if resource.featured %} card-important card-wide{% else %} card-resource{% endif %}">
     <div class="card-header">
-        <h3 class="card-title"><a href="{% url 'reader' book_id=resource.id version=0 %}" class="link-stretch">{{ resource.title }}</a></h3>
+        <h3 class="card-title"><a href="{% url 'res_reader' resource_id=resource.resource_identifier %}" class="link-stretch">{{ resource.title }}</a></h3>
     </div>
     <div class="card-img">
         <img class="img-fluid" src="{% get_media_prefix %}{{ resource.cover_path }}" alt="Cover image for {{ resource.title }}"/>
