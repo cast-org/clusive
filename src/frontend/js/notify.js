@@ -22,7 +22,7 @@
             var complete = function() {
                 setTimeout(function() {
                     notify.hide($item);
-                }, 3000);
+                }, 5000);
             };
 
             $item.addClass(CLASS_FADE);
