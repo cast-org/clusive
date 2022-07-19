@@ -1,0 +1,7 @@
+// stylelint-disable custom-property-empty-line-before
+@mixin resource-theme($theme-name: unquote(":root")) {
+    #{$theme-name} {
+        --CT_figureCaptionBg: #{$figure-caption-bg};
+        --CT_figureCaptionColor: #{$figure-caption-color};
+    }
+}

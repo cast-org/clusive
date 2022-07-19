@@ -1,0 +1,36 @@
+// Functions
+@import "../../../node_modules/figuration/scss/functions";
+
+// Clusive specific functions (some mixins too)
+@import "mixins/line-height";
+
+// Settings variables
+@import "site/site-pre";
+@import "resource/resource-pre";
+@import "../../../node_modules/figuration/scss/settings";
+@import "../../../node_modules/figuration/scss/settings-options";
+@import "site/site-post";
+@import "resource/resource-post";
+
+// Mixins
+@import "../../../node_modules/figuration/scss/mixins";
+@import "mixins/resource-theme";
+
+// Core CSS items - extend on the base HTML
+@import "../../../node_modules/figuration/scss/core/reboot";
+
+// Additional site specific items
+@import "resource/resource";
+
+// =====
+// Themes - build out each via mixin
+// stylelint-disable no-invalid-position-at-import-rule
+@import "site-themes/theme-default";
+@include resource-theme();
+
+@import "site-themes/theme-sepia";
+@include resource-theme(":root[style*=clusive-sepia]");
+
+@import "site-themes/theme-night";
+@include resource-theme(":root[style*=clusive-night]");
+// stylelint-enable no-invalid-position-at-import-rule

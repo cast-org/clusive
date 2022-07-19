@@ -1,0 +1,87 @@
+body {
+    font-family: $font-family-sans-serif;
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+    font-family: "Arial Black", Arial, sans-serif;
+    font-weight: 900;
+    line-height: 1.125;
+}
+h1,
+.h1 {
+    @include font-size(2rem);
+}
+
+h2,
+.h2 {
+    @include font-size(1.75rem);
+}
+
+h3,
+.h3 {
+    @include font-size(1.5rem);
+}
+
+h4,
+.h4 {
+    @include font-size(1.25rem);
+}
+
+h5,
+.h5 {
+    @include font-size(1.125rem);
+}
+
+h6,
+.h6 {
+    @include font-size(1rem);
+}
+
+
+figcaption {
+    color: var(--CT_figureCaptionColor);
+    background-color: var(--CT_figureCaptionBg)
+}
+
+aside {
+    width: 40%;
+    padding-left: .5rem;
+    margin-left: .5rem;
+    float: right;
+}
+
+aside > p {
+    margin: .5rem;
+}
+
+details {
+    border: 1px solid currentcolor;
+    border-radius: .25rem;
+    padding: .5em .5em 0;
+}
+
+summary {
+    font-weight: bold;
+    margin: -.5em -.5em 0;
+    padding: .5em;
+}
+
+details[open] {
+    padding: .5em;
+}
+
+details[open] summary {
+    border-bottom: 1px solid currentcolor;
+    margin-bottom: .5em;
+}
