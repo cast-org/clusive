@@ -498,7 +498,7 @@ function showTooltip(name) {
                 if (tip_control.is(':visible')) {
                     tip_popover.attr({
                         'role': 'status',
-                        'aria-live': 'assertive',
+                        'aria-live': 'polite',
                         'aria-atomic': 'true'
                     });
                     tip_control.CFW_Tooltip('show');

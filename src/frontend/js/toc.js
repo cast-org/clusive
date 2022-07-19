@@ -1,6 +1,7 @@
-/* global d2reader, Promise, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
+/* global d2reader, DJANGO_CSRF_TOKEN, PAGE_EVENT_ID, clusiveAutosave */
 /* exported buildTableOfContents, trackReadingLocation,
-   buildAnnotationList, addNewAnnotation, showExistingAnnotation */
+   buildAnnotationList, addNewAnnotation, showExistingAnnotation,
+   getCurrentTocEntryTitle */
 
 // Some IDs are required to be used in the side modal:
 var TOC_MODAL_BUTTON = '#tocButton';
@@ -33,6 +34,14 @@ function showNotesPanel() {
 /*
  * Functions dealing with location tracking and the Table of Contents modal.
  */
+
+function getReaderBody() {
+    'use strict';
+
+    var readerIframe = document.querySelector('#D2Reader-Container iframe');
+    var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
+    return readerDocument.body;
+}
 
 // Create HTML for a single level of TOC structure
 function buildTocLevel(list, level, id) {
@@ -101,8 +110,62 @@ function resetCurrentTocItem(collapse) {
     }
 }
 
-// Called when TOC modal is opened - activates the current location
-function markTocItemActive() {
+function attemptFindCurrentHash(current) {
+    'use strict';
+
+    var top = $(TOC_CONTAINER);
+    var $elt = top.find('a[href*=\'' + current + '\']');
+    var hashes = [];
+    var isScrollMode = d2reader.currentSettings.verticalScroll;
+    var readerBody = getReaderBody();
+    var iframeWrapper = document.querySelector('#iframe-wrapper');
+    var lastPassedHash = null;
+
+    $elt.each(function() {
+        var href = $(this).attr('href');
+        var url = new URL(href, 'http://localhost'); // eslint-disable-line compat/compat
+        if (url.hash !== '') {
+            hashes.push(url.hash);
+        }
+    });
+
+    if (!hashes.length) {
+        return null;
+    }
+
+    if (isScrollMode) {
+        var scrollTop = iframeWrapper.scrollTop;
+        var pageMid = iframeWrapper.getBoundingClientRect().height / 2;
+
+        hashes.forEach(function(hash) {
+            var node = readerBody.querySelector(hash);
+            if (node) {
+                if (node.offsetTop < scrollTop + pageMid) {
+                    // Passed the page midpoint
+                    lastPassedHash = hash;
+                }
+            }
+        });
+    } else {
+        var pageWidth = iframeWrapper.getBoundingClientRect().width;
+
+        hashes.forEach(function(hash) {
+            var node = readerBody.querySelector(hash);
+            if (node) {
+                var nodeOffset = node.getBoundingClientRect().left;
+                if (nodeOffset < pageWidth) {
+                    // Should be visible on page
+                    lastPassedHash = hash;
+                }
+            }
+        });
+    }
+
+    return lastPassedHash;
+}
+
+// Return jQuery element for current TOC location
+function getCurrentTocElement() {
     'use strict';
 
     var current = d2reader.mostRecentNavigatedTocItem;
@@ -110,15 +173,40 @@ function markTocItemActive() {
         current = current.substr(1);
     }
 
-    var top = $(TOC_CONTAINER);
-    var elt = top.find('a[href$=\'' + current + '\']');
+    var $top = $(TOC_CONTAINER);
+    var $elt = [];
+    var currentHash = attemptFindCurrentHash(current);
+
+    if (currentHash) {
+        $elt = $top.find('a[href*=\'' + current + currentHash + '\']');
+    }
+
+    if ($elt.length === 0) {
+        $elt = $top.find('a[href$=\'' + current + '\']');
+    }
+
+    if ($elt.length === 0) {
+        $elt = $top.find('a[href*=\'' + current + '\']');
+    }
+
+    // Use only first matching item if mutliple matching TOC entries
+    $elt = $elt.eq(0);
+
+    return $elt;
+}
+
+// Called when TOC modal is opened - activates the current location
+function markTocItemActive() {
+    'use strict';
+
+    var $elt = getCurrentTocElement();
 
     // Add active class to current element and any related 'parent' sections
-    elt.addClass('active').attr('aria-current', true);
-    elt.parents('li').children('.nav-link').addClass('active');
+    $elt.addClass('active').attr('aria-current', true);
+    $elt.parents('li').children('.nav-link').addClass('active');
 
     // Open collapsers to show the current section
-    elt.parents('li').children('a[data-cfw="collapse"]').attr('aria-current', true).CFW_Collapse('show');
+    $elt.parents('li').children('a[data-cfw="collapse"]').attr('aria-current', true).CFW_Collapse('show');
 }
 
 // Scroll the TOC display so that the active item can be seen.
@@ -132,20 +220,61 @@ function scrollToCurrentTocItem() {
     }
 }
 
+function getTocTitle() {
+    'use strict';
+
+    return document.querySelector('#tocPubTitle').innerHTML;
+}
+
+// Get TOC contents reported from reader, otherwise create a single TOC entry
+function getTocItems() {
+    'use strict';
+
+    var items = d2reader.tableOfContents;
+    if (items.length === 0) {
+        // Use title and locator to create a single entry
+        items = [{
+            title: getTocTitle(),
+            href: d2reader.currentLocator.href
+        }];
+    }
+    return items;
+}
+
+// Get the current TOC entry title
+// Return a entry name as text string that includes ancestor entries
+// Don't rely on active markers from TOC as they may not be current
+function getCurrentTocEntryTitle(doNested) {
+    'use strict';
+
+    doNested = typeof doNested === 'undefined' ? false : doNested;
+
+    var output = '';
+    var $elt = getCurrentTocElement();
+
+    // Add active class to current element and any related 'parent' sections
+    if ($elt.length) {
+        output += $elt[0].innerHTML;
+    }
+
+    if (doNested) {
+        var $ancestors = $elt.parents('li').children('.nav-link');
+        $ancestors.each(function() {
+            if (this !== $elt[0]) {
+                output = this.innerHTML + ', ' + output;
+            }
+        });
+    }
+
+    return output;
+}
+
 // Creates TOC contents for the current book.
 function buildTableOfContents() {
     'use strict';
 
     if (typeof d2reader === 'object') {
-        var items = d2reader.tableOfContents;
-        var has_structure = items.length > 0;
-        if (!has_structure) {
-            // Use title and locator to create a single entry
-            items = [{
-                title: document.querySelector('#tocPubTitle').innerHTML,
-                href: d2reader.currentLocator.href
-            }];
-        }
+        var items = getTocItems();
 
         var out = buildTocLevel(items, 0, 'toc');
         $(TOC_EMPTY).hide();
@@ -468,14 +597,6 @@ function setUpNotes() {
     });
 }
 
-function getReaderBody() {
-    'use strict';
-
-    var readerIframe = document.querySelector('#D2Reader-Container iframe');
-    var readerDocument = readerIframe.contentDocument || readerIframe.contentWindow.document;
-    return readerDocument.body;
-}
-
 $(document).on('updateCurrentLocation.d2reader', function() {
     'use strict';
 
@@ -498,7 +619,6 @@ $(document).on('updateCurrentLocation.d2reader', function() {
     var selector = _getValidSelector(TOC_focusSelector, readerBody);
 
     var updateTabindex = function(element) {
-        var tabindex = null;
         if (!element.hasAttribute('tabindex')) {
             element.setAttribute('tabindex', -1);
         }
