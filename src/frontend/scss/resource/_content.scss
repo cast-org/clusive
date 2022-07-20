@@ -51,14 +51,19 @@ h6,
 
 figcaption {
     color: var(--CT_figureCaptionColor);
-    background-color: var(--CT_figureCaptionBg)
+    background-color: var(--CT_figureCaptionBg);
 }
 
 aside {
-    width: 40%;
-    padding-left: .5rem;
-    margin-left: .5rem;
-    float: right;
+    width: 75%;
+    margin: 0 auto 1rem;
+
+    @include media-breakpoint-up(sm) {
+        width: 40%;
+        padding-left: 1rem;
+        margin: 0 0 .5rem;
+        float: right;
+    }
 }
 
 aside > p {
