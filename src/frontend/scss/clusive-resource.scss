@@ -2,7 +2,7 @@
 @import "../../../node_modules/figuration/scss/functions";
 
 // Clusive specific functions (some mixins too)
-@import "mixins/line-height";
+@import "resource/line-height";
 
 // Settings variables
 @import "site/site-pre";
@@ -18,6 +18,9 @@
 
 // Core CSS items - extend on the base HTML
 @import "../../../node_modules/figuration/scss/core/reboot";
+
+// Components - additional functionality and layout
+@import "../../../node_modules/figuration/scss/component/grid";
 
 // Additional site specific items
 @import "resource/resource";

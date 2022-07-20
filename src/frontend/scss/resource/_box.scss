@@ -1,0 +1,42 @@
+.box {
+    padding: $box-padding-y $box-padding-x;
+    margin-bottom: $box-margin-bottom;
+    line-height: $box-line-height;
+    color: var(--CT_boxResourceColor);
+    background: var(--CT_boxResourceBg);
+    border: $box-border-width solid var(--CT_boxResourceBorderColor);
+    @include border-radius($box-border-radius);
+    @include clearfix();
+
+    hr {
+        background-color: var(--CT_boxDivderColor);
+        opacity: 1;
+    }
+}
+
+.box-teach {
+    color: var(--CT_boxTeachColor);
+    background: var(--CT_boxTeachBg);
+    border-color: var(--CT_boxTeachBorderColor);
+}
+
+.box-share {
+    position: relative;
+    color: var(--CT_boxShareColor);
+    background: var(--CT_boxShareBg);
+    border-color: var(--CT_boxShareBorderColor);
+
+    &::before {
+        $twitter-width: 1.75rem;
+        position: absolute;
+        top: .5rem;
+        left: -1rem;
+        display: block;
+        width: $twitter-width;
+        height: $twitter-width * (204 / 248);
+        content: "";
+        background-image: var(--CT_imgTwitter);
+        background-repeat: no-repeat;
+    }
+
+}

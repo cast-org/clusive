@@ -15,6 +15,7 @@
 
         --RS__textColor: #{$body-color};
         --RS__linkColor: #{$link-color};
+        --RS__linkHoverColor: #{$link-hover-color};
         --RS__visitedColor: #{$link-color};
 
         // This can be customized but initial will re-use default value of the browser
@@ -63,6 +64,10 @@
         a:link,
         a:link * {
             color: var(--RS__linkColor);
+        }
+        a:hover,
+        a:hover * {
+            color: var(--RS_linkHoverColor);
         }
 
         a:visited,
