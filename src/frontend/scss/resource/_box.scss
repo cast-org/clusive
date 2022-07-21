@@ -1,4 +1,5 @@
 .box {
+    position: relative;
     padding: $box-padding-y $box-padding-x;
     margin-bottom: $box-margin-bottom;
     line-height: $box-line-height;
@@ -12,16 +13,57 @@
         background-color: var(--CT_boxDivderColor);
         opacity: 1;
     }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .box-teach {
     color: var(--CT_boxTeachColor);
     background: var(--CT_boxTeachBg);
     border-color: var(--CT_boxTeachBorderColor);
+
+    > h2:first-child,
+    > h3:first-child,
+    > h4:first-child,
+    > h5:first-child,
+    > h6:first-child {
+        margin-left: 3.5rem;
+    }
+
+    &::before {
+        $mascot-width: 5rem;
+        position: absolute;
+        top: .5rem;
+        left: -1rem;
+        display: block;
+        width: $mascot-width;
+        height: $mascot-width * $img-ratio-mascot-resource;
+        content: "";
+        background-image: var(--CT_imgMascotResource);
+        background-repeat: no-repeat;
+        background-size: contain;
+        transform: scaleX(-1);
+    }
+
+    @include media-breakpoint-down(xs) {
+        > h2:first-child,
+        > h3:first-child,
+        > h4:first-child,
+        > h5:first-child,
+        > h6:first-child {
+            margin-left: 5rem;
+        }
+
+        &::before {
+            top: .5rem;
+            left: .5rem;
+        }
+    }
 }
 
 .box-share {
-    position: relative;
     color: var(--CT_boxShareColor);
     background: var(--CT_boxShareBg);
     border-color: var(--CT_boxShareBorderColor);
@@ -39,4 +81,18 @@
         background-repeat: no-repeat;
     }
 
+    @include media-breakpoint-down(xs) {
+        > h2:first-child,
+        > h3:first-child,
+        > h4:first-child,
+        > h5:first-child,
+        > h6:first-child {
+            margin-left: 1.5rem;
+        }
+
+        &::before {
+            top: .5rem;
+            left: .5rem;
+        }
+    }
 }
