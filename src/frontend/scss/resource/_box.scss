@@ -10,12 +10,22 @@
     @include clearfix();
 
     hr {
-        background-color: var(--CT_boxDivderColor);
+        color: var(--CT_boxResourceDivderColor);
         opacity: 1;
     }
 
     p:last-child {
         margin-bottom: 0;
+    }
+}
+
+.box-secondary {
+    color: var(--CT_boxResourceSecondaryColor);
+    background: var(--CT_boxResourceSecondaryBg);
+    border: $box-border-width solid var(--CT_boxResourceSecondaryBorderColor);
+
+    hr {
+        color: var(--CT_boxResourceSecondaryDivderColor);
     }
 }
 
@@ -30,6 +40,10 @@
     > h5:first-child,
     > h6:first-child {
         margin-left: 3.5rem;
+    }
+
+    hr {
+        color: var(--CT_boxTeachDividerColor);
     }
 
     &::before {
@@ -67,6 +81,10 @@
     color: var(--CT_boxShareColor);
     background: var(--CT_boxShareBg);
     border-color: var(--CT_boxShareBorderColor);
+
+    hr {
+        color: var(--CT_boxShareDividerColor);
+    }
 
     &::before {
         $twitter-width: 1.75rem;

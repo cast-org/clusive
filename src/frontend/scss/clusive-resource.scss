@@ -22,6 +22,9 @@
 // Components - additional functionality and layout
 @import "../../../node_modules/figuration/scss/component/grid";
 
+// Utilities
+@import "../../../node_modules/figuration/scss/utilities/embed";
+
 // Additional site specific items
 @import "resource/resource";
 

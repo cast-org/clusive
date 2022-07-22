@@ -61,16 +61,35 @@
         @include clearfix();
     }
 
+    ol {
+        > li::marker {
+            font-weight: $font-weight-bold;
+        }
+    }
+
+    figure {
+        width: 80%;
+        margin: 0 auto 1rem;
+    }
+    .row figure {
+        width: 100%;
+        margin: 0 0 1rem;
+    }
+
     figcaption {
         padding: .5rem;
         @include font-size(.875rem);
         @include calc-line-height(1.5);
         color: var(--CT_figureCaptionColor);
         background-color: var(--CT_figureCaptionBg);
+
+        p:last-child {
+            margin-bottom: 0;
+        }
     }
 
-    aside {
-        width: 75%;
+    .callout {
+        width: 80%;
         margin: 0 auto 1rem;
 
         @include media-breakpoint-up(sm) {
@@ -80,8 +99,13 @@
             margin: 0 0 .5rem .5rem;
         }
 
-        & > p {
+        > p {
             margin: .5rem;
+        }
+
+        figure {
+            width: auto;
+            margin: 0 0 1rem;
         }
     }
 
@@ -89,10 +113,9 @@
         padding: .5em .5em 0;
         border: 1px solid currentcolor;
         @include border-radius(.25rem);
-
-        p + & {
-            margin-top: -.5rem;
-        }
+    }
+    p + details {
+        margin-top: -.5rem;
     }
 
     summary {
