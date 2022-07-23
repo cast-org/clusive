@@ -51,7 +51,7 @@ class BookVersionAdmin(admin.ModelAdmin):
 
 @admin.register(BookAssignment)
 class BookAssignmentAdmin(admin.ModelAdmin):
-    list_display = ('book', 'period', 'dateAssigned')
+    list_display = ('book', 'period', 'date_assigned')
     list_filter = ('book', 'period' )
 
 
