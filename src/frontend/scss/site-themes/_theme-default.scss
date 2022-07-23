@@ -606,3 +606,7 @@ $text-replace-color:                    #666;
 $text-picture-color:                    #333;
 $text-picture-term-color:               #333;
 $text-picture-img-filter:               brightness(0) saturate(100%) invert(18%) sepia(37%) saturate(0%) hue-rotate(139deg) brightness(99%) contrast(96%);
+
+// Notify
+$notify-bg:                             $uibase-900;
+$notify-color:                          color-auto-contrast($uibase-900);

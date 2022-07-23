@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 from allauth.socialaccount.models import SocialApp, SocialAccount, SocialToken
 from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
                                                           OAuth2LoginView,
@@ -11,6 +12,7 @@ from .provider import BookshareProvider
 
 
 GENERIC_ORG_NAME = 'Sponsor Account'
+ORGANIZATION_MEMBER = 'Organization Member Account'
 INDIVIDUAL_NOT_ORG = 'Individual Account'
 NOT_A_BOOKSHARE_ACCOUNT = 'Not Bookshare'
 
@@ -27,12 +29,14 @@ class UserTypes(object):
     """
     USER_TYPE = 'User Type'
     INDIVIDUAL = '1'
-    ORGANIZATIONAL = '2'
+    ORG_SPONSOR = '2'
+    ORG_MEMBER = '3'
     UNKNOWN = '99'
 
     USER_TYPES_CHOICES = [
         (INDIVIDUAL, 'Individual'),
-        (ORGANIZATIONAL, 'Sponsor'),
+        (ORG_SPONSOR, 'Sponsor'),
+        (ORG_MEMBER, 'Organization Member'),
         (UNKNOWN, 'Unknown'),
     ]
 
@@ -61,6 +65,7 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         extra_data = resp.json()
 
         # 2. Get "proofOfDisability" and "studentStatus" (organizational account)
+        # and date of birth
         resp = requests.get(
             self.account_summary_url,
             headers = { "Authorization": "Bearer " + token.token },
@@ -70,18 +75,36 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         json_resp = resp.json()
         extra_data.update( {'proofOfDisabilityStatus': json_resp['proofOfDisabilityStatus']} )
         extra_data.update( {'studentStatus': json_resp['studentStatus']} )
+        extra_data.update( {'dateOfBirth': json_resp['dateOfBirth']})
 
-        # 3. Ask for a list of organization members if `studentStatus` was null.
-        # If the request for members succeeds, then conclude it's an
-        # organizational account; otherwise, it isn't.
-        if extra_data['studentStatus'] == None:
-            members = get_organization_members(token.token, app.client_id)
-            extra_data.update ( {'organizational': members != None})
-        else:
-            extra_data.update( { 'organizational': True } )
+        # 3. Determine whether the Bookshare account is a Sponsor or Member 
+        # organizational account vs. an Individual account, and set the 
+        # organizational property of the `extra_data` as appropriate.
+        self.set_org_status(extra_data, token.token, app.client_id)
 
         login = self.get_provider().sociallogin_from_response(request, extra_data)
         return login
+
+    def set_org_status(self, extra_data, access_token, client_id):
+        """
+        Determine whether the Bookshare account is a member of a Bookshare
+        organization by checking the account's `studentStatus`.  If there is no
+        `studentStatus`, ask for a list of organization members.  If the
+        request for members succeeds, conclude it's a Sponsor Organizational
+        account.  If it fails, conclude this is an Individual account.
+        Set `extra_data['organziational']` as appropriate.
+        """
+        if extra_data['studentStatus'] == None:
+            members = get_organization_members(access_token, client_id)
+            if members != None:
+                # Organizational Sponsor
+                extra_data.update ({ 'organizational': UserTypes.ORG_SPONSOR })
+            else:
+                # Individual Member
+                extra_data.update ({ 'organizational': UserTypes.INDIVIDUAL })
+        else:
+            # Organizational Member
+            extra_data.update({ 'organizational': UserTypes.ORG_MEMBER })
 
     def is_connected(self):
         try:
@@ -113,6 +136,9 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
                     social_account.delete() # cascades and deletes the token
                 except:
                     token.delete()
+        # Check organizational status of older Bookshare connections and update
+        # to the new values for organziations, as necessary.
+        self.update_org_status(the_access_token.token, social_app.client_id)
         return {
             'access_token': the_access_token,
             'api_key': social_app.client_id,
@@ -125,11 +151,36 @@ class BookshareOAuth2Adapter(OAuth2Adapter):
         except SocialAccount.DoesNotExist:
             return 'missing'
 
-    def is_organizational_account(self):
+    def is_organization_sponsor(self):
         try:
-            return self.social_account.extra_data.get('organizational');
+            return self.social_account.extra_data.get('organizational') == UserTypes.ORG_SPONSOR
         except SocialAccount.DoesNotExist:
             return False
+
+    def is_organization_member(self):
+        try:
+            return self.social_account.extra_data.get('organizational') == UserTypes.ORG_MEMBER
+        except SocialAccount.DoesNotExist:
+            return False
+
+    def update_org_status(self, access_token, client_id):
+        """
+        For Bookshare SocialAccounts that were created before distinguishing the
+        type of organizational account, check current organizational information
+        in the database to see if it is True/False.  If so, update it to
+        Sponsor, Member, or Individual account as appropriate.
+        """
+        try:
+            extra_data = self.social_account.extra_data
+            org_status = extra_data.get('organizational')
+            if type(org_status) == bool:
+                social_account: SocialAccount
+                social_account = self.social_account
+                self.set_org_status(extra_data, access_token, client_id)
+                social_account.extra_data = extra_data
+                social_account.save()
+        except:
+            pass
 
     @property
     def social_account(self):
@@ -160,8 +211,11 @@ def bookshare_connected(request, *args, **kwargs):
     request.session['bookshare_connected'] = True
     return HttpResponseRedirect(reverse('reader_index'))
 
-def is_organizational_account(request):
-    return BookshareOAuth2Adapter(request).is_organizational_account()
+def is_organization_sponsor(request):
+    return BookshareOAuth2Adapter(request).is_organization_sponsor()
+
+def is_organization_member(request):
+    return BookshareOAuth2Adapter(request).is_organization_member()
 
 def get_organization_name(account):
     """
@@ -170,7 +224,8 @@ def get_organization_name(account):
     a name, the generic name (GENERIC_ORG_NAME) is returned.  If the
     account is a individual account, INDIVIDUAL_NOT_ORG is returned.
     """
-    is_organizational = account.extra_data.get('organizational', False)
+    org_info = account.extra_data.get('organizational')
+    is_organizational = org_info == UserTypes.ORG_SPONSOR or org_info == UserTypes.ORG_MEMBER
     studentStatus = account.extra_data.get('studentStatus');
     if studentStatus != None:
         return studentStatus.get('organizationName', GENERIC_ORG_NAME)
@@ -220,7 +275,6 @@ def get_user_type(user_id, access_token, api_key):
         return user_type
     except:
         return UserTypes.UNKNOWN
-
 
 oauth2_login = OAuth2LoginView.adapter_view(BookshareOAuth2Adapter)
 oauth2_callback = OAuth2CallbackView.adapter_view(BookshareOAuth2Adapter)

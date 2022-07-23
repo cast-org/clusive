@@ -541,5 +541,9 @@
         --CT_textPictureColor: #{$text-picture-color};
         --CT_textPictureTermColor: #{$text-picture-term-color};
         --CT_textPictureImgFilter: #{$text-picture-img-filter};
+
+        // Simple notify
+        --CT_notifyBg: #{$notify-bg};
+        --CT_notifyColor: #{$notify-color};
     }
 }

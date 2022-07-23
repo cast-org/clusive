@@ -358,12 +358,13 @@
 
         // Watch for 'hide' events
         // check STT target visibility to see if recognition needs to be stopped.
-        $(document).on('afterHide.cfw.modal afterHide.cfw.popover', function(e) {
-            var $node = $(e.target);
+        $(document).on('afterHide.cfw.modal afterHide.cfw.popover', function() {
             $('[data-cast="stt"]').each(function() {
                 var $stt = $(this);
-                if ($stt.data('cast.stt').recognizing && $stt.data('cast.stt').$target.is(':hidden')) {
-                    $stt.CAST_STT('stop');
+                if ($stt.data('cast.stt')) {
+                    if ($stt.data('cast.stt').recognizing && $stt.data('cast.stt').$target.is(':hidden')) {
+                        $stt.CAST_STT('stop');
+                    }
                 }
             });
         });
