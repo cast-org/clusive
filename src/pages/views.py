@@ -186,7 +186,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.panels['popular_reads'] = self.teacher
         if self.panels['popular_reads']:
             self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.periods, self.current_period,
-                                                                assigned_only=False)
+                                                                assigned_only=True)
 
         # Getting Started panel
         if not self.teacher:
