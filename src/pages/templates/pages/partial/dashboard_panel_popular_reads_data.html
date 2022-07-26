@@ -4,29 +4,35 @@
 </ul>
 
 <div class="box-divider"></div>
+    <p class="mx-1">
+    {% if data.view == 'assigned' %}
+        {% if data.all|length == 0 %}
+            Your students haven't done any assigned reading, yet. Assign them
+            something to read by clicking the
+            <span class="icon-ellipsis-vert"></span> (more actions) icon in the
+            lower right of any reading panel in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+        {% else %}
+            These are your 3 most recently assigned readings. See all assigned
+            readings for this class in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+        {% endif %}
+    {% elif data.view == 'popular' %}
+        {% if data.all|length == 0 %}
+            Your students haven't done any reading, yet. Assign them something
+            to read by clicking the
+            <span class="icon-ellipsis-vert"></span> (more actions) icon in the
+            lower right of any reading panel in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+        {% else %}
+            See what your students are reading and what they said about what they learned.
+        {% endif %}
+    {% endif %}
+    </p>
 <div>
     <div class="tab-pane" id="popularTab0">
         <div class="library-grid dashboard-grid">
             {% for item in data.all %}
             {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.trend.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
-            {% empty %}
-            <p class="mx-1">
-                {% if data.view == 'assigned' %}
-                    Your students haven't done any assigned reading, yet.
-                {% else %}
-                    Your students haven't done any reading, yet.
-                {% endif %}
-                Assign them something to read by clicking the <span class="icon-ellipsis-vert"></span>
-                (more actions) icon in the lower right of any reading panel in the library.
-            </p>
-            <div class="mx-1">
-                <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
-            </div>
             {% endfor %}
         </div>
-        {% if data.view == 'assigned' %}
-        <p><a href="{% url 'library_style_redirect' view='period' %}">See all assigned readings</a> for this class in the library.</p>
-        {% endif %}
     </div>
     {% for item in data.all %}
     {% include "pages/partial/modal_comprehension_detail.html" with type="comp" id_prefix="comp-detail-all" id_serial=forloop.counter title_prefix="Student learning" %}
