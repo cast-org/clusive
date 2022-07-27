@@ -70,6 +70,7 @@
     figure {
         width: 80%;
         margin: 0 auto 1rem;
+        text-align: center;
     }
     .row figure {
         width: 100%;
@@ -81,6 +82,7 @@
         @include font-size(.875rem);
         @include calc-line-height(1.5);
         color: var(--CT_figureCaptionColor);
+        text-align: left;
         background-color: var(--CT_figureCaptionBg);
 
         p:last-child {
