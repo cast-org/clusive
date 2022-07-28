@@ -14,15 +14,21 @@
         Revisit something you've read, or head to the
         <a href="{% url 'library_style_redirect' view='period' %}">library</a>
         for something new.
-    {% endif %}    
+    {% endif %}
 {% elif data.view == 'popular' %}
     {% if data.all|length == 0 %}
-       There are no readings popular in your class right now. Once your
-       classmates do more reading, you will find popular titles in your
-       class here.
+        {% if class_name is None %}
+           There are no readings popular with other Clusive readers right now.
+        {% else %}
+           There are no readings popular in your class right now. Once your
+           classmates do more reading, you will find popular titles in your
+           class here.
+        {% endif %}
     {% else %}
-        These readings are popular with your classmates.
+        {% if class_name is None %}
+           These readings are popular with other Clusive readers.
+        {% else %}
+           These readings are popular with your classmates.
+        {% endif %}
     {% endif %}
-{% else %}
-   <strong>??? HUH? ???</strong>
 {% endif %}

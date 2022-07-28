@@ -17,8 +17,7 @@
        they do more reading, you will find popular titles here.
     {% else %}
         These readings are popular with other Clusive readers. See all popular
-        readings in the library.
+        readings in the
+        <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
     {% endif %}
-{% else %}
-   <strong>??? HUH? ???</strong>
 {% endif %}

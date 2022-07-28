@@ -198,31 +198,6 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.periods, self.current_period,
                                                                 assigned_only=True)
 
-        # Student/guest assigned, recent, and popular readings
-#         if not self.is_teacher:
-#             pdb.set_trace()
-#             # Assigned Reads panel
-#             self.panels['assigned_reads'] = True
-#             assigned_reads = list(BookAssignment.objects.filter(book=book, period__in=self.clusive_user.periods.all()))
-#
-#
-#             # Recent Reads panel
-#             last_reads = Paradata.latest_for_user(request.clusive_user)
-#             self.panels['recent_reads'] = True
-#             if len(last_reads) < 3:
-#                 # Add featured books to the list
-#                 features = list(Book.get_featured_books()[:3])
-#                 # Remove any featured books that are in the user's last-read list.
-#                 for para in last_reads:
-#                     if para.book in features:
-#                         features.remove(para.book)
-#             else:
-#                 features = []
-#             self.data['recent_reads'] = {
-#                 'last_reads': last_reads,   # might be empty.
-#                 'featured': features,
-#             }
-
         # Student Activity panel
         self.panels['student_activity'] = self.is_teacher
         sa_days = self.clusive_user.student_activity_days
@@ -311,7 +286,7 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
             'is_teacher': is_teacher,
             'is_guest': is_guest,
             'current_period': current_period,
-            'period_name': current_period.name if current_period else '',
+            'period_name': current_period.name if current_period else None,
             'query': None,
             'data': readings,
         })
