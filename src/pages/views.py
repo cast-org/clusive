@@ -184,16 +184,17 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 'results': ClusiveRatingResponse.get_graphable_results(),
             }
 
-        # 'popular_reads' is a tabpanel with tabs for different readings types,
-        # namely, Assigned, Recent, and Trending readings. The panel is always
-        # present. When first shown, show the Assigned readings tab.  See
-        # PopularReadsPanelView() for the contents of the other tabs.
+        # 'popular_reads' is a tabpanel with tabs for different types of
+        # readings, namely, Assigned, Recent, and Trending readings. The panel
+        # is always present. When first shown, the Assigned readings tab is
+        # selected.  See PopularReadsPanelView() for the contents of the other
+        # tabs.
         self.panels['popular_reads'] = True
         if self.is_guest:
-            guest_assigned = {}
-            guest_assigned['view'] = 'assigned'
-            guest_assigned['all'] = Book.get_featured_books()[:3]
-            self.data['popular_reads'] = guest_assigned
+            self.data['popular_reads'] = {
+                'view': 'assigned',
+                'all': Book.get_featured_books()[:3],
+            }
         else:
             self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.periods, self.current_period,
                                                                 assigned_only=True)
@@ -265,22 +266,21 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
                                                       current_period, assigned_only=assigned)
                 else:
                     # self.view == 'recent'
-                    readings = {}
-                    readings['all'] = Paradata.latest_for_user(self.request.clusive_user)[:3]
-                    readings['view'] = 'recent'
+                    readings = get_recent_reads_data(self.clusive_user)[:3]
             # Guest
             else:
-                readings = {}
-                readings['view'] = self.view
                 if self.view == 'assigned':
                     # "Clues to Clusive"
-                    readings['all'] = Book.get_featured_books()[:3]
+                    readings = {
+                        'view': 'assigned',
+                        'all': Book.get_featured_books()[:3]
+                    }
                 elif self.view == 'popular':
                     readings = get_popular_reads_data(self.clusive_user, periods,
                                                       current_period, assigned_only=False)
                 else:
                     # self.view == 'recent'
-                    readings['all'] = Paradata.latest_for_user(self.request.clusive_user)[:3]
+                    readings = get_recent_reads_data(self.clusive_user)[:3]
 
         context.update({
             'is_teacher': is_teacher,
@@ -291,6 +291,13 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
             'data': readings,
         })
         return context
+
+
+def get_recent_reads_data(clusive_user):
+    return {
+        'view': 'recent',
+        'all': Paradata.latest_for_user(clusive_user)
+    }
 
 def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
     # Gather data about books that are trending for dashboard view
