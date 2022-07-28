@@ -29,6 +29,7 @@ from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, C
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.util import TranslateApiManager
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +120,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             return HttpResponseRedirect('/admin')
 
         self.clusive_user = request.clusive_user
-        self.teacher = self.clusive_user.can_manage_periods
+        self.is_teacher = self.clusive_user.can_manage_periods
+        self.is_guest = False if self.is_teacher else (self.request.clusive_user.role == 'GU')
         self.current_period = self.get_current_period(request, **kwargs)
         self.panels = {} # This will hold info on which panels are to be displayed.
         self.data = {} # This will hold panel-specific data
@@ -154,7 +156,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             self.panels['cta'] = False
 
         # Affect panel (for student)
-        self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
+        self.panels['affect'] = not self.is_teacher and user_stats.reading_views > 0
         if self.panels['affect']:
             totals = AffectiveUserTotal.objects.filter(user=request.clusive_user).first()
             self.data['affect'] = {
@@ -163,7 +165,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             }
 
         # Class Affect panel (for parent/teacher)
-        self.panels['class_affect'] = self.teacher and self.current_period
+        self.panels['class_affect'] = self.is_teacher and self.current_period
         if self.panels['class_affect']:
             sa = AffectiveUserTotal.objects.filter(user__periods=self.current_period, user__role=Roles.STUDENT)
             scaled = AffectiveUserTotal.aggregate_and_scale(sa)
@@ -182,40 +184,47 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 'results': ClusiveRatingResponse.get_graphable_results(),
             }
 
-        # Popular Reads panel (teacher)
-        self.panels['popular_reads'] = self.teacher
-        if self.panels['popular_reads']:
+        # 'popular_reads' is a tabpanel with tabs for different readings types,
+        # namely, Assigned, Recent, and Trending readings. The panel is always
+        # present. When first shown, show the Assigned readings tab.  See
+        # PopularReadsPanelView() for the contents of the other tabs.
+        self.panels['popular_reads'] = True
+        if self.is_guest:
+            guest_assigned = {}
+            guest_assigned['view'] = 'assigned'
+            guest_assigned['all'] = Book.get_featured_books()[:3]
+            self.data['popular_reads'] = guest_assigned
+        else:
             self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.periods, self.current_period,
                                                                 assigned_only=True)
 
-        # Getting Started panel
-        if not self.teacher:
-            last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
-            self.panels['getting_started'] = not last_reads or len(last_reads) == 0
-            if self.panels['getting_started']:
-                self.data['getting_started'] = {
-                    'featured': list(Book.get_featured_books()[:2])
-                }
-
-            # Recent Reads panel
-            self.panels['recent_reads'] = len(last_reads) > 0
-            if self.panels['recent_reads']:
-                if len(last_reads) < 3:
-                    # Add featured books to the list
-                    features = list(Book.get_featured_books()[:3])
-                    # Remove any featured books that are in the user's last-read list.
-                    for para in last_reads:
-                        if para.book in features:
-                            features.remove(para.book)
-                else:
-                    features = []
-                self.data['recent_reads'] = {
-                    'last_reads': last_reads,
-                    'featured': features,
-                }
+        # Student/guest assigned, recent, and popular readings
+#         if not self.is_teacher:
+#             pdb.set_trace()
+#             # Assigned Reads panel
+#             self.panels['assigned_reads'] = True
+#             assigned_reads = list(BookAssignment.objects.filter(book=book, period__in=self.clusive_user.periods.all()))
+#
+#
+#             # Recent Reads panel
+#             last_reads = Paradata.latest_for_user(request.clusive_user)
+#             self.panels['recent_reads'] = True
+#             if len(last_reads) < 3:
+#                 # Add featured books to the list
+#                 features = list(Book.get_featured_books()[:3])
+#                 # Remove any featured books that are in the user's last-read list.
+#                 for para in last_reads:
+#                     if para.book in features:
+#                         features.remove(para.book)
+#             else:
+#                 features = []
+#             self.data['recent_reads'] = {
+#                 'last_reads': last_reads,   # might be empty.
+#                 'featured': features,
+#             }
 
         # Student Activity panel
-        self.panels['student_activity'] = self.teacher
+        self.panels['student_activity'] = self.is_teacher
         sa_days = self.clusive_user.student_activity_days
         sa_sort = self.clusive_user.student_activity_sort
         if self.panels['student_activity']:
@@ -231,6 +240,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_teacher'] = self.is_teacher
+        context['is_guest'] = self.is_guest
         context['period_name'] = self.current_period.name if self.current_period else None
         context['query'] = None
         context['panels'] = self.panels
@@ -265,14 +276,46 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
         periods = list(self.clusive_user.periods.all())
         current_period = self.clusive_user.current_period
         assigned = self.view == 'assigned'
+        is_teacher = self.clusive_user.can_manage_periods
+        is_guest = self.clusive_user.role == 'GU'
+
+        if is_teacher:
+            readings = get_popular_reads_data(self.clusive_user, periods,
+                                              current_period, assigned_only=assigned)
+        else:
+            # Student
+            if not is_guest:
+                if self.view == 'assigned' or self.view == 'popular':
+                    readings = get_popular_reads_data(self.clusive_user, periods,
+                                                      current_period, assigned_only=assigned)
+                else:
+                    # self.view == 'recent'
+                    readings = {}
+                    readings['all'] = Paradata.latest_for_user(self.request.clusive_user)[:3]
+                    readings['view'] = 'recent'
+            # Guest
+            else:
+                readings = {}
+                readings['view'] = self.view
+                if self.view == 'assigned':
+                    # "Clues to Clusive"
+                    readings['all'] = Book.get_featured_books()[:3]
+                elif self.view == 'popular':
+                    readings = get_popular_reads_data(self.clusive_user, periods,
+                                                      current_period, assigned_only=False)
+                else:
+                    # self.view == 'recent'
+                    readings['all'] = Paradata.latest_for_user(self.request.clusive_user)[:3]
+
         context.update({
+            'is_teacher': is_teacher,
+            'is_guest': is_guest,
             'current_period': current_period,
-            'period_name': current_period.name,
+            'period_name': current_period.name if current_period else '',
             'query': None,
-            'data': get_popular_reads_data(self.clusive_user, periods, current_period, assigned_only=assigned),
+            'data': readings,
         })
         return context
-
 
 def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
     # Gather data about books that are trending for dashboard view

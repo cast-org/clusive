@@ -1,0 +1,23 @@
+{% if data.view == 'assigned' %}
+    {% if data.all|length == 0 %}
+        Your students haven't done any assigned reading, yet. Assign
+        them something to read by clicking the
+        <span class="icon-ellipsis-vert"></span> (more actions) icon in
+        the lower right of any reading panel in the
+        <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+    {% else %}
+        These are your {{ data.all|length }} most recently assigned readings. See all assigned
+        readings for this class in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+    {% endif %}
+{% elif data.view == 'popular' %}
+    {% if data.all|length == 0 %}
+        Your students haven't done any reading, yet. Assign them
+        something to read by clicking the
+        <span class="icon-ellipsis-vert"></span> (more actions) icon in
+        the lower right of any reading panel in the
+        <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+    {% else %}
+        See what your students are reading and what they said about what
+        they learned.
+    {% endif %}
+{% endif %}

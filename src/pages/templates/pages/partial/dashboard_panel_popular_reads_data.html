@@ -1,36 +1,32 @@
 <ul class="nav box-tabs mb-0">
-    <li class="nav-item"><button type="button" data-clusive-view="assigned" class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}">Assigned reads</button></li>
-    <li class="nav-item"><button type="button" data-clusive-view="popular" class="nav-link popular-read-view-button{% if data.view == 'popular' %} active{% endif %}">Popular reads</button></li>
+    <li class="nav-item"><button type="button" data-clusive-view="assigned" class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}">Assigned</button></li>
+    {% if not is_teacher %}
+    <li class="nav-item"><button type="button" data-clusive-view="recent" class="nav-link popular-read-view-button{% if data.view == 'recent' %} active{% endif %}">Recent</button></li>
+    {% endif %}
+    <li class="nav-item"><button type="button" data-clusive-view="popular" class="nav-link popular-read-view-button{% if data.view == 'popular' %} active{% endif %}">Trending</button></li>
 </ul>
 
 <div class="box-divider"></div>
     <p class="mx-1">
-    {% if data.view == 'assigned' %}
-        {% if data.all|length == 0 %}
-            Your students haven't done any assigned reading, yet. Assign them
-            something to read by clicking the
-            <span class="icon-ellipsis-vert"></span> (more actions) icon in the
-            lower right of any reading panel in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
-        {% else %}
-            These are your 3 most recently assigned readings. See all assigned
-            readings for this class in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
-        {% endif %}
-    {% elif data.view == 'popular' %}
-        {% if data.all|length == 0 %}
-            Your students haven't done any reading, yet. Assign them something
-            to read by clicking the
-            <span class="icon-ellipsis-vert"></span> (more actions) icon in the
-            lower right of any reading panel in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
-        {% else %}
-            See what your students are reading and what they said about what they learned.
-        {% endif %}
+    {% if is_teacher %}
+        {% include 'pages/partial/dashboard_panel_popular_reads_teacher_messages.html' %}
+    {% elif is_guest %}
+        {% include 'pages/partial/dashboard_panel_popular_reads_guest_messages.html' %}
+    {% else %}
+        {% include 'pages/partial/dashboard_panel_popular_reads_student_messages.html' %}
     {% endif %}
     </p>
 <div>
     <div class="tab-pane" id="popularTab0">
         <div class="library-grid dashboard-grid">
             {% for item in data.all %}
-            {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.trend.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
+                {% if view == 'recent' %}
+                    {% include "library/partial/library_card.html" with book=item.book show_starred=False show_description=True show_menu=False show_topics=False link_stretch=True %}
+                {% elif data.view == 'assigned' and is_guest %}
+                    {% include "library/partial/library_card.html" with book=item show_starred=False show_description=True show_menu=False show_topics=False link_stretch=True %}
+                {% else %}
+                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.trend.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
+                {% endif %}
             {% endfor %}
         </div>
     </div>

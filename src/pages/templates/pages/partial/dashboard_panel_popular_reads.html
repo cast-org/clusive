@@ -1,6 +1,10 @@
 <div class="box box-mascot-tipped">
+    {% if is_teacher %}
     <h2>Student reading</h2>
     <p>See what your students are reading and what they said they learned.</p>
+    {% else %}
+    <h2>Your reading</h2>
+    {% endif %}
     <div class="dashboard-reading-btns">
         <a href="{% url 'upload' %}" class="btn btn-primary btn-small"><span aria-hidden="true">+ </span>Upload a new reading</a>
         <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
@@ -9,17 +13,18 @@
     {% if periods.count == 0 %}
 
     <div class="box-divider"></div>
-    <p>
-        You haven't created any student accounts, yet.
-        Set up your classes by clicking the "Manage" link in the navigation bar.
-    </p>
-    <a href="{% url 'manage' %}" class="btn btn-primary">Manage</a>
+        {% if is_teacher %}
+        <p>
+            You haven't created any student accounts, yet.
+            Set up your classes by clicking the "Manage" link in the navigation bar.
+        </p>
+        <a href="{% url 'manage' %}" class="btn btn-primary">Manage</a>
+        {% endif %}
 
-    {% else %}
+    {% endif %}
         <div id="DashboardPopularReads">
         {% include 'pages/partial/dashboard_panel_popular_reads_data.html' %}
         </div>
-    {% endif %}
 </div>
 
 <script>

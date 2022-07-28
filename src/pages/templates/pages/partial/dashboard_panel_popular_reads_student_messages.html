@@ -1,0 +1,28 @@
+{% if data.view == 'assigned' %}
+    {% if data.all|length == 0 %}
+        Here’s where you’ll see readings assigned by your teacher.
+    {% else %}
+        These are your {{ data.all|length }} most recently assigned readings. See all assigned
+        readings for this class in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+    {% endif %}
+{% elif data.view == 'recent' %}
+    {% if data.all|length == 0 %}
+        You have no recent readings yet. Go to the 
+        <a href="{% url 'library_style_redirect' view='period' %}">library</a>
+        and get started in Clusive!
+    {% else %}
+        Revisit something you've read, or head to the
+        <a href="{% url 'library_style_redirect' view='period' %}">library</a>
+        for something new.
+    {% endif %}    
+{% elif data.view == 'popular' %}
+    {% if data.all|length == 0 %}
+       There are no readings popular in your class right now. Once your
+       classmates do more reading, you will find popular titles in your
+       class here.
+    {% else %}
+        These readings are popular with your classmates.
+    {% endif %}
+{% else %}
+   <strong>??? HUH? ???</strong>
+{% endif %}
