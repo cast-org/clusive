@@ -4,11 +4,11 @@
 {% elif data.view == 'recent' %}
     {% if data.all|length == 0 %}
         You have no recent readings yet. Go to the 
-        <a href="{% url 'library_style_redirect' view='period' %}">library</a>
+        <a href="{% url 'library_style_redirect' view='public' %}">library</a>
         and get started in Clusive!
     {% else %}
         Revisit something you've read, or head to the
-        <a href="{% url 'library_style_redirect' view='period' %}">library</a>
+        <a href="{% url 'library_style_redirect' view='public' %}">library</a>
         for something new.
     {% endif %}    
 {% elif data.view == 'popular' %}
@@ -16,8 +16,6 @@
        There are no readings popular with Clusive readers right now. Once they
        do more reading, you will find popular titles here.
     {% else %}
-        These readings are popular with other Clusive readers. See all popular
-        readings in the
-        <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+        These readings are popular with other Clusive readers.
     {% endif %}
 {% endif %}
