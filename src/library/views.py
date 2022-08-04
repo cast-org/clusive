@@ -148,6 +148,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         if self.clusive_user.library_style != self.style:
             self.clusive_user.library_style = self.style
             user_changed = True
+        if self.clusive_user.library_sort != self.sort:
+            self.clusive_user.library_sort = self.sort
+            user_changed = True
         if user_changed:
             self.clusive_user.save()
         return super().get(request, *args, **kwargs)
@@ -363,9 +366,10 @@ class LibraryStyleRedirectView(View):
     def dispatch(self, request, *args, **kwargs):
         view = kwargs.get('view')
         style = request.clusive_user.library_style
+        sort = request.clusive_user.library_sort
         kwargs = {
             'view': view,
-            'sort': 'title',  # FIXME
+            'sort': sort,
             'style': style,
         }
         if request.clusive_user and request.clusive_user.current_period:
