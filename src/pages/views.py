@@ -296,7 +296,7 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
 def get_recent_reads_data(clusive_user):
     return {
         'view': 'recent',
-        'total': Paradata.latest_for_user(clusive_user),
+        'all': Paradata.latest_for_user(clusive_user)[:3],
     }
 
 def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
