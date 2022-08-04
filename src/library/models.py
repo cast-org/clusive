@@ -296,6 +296,10 @@ class BookAssignment(models.Model):
     def __str__(self):
         return "[Assigned %s to %s]" % (self.book, self.period)
 
+    @classmethod
+    def recent_assigned(cls, period):
+        return cls.objects.filter(period=period).order_by('date_assigned')
+
     class Meta:
         ordering = ['book']
         constraints = [
@@ -336,7 +340,14 @@ class BookTrend(models.Model):
 
     @classmethod
     def top_trends(cls, period):
-        return cls.objects.filter(period=period).order_by('-popularity')
+        """
+        Return the set of books in the given period, ordered by popularity.  If
+        no period given, return all books, ordered by popularity.
+        """
+        if period:
+            return cls.objects.filter(period=period).order_by('-popularity')
+        else:
+            return cls.objects.order_by('-popularity')
 
     @classmethod
     def top_assigned(cls, period):

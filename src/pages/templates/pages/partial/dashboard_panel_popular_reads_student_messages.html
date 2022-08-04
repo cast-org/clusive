@@ -2,8 +2,13 @@
     {% if data.all|length == 0 %}
         Here’s where you’ll see readings assigned by your teacher.
     {% else %}
-        These are your {{ data.all|length }} most recently assigned readings. See all assigned
-        readings for this class in the <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+        {% if data.total < 4 %}
+            These are your most recently assigned readings.
+        {% else %}
+            These are your 3 most recently assigned readings.
+        {% endif %}
+        See all assigned readings for this class in the
+        <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
     {% endif %}
 {% elif data.view == 'recent' %}
     {% if data.all|length == 0 %}
@@ -25,7 +30,7 @@
            class here.
         {% endif %}
     {% else %}
-        {% if class_name is None %}
+        {% if period_name is None %}
            These readings are popular with other Clusive readers.
         {% else %}
            These readings are popular with your classmates.

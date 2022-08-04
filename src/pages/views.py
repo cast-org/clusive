@@ -25,11 +25,11 @@ from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from glossary.views import choose_words_to_cue
-from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, \
+    Customization, BookAssignment
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.util import TranslateApiManager
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -185,7 +185,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             }
 
         # 'popular_reads' is a tabpanel with tabs for different types of
-        # readings, namely, Assigned, Recent, and Trending readings. The panel
+        # readings, namely, Assigned, Recent, and Popular readings. The panel
         # is always present. When first shown, the Assigned readings tab is
         # selected.  See PopularReadsPanelView() for the contents of the other
         # tabs.
@@ -266,7 +266,7 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
                                                       current_period, assigned_only=assigned)
                 else:
                     # self.view == 'recent'
-                    readings = get_recent_reads_data(self.clusive_user)[:3]
+                    readings = get_recent_reads_data(self.clusive_user)
             # Guest
             else:
                 if self.view == 'assigned':
@@ -280,7 +280,7 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
                                                       current_period, assigned_only=False)
                 else:
                     # self.view == 'recent'
-                    readings = get_recent_reads_data(self.clusive_user)[:3]
+                    readings = get_recent_reads_data(self.clusive_user)
 
         context.update({
             'is_teacher': is_teacher,
@@ -296,15 +296,19 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
 def get_recent_reads_data(clusive_user):
     return {
         'view': 'recent',
-        'all': Paradata.latest_for_user(clusive_user)
+        'total': Paradata.latest_for_user(clusive_user),
     }
 
 def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
-    # Gather data about books that are trending for dashboard view
+    # Gather data about books that are popular for dashboard view
     if assigned_only:
-        trends = BookTrend.top_assigned(current_period)[:3]
+        readings = BookAssignment.recent_assigned(current_period)
+        total = len(readings)
+        trends = readings[:3]
     else:
-        trends = BookTrend.top_trends(current_period)[:3]
+        readings = BookTrend.top_trends(current_period)
+        total = len(readings)
+        trends = readings[:3]
     trend_data = [{'trend': t} for t in trends]
 
     for td in trend_data:
@@ -324,8 +328,8 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
     return {
         'all': trend_data,
         'view': 'assigned' if assigned_only else 'popular',
+        'total': total,
     }
-
 
 class DashboardActivityPanelView(TemplateView):
     """Shows just the activity panel, for AJAX updates"""
