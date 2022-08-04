@@ -500,7 +500,7 @@ function showTooltip(name) {
                 if (tip_control.is(':visible')) {
                     tip_popover.attr({
                         'role': 'status',
-                        'aria-live': 'assertive',
+                        'aria-live': 'polite',
                         'aria-atomic': 'true'
                     });
                     tip_control.CFW_Tooltip('show');
@@ -805,7 +805,7 @@ function toolboxHandleUpdate() {
     var observer = new MutationObserver(function() {
         setTimeout(function() {
             toolboxPosition();
-        }, 25);
+        }, 125);
     });
     observer.observe(
         document.querySelector('#highlight-toolbox'), {

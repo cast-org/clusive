@@ -1,0 +1,12 @@
+$enable-grid-row-cols:                      false;
+$enable-grid-responsive-gutters:            false;
+
+$grid-breakpoints: (
+    xs: 0,
+    sm: bp-to-em(576px)
+);
+$grid-gutter-width:                     1rem;
+
+$box-padding-y:                         .75rem;
+$box-padding-x:                         1rem;
+$box-border-width:                      3px;

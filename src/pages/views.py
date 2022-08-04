@@ -443,17 +443,18 @@ class ReaderIndexView(LoginRequiredMixin,RedirectView):
             clusive_user = get_object_or_404(ClusiveUser, user=self.request.user)
             view = clusive_user.library_view
             style = clusive_user.library_style
+            sort = clusive_user.library_sort
             if view == 'period' and clusive_user.current_period:
                 return reverse('library', kwargs = {
                     'style': style,
-                    'sort': 'title',   # FIXME
+                    'sort': sort,
                     'view': 'period',
                     'period_id': clusive_user.current_period.id
                 })
             else:
                 return reverse('library', kwargs = {
                     'style': style,
-                    'sort': 'title',  # FIXME
+                    'sort': sort,
                     'view': view
                 })
 

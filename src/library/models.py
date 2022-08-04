@@ -59,9 +59,9 @@ class Book(models.Model):
     """
     owner = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     title = models.CharField(max_length=256, db_index=True)
-    sort_title = models.CharField(max_length=256)
+    sort_title = models.CharField(max_length=256, db_index=True)
     author = models.CharField(max_length=256, db_index=True)
-    sort_author = models.CharField(max_length=256)
+    sort_author = models.CharField(max_length=256, db_index=True)
     description = models.TextField(default="", blank=True, db_index=True)
     cover = models.CharField(max_length=256, null=True)
     featured = models.BooleanField(default=False)
@@ -69,6 +69,7 @@ class Book(models.Model):
     picture_count = models.PositiveIntegerField(null=True)
     subjects = models.ManyToManyField(Subject, db_index=True)
     bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
+    add_date = models.DateTimeField(auto_now_add=True, db_index=True)
     # Educator-resource-specific fields.
     # Existence of a non-null resource_identifier marks this as a Resource rather than a Library Book
     resource_identifier = models.CharField(max_length=256, unique=True, db_index=True, null=True, blank=True)
@@ -330,7 +331,7 @@ class BookAssignment(models.Model):
     """Records Books that are visible by Periods."""
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True, related_name='assignments')
     period = models.ForeignKey(to=Period, on_delete=models.CASCADE, db_index=True)
-    dateAssigned = models.DateTimeField(auto_now_add=True)
+    date_assigned = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "[Assigned %s to %s]" % (self.book, self.period)
@@ -443,6 +444,7 @@ class Paradata(models.Model):
     read_aloud_count = models.SmallIntegerField(default=0, verbose_name='Read-aloud use count')
     translation_count = models.SmallIntegerField(default=0, verbose_name='Translation use count')
     starred = models.BooleanField(null=False, default=False)
+    starred_date = models.DateTimeField(null=True, blank=True)
 
     @property
     def words_looked_up_list(self):
@@ -530,6 +532,10 @@ class Paradata(models.Model):
         book_object = Book.objects.get(pk=book_id)
         para, created = cls.objects.get_or_create(book=book_object, user=user_object)
         para.starred = starred
+        if para.starred:
+            para.starred_date = timezone.now()
+        else:
+            para.starred_date = None
         para.save()
 
     @classmethod
