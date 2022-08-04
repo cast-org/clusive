@@ -3,34 +3,9 @@
     "name": "Getting started",
     "resources": [
       {
-        "identifier": "START",
-        "file": "getting-started-with-students.epub",
-        "tags": []
-      },
-      {
         "identifier": "CLUES",
         "file": "teacher-clues-to-clusive.epub",
-        "tags": ["Video", "Interactive"]
-      },
-      {
-        "identifier": "FAQ",
-        "file": "faq.epub",
-        "tags": ["FAQ"]
-      }
-    ]
-  },
-  {
-    "name": "Teaching with Clusive",
-    "resources": [
-      {
-        "identifier": "REACT",
-        "file": "reactions.epub",
-        "tags": ["Feature"]
-      },
-      {
-        "identifier": "TIME",
-        "file": "active-reading-time.epub",
-        "tags": ["Feature"]
+        "tags": []
       }
     ]
   }
