@@ -11,6 +11,7 @@ cd target
 python manage.py migrate
 python manage.py loaddata preferencesets tiptypes callstoaction subjects
 python manage.py importdir ../content
+python manage.py import_resources ../resources/resources.json
 echo "Creating superuser account:"
 python manage.py createsuperuser
 python manage.py createrostersamples
