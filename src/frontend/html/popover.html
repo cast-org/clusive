@@ -20,10 +20,15 @@
 <script src="https://cdn.jsdelivr.net/npm/figuration@4.1.0/dist/js/figuration.min.js" integrity="sha384-mmncPfSUidq1LlOp/43b1c3A1knjWrGnwec26YYujQlzI2YgCmpcSEtsJ/gjJRHT" crossorigin="anonymous"></script>
 <!--<script src="../dist/js/frontend.js"></script>-->
 <script src="../js/frontend.js"></script>
+<script src="../js/tour.js"></script>
 <script src="./js/theme-test.js"></script>
 
 <style>
-.popover {
+body {
+    margin-bottom: 300px;
+}
+
+.popover:not(.popover-tour) {
     position: relative;
     display: block;
     flex: 1 1 auto;
@@ -835,6 +840,164 @@ He never spoke of the softer passions, save with a <span class="text-replace" ro
         </div>
     </div>
 </div>
+
+<hr>
+
+<h2>Tour script tests</h2>
+<p><code>1</code> and <code>2</code> buttons do not invoke popovers themselves since they may be linked to other functionality, as long as it is not another popover.</p>
+
+<div id="tourContainer" class="tour-container" >
+    <!-- touring popovers to use this element for their `container` and `viewport` options -->
+</div>
+
+<div class="row">
+    <div class="col">
+        <button id="tourTest1Btn" type="button" class="btn" data-cfw-popover-target="#tourTest1">1</button>
+        <button id="tourTest2Btn" type="button" class="btn" data-cfw-popover-target="#tourTest2">2</button>
+    </div>
+    <div class="col-auto text-end ms-1">
+        <button id="tourTest0Btn" type="button" class="btn btn-primary btn-round" data-cfw-popover-target="#tourTest0" onclick="tour.chain('#tourTest0');" >
+            Start Tour
+        </button>
+    </div>
+</div>
+
+<div id="tourTest0" class="popover popover-tour popover-scrollable">
+    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#tourTest0Btn');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <div class="popover-header">
+        <div class="dialog-tts" role="region" aria-label="Read aloud controls">
+            <div class="tts-inactive">
+                <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="tts-active">
+                <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud" data-cle-handler="click" data-cle-control="tts-pause" data-cle-value="clicked">
+                    <span class="icon-pause" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud" data-cle-handler="click" data-cle-control="tts-resume" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud" data-cle-handler="click" data-cle-control="tts-stop" data-cle-value="clicked">
+                    <span class="icon-stop" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9">
+            <iframe src="https://www.youtube-nocookie.com/embed/C0DPdy98e4c" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="YouTube Video: TEST VIDEO"></iframe>
+        </div>
+        <strong>First Chained Popover</strong>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                <a href="#">Learn more <span class="sr-only">about something</span></a>
+            </div>
+            <div class="col-auto">1/3</div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-secondary" onclick="tour.chain('#tourTest1');">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="popover-arrow"></div>
+</div>
+
+<div id="tourTest1" class="popover popover-tour popover-scrollable">
+    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#tourTest0Btn');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <div class="popover-header">
+        <div class="dialog-tts" role="region" aria-label="Read aloud controls">
+            <div class="tts-inactive">
+                <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="tts-active">
+                <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud" data-cle-handler="click" data-cle-control="tts-pause" data-cle-value="clicked">
+                    <span class="icon-pause" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud" data-cle-handler="click" data-cle-control="tts-resume" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud" data-cle-handler="click" data-cle-control="tts-stop" data-cle-value="clicked">
+                    <span class="icon-stop" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9">
+            <iframe src="https://www.youtube-nocookie.com/embed/C0DPdy98e4c" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="YouTube Video: TEST VIDEO"></iframe>
+        </div>
+        <strong>Second Chained Popover</strong>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                <a href="#">Learn more <span class="sr-only">about something</span></a>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="tour.chain('#tourTest1');"><span class="fa fa-chevron-left" aria-hidden="true"></span> Prev</button>
+            </div>
+            <div class="col-auto">2/3</div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-secondary" onclick="tour.chain('#tourTest2');">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></button>
+            </div>
+        </div>
+    </div>
+    <div class="popover-arrow"></div>
+</div>
+
+<div id="tourTest2" class="popover popover-tour popover-scrollable">
+    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#tourTest0Btn');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <div class="popover-header">
+        <div class="dialog-tts" role="region" aria-label="Read aloud controls">
+            <div class="tts-inactive">
+                <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="tts-active">
+                <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud" data-cle-handler="click" data-cle-control="tts-pause" data-cle-value="clicked">
+                    <span class="icon-pause" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud" data-cle-handler="click" data-cle-control="tts-resume" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud" data-cle-handler="click" data-cle-control="tts-stop" data-cle-value="clicked">
+                    <span class="icon-stop" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9">
+            <iframe src="https://www.youtube-nocookie.com/embed/C0DPdy98e4c" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="YouTube Video: TEST VIDEO"></iframe>
+        </div>
+        <strong>Third Chained Popover</strong>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                <a href="#">Learn more <span class="sr-only">about something</span></a>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="tour.chain('#tourTest1');"><span class="fa fa-chevron-left" aria-hidden="true"></span> Prev</button>
+            </div>
+            <div class="col-auto">2/3</div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-secondary" onclick="tour.closeRefocus('#tourTest0Btn');">End</button>
+            </div>
+        </div>
+    </div>
+    <div class="popover-arrow"></div>
+</div>
+
+<script>
+$(window).ready(function() {
+    tour.prepare('#tourTest0Btn');
+    tour.prepare('#tourTest1Btn');
+    tour.prepare('#tourTest2Btn');
+});
+</script>
 
             </main>
         </div>
