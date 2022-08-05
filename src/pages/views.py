@@ -308,9 +308,9 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
     else:
         readings = BookTrend.top_trends(current_period)
         total = len(readings)
-        trends = readings[:3]
-    trend_data = [{'trend': t} for t in trends]
+        trends = cull_unauthorized_from_readings(readings[:3], clusive_user)
 
+    trend_data = [{'trend': t} for t in trends]
     for td in trend_data:
         t = td['trend']
         book = td['trend'].book
@@ -330,6 +330,26 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
         'view': 'assigned' if assigned_only else 'popular',
         'total': total,
     }
+
+def cull_unauthorized_from_readings(readings, clusive_user):
+    """
+    Check the given list of `readings` and return a new list of readings
+    containing only the books that the `clusive_user` is authorized to view.
+    Required:  each item in the `readings` has a `book` property that is an
+    instance of a `library.models.Book`.
+    """
+    results = []
+    # The loop assumes the `readings` are ordered and uses `results.append()` to
+    # maintain that order
+    for reading in readings:
+        if reading.book.is_visible_to(clusive_user):
+            results.append(reading)
+        else:
+            logger.debug('Culling %s from Dashboard view as unathorized for %s',
+                reading.book.title,
+                clusive_user.user.username)
+    return results
+
 
 class DashboardActivityPanelView(TemplateView):
     """Shows just the activity panel, for AJAX updates"""
