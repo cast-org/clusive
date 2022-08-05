@@ -298,7 +298,7 @@ class BookAssignment(models.Model):
 
     @classmethod
     def recent_assigned(cls, period):
-        return cls.objects.filter(period=period).order_by('date_assigned')
+        return cls.objects.filter(period=period).order_by('-date_assigned')
 
     class Meta:
         ordering = ['book']
