@@ -107,7 +107,7 @@ $enable-utility-pointer-events:         false;
 $enable-utility-flex-order:             true;
 $enable-utility-flex-direction:         false;
 $enable-utility-flex-wrap:              false;
-$enable-utility-flex-justify:           false;
+$enable-utility-flex-justify:           true;
 $enable-utility-flex-items:             true;
 $enable-utility-flex-content:           false;
 $enable-utility-flex-self:              false;
@@ -240,8 +240,8 @@ $list-item-active-bg:                   unset;
 $list-item-active-color:                unset;
 $list-bulleted-content:                 "\00a0\2022";
 
-$list-spaced-condensed-padding-y:       .5rem !default;
-$list-spaced-condensed-padding-x:       1rem !default;
+$list-spaced-condensed-padding-y:       .5rem;
+$list-spaced-condensed-padding-x:       1rem;
 
 $table-bg-active:                       var(--CT_tableActiveBg);
 $table-border-color:                    var(--CT_tableBorderColor);
@@ -279,11 +279,11 @@ $form-range-track-bg:                   var(--CT_formRangeTrackBg);
 $form-range-thumb-width:                1.25rem;
 $form-range-thumb-bg:                   var(--CT_formRangeThumbBg);
 $form-range-thumb-box-shadow:           .125rem .125rem 0 .025rem rgba(var(--CT_formRangeThumbBoxShadowRGB), var(--CT_formRangeThumbBoxShadowOpacity));
-$form-range-thumb-focus-box-shadow:     0 0 0 .1875rem rgba(var(--CT_formRangeThumbFocusBoxShadowRGB), var(--CT_formRangeThumbFocusBoxShadowOpacity)) !default;
+$form-range-thumb-focus-box-shadow:     0 0 0 .1875rem rgba(var(--CT_formRangeThumbFocusBoxShadowRGB), var(--CT_formRangeThumbFocusBoxShadowOpacity));
 $form-range-thumb-active-bg:            var(--CT_formRangeThumbActiveBg);
 
 $form-switch-width:                         3rem;
-$form-switch-gutter:                        calc(#{$form-switch-width} + .25em) !default;
+$form-switch-gutter:                        calc(#{$form-switch-width} + .25em);
 $form-switch-track-height:                  1.75rem;
 $form-switch-track-bg:                      var(--CT_formSwitchTrackBg);
 $form-switch-track-border-color:            var(--CT_formSwitchTrackBorderColor);
@@ -376,6 +376,16 @@ $popover-comp-md-width:                 22rem;
 $popover-control-padding-y:             .25rem;
 $popover-control-padding-x:             .25rem;
 $popover-simplify-md-width:             29rem;
+
+$popover-tour-bg:                       var(--CT_popoverTourBg);
+$popover-tour-border-width:             5px;
+$popover-tour-border-radius:            .875rem;
+$popover-tour-inner-border-radius:      subtract($popover-tour-border-radius, $popover-tour-border-width);
+$popover-tour-arrow-width:              1.25rem;
+$popover-tour-arrow-height:             .625rem;
+$popover-tour-arrow-color:              $popover-tour-bg;
+$popover-tour-arrow-outer-color:        $popover-border-color;
+$popover-tour-md-width:                 25rem;
 
 $modal-backdrop-bg:                     var(--CT_modalBackdropBg);
 $modal-backdrop-opacity:                var(--CT_modalBackdropOpacity);
@@ -516,6 +526,7 @@ $toobox-btn-font-size:                  1.25rem;
 
 $img-ratio-mascot:                      .95614;
 $img-ratio-mascot-tipped:               .7807;
+$img-ratio-mascot-resource:             .5;
 
 $star-size:                             2em;
 $star-spacing-x:                        .75em;

@@ -803,7 +803,7 @@ function toolboxHandleUpdate() {
     var observer = new MutationObserver(function() {
         setTimeout(function() {
             toolboxPosition();
-        }, 25);
+        }, 125);
     });
     observer.observe(
         document.querySelector('#highlight-toolbox'), {

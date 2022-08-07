@@ -169,6 +169,18 @@ class LibraryStyles:
         (LIST, 'list'),
     ]
 
+class LibrarySort:
+    TITLE = 'title'
+    AUTHOR = 'author'
+    RECENT = 'recent'
+
+    CHOICES = [
+        (TITLE, 'title'),
+        (AUTHOR, 'author'),
+        (RECENT, 'recent'),
+    ]
+
+
 class StudentActivitySort:
     NAME = 'name'
     TIME = 'time'
@@ -228,6 +240,10 @@ class ClusiveUser(models.Model):
     # Which view of the library page the user last viewed. This choice is persistent.
     library_view = models.CharField(max_length=10, default=LibraryViews.PERIOD,
                                     choices=LibraryViews.CHOICES)
+
+    # How the library was sorted most recently. This choice is persistent.
+    library_sort = models.CharField(max_length=10, default=LibrarySort.TITLE,
+                                    choices=LibrarySort.CHOICES)
 
     # What layout to use for the library cards. This choice is persistent.
     library_style = models.CharField(max_length=10, default=LibraryStyles.BRICKS,

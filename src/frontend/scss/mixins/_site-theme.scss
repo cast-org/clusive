@@ -291,6 +291,12 @@
         --CT_popoverFooterColor: #{$popover-footer-color};
         --CT_popoverFooterBorderColor: #{$popover-footer-border-color};
         --CT_popoverSectionBorderColor: #{$popover-section-border-color};
+        --CT_popoverTourBg: #{$popover-tour-bg};
+        --CT_popoverTourBorderColor: #{$popover-tour-border-color};
+        --CT_popoverTourHeaderBg: #{$popover-tour-header-bg};
+        --CT_popoverTourHeaderBorderColor: #{$popover-tour-header-border-color};
+        --CT_popoverTourFooterBg: #{$popover-tour-footer-bg};
+        --CT_popoverTourFooterBorderColor: #{$popover-tour-footer-border-color};
 
         --CT_popoverTabBg: #{$popover-tab-bg};
         --CT_popoverTabColor: #{$popover-tab-color};
@@ -482,6 +488,7 @@
         --CT_imgMascot: #{$img-mascot};
         --CT_imgMascotTipped: #{$img-mascot-tipped};
         --CT_imgMascotTippedAnimated: #{$img-mascot-tipped-animated};
+        --CT_imgMascotResource: #{$img-mascot-resource};
         --CT_imgMerriamWebster: #{$img-merriam-webster};
 
         --CT_starsBorderColor: #{$stars-border-color};

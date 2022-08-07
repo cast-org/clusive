@@ -32,6 +32,17 @@
                             {% endif %}
                         {% endif %}
                     </li>
+                    <li>
+                        {% if sort == 'recent' %}
+                        <span class="dropdown-item active">Recent</span>
+                        {% else %}
+                        {% if period %}
+                        <a class="sort-link" href="{% url 'library' style=style sort='recent' view=current_view period_id=period.id %}{% search_args query '' %}">Recent</a>
+                        {% else %}
+                        <a class="sort-link" href="{% url 'library' style=style sort='recent' view=current_view %}{% search_args query '' %}">Recent</a>
+                        {% endif %}
+                        {% endif %}
+                    </li>
                 </ul>
             </li>
             <li class="nav-item">

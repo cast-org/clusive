@@ -11,7 +11,7 @@ import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, QuerySet, Prefetch
+from django.db.models import Q, QuerySet, Prefetch, Max
 from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.response import TemplateResponse
@@ -148,6 +148,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         if self.clusive_user.library_style != self.style:
             self.clusive_user.library_style = self.style
             user_changed = True
+        if self.clusive_user.library_sort != self.sort:
+            self.clusive_user.library_sort = self.sort
+            user_changed = True
         if user_changed:
             self.clusive_user.save()
         return super().get(request, *args, **kwargs)
@@ -195,6 +198,19 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             q = q.order_by('sort_title', 'sort_author')
         elif self.sort == 'author':
             q = q.order_by('sort_author', 'sort_title')
+        elif self.sort == 'recent':
+            # "Recent" means different things in different views
+            if self.view == 'starred':
+                # Recently starred
+                q = q.order_by('-paradata__starred_date')
+            elif self.view == 'period':
+                # Recently assigned
+                q = q.annotate(assign_date=Max('assignments__date_assigned',
+                                               filter=Q(assignments__period=self.period)))\
+                    .order_by('-assign_date')
+            else:
+                # Public, Uploaded, or All:  Recently created
+                q = q.order_by('-add_date')
         else:
             logger.warning('unknown sort setting')
 
@@ -350,9 +366,10 @@ class LibraryStyleRedirectView(View):
     def dispatch(self, request, *args, **kwargs):
         view = kwargs.get('view')
         style = request.clusive_user.library_style
+        sort = request.clusive_user.library_sort
         kwargs = {
             'view': view,
-            'sort': 'title',  # FIXME
+            'sort': sort,
             'style': style,
         }
         if request.clusive_user and request.clusive_user.current_period:
