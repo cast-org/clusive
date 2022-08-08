@@ -315,6 +315,10 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
         t = td['trend']
         book = td['trend'].book
         # Look up paradata, assignments & customizations for books so they can be shown in the cards.
+        if hasattr(t, 'user_count'):
+            td['user_count'] = t.user_count
+        else:
+            td['user_count'] = BookTrend.user_count_for_assigned_book(book, current_period)
         book.paradata_list = list(Paradata.objects.filter(book=book, user=clusive_user))
         book.add_teacher_extra_info(periods)
         # Check if there is a customization for the current period.
@@ -340,7 +344,7 @@ def cull_unauthorized_from_readings(readings, clusive_user):
     """
     results = []
     # The loop assumes the `readings` are ordered and uses `results.append()` to
-    # maintain that order
+    # maintain that order.
     for reading in readings:
         if reading.book.is_visible_to(clusive_user):
             results.append(reading)

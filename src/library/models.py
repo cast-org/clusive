@@ -352,6 +352,18 @@ class BookTrend(models.Model):
     @classmethod
     def top_assigned(cls, period):
         return cls.objects.filter(period=period, book__assignments__period=period).order_by('-popularity')
+    
+    @classmethod
+    def user_count_for_assigned_book(cls, book, period):
+        """
+        Return the user count for the BookTrend that matches the given
+        book/period.
+        """
+        try:
+            book_trend = cls.objects.get(book=book, period=period)
+            return book_trend.user_count
+        except:
+            return None
 
     @classmethod
     def update_all_trends(cls):

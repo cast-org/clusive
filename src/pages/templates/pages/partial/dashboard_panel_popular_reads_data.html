@@ -23,9 +23,9 @@
                 {% if view == 'recent' %}
                     {% include "library/partial/library_card.html" with book=item.book show_starred=True show_description=True show_menu=False show_topics=False link_stretch=True %}
                 {% elif data.view == 'assigned' and is_guest %}
-                    {% include "library/partial/library_card.html" with book=item show_starred=False show_description=True show_menu=False show_topics=False link_stretch=True %}
+                    {% include "library/partial/library_card.html" with book=item show_starred=True show_description=True show_menu=False show_topics=False link_stretch=True %}
                 {% elif is_teacher %}
-                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.trend.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
+                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
                 {% else %}
                     {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized show_starred=True show_description=True show_menu=True %}
                 {% endif %}
