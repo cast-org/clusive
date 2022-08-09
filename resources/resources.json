@@ -5,7 +5,12 @@
       {
         "identifier": "CLUES",
         "file": "teacher-clues-to-clusive.epub",
-        "tags": []
+        "tags": ["15 min"]
+      },
+      {
+        "identifier": "FAQ",
+        "file": "faq.epub",
+        "tags": ["45 min"]
       }
     ]
   }
