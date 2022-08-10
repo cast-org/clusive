@@ -25,7 +25,8 @@ from eventlog.signals import star_rating_completed
 from eventlog.views import EventMixin
 from glossary.models import WordModel
 from glossary.views import choose_words_to_cue
-from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, Customization
+from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, \
+    Customization, BookAssignment
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.util import TranslateApiManager
@@ -119,7 +120,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             return HttpResponseRedirect('/admin')
 
         self.clusive_user = request.clusive_user
-        self.teacher = self.clusive_user.can_manage_periods
+        self.is_teacher = self.clusive_user.can_manage_periods
+        self.is_guest = False if self.is_teacher else (self.request.clusive_user.role == 'GU')
         self.current_period = self.get_current_period(request, **kwargs)
         self.panels = {} # This will hold info on which panels are to be displayed.
         self.data = {} # This will hold panel-specific data
@@ -154,7 +156,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             self.panels['cta'] = False
 
         # Affect panel (for student)
-        self.panels['affect'] = not self.teacher and user_stats.reading_views > 0
+        self.panels['affect'] = not self.is_teacher and user_stats.reading_views > 0
         if self.panels['affect']:
             totals = AffectiveUserTotal.objects.filter(user=request.clusive_user).first()
             self.data['affect'] = {
@@ -163,7 +165,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
             }
 
         # Class Affect panel (for parent/teacher)
-        self.panels['class_affect'] = self.teacher and self.current_period
+        self.panels['class_affect'] = self.is_teacher and self.current_period
         if self.panels['class_affect']:
             sa = AffectiveUserTotal.objects.filter(user__periods=self.current_period, user__role=Roles.STUDENT)
             scaled = AffectiveUserTotal.aggregate_and_scale(sa)
@@ -182,40 +184,23 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 'results': ClusiveRatingResponse.get_graphable_results(),
             }
 
-        # Popular Reads panel (teacher)
-        self.panels['popular_reads'] = self.teacher
-        if self.panels['popular_reads']:
+        # 'popular_reads' is a tabpanel with tabs for different types of
+        # readings, namely, Assigned, Recent, and Popular readings. The panel
+        # is always present. When first shown, the Assigned readings tab is
+        # selected.  See PopularReadsPanelView() for the contents of the other
+        # tabs.
+        self.panels['popular_reads'] = True
+        if self.is_guest:
+            self.data['popular_reads'] = {
+                'view': 'assigned',
+                'all': Book.get_featured_books()[:3],
+            }
+        else:
             self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.periods, self.current_period,
-                                                                assigned_only=False)
-
-        # Getting Started panel
-        if not self.teacher:
-            last_reads = Paradata.latest_for_user(request.clusive_user)[:3]
-            self.panels['getting_started'] = not last_reads or len(last_reads) == 0
-            if self.panels['getting_started']:
-                self.data['getting_started'] = {
-                    'featured': list(Book.get_featured_books()[:2])
-                }
-
-            # Recent Reads panel
-            self.panels['recent_reads'] = len(last_reads) > 0
-            if self.panels['recent_reads']:
-                if len(last_reads) < 3:
-                    # Add featured books to the list
-                    features = list(Book.get_featured_books()[:3])
-                    # Remove any featured books that are in the user's last-read list.
-                    for para in last_reads:
-                        if para.book in features:
-                            features.remove(para.book)
-                else:
-                    features = []
-                self.data['recent_reads'] = {
-                    'last_reads': last_reads,
-                    'featured': features,
-                }
+                                                                assigned_only=True)
 
         # Student Activity panel
-        self.panels['student_activity'] = self.teacher
+        self.panels['student_activity'] = self.is_teacher
         sa_days = self.clusive_user.student_activity_days
         sa_sort = self.clusive_user.student_activity_sort
         if self.panels['student_activity']:
@@ -231,6 +216,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_teacher'] = self.is_teacher
+        context['is_guest'] = self.is_guest
         context['period_name'] = self.current_period.name if self.current_period else None
         context['query'] = None
         context['panels'] = self.panels
@@ -265,27 +252,73 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
         periods = list(self.clusive_user.periods.all())
         current_period = self.clusive_user.current_period
         assigned = self.view == 'assigned'
+        is_teacher = self.clusive_user.can_manage_periods
+        is_guest = self.clusive_user.role == 'GU'
+
+        if is_teacher:
+            readings = get_popular_reads_data(self.clusive_user, periods,
+                                              current_period, assigned_only=assigned)
+        else:
+            # Student
+            if not is_guest:
+                if self.view == 'assigned' or self.view == 'popular':
+                    readings = get_popular_reads_data(self.clusive_user, periods,
+                                                      current_period, assigned_only=assigned)
+                else:
+                    # self.view == 'recent'
+                    readings = get_recent_reads_data(self.clusive_user)
+            # Guest
+            else:
+                if self.view == 'assigned':
+                    # "Clues to Clusive"
+                    readings = {
+                        'view': 'assigned',
+                        'all': Book.get_featured_books()[:3]
+                    }
+                elif self.view == 'popular':
+                    readings = get_popular_reads_data(self.clusive_user, periods,
+                                                      current_period, assigned_only=False)
+                else:
+                    # self.view == 'recent'
+                    readings = get_recent_reads_data(self.clusive_user)
+
         context.update({
+            'is_teacher': is_teacher,
+            'is_guest': is_guest,
             'current_period': current_period,
-            'period_name': current_period.name,
+            'period_name': current_period.name if current_period else None,
             'query': None,
-            'data': get_popular_reads_data(self.clusive_user, periods, current_period, assigned_only=assigned),
+            'data': readings,
         })
         return context
 
 
-def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
-    # Gather data about books that are trending for dashboard view
-    if assigned_only:
-        trends = BookTrend.top_assigned(current_period)[:3]
-    else:
-        trends = BookTrend.top_trends(current_period)[:3]
-    trend_data = [{'trend': t} for t in trends]
+def get_recent_reads_data(clusive_user):
+    return {
+        'view': 'recent',
+        'all': Paradata.latest_for_user(clusive_user)[:3],
+    }
 
+def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
+    # Gather data about books that are popular for dashboard view
+    if assigned_only:
+        readings = BookAssignment.recent_assigned(current_period)
+        total = len(readings)
+        trends = readings[:3]
+    else:
+        readings = BookTrend.top_trends(current_period)
+        total = len(readings)
+        trends = cull_unauthorized_from_readings(readings[:3], clusive_user)
+
+    trend_data = [{'trend': t} for t in trends]
     for td in trend_data:
         t = td['trend']
         book = td['trend'].book
         # Look up paradata, assignments & customizations for books so they can be shown in the cards.
+        if hasattr(t, 'user_count'):
+            td['user_count'] = t.user_count
+        else:
+            td['user_count'] = BookTrend.user_count_for_assigned_book(book, current_period)
         book.paradata_list = list(Paradata.objects.filter(book=book, user=clusive_user))
         book.add_teacher_extra_info(periods)
         # Check if there is a customization for the current period.
@@ -299,7 +332,27 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
     return {
         'all': trend_data,
         'view': 'assigned' if assigned_only else 'popular',
+        'total': total,
     }
+
+def cull_unauthorized_from_readings(readings, clusive_user):
+    """
+    Check the given list of `readings` and return a new list of readings
+    containing only the books that the `clusive_user` is authorized to view.
+    Required:  each item in the `readings` has a `book` property that is an
+    instance of a `library.models.Book`.
+    """
+    results = []
+    # The loop assumes the `readings` are ordered and uses `results.append()` to
+    # maintain that order.
+    for reading in readings:
+        if reading.book.is_visible_to(clusive_user):
+            results.append(reading)
+        else:
+            logger.debug('Culling %s from Dashboard view as unathorized for %s',
+                reading.book.title,
+                clusive_user.user.username)
+    return results
 
 
 class DashboardActivityPanelView(TemplateView):
