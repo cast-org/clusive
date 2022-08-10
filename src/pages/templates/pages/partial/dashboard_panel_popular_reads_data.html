@@ -1,32 +1,36 @@
 <ul class="nav box-tabs mb-0">
-    <li class="nav-item"><button type="button" data-clusive-view="popular" class="nav-link popular-read-view-button{% if data.view == 'popular' %} active{% endif %}">Popular reads</button></li>
-    <li class="nav-item"><button type="button" data-clusive-view="assigned" class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}">Assigned reads</button></li>
+    <li class="nav-item"><button type="button" data-clusive-view="assigned" class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}">Assigned</button></li>
+    {% if not is_teacher %}
+    <li class="nav-item"><button type="button" data-clusive-view="recent" class="nav-link popular-read-view-button{% if data.view == 'recent' %} active{% endif %}">Recent</button></li>
+    {% endif %}
+    <li class="nav-item"><button type="button" data-clusive-view="popular" class="nav-link popular-read-view-button{% if data.view == 'popular' %} active{% endif %}">Popular</button></li>
 </ul>
 
 <div class="box-divider"></div>
+    <p class="mx-1">
+    {% if is_teacher %}
+        {% include 'pages/partial/dashboard_panel_popular_reads_teacher_messages.html' %}
+    {% elif is_guest %}
+        {% include 'pages/partial/dashboard_panel_popular_reads_guest_messages.html' %}
+    {% else %}
+        {% include 'pages/partial/dashboard_panel_popular_reads_student_messages.html' %}
+    {% endif %}
+    </p>
 <div>
     <div class="tab-pane" id="popularTab0">
         <div class="library-grid dashboard-grid">
             {% for item in data.all %}
-            {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.trend.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
-            {% empty %}
-            <p class="mx-1">
-                {% if data.view == 'assigned' %}
-                    Your students haven't done any assigned reading, yet.
+                {% if view == 'recent' %}
+                    {% include "library/partial/library_card.html" with book=item.book show_starred=True show_description=True show_menu=False show_topics=False link_stretch=True %}
+                {% elif data.view == 'assigned' and is_guest %}
+                    {% include "library/partial/library_card.html" with book=item show_starred=True show_description=True show_menu=False show_topics=False link_stretch=True %}
+                {% elif is_teacher %}
+                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
                 {% else %}
-                    Your students haven't done any reading, yet.
+                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized show_starred=True show_description=True show_menu=True %}
                 {% endif %}
-                Assign them something to read by clicking the <span class="icon-ellipsis-vert"></span>
-                (more actions) icon in the lower right of any reading panel in the library.
-            </p>
-            <div class="mx-1">
-                <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
-            </div>
             {% endfor %}
         </div>
-        {% if data.view == 'assigned' %}
-        <p><a href="{% url 'library_style_redirect' view='period' %}">See all assigned readings</a> for this class in the library.</p>
-        {% endif %}
     </div>
     {% for item in data.all %}
     {% include "pages/partial/modal_comprehension_detail.html" with type="comp" id_prefix="comp-detail-all" id_serial=forloop.counter title_prefix="Student learning" %}

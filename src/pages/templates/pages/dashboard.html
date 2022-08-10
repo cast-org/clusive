@@ -49,15 +49,7 @@
         </div>
 
         <div class="col-lg-8 pt-1 mt-1 pt-lg-0 mt-lg-0">
-            {% if panels.getting_started %}
-                {% include "pages/partial/dashboard_panel_getting_started.html" with data=data.getting_started %}
-            {% endif %}
-            {% if panels.recent_reads %}
-                {% include "pages/partial/dashboard_panel_recent_reads.html" with data=data.recent_reads %}
-            {% endif %}
-            {% if panels.popular_reads %}
-                {% include "pages/partial/dashboard_panel_popular_reads.html" with data=data.popular_reads %}
-            {% endif %}
+            {% include "pages/partial/dashboard_panel_popular_reads.html" with data=data.popular_reads %}
         </div>
     </div>
 
