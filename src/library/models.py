@@ -37,6 +37,28 @@ class Subject(models.Model):
         return cls.cached_list
 
 
+class ReadingLevel:
+    EARLY_READER = 'EA'
+    ELEMENTARY_SCHOOL = 'EL'
+    MIDDLE_SCHOOL = 'MS'
+    HIGH_SCHOOL = 'HS'
+    ADVANCED = 'AD'
+    UNKNOWN = 'UN'
+
+    CHOICES = [
+        (EARLY_READER, 'Early reader (PreK – grade 3)'),
+        (ELEMENTARY_SCHOOL, 'Elementary school (grades 4 – 5)'),
+        (MIDDLE_SCHOOL, 'Middle school (grades 6 – 8)'),
+        (HIGH_SCHOOL, 'High school (grades 9 – 11)'),
+        (ADVANCED, 'Advanced'),
+        (UNKNOWN, 'Unknown'),
+    ]
+
+    @classmethod
+    def display_name(cls, reading_level):
+        return [item[1] for item in ReadingLevel.CHOICES if item[0] == reading_level][0]
+
+
 class Book(models.Model):
     """
     Metadata about a single reading, to be represented as an item on the Library page.
@@ -193,6 +215,10 @@ class BookVersion(models.Model):
     mod_date = models.DateTimeField(default=timezone.now)
     language = models.TextField(max_length=5, default="en-US")
     filename = models.TextField(null=True) # The filename of the EPUB that was uploaded.
+    reading_level = models.CharField(max_length=2,
+                                     choices=ReadingLevel.CHOICES,
+                                     default=ReadingLevel.UNKNOWN,
+                                     db_index=True)
 
     @property
     def path(self):

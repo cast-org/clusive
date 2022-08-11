@@ -6,7 +6,7 @@
             <span class="not-open">Show filters</span>
             <span class="is-open">Hide filters</span>
         </button>
-        <a id="clearFilters" href="{% search_args query '' %}" role="button" class="ms-0_5">Clear filters</a>
+        <a id="clearFilters" href="{% search_args query '' '' %}" role="button" class="ms-0_5">Clear filters</a>
     </div>
 </div>
 
@@ -37,6 +37,38 @@
         <div class="col-md-4">
             <div class="box library-filter-box">
                 <fieldset data-clusive="filterAllUpdate">
+                    <legend class="form-label lh-1 pt-0"><strong>Reading Level</strong></legend>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="levelAll" name="readingLevels" data-clusive="filterAll" value="">
+                        <label class="form-check-label" for="levelAll">All reading levels</label>
+                    </div>
+                    <div class="box-divider-thin"></div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="level0" value="EA">
+                        <label class="form-check-label" for="level0">Early reader (PreK &ndash; grade 3)</label>
+                    </div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="level1" value="EL">
+                        <label class="form-check-label" for="level1">Elementary school (grades 4 &ndash; 5)</label>
+                    </div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="level2" value="MS">
+                        <label class="form-check-label" for="level2">Middle school (grades 6 &ndash; 8)</label>
+                    </div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="level3" value="HS">
+                        <label class="form-check-label" for="level3">High school (grades 9 &ndash; 11)</label>
+                    </div>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="level4" value="AD">
+                        <label class="form-check-label" for="level4">Advanced</label>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="col-md-4 offset-md-8">
+            <div class="box library-filter-box">
+                <fieldset data-clusive="filterAllUpdate">
                     <legend class="form-label lh-1 pt-0"><strong>Word Count</strong></legend>
                     <div class="form-check form-checkradio">
                         <input class="form-check-input" type="checkbox" id="countAll" name="words" data-clusive="filterAll" value="">
@@ -53,7 +85,7 @@
                     </div>
                     <div class="form-check form-checkradio">
                         <input class="form-check-input" type="checkbox" id="count2" value="M">
-                        <label class="form-check-label" for="count2">1,001 - 5,000 words</label>
+                        <label class="form-check-label" for="count2">1,001 &ndash; 5,000 words</label>
                     </div>
                     <div class="form-check form-checkradio">
                         <input class="form-check-input" type="checkbox" id="count3" value="L">

@@ -27,12 +27,13 @@ from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
-    CustomVocabularyWord
+    CustomVocabularyWord, ReadingLevel
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
     get_access_keys, is_organization_sponsor, is_organization_member
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
+
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
@@ -92,6 +93,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
     period = None
     query = None
     subjects = None
+    reading_levels = None
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
@@ -107,6 +109,11 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             subject_strings = self.subjects_string.split(',')
             s = Subject.objects.filter(subject__in=subject_strings)
             self.subjects = s
+
+        self.reading_levels_string = request.GET.get('readingLevels')
+        if self.reading_levels_string:
+            reading_level_strings = self.reading_levels_string.split(',')
+            self.reading_levels = BookVersion.objects.filter(reading_level__in=reading_level_strings)
 
         self.lengths_string = request.GET.get('words')
         if self.lengths_string:
@@ -194,6 +201,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
                     length_query |= self.query_for_length(option)
             q = q.filter(length_query)
 
+        if self.reading_levels:
+            q = q.filter(Q(versions__in=self.reading_levels))
+
         if self.sort == 'title':
             q = q.order_by('sort_title', 'sort_author')
         elif self.sort == 'author':
@@ -255,6 +265,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             args['subjects'] = self.subjects_string
         if self.lengths:
             args['words'] = self.lengths_string
+        if self.reading_levels:
+            args['reading_levels'] = self.reading_levels_string
         return reverse('library', kwargs={
             'style': self.style,
             'sort': self.sort,
@@ -317,7 +329,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['clusive_user'] = self.clusive_user
         context['query'] = self.query
         context['subjects_string'] = self.subjects_string
-        context['subjects'] = self.subjects
+        context['subjects'] = self.subjects,
+        context['reading_levels_string'] = self.reading_levels_string,
+        context['reading_levels'] = self.reading_levels,
         context['period'] = self.period
         context['period_name'] = self.period.name if self.period else None
         context['style'] = self.style

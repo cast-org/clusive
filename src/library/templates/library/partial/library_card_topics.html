@@ -2,7 +2,12 @@
 {% if show_topics %}
 <div class="col card-library-tag">
     {% for s in book.subjects.all %}
-        <a href="{% search_args query s %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
+        <a href="{% search_args query s '' %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
+    {% endfor %}
+    {% for version in book.versions.all %}
+        {% if version.reading_level != 'UN' %}
+        <a href="{% search_args query '' version.reading_level %}" class="btn btn-tag link-above {% if version.reading_level in readingLevels %}active{% endif %}">{{ version.get_reading_level_display }}</a>
+        {% endif %}
     {% endfor %}
     <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"
           title="{{book.word_count}} word{{book.word_count|pluralize}}, {{book.picture_count}} picture{{book.picture_count|pluralize}}">

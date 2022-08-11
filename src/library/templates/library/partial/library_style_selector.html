@@ -15,9 +15,9 @@
                         <span class="dropdown-item active">Title</span></li>
                         {% else %}
                             {% if period %}
-                            <a class="sort-link" href="{% url 'library' style=style sort='title' view=current_view period_id=period.id %}{% search_args query '' %}">Title</a>
+                            <a class="sort-link" href="{% url 'library' style=style sort='title' view=current_view period_id=period.id %}{% search_args query '' '' %}">Title</a>
                             {% else %}
-                            <a class="sort-link" href="{% url 'library' style=style sort='title' view=current_view %}{% search_args query '' %}">Title</a>
+                            <a class="sort-link" href="{% url 'library' style=style sort='title' view=current_view %}{% search_args query '' '' %}">Title</a>
                             {% endif %}
                         {% endif %}
                     </li>
@@ -26,9 +26,9 @@
                         <span class="dropdown-item active">Author</span>
                         {% else %}
                             {% if period %}
-                            <a class="sort-link" href="{% url 'library' style=style sort='author' view=current_view period_id=period.id %}{% search_args query '' %}">Author</a>
+                            <a class="sort-link" href="{% url 'library' style=style sort='author' view=current_view period_id=period.id %}{% search_args query '' '' %}">Author</a>
                             {% else %}
-                            <a class="sort-link" href="{% url 'library' style=style sort='author' view=current_view %}{% search_args query '' %}">Author</a>
+                            <a class="sort-link" href="{% url 'library' style=style sort='author' view=current_view %}{% search_args query '' '' %}">Author</a>
                             {% endif %}
                         {% endif %}
                     </li>
@@ -37,9 +37,9 @@
                         <span class="dropdown-item active">Recent</span>
                         {% else %}
                         {% if period %}
-                        <a class="sort-link" href="{% url 'library' style=style sort='recent' view=current_view period_id=period.id %}{% search_args query '' %}">Recent</a>
+                        <a class="sort-link" href="{% url 'library' style=style sort='recent' view=current_view period_id=period.id %}{% search_args query '' '' %}">Recent</a>
                         {% else %}
-                        <a class="sort-link" href="{% url 'library' style=style sort='recent' view=current_view %}{% search_args query '' %}">Recent</a>
+                        <a class="sort-link" href="{% url 'library' style=style sort='recent' view=current_view %}{% search_args query '' '' %}">Recent</a>
                         {% endif %}
                         {% endif %}
                     </li>
@@ -56,9 +56,9 @@
                         <span class="dropdown-item active"><span class="icon-bricks" aria-hidden="true"></span>Bricks <span class="sr-only">current</span></span>
                         {% else %}
                         {% if period %}
-                        <a class="style-link" href="{% url 'library' style='bricks' sort=sort view=current_view period_id=period.id %}{% search_args query '' %}"><span class="icon-bricks" aria-hidden="true"></span>Bricks</a>
+                        <a class="style-link" href="{% url 'library' style='bricks' sort=sort view=current_view period_id=period.id %}{% search_args query '' '' %}"><span class="icon-bricks" aria-hidden="true"></span>Bricks</a>
                         {% else %}
-                        <a class="style-link" href="{% url 'library' style='bricks' sort=sort view=current_view %}{% search_args query '' %}"><span class="icon-bricks" aria-hidden="true"></span>Bricks</a>
+                        <a class="style-link" href="{% url 'library' style='bricks' sort=sort view=current_view %}{% search_args query '' '' %}"><span class="icon-bricks" aria-hidden="true"></span>Bricks</a>
                         {% endif %}
                         {% endif %}
                     </li>
@@ -67,9 +67,9 @@
                         <span class="dropdown-item active"><span class="icon-th-large" aria-hidden="true"></span>Grid <span class="sr-only">current</span></span>
                         {% else %}
                         {% if period %}
-                        <a class="style-link" href="{% url 'library' style='grid' sort=sort view=current_view period_id=period.id %}{% search_args query '' %}"><span class="icon-th-large" aria-hidden="true"></span>Grid</a>
+                        <a class="style-link" href="{% url 'library' style='grid' sort=sort view=current_view period_id=period.id %}{% search_args query '' '' %}"><span class="icon-th-large" aria-hidden="true"></span>Grid</a>
                         {% else %}
-                        <a class="style-link" href="{% url 'library' style='grid' sort=sort view=current_view %}{% search_args query '' %}"><span class="icon-th-large" aria-hidden="true"></span>Grid</a>
+                        <a class="style-link" href="{% url 'library' style='grid' sort=sort view=current_view %}{% search_args query '' '' %}"><span class="icon-th-large" aria-hidden="true"></span>Grid</a>
                         {% endif %}
                         {% endif %}
                     </li>
@@ -78,9 +78,9 @@
                         <span class="dropdown-item active"><span class="icon-menu" aria-hidden="true"></span>List <span class="sr-only">current</span></span>
                         {% else %}
                         {% if period %}
-                        <a class="style-link" href="{% url 'library' style='list' sort=sort view=current_view period_id=period.id %}{% search_args query '' %}"><span class="icon-menu" aria-hidden="true"></span>List</a>
+                        <a class="style-link" href="{% url 'library' style='list' sort=sort view=current_view period_id=period.id %}{% search_args query '' '' %}"><span class="icon-menu" aria-hidden="true"></span>List</a>
                         {% else %}
-                        <a class="style-link" href="{% url 'library' style='list' sort=sort view=current_view %}{% search_args query '' %}"><span class="icon-menu" aria-hidden="true"></span>List</a>
+                        <a class="style-link" href="{% url 'library' style='list' sort=sort view=current_view %}{% search_args query '' '' %}"><span class="icon-menu" aria-hidden="true"></span>List</a>
                         {% endif %}
                         {% endif %}
                     </li>

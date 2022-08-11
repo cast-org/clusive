@@ -46,7 +46,7 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(BookVersion)
 class BookVersionAdmin(admin.ModelAdmin):
-    list_display = ('book', 'sortOrder')
+    list_display = ('book', 'sortOrder', 'reading_level')
 
 
 @admin.register(BookAssignment)

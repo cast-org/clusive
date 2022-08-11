@@ -9,9 +9,10 @@ register = template.Library()
 
 
 @register.simple_tag
-def search_args(query, subject):
+def search_args(query, subject, reading_level):
     """
-    Build URL args for the library page from the given query and subject filter.
+    Build URL args for the library page from the given query, subject, and
+    reading level filter.
     """
     params = []
 
@@ -20,6 +21,9 @@ def search_args(query, subject):
 
     if subject:
         params.append(('subjects', subject))
+
+    if reading_level:
+        params.append(('readingLevels', reading_level))
 
     return "?%s" % (urlencode(params))
 
