@@ -49,7 +49,7 @@ class ReadingLevel:
         (EARLY_READER, 'Early reader (PreK – grade 3)'),
         (ELEMENTARY_SCHOOL, 'Elementary school (grades 4 – 5)'),
         (MIDDLE_SCHOOL, 'Middle school (grades 6 – 8)'),
-        (HIGH_SCHOOL, 'High school (grades 9 – 11)'),
+        (HIGH_SCHOOL, 'High school (grades 9 – 12)'),
         (ADVANCED, 'Advanced'),
         (UNKNOWN, 'Unknown'),
     ]
@@ -57,6 +57,19 @@ class ReadingLevel:
     @classmethod
     def display_name(cls, reading_level):
         return [item[1] for item in ReadingLevel.CHOICES if item[0] == reading_level][0]
+
+    @classmethod
+    def from_grade(cls, grade):
+        if grade <= 3:
+            return cls.EARLY_READER
+        elif grade <= 5:
+            return cls.ELEMENTARY_SCHOOL
+        elif grade <= 8:
+            return cls.MIDDLE_SCHOOL
+        elif grade <= 12:
+            return cls.HIGH_SCHOOL
+        else:
+            return cls.ADVANCED
 
 
 class Book(models.Model):
@@ -378,7 +391,7 @@ class BookTrend(models.Model):
     @classmethod
     def top_assigned(cls, period):
         return cls.objects.filter(period=period, book__assignments__period=period).order_by('-popularity')
-    
+
     @classmethod
     def user_count_for_assigned_book(cls, book, period):
         """

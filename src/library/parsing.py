@@ -16,9 +16,10 @@ import requests
 from dawn.epub import Epub
 from django.utils import timezone
 from nltk import RegexpTokenizer
+from textstat import textstat
 
 from glossary.util import base_form
-from library.models import Book, BookVersion, Subject
+from library.models import Book, BookVersion, Subject, ReadingLevel
 from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
@@ -534,6 +535,7 @@ def find_all_words(bv, glossary_words):
             logger.debug('%s: parsed %d words; %d glossary words; %d dictionary words; %d non-dict words',
                          bv, bv.word_count,
                          len(bv.glossary_word_list), len(bv.all_word_list), len(bv.non_dict_word_list))
+            bv.reading_level = ReadingLevel.from_grade(te.get_text_complexity())
             bv.save()
     else:
         logger.error("Book directory had no manifest: %s", bv.manifest_file)
@@ -576,6 +578,9 @@ class TextExtractor(HTMLParser):
             for line in html:
                 self.feed(line)
         self.file = None
+
+    def get_text_complexity(self):
+        return textstat.automated_readability_index(self.text)
 
     def get_word_lists(self, glossary_words):
         self.close()
