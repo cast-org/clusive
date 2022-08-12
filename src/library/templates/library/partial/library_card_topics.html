@@ -6,7 +6,13 @@
     {% endfor %}
     {% for level in book.reading_level_range %}
         {% if level != 0 %}
-        <a href="{% search_args query '' level %}" class="btn btn-tag link-above {% if level in readingLevels %}active{% endif %}">{{ level }}</a>
+            <a href="{% search_args query '' level %}" class="btn btn-tag link-above {% if level in readingLevels %}active{% endif %}">
+            {% if level == 1 %} Early reader</a>
+            {% elif level == 2 %} Elementary</a>
+            {% elif level == 3 %} Middle school</a>
+            {% elif level == 4 %} High school</a>
+            {% else %} Advanced</a>
+            {% endif %}
         {% endif %}
     {% endfor %}
     <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"
