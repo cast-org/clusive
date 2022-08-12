@@ -33,7 +33,6 @@ from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected
     get_access_keys, is_organization_sponsor, is_organization_member
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
-import pdb
 
 from tips.models import TipHistory
 
@@ -111,11 +110,11 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             s = Subject.objects.filter(subject__in=subject_strings)
             self.subjects = s
 
-        pdb.set_trace()
         self.reading_levels_string = request.GET.get('readingLevels')
         if self.reading_levels_string:
-            reading_level_strings = self.reading_levels_string.split(',')
-            self.reading_levels = Book.objects.filter(reading_level__in=reading_level_strings)
+           self.reading_levels = self.reading_levels_string.split(',')
+        else:
+            self.reading_levels = None
 
         self.lengths_string = request.GET.get('words')
         if self.lengths_string:
@@ -204,7 +203,12 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             q = q.filter(length_query)
 
         if self.reading_levels:
-            q = q.filter(Q(versions__in=self.reading_levels))
+            min_level = min(self.reading_levels)
+            max_level = max(self.reading_levels)
+            q = q.filter(
+                Q(min_reading_level__gte=min_level) &
+                Q(max_reading_level__lte=max_level)
+            )
 
         if self.sort == 'title':
             q = q.order_by('sort_title', 'sort_author')
@@ -333,7 +337,6 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['subjects_string'] = self.subjects_string
         context['subjects'] = self.subjects,
         context['reading_levels_string'] = self.reading_levels_string,
-        context['reading_levels'] = self.reading_levels,
         context['period'] = self.period
         context['period_name'] = self.period.name if self.period else None
         context['style'] = self.style

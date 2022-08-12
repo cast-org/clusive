@@ -215,13 +215,6 @@ class Book(models.Model):
         # range() is inclusive, add 1 to max to include it.
         return range(self.min_reading_level, self.max_reading_level + 1)
 
-    @property
-    def reading_level_list(self):
-        levels = []
-        levels.extend(range(self.min_reading_level, self.max_reading_level))
-        levels.append(self.max_reading_level)
-        return levels
-
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
