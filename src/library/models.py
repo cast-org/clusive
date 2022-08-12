@@ -93,6 +93,9 @@ class Book(models.Model):
     subjects = models.ManyToManyField(Subject, db_index=True)
     bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
     add_date = models.DateTimeField(auto_now_add=True, db_index=True)
+    # ARI scores are in the range 1-14. Use zero, the default, to mean "unknown".
+    min_reading_level = models.PositiveSmallIntegerField(default=0, db_index=True)
+    max_reading_level = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     @property
     def is_public(self):
@@ -199,6 +202,26 @@ class Book(models.Model):
         self.assign_list = list(BookAssignment.objects.filter(book=self, period__in=periods))
         self.custom_list = list(Customization.objects.filter(book=self, periods__in=periods))
 
+    def update_reading_level_range(self, reading_level):
+        if reading_level <= 0:
+            logger.debug("Negative or zero reading level value (%s) not allowed; ignored", reading_level)
+        elif reading_level < self.min_reading_level:
+            self.min_reading_level = reading_level
+        elif reading_level > self.max_reading_level:
+            self.max_reading_level = reading_level
+
+    @property
+    def reading_level_range(self):
+        # range() is inclusive, add 1 to max to include it.
+        return range(self.min_reading_level, self.max_reading_level + 1)
+
+    @property
+    def reading_level_list(self):
+        levels = []
+        levels.extend(range(self.min_reading_level, self.max_reading_level))
+        levels.append(self.max_reading_level)
+        return levels
+
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
@@ -228,10 +251,8 @@ class BookVersion(models.Model):
     mod_date = models.DateTimeField(default=timezone.now)
     language = models.TextField(max_length=5, default="en-US")
     filename = models.TextField(null=True) # The filename of the EPUB that was uploaded.
-    reading_level = models.CharField(max_length=2,
-                                     choices=ReadingLevel.CHOICES,
-                                     default=ReadingLevel.UNKNOWN,
-                                     db_index=True)
+    # ARI scores are in the range 1-14. Use zero, the default, to mean "unknown".
+    reading_level = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     @property
     def path(self):

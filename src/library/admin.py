@@ -23,7 +23,7 @@ class subjectBookAdmin(admin.ModelAdmin):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'owner', 'title', 'author', 'word_count')
+    list_display = ('id', 'owner', 'title', 'author', 'word_count', 'reading_level_range')
     sortable_by = ('id', 'owner', 'title', 'author', 'word_count')
     inlines = [subjectBookAdmin]
     inlines = [VersionsInline]
