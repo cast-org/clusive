@@ -112,8 +112,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
 
         self.reading_levels_string = request.GET.get('readingLevels')
         if self.reading_levels_string:
-            reading_level_strings = self.reading_levels_string.split(',')
-            self.reading_levels = BookVersion.objects.filter(reading_level__in=reading_level_strings)
+            self.reading_levels = self.reading_levels_string.split(',')
         else:
             self.reading_levels = None
 
@@ -204,7 +203,10 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             q = q.filter(length_query)
 
         if self.reading_levels:
-            q = q.filter(Q(versions__in=self.reading_levels))
+            filter_min = min(self.reading_levels)
+            filter_max = max(self.reading_levels)
+            q = q.exclude(Q(min_reading_level__gt=filter_max) | Q(max_reading_level__lt=filter_min))
+
 
         if self.sort == 'title':
             q = q.order_by('sort_title', 'sort_author')
