@@ -12,6 +12,14 @@
 {% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=False %}
 {% endblock %}
 
+{% block head_additional %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        libraryMasonryEnable();
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 <main id="content" tabindex="-1">
     {% include "shared/partial/alerts.html" %}
