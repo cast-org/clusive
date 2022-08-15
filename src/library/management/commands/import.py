@@ -111,7 +111,7 @@ class Command(BaseCommand):
 
     def handle_epub(self, label: str):
         try:
-            (bv, changed) = unpack_epub_file(None, label, self.book, self.version)
+            (bv, changed) = unpack_epub_file(None, label, book=self.book, sort_order=self.version)
             if changed:
                 self.found_new_content = True
             if bv and not self.book:

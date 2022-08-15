@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Getting started",
+    "resources": [
+      {
+        "identifier": "SSTART",
+        "file": "students-started.epub",
+        "tags": ["5 min"]
+      },
+      {
+        "identifier": "CLUES",
+        "file": "teacher-clues-to-clusive.epub",
+        "tags": ["15 min"]
+      },
+      {
+        "identifier": "FAQ",
+        "file": "faq.epub",
+        "tags": ["45 min"]
+      },
+      {
+        "identifier": "ASSIGN",
+        "file": "assign-readings.epub",
+        "tags": ["5 min"]
+      }
+  ]
+  },
+  {
+    "name": "Teaching with Clusive",
+    "resources": [
+      {
+        "identifier": "SREADP",
+        "file": "teaching-student-reading-panel.epub",
+        "tags": ["5 min"]
+      }]
+  }
+
+]

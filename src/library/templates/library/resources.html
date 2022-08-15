@@ -1,0 +1,47 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block bodyClass %}sidebar-no-start{% endblock %}
+{% block title %}Resources | Clusive{% endblock %}
+
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="resources" %}
+{% endblock %}
+
+{% block sidebar_end %}
+{% include "shared/partial/sidebar_end.html" with read_aloud=True lookup=False %}
+{% endblock %}
+
+{% block head_additional %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        libraryMasonryEnable();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    {% include "shared/partial/alerts.html" %}
+    <h1>Resources</h1>
+
+    <div class="box-mascot-resource-text">
+        <p>Whether you're a classroom teacher, special educator, caregiver,
+            or anyone else looking to support students in reading,
+            these learning resources are here to support <em>you.</em></p>
+    </div>
+
+    {% for cat in categories %}
+    <div class="box box-secondary">
+        <h2>{{ cat.name }}</h2>
+        <div class="library-grid pt-0">
+        {% for resource in cat.resources.all %}
+            {% include "library/partial/resource_card.html" with resource=resource %}
+        {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+</main>
+{% include "shared/partial/popover_tip.html" %}
+{% endblock %}

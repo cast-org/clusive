@@ -8,9 +8,11 @@
         <span class="icon-thought" aria-hidden="true"></span>
         <span class="sr-only">Your thoughts</span>
     </button>
+    {% if not pub.is_educator_resource %}
     <div class="mt-0_5">
         {% include "library/partial/book_starred.html" %}
     </div>
+    {% endif %}
 </div>
 
 {% include "shared/partial/popover_comp.html" %}

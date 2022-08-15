@@ -100,6 +100,11 @@ of the same content. A glossary JSON file and directory of images that
 it refers to can also be included on the command line.
 The content directory contains many examples of these.  
 
+Some initial **Teacher resources** are available in the Clusive\resources directory.
+For these resources, a JSON file listing them along with important metadata
+is required.  The default resources can be imported with the following command:
+* `python manage.py import_resources ..\resources\resources.json`
+
 ### Create a Superuser
 
 Run in the Clusive\target directory:
