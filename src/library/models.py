@@ -202,22 +202,13 @@ class Book(models.Model):
         self.assign_list = list(BookAssignment.objects.filter(book=self, period__in=periods))
         self.custom_list = list(Customization.objects.filter(book=self, periods__in=periods))
 
-    def update_reading_level_range(self, reading_level):
-        if reading_level <= 0:
-            logger.debug("Negative or zero reading level value (%s) not allowed; ignored", reading_level)
-        elif reading_level < self.min_reading_level:
-            self.min_reading_level = reading_level
-        elif reading_level > self.max_reading_level:
-            self.max_reading_level = reading_level
-
     @property
-    def reading_level_range(self):
-        # list based on math notation where square brackets are inclusive,
-        # e.g. [1,3] means levels 1, 2, and 3.
-        if self.min_reading_level == 0 or self.max_reading_level == 0:
-            return [0]
-        else:
-            return [*range(self.min_reading_level, self.max_reading_level+1)]
+    def reading_levels(self):
+        # list of reading levels found in the book versions
+        levels = []
+        for version in self.versions.all():
+            levels.append(version.reading_level)
+        return levels
 
     def __str__(self):
         if self.is_bookshare:
