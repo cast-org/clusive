@@ -239,6 +239,8 @@ $figure-caption-color:                  #666;
 $box-bg:                                #84d2c4;
 $box-color:                             $body-color;
 $box-divider-color:                     #75c0b2;
+$box-secondary-bg:                      #ebe9e4;
+$box-secondary-color:                   $body-color;
 
 $box-resource-bg:                       #84d2c4;
 $box-resource-color:                    $body-color;
@@ -284,6 +286,12 @@ $card-special-bg:                       #9aeadd;
 $card-special-color:                    inherit;
 $card-divider-color:                    #d3cfc9;
 $card-progress-bar-bg:                  #636b82;
+$card-important-bg:                     #f6f4f0;
+$card-important-border-color:           #d3cfc9;
+$card-important-box-shadow:             .125rem .5rem 0 .125rem #fec133, .125rem .125rem 0 .125rem #fec133;
+$card-resource-bg:                      #f6f4f0;
+$card-resource-border-color:            #d3cfc9;
+$card-resource-box-shadow:              .125rem .5rem 0 .125rem #d3cfc9, .125rem .125rem 0 .125rem #d3cfc9;
 
 // Tables
 $table-active-bg:                       #f6f4f0;

@@ -21,7 +21,6 @@
         background-color: var(--CT_boxDivderColor);
         opacity: 1;
     }
-
 }
 
 .box-divider {
@@ -136,5 +135,43 @@
         text-decoration: none;
         background-color: var(--CT_boxTabActiveBg);
         border-color: var(--CT_boxTabActiveBorderColor);
+    }
+}
+
+.box-secondary {
+    color: var(--CT_boxSecondaryColor);
+    background-color: var(--CT_boxSecondaryBg);
+}
+
+.box-mascot-resource-text {
+    position: relative;
+    max-width: rem(800px);
+    min-height: calc(#{$box-mascot-resource-size} * #{$img-ratio-mascot-resource});
+    padding-left: calc(#{$box-mascot-resource-size} + 1rem);
+
+    p {
+        margin-bottom: .75rem;
+    }
+
+    &::before {
+        position: absolute;
+        bottom: -.75rem;
+        left: 0;
+        display: block;
+        width: $box-mascot-resource-size;
+        height: calc(#{$box-mascot-resource-size} * #{$img-ratio-mascot-resource});
+        content: "";
+        background-image: var(--CT_imgMascotResource);
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    @include media-breakpoint-down(md) {
+        padding-bottom: calc(#{$box-mascot-resource-size} * #{$img-ratio-mascot-resource});
+        padding-left: 0;
+
+        &::before {
+            bottom: 0;
+        }
     }
 }

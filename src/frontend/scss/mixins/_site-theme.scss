@@ -96,6 +96,8 @@
         --CT_boxColor: #{$box-color};
         --CT_boxDivderColor: #{$box-divider-color};
         --CT_boxMascotSize: #{$box-mascot-size};
+        --CT_boxSecondaryBg: #{$box-secondary-bg};
+        --CT_boxSecondaryColor: #{$box-secondary-color};
 
         --CT_boxTabBg: #{$box-tab-bg};
         --CT_boxTabColor: #{$box-tab-color};
@@ -121,6 +123,13 @@
 
         --CT_cardSpecialBg: #{$card-special-bg};
         --CT_cardSpecialColor: #{$card-special-color};
+
+        --CT_cardImportantBg: #{$card-important-bg};
+        --CT_cardImportantBorderColor: #{$card-important-border-color};
+        --CT_cardImportantBoxShadow: #{$card-important-box-shadow};
+        --CT_cardResourceBg: #{$card-resource-bg};
+        --CT_cardResourceBorderColor: #{$card-resource-border-color};
+        --CT_cardResourceBoxShadow: #{$card-resource-box-shadow};
 
         --CT_figureCaptionBg: #{$figure-caption-bg};
         --CT_figureCaptionColor: #{$figure-caption-color};

@@ -4,7 +4,8 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.urls import path
 
-from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend, Customization, CustomVocabularyWord
+from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend, \
+    Customization, CustomVocabularyWord, EducatorResourceCategory
 from library.parsing import scan_all_books
 
 logger = logging.getLogger(__name__)
@@ -23,8 +24,8 @@ class subjectBookAdmin(admin.ModelAdmin):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'owner', 'title', 'author', 'word_count')
-    sortable_by = ('id', 'owner', 'title', 'author', 'word_count')
+    list_display = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count')
+    sortable_by = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count')
     inlines = [subjectBookAdmin]
     inlines = [VersionsInline]
 
@@ -42,6 +43,12 @@ class BookAdmin(admin.ModelAdmin):
     def rescan(self, request):
         scan_all_books()
         return HttpResponseRedirect("../")
+
+
+@admin.register(EducatorResourceCategory)
+class EducatorResourceCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'sort_order',)
+    list_display_links = ('name',)
 
 
 @admin.register(BookVersion)
@@ -80,14 +87,17 @@ class AnnotationAdmin(admin.ModelAdmin):
     sortable_by = ('progression', 'user', 'bookVersion', 'dateAdded', 'dateDeleted')
     list_filter = ('bookVersion', 'user' )
 
+
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ['subject', 'sort_order']
+
 
 @admin.register(Customization)
 class CustomizationAdmin(admin.ModelAdmin):
     list_display = ['id', 'owner', 'book', 'title']
     sortable_by = ('id', 'book', 'title')
+
 
 @admin.register(CustomVocabularyWord)
 class CustomVocabularyWordAdmin(admin.ModelAdmin):

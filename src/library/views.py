@@ -27,7 +27,7 @@ from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
-    CustomVocabularyWord
+    CustomVocabularyWord, EducatorResourceCategory
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
     get_access_keys, is_organization_sponsor, is_organization_member
@@ -157,20 +157,22 @@ class LibraryDataView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         q: QuerySet
+        # Base QuerySet makes sure this is a Library, not Resources, item.
+        q = Book.objects.filter(resource_identifier__isnull=True)
         if self.view == 'period' and self.period:
-            q = Book.objects.filter(assignments__period=self.period)
+            q = q.filter(assignments__period=self.period)
         elif self.view == 'mine':
-            q = Book.objects.filter(owner=self.clusive_user)
+            q = q.filter(owner=self.clusive_user)
         elif self.view == 'starred':
             # STARRED = books found in paradata where starred field is true for this user
-            q = Book.objects.filter(
+            q = q.filter(
                 Q(paradata__starred=True)
                 & Q(paradata__user=self.clusive_user))
         elif self.view == 'public':
-            q = Book.objects.filter(owner=None)
+            q = q.filter(owner=None)
         elif self.view == 'all':
             # ALL = assigned in one of my periods, or public, or owned by me.
-            q = Book.objects.filter(
+            q = q.filter(
                 Q(assignments__period__in=self.clusive_user.periods.all())
                 | Q(owner=None)
                 | Q(owner=self.clusive_user)).distinct()
@@ -375,6 +377,17 @@ class LibraryStyleRedirectView(View):
         if request.clusive_user and request.clusive_user.current_period:
             kwargs['period_id'] = request.clusive_user.current_period.id
         return HttpResponseRedirect(redirect_to=reverse('library', kwargs=kwargs))
+
+
+class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+    template_name = 'library/resources.html'
+
+    def get(self, request, *args, **kwargs):
+        self.extra_context = {
+            'categories': EducatorResourceCategory.objects.all()
+                .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order')))
+        }
+        return super().get(request, *args, **kwargs)
 
 
 class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):

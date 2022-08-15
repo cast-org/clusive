@@ -1,35 +1,56 @@
+{% comment %}
+Expects context:
+  page_group:  indicates which navigation item should be shown as "current"
+  page_group_main (optional): indicates that the current page is the main page with this navigation item
+                              so it does not need to be linked. If the URLs match, then this is automatically
+                              detected and this does not need to be specified.
+  request, user, clusive_user
+{% endcomment %}
 <ul class="navbar-nav">
     <li class="nav-item">
-        {% if page_group == 'dashboard' %}
+        {% url 'dashboard' as link_url %}
+        {% if request.path == link_url or page_group_main == 'dashboard' %}
         <span class="nav-link current" aria-current="true">Dashboard</span>
         {% else %}
-        <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'dashboard' %} current{% endif %}">Dashboard</a>
         {% endif %}
     </li>
 
     <li class="nav-item">
-        {% if page_group == 'library' %}
+        {% url 'resources' as link_url %}
+        {% if request.path == link_url or page_group_main == 'resources' %}
+        <span class="nav-link current" aria-current="true">Resources</span>
+        {% else %}
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'resources' %} current{% endif %}">Resources</a>
+        {% endif %}
+    </li>
+
+    <li class="nav-item">
+        {% url 'reader_index' as link_url %}
+        {% if request.path == link_url or page_group_main == 'library' %}
         <span class="nav-link current" aria-current="true">Library</span>
         {% else %}
-        <a href="{% url 'reader_index' %}" class="nav-link">Library</a>
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'library' %} current{% endif %}">Library</a>
         {% endif %}
     </li>
 
     {% if request.clusive_user.can_manage_periods %}
     <li class="nav-item">
-        {% if page_group == 'manage' %}
+        {% url 'manage' as link_url %}
+        {% if request.path == link_url or page_group_main == 'manage' %}
         <span class="nav-link current" aria-current="true">Manage</span>
         {% else %}
-        <a href="{% url 'manage' %}" class="nav-link">Manage</a>
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'manage' %} current{% endif %}">Manage</a>
         {% endif %}
     </li>
     {% endif %}
 
     <li class="nav-item">
-        {% if page_group == 'word_bank' %}
+        {% url 'word_bank' as link_url %}
+        {% if request.path == link_url or page_group_main == 'word_bank' %}
         <span class="nav-link current" aria-current="true">Word bank</span>
         {% else %}
-        <a href="{% url 'word_bank' %}" class="nav-link" data-clusive-tip-id="wordbank" data-clusive-tip-action="wordbank" data-cfw-tooltip-placement="bottom auto">Word bank</a>
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'word_bank' %} current{% endif %}" data-clusive-tip-id="wordbank" data-clusive-tip-action="wordbank" data-cfw-tooltip-placement="bottom auto">Word bank</a>
         {% endif %}
     </li>
 

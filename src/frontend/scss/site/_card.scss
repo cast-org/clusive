@@ -88,6 +88,11 @@
 }
 
 .card {
+    .card-header + .card-body {
+        padding-top: 0;
+        margin-top: $card-title-margin-bottom * -1;
+    }
+
     .stars-chart {
         border-color: var(--CT_cardDividerColor);
 
@@ -230,5 +235,37 @@
 
     .card-body {
         padding: .75rem 1.5rem;
+    }
+}
+
+.card-important {
+    background-color: var(--CT_cardImportantBg);
+    border-color: var(--CT_cardImportantBorderColor);
+    border-right: 0;
+    border-bottom: 0;
+    box-shadow: var(--CT_cardImportantBoxShadow);
+}
+.card-resource {
+    background-color: var(--CT_cardResourceBg);
+    border-color: var(--CT_cardResourceBorderColor);
+    border-right: 0;
+    border-bottom: 0;
+    box-shadow: var(--CT_cardResourceBoxShadow);
+}
+.card-important,
+.card-resource {
+    .row {
+        margin-right: -.25rem;
+        margin-left: -.25rem;
+
+        > * {
+            padding-right: .25rem;
+            padding-left: .25rem;
+        }
+
+        .card-img {
+            margin-bottom: $card-padding-y;
+            margin-left: $card-padding-x;
+        }
     }
 }

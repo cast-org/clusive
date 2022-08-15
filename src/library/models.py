@@ -37,6 +37,17 @@ class Subject(models.Model):
         return cls.cached_list
 
 
+class EducatorResourceCategory(models.Model):
+    name = models.CharField(max_length=256)
+    sort_order = models.SmallIntegerField(unique=True)
+
+    def __str__(self):
+        return '<EducatorResourceCategory %s:%s>' % (self.sort_order, self.name)
+
+    class Meta:
+        ordering = ['sort_order']
+
+
 class Book(models.Model):
     """
     Metadata about a single reading, to be represented as an item on the Library page.
@@ -53,11 +64,23 @@ class Book(models.Model):
     sort_author = models.CharField(max_length=256, db_index=True)
     description = models.TextField(default="", blank=True, db_index=True)
     cover = models.CharField(max_length=256, null=True)
+    featured = models.BooleanField(default=False)
     word_count = models.PositiveIntegerField(null=True, db_index=True)
     picture_count = models.PositiveIntegerField(null=True)
     subjects = models.ManyToManyField(Subject, db_index=True)
     bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
     add_date = models.DateTimeField(auto_now_add=True, db_index=True)
+    # Educator-resource-specific fields.
+    # Existence of a non-null resource_identifier marks this as a Resource rather than a Library Book
+    resource_identifier = models.CharField(max_length=256, unique=True, db_index=True, null=True, blank=True)
+    resource_category = models.ForeignKey(to=EducatorResourceCategory, related_name='resources',
+                                          on_delete=models.SET_NULL, null=True, blank=True)
+    resource_sort_order = models.SmallIntegerField(null=True, blank=True) # Display order within the category
+    resource_tags = models.TextField(null=True, blank=True)
+
+    @property
+    def is_educator_resource(self):
+        return self.resource_identifier is not None
 
     @property
     def is_public(self):
@@ -76,6 +99,16 @@ class Book(models.Model):
         if BookAssignment.objects.filter(book=self, period__in=periods).exists():
             return True
         return False
+
+    @property
+    def resource_tag_list(self):
+        """Decode JSON format and return tags as a list."""
+        if not hasattr(self, '_resource_tag_list'):
+            if self.resource_tags:
+                self._resource_tag_list = json.loads(self.resource_tags)
+            else:
+                self._resource_tag_list = None
+        return self._resource_tag_list
 
     @property
     def all_word_list(self):
@@ -109,6 +142,8 @@ class Book(models.Model):
         """URL-style path to the book's location."""
         if self.owner:
             return '%d/%d' % (self.owner.pk, self.pk)
+        elif self.is_educator_resource:
+            return 'resource/%d' % self.pk
         else:
             return 'public/%d' % self.pk
 
@@ -167,6 +202,8 @@ class Book(models.Model):
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
+        elif self.is_educator_resource:
+            return '<Book %d: Resource %s>' % (self.pk, self.resource_identifier)
         else:
             return '<Book %d: %s/%s>' % (self.pk, self.owner, self.title)
 
@@ -278,7 +315,10 @@ class BookVersion(models.Model):
         return cls.objects.get(book__pk=book_id, sortOrder=version_number)
 
     def __str__(self):
-        return '<BV %d: %s[%d]>' % (self.pk, self.book, self.sortOrder)
+        if self.book: #FIXME
+            return '<BV %d: %s[%d]>' % (self.pk, self.book, self.sortOrder)
+        else:
+            return '<BV %d: resource %s>' % (self.pk, self.resource)
 
     class Meta:
         ordering = ['book', 'sortOrder']
@@ -345,14 +385,14 @@ class BookTrend(models.Model):
         no period given, return all books, ordered by popularity.
         """
         if period:
-            return cls.objects.filter(period=period).order_by('-popularity')
+            return cls.objects.filter(period=period, book__resource_identifier__isnull=True).order_by('-popularity')
         else:
-            return cls.objects.order_by('-popularity')
+            return cls.objects.filter(book__resource_identifier__isnull=True).order_by('-popularity')
 
     @classmethod
     def top_assigned(cls, period):
-        return cls.objects.filter(period=period, book__assignments__period=period).order_by('-popularity')
-    
+        return cls.objects.filter(period=period, book__resource_identifier__isnull=True, book__assignments__period=period).order_by('-popularity')
+
     @classmethod
     def user_count_for_assigned_book(cls, book, period):
         """

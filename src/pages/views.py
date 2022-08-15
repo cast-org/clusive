@@ -580,12 +580,18 @@ class ReaderChooseVersionView(RedirectView):
 class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
-    page_name = 'Reading'
 
     def get(self, request, *args, **kwargs):
+        resource_identifier = kwargs.get('resource_id')
         book_id = kwargs.get('book_id')
-        version = kwargs.get('version')
-        book = Book.objects.get(pk=book_id)
+        version = kwargs.get('version') or 0
+        if resource_identifier:
+            logger.debug('id=%s', resource_identifier)
+            book = Book.objects.get(resource_identifier=resource_identifier)
+        else:
+            book = Book.objects.get(pk=book_id)
+        self.page_name = 'ResourceReading' if book.is_educator_resource else 'Reading'
+
         if not book.is_visible_to(request.clusive_user):
             raise PermissionDenied()
         versions = book.versions.all()
@@ -593,7 +599,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         self.book_version = versions[version]
         self.book = book
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
-        cuelist_map = choose_words_to_cue(book_version=self.book_version, user=clusive_user)
+        cuelist_map = choose_words_to_cue(book_version=self.book_version, user=clusive_user) \
+            if not book.is_educator_resource else {}
         # Make into format that R2D2BC wants for "definitions"
         cuelist = [{ 'order': i, 'result': 1, 'terms': terms } for i, terms in enumerate(cuelist_map.values())]
         logger.debug('Cuelist: %s', repr(cuelist))

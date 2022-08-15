@@ -19,7 +19,11 @@ var simplificationTool = "{{ simplification_tool }}";
 {% block title %}{{ pub.title }} | Clusive{% endblock %}
 
 {% block header %}
-{% include "shared/partial/site_header.html" %}
+{% if pub.is_educator_resource %}
+{% include "shared/partial/site_header.html" with page_group="resources" %}
+{% else %}
+{% include "shared/partial/site_header.html" with page_group="library" %}
+{% endif %}
 {% endblock %}
 
 {% block sidebar_start %}
@@ -125,9 +129,10 @@ var simplificationTool = "{{ simplification_tool }}";
         {% for a in annotations %}
             annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
         {% endfor %}
-        var definitions = JSON.parse('{{cuelist|safe}}');
+        var definitions = {% if definitions %}JSON.parse('{{cuelist|safe}}'){% else %}null{% endif %};
         var definitionsSeen = {};
-        var lastReadingPosition = {{ last_position|safe }};
+
+        var lastReadingPosition = {% if last_position %} {{ last_position|safe }} {% else %} null{% endif %};
 
         var selectionMenuItems = [
             {
