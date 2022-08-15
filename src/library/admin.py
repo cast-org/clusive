@@ -22,11 +22,11 @@ class SubjectsInline(admin.TabularInline):
 class subjectBookAdmin(admin.ModelAdmin):
     inlines = (SubjectsInline,)
 
+
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count')
     sortable_by = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count')
-    inlines = [subjectBookAdmin]
     inlines = [VersionsInline]
 
     change_list_template = 'library/book_changelist.html'
@@ -38,8 +38,8 @@ class BookAdmin(admin.ModelAdmin):
         ]
         return my_urls + urls
 
-    ## Define a custom action that scans previously uploaded EPUBs and updates the database
-    ## This might be useful if database structure or parsing rules get updated
+    # Define a custom action that scans previously uploaded EPUBs and updates the database
+    # This might be useful if database structure or parsing rules get updated
     def rescan(self, request):
         scan_all_books()
         return HttpResponseRedirect("../")
