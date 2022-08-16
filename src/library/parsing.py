@@ -466,8 +466,10 @@ def scan_book(b):
     """Looks through book manifest and text files and sets or updates database metadata."""
     glossary_words = find_glossary_words(b.storage_dir)
     versions = b.versions.all()
+    reading_levels = []
     for bv in versions:
         find_all_words(bv, glossary_words)
+        reading_levels.append(bv.reading_level)
         count_pictures(bv)
     # After all versions are read, gather global metadata
     # Book word_count is the average of version word_counts.
@@ -475,6 +477,8 @@ def scan_book(b):
     set_subjects(b)
     b.word_count = sum([v.word_count for v in versions])/len(versions)
     b.picture_count = sum([v.picture_count for v in versions])/len(versions)
+    b.min_reading_level = min(reading_levels)
+    b.max_reading_level = max(reading_levels)
     b.save()
     # determine new words added in each version.
     if len(versions) > 1:
