@@ -396,8 +396,9 @@ class LibraryStyleRedirectView(View):
         return HttpResponseRedirect(redirect_to=reverse('library', kwargs=kwargs))
 
 
-class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, TemplateView):
     template_name = 'library/resources.html'
+    page_name = 'Resources'
 
     def get(self, request, *args, **kwargs):
         self.extra_context = {
@@ -405,6 +406,9 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
                 .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order')))
         }
         return super().get(request, *args, **kwargs)
+
+    def configure_event(self, event: Event):
+        event.page = self.page_name
 
 
 class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):

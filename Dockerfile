@@ -67,8 +67,8 @@ COPY --from=base /usr/local/share/nltk_data /usr/local/share/nltk_data
 
 # Don't run as root
 RUN addgroup --system app && adduser --system --ingroup app app
-RUN mkdir -p /app /content
-RUN chown -R app:app /app /content
+RUN mkdir -p /app /content /resources
+RUN chown -R app:app /app /content /resources
 
 WORKDIR /app
 
@@ -76,6 +76,7 @@ COPY --from=base /app/target /app
 COPY src/entrypoint.sh /app
 
 COPY content /content
+COPY resources /resources
 
 RUN gosu app:app python manage.py collectstatic --no-input
 
