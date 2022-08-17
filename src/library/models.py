@@ -204,32 +204,31 @@ class Book(models.Model):
 
     @property
     def reading_levels(self):
-        # list of reading levels found in the book versions
-        levels = []
+        levels = set()
         for version in self.versions.all():
-            levels.append(version.reading_level)
+            levels.add(version.reading_level)
         return levels
 
     @property
     def reading_levels_categories(self):
         """
-        Collapses the reading levels into a list of two character categories
-        that represents the range reading levels
+        Collapses the reading levels into a list of names that represent the
+        range of reading levels
         """
-        categories = []
-        for level in self.reading_levels:
+        categories = set()
+        for level_str in self.reading_levels:
+            level = int(level_str)
             if 1 <= level and level <= 3:
-                categories.append(1)
+                categories.add('Early')
             elif 4 <= level and level <= 5:
-                categories.append(2)
+                categories.add('Elementary')
             elif 6 <= level and level <= 8:
-                categories.append(3)
+                categories.add('Middle')
             elif 9 <= level and level <= 12:
-                categories.append(4)
+                categories.add('High')
             elif level > 12:
-                categories.append(5)
-        logger.debug('CATEGORIES: %s', list(dict.fromkeys(categories)))
-        return list(dict.fromkeys(categories))  # removes duplicates
+                categories.add('Advanced')
+        return categories
 
     def __str__(self):
         if self.is_bookshare:

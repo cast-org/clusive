@@ -35,7 +35,6 @@ from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 
 from tips.models import TipHistory
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -113,7 +112,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
 
         self.reading_levels_string = request.GET.get('readingLevels')
         if self.reading_levels_string:
-            self.reading_levels = self.get_ARI_levels(self.reading_levels_string)
+            self.reading_levels = self.reading_levels_string.split(',')
         else:
             self.reading_levels = None
 
@@ -265,21 +264,6 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         if size=='XL':
             return Q(word_count__gt=30000)
         raise Exception('invalid input')
-
-    def get_ARI_levels(self, reading_levels_string):
-        ari_levels = []
-        for level in reading_levels_string.split(','):
-            if level == '1':
-                ari_levels = ari_levels + [1, 2, 3]
-            elif level == '2':
-                ari_levels = ari_levels + [4, 5]
-            elif level == '3':
-                ari_levels = ari_levels + [6, 7, 8]
-            elif level == '4':
-                ari_levels = ari_levels + [9, 10, 11, 12]
-            elif level == '5':
-                ari_levels = ari_levels + [13]
-        return ari_levels
 
     def make_all_link(self):
         args = {}
