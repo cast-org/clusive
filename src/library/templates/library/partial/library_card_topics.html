@@ -4,15 +4,13 @@
     {% for s in book.subjects.all %}
         <a href="{% search_args query s '' %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
     {% endfor %}
-    {% for level in book.reading_levels %}
-        {% if level != 0 %}
-            <a href="{% search_args query '' level %}" class="btn btn-tag link-above {% if level in readingLevels %}active{% endif %}">
-            {% if level == 1 %} Early reader</a>
-            {% elif level == 2 %} Elementary</a>
-            {% elif level == 3 %} Middle school</a>
-            {% elif level == 4 %} High school</a>
-            {% else %} Advanced</a>
-            {% endif %}
+    {% for category in book.reading_levels_categories %}
+        <a href="{% search_args query '' category %}" class="btn btn-tag link-above {% if category in readingLevels %}active{% endif %}">
+        {% if category == 1 %} Early reader</a>
+        {% elif category == 2 %} Elementary</a>
+        {% elif category == 3 %} Middle school</a>
+        {% elif category == 4 %} High school</a>
+        {% elif category == 5 %} Advanced</a>
         {% endif %}
     {% endfor %}
     <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"

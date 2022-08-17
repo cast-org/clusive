@@ -210,6 +210,27 @@ class Book(models.Model):
             levels.append(version.reading_level)
         return levels
 
+    @property
+    def reading_levels_categories(self):
+        """
+        Collapses the reading levels into a list of two character categories
+        that represents the range reading levels
+        """
+        categories = []
+        for level in self.reading_levels:
+            if 1 <= level and level <= 3:
+                categories.append(1)
+            elif 4 <= level and level <= 5:
+                categories.append(2)
+            elif 6 <= level and level <= 8:
+                categories.append(3)
+            elif 9 <= level and level <= 12:
+                categories.append(4)
+            elif level > 12:
+                categories.append(5)
+        logger.debug('CATEGORIES: %s', list(dict.fromkeys(categories)))
+        return list(dict.fromkeys(categories))  # removes duplicates
+
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
