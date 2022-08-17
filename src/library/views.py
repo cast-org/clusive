@@ -112,7 +112,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
 
         self.reading_levels_string = request.GET.get('readingLevels')
         if self.reading_levels_string:
-            self.reading_levels = self.reading_levels_string.split(',')
+            splits = self.reading_levels_string.split(',')
+            self.reading_levels = [int(level) for level in splits]
         else:
             self.reading_levels = None
 
