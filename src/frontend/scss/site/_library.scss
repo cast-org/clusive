@@ -115,12 +115,12 @@
 }
 
 .library-filter-row {
-    > * {
-        display: flex;
-    }
-    .library-filter-box {
-        flex: 1 0 auto;
-    }
+    //> * {
+    //    display: flex;
+    //}
+    //.library-filter-box {
+    //    flex: 1 0 auto;
+    //}
     .form-check {
         margin-bottom: .125rem;
     }
