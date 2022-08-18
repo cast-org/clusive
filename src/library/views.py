@@ -347,7 +347,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['clusive_user'] = self.clusive_user
         context['query'] = self.query
         context['subjects_string'] = self.subjects_string
-        context['subjects'] = self.subjects,
+        context['subjects'] = self.subjects
         context['filter_reading_levels_string'] = self.filter_reading_levels_string
         context['category_map'] = READING_LEVEL_CATEGORY_MAP
         context['period'] = self.period
