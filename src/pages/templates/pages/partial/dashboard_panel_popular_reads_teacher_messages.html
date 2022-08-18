@@ -7,9 +7,9 @@
         <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
     {% else %}
         {% if data.total < 4 %}
-            These are your most recently assigned readings.
+            These are the readings you most recently assigned to this class.
         {% else %}
-            These are your 3 most recently assigned readings.
+            These are the 3 readings you most recently assigned to this class.
         {% endif %}
         See all assigned readings for this class in the
         <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
