@@ -5,16 +5,16 @@
         <a href="{% search_args query s '' %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
     {% endfor %}
     {% for category in book.reading_levels_categories %}
-        {% if category == 'Early' %}
-        <a href="{% search_args query '' '1,2,3' %}" class="btn btn-tag link-above">Early reader</a>
-        {% elif category == 'Elementary' %}
-            <a href="{% search_args query '' '4,5' %}" class="btn btn-tag link-above">Elementary</a>
-        {% elif category == 'Middle' %}
-            <a href="{% search_args query '' '6,7,8' %}" class="btn btn-tag link-above">Middle school</a>
-        {% elif category == 'High' %}
-            <a href="{% search_args query '' '9,10,11,12' %}" class="btn btn-tag link-above">High school</a>
-        {% elif category == 'Advanced' %}
-            <a href="{% search_args query '' '13' %}" class="btn btn-tag link-above">Advanced</a>
+        {% if category == '1Early' %}
+        <a href="{% search_args query '' category_map.1Early %}" class="btn btn-tag link-above {% if category_map.1Early in filter_reading_levels_string %}active{% endif %}">Early reader</a>
+        {% elif category == '2Elementary' %}
+            <a href="{% search_args query '' category_map.2Elementary %}" class="btn btn-tag link-above {% if category_map.2Elementary in filter_reading_levels_string %}active{% endif %}">Elementary</a>
+        {% elif category == '3Middle' %}
+            <a href="{% search_args query '' category_map.3Middle %}" class="btn btn-tag link-above {% if category_map.3Middle in filter_reading_levels_string %}active{% endif %}">Middle school</a>
+        {% elif category == '4High' %}
+            <a href="{% search_args query '' category_map.4High %}" class="btn btn-tag link-above {% if category_map.4High in filter_reading_levels_string %}active{% endif %}">High school</a>
+        {% elif category == '5Advanced' %}
+            <a href="{% search_args query '' category_map.5Advanced %}" class="btn btn-tag link-above {% if category_map.5Advanced in filter_reading_levels_string %}active{% endif %}">Advanced</a>
         {% endif %}
     {% endfor %}
     <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"

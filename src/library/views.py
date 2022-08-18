@@ -35,8 +35,17 @@ from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 
 from tips.models import TipHistory
+import pdb
 
 logger = logging.getLogger(__name__)
+
+READING_LEVEL_CATEGORY_MAP = {
+    '1Early': '1,2,3',
+    '2Elementary': '4,5',
+    '3Middle': '6,7,8',
+    '4High': '9,10,11,12,',
+    '5Advanced': '13'
+}
 
 # The library page requires a lot of parameters, which interact in rather complex ways.
 # Here's a summary.  It is a sort-of hierarchy, in that changing parameters higher on this list
@@ -93,7 +102,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
     period = None
     query = None
     subjects = None
-    reading_levels = None
+    filter_reading_levels = None
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
@@ -110,12 +119,12 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             s = Subject.objects.filter(subject__in=subject_strings)
             self.subjects = s
 
-        self.reading_levels_string = request.GET.get('readingLevels')
-        if self.reading_levels_string:
-            splits = self.reading_levels_string.split(',')
-            self.reading_levels = [int(level) for level in splits]
+        self.filter_reading_levels_string = request.GET.get('readingLevels')
+        if self.filter_reading_levels_string:
+            splits = self.filter_reading_levels_string.split(',')
+            self.filter_reading_levels = [int(level) for level in splits]
         else:
-            self.reading_levels = None
+            self.filter_reading_levels = None
 
         self.lengths_string = request.GET.get('words')
         if self.lengths_string:
@@ -205,9 +214,9 @@ class LibraryDataView(LoginRequiredMixin, ListView):
                     length_query |= self.query_for_length(option)
             q = q.filter(length_query)
 
-        if self.reading_levels:
-            filter_min = min(self.reading_levels)
-            filter_max = max(self.reading_levels)
+        if self.filter_reading_levels:
+            filter_min = min(self.filter_reading_levels)
+            filter_max = max(self.filter_reading_levels)
             if filter_max == 13:
                 q = q.exclude(Q(max_reading_level__lt=filter_min))
             else:
@@ -274,8 +283,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             args['subjects'] = self.subjects_string
         if self.lengths:
             args['words'] = self.lengths_string
-        if self.reading_levels:
-            args['reading_levels'] = self.reading_levels_string
+        if self.filter_reading_levels:
+            args['filter_reading_levels'] = self.filter_reading_levels_string
         return reverse('library', kwargs={
             'style': self.style,
             'sort': self.sort,
@@ -339,7 +348,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['query'] = self.query
         context['subjects_string'] = self.subjects_string
         context['subjects'] = self.subjects,
-        context['reading_levels_string'] = self.reading_levels_string,
+        context['filter_reading_levels_string'] = self.filter_reading_levels_string
+        context['category_map'] = READING_LEVEL_CATEGORY_MAP
         context['period'] = self.period
         context['period_name'] = self.period.name if self.period else None
         context['style'] = self.style
@@ -352,6 +362,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
 
         if len(self.object_list) == 0:
             context['empty_message'] = self.create_empty_message()
+
         return context
 
 
