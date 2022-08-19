@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Sum, Q
 from django.db.models.functions import Lower
+from django.db.utils import NotSupportedError
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -30,6 +31,7 @@ from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, \
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.util import TranslateApiManager
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -307,8 +309,16 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
         trends = readings[:3]
     else:
         readings = BookTrend.top_trends(current_period)
+        if current_period == None:
+            # Find the book trends that are unique with respect to their book
+            # "by hand".  Might be able to use `QuerySet.distinct(book)`, but:
+            # 1. `distinct(book)` is supported by Postgres only, and
+            # 2. Should use `order_by(book)` in conjunction with `distinct()`,
+            # but the goal here is to order by `popularity`.  See:
+            # https://docs.djangoproject.com/en/3.2/ref/models/querysets/#django.db.models.query.QuerySet.distinct
+            readings = unique_books(readings)
         total = len(readings)
-        trends = cull_unauthorized_from_readings(readings[:3], clusive_user)
+        trends = cull_unauthorized_from_readings(readings, clusive_user)[:3]
 
     trend_data = [{'trend': t} for t in trends]
     for td in trend_data:
@@ -334,6 +344,15 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
         'view': 'assigned' if assigned_only else 'popular',
         'total': total,
     }
+
+def unique_books(trends):
+    unique_book_trends = []
+    books = []  # scratch
+    for trend in trends:
+        if trend.book not in books:
+            unique_book_trends.append(trend)
+            books.append(trend.book)
+    return unique_book_trends
 
 def cull_unauthorized_from_readings(readings, clusive_user):
     """
