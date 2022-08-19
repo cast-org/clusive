@@ -31,7 +31,6 @@ from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, \
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.util import TranslateApiManager
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -316,9 +315,17 @@ def get_popular_reads_data(clusive_user, periods, current_period, assigned_only)
             # 2. Should use `order_by(book)` in conjunction with `distinct()`,
             # but the goal here is to order by `popularity`.  See:
             # https://docs.djangoproject.com/en/3.2/ref/models/querysets/#django.db.models.query.QuerySet.distinct
-            readings = unique_books(readings)
-        total = len(readings)
-        trends = cull_unauthorized_from_readings(readings, clusive_user)[:3]
+            if clusive_user.role == 'GU':
+                readings = readings.filter(book__owner=None) # public readings
+                total = len(readings)
+                trends = unique_books(readings)[:3]
+            else:
+                readings = unique_books(readings)
+                total = len(readings)
+                trends = cull_unauthorized_from_readings(readings, clusive_user)[:3]
+        else:
+            total = len(readings)
+            trends = cull_unauthorized_from_readings(readings, clusive_user)[:3]
 
     trend_data = [{'trend': t} for t in trends]
     for td in trend_data:
