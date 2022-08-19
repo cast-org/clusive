@@ -16,6 +16,7 @@ Expects context:
         {% endif %}
     </li>
 
+    {% if request.clusive_user.can_manage_periods %}
     <li class="nav-item">
         {% url 'resources' as link_url %}
         {% if request.path == link_url or page_group_main == 'resources' %}
@@ -24,6 +25,7 @@ Expects context:
         <a href="{{ link_url }}" class="nav-link{% if page_group == 'resources' %} current{% endif %}">Resources</a>
         {% endif %}
     </li>
+    {% endif %}
 
     <li class="nav-item">
         {% url 'reader_index' as link_url %}

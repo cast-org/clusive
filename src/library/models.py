@@ -211,7 +211,7 @@ class Book(models.Model):
     def get_featured_books(cls):
         """Return books to suggest to users who have not visited any book yet.
         This is really just a stub so far; returns "Clues to Clusive" if it exists."""
-        return Book.objects.filter(owner=None, title__contains='Clusive')
+        return Book.objects.filter(owner=None, title__contains='Clusive', resource_identifier__isnull=True)
 
     class Meta:
         ordering = ['title']
