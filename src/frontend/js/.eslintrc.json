@@ -5,6 +5,9 @@
     "es6": true,
     "jquery": true
   },
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
   "extends": "eslint:recommended",
   "plugins": ["compat"],
   "globals": {

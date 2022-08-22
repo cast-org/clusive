@@ -35,6 +35,8 @@ var clusiveTTS = {
 $(document).ready(function() {
     'use strict';
 
+    clusiveSelection.startSelectListen();
+
     // Allow play button to have toggle behavior
     $(document).on('click', '.tts-play', function(e) {
         clusiveTTS.toggle(e);
@@ -626,7 +628,7 @@ clusiveTTS.isSelection = function(selection) {
     return !(selection.type === 'None' || selection.type === 'Caret');
 };
 
-clusiveTTS.read = function(selector) {
+clusiveTTS.read = async function(selector) {
     'use strict';
 
     if (typeof selector === 'undefined' || selector === null) {
@@ -636,7 +638,7 @@ clusiveTTS.read = function(selector) {
     var elem = clusiveTTS.getElement(selector);
 
     var nodesToRead = clusiveTTS.getReadableTextNodes(elem);
-    var selection = window.getSelection();
+    var selection = await clusiveSelection.getUserSelection();
     var isSelection = clusiveTTS.isSelection(selection);
 
     clusiveTTS.scrollWatchStart();
@@ -901,7 +903,90 @@ var clusiveSelection = {
     directions: {
         FORWARD: 'Forward',
         BACKWARD: 'Backward'
+    },
+    storedRange: {
+        collapsed: true
+    },
+    timerRef: null
+};
+
+clusiveSelection.isIOS = function() {
+    'use strict';
+
+    // Second test is needed for iOS 13+
+    return (
+        navigator.userAgent.match(/iPhone|iPad|iPod/i) !== null ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    );
+};
+
+clusiveSelection.startSelectListen = function() {
+    'use strict';
+
+    document.addEventListener('selectionchange', clusiveSelection.handleSelectionChange);
+    document.addEventListener('selectionEnd', clusiveSelection.handleSelectionEnd); // Custom event
+};
+
+clusiveSelection.endSelectListen = function() {
+    'use strict';
+
+    document.removeEventListener('selectionchange', clusiveSelection.handleSelectionChange);
+    document.removeEventListener('selectionEnd', clusiveSelection.handleSelectionEnd); // Custom event
+    clusiveSelection.timerRef = null;
+};
+
+clusiveSelection.handleSelectionChange = function() {
+    'use strict';
+
+    // Delay after the last selection change event
+    if (clusiveSelection.timerRef) {
+        clearTimeout(clusiveSelection.timerRef);
     }
+    clusiveSelection.timerRef = setTimeout(function() {
+        const eventSelectionEnd = new Event('selectionEnd');
+        document.dispatchEvent(eventSelectionEnd);
+    }, 100);
+};
+
+clusiveSelection.handleSelectionEnd = function() {
+    'use strict';
+
+    clusiveSelection.timerRef = null;
+    if (window.getSelection().rangeCount) {
+        clusiveSelection.storedRange =  window.getSelection().getRangeAt(0);
+    } else {
+        clusiveSelection.storedRange = {
+            collapsed: true
+        };
+    }
+};
+
+clusiveSelection.recreateSelection = function() {
+    'use strict';
+
+    return new Promise((resolve) => { // eslint-disable-line compat/compat
+        if (clusiveSelection.isIOS() && !clusiveSelection.storedRange.collapsed) {
+            clusiveSelection.endSelectListen();
+            const selectionReset = document.getSelection();
+            selectionReset.removeAllRanges();
+            clearTimeout(clusiveSelection.timerRef);
+            setTimeout(function() {
+                selectionReset.addRange(clusiveSelection.storedRange);
+                clusiveSelection.startSelectListen();
+                resolve();
+            }, 10);
+        } else {
+            resolve();
+        }
+    });
+};
+
+clusiveSelection.getUserSelection = async function() {
+    'use strict';
+
+    clearTimeout(clusiveSelection.timerRef);
+    await clusiveSelection.recreateSelection();
+    return window.getSelection();
 };
 
 clusiveSelection.getSelectionDirection = function(elements, selection) {
