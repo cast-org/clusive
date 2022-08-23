@@ -5,9 +5,8 @@ from os.path import exists
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, Prefetch
 from django.db.models.functions import Lower
-from django.db.utils import NotSupportedError
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -124,8 +123,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.is_teacher = self.clusive_user.can_manage_periods
         self.is_guest = False if self.is_teacher else (self.request.clusive_user.role == 'GU')
         self.current_period = self.get_current_period(request, **kwargs)
-        self.panels = {} # This will hold info on which panels are to be displayed.
-        self.data = {} # This will hold panel-specific data
+        self.panels = dict()  # This will hold info on which panels are to be displayed.
+        self.data = dict()    # This will hold panel-specific data
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
 
@@ -191,14 +190,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # selected.  See PopularReadsPanelView() for the contents of the other
         # tabs.
         self.panels['popular_reads'] = True
-        if self.is_guest:
-            self.data['popular_reads'] = {
-                'view': 'assigned',
-                'all': Book.get_featured_books()[:3],
-            }
-        else:
-            self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.periods, self.current_period,
-                                                                assigned_only=True)
+        self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
 
         # Student Activity panel
         self.panels['student_activity'] = self.is_teacher
@@ -240,7 +232,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
 
 
 class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
-    """Used for AJAX request to switch between Popular and Assigned views of the student reading panel."""
+    """Used for AJAX request to switch between Recent, Popular, and Assigned views of the 'popular readings' panel."""
     template_name = 'pages/partial/dashboard_panel_popular_reads_data.html'
 
     def get(self, request, *args, **kwargs):
@@ -250,38 +242,18 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        periods = list(self.clusive_user.periods.all())
         current_period = self.clusive_user.current_period
-        assigned = self.view == 'assigned'
         is_teacher = self.clusive_user.can_manage_periods
         is_guest = self.clusive_user.role == 'GU'
 
-        if is_teacher:
-            readings = get_popular_reads_data(self.clusive_user, periods,
-                                              current_period, assigned_only=assigned)
+        if self.view == 'assigned':
+            readings = get_assigned_reads_data(self.clusive_user)
+        elif self.view == 'recent':
+            readings = get_recent_reads_data(self.clusive_user)
+        elif self.view == 'popular':
+            readings = get_popular_reads_data(self.clusive_user, current_period)
         else:
-            # Student
-            if not is_guest:
-                if self.view == 'assigned' or self.view == 'popular':
-                    readings = get_popular_reads_data(self.clusive_user, periods,
-                                                      current_period, assigned_only=assigned)
-                else:
-                    # self.view == 'recent'
-                    readings = get_recent_reads_data(self.clusive_user)
-            # Guest
-            else:
-                if self.view == 'assigned':
-                    # "Clues to Clusive"
-                    readings = {
-                        'view': 'assigned',
-                        'all': Book.get_featured_books()[:3]
-                    }
-                elif self.view == 'popular':
-                    readings = get_popular_reads_data(self.clusive_user, periods,
-                                                      current_period, assigned_only=False)
-                else:
-                    # self.view == 'recent'
-                    readings = get_recent_reads_data(self.clusive_user)
+            raise NotImplementedError('No such view')
 
         context.update({
             'is_teacher': is_teacher,
@@ -295,62 +267,114 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
 
 
 def get_recent_reads_data(clusive_user):
+    """Return most recently read items for the given user"""
+    # Select latest 4 so we can tell if the 3 displayed is all, or just some, of the user's reads.
+    recent = Paradata.latest_for_user(clusive_user).prefetch_related('book')[:4]
+    truncated = len(recent) > 3
+    items = []
+    for para in recent[:3]:
+        book = para.book
+        # Paradata is expected to be provided this way for "starred" support
+        book.paradata_list = [para]
+        items.append({'book': book})
+
     return {
         'view': 'recent',
-        'all': Paradata.latest_for_user(clusive_user)[:3],
+        'all': items,
+        'is_truncated': truncated,
     }
 
-def get_popular_reads_data(clusive_user, periods, current_period, assigned_only):
-    # Gather data about books that are popular for dashboard view
-    if assigned_only:
-        readings = BookAssignment.recent_assigned(current_period)
-        total = len(readings)
-        trends = readings[:3]
-    else:
-        readings = BookTrend.top_trends(current_period)
-        if current_period == None:
-            # Find the book trends that are unique with respect to their book
-            # "by hand".  Might be able to use `QuerySet.distinct(book)`, but:
-            # 1. `distinct(book)` is supported by Postgres only, and
-            # 2. Should use `order_by(book)` in conjunction with `distinct()`,
-            # but the goal here is to order by `popularity`.  See:
-            # https://docs.djangoproject.com/en/3.2/ref/models/querysets/#django.db.models.query.QuerySet.distinct
-            if clusive_user.role == 'GU':
-                readings = readings.filter(book__owner=None) # public readings
-                total = len(readings)
-                trends = unique_books(readings)[:3]
-            else:
-                readings = unique_books(readings)
-                total = len(readings)
-                trends = cull_unauthorized_from_readings(readings, clusive_user)[:3]
-        else:
-            total = len(readings)
-            trends = cull_unauthorized_from_readings(readings, clusive_user)[:3]
+def get_assigned_reads_data(clusive_user: ClusiveUser):
+    """
+    Return the most recent assignments in the user's current period.
+    For users without a current period, returns the featured book(s) (eg, Clues to Clusive).
+    """
+    if clusive_user.role == Roles.GUEST:
+        featured = Book.get_featured_books()
+        # Attach paradata (for 'starred' support)
+        paradata_query = Paradata.objects.filter(user=clusive_user)
+        featured = featured.prefetch_related(Prefetch('paradata_set', queryset=paradata_query, to_attr='paradata_list'))
+        items = [{'book': b} for b in featured[:3]]
+        return {
+            'view': 'assigned',
+            'all': items,
+            'is_truncated': False,
+        }
+    # Select latest 4 so we can tell if the 3 displayed is all, or just some, of the assignments.
+    # Attach paradata (for 'starred' support)
+    paradata_query = Paradata.objects.filter(user=clusive_user)
+    assignments = BookAssignment.recent_assigned(clusive_user.current_period)\
+        .prefetch_related('book')\
+        .prefetch_related(Prefetch('book__paradata_set', queryset=paradata_query, to_attr='paradata_list'))[:4]
+    truncated = len(assignments) > 3
+    items = [{'book': ba.book} for ba in assignments[:3]]
+    if clusive_user.can_manage_periods:
+        for item in items:
+            item['user_count'] = BookTrend.user_count_for_assigned_book(item['book'], clusive_user.current_period)
+            add_teacher_details(item, clusive_user)
 
-    trend_data = [{'trend': t} for t in trends]
+    return {
+        'view': 'assigned',
+        'all': items,
+        'is_truncated': truncated,
+    }
+
+
+def get_popular_reads_data(clusive_user, current_period):
+    # Gather data about books that are popular for dashboard view
+    trends = BookTrend.top_trends(current_period)
+    if current_period == None:
+        # If user has no Period (eg, a guest) 'trends' is now the top trends in any Period.
+        # Find the book trends that are unique with respect to their book
+        # "by hand".  Might be able to use `QuerySet.distinct(book)`, but:
+        # 1. `distinct(book)` is supported by Postgres only, and
+        # 2. Should use `order_by(book)` in conjunction with `distinct()`,
+        # but the goal here is to order by `popularity`.  See:
+        # https://docs.djangoproject.com/en/3.2/ref/models/querysets/#django.db.models.query.QuerySet.distinct
+        trends = trends.filter(book__owner=None) # limit to public readings
+        trends = unique_books(cull_unauthorized_from_readings(trends, clusive_user))[:4]
+    else:
+        if clusive_user.can_manage_periods:
+            trends = trends[:4]
+        else:
+            trends = cull_unauthorized_from_readings(trends, clusive_user)[:4]
+
+    is_truncated = len(trends) > 3
+
+    trend_data = [{'trend': t} for t in trends[:3]]
     for td in trend_data:
         t = td['trend']
         book = td['trend'].book
-        # Look up paradata, assignments & customizations for books so they can be shown in the cards.
-        if hasattr(t, 'user_count'):
-            td['user_count'] = t.user_count
-        else:
-            td['user_count'] = BookTrend.user_count_for_assigned_book(book, current_period)
+        td['book'] = book
+        td['user_count'] = t.user_count
         book.paradata_list = list(Paradata.objects.filter(book=book, user=clusive_user))
-        book.add_teacher_extra_info(periods)
-        # Check if there is a customization for the current period.
-        for c in book.custom_list:
-            if current_period in list(c.periods.all()):
-                td['customization'] = c
-        # Get comp check statistics
-        td['comp_check'] = ComprehensionCheckResponse.get_counts(t.book, t.period)
-        td['unauthorized'] = not t.book.is_visible_to(clusive_user)
+        if clusive_user.can_manage_periods:
+            add_teacher_details(td, clusive_user)
 
     return {
+        'view': 'popular',
         'all': trend_data,
-        'view': 'assigned' if assigned_only else 'popular',
-        'total': total,
+        'is_truncated': is_truncated,
     }
+
+
+def add_teacher_details(item: dict, clusive_user: ClusiveUser):
+    """
+    Add additional information to the given dict for teacher-side display of the library card.
+    :param item:
+    :param clusive_user:
+    :return:
+    """
+    periods = list(clusive_user.periods.all())
+    item['book'].add_teacher_extra_info(periods)
+    # Check if there is a customization for the current period.
+    for c in item['book'].custom_list:
+        if clusive_user.current_period in list(c.periods.all()):
+            item['customization'] = c
+    # Get comp check statistics
+    item['comp_check'] = ComprehensionCheckResponse.get_counts(item['book'], clusive_user.current_period)
+    item['unauthorized'] = not item['book'].is_visible_to(clusive_user)
+
 
 def unique_books(trends):
     unique_book_trends = []
@@ -360,6 +384,7 @@ def unique_books(trends):
             unique_book_trends.append(trend)
             books.append(trend.book)
     return unique_book_trends
+
 
 def cull_unauthorized_from_readings(readings, clusive_user):
     """
@@ -375,7 +400,7 @@ def cull_unauthorized_from_readings(readings, clusive_user):
         if reading.book.is_visible_to(clusive_user):
             results.append(reading)
         else:
-            logger.debug('Culling %s from Dashboard view as unathorized for %s',
+            logger.debug('Culling %s from Dashboard view as unauthorized for %s',
                 reading.book.title,
                 clusive_user.user.username)
     return results
