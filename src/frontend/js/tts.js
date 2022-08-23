@@ -955,10 +955,16 @@ clusiveSelection.handleSelectionEnd = function() {
     if (window.getSelection().rangeCount) {
         clusiveSelection.storedRange =  window.getSelection().getRangeAt(0);
     } else {
-        clusiveSelection.storedRange = {
-            collapsed: true
-        };
+        clusiveSelection.resetStoredRange();
     }
+};
+
+clusiveSelection.resetStoredRange = function() {
+    'use strict';
+
+    clusiveSelection.storedRange = {
+        collapsed: true
+    };
 };
 
 clusiveSelection.recreateSelection = function() {
@@ -972,6 +978,7 @@ clusiveSelection.recreateSelection = function() {
             clearTimeout(clusiveSelection.timerRef);
             setTimeout(function() {
                 selectionReset.addRange(clusiveSelection.storedRange);
+                clusiveSelection.resetStoredRange();
                 clusiveSelection.startSelectListen();
                 resolve();
             }, 10);
