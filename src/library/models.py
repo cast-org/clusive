@@ -8,7 +8,7 @@ from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
 from django.db import models
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, QuerySet
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles, StudentActivitySort
@@ -379,15 +379,17 @@ class BookTrend(models.Model):
         return '<BookTrend %s/%s>' % (self.book, self.period)
 
     @classmethod
-    def top_trends(cls, period):
+    def top_trends(cls, period) -> QuerySet:
         """
-        Return the set of books in the given period, ordered by popularity.  If
-        no period given, return all books, ordered by popularity.
+        Return the set of books in the given period, ordered by popularity.
+        If no period given, return top trends for public books in any Period, ordered by popularity.
         """
         if period:
             return cls.objects.filter(period=period, book__resource_identifier__isnull=True).order_by('-popularity')
         else:
-            return cls.objects.filter(book__resource_identifier__isnull=True).order_by('-popularity')
+            # No Period, therefore public books only since there can be nothing shared.
+            return cls.objects.filter(book__owner=None, book__resource_identifier__isnull=True).order_by('-popularity')
+        trends = trends.filter() # limit to public readings
 
     @classmethod
     def top_assigned(cls, period):

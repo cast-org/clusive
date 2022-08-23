@@ -5,7 +5,7 @@ from os.path import exists
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Sum, Q, Prefetch
+from django.db.models import Sum, Q, Prefetch, QuerySet
 from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
@@ -320,24 +320,20 @@ def get_assigned_reads_data(clusive_user: ClusiveUser):
     }
 
 
-def get_popular_reads_data(clusive_user, current_period):
+def get_popular_reads_data(clusive_user: ClusiveUser, current_period: Period):
     # Gather data about books that are popular for dashboard view
-    trends = BookTrend.top_trends(current_period)
+    trend_query = BookTrend.top_trends(current_period)
     if current_period == None:
-        # If user has no Period (eg, a guest) 'trends' is now the top trends in any Period.
-        # Find the book trends that are unique with respect to their book
-        # "by hand".  Might be able to use `QuerySet.distinct(book)`, but:
-        # 1. `distinct(book)` is supported by Postgres only, and
-        # 2. Should use `order_by(book)` in conjunction with `distinct()`,
-        # but the goal here is to order by `popularity`.  See:
-        # https://docs.djangoproject.com/en/3.2/ref/models/querysets/#django.db.models.query.QuerySet.distinct
-        trends = trends.filter(book__owner=None) # limit to public readings
-        trends = unique_books(cull_unauthorized_from_readings(trends, clusive_user))[:4]
+        # If user has no Period (eg, a guest) 'trends' is a query across the top trends in any Period.
+        # We don't want to retrieve this huge dataset fully, but just walk through the top items
+        # to find the books that feature there as popular.
+        trends = unique_books(trend_query, clusive_user, 4)
     else:
         if clusive_user.can_manage_periods:
-            trends = trends[:4]
+            # Teachers are allowed to see what's popular even if they cannot access the book themselves.
+            trends = trend_query[:4]
         else:
-            trends = cull_unauthorized_from_readings(trends, clusive_user)[:4]
+            trends = cull_unauthorized_from_readings(trend_query, clusive_user)[:4]
 
     is_truncated = len(trends) > 3
 
@@ -376,13 +372,16 @@ def add_teacher_details(item: dict, clusive_user: ClusiveUser):
     item['unauthorized'] = not item['book'].is_visible_to(clusive_user)
 
 
-def unique_books(trends):
+def unique_books(trends: QuerySet, clusive_user: ClusiveUser, count: int):
     unique_book_trends = []
-    books = []  # scratch
-    for trend in trends:
+    books = set()  # track books already seen
+    for trend in trends.iterator(chunk_size=10):
         if trend.book not in books:
-            unique_book_trends.append(trend)
-            books.append(trend.book)
+            books.add(trend.book)
+            if trend.book.is_visible_to(clusive_user):
+                unique_book_trends.append(trend)
+                if len(unique_book_trends) == count:
+                    break
     return unique_book_trends
 
 
