@@ -111,19 +111,30 @@
         }
     }
 
-    details {
-        padding: .5em .5em 0;
-        border: 1px solid currentcolor;
-        @include border-radius(.25rem);
-    }
     p + details {
-        margin-top: -.5rem;
+        display: block;
+        margin-top: -1rem;
+    }
+
+    details {
+        display: inline;
     }
 
     summary {
-        padding: .25rem .5em;
-        margin: -.5em -.5em 0;
-        font-weight: $font-weight-bold;
+        display: inline-block;
+        font-weight: $font-weight-normal;
+        color: var(--CT_linkColor);
+        text-decoration: underline;
+
+        @include hover-focus() {
+            color: var(--CT_linkHoverColor);
+            text-decoration: underline;
+        }
+
+
+        &:marker {
+            display: none;
+        }
     }
 
     details[open] {
