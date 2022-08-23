@@ -2,17 +2,17 @@
     {% if data.all|length == 0 %}
         Here’s where you’ll see readings assigned by your teacher.
     {% else %}
-        {% if data.total < 4 %}
-            These are your most recently assigned readings.
-        {% else %}
+        {% if data.is_truncated %}
             These are your 3 most recently assigned readings.
+        {% else %}
+            These are your assigned readings.
         {% endif %}
         See all assigned readings for your class in the
         <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
     {% endif %}
 {% elif data.view == 'recent' %}
     {% if data.all|length == 0 %}
-        You have no recent readings yet. Go to the 
+        You have no recent readings yet. Go to the
         <a href="{% url 'library_style_redirect' view='period' %}">library</a>
         and get started in Clusive!
     {% else %}

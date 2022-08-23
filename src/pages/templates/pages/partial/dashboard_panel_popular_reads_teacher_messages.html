@@ -1,15 +1,15 @@
 {% if data.view == 'assigned' %}
     {% if data.all|length == 0 %}
-        Your students haven't done any assigned reading, yet. Assign
-        them something to read by clicking the
+        No readings are assigned to this class.
+        Assign them something to read by clicking the
         <span class="icon-ellipsis-vert"></span> (more actions) icon in
         the lower right of any reading panel in the
-        <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+        <a href="{% url 'reader_index' %}">library</a>.
     {% else %}
-        {% if data.total < 4 %}
-            These are the readings you most recently assigned to this class.
-        {% else %}
+        {% if data.is_truncated %}
             These are the 3 readings you most recently assigned to this class.
+        {% else %}
+            These are the readings assigned to this class.
         {% endif %}
         See all assigned readings for this class in the
         <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
@@ -20,7 +20,7 @@
         something to read by clicking the
         <span class="icon-ellipsis-vert"></span> (more actions) icon in
         the lower right of any reading panel in the
-        <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+        <a href="{% url 'reader_index' %}">library</a>library</a>.
     {% else %}
         See what your students are reading and what they said about what
         they learned.

@@ -37,7 +37,7 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'cisl@cast.org'
 
-# Log database queries
+# To log database queries, change the level here to DEBUG
 LOGGING['loggers']['django.db.backends'] = {
     'handlers': ['console'],
     'level': 'INFO',
