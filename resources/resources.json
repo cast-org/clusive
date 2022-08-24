@@ -21,6 +21,16 @@
         "identifier": "ASSIGN",
         "file": "assign-readings.epub",
         "tags": ["5 min"]
+      },
+      {
+        "identifier": "SVIDEO",
+        "file": "student-overview-video.epub",
+        "tags": ["5 min"]
+      },
+      {
+        "identifier": "TVIDEO",
+        "file": "teacher-overview-video.epub",
+        "tags": ["5 min"]
       }
   ]
   },
