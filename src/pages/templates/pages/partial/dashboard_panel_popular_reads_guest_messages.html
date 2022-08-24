@@ -1,16 +1,16 @@
 {% if data.view == 'assigned' %}
-    A list of recently assigned readings displays for students with a
+    A list of recently assigned readings displays here for students with a
     Clusive account connected with a teacher.
 {% elif data.view == 'recent' %}
     {% if data.all|length == 0 %}
-        You have no recent readings yet. Go to the 
+        You have no recent readings yet. Go to the
         <a href="{% url 'library_style_redirect' view='public' %}">library</a>
         and get started in Clusive!
     {% else %}
         Revisit something you've read, or head to the
         <a href="{% url 'library_style_redirect' view='public' %}">library</a>
         for something new.
-    {% endif %}    
+    {% endif %}
 {% elif data.view == 'popular' %}
     {% if data.all|length == 0 %}
        There are no readings popular with Clusive readers right now. Once they

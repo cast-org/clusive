@@ -20,20 +20,16 @@
     <div class="tab-pane" id="popularTab0">
         <div class="library-grid dashboard-grid">
             {% for item in data.all %}
-                {% if view == 'recent' %}
-                    {% include "library/partial/library_card.html" with book=item.book show_starred=True show_description=True show_menu=False show_topics=False link_stretch=True %}
-                {% elif data.view == 'assigned' and is_guest %}
-                    {% include "library/partial/library_card.html" with book=item show_starred=True show_description=True show_menu=False show_topics=False link_stretch=True %}
-                {% elif is_teacher %}
-                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized read_count_data=item.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization show_starred=True show_description=False show_topics=False show_assignments=True show_menu=True %}
+                {% if is_teacher %}
+                    {% include "library/partial/library_card.html" with book=item.book show_starred=True show_description=False show_menu=True show_topics=False show_assignments=True unauthorized=item.unauthorized read_count_data=item.user_count graph_data=item.comp_check graph_link_prefix="comp-detail-all" graph_link_serial=forloop.counter custom_link_prefix="custom-detail-all" custom_question_data=item.customization %}
                 {% else %}
-                    {% include "library/partial/library_card.html" with book=item.trend.book unauthorized=item.unauthorized show_starred=True show_description=True show_menu=True %}
+                    {% include "library/partial/library_card.html" with book=item.book show_starred=True show_description=True  show_menu=False %}
                 {% endif %}
             {% endfor %}
         </div>
     </div>
     {% for item in data.all %}
-    {% include "pages/partial/modal_comprehension_detail.html" with type="comp" id_prefix="comp-detail-all" id_serial=forloop.counter title_prefix="Student learning" %}
+    {% include "pages/partial/modal_comprehension_detail.html" with type="comp"   id_prefix="comp-detail-all"   id_serial=forloop.counter title_prefix="Student learning" %}
     {% include "pages/partial/modal_comprehension_detail.html" with type="custom" id_prefix="custom-detail-all" id_serial=forloop.counter title_prefix="Custom question" %}
     {% endfor %}
 </div>

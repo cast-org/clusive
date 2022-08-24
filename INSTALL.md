@@ -12,16 +12,17 @@ Note: all steps between **Create/Activitate Virtual Environment** and **Create a
 
 * [Python 3](https://www.python.org/downloads/)
   * Version 3.7.4 up to 3.9. (3.10+ not tested yet). On Mac, Homebrew is the easiest way to install.
-* Django 3
-  * Version 3.2.14+, installed with other Python dependencies as documented in
+* Django
+  * Version 3.2, installed with other Python dependencies as documented in
     section [Install Python Dependencies](#install-python-dependencies).
 * [virtualenv](https://virtualenv.pypa.io/en/latest/) 
-  * Not required, but highly recommended for maintaining an isolated environment and dependencies.
+  * Not required, but highly recommended for maintaining an isolated environment for Python and Python packages.
 * [Postgres](https://www.postgresql.org/) 
   * Version 11.5 or later. Used in the deployment configuration.
 * [Node.js](https://nodejs.org/)
-  * Version 16 or later. Not required to run the Clusive server, but for development it is needed. 
-    since we use:
+  * Version 16 or 17 (18 is not compatible with [node-sass](https://github.com/sass/node-sass/releases/tag/v7.0.1)). 
+    Not required to run the Clusive server, but for development it is needed. 
+    since the build and install process uses:
     * [npm](https://www.npmjs.com/get-npm) - Package manager
     * [Grunt](https://gruntjs.com/) - Task runner
 
