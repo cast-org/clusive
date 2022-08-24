@@ -676,6 +676,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
 
         self.extra_context = {
             'pub': book,
+            'version_number': self.book_version.sortOrder,
             'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,
