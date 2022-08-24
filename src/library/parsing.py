@@ -458,12 +458,18 @@ def make_positions_and_weight(epub: Epub, zip_file: ZipFile, manifest: dict):
 
 def scan_all_books():
     """Go through all books and versions and update the database"""
-    for book in Book.objects.all():
+    books = Book.objects.all()
+    count = len(books)
+    for index, book in enumerate(books, start=1):
+        logger.debug('(%d/%d) Scanning %s', index, count, book)
         scan_book(book)
 
 
 def scan_book(b):
-    """Looks through book manifest and text files and sets or updates database metadata."""
+    """
+    Looks through book manifest and text files and sets or updates database metadata:
+    word lists, word/picture counts, reading levels, and subjects.
+    """
     glossary_words = find_glossary_words(b.storage_dir)
     versions = b.versions.all()
     reading_levels = []
@@ -472,9 +478,9 @@ def scan_book(b):
         reading_levels.append(bv.reading_level)
         count_pictures(bv)
     # After all versions are read, gather global metadata
-    # Book word_count is the average of version word_counts.
     set_sort_fields(b)
     set_subjects(b)
+    # Book word_count is the average of version word_counts.
     b.word_count = sum([v.word_count for v in versions])/len(versions)
     b.picture_count = sum([v.picture_count for v in versions])/len(versions)
     b.min_reading_level = min(reading_levels)
@@ -491,17 +497,25 @@ def scan_book(b):
 
 
 def set_sort_fields(book:Book):
-    # Read the title and sort_title out of the first version. THey should all be the same.
+    """
+    Set the sort_title and sort_author fields for the book based on EPUB metadata, if they are not already set.
+    :param book: Book to update
+    :return:
+    """
+    if book.sort_title and book.sort_author:
+        # Already set, don't overwrite
+        return
+    # Read the metadata from the first version's manifest. It should not differ between versions.
     bv = book.versions.all()[0]
     if os.path.exists(bv.manifest_file):
         with open(bv.manifest_file, 'r') as file:
             manifest = json.load(file)
             title = manifest['metadata'].get('title')
             sort_title = manifest['metadata'].get('sortAs')
-            logger.debug('Sort title: %s', sort_title)
+            logger.debug('Setting sort title from manifest: %s', sort_title)
             if not sort_title:
                 # TODO: should make some simple default assumptions, like removing 'The'/'A'
-                logger.debug('Setting sort title to the title: %s', title)
+                logger.debug('Setting sort title equal to the title: %s', title)
                 sort_title = title
             book.sort_title = sort_title or ''
 
@@ -509,28 +523,37 @@ def set_sort_fields(book:Book):
             if author_list:
                 author = author_list[0].get('name')
                 sort_author = author_list[0].get('sortAs')
-                logger.debug('Sort author: %s', sort_author)
+                logger.debug('Setting sort author from manifest: %s', sort_author)
                 if not sort_author:
                     # TODO: maybe should make some default assumptions, First Last -> Last first
-                    logger.debug('Setting sort author to the author: %s', author )
+                    logger.debug('Setting sort author equal to the author: %s', author )
                     sort_author = author
                 book.sort_author = sort_author or ''
 
 
 def set_subjects(book:Book):
+    """
+    Set subjects for the given book (if not already set) based on the subjects in the EPUB metadata.
+    :param book: Book to update
+    :return:
+    """
+    if book.subjects.count() > 0:
+        # Already set, don't overwrite
+        return
+
     # Get all valid subjects
     valid_subjects = Subject.objects.all()
 
-    # Read the subject array out of the first version of the book
+    # Read the subject array out of the manifest of the first version of the book
     bv = book.versions.all()[0]
     if os.path.exists(bv.manifest_file):
         with open(bv.manifest_file, 'r') as file:
             manifest = json.load(file)
 
             # clear any current subjects
-            if book.subjects.count() > 0:
-                logger.debug('Removing these subjects from the book: %s', book.subjects.all())
-                book.subjects.clear()
+            # if book.subjects.count() > 0:
+            #     # logger.debug('Removing these subjects from the book: %s', book.subjects.all())
+            #     book.subjects.clear()
 
             #  make a list of subjects from the manifest
             bs = manifest['metadata'].get('subject')
@@ -541,20 +564,19 @@ def set_subjects(book:Book):
                 book_subjects.append(bs)
             else:
                 book_subjects.extend(bs)
-            logger.debug('These are the book subjects to add: %s', book_subjects)
+            # logger.debug('These are the book subjects to add: %s', book_subjects)
 
             # Loop through subjects array checking for valid subjects only
             if book_subjects:
                 for s in book_subjects:
                     if s is not None:
                         if valid_subjects.filter(subject__iexact=s).exists():
-                            logger.debug('Adding subject relationship for: %s', s)
+                            # logger.debug('Adding subject relationship for: %s', s)
                             book.subjects.add(valid_subjects.filter(subject__iexact=s).first())
-                        else:
-                            logger.debug('Subject is not in the subject table: %s', s)
+                        # else:
+                        #     logger.debug('Subject is not in the subject table: %s', s)
     else:
         logger.error("Book directory had no manifest: %s", bv.manifest_file)
-
 
 
 def find_glossary_words(book_dir):
@@ -582,6 +604,13 @@ def count_pictures(bv):
 
 
 def find_all_words(bv, glossary_words):
+    """
+    Walk through the EPUB content and calculate some metadata about it.
+    The BookVersion is updated with word counts and word lists, and the reading level.
+    :param bv: BookVersion to update
+    :param glossary_words: list of glossary words to look for
+    :return:
+    """
     # Read the book manifest
     if os.path.exists(bv.manifest_file):
         with open(bv.manifest_file, 'r') as file:
@@ -599,10 +628,14 @@ def find_all_words(bv, glossary_words):
             logger.debug('%s: parsed %d words; %d glossary words; %d dictionary words; %d non-dict words',
                          bv, bv.word_count,
                          len(bv.glossary_word_list), len(bv.all_word_list), len(bv.non_dict_word_list))
-            bv.reading_level = te.get_text_complexity()
+            if not bv.reading_level:
+                complexity = te.get_text_complexity()
+                bv.reading_level = complexity
+                logger.debug('Set reading level to %s', bv.reading_level)
             bv.save()
     else:
         logger.error("Book directory had no manifest: %s", bv.manifest_file)
+
 
 def download_and_save_cover(href, book_id):
     """
@@ -644,7 +677,9 @@ class TextExtractor(HTMLParser):
         self.file = None
 
     def get_text_complexity(self):
-        return textstat.automated_readability_index(self.text)
+        """Return the ARI calculated from the text, but with a lower bound of 1"""
+        index = textstat.automated_readability_index(self.text)
+        return max(1, index)
 
     def get_word_lists(self, glossary_words):
         self.close()
