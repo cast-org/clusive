@@ -4,18 +4,8 @@
     {% for s in book.subjects.all %}
         <a href="{% search_args query s '' %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
     {% endfor %}
-    {% for category in book.reading_levels_categories %}
-        {% if category == '1Early' %}
-        <a href="{% search_args query '' category_map.1Early %}" class="btn btn-tag link-above {% if category_map.1Early in filter_reading_levels_string %}active{% endif %}">Early reader</a>
-        {% elif category == '2Elementary' %}
-            <a href="{% search_args query '' category_map.2Elementary %}" class="btn btn-tag link-above {% if category_map.2Elementary in filter_reading_levels_string %}active{% endif %}">Elementary</a>
-        {% elif category == '3Middle' %}
-            <a href="{% search_args query '' category_map.3Middle %}" class="btn btn-tag link-above {% if category_map.3Middle in filter_reading_levels_string %}active{% endif %}">Middle school</a>
-        {% elif category == '4High' %}
-            <a href="{% search_args query '' category_map.4High %}" class="btn btn-tag link-above {% if category_map.4High in filter_reading_levels_string %}active{% endif %}">High school</a>
-        {% elif category == '5Advanced' %}
-            <a href="{% search_args query '' category_map.5Advanced %}" class="btn btn-tag link-above {% if category_map.5Advanced in filter_reading_levels_string %}active{% endif %}">Advanced</a>
-        {% endif %}
+    {% for category in book.reading_level_categories %}
+        <a href="{% search_args query '' category.value %}" class="btn btn-tag link-above {% if category in reading_levels_filter %}active{% endif %}">{{ category.tag_name }}</a>
     {% endfor %}
     <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"
           title="{{book.word_count}} word{{book.word_count|pluralize}}, {{book.picture_count}} picture{{book.picture_count|pluralize}}">

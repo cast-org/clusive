@@ -22,7 +22,8 @@ def search_args(query, subject, reading_level):
     if subject:
         params.append(('subjects', subject))
 
-    if reading_level:
+    # 0 is a valid value here, so can't just do "if reading_level:"
+    if reading_level is not None:
         params.append(('readingLevels', reading_level))
 
     return "?%s" % (urlencode(params))

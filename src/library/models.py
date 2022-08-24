@@ -1,3 +1,4 @@
+import enum
 import json
 import logging
 import os
@@ -46,6 +47,56 @@ class EducatorResourceCategory(models.Model):
 
     class Meta:
         ordering = ['sort_order']
+
+
+class ReadingLevel(enum.Enum):
+    EARLY = 0        # up to 3rd grade
+    ELEMENTARY = 1   # 4-5
+    MIDDLE = 2       # 6-8
+    HIGH_SCHOOL = 3  # 9-12
+    ADVANCED = 4     # 13+
+
+    @property
+    def tag_name(self):
+        return self.name.replace('_', ' ').capitalize()
+
+    def description(self):
+        return ['Early reader (preK &ndash; grade 3)',
+                'Elementary school (grades 4 &ndash; 5)',
+                'Middle school (grades 6 &ndash; 8)',
+                'High school (grades 9 &ndash; 12)',
+                'Advanced',
+                ][self.value]
+
+    @property
+    def min_grade(self):
+        """Bottom of the grade range for this ReadingLevel.
+        The lowest ReadingLevel has no bottom value"""
+        return [None, 4, 6, 9, 13][self.value]
+
+    @property
+    def max_grade(self):
+        """Top of the grade range for this ReadingLevel.
+        The highest ReadingLevel has no top value"""
+        return [3, 5, 8, 12, None][self.value]
+
+    @classmethod
+    def for_grade(cls, grade):
+        for level in cls:
+            if grade <= level.max_grade:
+                return level
+        return cls.ADVANCED
+
+    @classmethod
+    def for_grade_range(cls, min_grade, max_grade):
+        """Return a list of ReadingLevel objects that overlap with the given grade range."""
+        levels = []
+        for level in cls:
+            # See if this level category overlaps the given range.
+            if not level.min_grade or level.min_grade <= max_grade:
+                if not level.max_grade or level.max_grade >= min_grade:
+                    levels.append(level)
+        return levels
 
 
 class Book(models.Model):
@@ -203,31 +254,12 @@ class Book(models.Model):
         self.custom_list = list(Customization.objects.filter(book=self, periods__in=periods))
 
     @property
-    def reading_levels(self):
-        levels = []
-        for version in self.versions.all():
-            levels.append(version.reading_level)
-        return levels
-
-    @property
-    def reading_levels_categories(self):
+    def reading_level_categories(self):
         """
         Collapses the reading levels into a list of names that represent the
         range of reading levels
         """
-        categories = set()
-        for level in self.reading_levels:
-            if 1 <= level and level <= 3:
-                categories.add('1Early')
-            elif 4 <= level and level <= 5:
-                categories.add('2Elementary')
-            elif 6 <= level and level <= 8:
-                categories.add('3Middle')
-            elif 9 <= level and level <= 12:
-                categories.add('4High')
-            elif level > 12:
-                categories.add('5Advanced')
-        return sorted(categories)
+        return ReadingLevel.for_grade_range(self.min_reading_level, self.max_reading_level)
 
     def __str__(self):
         if self.is_bookshare:

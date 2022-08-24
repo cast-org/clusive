@@ -31,6 +31,12 @@ class BookAdmin(admin.ModelAdmin):
 
     change_list_template = 'library/book_changelist.html'
 
+    def reading_levels(self, book: Book):
+        if book.min_reading_level == book.max_reading_level:
+            return book.min_reading_level
+        else:
+            return '%d - %d' % (book.min_reading_level, book.max_reading_level)
+
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
