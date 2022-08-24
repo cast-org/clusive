@@ -27,7 +27,7 @@ from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
-    CustomVocabularyWord, EducatorResourceCategory
+    CustomVocabularyWord, EducatorResourceCategory, ReadingLevel
 from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
     get_access_keys, is_organization_sponsor, is_organization_member
@@ -92,6 +92,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
     period = None
     query = None
     subjects = None
+    filter_reading_levels = None
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
@@ -107,6 +108,13 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             subject_strings = self.subjects_string.split(',')
             s = Subject.objects.filter(subject__in=subject_strings)
             self.subjects = s
+
+        self.filter_reading_levels_string = request.GET.get('readingLevels')
+        if self.filter_reading_levels_string:
+            splits = self.filter_reading_levels_string.split(',')
+            self.filter_reading_levels = [ReadingLevel(int(level)) for level in splits]
+        else:
+            self.filter_reading_levels = None
 
         self.lengths_string = request.GET.get('words')
         if self.lengths_string:
@@ -196,6 +204,25 @@ class LibraryDataView(LoginRequiredMixin, ListView):
                     length_query |= self.query_for_length(option)
             q = q.filter(length_query)
 
+        if self.filter_reading_levels:
+            # OR together the queries for each individual selected reading level.
+            reading_level_q = None
+            for lev in self.filter_reading_levels:
+                if not lev.max_grade:
+                    # ADVANCED has no max; so just consider minimum that user is requesting.
+                    new_q = Q(max_reading_level__gte=lev.min_grade)
+                elif not lev.min_grade:
+                    # EARLY has no min; but we have to use 1 as the min because 0 is used for "unknown" in the DB
+                    new_q = Q(min_reading_level__lte=lev.max_grade, max_reading_level__gte=1)
+                else:
+                    new_q = Q(min_reading_level__lte=lev.max_grade, max_reading_level__gte=lev.min_grade)
+                if not reading_level_q:
+                    reading_level_q = new_q
+                else:
+                    reading_level_q |= new_q
+            logger.debug('reading level q: %s', reading_level_q)
+            q = q.filter(reading_level_q)
+
         if self.sort == 'title':
             q = q.order_by('sort_title', 'sort_author')
         elif self.sort == 'author':
@@ -257,6 +284,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             args['subjects'] = self.subjects_string
         if self.lengths:
             args['words'] = self.lengths_string
+        if self.filter_reading_levels:
+            args['filter_reading_levels'] = self.filter_reading_levels
         return reverse('library', kwargs={
             'style': self.style,
             'sort': self.sort,
@@ -320,6 +349,8 @@ class LibraryDataView(LoginRequiredMixin, ListView):
         context['query'] = self.query
         context['subjects_string'] = self.subjects_string
         context['subjects'] = self.subjects
+        context['reading_levels'] = [rl for rl in ReadingLevel]
+        context['reading_levels_filter'] = self.filter_reading_levels
         context['period'] = self.period
         context['period_name'] = self.period.name if self.period else None
         context['style'] = self.style
@@ -332,6 +363,7 @@ class LibraryDataView(LoginRequiredMixin, ListView):
 
         if len(self.object_list) == 0:
             context['empty_message'] = self.create_empty_message()
+
         return context
 
 
@@ -392,6 +424,7 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
 
     def configure_event(self, event: Event):
         event.page = self.page_name
+
 
 class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):
     """Parent class for several pages that allow uploading of EPUBs."""

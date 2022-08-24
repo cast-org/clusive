@@ -25,11 +25,17 @@ class subjectBookAdmin(admin.ModelAdmin):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count')
+    list_display = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count', 'reading_levels')
     sortable_by = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count')
     inlines = [VersionsInline]
 
     change_list_template = 'library/book_changelist.html'
+
+    def reading_levels(self, book: Book):
+        if book.min_reading_level == book.max_reading_level:
+            return book.min_reading_level
+        else:
+            return '%d - %d' % (book.min_reading_level, book.max_reading_level)
 
     def get_urls(self):
         urls = super().get_urls()
@@ -53,7 +59,7 @@ class EducatorResourceCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(BookVersion)
 class BookVersionAdmin(admin.ModelAdmin):
-    list_display = ('book', 'sortOrder')
+    list_display = ('book', 'sortOrder', 'reading_level')
 
 
 @admin.register(BookAssignment)
