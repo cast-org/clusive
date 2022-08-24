@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('library', '0054_merge_0051_auto_20220714_1359_0053_auto_20220721_1916'),
-        ('library', '0055_auto_20220812_1525'),
+        ('library', '0056_auto_20220812_1525'),
     ]
 
     operations = [

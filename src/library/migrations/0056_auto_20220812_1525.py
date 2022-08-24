@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('library', '0054_bookversion_reading_level'),
+        ('library', '0055_bookversion_reading_level'),
     ]
 
     operations = [
