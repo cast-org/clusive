@@ -50,11 +50,11 @@ class EducatorResourceCategory(models.Model):
 
 
 class ReadingLevel(enum.Enum):
-    EARLY = 0        # up to 3rd grade
-    ELEMENTARY = 1   # 4-5
-    MIDDLE = 2       # 6-8
-    HIGH_SCHOOL = 3  # 9-12
-    ADVANCED = 4     # 13+
+    EARLY_READER = 0   # up to 3rd grade
+    ELEMENTARY = 1     # 4-5
+    MIDDLE_SCHOOL = 2  # 6-8
+    HIGH_SCHOOL = 3    # 9-12
+    ADVANCED = 4       # 13+
 
     @property
     def tag_name(self):
