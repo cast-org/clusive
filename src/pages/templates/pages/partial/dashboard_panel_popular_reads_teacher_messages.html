@@ -5,14 +5,12 @@
         <span class="icon-ellipsis-vert"></span> (more actions) icon in
         the lower right of any reading panel in the
         <a href="{% url 'reader_index' %}">library</a>.
-    {% else %}
-        {% if data.is_truncated %}
-            These are the 3 readings you most recently assigned to this class.
-        {% else %}
-            These are the readings assigned to this class.
-        {% endif %}
+    {% elif data.is_truncated %}
+        These are the 3 readings most recently assigned to this class.
         See all assigned readings for this class in the
         <a href="{% url 'library_style_redirect' view='period' %}">library</a>.
+    {% else %}
+        These are the readings assigned to this class.
     {% endif %}
 {% elif data.view == 'popular' %}
     {% if data.all|length == 0 %}
