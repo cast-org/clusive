@@ -1,29 +1,27 @@
 <div class="box box-mascot-tipped">
     {% if is_teacher %}
-    <h2>Student reading</h2>
+        <h2>Student reading</h2>
     {% else %}
-    <h2>Your reading</h2>
+        <h2>Your reading</h2>
     {% endif %}
+
     <div class="dashboard-reading-btns">
         <a href="{% url 'upload' %}" class="btn btn-primary btn-small"><span aria-hidden="true">+ </span>Upload a new reading</a>
         <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
     </div>
 
-    {% if periods.count == 0 %}
-
-    <div class="box-divider"></div>
-        {% if is_teacher %}
+    {% if is_teacher and periods.count == 0 %}
+        <div class="box-divider"></div>
         <p>
             You haven't created any student accounts, yet.
             Set up your classes by clicking the "Manage" link in the navigation bar.
         </p>
         <a href="{% url 'manage' %}" class="btn btn-primary">Manage</a>
-        {% endif %}
-
-    {% endif %}
+    {% else %}
         <div id="DashboardPopularReads">
-        {% include 'pages/partial/dashboard_panel_popular_reads_data.html' %}
+            {% include 'pages/partial/dashboard_panel_popular_reads_data.html' %}
         </div>
+    {% endif %}
 </div>
 
 <script>

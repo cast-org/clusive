@@ -1,5 +1,7 @@
 <ul class="nav box-tabs mb-0">
+    {% if is_guest or current_period %}
     <li class="nav-item"><button type="button" data-clusive-view="assigned" class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}">Assigned</button></li>
+    {% endif %}
     {% if not is_teacher %}
     <li class="nav-item"><button type="button" data-clusive-view="recent" class="nav-link popular-read-view-button{% if data.view == 'recent' %} active{% endif %}">Recent</button></li>
     {% endif %}

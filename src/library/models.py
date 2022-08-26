@@ -453,7 +453,6 @@ class BookTrend(models.Model):
         else:
             # No Period, therefore public books only since there can be nothing shared.
             return cls.objects.filter(book__owner=None, book__resource_identifier__isnull=True).order_by('-popularity')
-        trends = trends.filter() # limit to public readings
 
     @classmethod
     def top_assigned(cls, period):
