@@ -1,3 +1,4 @@
+import enum
 import json
 import logging
 import os
@@ -48,6 +49,56 @@ class EducatorResourceCategory(models.Model):
         ordering = ['sort_order']
 
 
+class ReadingLevel(enum.Enum):
+    EARLY_READER = 0   # up to 3rd grade
+    ELEMENTARY = 1     # 4-5
+    MIDDLE_SCHOOL = 2  # 6-8
+    HIGH_SCHOOL = 3    # 9-12
+    ADVANCED = 4       # 13+
+
+    @property
+    def tag_name(self):
+        return self.name.replace('_', ' ').capitalize()
+
+    def description(self):
+        return ['Early reader (preK &ndash; grade 3)',
+                'Elementary school (grades 4 &ndash; 5)',
+                'Middle school (grades 6 &ndash; 8)',
+                'High school (grades 9 &ndash; 12)',
+                'Advanced',
+                ][self.value]
+
+    @property
+    def min_grade(self):
+        """Bottom of the grade range for this ReadingLevel.
+        The lowest ReadingLevel has no bottom value"""
+        return [None, 4, 6, 9, 13][self.value]
+
+    @property
+    def max_grade(self):
+        """Top of the grade range for this ReadingLevel.
+        The highest ReadingLevel has no top value"""
+        return [3, 5, 8, 12, None][self.value]
+
+    @classmethod
+    def for_grade(cls, grade):
+        for level in cls:
+            if grade <= level.max_grade:
+                return level
+        return cls.ADVANCED
+
+    @classmethod
+    def for_grade_range(cls, min_grade, max_grade):
+        """Return a list of ReadingLevel objects that overlap with the given grade range."""
+        levels = []
+        for level in cls:
+            # See if this level category overlaps the given range.
+            if not level.min_grade or level.min_grade <= max_grade:
+                if not level.max_grade or level.max_grade >= min_grade:
+                    levels.append(level)
+        return levels
+
+
 class Book(models.Model):
     """
     Metadata about a single reading, to be represented as an item on the Library page.
@@ -70,6 +121,9 @@ class Book(models.Model):
     subjects = models.ManyToManyField(Subject, db_index=True)
     bookshare_id = models.CharField(max_length=256, null=True, blank=True, db_index=True)
     add_date = models.DateTimeField(auto_now_add=True, db_index=True)
+    # ARI scores are in the range 1-14. Use zero, the default, to mean "unknown".
+    min_reading_level = models.PositiveSmallIntegerField(default=0, db_index=True)
+    max_reading_level = models.PositiveSmallIntegerField(default=0, db_index=True)
     # Educator-resource-specific fields.
     # Existence of a non-null resource_identifier marks this as a Resource rather than a Library Book
     resource_identifier = models.CharField(max_length=256, unique=True, db_index=True, null=True, blank=True)
@@ -199,6 +253,14 @@ class Book(models.Model):
         self.assign_list = list(BookAssignment.objects.filter(book=self, period__in=periods))
         self.custom_list = list(Customization.objects.filter(book=self, periods__in=periods))
 
+    @property
+    def reading_level_categories(self):
+        """
+        Collapses the reading levels into a list of names that represent the
+        range of reading levels
+        """
+        return ReadingLevel.for_grade_range(self.min_reading_level, self.max_reading_level)
+
     def __str__(self):
         if self.is_bookshare:
             return '<Book %d: %s/bookshare/%s>' % (self.pk, self.owner, self.title)
@@ -230,6 +292,8 @@ class BookVersion(models.Model):
     mod_date = models.DateTimeField(default=timezone.now)
     language = models.TextField(max_length=5, default="en-US")
     filename = models.TextField(null=True) # The filename of the EPUB that was uploaded.
+    # ARI scores are in the range 1-14. Use zero, the default, to mean "unknown".
+    reading_level = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     @property
     def path(self):
@@ -389,7 +453,6 @@ class BookTrend(models.Model):
         else:
             # No Period, therefore public books only since there can be nothing shared.
             return cls.objects.filter(book__owner=None, book__resource_identifier__isnull=True).order_by('-popularity')
-        trends = trends.filter() # limit to public readings
 
     @classmethod
     def top_assigned(cls, period):

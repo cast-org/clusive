@@ -6,7 +6,7 @@
             <span class="not-open">Show filters</span>
             <span class="is-open">Hide filters</span>
         </button>
-        <a id="clearFilters" href="{% search_args query '' %}" role="button" class="ms-0_5">Clear filters</a>
+        <a id="clearFilters" href="{% search_args query '' '' %}" role="button" class="ms-0_5">Clear filters</a>
     </div>
 </div>
 
@@ -37,6 +37,23 @@
         <div class="col-md-4">
             <div class="box library-filter-box">
                 <fieldset data-clusive="filterAllUpdate">
+                    <legend class="form-label lh-1 pt-0"><strong>Reading Level</strong></legend>
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="levelAll" name="readingLevels" data-clusive="filterAll" value="">
+                        <label class="form-check-label" for="levelAll">All reading levels</label>
+                    </div>
+                    <div class="box-divider-thin"></div>
+                    {% for rl in reading_levels %}
+                    <div class="form-check form-checkradio">
+                        <input class="form-check-input" type="checkbox" id="reading-level-{{ rl.value }}" value="{{ rl.value }}"
+                           {% if rl in reading_levels_filter %}checked{% endif %}>
+                        <label class="form-check-label" for="reading-level-{{ rl.value }}">{{ rl.description|safe }}</label>
+                    </div>
+                    {% endfor %}
+                </fieldset>
+            </div>
+            <div class="box library-filter-box">
+                <fieldset data-clusive="filterAllUpdate">
                     <legend class="form-label lh-1 pt-0"><strong>Word Count</strong></legend>
                     <div class="form-check form-checkradio">
                         <input class="form-check-input" type="checkbox" id="countAll" name="words" data-clusive="filterAll" value="">
@@ -53,7 +70,7 @@
                     </div>
                     <div class="form-check form-checkradio">
                         <input class="form-check-input" type="checkbox" id="count2" value="M">
-                        <label class="form-check-label" for="count2">1,001 - 5,000 words</label>
+                        <label class="form-check-label" for="count2">1,001 &ndash; 5,000 words</label>
                     </div>
                     <div class="form-check form-checkradio">
                         <input class="form-check-input" type="checkbox" id="count3" value="L">

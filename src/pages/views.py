@@ -184,13 +184,15 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 'results': ClusiveRatingResponse.get_graphable_results(),
             }
 
-        # 'popular_reads' is a tabpanel with tabs for different types of
-        # readings, namely, Assigned, Recent, and Popular readings. The panel
-        # is always present. When first shown, the Assigned readings tab is
-        # selected.  See PopularReadsPanelView() for the contents of the other
-        # tabs.
+        # Popular Reads panel
+        # Tabbed panel with Assigned, Recent, and Popular readings.
+        # Tabs are AJAX updated via PopularReadsPanelView()
         self.panels['popular_reads'] = True
-        self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
+        # Default is Assigned except for students without a classroom
+        if self.clusive_user.role == Roles.STUDENT and not self.current_period:
+            self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
+        else:
+            self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
 
         # Student Activity panel
         self.panels['student_activity'] = self.is_teacher
@@ -323,11 +325,13 @@ def get_assigned_reads_data(clusive_user: ClusiveUser):
 def get_popular_reads_data(clusive_user: ClusiveUser, current_period: Period):
     # Gather data about books that are popular for dashboard view
     trend_query = BookTrend.top_trends(current_period)
+    logger.debug('gprd %s', trend_query)
     if current_period == None:
         # If user has no Period (eg, a guest) 'trends' is a query across the top trends in any Period.
         # We don't want to retrieve this huge dataset fully, but just walk through the top items
         # to find the books that feature there as popular.
         trends = unique_books(trend_query, clusive_user, 4)
+        logger.debug('gprd unique %s', trends)
     else:
         if clusive_user.can_manage_periods:
             # Teachers are allowed to see what's popular even if they cannot access the book themselves.
@@ -376,6 +380,7 @@ def unique_books(trends: QuerySet, clusive_user: ClusiveUser, count: int):
     unique_book_trends = []
     books = set()  # track books already seen
     for trend in trends.iterator(chunk_size=10):
+        logger.debug('Checkin trend: %s', trend)
         if trend.book not in books:
             books.add(trend.book)
             if trend.book.is_visible_to(clusive_user):
@@ -676,6 +681,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
 
         self.extra_context = {
             'pub': book,
+            'version_number': self.book_version.sortOrder,
             'version_id': self.book_version.id,
             'version_count': len(versions),
             'manifest_path': self.book_version.manifest_path,

@@ -1,11 +1,11 @@
-{% extends "shared/base.html" %}
+ {% extends "shared/base.html" %}
 {% load static %}
 
 {% block head_additional %}
 <script>
 var d2reader = null;
 var pub_id = "{{ pub.id }}";
-var pub_version = "{{ version }}";
+var pub_version = "{{ version_number }}";
 var pub_version_id = "{{ version_id }}";
 var manifest_path = "{{ manifest_path }}";
 var positions_path = "{{ positions_path }}";
@@ -40,7 +40,11 @@ var simplificationTool = "{{ simplification_tool }}";
 {% endblock%}
 
 {% block sidebar_bottom_start %}
-{% include "shared/partial/sidebar_bottom_start.html" with why=True %}
+ {% if pub.is_educator_resource %}
+    {% include "shared/partial/sidebar_bottom_start.html" with show_reading_feedback=False %}
+ {% else %}
+    {% include "shared/partial/sidebar_bottom_start.html" with show_reading_feedback=True %}
+ {% endif %}
 {% endblock %}
 
 {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=True %} {% endblock %}
