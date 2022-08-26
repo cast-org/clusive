@@ -650,8 +650,11 @@ class SyncMailingListView(View):
 
     def get(self, request):
         logger.debug('Sync mailing list request received')
-        MailingListMember.synchronize_user_emails()
-        return JsonResponse({'success': 1})
+        messages = MailingListMember.synchronize_user_emails()
+        return JsonResponse({
+            'success': 1,
+            'messages': messages,
+        })
 
 
 class GoogleCoursesView(LoginRequiredMixin, EventMixin, ThemedPageMixin, TemplateView, FormView):

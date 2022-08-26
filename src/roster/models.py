@@ -622,9 +622,11 @@ class MailingListMember (models.Model):
     All Users have successfully been self added and email validated.
     Periodically the user information will be synchronized with MailChimp.
     """
-
     user = models.OneToOneField(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     sync_date = models.DateTimeField(null=True, blank=True)
+    failures = models.PositiveSmallIntegerField(default=0)
+
+    MAX_FAILURES = 3  # How many times we're allowed to fail before giving up.
 
     def update_sync_date(self):
         self.sync_date = timezone.now()
@@ -637,6 +639,7 @@ class MailingListMember (models.Model):
 
     @classmethod
     def synchronize_user_emails(cls):
+        messages = []
         members_to_synch = cls.get_members_to_sync()
 
         if members_to_synch and settings.MAILCHIMP_API_KEY and settings.MAILCHIMP_SERVER \
@@ -650,6 +653,7 @@ class MailingListMember (models.Model):
             })
 
             # loop through all users that have not been synchronized
+            member: MailingListMember
             for member in members_to_synch:
                 member_info = {
                     "email_address": member.user.user.email,
@@ -663,8 +667,17 @@ class MailingListMember (models.Model):
                     response = mailchimp.lists.add_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member_info)
                     logger.debug("response: %s", response)
                     member.update_sync_date()
+                    messages.append('Added: %s' % member.user.user.email)
                 except ApiClientError as error:
-                    logger.error("A mailchimp subscribe exception occurred: %s", error.text)
+                    member.failures += 1
+                    if member.failures >= cls.MAX_FAILURES:
+                        member.update_sync_date()
+                        messages.append('Hard failure: %s (%s)' % (member.user.user.email, error.text))
+                    else:
+                        member.save()
+                        messages.append('Soft failure #%d: %s (%s)' % (member.failures, member.user.user.email, error.text))
+                    logger.error("A mailchimp subscribe exception occurred (%d failures so far): %s",
+                                 member.failures, error.text)
         else:
             for member in members_to_synch:
                 member_info = {
@@ -673,11 +686,6 @@ class MailingListMember (models.Model):
                     "merge_fields": {"FNAME": member.user.user.first_name,
                                      "MMERGE5": member.user.get_role_display()}
                 }
-                logger.debug('Would send to MailChimp: %s', member_info)
-
-# The signal is sent when a new user is successfully self added and validated.
-# Only add to the UserEmail table if MailChimp is set up.
-#@receiver(add_member_to_sync)
-#def add_member_to_synch(sender, **kwargs):
-#@receiver(sync_now_request)
-#def sync_now_request(sender, **kwargs):
+                messages.append('Added: %s' % member.user.user.email)
+            logger.debug('Would send to MailChimp: %s', member_info)
+        return messages
