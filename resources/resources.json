@@ -31,6 +31,11 @@
         "identifier": "TVIDEO",
         "file": "teacher-overview-video.epub",
         "tags": ["5 min"]
+      },
+      {
+        "identifier": "CCLASS",
+        "file": "create-classes.epub",
+        "tags": ["15 min"]
       }
   ]
   },
@@ -41,7 +46,23 @@
         "identifier": "SREADP",
         "file": "teaching-student-reading-panel.epub",
         "tags": ["5 min"]
-      }]
+      },
+      {
+        "identifier": "CREAD",
+        "file": "teaching-customize-readings.epub",
+        "tags": ["15 min"]
+      },
+      {
+        "identifier": "READDTL",
+        "file": "teaching-reading-time-details.epub",
+        "tags": ["5 min"]
+      },
+      {
+        "identifier": "SREACT",
+        "file": "teaching-student-reactions.epub",
+        "tags": ["5 min"]
+      }
+    ]
   }
 
 ]
