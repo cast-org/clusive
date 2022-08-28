@@ -687,5 +687,5 @@ class MailingListMember (models.Model):
                                      "MMERGE5": member.user.get_role_display()}
                 }
                 messages.append('Added: %s' % member.user.user.email)
-            logger.debug('Would send to MailChimp: %s', member_info)
+                logger.debug('Would send to MailChimp: %s', member_info)
         return messages
