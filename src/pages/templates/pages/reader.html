@@ -133,7 +133,7 @@ var simplificationTool = "{{ simplification_tool }}";
         {% for a in annotations %}
             annotations.push(JSON.parse(atob('{{a.highlight_base64}}')));
         {% endfor %}
-        var definitions = {% if definitions %}JSON.parse('{{cuelist|safe}}'){% else %}null{% endif %};
+        var definitions = {% if cuelist %}JSON.parse('{{cuelist|safe}}'){% else %}null{% endif %};
         var definitionsSeen = {};
 
         var lastReadingPosition = {% if last_position %} {{ last_position|safe }} {% else %} null{% endif %};
