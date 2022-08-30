@@ -149,7 +149,7 @@
     min-height: calc(#{$box-mascot-resource-size} * #{$img-ratio-mascot-resource});
     padding-left: calc(#{$box-mascot-resource-size} + 1rem);
 
-    p {
+    p:last-child {
         margin-bottom: .75rem;
     }
 
@@ -168,6 +168,39 @@
 
     @include media-breakpoint-down(md) {
         padding-bottom: calc(#{$box-mascot-resource-size} * #{$img-ratio-mascot-resource});
+        padding-left: 0;
+
+        &::before {
+            bottom: 0;
+        }
+    }
+}
+
+.box-mascot-video-text {
+    position: relative;
+    max-width: rem(800px);
+    min-height: calc(#{$box-mascot-video-size} * #{$img-ratio-mascot-video});
+    padding-left: calc(#{$box-mascot-video-size} + 1rem);
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+
+    &::before {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: block;
+        width: $box-mascot-video-size;
+        height: calc(#{$box-mascot-video-size} * #{$img-ratio-mascot-video});
+        content: "";
+        background-image: var(--CT_imgMascotVideo);
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    @include media-breakpoint-down(md) {
+        padding-bottom: calc(#{$box-mascot-video-size} * #{$img-ratio-mascot-video});
         padding-left: 0;
 
         &::before {

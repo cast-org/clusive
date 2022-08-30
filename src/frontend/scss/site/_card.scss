@@ -88,6 +88,9 @@
 }
 
 .card {
+    word-wrap: normal;
+    hyphens: auto;
+
     .card-header + .card-body {
         padding-top: 0;
         margin-top: $card-title-margin-bottom * -1;
