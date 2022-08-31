@@ -3,6 +3,13 @@
 from django.db import migrations, models
 
 
+def clear_old_reading_level_data(apps, schema_editor):
+    Book = apps.get_model('library', 'Book')
+    for book in Book.objects.all():
+        book.reading_level = '0'
+        book.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -20,6 +27,7 @@ class Migration(migrations.Migration):
             name='min_reading_level',
             field=models.PositiveSmallIntegerField(db_index=True, default=0),
         ),
+        migrations.RunPython(clear_old_reading_level_data, migrations.RunPython.noop),
         migrations.AlterField(
             model_name='bookversion',
             name='reading_level',
