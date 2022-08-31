@@ -4,8 +4,8 @@ from django.db import migrations, models
 
 
 def clear_old_reading_level_data(apps, schema_editor):
-    Book = apps.get_model('library', 'Book')
-    for book in Book.objects.all():
+    BookVersion = apps.get_model('library', 'BookVersion')
+    for book in BookVersion.objects.all():
         book.reading_level = '0'
         book.save()
 
