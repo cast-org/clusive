@@ -125,6 +125,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.current_period = self.get_current_period(request, **kwargs)
         self.panels = dict()  # This will hold info on which panels are to be displayed.
         self.data = dict()    # This will hold panel-specific data
+        self.dashboard_popular_view = self.clusive_user.dashboard_popular_view
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
 
@@ -188,11 +189,20 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # Tabbed panel with Assigned, Recent, and Popular readings.
         # Tabs are AJAX updated via PopularReadsPanelView()
         self.panels['popular_reads'] = True
-        # Default is Assigned except for students without a classroom
-        if self.clusive_user.role == Roles.STUDENT and not self.current_period:
-            self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
-        else:
+
+        # Check for persistent choice
+        if self.dashboard_popular_view == 'assigned':
             self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
+        elif self.dashboard_popular_view == 'recent':
+            self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
+        elif self.dashboard_popular_view == 'popular':
+            self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.current_period)
+        else :
+            # Default is Assigned except for students without a classroom
+            if self.clusive_user.role == Roles.STUDENT and not self.current_period:
+                self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
+            else:
+                self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
 
         # Student Activity panel
         self.panels['student_activity'] = self.is_teacher
@@ -256,6 +266,14 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
             readings = get_popular_reads_data(self.clusive_user, current_period)
         else:
             raise NotImplementedError('No such view')
+
+        # Set defaults for next time
+        user_changed = False
+        if self.clusive_user.dashboard_popular_view != self.view:
+            self.clusive_user.dashboard_popular_view = self.view
+            user_changed = True
+        if user_changed:
+            self.clusive_user.save()
 
         context.update({
             'is_teacher': is_teacher,
