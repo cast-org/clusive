@@ -191,12 +191,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.panels['popular_reads'] = True
 
         # Check for persistent choice
-        if self.dashboard_popular_view == 'assigned':
-            self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
-        elif self.dashboard_popular_view == 'recent':
-            self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
-        elif self.dashboard_popular_view == 'popular':
-            self.data['popular_reads'] = get_popular_reads_data(self.clusive_user, self.current_period)
+        if self.dashboard_popular_view != '':
+            self.data['popular_reads'] = get_readings_data(self.clusive_user, self.dashboard_popular_view, self.current_period)
         else :
             # Default is Assigned except for students without a classroom
             if self.clusive_user.role == Roles.STUDENT and not self.current_period:
@@ -258,14 +254,7 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
         is_teacher = self.clusive_user.can_manage_periods
         is_guest = self.clusive_user.role == 'GU'
 
-        if self.view == 'assigned':
-            readings = get_assigned_reads_data(self.clusive_user)
-        elif self.view == 'recent':
-            readings = get_recent_reads_data(self.clusive_user)
-        elif self.view == 'popular':
-            readings = get_popular_reads_data(self.clusive_user, current_period)
-        else:
-            raise NotImplementedError('No such view')
+        readings = get_readings_data(self.clusive_user, self.view, current_period)
 
         # Set defaults for next time
         user_changed = False
@@ -303,6 +292,17 @@ def get_recent_reads_data(clusive_user):
         'all': items,
         'is_truncated': truncated,
     }
+
+def get_readings_data(clusive_user, view, current_period):
+    if view == 'assigned':
+        readings = get_assigned_reads_data(clusive_user)
+    elif view == 'recent':
+        readings = get_recent_reads_data(clusive_user)
+    elif view == 'popular':
+        readings = get_popular_reads_data(clusive_user, current_period)
+    else:
+        raise NotImplementedError('No such view')
+    return readings
 
 def get_assigned_reads_data(clusive_user: ClusiveUser):
     """
