@@ -285,6 +285,13 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+# Django-axes configuration
+# Default lock out is by client IP -- once that IP is locked out no user can
+# login from that IP regardless of which user caused the lockout.  The following
+# setting locks out only any individual user failures, not the client IP (useful
+# for debugging).
+AXES_ONLY_USER_FAILURES = True
+
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py
 settingsFileName = os.environ.get('DJANGO_CONFIG', 'local')
