@@ -58,6 +58,7 @@ class LoginView(auth_views.LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user_locked_out'] = getattr(self.request, "axes_locked_out", False)
         form = context.get('form')
         if form.errors:
             for err in form.errors.as_data().get('__all__'):
