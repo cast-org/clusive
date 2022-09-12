@@ -301,7 +301,7 @@ def get_readings_data(clusive_user, view, current_period):
     elif view == 'popular':
         readings = get_popular_reads_data(clusive_user, current_period)
     else:
-        raise NotImplementedError('No such view')
+        # raise NotImplementedError('No such view')
         readings = {
             'view': ''
         }
