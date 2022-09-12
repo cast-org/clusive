@@ -134,17 +134,6 @@ class EducationLevels:
         (HIGH_SCHOOL, 'High School'),
     ]
 
-class DashboardPopularViews:
-    ASSIGNED = 'assigned'
-    RECENT = 'recent'
-    POPULAR = 'popular'
-
-    CHOICES = [
-        (ASSIGNED, 'assigned'),
-        (RECENT, 'recent'),
-        (POPULAR, 'popular')
-    ]
-
 class LibraryViews:
     ALL = 'all'
     PUBLIC = 'public'

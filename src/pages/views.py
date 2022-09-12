@@ -193,7 +193,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # Check for persistent choice
         if self.dashboard_popular_view != '':
             self.data['popular_reads'] = get_readings_data(self.clusive_user, self.dashboard_popular_view, self.current_period)
-        else :
+        if self.dashboard_popular_view == '' or self.data['popular_reads']['view'] == '':
             # Default is Assigned except for students without a classroom
             if self.clusive_user.role == Roles.STUDENT and not self.current_period:
                 self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
@@ -302,6 +302,9 @@ def get_readings_data(clusive_user, view, current_period):
         readings = get_popular_reads_data(clusive_user, current_period)
     else:
         raise NotImplementedError('No such view')
+        readings = {
+            'view': ''
+        }
     return readings
 
 def get_assigned_reads_data(clusive_user: ClusiveUser):
