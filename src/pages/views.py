@@ -641,7 +641,6 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         book_id = kwargs.get('book_id')
         version = kwargs.get('version') or 0
         if resource_identifier:
-            logger.debug('id=%s', resource_identifier)
             book = Book.objects.get(resource_identifier=resource_identifier)
         else:
             book = Book.objects.get(pk=book_id)
