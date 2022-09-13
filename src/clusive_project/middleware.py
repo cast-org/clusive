@@ -3,7 +3,6 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
 from roster.models import ClusiveUser
-import pdb
 
 
 class LookupClusiveUserMiddleware:
