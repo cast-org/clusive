@@ -102,6 +102,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'clusive_project.middleware.LookupClusiveUserMiddleware',
+    # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
+    # It only formats user lockout messages and renders Axes lockout responses
+    # on failed user authentication attempts from login views.
+    # Note that `clusive_project.middleware.LoginLockoutMiddleWare` is derived
+    # from `axes.middleware.AxesMiddleware` and replaces the latter here.
+    'clusive_project.middleware.LoginLockoutMiddleware',
 ]
 
 FILE_UPLOAD_HANDLERS = (
