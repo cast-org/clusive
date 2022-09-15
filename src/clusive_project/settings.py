@@ -290,6 +290,8 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # setting locks out only any individual user failures, not the client IP (useful
 # for debugging).
 AXES_ONLY_USER_FAILURES = True
+CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD = 4    # 3 or less causes a warning
+SILENCED_SYSTEM_CHECKS = ['axes.W003']          # we replace axes.middleware.AxesMiddleware
 
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py

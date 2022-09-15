@@ -54,13 +54,17 @@
                         Please check your email for the link.
                         <p><a href="{% url 'validate_resend' user_id=user_id %}" style="color: inherit">Resend email</a></p>
                     </div>
-                    {% elif user_locked_out %}
+                    {% elif lock_out_status.user_locked_out %}
                     <div class="errorlist">
                         Account locked: too many failed login attempts. Contact an admin to unlock your account.
                     </div>
                     {% elif form.errors %}
                     <div class="errorlist">
                         Your username and password didn't match. Please try again.
+                        {% if lock_out_status.warning_threshold_reached %}
+                        <br>WARNING: You can try only {{ lock_out_status.num_remaining_attempts }} more
+                          {% if lock_out_status.num_remaining_attempts == 1 %} time. {% else %} times. {% endif %}
+                        {% endif %}
                     </div>
                     {% endif %}
 

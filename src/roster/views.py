@@ -8,6 +8,8 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount import signals
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from axes import attempts, helpers
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth import views as auth_views
@@ -58,7 +60,7 @@ class LoginView(auth_views.LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_locked_out'] = getattr(self.request, "axes_locked_out", False)
+        context['lock_out_status'] = self.get_lock_out_status(self.request)
         form = context.get('form')
         if form.errors:
             for err in form.errors.as_data().get('__all__'):
@@ -71,6 +73,46 @@ class LoginView(auth_views.LoginView):
                     except User.DoesNotExist:
                         logger.error('Email not validated error signalled when account does not exist')
         return context
+
+    def get_lock_out_status(self, request):
+        user_locked_out = False
+        num_remaining_attempts = 999
+        warning_threshold_reached = False
+
+        # If the workflow is a user login, create credentials (username and
+        # password) for the axes utilities.
+        username = request.POST.get('username', None)
+        if username:
+            axes_credentials = {
+                settings.AXES_USERNAME_FORM_FIELD: username,
+                'password': request.POST.get('password')
+            }
+        else:
+            axes_credentials = None
+
+        # Get the number of allowed attempts remaining for the user.
+        if axes_credentials:
+            user_locked_out = getattr(request, "axes_locked_out", False)
+            failure_limit = helpers.get_failure_limit(request, axes_credentials)
+            # `get_user_attempts()` returns an array of QuerySets but given the
+            # setting AXES_ONLY_USER_FAILURES, there is one QuerySet in the
+            # resulting array
+            user_attempts = attempts.get_user_attempts(request, axes_credentials)[0]
+            if len(user_attempts) != 0:
+                failures_so_far = user_attempts[0].failures_since_start
+            else:
+                failures_so_far = 0
+            num_remaining_attempts = failure_limit - failures_so_far
+            warning_threshold_reached = (
+                num_remaining_attempts > 0 and
+                num_remaining_attempts < settings.CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD
+            )
+
+        return {
+            'user_locked_out': user_locked_out,
+            'num_remaining_attempts': num_remaining_attempts,
+            'warning_threshold_reached': warning_threshold_reached
+        }
 
 
 class SignUpView(EventMixin, ThemedPageMixin, CreateView):
