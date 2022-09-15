@@ -9,12 +9,14 @@ from allauth.socialaccount import signals
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from axes import attempts as axes_attempts, helpers as axes_helpers
+from axes.utils import reset as axes_reset
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
@@ -113,6 +115,13 @@ class LoginView(auth_views.LoginView):
             'num_remaining_attempts': num_remaining_attempts,
             'warning_threshold_reached': warning_threshold_reached
         }
+
+
+class PasswordResetResetLockoutView(PasswordResetCompleteView):
+
+    def dispatch(self, *args, **kwargs):
+        axes_reset(username=self.request.user.username)
+        return super().dispatch(*args, **kwargs)
 
 
 class SignUpView(EventMixin, ThemedPageMixin, CreateView):
