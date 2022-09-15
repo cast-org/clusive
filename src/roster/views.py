@@ -8,7 +8,7 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount import signals
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
-from axes import attempts, helpers
+from axes import attempts as axes_attempts, helpers as axes_helpers
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model, logout
@@ -93,11 +93,11 @@ class LoginView(auth_views.LoginView):
         # Get the number of allowed attempts remaining for the user.
         if axes_credentials:
             user_locked_out = getattr(request, "axes_locked_out", False)
-            failure_limit = helpers.get_failure_limit(request, axes_credentials)
+            failure_limit = axes_helpers.get_failure_limit(request, axes_credentials)
             # `get_user_attempts()` returns an array of QuerySets but given the
             # setting AXES_ONLY_USER_FAILURES, there is one QuerySet in the
             # resulting array
-            user_attempts = attempts.get_user_attempts(request, axes_credentials)[0]
+            user_attempts = axes_attempts.get_user_attempts(request, axes_credentials)[0]
             if len(user_attempts) != 0:
                 failures_so_far = user_attempts[0].failures_since_start
             else:
