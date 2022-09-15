@@ -85,10 +85,10 @@ class LoginView(auth_views.LoginView):
         # password) for the axes utilities.
         username = request.POST.get('username', None)
         if username:
-            axes_credentials = {
+            axes_credentials = axes_helpers.cleanse_parameters({
                 settings.AXES_USERNAME_FORM_FIELD: username,
-                'password': request.POST.get('password')
-            }
+                settings.AXES_PASSWORD_FORM_FIELD: request.POST.get('password')
+            })
         else:
             axes_credentials = None
 

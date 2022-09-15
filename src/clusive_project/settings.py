@@ -109,6 +109,9 @@ MIDDLEWARE = [
     # from `axes.middleware.AxesMiddleware` and replaces the latter here.
     'clusive_project.middleware.LoginLockoutMiddleware',
 ]
+# Since clusive_project.middleware.LoginLockoutMiddleware replaces django-axes'
+# axes.middleware.AxesMiddleware, remove warning about AxesMiddleware missing
+SILENCED_SYSTEM_CHECKS = ['axes.W002']
 
 FILE_UPLOAD_HANDLERS = (
     "progressbarupload.uploadhandler.ProgressBarUploadHandler",
@@ -291,7 +294,6 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # for debugging).
 AXES_ONLY_USER_FAILURES = True
 CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD = 4    # 3 or less causes a warning
-SILENCED_SYSTEM_CHECKS = ['axes.W002']          # we replace axes.middleware.AxesMiddleware
 
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py
