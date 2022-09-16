@@ -57,16 +57,10 @@
                     {% elif lock_out_status.user_locked_out %}
                     <div class="errorlist">
                         Account locked:
-                        <ul class="list-unstyled">
                             {% if lock_out_status.cool_off_time %}
-                            <li class="mb-0_5">
-                               Wait {{ lock_out_status.cool_off_time }} hours and try again, or
-                            </li>
+                                Wait {{ lock_out_status.cool_off_time }} hours and try again, or
                             {% endif %}
-                            <li class="mb-0_5">
-                                <a href="{% url 'password_reset' %}">Change your password</a>
-                            </li>
-                        </ul>
+                            <a href="{% url 'password_reset' %}">Change your password</a>.
                     </div>
                     {% elif form.errors %}
                     <div class="errorlist">
