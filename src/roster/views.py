@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
 import requests
@@ -80,6 +80,7 @@ class LoginView(auth_views.LoginView):
         user_locked_out = False
         num_remaining_attempts = 999
         warning_threshold_reached = False
+        cool_off_time = None
 
         # If the workflow is a user login, create credentials (username and
         # password) for the axes utilities.
@@ -92,8 +93,8 @@ class LoginView(auth_views.LoginView):
         else:
             axes_credentials = None
 
-        # Get the number of allowed attempts remaining for the user.
         if axes_credentials:
+            # Get the number of allowed attempts remaining for the user.
             user_locked_out = getattr(request, "axes_locked_out", False)
             failure_limit = axes_helpers.get_failure_limit(request, axes_credentials)
             # `get_user_attempts()` returns an array of QuerySets but given the
@@ -110,10 +111,40 @@ class LoginView(auth_views.LoginView):
                 num_remaining_attempts < settings.CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD
             )
 
+            # Cool off time
+            if user_locked_out:
+                if request.session.get('lock_out_expires_at', False):
+                    # If lock out happened for a previous login attempt, use the
+                    # session's lock_out_expires_at to calculate how much longer
+                    # lockout is in effect.  If it has expired, reset the axes
+                    # restriction, the session, and set the cool_off_time to zero.
+                    lock_out_expires_at = datetime.strptime(
+                        request.session.get('lock_out_expires_at'),
+                        '%Y-%m-%d %H:%M:%S.%f%z'
+                    )
+                    now = timezone.now()
+                    time_remaining = lock_out_expires_at - now
+                    if lock_out_expires_at < now:
+                        axes_reset(username=username)
+                        request.session.pop('lock_out_expires_at')
+                        user_locked_out = False
+                        cool_off_time = None
+                    else:
+                        cool_off_time = time_remaining
+                else:
+                    # User was just lock out.  Calculate and store the
+                    # lock_out_expires_at in the session.  Note that
+                    # cool_off_duration isa timedelta
+                    cool_off_duration = axes_helpers.get_cool_off()
+                    lock_out_expires_at = str(timezone.now() + cool_off_duration)
+                    request.session['lock_out_expires_at'] = lock_out_expires_at
+                    cool_off_time = cool_off_duration
+
         return {
             'user_locked_out': user_locked_out,
             'num_remaining_attempts': num_remaining_attempts,
-            'warning_threshold_reached': warning_threshold_reached
+            'warning_threshold_reached': warning_threshold_reached,
+            'cool_off_time': cool_off_time,
         }
 
 

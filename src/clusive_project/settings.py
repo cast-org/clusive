@@ -288,12 +288,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Django-axes configuration
-# Default lock out is by client IP -- once that IP is locked out no user can
-# login from that IP regardless of which user caused the lockout.  The following
-# setting locks out only any individual user failures, not the client IP (useful
-# for debugging).
+# - Lock out by user only (client IP is ignored)
+# - Lock out after 10 login failures
+# - Rescind lockouts after three hours
+# - Warn uesrs when they are only allowed three or less more attempts
 AXES_ONLY_USER_FAILURES = True
-CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD = 4    # 3 or less causes a warning
+AXES_FAILURE_LIMIT = 4          # TODO: 10
+AXES_COOLOFF_TIME = 0.25        # TODO: 3  Fifteen minutes for development.
+CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD = 4
 
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py
