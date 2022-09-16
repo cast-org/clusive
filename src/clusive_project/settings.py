@@ -291,10 +291,12 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # - Lock out by user only (client IP is ignored)
 # - Lock out after 10 login failures
 # - Rescind lockouts after three hours
+# - Do not reset cool off duration if another failed attempt occurs during cool off
 # - Warn uesrs when they are only allowed three or less more attempts
 AXES_ONLY_USER_FAILURES = True
 AXES_FAILURE_LIMIT = 4          # TODO: 10
 AXES_COOLOFF_TIME = 0.25        # TODO: 3  Fifteen minutes for development.
+AXES_RESET_COOL_OFF_ON_FAILURE_DURING_LOCKOUT = False
 CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD = 4
 
 # Load appropriate specific settings file

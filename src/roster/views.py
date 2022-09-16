@@ -128,19 +128,18 @@ class LoginView(auth_views.LoginView):
             if session_lock_out_expires_at:
                 # If lock out happened for a previous login attempt, use the
                 # session's lock_out_expires_at to calculate how much longer
-                # lockout is in effect.  If lockout has expired, reset the axes
-                # restriction, the session, and set the cool_off_time to None.
+                # lockout is in effect.
                 lock_out_expires_at = datetime.strptime(
                     session_lock_out_expires_at,
                     '%Y-%m-%d %H:%M:%S.%f%z'
                 )
                 now = timezone.now()
                 if lock_out_expires_at < now:
-                    axes_reset(username=username)
-                    request.session.pop('lock_out_expires_at')
-                    request.axes_locked_out = False
-                    user_locked_out = False
-                    cool_off_time = None
+                    # Lock out should have expired by now, but
+                    # request.axes_locked_out is still True.  Assume lockout
+                    # will be cleared in less than a minute.  Set cool_off_time
+                    # to a timedelta of zero.
+                    cool_off_time = timedelta()
                 else:
                     cool_off_time = lock_out_expires_at - now
             else:
@@ -150,20 +149,30 @@ class LoginView(auth_views.LoginView):
                 lock_out_expires_at = str(timezone.now() + cool_off_duration)
                 request.session['lock_out_expires_at'] = lock_out_expires_at
                 cool_off_time = cool_off_duration
+        else:
+            # request.axes_locked_out is not True.  Make sure there is no
+            # lingering lock_out_expires_at property in the session.
+            try:
+                request.session.pop('lock_out_expires_at')
+            except:
+                pass
 
         # Make cool_off_time readable
-        if cool_off_time is not None:
-            hours = int(cool_off_time.seconds / 3600)
-            if hours < 1:
-                cool_off_time = str(math.ceil(cool_off_time.seconds / 60)) + ' minutes'
-            else:
-                cool_off_time = str(hours) + ' hours'
+        if cool_off_time is not None :
+            cool_off_time = readable_wait_time(cool_off_time)
 
         return {
             'user_locked_out': user_locked_out,
             'cool_off_time': cool_off_time,
         }
 
+def readable_wait_time(duration: timedelta):
+    hours = int(duration.seconds / 3600)
+    if hours < 1:
+        minutes = math.ceil(duration.seconds / 60) or 1
+        return str(minutes) + ' minute' if minutes == 1 else str(minutes) + ' minutes'
+    else:
+        return str(hours) + ' hours'
 
 class PasswordResetResetLockoutView(PasswordResetCompleteView):
 
