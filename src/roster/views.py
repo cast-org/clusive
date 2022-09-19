@@ -103,7 +103,7 @@ class LoginView(auth_views.LoginView):
         failure_limit = axes_helpers.get_failure_limit(request, axes_credentials)
 
         # `get_user_attempts()` returns an array of QuerySets, but the
-        # setting AXES_ONLY_USER_FAILURES entrails that there is only one
+        # setting AXES_ONLY_USER_FAILURES entails that there is only one
         # QuerySet in the resulting array.
         user_attempts = axes_attempts.get_user_attempts(request, axes_credentials)[0]
         if user_attempts.count() != 0:
