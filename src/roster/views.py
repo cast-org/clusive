@@ -9,7 +9,8 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount import signals
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
-from axes import attempts as axes_attempts, helpers as axes_helpers
+from axes import helpers as axes_helpers
+from axes.handlers.proxy import AxesProxyHandler
 from axes.utils import reset as axes_reset
 from django.conf import settings
 from django.contrib import messages
@@ -91,7 +92,7 @@ class LoginView(auth_views.LoginView):
         if username:
             axes_credentials = axes_helpers.cleanse_parameters({
                 settings.AXES_USERNAME_FORM_FIELD: username,
-                settings.AXES_PASSWORD_FORM_FIELD: request.POST.get('password')
+                settings.AXES_PASSWORD_FORM_FIELD: request.POST.get('password'),
             })
             lock_out_status.update(self.get_attempts_status(request, axes_credentials))
             lock_out_status.update(self.get_cool_off_status(request, username))
@@ -99,17 +100,10 @@ class LoginView(auth_views.LoginView):
         return lock_out_status
 
     def get_attempts_status(self, request, axes_credentials):
-        # Determine the number of allowed attempts remaining for the user.
+        # Determine the number of allowed attempts remaining for the user, and
+        # the number of times they have failed thus far.
         failure_limit = axes_helpers.get_failure_limit(request, axes_credentials)
-
-        # `get_user_attempts()` returns an array of QuerySets, but the
-        # setting AXES_ONLY_USER_FAILURES entails that there is only one
-        # QuerySet in the resulting array.
-        user_attempts = axes_attempts.get_user_attempts(request, axes_credentials)[0]
-        if user_attempts.count() != 0:
-            failures_so_far = user_attempts.first().failures_since_start
-        else:
-            failures_so_far = 0
+        failures_so_far = AxesProxyHandler.get_failures(request, axes_credentials)
         num_remaining_attempts = failure_limit - failures_so_far
         warning_threshold_reached = (
             num_remaining_attempts > 0 and
@@ -165,6 +159,7 @@ class LoginView(auth_views.LoginView):
             'user_locked_out': user_locked_out,
             'cool_off_time': cool_off_time,
         }
+
 
 def readable_wait_time(duration: timedelta):
     hours = int(duration.seconds / 3600)
