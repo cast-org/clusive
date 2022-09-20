@@ -294,7 +294,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # - Do not reset cool off duration if another attempt occurs during cool off
 # - Log login failures -- these logs include failures that cause lockout
 # - Do not log logins
-# - Warn uesrs when they are allowed only three or fewer login attempts
+# - Warn users when they are allowed only three or fewer login attempts
 AXES_ONLY_USER_FAILURES = True
 AXES_FAILURE_LIMIT = 20
 AXES_COOLOFF_TIME = 3
