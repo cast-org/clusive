@@ -163,7 +163,8 @@ $btn-starred-active-border-color:       transparent;
 
 // Badges
 $badge-count-bg:                        transparent;
-$badge-count-color:                     #6e6355;
+$badge-count-color:                     #333;
+$badge-count-icon-color:                #636b82;
 $badge-count-border-color:              #d3cfc9;
 
 // SKiplink
@@ -291,6 +292,7 @@ $card-border-color:                     #ebe3d5;
 $card-img-bg:                           rgba(#b09f88, .2);
 $card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
 $card-library-author-color:             #666;
+$card-library-bg-secondary:             #e4e1da;
 $card-login-bg:                         #e4dacb; //rgba(#b09f88, .3);
 $card-login-color:                      inherit;
 $card-special-bg:                       #d4c8b7;

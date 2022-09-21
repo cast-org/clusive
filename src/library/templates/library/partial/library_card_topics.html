@@ -1,28 +1,33 @@
 {% load library humanize %}
+<div class="row">
 {% if show_topics %}
-<div class="col card-library-tag">
-    {% for s in book.subjects.all %}
-        <a href="{% search_args query s '' %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
-    {% endfor %}
-    {% for category in book.reading_level_categories %}
-        <a href="{% search_args query '' category.value %}" class="btn btn-tag link-above {% if category in reading_levels_filter %}active{% endif %}">{{ category.tag_name }}</a>
-    {% endfor %}
-    <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"
-          title="{{book.word_count}} word{{book.word_count|pluralize}}, {{book.picture_count}} picture{{book.picture_count|pluralize}}">
-        <span class="badge-item">
-            <span class="icon-tag-word" aria-hidden="true"></span>
-            {{ book.word_count|intcomma }} <span class="sr-only">word{{book.word_count|pluralize}}</span>
+    <div class="col card-library-tag {% if book.assign_list or book.custom_list %} mb-0_5{% endif %}">
+        {% for s in book.subjects.all %}
+            <a href="{% search_args query s '' %}" class="btn btn-tag link-above {% if s in subjects %}active{% endif %}">{{ s.subject }}</a>
+        {% endfor %}
+        {% for category in book.reading_level_categories %}
+            <a href="{% search_args query '' category.value %}" class="btn btn-tag link-above {% if category in reading_levels_filter %}active{% endif %}">{{ category.tag_name }}</a>
+        {% endfor %}
+        <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip"
+              title="{{book.word_count}} word{{book.word_count|pluralize}}, {{book.picture_count}} picture{{book.picture_count|pluralize}}">
+            <span class="badge-item">
+                <span class="icon-tag-word" aria-hidden="true"></span>
+                {{ book.word_count|intcomma }} <span class="sr-only">word{{book.word_count|pluralize}}</span>
+            </span>
+            <span class="badge-item">
+                <span class="icon-tag-img" aria-hidden="true"></span>
+                {{ book.picture_count|intcomma }} <span class="sr-only">picture{{book.picture_count|pluralize}}</span>
+            </span>
         </span>
-        <span class="badge-item">
-            <span class="icon-tag-img" aria-hidden="true"></span>
-            {{ book.picture_count|intcomma }} <span class="sr-only">picture{{book.picture_count|pluralize}}</span>
+        {% if book.owner == request.clusive_user %}
+        <span class="badge badge-count">
+            <span class="icon-user-o" aria-hidden="true"></span>
+            <span class="sr-only">Uploaded reading</span>
         </span>
-    </span>
-    {% if book.owner == request.clusive_user %}
-    <span class="badge badge-count">
-        <span class="icon-user-o" aria-hidden="true"></span>
-        <span class="sr-only">Uploaded reading</span>
-    </span>
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
 {% endif %}
+{% if not book.assign_list and not book.custom_list %}
+{% include 'library/partial/library_action_menu.html' %}
+{% endif %}
+</div>

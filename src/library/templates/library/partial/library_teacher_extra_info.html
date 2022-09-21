@@ -2,22 +2,19 @@
 
 {% if show_assignments %}
     {% if book.assign_list or book.custom_list %}
-    </div>
-    <div class="card-divider spaced-top"></div>
-    {% if book.assign_list %}
-    {% include 'library/partial/library_teacher_assign_list.html' %}
-    {% endif %}
-    <div class="row">
-        <div class="col">
+        {% if book.assign_list %}
+        {% include 'library/partial/library_teacher_assign_list.html' %}
+        {% endif %}
+        <div class="row">
             {% if book.custom_list %}
-            <div class="card-text">
+            <div class="col pe-0_5">
                 <span class="badge badge-count">
                     <span class="icon-wrench" aria-hidden="true"></span>
                 </span>
                 Customized
             </div>
             {% endif %}
+            {% include 'library/partial/library_action_menu.html' %}
         </div>
     {% endif %}
 {% endif %}
-{% include 'library/partial/library_action_menu.html' %}

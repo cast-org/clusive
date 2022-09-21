@@ -1,16 +1,12 @@
-{% if custom_question_data.question %}
-<div class="card-divider spaced-top"></div>
-{% else %}
-<div class="card-divider"></div>
-{% endif %}
-
 {% if graph_data.max == 0 %}
-No learning data. Have your readers add their thoughts at the bottom left of the reading page.
+<div class="card-footer">
+    No learning data. Have your readers add their thoughts at the bottom left of the reading page.
+</div>
 {% else %}
-<div class="card-graph">
-    <div class="card-graph-title">
+<div class="card-footer">
+    <div class="card-footer-title">
         <strong>Student learning</strong>
-        (<a href="#" role="button" class="link-stretch" data-cfw="modal" data-cfw-modal-target="#{{graph_link_prefix}}-{{graph_link_serial}}"
+        (<a href="#" role="button" data-cfw="modal" data-cfw-modal-target="#{{graph_link_prefix}}-{{graph_link_serial}}"
             data-cle-handler="click" data-cle-control="dash_comprehension_detail" data-cle-value="{{book.id}}">details</a>)
         </div>
     <div class="stars-chart">

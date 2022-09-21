@@ -1,18 +1,19 @@
 {% load static library %}
 <div class="card card-library card-horizontal">
-    {% if book.cover %}
-    <div class="card-col col-12 col-sm-3 card-col-img">
-        <div class="card-img">
-            <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
-        </div>
-    </div>
-    <div class="card-col col-12 col-sm">
-    {% else %}
-    <div class="card-col col-12">
-    {% endif %}
-        <div class="card-header has-favorite">
-                <div class="row">
-                    <div class="col">
+    <div class="card-col col-12 col-lg-8">
+        <div class="card-hover">
+            <div class="row gx-0">
+                {% if book.cover %}
+                <div class="col-3 col-lg-5 col-xl-4">
+                    <div class="card-img">
+                        <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+                    </div>
+                </div>
+                <div class="col-9 col-lg-7 col-xl-8">
+                {% else %}
+                <div class="col">
+                {% endif %}
+                    <div class="card-header has-favorite">
                         {% if unauthorized %}
                         <span class="d-block" tabindex="0" data-cfw="tooltip" title="Not authorized to view">
                             <h2 class="card-title">
@@ -21,13 +22,13 @@
                             </h2>
                         </span>
                         {% elif link_stretch %}
-                        <a href="{% url 'reader_default' book_id=book.id %}"
-                            class="link-stretch"
-                            {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
-                            <h2 class="card-title">
-                                {{ book.title|highlight:query }}
-                            </h2>
-                        </a>
+                        <h2 class="card-title">
+                            <a href="{% url 'reader_default' book_id=book.id %}"
+                                class="link-stretch"
+                                {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
+                                    {{ book.title|highlight:query }}
+                            </a>
+                        </h2>
                         {% else %}
                         <h2 class="card-title">
                             <a href="{% url 'reader_default' book_id=book.id %}"
@@ -38,29 +39,32 @@
                         {% endif %}
                         {% if book.author %}<div class="card-author">{{ book.author|highlight:query }}</div>{% endif %}
                     </div>
-                    <div class="col-auto card-toggle">
-                        <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target="#card-collapse-{{ book.id }}">
-                            <span class="icon-chevron-right" aria-hidden="true"></span>
-                            <span class="sr-only">Expand card</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div id="card-collapse-{{ book.id }}" class="card-collapse collapse">
-                <div class="card-library-favorite">
-                    {% with  book.paradata_list|first as paradata %}
-                        {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
-                    {% endwith %}
-                </div>
-                <div class="card-body">
-                    {% if book.description %}<p>{{ book.description|highlight:query }}</p>{% endif %}
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        {% include 'library/partial/library_card_topics.html' %}
-                        {% include 'library/partial/library_teacher_extra_info.html' %}
+                    <div class="card-collapse-{{ book.id }} card-collapse collapse">
+                        <div class="card-body">
+                            {% if book.description %}<p>{{ book.description|highlight:query }}</p>{% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="card-library-favorite">
+            {% with  book.paradata_list|first as paradata %}
+                {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
+            {% endwith %}
+        </div>
+        <div class="card-toggle">
+            <button type="button" class="btn btn-flag card-toggle-btn link-above" data-cfw="collapse" data-cfw-collapse-target=".card-collapse-{{ book.id }}">
+                <span class="icon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Expand card</span>
+            </button>
+        </div>
     </div>
+    <div class="card-col col-12 col-lg-4">
+        <div class="card-collapse-{{ book.id }} card-collapse collapse">
+            <div class="card-footer">
+                {% include 'library/partial/library_card_topics.html' %}
+                {% include 'library/partial/library_teacher_extra_info.html' %}
+            </div>
+        </div>
+    </div>
+</div>

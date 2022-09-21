@@ -33,6 +33,11 @@
     background-color: var(--CT_badgeCountBg);
     border-color: var(--CT_badgeCountBorderColor);
     @include border-radius($btn-border-radius);
+
+    [class^="icon-"],
+    [class*=" icon-"] {
+        color: var(--CT_badgeCountIconColor);
+    }
 }
 
 .badge-item {
