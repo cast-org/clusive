@@ -83,7 +83,11 @@ class ReadingLevel(enum.Enum):
     @classmethod
     def for_grade(cls, grade):
         for level in cls:
-            if grade <= level.max_grade:
+            # Can't do `grade <= None`, but if `level.max_grade` is None, then
+            # this is an ADVANCED level.  Make maximum grade "infinity"?
+            if level.max_grade == None:
+                return cls.ADVANCED
+            elif grade <= level.max_grade:
                 return level
         return cls.ADVANCED
 

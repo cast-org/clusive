@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
-from library.models import Book, Customization
+from library.models import Book, BookVersion, Customization, ReadingLevel
 from roster.models import Period, ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -32,9 +32,18 @@ class MetadataForm(forms.ModelForm):
     use_orig_cover = forms.BooleanField(label='Use this', required=False, initial=False)
     use_orig_cover.widget.attrs.update({'class': 'usethis-cover'})
 
+    reading_category = forms.ChoiceField(
+        choices = [(category.value, category.description()) for category in ReadingLevel],
+        required=True,
+        widget=forms.RadioSelect
+    )
+
     def __init__(self, *args, **kwargs):
+        book_version = kwargs.pop('book_version')
+        category = ReadingLevel.for_grade(book_version.reading_level)
         super().__init__(*args, **kwargs)
         self.label_suffix = ''
+        self.fields['reading_category'].initial = category.value
 
     class Meta:
         model = Book
@@ -48,7 +57,6 @@ class MetadataForm(forms.ModelForm):
             #'subjects': forms.Textarea(attrs={'placeholder': 'Check all that apply.'})
             'subjects': forms.CheckboxSelectMultiple(),
         }
-
 
 
 class PeriodModelMultipleChoiceField(forms.ModelMultipleChoiceField):

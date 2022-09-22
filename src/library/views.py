@@ -527,11 +527,29 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
     form_class = MetadataForm
     success_url = reverse_lazy('library_style_redirect', kwargs={'view': 'mine'})
 
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs.update({'book_version': self.book_version})
+        return kwargs
+
     def get(self, request, *args, **kwargs):
+        ### DEBUG - fake adding bookversion to url
+        kwargs.update({'bv': 390})
+        self.kwargs = kwargs
+        ### DEBUG
+        self.book_version = get_object_or_404(BookVersion, pk=self.kwargs['bv'])
         response = super().get(request, *args, **kwargs)
         if self.object.owner != request.clusive_user:
             return self.handle_no_permission()
         return response
+
+    def post(self, request, *args, **kwargs):
+         ### DEBUG - fake adding bookversion to url
+        kwargs.update({'bv': 390})
+        self.kwargs = kwargs
+        ### DEBUG
+        self.book_version = get_object_or_404(BookVersion, pk=self.kwargs['bv'])
+        return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -561,11 +579,46 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
 
         else:
             logger.debug('Form valid, no cover image')
+
+        # Based on the value of the radio button (a grade range category) choose
+        # that category's minimum as the ARI reading level score.
+        # TODO: ReadingLevel.min_grade for EARLY_READER radio button is zero,
+        # but ARI scores start at one.  Set to one in that case, but possibly 
+        # revisit ReadingLevel class and modify there.
+        ari_level = ReadingLevel(int(form.cleaned_data['reading_category'])).min_grade or 1
+        self.save_reading_levels(self.object, self.book_version, ari_level)
+
         messages.success(self.request, 'Reading added. Your uploaded readings are indicated by a personal icon ({icon:user-o}) on your library card.')
         return super().form_valid(form)
 
+    def save_reading_levels(self, book, book_version, ari_level):
+        # Update book version's reading level, if different.  If no change
+        # at the book version level, then there is also nothing to update/save
+        # with respect to the book.
+        if book_version.reading_level != ari_level:
+            book_version.reading_level = ari_level
+            book_version.save()
+
+            # Limiting case for book's reading level range is if there is only
+            # a single book version.  In that case, the range is that single
+            # version's reading_level.  Otherwise, ...
+            versions = book.versions.all()
+            if len(versions) == 1:
+                book.min_reading_level = book.max_reading_level = ari_level
+                book.save()
+            # ... adjust book's reading levels if book version's is outside the
+            # book's range.
+            else:
+                if ari_level < book.min_reading_level:
+                    book.min_reading_level = ari_level
+                    book.save()
+                elif ari_level > book.max_reading_level:
+                    book.max_reading_level = ari_level
+                    book.save()
+
     def configure_event(self, event: Event):
         event.book_id = self.object.id
+        event.book_version_id = self.book_version.id
 
 
 class MetadataCreateFormView(MetadataFormView):
