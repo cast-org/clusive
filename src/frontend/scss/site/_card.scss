@@ -125,7 +125,6 @@
         flex: 1;
         overflow: hidden;
         @include border-top-radius($card-border-radius);
-        @include border-bottom-start-radius($card-border-radius);
 
         // stylelint-disable declaration-no-important
         &:hover {
@@ -185,6 +184,7 @@
         @include media-breakpoint-up(lg) {
             .card-hover {
                 @include border-top-end-radius(0);
+                @include border-bottom-start-radius($card-border-radius);
             }
             .card-footer {
                 display: flex;
