@@ -1,15 +1,37 @@
 {% load static library %}
 <div class="card card-library card-horizontal">
+    {% if show_assignments and book.assign_list or book.custom_list %}
     <div class="card-col col-12 col-lg-8">
+    {% elif show_topics %}
+    <div class="card-col col-12 col-lg-8">
+    {% else %}
+    <div class="card-col col-12">
+    {% endif %}
         <div class="card-hover">
             <div class="row gx-0">
                 {% if book.cover %}
-                <div class="col-3 col-lg-5 col-xl-4">
-                    <div class="card-img">
-                        <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+                    {% if show_assignments and book.assign_list or book.custom_list %}
+                    <div class="d-xs-down-none col-3 col-lg-5 col-xl-4">
+                        <div class="card-img">
+                            <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-9 col-lg-7 col-xl-8">
+                    <div class="col-9 col-lg-7 col-xl-8">
+                    {% elif show_topics %}
+                    <div class="d-xs-down-none col-3 col-lg-5 col-xl-4">
+                        <div class="card-img">
+                            <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+                        </div>
+                    </div>
+                    <div class="col-9 col-lg-7 col-xl-8">
+                    {% else %}
+                    <div class="d-xl-down-none col-sm-3">
+                        <div class="card-img">
+                            <img src="{% get_media_prefix %}{{ book.cover_path }}" alt="Cover image for {{ book.title }}" class="img-fluid" />
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                    {% endif %}
                 {% else %}
                 <div class="col">
                 {% endif %}
@@ -48,7 +70,7 @@
             </div>
         </div>
         <div class="card-library-favorite">
-            {% with  book.paradata_list|first as paradata %}
+            {% with book.paradata_list|first as paradata %}
                 {% include "library/partial/book_starred.html" with starred=paradata.starred book_id=book.id %}
             {% endwith %}
         </div>
@@ -59,6 +81,7 @@
             </button>
         </div>
     </div>
+    {% if show_assignments and book.assign_list or book.custom_list %}
     <div class="card-col col-12 col-lg-4">
         <div class="card-collapse-{{ book.id }} card-collapse collapse">
             <div class="card-footer">
@@ -67,4 +90,14 @@
             </div>
         </div>
     </div>
+    {% elif show_topics %}
+    <div class="card-col col-12 col-lg-4">
+        <div class="card-collapse-{{ book.id }} card-collapse collapse">
+            <div class="card-footer">
+                {% include 'library/partial/library_card_topics.html' %}
+                {% include 'library/partial/library_teacher_extra_info.html' %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
