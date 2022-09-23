@@ -164,7 +164,7 @@ class LoginView(auth_views.LoginView):
 def readable_wait_time(duration: timedelta):
     hours, remainder = divmod(duration.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
-    return f'{hours}:{minutes}'
+    return f'{hours}:{minutes:02}'
 
 class PasswordResetResetLockoutView(PasswordResetCompleteView):
 
