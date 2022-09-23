@@ -478,7 +478,7 @@ class UploadCreateFormView(UploadFormView):
     page_name = 'UploadNew'
 
     def get_success_url(self):
-        return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk})
+        return reverse('metadata_upload', kwargs={'pk': self.bv.book.pk, 'bv': self.bv.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -499,12 +499,14 @@ class UploadReplaceFormView(UploadFormView):
         self.orig_book = get_object_or_404(Book, pk=kwargs['pk'])
         if self.orig_book.owner != request.clusive_user:
             return self.handle_no_permission()
+        self.book_version = get_object_or_404(BookVersion, pk=kwargs['bv'])
         logger.debug('Allowing new upload for owned content: %s', self.orig_book)
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['orig_book'] = self.orig_book
+        context['book_version'] = self.book_version
         return context
 
     def form_valid(self, form):
@@ -515,7 +517,7 @@ class UploadReplaceFormView(UploadFormView):
         return result
 
     def get_success_url(self):
-        return reverse('metadata_replace', kwargs={'orig': self.orig_book.pk, 'pk': self.bv.book.pk})
+        return reverse('metadata_replace', kwargs={'orig': self.orig_book.pk, 'pk': self.bv.book.pk, 'bv': self.bv.pk})
 
     def configure_event(self, event: Event):
         event.page = self.page_name
@@ -533,27 +535,20 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        ### DEBUG - fake adding bookversion to url
-        kwargs.update({'bv': 390})
-        self.kwargs = kwargs
-        ### DEBUG
-        self.book_version = get_object_or_404(BookVersion, pk=self.kwargs['bv'])
+        self.set_book_version_update_kwargs(kwargs)
         response = super().get(request, *args, **kwargs)
         if self.object.owner != request.clusive_user:
             return self.handle_no_permission()
         return response
 
     def post(self, request, *args, **kwargs):
-         ### DEBUG - fake adding bookversion to url
-        kwargs.update({'bv': 390})
-        self.kwargs = kwargs
-        ### DEBUG
-        self.book_version = get_object_or_404(BookVersion, pk=self.kwargs['bv'])
+        self.set_book_version_update_kwargs(kwargs)
         return super().post(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['orig_filename'] = self.object.versions.first().filename
+        context['book_version'] = self.book_version
         return context
 
     def form_valid(self, form):
@@ -591,6 +586,16 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
         messages.success(self.request, 'Reading added. Your uploaded readings are indicated by a personal icon ({icon:user-o}) on your library card.')
         return super().form_valid(form)
 
+    def set_book_version_update_kwargs(self, kwargs):
+        # If no book version id was passed in the kwargs, default to the first
+        # one for the given book.  Update the kwargs with its id
+        if kwargs.get('bv') == None:
+            self.book_version = BookVersion.objects.filter(book__pk=kwargs['pk']).first()
+            kwargs.update({ 'bv': self.book_version.id })
+            self.kwargs = kwargs  # Needed?
+        else:
+            self.book_version = get_object_or_404(BookVersion, pk=self.kwargs['bv'])
+
     def save_reading_levels(self, book, book_version, ari_level):
         # Update book version's reading level, if different.  If no change
         # at the book version level, then there is also nothing to update/save
@@ -603,7 +608,7 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
             # a single book version.  In that case, the range is that single
             # version's reading_level.  Otherwise, ...
             versions = book.versions.all()
-            if len(versions) == 1:
+            if versions.count() == 1:
                 book.min_reading_level = book.max_reading_level = ari_level
                 book.save()
             # ... adjust book's reading levels if book version's is outside the
@@ -1333,7 +1338,7 @@ class BookshareImport(LoginRequiredMixin, View):
                 )
                 metadata = meta_resp.json()
                 bv = self.save_book(resp.content, metadata, kwargs)
-                return JsonResponse(data={'status': 'done', 'id': bv.book.id})
+                return JsonResponse(data={'status': 'done', 'id': bv.book.id, 'bv': bv.id})
             else:
                 return JsonResponse(data={'status': 'error', 'message': 'Got 200 but not the expected content type.'})
         # If book can't be downloaded, this returns 403

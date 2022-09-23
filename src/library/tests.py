@@ -23,7 +23,7 @@ class LibraryTestCase(TestCase):
         clusive_user.save()
         book = Book.objects.create(id=1, owner=clusive_user, title='Foo', sort_title='Foo', author='Bar', sort_author='Bar')
         book.save()
-        bv = BookVersion.objects.create(book=book, sortOrder=0)
+        bv = BookVersion.objects.create(id=321, book=book, sortOrder=0)
         bv.save()
 
     def test_upload_create_page(self):
@@ -33,17 +33,19 @@ class LibraryTestCase(TestCase):
 
     def test_upload_replace_page(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/library/upload/replace/1')
+        response = self.client.get('/library/upload/replace/1/321')
         self.assertEqual(response.status_code, 200)
 
     def test_metadata_create_page(self):
         login = self.client.login(username='user1', password='password1')
-        response = self.client.get('/library/metadata/upload/1')
+        response = self.client.get('/library/metadata/upload/1/321')
         self.assertEqual(response.status_code, 200)
 
     def test_metadata_edit_page(self):
         login = self.client.login(username='user1', password='password1')
         response = self.client.get('/library/metadata/edit/1')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/library/metadata/edit/1/321')
         self.assertEqual(response.status_code, 200)
 
     def test_library_style_redirect(self):
