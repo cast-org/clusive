@@ -1,6 +1,7 @@
 import imghdr
 import json
 import logging
+import math
 import os
 import shutil
 import traceback
@@ -208,10 +209,10 @@ class LibraryDataView(LoginRequiredMixin, ListView):
             # OR together the queries for each individual selected reading level.
             reading_level_q = None
             for lev in self.filter_reading_levels:
-                if not lev.max_grade:
+                if lev.max_grade == math.inf:
                     # ADVANCED has no max; so just consider minimum that user is requesting.
                     new_q = Q(max_reading_level__gte=lev.min_grade)
-                elif not lev.min_grade:
+                elif lev.min_grade == -math.inf:
                     # EARLY has no min; but we have to use 1 as the min because 0 is used for "unknown" in the DB
                     new_q = Q(min_reading_level__lte=lev.max_grade, max_reading_level__gte=1)
                 else:
@@ -577,9 +578,9 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
 
         # Based on the value of the radio button (a grade range category) choose
         # that category's minimum as the ARI reading level score.
-        # TODO: ReadingLevel.min_grade for EARLY_READER radio button is zero,
-        # but ARI scores start at one.  Set to one in that case, but possibly 
-        # revisit ReadingLevel class and modify there.
+        # ReadingLevel.min_grade for EARLY_READER radio button is zero,
+        # but ARI scores start at one and a score of zero means "unkonwn" in the
+        # database.  Set to one in that case.
         ari_level = ReadingLevel(int(form.cleaned_data['reading_category'])).min_grade or 1
         self.save_reading_levels(self.object, self.book_version, ari_level)
 

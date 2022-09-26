@@ -1,4 +1,5 @@
 import logging
+import math
 from zipfile import ZipFile
 
 import dawn
@@ -8,7 +9,8 @@ from django.test import TestCase
 from django.urls import reverse
 
 from roster.models import ClusiveUser, Period, Site
-from .models import Book, Paradata, BookVersion, BookAssignment, Customization, CustomVocabularyWord
+from .models import Book, Paradata, BookVersion, BookAssignment, Customization, \
+    CustomVocabularyWord, ReadingLevel
 from .parsing import TextExtractor
 
 logger = logging.getLogger(__name__)
@@ -181,6 +183,7 @@ class ShareFormTestCase(TestCase):
         print(response)
         self.assertFormError(response, 'form', 'periods', 'Select a valid choice. 2 is not one of the available choices.')
 
+
 class Customizations(TestCase):
 
     def setUp(self) -> None:
@@ -282,3 +285,47 @@ class Customizations(TestCase):
         self.assertTrue(self.period1 in custom_periods)
         self.assertTrue(self.period2 in custom_periods)
         self.assertFalse(self.period3 in custom_periods)
+
+
+class ReadingLevels(TestCase):
+
+    def setUp(self) -> None:
+        # ARI scores (grades) that are within the ranges defined by ReadingLevel
+        # and their expected minimum and maximum grades.
+        self.ari_and_reading_levels = [
+            { 'ari': 2, 'reading_level': ReadingLevel.EARLY_READER, 'expected_min': -math.inf, 'expected_max': 3},
+            { 'ari': 4, 'reading_level': ReadingLevel.ELEMENTARY, 'expected_min': 4, 'expected_max': 5},
+            { 'ari': 7, 'reading_level': ReadingLevel.MIDDLE_SCHOOL, 'expected_min': 6, 'expected_max': 8},
+            { 'ari': 11, 'reading_level': ReadingLevel.HIGH_SCHOOL, 'expected_min': 9, 'expected_max': 12},
+            { 'ari': 14, 'reading_level': ReadingLevel.ADVANCED, 'expected_min': 13, 'expected_max': math.inf},
+        ]
+
+    def test_min_grade(self):
+        for grade in self.ari_and_reading_levels:
+            self.assertEqual(grade['expected_min'], grade['reading_level'].min_grade)
+
+    def test_max_grade(self):
+        for grade in self.ari_and_reading_levels:
+            self.assertEqual(grade['expected_max'], grade['reading_level'].max_grade)
+
+    def test_for_grade(self):
+        for ari_grade in self.ari_and_reading_levels:
+            reading_level = ReadingLevel.for_grade(ari_grade['ari'])
+            self.assertEquals(ari_grade['reading_level'], reading_level)
+
+    def test_for_grade_range(self):
+        # Test a range that gives a single category.
+        expected = [ReadingLevel.HIGH_SCHOOL]
+        actual = ReadingLevel.for_grade_range(9, 12)
+        self.assertEqual(expected, actual)
+
+        # Given a grade range of 2 through 7, expect a list of EARLY_READER,
+        # ELEMENTARY, and MIDDLE_SCHOOL
+        expected = [ReadingLevel.EARLY_READER, ReadingLevel.ELEMENTARY, ReadingLevel.MIDDLE_SCHOOL]
+        actual = ReadingLevel.for_grade_range(2, 7)
+        self.assertEqual(expected, actual)
+
+        # Get all the reading levels using using lowest min and highest mas.
+        expected = [rl for rl in ReadingLevel]
+        actual = ReadingLevel.for_grade_range(-math.inf, math.inf)
+        self.assertEqual(expected, actual)

@@ -1,6 +1,7 @@
 import enum
 import json
 import logging
+import math
 import os
 import textwrap
 from base64 import b64encode
@@ -72,22 +73,18 @@ class ReadingLevel(enum.Enum):
     def min_grade(self):
         """Bottom of the grade range for this ReadingLevel.
         The lowest ReadingLevel has no bottom value"""
-        return [None, 4, 6, 9, 13][self.value]
+        return [-math.inf, 4, 6, 9, 13][self.value]
 
     @property
     def max_grade(self):
         """Top of the grade range for this ReadingLevel.
         The highest ReadingLevel has no top value"""
-        return [3, 5, 8, 12, None][self.value]
+        return [3, 5, 8, 12, math.inf][self.value]
 
     @classmethod
     def for_grade(cls, grade):
         for level in cls:
-            # Can't do `grade <= None`, but if `level.max_grade` is None, then
-            # this is an ADVANCED level.  Make maximum grade "infinity"?
-            if level.max_grade == None:
-                return cls.ADVANCED
-            elif grade <= level.max_grade:
+            if grade <= level.max_grade:
                 return level
         return cls.ADVANCED
 
