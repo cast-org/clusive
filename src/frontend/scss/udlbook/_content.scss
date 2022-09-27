@@ -111,38 +111,18 @@
         }
     }
 
-    p + details {
-        display: block;
-        margin-top: -1rem;
-    }
-
     details {
-        display: inline;
-    }
+        position: relative;
+        padding: $box-padding-y $box-padding-x;
+        margin-bottom: $box-margin-bottom;
+        line-height: $box-line-height;
+        color: var(--CT_boxResourceColor);
+        background: var(--CT_boxResourceBg);
+        @include border-radius($box-border-radius);
+        @include clearfix();
 
-    summary {
-        display: inline-block;
-        font-weight: $font-weight-normal;
-        color: var(--CT_linkColor);
-        text-decoration: underline;
-
-        @include hover-focus() {
-            color: var(--CT_linkHoverColor);
-            text-decoration: underline;
-        }
-
-
-        &:marker {
-            display: none;
-        }
-    }
-
-    details[open] {
-        padding: .5em;
-
-        summary {
-            margin-bottom: .5em;
-            border-bottom: 1px solid currentcolor;
+        &[open] summary {
+            padding-bottom: 1rem;
         }
     }
 }
