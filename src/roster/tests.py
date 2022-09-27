@@ -170,6 +170,7 @@ class ClusiveUserTestCase(TestCase):
         """ A user can have an anon_id set manually """
         clusive_user_1 = ClusiveUser.objects.get(anon_id="Student1")
         clusive_user_1.anon_id = "Student3"
+        clusive_user_1.dashboard_popular_view = 'assigned'
 
         try:
             clusive_user_1.full_clean()
