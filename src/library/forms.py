@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
-from library.models import Book, BookVersion, Customization, ReadingLevel
+from library.models import Book, Customization, ReadingLevel
 from roster.models import Period, ClusiveUser
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,8 @@ class MetadataForm(forms.ModelForm):
     reading_category = forms.ChoiceField(
         choices = [(category.value, category.description()) for category in ReadingLevel],
         required=True,
-        widget=forms.RadioSelect
+        widget=forms.RadioSelect,
+        label='Reading level',
     )
 
     def __init__(self, *args, **kwargs):

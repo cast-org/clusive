@@ -128,7 +128,7 @@
     {{ form.reading_category.errors }}
     <div class="col">
         {% for radio in form.reading_category %}
-            <div class="form-check form-checkradio mb-1">
+            <div class="form-check form-checkradio">
                 {{ radio.tag | formcontrol }}
                 <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label|safe }}</label>
             </div>
