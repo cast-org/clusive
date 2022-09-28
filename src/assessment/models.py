@@ -1,6 +1,6 @@
 import logging
-
 import math
+
 from django.db import models
 from django.db.models import Count, Sum
 
@@ -102,9 +102,6 @@ class ComprehensionCheckResponse(CheckResponse):
             .filter(book=book, user__periods=period, user__role=Roles.STUDENT) \
             .values('comprehension_scale_response').annotate(count=Count('id')))
         max = 0
-        for c in comp_check_counts:
-            if c['count'] > max:
-                max = c['count']
         data = []
         for option in ComprehensionCheck.ComprehensionScale.COMPREHENSION_SCALE_CHOICES:
             count_item = [c['count'] for c in comp_check_counts if c['comprehension_scale_response'] == option[0]]
@@ -113,6 +110,8 @@ class ComprehensionCheckResponse(CheckResponse):
                 'label': option[1],
                 'value': count,
             })
+            if count > max:
+                max = count
         return { 'max': max,
                  'items': data }
 

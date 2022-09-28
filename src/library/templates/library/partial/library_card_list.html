@@ -43,19 +43,12 @@
                                 {{ book.title|highlight:query }}
                             </h2>
                         </span>
-                        {% elif link_stretch %}
+                        {% else %}
                         <h2 class="card-title">
                             <a href="{% url 'reader_default' book_id=book.id %}"
                                 class="link-stretch"
                                 {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
                                     {{ book.title|highlight:query }}
-                            </a>
-                        </h2>
-                        {% else %}
-                        <h2 class="card-title">
-                            <a href="{% url 'reader_default' book_id=book.id %}"
-                            {% if not direct_link %}onclick="vocabCheck.start(this, '{{ book.id }}'); return false;"{% endif %}>
-                                {{ book.title|highlight:query }}
                             </a>
                         </h2>
                         {% endif %}
