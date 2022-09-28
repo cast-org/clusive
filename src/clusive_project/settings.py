@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import logging
 import os
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     # https://django-allauth.readthedocs.io/en/latest/installation.html#django
     'allauth.socialaccount.providers.google',
     'oauth2.bookshare',
+    'axes',
     'debug_toolbar',
 ]
 
@@ -100,7 +102,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'clusive_project.middleware.LookupClusiveUserMiddleware',
+    # AxesMiddleware should be the last middleware in the MIDDLEWARE list.
+    # It only formats user lockout messages and renders Axes lockout responses
+    # on failed user authentication attempts from login views.
+    # Note that `clusive_project.middleware.LoginLockoutMiddleWare` is derived
+    # from `axes.middleware.AxesMiddleware` and replaces the latter here.
+    'clusive_project.middleware.LoginLockoutMiddleware',
 ]
+# Since clusive_project.middleware.LoginLockoutMiddleware replaces django-axes'
+# axes.middleware.AxesMiddleware, remove warning about AxesMiddleware missing
+SILENCED_SYSTEM_CHECKS = ['axes.W002']
 
 FILE_UPLOAD_HANDLERS = (
     "progressbarupload.uploadhandler.ProgressBarUploadHandler",
@@ -160,8 +171,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # AUTHENTICATION_BACKENDS needed by `django-allauth` solution
 AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesStandaloneBackend',
+
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
+
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
@@ -266,11 +281,27 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'
 #   https://docs.djangoproject.com/en/4.0/releases/3.2/#customizing-type-of-auto-created-primary-keys,
 #   https://dev.to/weplayinternet/upgrading-to-django-3-2-and-fixing-defaultautofield-warnings-518n.
 #
-# - default `X-Frame-Options` header is now`DENY`; it was `SAMEORIGIN` prior to
+# - default `X-Frame-Options` header is now `DENY`; it was `SAMEORIGIN` prior to
 #   Django 3. Use 'SAMEORIGIN'` since Clusive uses frames; see:
 #   https://docs.djangoproject.com/en/4.0/releases/3.0/#security
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# Django-axes configuration
+# - Lock out by user only (client IP is ignored)
+# - Lock out after 20 login failures
+# - Rescind lockouts after three hours
+# - Do not reset cool off duration if another attempt occurs during cool off
+# - Log login failures -- these logs include failures that cause lockout
+# - Do not log logins
+# - Warn users when they are allowed only three or fewer login attempts
+AXES_ONLY_USER_FAILURES = True
+AXES_FAILURE_LIMIT = 15
+AXES_COOLOFF_TIME = 3
+AXES_RESET_COOL_OFF_ON_FAILURE_DURING_LOCKOUT = False
+AXES_ENABLE_ACCESS_FAILURE_LOG = True
+AXES_DISABLE_ACCESS_LOG = True
+CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD = 4
 
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py
@@ -278,3 +309,9 @@ settingsFileName = os.environ.get('DJANGO_CONFIG', 'local')
 fullPath = BASE_DIR + "/clusive_project/settings_" + settingsFileName + ".py"
 print("Reading settings file: ", fullPath)
 exec(open(fullPath).read(), globals())
+
+# Disable django-axes when testing.  This could be in a settings file for
+# testing, e.g., `settings_test.py`, but it's only one setting. See:
+# https://django-axes.readthedocs.io/en/latest/2_installation.html#disabling-axes-components-in-tests
+if 'test' in sys.argv:
+    AXES_ENABLED=False

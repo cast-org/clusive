@@ -54,9 +54,22 @@
                         Please check your email for the link.
                         <p><a href="{% url 'validate_resend' user_id=user_id %}" style="color: inherit">Resend email</a></p>
                     </div>
+                    {% elif lock_out_status.user_locked_out %}
+                    <div class="errorlist">
+                        Account locked.
+                            {% if lock_out_status.cool_off_time %}
+                                Wait {{ lock_out_status.cool_off_time }} hours then try again or
+                            {% endif %}
+                            <a href="{% url 'password_reset' %}" style="color: inherit">Change your password</a>.
+                    </div>
                     {% elif form.errors %}
                     <div class="errorlist">
                         Your username and password didn't match. Please try again.
+                        {% if lock_out_status.warning_threshold_reached %}
+                        <br><span style=font-weight:bold>Warning</span>: You can try only {{ lock_out_status.num_remaining_attempts }} more
+                          {% if lock_out_status.num_remaining_attempts == 1 %} time {% else %} times {% endif %} or
+                          <a href="{% url 'password_reset' %}" style="color: inherit">Change your password</a>.
+                        {% endif %}
                     </div>
                     {% endif %}
 

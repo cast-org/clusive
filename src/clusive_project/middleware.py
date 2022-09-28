@@ -1,3 +1,5 @@
+from axes.middleware import AxesMiddleware
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 
 from roster.models import ClusiveUser
@@ -24,4 +26,19 @@ class LookupClusiveUserMiddleware:
 
         # Any postprocessing could be added here.
 
+        return response
+
+
+class LoginLockoutMiddleware(AxesMiddleware):
+    """
+    Override default django-axes user lockout handling.
+    Get the response provided roster.LoginView, but change its status
+    code to 403.
+    """
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if settings.AXES_ENABLED:
+            if getattr(request, "axes_locked_out", None):
+                response.status_code = 403
         return response

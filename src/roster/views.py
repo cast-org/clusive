@@ -1,6 +1,7 @@
 import json
 import logging
-from datetime import timedelta
+import math
+from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
 import requests
@@ -8,11 +9,16 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount import signals
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialAccount
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from axes import helpers as axes_helpers
+from axes.handlers.proxy import AxesProxyHandler
+from axes.utils import reset as axes_reset
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
@@ -58,6 +64,7 @@ class LoginView(auth_views.LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['lock_out_status'] = self.get_lock_out_status(self.request)
         form = context.get('form')
         if form.errors:
             for err in form.errors.as_data().get('__all__'):
@@ -70,6 +77,100 @@ class LoginView(auth_views.LoginView):
                     except User.DoesNotExist:
                         logger.error('Email not validated error signalled when account does not exist')
         return context
+
+    def get_lock_out_status(self, request):
+        # Default values
+        lock_out_status = {
+            'user_locked_out': False,
+            'num_remaining_attempts': 999,
+            'warning_threshold_reached':  False,
+            'cool_off_time':  None,
+        }
+        # Check that the workflow is for a user login.  If so, get the lockout
+        # status information.
+        username = request.POST.get('username', None)
+        if username:
+            axes_credentials = axes_helpers.cleanse_parameters({
+                settings.AXES_USERNAME_FORM_FIELD: username,
+                settings.AXES_PASSWORD_FORM_FIELD: request.POST.get('password'),
+            })
+            lock_out_status.update(self.get_attempts_status(request, axes_credentials))
+            lock_out_status.update(self.get_cool_off_status(request, username))
+
+        return lock_out_status
+
+    def get_attempts_status(self, request, axes_credentials):
+        # Determine the number of allowed attempts remaining for the user, and
+        # the number of times they have failed thus far.
+        failure_limit = axes_helpers.get_failure_limit(request, axes_credentials)
+        failures_so_far = AxesProxyHandler.get_failures(request, axes_credentials)
+        num_remaining_attempts = failure_limit - failures_so_far
+        warning_threshold_reached = (
+            num_remaining_attempts > 0 and
+            num_remaining_attempts < settings.CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD
+        )
+        return {
+            'num_remaining_attempts': num_remaining_attempts,
+            'warning_threshold_reached': warning_threshold_reached,
+        }
+
+    def get_cool_off_status(self, request, username):
+        cool_off_time = None
+        user_locked_out = getattr(request, 'axes_locked_out', False)
+        if user_locked_out:
+            session_lock_out_expires_at = request.session.get('lock_out_expires_at', False)
+            if session_lock_out_expires_at:
+                # If lock out happened for a previous login attempt, use the
+                # session's lock_out_expires_at to calculate how much longer
+                # lockout is in effect.
+                lock_out_expires_at = datetime.strptime(
+                    session_lock_out_expires_at,
+                    '%Y-%m-%d %H:%M:%S.%f%z'
+                )
+                now = timezone.now()
+                if lock_out_expires_at < now:
+                    # Lock out should have expired by now, but
+                    # request.axes_locked_out is still True.  Assume lockout
+                    # will be cleared in less than a minute.  Set cool_off_time
+                    # to a timedelta of zero.
+                    cool_off_time = timedelta()
+                else:
+                    cool_off_time = lock_out_expires_at - now
+            else:
+                # User was just locked out.  Calculate and store the
+                # lock_out_expires_at in the session.
+                cool_off_duration = axes_helpers.get_cool_off()
+                lock_out_expires_at = str(timezone.now() + cool_off_duration)
+                request.session['lock_out_expires_at'] = lock_out_expires_at
+                cool_off_time = cool_off_duration
+        else:
+            # request.axes_locked_out is not True.  Make sure there is no
+            # lingering lock_out_expires_at property in the session.
+            try:
+                request.session.pop('lock_out_expires_at')
+            except:
+                pass
+
+        # Make cool_off_time readable
+        if cool_off_time is not None :
+            cool_off_time = readable_wait_time(cool_off_time)
+
+        return {
+            'user_locked_out': user_locked_out,
+            'cool_off_time': cool_off_time,
+        }
+
+
+def readable_wait_time(duration: timedelta):
+    hours, remainder = divmod(duration.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f'{hours}:{minutes:02}'
+
+class PasswordResetResetLockoutView(PasswordResetCompleteView):
+
+    def dispatch(self, *args, **kwargs):
+        axes_reset(username=self.request.user.username)
+        return super().dispatch(*args, **kwargs)
 
 
 class SignUpView(EventMixin, ThemedPageMixin, CreateView):
