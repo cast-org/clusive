@@ -93,7 +93,7 @@ function libraryMasonryEnable() {
         grid.classList.add('has-masonry');
 
         var hasResource = grid.querySelector('.card-resource') !== null;
-        var libraryMasonryApi = null
+        var libraryMasonryApi = null;
 
         var libraryMasonryLayout = clusiveDebounce(function() {
             if (libraryMasonryApi !== null) {
@@ -109,6 +109,9 @@ function libraryMasonryEnable() {
         });
 
         document.addEventListener('update.cisl.prefs', libraryMasonryLayout, {
+            passive: true
+        });
+        document.addEventListener('update.cisl.cardcontent', libraryMasonryLayout, {
             passive: true
         });
 
@@ -1233,6 +1236,8 @@ function configureConfirmDeletionPopup (e) {
 // When new assignments are submitted, send form data to server via AJAX, and AJAX update the assignments indication
 // on the library card.
 function shareForm() {
+    'use strict';
+
     $('body').on('submit', '#ShareBookForm', function(e) {
        e.preventDefault();
         var $form = $('#ShareBookForm');
@@ -1241,6 +1246,7 @@ function shareForm() {
            .done(function(data) {
                $('#AssignList-'+bookId).replaceWith(data);
                $form.closest('.modal').CFW_Modal('hide');
+               document.dispatchEvent(new Event('update.cisl.cardcontent'));
            })
            .fail(function(err) {
                console.error(err);

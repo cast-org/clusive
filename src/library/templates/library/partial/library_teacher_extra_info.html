@@ -1,10 +1,8 @@
 {% load library %}
 
 {% if show_assignments %}
+    {% include 'library/partial/library_teacher_assign_list.html' %}
     {% if book.assign_list or book.custom_list %}
-        {% if book.assign_list %}
-        {% include 'library/partial/library_teacher_assign_list.html' %}
-        {% endif %}
         <div class="row">
             {% if book.custom_list %}
             <div class="col pe-0_5">
