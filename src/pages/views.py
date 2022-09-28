@@ -125,6 +125,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.current_period = self.get_current_period(request, **kwargs)
         self.panels = dict()  # This will hold info on which panels are to be displayed.
         self.data = dict()    # This will hold panel-specific data
+        self.dashboard_popular_view = self.clusive_user.dashboard_popular_view
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
 
@@ -188,11 +189,16 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # Tabbed panel with Assigned, Recent, and Popular readings.
         # Tabs are AJAX updated via PopularReadsPanelView()
         self.panels['popular_reads'] = True
-        # Default is Assigned except for students without a classroom
-        if self.clusive_user.role == Roles.STUDENT and not self.current_period:
-            self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
-        else:
-            self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
+
+        # Check for persistent choice
+        if self.dashboard_popular_view != '':
+            self.data['popular_reads'] = get_readings_data(self.clusive_user, self.dashboard_popular_view, self.current_period)
+        if self.dashboard_popular_view == '' or self.data['popular_reads']['view'] == '':
+            # Default is Assigned except for students without a classroom
+            if self.clusive_user.role == Roles.STUDENT and not self.current_period:
+                self.data['popular_reads'] = get_recent_reads_data(self.clusive_user)
+            else:
+                self.data['popular_reads'] = get_assigned_reads_data(self.clusive_user)
 
         # Student Activity panel
         self.panels['student_activity'] = self.is_teacher
@@ -248,14 +254,15 @@ class PopularReadsPanelView(LoginRequiredMixin, TemplateView):
         is_teacher = self.clusive_user.can_manage_periods
         is_guest = self.clusive_user.role == 'GU'
 
-        if self.view == 'assigned':
-            readings = get_assigned_reads_data(self.clusive_user)
-        elif self.view == 'recent':
-            readings = get_recent_reads_data(self.clusive_user)
-        elif self.view == 'popular':
-            readings = get_popular_reads_data(self.clusive_user, current_period)
-        else:
-            raise NotImplementedError('No such view')
+        readings = get_readings_data(self.clusive_user, self.view, current_period)
+
+        # Set defaults for next time
+        user_changed = False
+        if self.clusive_user.dashboard_popular_view != self.view:
+            self.clusive_user.dashboard_popular_view = self.view
+            user_changed = True
+        if user_changed:
+            self.clusive_user.save()
 
         context.update({
             'is_teacher': is_teacher,
@@ -285,6 +292,20 @@ def get_recent_reads_data(clusive_user):
         'all': items,
         'is_truncated': truncated,
     }
+
+def get_readings_data(clusive_user, view, current_period):
+    if view == 'assigned':
+        readings = get_assigned_reads_data(clusive_user)
+    elif view == 'recent':
+        readings = get_recent_reads_data(clusive_user)
+    elif view == 'popular':
+        readings = get_popular_reads_data(clusive_user, current_period)
+    else:
+        # raise NotImplementedError('No such view')
+        readings = {
+            'view': ''
+        }
+    return readings
 
 def get_assigned_reads_data(clusive_user: ClusiveUser):
     """
@@ -641,7 +662,6 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         book_id = kwargs.get('book_id')
         version = kwargs.get('version') or 0
         if resource_identifier:
-            logger.debug('id=%s', resource_identifier)
             book = Book.objects.get(resource_identifier=resource_identifier)
         else:
             book = Book.objects.get(pk=book_id)

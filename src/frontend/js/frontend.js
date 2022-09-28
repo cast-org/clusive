@@ -976,7 +976,7 @@ function bookshareCheckImportProgress(id) {
         .done(function(data) {
             if (data.status === 'done') {
                 // When import is done, redirect to metadata editing page.
-                window.location.href = '/library/metadata/upload/' + data.id;
+                window.location.href = '/library/metadata/upload/' + data.id + '/' + data.bv;
             } else if (data.status === 'pending') {
                 console.debug('Import is still pending');
                 bookshareImportCheckInFlight = false;

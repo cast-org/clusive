@@ -11,7 +11,7 @@
             File *<br />
             {{ orig_filename }}
             {% if replace_option %}
-                <a class="ms-2" href="{% url 'upload_replace' pk=object.pk %}">Replace file</a>
+                <a class="ms-2" href="{% url 'upload_replace' pk=object.pk bv=book_version.pk%}">Replace file</a>
             {% endif %}
         </div>
     </div>
@@ -118,6 +118,19 @@
             <div class="form-check form-checkradio">
                 {{ checkbox.tag | formcontrol }}
                 <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="form-group">
+    {{ form.reading_category.label_tag | formlabel }} *
+    {{ form.reading_category.errors }}
+    <div class="col">
+        {% for radio in form.reading_category %}
+            <div class="form-check form-checkradio">
+                {{ radio.tag | formcontrol }}
+                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label|safe }}</label>
             </div>
         {% endfor %}
     </div>

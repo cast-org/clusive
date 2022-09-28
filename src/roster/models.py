@@ -134,7 +134,6 @@ class EducationLevels:
         (HIGH_SCHOOL, 'High School'),
     ]
 
-
 class LibraryViews:
     ALL = 'all'
     PUBLIC = 'public'
@@ -236,6 +235,9 @@ class ClusiveUser(models.Model):
 
     # Which period will be shown by default, eg in library or manage rosters view
     current_period = models.ForeignKey(Period, null=True, blank=True, on_delete=models.SET_NULL)
+
+    # Which view of the dashboard 'Popular Reads' panel the user last viewed. This choice is persistent.
+    dashboard_popular_view = models.CharField(max_length=10, blank=True, default="")
 
     # Which view of the library page the user last viewed. This choice is persistent.
     library_view = models.CharField(max_length=10, default=LibraryViews.PERIOD,

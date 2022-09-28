@@ -36,6 +36,11 @@
         "identifier": "CCLASS",
         "file": "create-classes.epub",
         "tags": ["15 min"]
+      },
+      {
+        "identifier": "ADAPT",
+        "file": "adaptivity-started.epub",
+        "tags": ["15 min"]
       }
   ]
   },
@@ -60,6 +65,21 @@
       {
         "identifier": "SREACT",
         "file": "teaching-student-reactions.epub",
+        "tags": ["5 min"]
+      },
+      {
+        "identifier": "SSETTINGS",
+        "file": "teaching-settings.epub",
+        "tags": ["15 min"]
+      },
+      {
+        "identifier": "LESSONPLANS",
+        "file": "teaching-lesson-plans.epub",
+        "tags": ["15 min"]
+      },
+      {
+        "identifier": "SWITCH",
+        "file": "teaching-switch.epub",
         "tags": ["5 min"]
       }
     ]
