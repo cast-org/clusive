@@ -308,32 +308,34 @@
                 </div>
 
                 <div class="card card-library">
-                    <div class="card-header has-favorite">
-                        <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
-                        <div class="card-author">
-                            by Firstname Lastname
-                        </div>
-                        <div class="card-library-favorite">
-                            <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
-                                <input id="starred0" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred">
-                                <label for="starred0" class="btn btn-icon btn-starred link-above">
-                                    <span class="icon-starred" aria-hidden="true"></span>
-                                </button>
+                    <div class="card-hover">
+                        <div class="card-header has-favorite">
+                            <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
+                            <div class="card-author">
+                                by Firstname Lastname
                             </div>
                         </div>
+                        <div class="card-img">
+                            <img class="img-fluid" src="./img/sample-1.jpg" alt="">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
                     </div>
-                    <div class="card-img">
-                        <img class="img-fluid" src="./img/sample-1.jpg" alt="">
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <div class="card-library-favorite">
+                        <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Not starred">
+                            <input id="starred0" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred">
+                            <label for="starred0" class="btn btn-icon btn-starred link-above">
+                                <span class="icon-starred" aria-hidden="true"></span>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="row">
                             <div class="col card-library-tag">
-                                <a href="#" class="btn btn-tag active link-above">art</a>
-                                <a href="#" class="btn btn-tag link-above">non-fiction</a>
-                                <span class="badge badge-count link-above" tabindex="0" data-cfw="tooltip" title="51 words, 6 images">
+                                <a href="#" class="btn btn-tag active">art</a>
+                                <a href="#" class="btn btn-tag">non-fiction</a>
+                                <span class="badge badge-count" tabindex="0" data-cfw="tooltip" title="51 words, 6 images">
                                     <span class="badge-item">
                                         <span class="icon-tag-word" aria-hidden="true"></span>
                                         51 <span class="sr-only">words</span>
@@ -349,7 +351,7 @@
                                 </span>
                             </div>
                             <div class="col-auto card-library-action">
-                                <span class="dropdown link-above">
+                                <span class="dropdown">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                         <span class="sr-only">Publication settings</span>
@@ -362,21 +364,20 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="card-divider spaced-top"></div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-text">
+                            Assigned to: Class One, Class Two, Class C
+                        </div>
                         <div class="row">
                             <div class="col">
-                                <div class="card-text">
-                                    Assigned to: Class One, Class Two, Class C
-                                </div>
-                                <div class="card-text">
-                                    <span class="badge badge-count">
-                                        <span class="icon-wrench" aria-hidden="true"></span>
-                                    </span>
-                                    Customized
-                                </div>
+                                <span class="badge badge-count">
+                                    <span class="icon-wrench" aria-hidden="true"></span>
+                                </span>
+                                Customized
                             </div>
                             <div class="col-auto card-library-action">
-                                <span class="dropdown link-above">
+                                <span class="dropdown">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                         <span class="sr-only">Publication settings</span>
@@ -392,25 +393,27 @@
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-header has-favorite">
-                        <h2 class="card-title"><a href="#" class="link-stretch">Some longer article title with question?</a></h2>
-                        <div class="card-author">
-                            by Firstname Lastname
-                        </div>
-                        <div class="card-library-favorite">
-                            <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Starred">
-                                <input id="starred1" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred" checked>
-                                <label for="starred1" class="btn btn-icon btn-starred link-above">
-                                    <span class="icon-starred" aria-hidden="true"></span>
-                                </button>
+                    <div class="card-hover">
+                        <div class="card-header has-favorite">
+                            <h2 class="card-title"><a href="#" class="link-stretch">Some longer article title with question?</a></h2>
+                            <div class="card-author">
+                                by Firstname Lastname
                             </div>
                         </div>
+                        <div class="card-img">
+                            <img class="img-fluid" src="./img/sample-2.jpg" alt="">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                        </div>
                     </div>
-                    <div class="card-img">
-                        <img class="img-fluid" src="./img/sample-2.jpg" alt="">
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                    <div class="card-library-favorite">
+                        <div class="btn-check" data-cfw="tooltip" data-cfw-tooltip-title="Starred">
+                            <input id="starred1" type="checkbox" class="btn-check-input btn-check-starred" aria-label="Starred" checked>
+                            <label for="starred1" class="btn btn-icon btn-starred link-above">
+                                <span class="icon-starred" aria-hidden="true"></span>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -421,7 +424,7 @@
                                 </span>
                             </div>
                             <div class="col-auto card-library-action">
-                                <span class="dropdown link-above">
+                                <span class="dropdown">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                         <span class="sr-only">Publication settings</span>
@@ -437,17 +440,19 @@
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-header">
-                        <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
-                        <div class="card-author">
-                            by Firstname Lastname
+                    <div class="card-hover">
+                        <div class="card-header">
+                            <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
+                            <div class="card-author">
+                                by Firstname Lastname
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-img">
-                        <img class="img-fluid" src="./img/cover.svg" alt="">
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <div class="card-img">
+                            <img class="img-fluid" src="./img/cover.svg" alt="">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -455,7 +460,7 @@
                         </div>
                         <div class="row">
                             <div class="col-auto card-library-action">
-                                <span class="dropdown link-above">
+                                <span class="dropdown">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                         <span class="sr-only">Publication settings</span>
@@ -471,17 +476,19 @@
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-header">
-                        <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
-                        <div class="card-author">
-                            by Firstname Lastname
+                    <div class="card-hover">
+                        <div class="card-header">
+                            <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
+                            <div class="card-author">
+                                by Firstname Lastname
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-img">
-                        <img class="img-fluid" src="./img/crane.jpg" alt="">
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <div class="card-img">
+                            <img class="img-fluid" src="./img/crane.jpg" alt="">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -500,10 +507,8 @@
                                     </span>
                                 </span>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-auto card-library-action">
-                                <span class="dropdown link-above">
+                                <span class="dropdown">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                         <span class="sr-only">Publication settings</span>
@@ -519,17 +524,19 @@
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-header">
-                        <h2 class="card-title"><a href="#" class="link-stretch">Some longer article title with question?</a></h2>
-                        <div class="card-author">
-                            by Firstname Lastname
+                    <div class="card-hover">
+                        <div class="card-header">
+                            <h2 class="card-title"><a href="#" class="link-stretch">Some longer article title with question?</a></h2>
+                            <div class="card-author">
+                                by Firstname Lastname
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-img">
-                        <img class="img-fluid" src="./img/sample-4.jpg" alt="">
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                        <div class="card-img">
+                            <img class="img-fluid" src="./img/sample-4.jpg" alt="">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Vestibulum vel velit vitae enim maximus sollicitudin a quis enim.</p>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -537,7 +544,7 @@
                         </div>
                         <div class="row">
                             <div class="col-auto card-library-action">
-                                <span class="dropdown link-above">
+                                <span class="dropdown">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                         <span class="sr-only">Publication settings</span>
@@ -553,14 +560,16 @@
                     </div>
                 </div>
                 <div class="card card-library">
-                    <div class="card-header">
-                        <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
-                        <div class="card-author">
-                            by Firstname Lastname
+                    <div class="card-hover">
+                        <div class="card-header">
+                            <h2 class="card-title"><a href="#" class="link-stretch">Some article title</a></h2>
+                            <div class="card-author">
+                                by Firstname Lastname
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <div class="card-body">
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -578,10 +587,9 @@
                                     </span>
                                 </span>
                             </div>
-                        </div>
-                        <div class="row">
+
                             <div class="col-auto card-library-action">
-                                <span class="dropdown link-above">
+                                <span class="dropdown">
                                     <button type="button" class="btn btn-flag" data-cfw="dropdown">
                                         <span class="icon-ellipsis-vert" aria-hidden="true"></span>
                                         <span class="sr-only">Publication settings</span>

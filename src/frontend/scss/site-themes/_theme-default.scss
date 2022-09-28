@@ -152,7 +152,8 @@ $btn-starred-active-border-color:       transparent;
 
 // Badges
 $badge-count-bg:                        transparent;
-$badge-count-color:                     #636b82;
+$badge-count-color:                     #333;
+$badge-count-icon-color:                #636b82;
 $badge-count-border-color:              #d3cfc9;
 
 // Skiplink
@@ -280,6 +281,7 @@ $card-border-color:                     #ebe9e4;
 $card-img-bg:                           rgba(#72c0b2, .3);
 $card-library-box-shadow:               -.125rem -.5rem 0 .125rem #fbfbfb, -.125rem -.125rem 0 .125rem #fbfbfb;
 $card-library-author-color:             #666;
+$card-library-bg-secondary:             #e4e1da;
 $card-login-bg:                         #84d2c4; //rgba(#acfdf0, .3);
 $card-login-color:                      inherit;
 $card-special-bg:                       #9aeadd;

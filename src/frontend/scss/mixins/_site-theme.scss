@@ -115,6 +115,7 @@
         --CT_cardImgBg: #{$card-img-bg};
         --CT_cardLibraryBoxShadow: #{$card-library-box-shadow};
         --CT_cardLibraryAuthorColor: #{$card-library-author-color};
+        --CT_cardLibraryBgSecondary: #{$card-library-bg-secondary};
         --CT_cardDividerColor: #{$card-divider-color};
         --CT_cardProgressBarBg: #{$card-progress-bar-bg};
 
@@ -270,6 +271,7 @@
 
         --CT_badgeCountBg: #{$badge-count-bg};
         --CT_badgeCountColor: #{$badge-count-color};
+        --CT_badgeCountIconColor: #{$badge-count-icon-color};
         --CT_badgeCountBorderColor: #{$badge-count-border-color};
 
         --CT_errorListBg: #{$error-bg};

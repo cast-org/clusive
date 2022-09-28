@@ -232,6 +232,7 @@
 
     .card-img {
         flex: 1 0 auto;
+        height: 100%;
 
         img {
             max-height: 45vw;
@@ -255,8 +256,11 @@
     }
 
     .card-toggle {
-        padding-right: .25rem;
-        @include media-breakpoint-up(md) {
+        position: absolute;
+        top: .25rem;
+        right: .25rem;
+
+        @include media-breakpoint-up(lg) {
             display: none;
         }
     }
@@ -270,8 +274,9 @@
     }
 
     .card-collapse {
-        @include media-breakpoint-up(md) {
-            display: block;
+        @include media-breakpoint-up(lg) {
+            display: flex;
+            flex-grow: 1;
         }
     }
 
@@ -282,13 +287,16 @@
         }
     }
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .card-library-favorite {
-            top: .75rem;
+            top: .5rem;
             right: 3rem;
         }
         .has-favorite .card-title {
-            margin-right: 1rem;
+            margin-right: 4.5rem;
+        }
+        .card-footer {
+            @include border-bottom-start-radius($card-border-radius !important);
         }
     }
 }

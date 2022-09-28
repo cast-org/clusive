@@ -25,7 +25,8 @@
     }
 }
 
-.card-body {
+.card-body,
+.card-footer {
     p:last-child {
         margin-bottom: 0;
     }
@@ -46,51 +47,12 @@
     }
 }
 
-.card-graph {
-    position: relative;
-    z-index: 2;
-
-    .link-stretch {
-        &::after {
-            top: calc(-#{$card-padding-y} - 3px);
-            right: -$card-padding-x;
-            bottom: calc(-2rem + #{-$card-padding-y});
-            left: -$card-padding-x;
-        }
-    }
-
-}
-.card-graph-title {
-    margin-bottom: .25rem;
-    @include font-size(.8125rem);
-}
-
-.card-question {
-    position: relative;
-    z-index: 2;
-
-    .link-stretch {
-        &::after {
-            top: calc(-#{$card-padding-y} - 3px);
-            right: -$card-padding-x;
-            bottom: -$card-padding-y;
-            left: -$card-padding-x;
-        }
-
-        &:hover::after {
-            background-color: rgba(0, 0, 0, .05);
-        }
-    }
-}
-.card-question-title {
+.card-footer-title {
     margin-bottom: .25rem;
     @include font-size(.8125rem);
 }
 
 .card {
-    word-wrap: normal;
-    hyphens: auto;
-
     .card-header + .card-body {
         padding-top: 0;
         margin-top: $card-title-margin-bottom * -1;
@@ -112,17 +74,21 @@
 }
 
 .card-library {
+    border-width: 0;
     box-shadow: var(--CT_cardLibraryBoxShadow);
 
-    .card-title a,
-    *:not(.card-graph):not(.card-graph-title):not(.card-question-title) > .link-stretch {
-        color: inherit;
-        text-decoration: none;
+    .card-title {
+        hyphens: auto;
+        word-wrap: normal;
 
-        &:hover,
-        &:focus {
+        a {
             color: inherit;
-            text-decoration: underline;
+            text-decoration: none;
+
+            &:focus {
+                color: inherit;
+                text-decoration: underline;
+            }
         }
     }
 
@@ -154,10 +120,39 @@
         @include calc-line-height(1.375);
     }
 
+    .card-hover {
+        position: relative;
+        flex: 1;
+        overflow: hidden;
+        @include border-top-radius($card-border-radius);
+
+        // stylelint-disable declaration-no-important
+        &:hover {
+            background-color: var(--CT_btnPrimaryHoverBg) !important;
+
+            .card-header,
+            .card-title,
+            .card-author,
+            .card-img,
+            .card-body,
+            .card-library-favorite .btn,
+            ~ .card-library-favorite .btn {
+                color: var(--CT_btnPrimaryHoverColor) !important;
+                background-color: var(--CT_btnPrimaryHoverBg) !important;
+                border-color: var(--CT_btnPrimaryHoverColor) !important;
+            }
+        }
+        // stylelint-enable  declaration-no-important
+
+        &:last-child .card-body:last-child {
+            @include border-bottom-radius($card-inner-border-radius);
+        }
+    }
+
     .card-footer {
-        padding-top: 0;
-        background: transparent;
-        border-top-width: 0;
+        @include calc-line-height(1.375);
+        background-color: var(--CT_cardLibraryBgSecondary);
+        border-top: 3px solid var(--CT_cardDividerColor);
     }
 
     > .card-img {
@@ -174,6 +169,36 @@
             @include border-bottom-radius(0);
         }
     }
+
+    &.card-horizontal {
+        .card-col {
+            position: relative;
+        }
+
+        .card-hover {
+            .row {
+                height: 100%;
+            }
+        }
+
+        @include media-breakpoint-up(lg) {
+            .card-hover {
+                @include border-top-end-radius(0);
+                @include border-bottom-start-radius($card-border-radius);
+            }
+            .card-footer {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                border-top: 0;
+                border-left: 3px solid var(--CT_cardDividerColor);
+
+                .row:last-child {
+                    height: 100%;
+                }
+            }
+        }
+    }
 }
 
 .card-library-favorite {
@@ -184,6 +209,8 @@
 }
 
 .card-toggle-btn {
+    background-color: var(--CT_cardBg);
+
     &.link-above {
         z-index: 1;
     }
@@ -199,6 +226,7 @@
     // 3. Push to right side of card
     display: flex; // 1
     align-items: flex-end;
+    justify-content: flex-end;
     padding-right: .5rem; // 2
     padding-left: 0;
     margin-top: -.25rem; // 2
