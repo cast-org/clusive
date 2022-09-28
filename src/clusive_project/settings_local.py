@@ -37,6 +37,10 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'cisl@cast.org'
 
+# Set more QA-friendly values than the live config.
+AXES_FAILURE_LIMIT = 10
+AXES_COOLOFF_TIME = 1
+
 # To log database queries, change the level here to DEBUG
 LOGGING['loggers']['django.db.backends'] = {
     'handlers': ['console'],
