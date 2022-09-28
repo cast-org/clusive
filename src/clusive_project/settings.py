@@ -296,7 +296,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # - Do not log logins
 # - Warn users when they are allowed only three or fewer login attempts
 AXES_ONLY_USER_FAILURES = True
-AXES_FAILURE_LIMIT = 20
+AXES_FAILURE_LIMIT = 15
 AXES_COOLOFF_TIME = 3
 AXES_RESET_COOL_OFF_ON_FAILURE_DURING_LOCKOUT = False
 AXES_ENABLE_ACCESS_FAILURE_LOG = True
