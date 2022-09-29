@@ -67,11 +67,48 @@
         }
     }
 
+    details {
+        position: relative;
+        padding: $box-padding-y $box-padding-x;
+        margin-bottom: $box-margin-bottom;
+        line-height: $box-line-height;
+        color: var(--CT_boxResourceColor);
+        background-color: var(--CT_boxResourceBg);
+        @include border-radius($box-border-radius);
+        @include clearfix();
+
+        &[open] summary {
+            padding-bottom: 1rem;
+        }
+    }
+
     figure {
         width: 80%;
         margin: 0 auto 1.5rem;
         text-align: center;
+
+        details {
+            padding: 0;
+            margin: .5rem 0 0;
+            line-height: inherit;
+            color: inherit;
+            background-color: transparent;
+            @include border-radius(0);
+        }
+
+        summary {
+            font-weight: $font-weight-normal;
+            color: var(--CT_linkColor);
+            text-decoration: underline;
+            list-style: none;
+
+            @include hover-focus() {
+                color: var(--CT_linkHoverColor);
+                text-decoration: underline;
+            }
+        }
     }
+
     .row figure {
         width: 100%;
         margin: 0 0 1rem;
@@ -111,18 +148,21 @@
         }
     }
 
-    details {
-        position: relative;
-        padding: $box-padding-y $box-padding-x;
-        margin-bottom: $box-margin-bottom;
-        line-height: $box-line-height;
-        color: var(--CT_boxResourceColor);
-        background: var(--CT_boxResourceBg);
-        @include border-radius($box-border-radius);
-        @include clearfix();
+    blockquote {
+        width: 80%;
+        padding: .25rem .75rem;
+        margin-right: auto;
+        margin-left: auto;
+        @include font-size(1.25rem, true);
+        font-style: italic;
+        border-left: 4px solid var(--CT_boxResourceDivderColor);
 
-        &[open] summary {
-            padding-bottom: 1rem;
+        p {
+            font-size: inherit !important;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
         }
     }
 }
