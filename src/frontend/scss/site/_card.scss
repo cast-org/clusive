@@ -294,4 +294,7 @@
             padding-left: .25rem;
         }
     }
+    .card-hover {
+        @include border-bottom-radius($card-border-radius);
+    }
 }
