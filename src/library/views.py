@@ -35,6 +35,7 @@ from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -390,7 +391,10 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
         context['tip_name'] = self.tip_shown.name if self.tip_shown else None
+        context['tip_title'] = 'Library'
+        context['teacher_resource'] = False
         context['has_bookshare_account'] = has_bookshare_account(self.request)
+        #pdb.set_trace()
         return context
 
 

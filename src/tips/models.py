@@ -7,6 +7,8 @@ from django.utils import timezone
 from roster.models import ClusiveUser, UserStats, Roles
 
 logger = logging.getLogger(__name__)
+import pdb
+import pprint
 
 
 class TipType(models.Model):
@@ -64,6 +66,15 @@ class TipHistory(models.Model):
         return '<TipHistory %s:%s>' % (self.type.name, self.user.user.username)
 
     def ready_to_show(self):
+        #########################
+        # DEBUGGING
+        ########################
+        if self.type.name == 'view' or self.type.name == 'readaloud':
+            logger.debug(self.type.name)
+            logger.debug(self)
+            pprint.pprint(vars(self))
+            return True
+        #pdb.set_trace()
         # Already shown the maximum number of times?
         if self.show_count >= self.type.max:
             return False

@@ -1,15 +1,66 @@
 {% load i18n %}
-<div id="tip" class="tooltip tooltip-feature">
-    <div class="tooltip-body">
+<div id="tip" class="popover popover-tour popover-scrollable">
+    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <div class="popover-header">
+        <span class="h3">
+        {% if tip_name == "settings" %}
+            Settings
+        {% elif tip_name == "readaloud" %}
+            Read-aloud
+        {% elif tip_name == "wordbank" %}
+            Word Bank
+        {% elif tip_name == "switch" %}
+            Switch
+        {% elif tip_name == "context" %}
+            Context
+        {% elif tip_name == "view" %}
+            Library Views
+        {% elif tip_name == "book_actions" %}
+            Book Actions
+        {% elif tip_name == "activity" %}
+            Activities
+        {% endif %}
+        </span>
+        <div class="dialog-tts" role="region" aria-label="Read aloud controls">
+            <div class="tts-inactive">
+                <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="tts-active">
+                <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud" data-cle-handler="click" data-cle-control="tts-pause" data-cle-value="clicked">
+                    <span class="icon-pause" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud" data-cle-handler="click" data-cle-control="tts-resume" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud" data-cle-handler="click" data-cle-control="tts-stop" data-cle-value="clicked">
+                    <span class="icon-stop" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="popover-body">
         {% if tip_name == "settings" %}
         <p><strong>Settings:</strong> Change the font, colors, and more!</p>
         <div class="tooltip-action">
             <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
         </div>
         {% elif tip_name == "readaloud" %}
-        <p><strong>Read-aloud:</strong> Hear this page read aloud.</p>
-        <div class="tooltip-action">
-            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="readaloudIframe" src="https://videos.sproutvideo.com/embed/449edbb51c1ae6cecd/90717ea3b61bbdd3?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Read aloud"></iframe>
+        </div>
+        <p>Click the page read aloud icon to hear the entire page. Select text and click read aloud in the context menu to hear a smaller selection or a single word read aloud.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and teacher_resource %}
+                <!-- 'readaloud' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#"></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+            </div>
         </div>
         {% elif tip_name == "wordbank" %}
         <p><strong>Word bank:</strong> Track words you&apos;re learning.</p>
@@ -45,9 +96,20 @@
             </div>
         </div>
         {% elif tip_name == "view" %}
-        <p>Change your view to see different sets of readings.</p>
-        <div class="tooltip-action">
-            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="viewIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb141fe6c525/86b0cbe36e2ab800?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Library Views"></iframe>
+        </div>
+        <p>View the Clusive library by all readings, or in smaller groupings like class readings, readings you’ve starred, public readings, or readings you’ve uploaded.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and teacher_resource %}
+                <!-- 'view' type popovers currently do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#"></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+            </div>
         </div>
         {% elif tip_name == "book_actions" %}
         <p>Select to assign a reading to a class, and more.</p>
@@ -74,14 +136,15 @@
         </div>
         {% endif %}
     </div>
+    <div class="popover-arrow"></div>
     {% if tip_name != "context" and tip_name != "activity" %}
-    <div class="tooltip-arrow"></div>
+    <!-- <div class="tooltip-arrow"></div> -->
     {% endif %}
 </div>
 <div id="features" class="features" aria-live="assertive" aria-atomic="true">
     <div class="content-container container-xl">
         <div class="content">
-            <span data-clusive-tip-id="context" data-cfw-tooltip-placement="right auto" class="feature-context feature-novis"></span>
+            <span data-clusive-tip-id="context" data-cfw-tooltip-placement="right auto" class="feature-context feature-novis">FOO</span>
         </div>
     </div>
 </div>
