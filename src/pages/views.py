@@ -674,8 +674,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         self.book_version = versions[version]
         self.book = book
         annotationList = Annotation.get_list(user=clusive_user, book_version=self.book_version)
-        cuelist_map = choose_words_to_cue(book_version=self.book_version, user=clusive_user) \
-            if not book.is_educator_resource else {}
+        cuelist_map = choose_words_to_cue(book_version=self.book_version, user=clusive_user)
         # Make into format that R2D2BC wants for "definitions"
         cuelist = [{ 'order': i, 'result': 1, 'terms': terms } for i, terms in enumerate(cuelist_map.values())]
         logger.debug('Cuelist: %s', repr(cuelist))

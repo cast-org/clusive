@@ -243,6 +243,10 @@ class Book(models.Model):
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
 
+    @property
+    def glossimages_storage(self):
+        return os.path.join(self.storage_dir, 'glossimages')
+
     def add_teacher_extra_info(self, periods):
         """
         Adds two fields of additional information for displaying a library card to teachers:
