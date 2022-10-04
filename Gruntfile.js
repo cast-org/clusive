@@ -127,7 +127,6 @@ module.exports = function (grunt) {
                     'src/frontend/dist/css/<%= pkg.name %>-prefs-panel.css': 'src/frontend/scss/<%= pkg.name %>-prefs-panel.scss',
                     'src/frontend/dist/css/<%= pkg.name %>-reader-theme-sepia.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-sepia.scss',
                     'src/frontend/dist/css/<%= pkg.name %>-reader-theme-night.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-night.scss',
-                    'src/frontend/dist/css/<%= pkg.name %>-resource.css': 'src/frontend/scss/<%= pkg.name %>-resource.scss',
                     'src/frontend/dist/css/reader-frame.css': 'src/frontend/scss/reader-frame.scss'
                 }
             },
@@ -138,6 +137,7 @@ module.exports = function (grunt) {
                     'target/shared/static/shared/css/<%= pkg.name %>-reader-theme-sepia.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-sepia.scss',
                     'target/shared/static/shared/css/<%= pkg.name %>-reader-theme-night.css': 'src/frontend/scss/<%= pkg.name %>-reader-theme-night.scss',
                     'target/shared/static/shared/css/<%= pkg.name %>-resource.css': 'src/frontend/scss/<%= pkg.name %>-resource.scss',
+                    'target/shared/static/shared/css/<%= pkg.name %>-udlbook.css': 'src/frontend/scss/<%= pkg.name %>-udlbook.scss',
                     'target/shared/static/shared/css/reader-frame.css': 'src/frontend/scss/reader-frame.scss'
                 }
             }

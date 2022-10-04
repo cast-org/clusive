@@ -1,0 +1,7 @@
+@mixin calc-line-height($dim) {
+    line-height: calc((#{$dim} / 1.6) * var(--USER__lineHeight));
+}
+@function scale-line-height($dim) {
+    $output: calc((#{$dim} / 1.6) * var(--USER__lineHeight));
+    @return $output;
+}
