@@ -18,6 +18,11 @@
         {% if resource.description %}
         <div class="card-body">
             <p class="card-text">{{ resource.description }}</p>
+            <p>
+                {% for tag in resource.resource_tag_list %}
+                <span class="badge badge-count">{{ tag }}</span>
+                {% endfor %}
+            </p>
         </div>
         {% endif %}
         {% if use_col %}
@@ -29,9 +34,6 @@
     <div class="card-footer">
         <div class="row">
             <div class="col card-library-tag">
-                {% for tag in resource.resource_tag_list %}
-                <span class="badge badge-count">{{ tag }}</span>
-                {% endfor %}
             </div>
             <div class="col-auto card-library-action">
             </div>

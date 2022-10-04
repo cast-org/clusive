@@ -15,8 +15,24 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = 'Import or update items into the application for display on the Resources page. ' \
-           'Requires an argument which is a JSON file listing information about the resources to be imported.'
+    help = 'Import or update items into the application for display on the Resources page. \n' \
+           'Requires an argument which is a JSON file listing information about the resources to be imported.\n' \
+           '\n' \
+           'Format of JSON file:\n' \
+           '[\n' \
+           '  { "name": "Category name",\n' \
+           '    "feature_format": "1col OR 2col", # OPTIONAL' \
+           '    "resources": [\n' \
+           '       { "identifier": "ID",\n' \
+           '          "file": "filename.epub",\n' \
+           '          "tags": [ "tag1", "tag2" ],\n' \
+           '          "glossary": "glossary-file.json", # OPTIONAL\n' \
+           '          "glossimages": "glossary-image-directory" # OPTIONAL\n' \
+           '       }\n' \
+           '       # Other resources...\n' \
+           '    ] }\n' \
+           '  # Other categories...\n' \
+           ']\n'
     label = 'file'
 
     def add_arguments(self, parser):
@@ -33,9 +49,12 @@ class Command(BaseCommand):
                 resourcedata = json.load(resource_file)
                 # Loop through outer list (categories)
                 for seq, catinfo in enumerate(resourcedata):
+                    cat: EducatorResourceCategory
                     cat, created = EducatorResourceCategory.objects.get_or_create(sort_order=seq)
                     resource_count = len(cat.resources.all())
                     cat.name = catinfo['name']
+                    if 'feature_format' in catinfo:
+                         cat.feature_alt_format = (catinfo['feature_format'] == '2col')
                     cat.save()
                     # Loop through inner list (resources for this category)
                     for item in catinfo['resources']:
