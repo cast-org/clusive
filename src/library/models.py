@@ -42,6 +42,8 @@ class Subject(models.Model):
 class EducatorResourceCategory(models.Model):
     name = models.CharField(max_length=256)
     sort_order = models.SmallIntegerField(unique=True)
+    # If true, featured resources are displayed in an alternate (2-column) format.
+    feature_alt_format = models.BooleanField(default=False)
 
     def __str__(self):
         return '<EducatorResourceCategory %s:%s>' % (self.sort_order, self.name)
@@ -242,6 +244,10 @@ class Book(models.Model):
     @property
     def glossary_storage(self):
         return os.path.join(self.storage_dir, 'glossary.json')
+
+    @property
+    def glossimages_storage(self):
+        return os.path.join(self.storage_dir, 'glossimages')
 
     def add_teacher_extra_info(self, periods):
         """

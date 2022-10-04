@@ -27,8 +27,9 @@ class BookGlossary:
                 for worddata in rawdata:
                     base = glossaryutil.base_form(worddata['headword'])
                     self.data[base] = worddata
-                    for altform in worddata['alternateForms']:
-                        self.data[altform.lower()] = worddata
+                    if 'alternateForms' in worddata:
+                        for altform in worddata['alternateForms']:
+                            self.data[altform.lower()] = worddata
         except FileNotFoundError:
             logger.warning('Book %s has no glossary', book)
         except EnvironmentError:

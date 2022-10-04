@@ -35,7 +35,7 @@
         <h2>{{ cat.name }}</h2>
         <div class="library-grid pt-0">
         {% for resource in cat.resources.all %}
-            {% include "library/partial/resource_card.html" with resource=resource %}
+            {% include "library/partial/resource_card.html" with resource=resource use_col=cat.feature_alt_format %}
         {% endfor %}
         </div>
     </div>
