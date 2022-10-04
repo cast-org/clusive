@@ -133,23 +133,30 @@ class ChecklistView(View):
         return word
 
 
-def merge_into_set(old_set: set, new_set: set, max_count: int):
+def merge_into_set(old_set: set, new_set: set, max_count: int, logname: str):
     """
     Add all or some items from new_set into old_set, without letting old_set get larger than max_count.
     If there isn't space to add all the items, a random sampling is chosen.
     :param old_set:
     :param new_set:
     :param max_count: desired size of set.
+    :param logname: how to refer to the list of words added in log messages
     :return: void
     """
     if len(old_set) >= max_count or len(new_set) == 0:
         return
     new_set_without_dups = new_set - old_set
-    if len(old_set) + len(new_set_without_dups) < max_count:
-        old_set |= new_set_without_dups
+    if new_set_without_dups:
+        if len(old_set) + len(new_set_without_dups) < max_count:
+            old_set |= new_set_without_dups
+            logger.debug('Added all %d new %s words to set', len(new_set_without_dups), logname)
+        else:
+            sample = random.sample(new_set_without_dups, k=max_count - len(old_set))
+            old_set |= set(sample)
+            logger.debug('Added a random %d of the %d new %s words to set',
+                         max_count, len(new_set_without_dups), logname)
     else:
-        sample = random.sample(new_set_without_dups, k=max_count - len(old_set))
-        old_set |= set(sample)
+        logger.debug('No %s words that aren\'t already in the set', logname)
 
 
 def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
@@ -178,23 +185,21 @@ def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
                       if wm.interest_est() > 0
                       and (wm.knowledge_est()==None or wm.knowledge_est()<3)
                       and has_definition(book_version.book, wm.word, priority_lookup)]
-    logger.debug("Found %d interest words: %s", len(interest_words), interest_words)
-    merge_into_set(cue_words, set(interest_words), max_count=to_find)
+    merge_into_set(cue_words, set(interest_words), max_count=to_find, logname='interest')
 
     # Next look for words in the teacher's Customization
     if len(cue_words) < to_find:
         customization = Customization.get_customization_for_user(book_version.book, user)
         if customization:
             custom_words = customization.word_list
-            logger.debug("Found:  %d custom words: %s", len(custom_words), custom_words)
             # First, any custom words that are known to be low-knowledge
             low_knowledge_custom = [wm.word for wm in user_words
                                     if wm.word in custom_words
                                     and (wm.knowledge_est()==None or wm.knowledge_est()<3)]
-            merge_into_set(cue_words, set(low_knowledge_custom), max_count=to_find)
+            merge_into_set(cue_words, set(low_knowledge_custom), max_count=to_find, logname='low-knowledge custom')
 
             # Then, any others
-            merge_into_set(cue_words, set(custom_words), max_count=to_find)
+            merge_into_set(cue_words, set(custom_words), max_count=to_find, logname='custom')
 
     # Next look for words where the user has low estimated knowledge
     if len(cue_words) < to_find:
@@ -202,12 +207,11 @@ def choose_words_to_cue(book_version: BookVersion, user: ClusiveUser):
                          if wm.knowledge_est()
                          and wm.knowledge_est() < 2
                          and has_definition(book_version.book, wm.word, priority_lookup)]
-        logger.debug("Found:  %d low-knowledge words: %s", len(unknown_words), unknown_words)
-        merge_into_set(cue_words, set(unknown_words), max_count=to_find)
+        merge_into_set(cue_words, set(unknown_words), max_count=to_find, logname='low-knowledge')
 
     # Fill up the list with glossary words
     if len(cue_words) < to_find:
-        merge_into_set(cue_words, set(all_glossary_words), max_count=to_find)
+        merge_into_set(cue_words, set(all_glossary_words), max_count=to_find, logname='glossary')
 
     map_to_forms = {}
     for word in cue_words:

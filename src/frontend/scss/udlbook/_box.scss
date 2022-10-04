@@ -1,0 +1,30 @@
+.box {
+    position: relative;
+    padding: $box-padding-y $box-padding-x;
+    margin-bottom: $box-margin-bottom;
+    line-height: $box-line-height;
+    color: var(--CT_boxResourceColor);
+    background: var(--CT_boxResourceBg);
+    border: $box-border-width solid var(--CT_boxResourceBorderColor);
+    @include border-radius($box-border-radius);
+    @include clearfix();
+
+    hr {
+        color: var(--CT_boxResourceDivderColor);
+        opacity: 1;
+    }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.box-secondary {
+    color: var(--CT_boxResourceSecondaryColor);
+    background: var(--CT_boxResourceSecondaryBg);
+    border: $box-border-width solid var(--CT_boxResourceSecondaryBorderColor);
+
+    hr {
+        color: var(--CT_boxResourceSecondaryDivderColor);
+    }
+}

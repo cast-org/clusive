@@ -31,7 +31,7 @@ urlpatterns = [
          name='metadata_edit'),
     path('metadata/edit/<int:pk>/<int:bv>', views.MetadataEditFormView.as_view(),
          name='metadata_edit'),
-    path('metadata/replace/<int:orig>/<int:pk>', views.MetadataReplaceFormView.as_view(),
+    path('metadata/replace/<int:orig>/<int:pk>/<int:bv>', views.MetadataReplaceFormView.as_view(),
          name='metadata_replace'),
 
     path('remove/<int:pk>', views.RemoveBookView.as_view(),

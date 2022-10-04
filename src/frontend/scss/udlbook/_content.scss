@@ -1,0 +1,168 @@
+// stylelint-disable selector-no-qualifying-type, selector-max-attribute
+
+// Override the Readium CSS overrides to get closer to Clusive styling
+:root[style*="readium-advanced-on"][style*="--USER__lineHeight"] {
+    body {
+        --RS__maxLineLength: 45rem;
+        font-family: $font-family-sans-serif;
+    }
+
+    h1,
+    .h1,
+    h2,
+    .h2,
+    h3,
+    .h3,
+    h4,
+    .h4,
+    h5,
+    .h5,
+    h6,
+    .h6 {
+        font-family: "Arial Black", Arial, sans-serif;
+        font-weight: 900;
+        @include calc-line-height(1.25);
+    }
+    h1,
+    .h1 {
+        @include font-size(1.875rem, true);
+    }
+
+    h2,
+    .h2 {
+        @include font-size(1.625rem, true);
+    }
+
+    h3,
+    .h3 {
+        @include font-size(1.375rem, true);
+    }
+
+    h4,
+    .h4 {
+        @include font-size(1.25rem, true);
+    }
+
+    h5,
+    .h5 {
+        @include font-size(1.125rem, true);
+    }
+
+    h6,
+    .h6 {
+        @include font-size(1rem, true);
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @include clearfix();
+    }
+
+    ol {
+        > li::marker {
+            font-weight: $font-weight-bold;
+        }
+    }
+
+    details {
+        position: relative;
+        padding: $box-padding-y $box-padding-x;
+        margin-bottom: $box-margin-bottom;
+        line-height: $box-line-height;
+        color: var(--CT_boxResourceColor);
+        background-color: var(--CT_boxResourceBg);
+        @include border-radius($box-border-radius);
+        @include clearfix();
+
+        &[open] summary {
+            padding-bottom: 1rem;
+        }
+    }
+
+    figure {
+        width: 80%;
+        margin: 0 auto 1.5rem;
+        text-align: center;
+
+        details {
+            padding: 0;
+            margin: .5rem 0 0;
+            line-height: inherit;
+            color: inherit;
+            background-color: transparent;
+            @include border-radius(0);
+        }
+
+        summary {
+            font-weight: $font-weight-normal;
+            color: var(--CT_linkColor);
+            text-decoration: underline;
+            list-style: none;
+
+            @include hover-focus() {
+                color: var(--CT_linkHoverColor);
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .row figure {
+        width: 100%;
+        margin: 0 0 1rem;
+    }
+
+    figcaption {
+        padding: .5rem;
+        @include font-size(.875rem);
+        @include calc-line-height(1.5);
+        color: var(--CT_figureCaptionColor);
+        text-align: left;
+        background-color: var(--CT_figureCaptionBg);
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .callout {
+        width: 80%;
+        margin: 0 auto 1rem;
+
+        @include media-breakpoint-up(sm) {
+            float: right;
+            width: 41.666667%;
+            padding-left: .5rem;
+            margin: 0 0 .5rem .5rem;
+        }
+
+        > p {
+            margin: .5rem;
+        }
+
+        figure {
+            width: auto;
+            margin: 0 0 1rem;
+        }
+    }
+
+    blockquote {
+        width: 80%;
+        padding: .25rem .75rem;
+        margin-right: auto;
+        margin-left: auto;
+        @include font-size(1.25rem, true);
+        font-style: italic;
+        border-left: 4px solid var(--CT_boxResourceDivderColor);
+
+        p {
+            font-size: inherit !important;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

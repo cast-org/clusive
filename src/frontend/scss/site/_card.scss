@@ -293,10 +293,8 @@
             padding-right: .25rem;
             padding-left: .25rem;
         }
-
-        .card-img {
-            margin-bottom: $card-padding-y;
-            margin-left: $card-padding-x;
-        }
+    }
+    .card-hover {
+        @include border-bottom-radius($card-border-radius);
     }
 }
