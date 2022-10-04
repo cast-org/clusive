@@ -1,5 +1,6 @@
 {% load i18n %}
-<div id="tip" class="popover popover-tour popover-scrollable">
+<div id="tip" class="popover popover-tour popover-scrollable tooltip">
+<!-- <div id="tip" class="tooltip tooltip-feature">  -->
     <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
     <div class="popover-header">
         <span class="h3">
@@ -48,7 +49,7 @@
         </div>
         {% elif tip_name == "readaloud" %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
-            <iframe id="readaloudIframe" src="https://videos.sproutvideo.com/embed/449edbb51c1ae6cecd/90717ea3b61bbdd3?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Read aloud"></iframe>
+            <iframe id="readaloudIframe" src="https://videos.sproutvideo.com/embed/449edbb51c1ae6cecd/90717ea3b61bbdd3?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Read aloud video"></iframe>
         </div>
         <p>Click the page read aloud icon to hear the entire page. Select text and click read aloud in the context menu to hear a smaller selection or a single word read aloud.</p>
         <div class="row gx-0_5 flex-items-center">
@@ -97,7 +98,7 @@
         </div>
         {% elif tip_name == "view" %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
-            <iframe id="viewIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb141fe6c525/86b0cbe36e2ab800?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Library Views"></iframe>
+            <iframe id="viewIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb141fe6c525/86b0cbe36e2ab800?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Library Views video"></iframe>
         </div>
         <p>View the Clusive library by all readings, or in smaller groupings like class readings, readings you’ve starred, public readings, or readings you’ve uploaded.</p>
         <div class="row gx-0_5 flex-items-center">
