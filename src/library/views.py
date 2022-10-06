@@ -578,10 +578,11 @@ class MetadataFormView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settings
 
         # Based on the value of the radio button (a grade range category) choose
         # that category's minimum as the ARI reading level score.
-        # ReadingLevel.min_grade for EARLY_READER radio button is zero,
-        # but ARI scores start at one and a score of zero means "unkonwn" in the
-        # database.  Set to one in that case.
-        ari_level = ReadingLevel(int(form.cleaned_data['reading_category'])).min_grade or 1
+        # ReadingLevel.min_grade for EARLY_READER radio button is negative
+        # infinity, but ARI scores start at one.  Set to one in that case.
+        ari_level = ReadingLevel(int(form.cleaned_data['reading_category'])).min_grade
+        if ari_level == -math.inf:
+            ari_level = 1
         self.save_reading_levels(self.object, self.book_version, ari_level)
 
         messages.success(self.request, 'Reading added. Your uploaded readings are indicated by a personal icon ({icon:user-o}) on your library card.')
