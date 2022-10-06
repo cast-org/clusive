@@ -1,24 +1,28 @@
 {% load i18n %}
-<div id="tip" class="popover popover-tour popover-scrollable tip">
-<!-- <div id="tip" class="tooltip tooltip-feature">  -->
-    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+<div id="tour_{{ tour_name }}" class="popover popover-tour popover-scrollable">
+    {% if tour_robust %}
+    {% if tours|length > 1 %}
+    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#tourStart');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    {% else %}
+    <button type="button" class="close" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    {% endif %}
     <div class="popover-header">
         <span class="h3">
-        {% if tip_name == "settings" %}
+        {% if tour_name == "settings" %}
             Settings
-        {% elif tip_name == "readaloud" %}
+        {% elif tour_name == "readaloud" %}
             Read-aloud
-        {% elif tip_name == "wordbank" %}
+        {% elif tour_name == "wordbank" %}
             Word Bank
-        {% elif tip_name == "switch" %}
+        {% elif tour_name == "switch" %}
             Switch
-        {% elif tip_name == "context" %}
+        {% elif tour_name == "context" %}
             Context
-        {% elif tip_name == "view" %}
+        {% elif tour_name == "view" %}
             Library Views
-        {% elif tip_name == "book_actions" %}
+        {% elif tour_name == "book_actions" %}
             Book Actions
-        {% elif tip_name == "activity" %}
+        {% elif tour_name == "activity" %}
             Activities
         {% endif %}
         </span>
@@ -41,8 +45,9 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <div class="popover-body">
-        {% if tip_name == "settings" %}
+        {% if tour_name == "settings" %}
 <!-- settings -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="settingsIframe" src="https://videos.sproutvideo.com/embed/a79edbb41414e7c72e/96f3dfacf85e2603?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Settings video"></iframe>
@@ -57,7 +62,7 @@
             <div class="tooltip-action">
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
-        {% elif tip_name == "readaloud" %}
+        {% elif tour_name == "readaloud" %}
 <!-- readaloud -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="readaloudIframe" src="https://videos.sproutvideo.com/embed/449edbb51c1ae6cecd/90717ea3b61bbdd3?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Read aloud video"></iframe>
@@ -74,7 +79,7 @@
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
-        {% elif tip_name == "wordbank" %}
+        {% elif tour_name == "wordbank" %}
 <!-- wordbank -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="wordbankIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb161fe1c025/5cb0b244a6a441c9?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Word bank video"></iframe>
@@ -91,7 +96,7 @@
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
-        {% elif tip_name == "switch" %}
+        {% elif tour_name == "switch" %}
 <!-- switch -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="switchIframe" src="https://videos.sproutvideo.com/embed/d39edbbb161ae0c75a/7acc94350bf3dd31?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Switch video"></iframe>
@@ -107,7 +112,7 @@
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
-        {% elif tip_name == "context" %}
+        {% elif tour_name == "context" %}
 <!-- context -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="contextIframe" src="https://videos.sproutvideo.com/embed/799edbb41410e3c1f0/10056e5843bb7d55?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Context tools video"></iframe>
@@ -130,7 +135,7 @@
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
-        {% elif tip_name == "view" %}
+        {% elif tour_name == "view" %}
 <!-- view -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="viewIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb141fe6c525/86b0cbe36e2ab800?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Library Views video"></iframe>
@@ -144,10 +149,10 @@
                 {% endif %}
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
-        {% elif tip_name == "book_actions" %}
+        {% elif tour_name == "book_actions" %}
 <!-- book_actions -->
         {% if clusive_user.role == 'TE' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
@@ -165,7 +170,7 @@
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
-        {% elif tip_name == "activity" %}
+        {% elif tour_name == "activity" %}
 <!-- activity -->
         {% if clusive_user.role == 'TE' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
@@ -186,15 +191,16 @@
         </div>
         {% endif %}
     </div>
+    {% if tour_name != "context" and tour_name != "activity" %}
     <div class="popover-arrow"></div>
-    {% if tip_name != "context" and tip_name != "activity" %}
-    <!-- <div class="tooltip-arrow"></div> -->
     {% endif %}
 </div>
-<div id="features" class="features" aria-live="assertive" aria-atomic="true">
-    <div class="content-container container-xl">
-        <div class="content">
-            <span data-clusive-tip-id="context" data-cfw-tooltip-placement="right auto" class="feature-context feature-novis">FOO</span>
-        </div>
-    </div>
-</div>
+<script>
+$(window).ready(function() {
+    tour.prepare('[data-clusive-tip-id="{{ tour_name }}"]');
+
+    {% if tours|length == 1 %}
+    $('[data-clusive-tip-id="{{ tour_name }}"]').CFW_Popover('show');
+    {% endif %}
+});
+</script>

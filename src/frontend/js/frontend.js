@@ -483,44 +483,45 @@ function formUseThisLinks() {
 function showTooltip(name) {
     'use strict';
 
-    if (name) {
-        $(window).ready(function() {
-            var tip_control = $('[data-clusive-tip-id="' + name + '"]');
-            var tip_popover = $('#tip');
-            var tip_placement = tip_control.attr('data-cfw-tooltip-placement');
-            tip_control.CFW_Tooltip('dispose');
-            tip_control.CFW_Tooltip({
-                target: '#tip',
-                container: '#features',
-                viewport: '#features',
-                trigger: 'manual',
-                placement: tip_placement ? tip_placement : 'right auto',
-                popperConfig: {
-                    positionFixed: true
-                }
-            });
-            setTimeout(function() {
-                if (tip_control.is(':visible')) {
-                    tip_popover.attr({
-                        'role': 'status',
-                        'aria-live': 'polite',
-                        'aria-atomic': 'true'
-                    });
-                    tip_control.CFW_Tooltip('show');
-                    tip_popover.trigger('focus');
-                    if (typeof window.parent.clusiveEvents === 'object' && window.parent.clusiveEvents.addTipViewToQueue === 'function') {
-                        window.parent.clusiveEvents.addTipViewToQueue(name);
-                    }
-                }
-            }, 2000);
-            tip_control.one('afterHide.cfw.tooltip', function() {
-                $(this).CFW_Tooltip('dispose');
-                if ($(this).hasClass('feature-novis')) {
-                    $('#content').trigger('focus');
-                }
-            });
-        });
+    if (!name || name === '') {
+        return;
     }
+    $(window).ready(function() {
+        var tip_control = $('[data-clusive-tip-id="' + name + '"]');
+        var tip_tooltip = $('#tip');
+        var tip_placement = tip_control.attr('data-cfw-tooltip-placement');
+        tip_control.CFW_Tooltip('dispose');
+        tip_control.CFW_Tooltip({
+            target: '#tip',
+            container: '#features',
+            viewport: '#features',
+            trigger: 'manual',
+            placement: tip_placement ? tip_placement : 'right auto',
+            popperConfig: {
+                positionFixed: true
+            }
+        });
+        setTimeout(function() {
+            if (tip_control.is(':visible')) {
+                tip_tooltip.attr({
+                    'role': 'status',
+                    'aria-live': 'polite',
+                    'aria-atomic': 'true'
+                });
+                tip_control.CFW_Tooltip('show');
+                tip_tooltip.trigger('focus');
+                if (typeof window.parent.clusiveEvents === 'object' && window.parent.clusiveEvents.addTipViewToQueue === 'function') {
+                    window.parent.clusiveEvents.addTipViewToQueue(name);
+                }
+            }
+        }, 2000);
+        tip_control.one('afterHide.cfw.tooltip', function() {
+            $(this).CFW_Tooltip('dispose');
+            if ($(this).hasClass('feature-novis')) {
+                $('#content').trigger('focus');
+            }
+        });
+    });
 }
 
 // Determine if page has bricks layout

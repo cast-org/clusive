@@ -61,7 +61,12 @@
 
 </main>
 {% include "shared/partial/modal_vocab_check.html" %}
-{% include "shared/partial/popover_tip.html" %}
+{% for tour in tours %}
+{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
+{% endfor %}
+{% if tip_name %}
+{% include "shared/partial/tooltip_tip.html" %}
+{% endif %}
 {% include "shared/partial/modal_confirm.html" %}
 
 {% endblock %}
