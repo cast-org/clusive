@@ -391,8 +391,7 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
         context['tip_name'] = self.tip_shown.name if self.tip_shown else None
-        context['tip_title'] = 'Library'
-        context['teacher_resource'] = False
+        context['has_teacher_resource'] = False
         context['has_bookshare_account'] = has_bookshare_account(self.request)
         #pdb.set_trace()
         return context

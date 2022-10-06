@@ -1,5 +1,5 @@
 {% load i18n %}
-<div id="tip" class="popover popover-tour popover-scrollable tooltip">
+<div id="tip" class="popover popover-tour popover-scrollable tip">
 <!-- <div id="tip" class="tooltip tooltip-feature">  -->
     <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
     <div class="popover-header">
@@ -43,67 +43,102 @@
     </div>
     <div class="popover-body">
         {% if tip_name == "settings" %}
-        <p><strong>Settings:</strong> Change the font, colors, and more!</p>
-        <div class="tooltip-action">
-            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+<!-- settings -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="settingsIframe" src="https://videos.sproutvideo.com/embed/a79edbb41414e7c72e/96f3dfacf85e2603?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Settings video"></iframe>
         </div>
+        <p>Change the font, colors, and more! Settings let you choose the look, supports, and reading tools to make Clusive all your own.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' resource_id='SETTINGS' %}">Learn more<span class="sr-only"> about settings</span></a>
+                {% endif %}
+            </div>
+            <div class="tooltip-action">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
         {% elif tip_name == "readaloud" %}
+<!-- readaloud -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="readaloudIframe" src="https://videos.sproutvideo.com/embed/449edbb51c1ae6cecd/90717ea3b61bbdd3?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Read aloud video"></iframe>
         </div>
         <p>Click the page read aloud icon to hear the entire page. Select text and click read aloud in the context menu to hear a smaller selection or a single word read aloud.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and teacher_resource %}
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <!-- 'readaloud' type popovers do not have a "Learn more" resource link yet, so this is blank -->
                 <a href="#"></a>
                 {% endif %}
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
         {% elif tip_name == "wordbank" %}
-        <p><strong>Word bank:</strong> Track words you&apos;re learning.</p>
-        <div class="tooltip-action">
-            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+<!-- wordbank -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="wordbankIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb161fe1c025/5cb0b244a6a441c9?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Word bank video"></iframe>
+        </div>
+        <p>The Word bank collects words you’ve looked up or rated. Check out how you’ve rated words. Change ratings as your word knowledge grows. Get back to your previous page by clicking on the back button.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <!-- 'wordbank' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#"></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
         </div>
         {% elif tip_name == "switch" %}
-        <p>Switch the challenge level of this text.</p>
-        <div class="tooltip-action">
-            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+<!-- switch -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="switchIframe" src="https://videos.sproutvideo.com/embed/d39edbbb161ae0c75a/7acc94350bf3dd31?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Switch video"></iframe>
+        </div>
+        <p>Switch gives three challenge options for some texts. Open Switch, check out the vocabulary in each version, and choose to stay, or change challenge levels. It’s up to you!</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' resource_id='SWITCH' %}">Learn more<span class="sr-only"> about switch</span></a>
+                {% endif %}
+            </div>
+            <div class="col-auto tooltip-action">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
         </div>
         {% elif tip_name == "context" %}
-        <div data-cfw="accordion">
-            <div id="contextFeature0" class="collapse">
-                <p>Select some text to see things you can do with it.</p>
-                <div class="tooltip-action">
-                    <div class="tooltip-step">1/2</div>
-                    <button type="button" class="btn btn-primary" data-cfw="collapse" data-cfw-collapse-target="#contextFeature1" data-cfw-collapse-animate="false">Next</button>
-                </div>
+<!-- context -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="contextIframe" src="https://videos.sproutvideo.com/embed/799edbb41410e3c1f0/10056e5843bb7d55?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Context tools video"></iframe>
+        </div>
+        <p>Select some text to see things you can do with it.</p>
+        <ul class="list feature-list">
+            <li><span class="feature-icon icon-edit" aria-hidden="true"></span> Highlight the passage</li>
+            <li><span class="feature-icon icon-book" aria-hidden="true"></span> Look up a definition</li>
+            <li><span class="feature-icon icon-switch" aria-hidden="true"></span> Translate or simplify</li>
+            <li><span class="feature-icon icon-play-circled2" aria-hidden="true"></span> Hear the words read aloud</li>
+        </ul>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <!-- 'context' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#"></a>
+                {% endif %}
             </div>
-            <div id="contextFeature1" class="collapse">
-                <ul class="list feature-list">
-                    <li><span class="feature-icon icon-edit" aria-hidden="true"></span> Highlight the passage</li>
-                    <li><span class="feature-icon icon-book" aria-hidden="true"></span> Look up a definition</li>
-                    <li><span class="feature-icon icon-switch" aria-hidden="true"></span> Translate or simplify</li>
-                    <li><span class="feature-icon icon-play-circled2" aria-hidden="true"></span> Hear the words read aloud</li>
-                </ul>
-                <div class="tooltip-action">
-                    <div class="tooltip-step">2/2</div>
-                    <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
-                </div>
-                <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#contextFeature0" data-cfw-collapse-animate="false">Previous</span>
+            <div class="col-auto tooltip-action">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
         {% elif tip_name == "view" %}
+<!-- view -->
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="viewIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb141fe6c525/86b0cbe36e2ab800?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Library Views video"></iframe>
         </div>
         <p>View the Clusive library by all readings, or in smaller groupings like class readings, readings you’ve starred, public readings, or readings you’ve uploaded.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and teacher_resource %}
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <!-- 'view' type popovers currently do not have a "Learn more" resource link yet, so this is blank -->
                 <a href="#"></a>
                 {% endif %}
@@ -113,26 +148,40 @@
             </div>
         </div>
         {% elif tip_name == "book_actions" %}
-        <p>Select to assign a reading to a class, and more.</p>
-        <div class="tooltip-action">
-            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
+<!-- book_actions -->
+        {% if clusive_user.role == 'TE' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="book_actionsIframe" src="https://videos.sproutvideo.com/embed/799edbb41512e5c4f0/ba8fab36c9170dc4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Book actions video"></iframe>
+        </div>
+        {% endif %}
+        <p>Click “More actions” (three dots) to assign or customize any book, and for books you uploaded to Clusive, to edit information or delete a book.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' 'CREAD' %}">Learn more<span class="sr-only"> about book actions</span></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
         </div>
         {% elif tip_name == "activity" %}
-        <div data-cfw="accordion">
-            <div id="activityFeature0" class="collapse">
-                <p>Hover over active reading time bars for titles and reading time. Click for readings students have in common. Triangles show assigned readings.</p>
-                <div class="tooltip-action">
-                    <div class="tooltip-step">1/2</div>
-                    <button type="button" class="btn btn-primary" data-cfw="collapse" data-cfw-collapse-target="#activityFeature1" data-cfw-collapse-animate="false">Next</button>
-                </div>
+<!-- activity -->
+        {% if clusive_user.role == 'TE' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="activityIframe" src="https://videos.sproutvideo.com/embed/ac9ed9b61c1be4c425/cba560baf17ff6d4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Student active reading time data video"></iframe>
+        </div>
+        {% endif %}
+        <p>Get a quick overview of student activity. Hover over active reading time bars for titles and reading time. Click a bar to see readings students have in common. Triangles show readings you have assigned.</p>
+        <p>Select timeframe and sort by hours, books, or student name.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' 'READDTL' %}">Learn more<span class="sr-only"> about student activities data</span></a>
+                {% endif %}
             </div>
-            <div id="activityFeature1" class="collapse">
-                <p>Select timeframe and sort by hours, books, or student name.</p>
-                <div class="tooltip-action">
-                    <div class="tooltip-step">2/2</div>
-                    <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
-                </div>
-                <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#activityFeature0" data-cfw-collapse-animate="false">Previous</span>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
         {% endif %}
