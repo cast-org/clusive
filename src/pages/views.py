@@ -227,8 +227,8 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # BEGIN: Sample Tour
         # Sample tour with single item list
         #context['tip_name'] = self.tip_shown.name if self.tip_shown else None
-        context['tip_name']: None
-        context['tours']: [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
+        context['tip_name'] = None
+        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
         # END: Sample Tour
         context['has_teacher_resource'] = True
         return context

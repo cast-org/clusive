@@ -393,8 +393,8 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
         # BEGIN: Sample Tour
         # Sample tour with single item list
         #context['tip_name'] = self.tip_shown.name if self.tip_shown else None
-        context['tip_name']: None
-        context['tours']: [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
+        context['tip_name'] = None
+        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
         # END: Sample Tour
         context['has_teacher_resource'] = False
         context['has_bookshare_account'] = has_bookshare_account(self.request)
