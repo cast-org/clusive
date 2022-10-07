@@ -5,14 +5,8 @@ from django.db import models
 from django.utils import timezone
 
 from roster.models import ClusiveUser, UserStats, Roles
-import pprint
 
 logger = logging.getLogger(__name__)
-
-
-class TipKind(models.TextChoices):
-    TOOL_TIP = 'TT'
-    DIALOG = 'DG'
 
 
 class TipType(models.Model):
@@ -20,14 +14,12 @@ class TipType(models.Model):
     A tip is a short message that is displayed to introduce or remind users of a feature.
     They are shown with a certain frequency (eg, once a week), no more than one at a time,
     with certain visibility restrictions. Showing of tips can be pre-empted by related user actions:
-    we don't need to remind users of features they have recently used.  There are two kinds
-    of tips, namely, simple textual tooltip popups vs. interactive popover dialogs
+    we don't need to remind users of features they have recently used.
     """
     name = models.CharField(max_length=20, unique=True)
     priority = models.PositiveSmallIntegerField(unique=True)
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
-    kind = models.CharField(max_length=2, choices=TipKind.choices, default=TipKind.DIALOG)
 
     def can_show(self, page: str, version_count: int, user: ClusiveUser):
         """Test whether this tip can be shown on a particular page"""
@@ -72,14 +64,6 @@ class TipHistory(models.Model):
         return '<TipHistory %s:%s>' % (self.type.name, self.user.user.username)
 
     def ready_to_show(self):
-        #########################
-        # DEBUGGING
-        ########################
-        if self.type.name == 'view':
-            logger.debug(self.type.name)
-            logger.debug(self)
-            pprint.pprint(vars(self))
-            return True
         # Already shown the maximum number of times?
         if self.show_count >= self.type.max:
             return False

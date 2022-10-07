@@ -56,7 +56,7 @@
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' resource_id='SETTINGS' %}">Learn more<span class="sr-only"> about settings</span></a>
+                <a href="{% url 'res_reader' resource_id='SSETTINGS' %}">Learn more<span class="sr-only"> about settings</span></a>
                 {% endif %}
             </div>
             <div class="tooltip-action">
