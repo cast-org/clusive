@@ -40,7 +40,7 @@ class TipType(models.Model):
         return False
 
     def __str__(self):
-        return '<TipType %s:%s>' % (self.name, self.kind)
+        return '<TipType %s>' % self.name
 
 
 class TipHistory(models.Model):
