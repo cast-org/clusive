@@ -201,7 +201,14 @@ $(window).ready(function() {
     tour.prepare('[data-clusive-tip-id="{{ tour_name }}"]');
 
     {% if tours|length == 1 %}
-    $('[data-clusive-tip-id="{{ tour_name }}"]').CFW_Popover('show');
+    var tip_control = document.querySelector('[data-clusive-tip-id="{{ tour_name }}"]');
+    if (tip_control) {
+        var $tip_control = $(tip_control);
+        $tip_control.one('afterShow.cfw.popover', function() {
+            document.querySelector('#tour_{{ tour_name }}').focus();
+        });
+        $tip_control.CFW_Popover('show');
+    }
     {% endif %}
 });
 </script>
