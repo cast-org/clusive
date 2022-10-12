@@ -7,7 +7,7 @@
     <button type="button" class="close" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
     {% endif %}
     <div class="popover-header">
-        <span class="h3">
+        <span class="h3" role="heading" aria-level="3" tabindex="-1">
         {% if tour_name == "settings" %}
             Settings
         {% elif tour_name == "readaloud" %}
@@ -73,7 +73,7 @@
             <div class="col">
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <!-- 'readaloud' type popovers do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#"></a>
+                <a href="#" tabindex="-1"></a>
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -90,7 +90,7 @@
             <div class="col">
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <!-- 'wordbank' type popovers do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#"></a>
+                <a href="#" tabindex="-1"></a>
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -129,7 +129,7 @@
             <div class="col">
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <!-- 'context' type popovers do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#"></a>
+                <a href="#" tabindex="-1"></a>
                 {% endif %}
             </div>
             <div class="col-auto tooltip-action">
@@ -146,7 +146,7 @@
             <div class="col">
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <!-- 'view' type popovers currently do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#"></a>
+                <a href="#" tabindex="-1"></a>
                 {% endif %}
             </div>
             <div class="col-auto">
