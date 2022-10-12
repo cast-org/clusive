@@ -6,6 +6,7 @@ fi
 npm install
 pip install -r requirements.txt
 python -m nltk.downloader wordnet
+python -m nltk.downloader omw-1.4
 grunt build
 cd target
 python manage.py migrate
