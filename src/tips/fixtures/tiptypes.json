@@ -78,5 +78,95 @@
       "max": 3,
       "interval": "7 00:00:00"
     }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 9,
+    "fields": {
+      "name": "student_reactions",
+      "priority": 9,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 10,
+    "fields": {
+      "name": "reading_details",
+      "priority": 10,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 11,
+    "fields": {
+      "name": "reading_data",
+      "priority": 11,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 12,
+    "fields": {
+      "name": "cluey",
+      "priority": 12,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 13,
+    "fields": {
+      "name": "thoughts",
+      "priority": 13,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 14,
+    "fields": {
+      "name": "manage",
+      "priority": 14,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 15,
+    "fields": {
+      "name": "resources",
+      "priority": 15,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 16,
+    "fields": {
+      "name": "filters",
+      "priority": 16,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 17,
+    "fields": {
+      "name": "search",
+      "priority": 17,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
   }
 ]

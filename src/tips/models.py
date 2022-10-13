@@ -8,6 +8,42 @@ from roster.models import ClusiveUser, UserStats, Roles
 
 logger = logging.getLogger(__name__)
 
+TEACHER_ONLY_TIPS = [
+    'book_actions',
+    'activity',
+    'student_reactions',
+    'reading_details',
+    'reading_data',
+    'thoughts',
+    'manage',
+    'resources',
+]
+
+DASHBOARD_TIPS = [
+    'activity',
+    'student_reactions',
+    'reading_details',
+    'reading_data',
+    'thoughts',
+    'manage',
+    'resources',
+]
+
+LIBRARY_TIPS = [
+    'view',
+    'book_actions',
+    'filters',
+    'search',
+]
+
+READING_TIPS = [
+    'context',
+    'settings',
+    'readaloud',
+    'wordbank',
+    'switch',   # Note: special case requires versions -- see TipType.can_show()
+]
+
 
 class TipType(models.Model):
     """
@@ -24,17 +60,17 @@ class TipType(models.Model):
     def can_show(self, page: str, version_count: int, user: ClusiveUser):
         """Test whether this tip can be shown on a particular page"""
         # Teacher/parent-only tips
-        if user.role == Roles.STUDENT and self.name in ['book_actions', 'activity']:
+        if user.role == Roles.STUDENT and self.name in TEACHER_ONLY_TIPS:
             return False
         # Switch tooltip requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1
         # Most tooltips need to check if on correct page
-        if self.name == 'activity':
+        if self.name in DASHBOARD_TIPS:
             return page == 'Dashboard'
-        if self.name in ['view', 'book_actions']:
+        if self.name in LIBRARY_TIPS:
             return page == 'Library'
-        if self.name in ['context', 'settings', 'readaloud', 'wordbank']:
+        if self.name in READING_TIPS:
             return page == 'Reading'
         # Unknown tip never shown
         return False
