@@ -42,9 +42,9 @@
     {% endfor %}
 
 </main>
-{% for tour in tours %}
-{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
-{% endfor %}
+{% if tours %}
+{% include "shared/partial/popover_tour.html" %}
+{% endif %}
 {% if tip_name %}
 {% include "shared/partial/tooltip_tip.html" %}
 {% endif %}

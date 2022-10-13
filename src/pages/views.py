@@ -226,10 +226,10 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['clusive_user'] = self.clusive_user
         # BEGIN: Sample Tour
         # Sample tour with single item list
+        #context['tip_name'] = self.tip_shown.name if self.tip_shown else None
         context['tip_name'] = None
-        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
+        context['tours'] = [self.tip_shown.name] if self.tip_shown else None
         # END: Sample Tour
-        context['tip_shown'] = self.tip_shown
         context['has_teacher_resource'] = True
         return context
 
@@ -720,10 +720,14 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'hide_cues': hide_cues,
             # BEGIN: Sample Tour
             # Sample tour with single item list
+            #'tip_name': self.tip_shown.name if self.tip_shown else None,
             'tip_name': None,
-            'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
+            'tours': [self.tip_shown.name] if self.tip_shown else None,
+            #---
+            # If a chained tour, set an array of popover names
+            #'tours': ['settings', 'readaloud'],
+            #---
             # END: Sample Tour
-            'tip_shown': self.tip_shown,
             'has_teacher_resource': True,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
