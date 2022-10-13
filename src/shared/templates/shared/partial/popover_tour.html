@@ -7,7 +7,7 @@
     <button type="button" class="close" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
     {% endif %}
     <div class="popover-header">
-        <span class="h3" role="heading" aria-level="3" tabindex="-1">
+        <span class="h3">
         {% if tour_name == "settings" %}
             Settings
         {% elif tour_name == "readaloud" %}
@@ -205,7 +205,7 @@ $(window).ready(function() {
     if (tip_control) {
         var $tip_control = $(tip_control);
         $tip_control.one('afterShow.cfw.popover', function() {
-            document.querySelector('#tour_{{ tour_name }} span.h3').focus();
+            document.querySelector('#tour_{{ tour_name }}').focus();
         });
         $tip_control.CFW_Popover('show');
     }
