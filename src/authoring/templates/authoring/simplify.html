@@ -70,6 +70,7 @@
             <table>
                 <tr>
                     <th>Word</th>
+                    <th>POS</th>
                     <th>Word frequency</th>
                     <th>Replacement</th>
                     <th>Flaticon</th>
@@ -77,6 +78,7 @@
                 {% for info in word_info %}
                 <tr>
                     <td>{{ info.hw }}</td>
+                    <td>{{ info.pos }}</td>
                     <td>{{ info.freq }}</td>
                     <td>
                         {% if info.full_replacement %}

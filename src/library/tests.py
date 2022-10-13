@@ -66,10 +66,10 @@ class LibraryTestCase(TestCase):
             '<html><head><title>Hi</title></head><body><p>Some nice text.</p><script type="text/javascript">Script</script><p>More and nicer texts. Imnotinthebook.</p></body></html>')
         self.assertEqual(result, "Some nice text. More and nicer texts. Imnotinthebook. ")
         lists = te.get_word_lists(['nice', 'and'])
-        self.assertListEqual(['text', 'nice', 'more', 'and'],
+        self.assertListEqual(['text', 'nice', 'some', 'more', 'and'],
                              lists['all_words'],
                              'Did not extract correct set of words')
-        self.assertListEqual(['imnotinthebook', 'some'],
+        self.assertListEqual(['imnotinthebook'],
                              lists['non_dict_words'],
                              'Did not recognize nonword')
         self.assertListEqual(['and', 'nice'],
