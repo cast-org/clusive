@@ -30,6 +30,7 @@ class GlossaryTestCase(TestCase):
         info = self.simplifier.simplify_text('Jimmy Carter carted jimmies', self.clusive_user, 100, include_full=True)
         self.assertRegexpMatches(info['result'], r'<div class="text-alt-vertical">Jimmy Carter ')
         self.assertRegexpMatches(info['result'], r'aria-label="carted: alternate word">dragged')
+
         info = self.simplifier.simplify_text('Frank wrote a frank autobiography', self.clusive_user, 100, include_full=True)
-        # self.assertRegexpMatches(info['result'], r'<div class="text-alt-vertical">Frank')
+        self.assertRegexpMatches(info['result'], r'<div class="text-alt-vertical">Frank')
         self.assertRegexpMatches(info['result'], r'aria-label="frank: alternate word">dog')

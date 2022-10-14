@@ -71,7 +71,8 @@ class WordnetSimplifier:
             base = base_form(tok, return_word_if_not_found=True)
             base_pair = (base, pos[0:2])
 
-            if base_pair in replacements:
+            # Replace the word if we have a replacement and it's not being used as a proper noun.
+            if base_pair in replacements and pos != 'NNP':
                 rep: str
                 rep = replacements[base_pair]
                 # Try to inflect the word if it's a single word, and we're not looking for the base form
