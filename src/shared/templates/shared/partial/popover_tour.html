@@ -24,6 +24,8 @@
             Book Actions
         {% elif tour_name == "activity" %}
             Activities
+        {% elif tour_name == "student_reactions" %}
+            Your students&apos; reactions
         {% endif %}
         </span>
         <div class="dialog-tts" role="region" aria-label="Read aloud controls" data-tts-mode="dialog">
@@ -184,6 +186,24 @@
             <div class="col">
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <a href="{% url 'res_reader' 'READDTL' %}">Learn more<span class="sr-only"> about student activities data</span></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "activity" %}
+<!-- student_reactions -->
+        {% if clusive_user.role == 'TE' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="activityIframe" src="https://videos.sproutvideo.com/embed/119ed9b21f1aeac598/961f727539a6dc9b?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Your students reactions video"></iframe>
+        </div>
+        {% endif %}
+        <p>Click on a reaction word and see a list of Clusive readings that have inspired your students, and other Clusive readers, to react with that word.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' 'SREACT' %}">Learn more<span class="sr-only"> about students&apos; reactions</span></a>
                 {% endif %}
             </div>
             <div class="col-auto">
