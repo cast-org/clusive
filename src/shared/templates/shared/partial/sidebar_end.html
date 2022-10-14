@@ -5,9 +5,9 @@
     </button>
 </div>
 {% if read_aloud %}
-<div class="sidebar-region sidebar-tts" role="region" aria-label="Read aloud controls"{% if read_aloud == 'Readium' %} data-tts-mode="Readium"{% endif %}>
+<div class="sidebar-region sidebar-tts" role="region" aria-label="Read aloud controls"{% if read_aloud == 'Readium' %} data-tts-mode="Readium"{% endif %} data-clusive-tip-id="readaloud" data-clusive-tip-action="readaloud" tabindex="-1">
     <div class="tts-inactive">
-        <button type="button" data-clusive-tip-id="readaloud" data-clusive-tip-action="readaloud" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+        <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
             <span class="icon-play" aria-hidden="true"></span>
         </button>
     </div>

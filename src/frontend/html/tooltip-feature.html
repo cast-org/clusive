@@ -226,7 +226,7 @@ function showSampleTooltip(name) {
     if (name) {
         $(window).ready(function() {
             var tip_control = $('[data-clusive-tip-id="' + name + '"]');
-            var tip_popover = $(tip_control.attr('data-cfw-tooltip-target'));
+            var tip_tooltip = $(tip_control.attr('data-cfw-tooltip-target'));
             var tip_placement = tip_control.attr('data-cfw-tooltip-placement');
             tip_control.CFW_Tooltip({
                 container: '#features',
@@ -238,13 +238,13 @@ function showSampleTooltip(name) {
                 }
             });
             setTimeout(function() {
-                tip_popover.attr({
+                tip_tooltip.attr({
                     'role': 'status',
                     'aria-live': 'assertive',
                     'aria-atomic': 'true'
                 });
                 tip_control.CFW_Tooltip('show');
-                tip_popover.trigger('focus');
+                tip_tooltip.trigger('focus');
             }, 2000);
             tip_control.one('afterHide.cfw.tooltip', function() {
                 $(this).CFW_Tooltip('dispose');

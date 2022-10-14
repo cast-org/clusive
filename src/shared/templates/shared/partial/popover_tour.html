@@ -1,0 +1,214 @@
+{% load i18n %}
+<div id="tour_{{ tour_name }}" class="popover popover-tour popover-scrollable">
+    {% if tour_robust %}
+    {% if tours|length > 1 %}
+    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#tourStart');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    {% else %}
+    <button type="button" class="close" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    {% endif %}
+    <div class="popover-header">
+        <span class="h3">
+        {% if tour_name == "settings" %}
+            Settings
+        {% elif tour_name == "readaloud" %}
+            Read-aloud
+        {% elif tour_name == "wordbank" %}
+            Word Bank
+        {% elif tour_name == "switch" %}
+            Switch
+        {% elif tour_name == "context" %}
+            Context
+        {% elif tour_name == "view" %}
+            Library Views
+        {% elif tour_name == "book_actions" %}
+            Book Actions
+        {% elif tour_name == "activity" %}
+            Activities
+        {% endif %}
+        </span>
+        <div class="dialog-tts" role="region" aria-label="Read aloud controls" data-tts-mode="dialog">
+            <div class="tts-inactive">
+                <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="tts-active">
+                <button type="button" class="btn btn-tts tts-pause" aria-label="Pause read aloud" title="Pause read aloud" data-cle-handler="click" data-cle-control="tts-pause" data-cle-value="clicked">
+                    <span class="icon-pause" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-resume" aria-label="Resume read aloud" title="Resume read aloud" data-cle-handler="click" data-cle-control="tts-resume" data-cle-value="clicked">
+                    <span class="icon-play" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-tts tts-stop" aria-label="Stop read aloud" title="Stop read aloud" data-cle-handler="click" data-cle-control="tts-stop" data-cle-value="clicked">
+                    <span class="icon-stop" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="popover-body">
+        {% if tour_name == "settings" %}
+<!-- settings -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="settingsIframe" src="https://videos.sproutvideo.com/embed/a79edbb41414e7c72e/96f3dfacf85e2603?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Settings video"></iframe>
+        </div>
+        <p>Change the font, colors, and more! Settings let you choose the look, supports, and reading tools to make Clusive all your own.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' resource_id='SSETTINGS' %}">Learn more<span class="sr-only"> about settings</span></a>
+                {% endif %}
+            </div>
+            <div class="tooltip-action">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "readaloud" %}
+<!-- readaloud -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="readaloudIframe" src="https://videos.sproutvideo.com/embed/449edbb51c1ae6cecd/90717ea3b61bbdd3?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Read aloud video"></iframe>
+        </div>
+        <p>Click the page read aloud icon to hear the entire page. Select text and click read aloud in the context menu to hear a smaller selection or a single word read aloud.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <!-- 'readaloud' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#" tabindex="-1"></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "wordbank" %}
+<!-- wordbank -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="wordbankIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb161fe1c025/5cb0b244a6a441c9?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Word bank video"></iframe>
+        </div>
+        <p>The Word bank collects words you’ve looked up or rated. Check out how you’ve rated words. Change ratings as your word knowledge grows. Get back to your previous page by clicking on the back button.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <!-- 'wordbank' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#" tabindex="-1"></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "switch" %}
+<!-- switch -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="switchIframe" src="https://videos.sproutvideo.com/embed/d39edbbb161ae0c75a/7acc94350bf3dd31?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Switch video"></iframe>
+        </div>
+        <p>Switch gives three challenge options for some texts. Open Switch, check out the vocabulary in each version, and choose to stay, or change challenge levels. It’s up to you!</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' resource_id='SWITCH' %}">Learn more<span class="sr-only"> about switch</span></a>
+                {% endif %}
+            </div>
+            <div class="col-auto tooltip-action">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "context" %}
+<!-- context -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="contextIframe" src="https://videos.sproutvideo.com/embed/799edbb41410e3c1f0/10056e5843bb7d55?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Context tools video"></iframe>
+        </div>
+        <p>Select some text to see things you can do with it.</p>
+        <ul class="list feature-list">
+            <li><span class="feature-icon icon-edit" aria-hidden="true"></span> Highlight the passage</li>
+            <li><span class="feature-icon icon-book" aria-hidden="true"></span> Look up a definition</li>
+            <li><span class="feature-icon icon-switch" aria-hidden="true"></span> Translate or simplify</li>
+            <li><span class="feature-icon icon-play-circled2" aria-hidden="true"></span> Hear the words read aloud</li>
+        </ul>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <!-- 'context' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#" tabindex="-1"></a>
+                {% endif %}
+            </div>
+            <div class="col-auto tooltip-action">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "view" %}
+<!-- view -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="viewIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb141fe6c525/86b0cbe36e2ab800?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Library Views video"></iframe>
+        </div>
+        <p>View the Clusive library by all readings, or in smaller groupings like class readings, readings you’ve starred, public readings, or readings you’ve uploaded.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <!-- 'view' type popovers currently do not have a "Learn more" resource link yet, so this is blank -->
+                <a href="#" tabindex="-1"></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "book_actions" %}
+<!-- book_actions -->
+        {% if clusive_user.role == 'TE' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="book_actionsIframe" src="https://videos.sproutvideo.com/embed/799edbb41512e5c4f0/ba8fab36c9170dc4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Book actions video"></iframe>
+        </div>
+        {% endif %}
+        <p>Click “More actions” (three dots) to assign or customize any book, and for books you uploaded to Clusive, to edit information or delete a book.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' 'CREAD' %}">Learn more<span class="sr-only"> about book actions</span></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "activity" %}
+<!-- activity -->
+        {% if clusive_user.role == 'TE' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="activityIframe" src="https://videos.sproutvideo.com/embed/ac9ed9b61c1be4c425/cba560baf17ff6d4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Student active reading time data video"></iframe>
+        </div>
+        {% endif %}
+        <p>Get a quick overview of student activity. Hover over active reading time bars for titles and reading time. Click a bar to see readings students have in common. Triangles show readings you have assigned.</p>
+        <p>Select timeframe and sort by hours, books, or student name.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'res_reader' 'READDTL' %}">Learn more<span class="sr-only"> about student activities data</span></a>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% if tour_name != "context" and tour_name != "activity" %}
+    <div class="popover-arrow"></div>
+    {% endif %}
+</div>
+<script>
+$(window).ready(function() {
+    tour.prepare('[data-clusive-tip-id="{{ tour_name }}"]');
+
+    {% if tours|length == 1 %}
+    var tip_control = document.querySelector('[data-clusive-tip-id="{{ tour_name }}"]');
+    if (tip_control) {
+        var $tip_control = $(tip_control);
+        $tip_control.one('afterShow.cfw.popover', function() {
+            document.querySelector('#tour_{{ tour_name }}').focus();
+        });
+        $tip_control.CFW_Popover('show');
+    }
+    {% endif %}
+});
+</script>

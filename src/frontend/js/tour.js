@@ -14,13 +14,17 @@
         prepare : function(selector) {
             if (selector) {
                 var control = $(selector);
-                // var popover = $(control.attr('data-cfw-popover-target'));
+                var target = control.attr('data-cfw-popover-target');
+                if ((typeof target === 'undefined' || target === false) && control.is('[data-clusive-tip-id]')) {
+                    target = '#tour_' + control.attr('data-clusive-tip-id');
+                }
                 var placement = control.attr('data-cfw-popover-placement');
                 control.CFW_Popover({
                     container: SELECTOR_CONTAINER,
                     viewport: 'window',
                     trigger: 'manual',
-                    placement: placement ? placement : 'bottom auto',
+                    target: target,
+                    placement: placement ? placement : 'right auto',
                     popperConfig: {
                         positionFixed: true
                     }

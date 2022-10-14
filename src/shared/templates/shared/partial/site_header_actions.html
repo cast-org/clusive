@@ -52,7 +52,7 @@ Expects context:
         {% if request.path == link_url or page_group_main == 'word_bank' %}
         <span class="nav-link current" aria-current="true">Word bank</span>
         {% else %}
-        <a href="{{ link_url }}" class="nav-link{% if page_group == 'word_bank' %} current{% endif %}" data-clusive-tip-id="wordbank" data-clusive-tip-action="wordbank" data-cfw-tooltip-placement="bottom auto">Word bank</a>
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'word_bank' %} current{% endif %}" data-clusive-tip-id="wordbank" data-clusive-tip-action="wordbank" data-cfw-popover-placement="bottom auto">Word bank</a>
         {% endif %}
     </li>
 

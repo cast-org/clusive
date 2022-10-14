@@ -223,7 +223,14 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['query'] = None
         context['panels'] = self.panels
         context['data'] = self.data
-        context['tip_name'] = self.tip_shown.name if self.tip_shown else None
+        context['clusive_user'] = self.clusive_user
+        # BEGIN: Sample Tour
+        # Sample tour with single item list
+        context['tip_name'] = None
+        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
+        # END: Sample Tour
+        context['tip_shown'] = self.tip_shown
+        context['has_teacher_resource'] = True
         return context
 
     def should_show_star_results(self, request):
@@ -699,6 +706,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             logger.debug('No pre-calculated positions or weight')
 
         self.extra_context = {
+            'clusive_user': clusive_user,
             'pub': book,
             'version_number': self.book_version.sortOrder,
             'version_id': self.book_version.id,
@@ -710,7 +718,13 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'annotations': annotationList,
             'cuelist': json.dumps(cuelist),
             'hide_cues': hide_cues,
-            'tip_name': self.tip_shown.name if self.tip_shown else None,
+            # BEGIN: Sample Tour
+            # Sample tour with single item list
+            'tip_name': None,
+            'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
+            # END: Sample Tour
+            'tip_shown': self.tip_shown,
+            'has_teacher_resource': True,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
             'book_id': book.id,
