@@ -14,7 +14,6 @@ TEACHER_ONLY_TIPS = [
     'student_reactions',
     'reading_details',
     'reading_data',
-    'thoughts',
     'manage',
     'resources',
 ]
@@ -62,6 +61,9 @@ class TipType(models.Model):
         # Teacher/parent-only tips
         if user.role == Roles.STUDENT and self.name in TEACHER_ONLY_TIPS:
             return False
+        # Cluey is on every page
+        if self.name == 'cluey':
+            return True
         # Switch tooltip requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1

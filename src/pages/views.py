@@ -107,7 +107,7 @@ class PeriodChoiceMixin(ContextMixin):
         context['current_period'] = self.current_period
         return context
 
-
+import pdb
 class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, PeriodChoiceMixin, TemplateView):
     template_name='pages/dashboard.html'
 
@@ -128,6 +128,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.dashboard_popular_view = self.clusive_user.dashboard_popular_view
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
+        #pdb.set_trace()
 
         # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
@@ -231,6 +232,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         # END: Sample Tour
         context['tip_shown'] = self.tip_shown
         context['has_teacher_resource'] = True
+        #pdb.set_trace()
         return context
 
     def should_show_star_results(self, request):
