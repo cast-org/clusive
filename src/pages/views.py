@@ -229,6 +229,12 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         #context['tip_name'] = self.tip_shown.name if self.tip_shown else None
         context['tip_name'] = None
         context['tours'] = [self.tip_shown.name] if self.tip_shown else None
+        #---
+        # If a chained tour, set tooltip to be shown at some point (but not always)
+        # and set an array of popover names
+        #context['tip_name'] = 'tour'
+        #context['tours'] = ['settings', 'readaloud']
+        #---
         # END: Sample Tour
         context['has_teacher_resource'] = True
         return context
@@ -725,7 +731,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'tours': [self.tip_shown.name] if self.tip_shown else None,
             #---
             # If a chained tour, set an array of popover names
-            'tours': ['settings', 'readaloud'],
+            #'tours': ['settings', 'readaloud'],
             #---
             # END: Sample Tour
             'has_teacher_resource': True,

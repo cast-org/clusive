@@ -88,6 +88,12 @@
     }
 }
 
+.tooltip-tour {
+    .tooltip-action {
+        justify-content: space-between;
+    }
+}
+
 .tooltip-action {
     display: flex;
     align-items: center;
