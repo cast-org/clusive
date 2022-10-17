@@ -36,6 +36,8 @@
             Your thoughts
         {% elif tour_name == "manage" %}
             Manage
+        {% elif tour_name == "resources" %}
+            Resources
         {% endif %}
         </span>
         <div class="dialog-tts" role="region" aria-label="Read aloud controls" data-tts-mode="dialog">
@@ -285,7 +287,7 @@
             </div>
         </div>
         {% elif tour_name == "manage" %}
-<!-- maange -->
+<!-- manage -->
         {% if clusive_user.role == 'TE' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="manageIframe" src="https://videos.sproutvideo.com/embed/d39ed4bf1c1ee2c05a/f6ed60e66ef37628?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Manage video"></iframe>
@@ -296,6 +298,24 @@
             <div class="col">
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <a href="{% url 'res_reader' 'CCLASS' %}">Learn more<span class="sr-only"> about manage</span></a>
+                {% endif %}
+           </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "resources" %}
+<!-- resources -->
+        {% if clusive_user.role == 'TE' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="resourcesIframe" src="https://videos.sproutvideo.com/embed/ac9ed4bf1c1ee2c325/8c2089ffd2b063c4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Resources video"></iframe>
+        </div>
+        {% endif %}
+        <p>Get tips, resources and videos for getting you and your students started in Clusive, and for building teaching skills with Clusive tools and features.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
+                <a href="{% url 'resources' %}">Learn more<span class="sr-only"> about resources</span></a>
                 {% endif %}
            </div>
             <div class="col-auto">

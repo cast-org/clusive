@@ -31,7 +31,7 @@ Expects context:
         {% if request.path == link_url or page_group_main == 'resources' %}
         <span class="nav-link current" aria-current="true">Resources</span>
         {% else %}
-        <a href="{{ link_url }}" class="nav-link{% if page_group == 'resources' %} current{% endif %}">Resources</a>
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'resources' %} current{% endif %}" data-clusive-tip-id="resources">Resources</a>
         {% endif %}
     </li>
     {% endif %}
