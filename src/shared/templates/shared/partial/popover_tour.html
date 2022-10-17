@@ -38,6 +38,8 @@
             Manage
         {% elif tour_name == "resources" %}
             Resources
+        {% elif tour_name == "filters" %}
+            Filters
         {% endif %}
         </span>
         <div class="dialog-tts" role="region" aria-label="Read aloud controls" data-tts-mode="dialog">
@@ -281,7 +283,7 @@
         <p>Click on a reaction word and see Clusive readings that inspired you and others to react with that word.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-           </div>
+            </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
@@ -299,7 +301,7 @@
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <a href="{% url 'res_reader' 'CCLASS' %}">Learn more<span class="sr-only"> about manage</span></a>
                 {% endif %}
-           </div>
+            </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
@@ -317,7 +319,20 @@
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <a href="{% url 'resources' %}">Learn more<span class="sr-only"> about resources</span></a>
                 {% endif %}
-           </div>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "filters" %}
+<!-- filters -->
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="resourcesIframe" src="https://videos.sproutvideo.com/embed/a79ed4bf1c1ee2c42e/ed4f87afb4202c31?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Filters video"></iframe>
+        </div>
+        <p>Use filters to find readings based on topics, reading levels, and word count. Click on one or more topics or filters and get readings that match any of your selections.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+            </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
