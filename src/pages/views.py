@@ -725,7 +725,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'tours': [self.tip_shown.name] if self.tip_shown else None,
             #---
             # If a chained tour, set an array of popover names
-            #'tours': ['settings', 'readaloud'],
+            'tours': ['settings', 'readaloud'],
             #---
             # END: Sample Tour
             'has_teacher_resource': True,

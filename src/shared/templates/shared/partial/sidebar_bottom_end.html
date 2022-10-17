@@ -1,0 +1,6 @@
+{% load array_helpers %}
+{% if tours %}
+<div class="sidebar-region sidebar-support" role="region" aria-label="User support">
+    <button id="tourStart" type="button" class="btn btn-tool btn-mascot-tipped" onclick="tour.chain('#tour_{{ tours|get_index:0 }}');"><span class="sr-only">Start tour of features</span></button>
+</div>
+{% endif %}

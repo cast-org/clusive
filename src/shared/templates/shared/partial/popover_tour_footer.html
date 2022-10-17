@@ -20,7 +20,7 @@
     {% if tours|get_index_next:forloop.counter0 %}
     <button type="button" class="btn btn-secondary" onclick="tour.chain('#tour_{{ tours|get_index_next:forloop.counter0 }}');">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></button>
     {% else %}
-    <button type="button" class="btn btn-secondary" data-cfw-dismiss="popover">End</button>
+    <button type="button" class="btn btn-secondary" onclick="tour.closeRefocus('#tourStart');">End</button>
     {% endif %}
 </div>
 {% else %}
