@@ -12,7 +12,7 @@ def get_index(sequence, position):
 
 @register.filter(is_safe=True)
 def get_index_prev(sequence, position):
-    if 0 <= position:
+    if 0 >= position:
         return None
     try:
         return sequence[int(position) - 1]
