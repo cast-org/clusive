@@ -75,7 +75,8 @@ Run in the Clusive directory:
 
 Run in the Clusive directory:
 * `python -m nltk.downloader wordnet`
-* possible solutions for [certificate issues](https://stackoverflow.com/questions/38916452/nltk-download-ssl-certificate-verify-failed) on Mac
+* `python -m nltk.downloader omw-1.4`
+* If you run into problems here, review possible solutions for [certificate issues](https://stackoverflow.com/questions/38916452/nltk-download-ssl-certificate-verify-failed) on Mac
 
 ### Initialize Local Database
 

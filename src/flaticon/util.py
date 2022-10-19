@@ -1,8 +1,10 @@
 import logging
 import math
 
+import nltk
 import requests
 from django.conf import settings
+from unidecode import unidecode
 
 from glossary.util import base_form
 from simplification.models import PictureUsage, PictureSource
@@ -107,9 +109,13 @@ class FlaticonManager:
         if not flaticon_is_configured():
             return text
         session = self.get_session()
+
         wns = WordnetSimplifier('en')
-        word_list = wns.tokenize_no_casefold(text)
-        word_info = wns.analyze_words(word_list, clusive_user=clusive_user)
+        clean_text = unidecode(text)
+        spans = wns.span_tokenize(clean_text)
+        tokens = [clean_text[span[0]:span[1]] for span in spans]
+        tagged_list = nltk.pos_tag(tokens)
+        word_info = wns.analyze_words(tagged_list, clusive_user=clusive_user)
         to_replace = math.ceil(len(word_info) * percent / 100)
 
         # Find some pictures to use
@@ -125,15 +131,17 @@ class FlaticonManager:
                         break
 
         # Insert them into the text
-        out = ''
-        for tok in word_list:
+        for i in range(len(spans)-1, -1, -1):
+            tok = tokens[i]
+            span = spans[i]
+            tagged = tagged_list[i]
             base = base_form(tok, return_word_if_not_found=True)
+
             if base in pictures:
                 url, desc = pictures[base]
                 rep = '<span class="text-picture-pair"><span class="text-picture-term">%s</span> ' \
                       '<img src="%s" class="text-picture-img" alt="%s"></span>' \
                       % (tok, url, desc)
-            else:
-                rep = tok
-            out += rep
-        return out
+                clean_text = clean_text[:span[0]] + rep + clean_text[span[1]:]
+
+        return clean_text
