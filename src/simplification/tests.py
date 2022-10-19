@@ -24,7 +24,7 @@ class GlossaryTestCase(TestCase):
         self.assertEqual(3, info['word_count'])
         self.assertEqual(3, info['to_replace'])
         self.assertRegexpMatches(info['result'], r'Thoroughly.*obscure.*verbiage')
-        self.assertRegexpMatches(info['result'], r'Good.*dark.*choice of words')
+        self.assertRegexpMatches(info['result'], r'Good.*dark.*wording')
 
     def test_does_not_simplify_proper_nouns(self):
         info = self.simplifier.simplify_text('Jimmy Carter carted jimmies', self.clusive_user, 100, include_full=True)

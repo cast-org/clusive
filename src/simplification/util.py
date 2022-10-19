@@ -25,13 +25,35 @@ class WordnetSimplifier:
         super().__init__()
         self.lang = lang
 
+    def span_tokenize(self, text: str):
+        """
+        Run NLTK's recommended tokenizer, returning a list of position spans which locate the tokens in the string.
+        NLTK has span_ versions of all its simple tokenizers, but not for this one that does both
+        sentence and word tokenization; so we have to implement our own.
+        :param text: text string to operate on.
+        :return: list of spans.
+        """
+        stoker = nltk.tokenize.punkt.PunktSentenceTokenizer()
+        toker = TreebankWordTokenizer()
+
+        sentence_spans = stoker.span_tokenize(text)
+
+        all_spans = []
+
+        for sent in sentence_spans:
+            sent_start = sent[0]
+            sent_end = sent[1]
+            local_spans = toker.span_tokenize(text[sent_start:sent_end])
+            # Need to add the offset to the start of the sentence to these locally-generated spans.
+            adjusted_spans = [(s[0]+sent_start, s[1]+sent_start) for s in local_spans]
+            all_spans.extend(adjusted_spans)
+        return all_spans
+
     def simplify_text(self, text: str, clusive_user: ClusiveUser = None, percent: int = 10, include_full=False):
         clean_text = unidecode(text)
-        spans = list(TreebankWordTokenizer().span_tokenize(clean_text))
+        spans = self.span_tokenize(clean_text)
         tokens = [clean_text[span[0]:span[1]] for span in spans]
-        # logger.debug('tokenize: %s\nresult: %s', text, spans)
         tagged_list = nltk.pos_tag(tokens)
-        # logger.debug('tagged: %s', tagged_list)
         # Returns frequency info about all distinct tagged tokens, sorted by frequency
         # Each value is a dict with keys hw, alts, pos, count, freq, known
         word_info = self.analyze_words(tagged_list, clusive_user=clusive_user)
@@ -62,7 +84,7 @@ class WordnetSimplifier:
                 if len(replacements) >= to_replace:
                     break
 
-        # Go through the full text again, adding in replacements where needed.
+        # Insert the replacements wherever they occur in the original text.
         for i in range(len(spans)-1, -1, -1):
             tok = tokens[i]
             span = spans[i]
@@ -176,15 +198,15 @@ class WordnetSimplifier:
 
     def easiest_word(self, list):
         """
-        Find the highest-frequency, non-offensive option from the given list of words.
+        Find the highest-frequency, non-offensive, single-word option from the given list of words.
         :param list: list of words
         :return: a single word, or None if all are offensive.
         """
         best_so_far = None
         best_freq = None
+        word: str
         for word in list:
-            disp_word = word.replace('_', ' ')
-            if not self.is_offensive(disp_word):
+            if not '_' in word and not self.is_offensive(word):
                 freq = self.get_freq(word)
                 if best_freq is None or freq > best_freq:
                     best_so_far = word
@@ -220,15 +242,7 @@ class WordnetSimplifier:
         return profanity_check.predict([word])[0] == 1
 
     def get_freq(self, word: str):
-        if word.find('_') >= 0:
-            # Wordnet lemmas sometimes are multiple words separated by '_', eg 'get_rid_of'
-            # Frequency of this item is taken to be the min frequency of any of the constituent words.
-            return zipf_frequency(word.replace('_', ' '), self.lang)
-            # parts = regex.split('_', word)
-            # freqs = [zipf_frequency(w, self.lang) for w in parts]
-            # return min(*freqs)
-        else:
-            return zipf_frequency(word, self.lang)
+        return zipf_frequency(word, self.lang)
 
     def analyze_words(self, tagged_list, clusive_user=None):
         word_info = {}
