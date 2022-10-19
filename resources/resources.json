@@ -73,6 +73,11 @@
         "tags": ["15 min"]
       },
       {
+        "identifier": "BOOKSHARE",
+        "file": "clusive-and-bookshare.epub",
+        "tags": ["15 min"]
+      },
+      {
         "identifier": "LESSONPLANS",
         "file": "teaching-lesson-plans.epub",
         "tags": ["15 min"]
