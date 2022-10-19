@@ -232,7 +232,9 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         #---
         # If a chained tour, set tooltip to be shown at some point (but not always)
         # and set an array of popover names
-        #context['tip_name'] = 'tour'
+        # 'cluey' is a special case and uses the older tooltip functionality
+        #context['tip_name'] = 'cluey' if self.tip_shown and self.tip_shown.name == 'cluey' else None # Cluey tooltip
+        #context['tour_singleton'] = self.tip_shown.name if self.tip_shown and self.tip_shown.name != 'cluey' else None # Singleton tour item
         #context['tours'] = ['settings', 'readaloud']
         #---
         # END: Sample Tour

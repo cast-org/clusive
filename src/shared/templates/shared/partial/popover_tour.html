@@ -1,12 +1,10 @@
 {% load i18n %}
+{% load array_helpers %}
 
 {% for name in tours %}
 <div id="tour_{{ name }}" class="popover popover-tour popover-scrollable">
-    {% if tours|length > 1 %}
-    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#tourStart');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
-    {% else %}
-    <button type="button" class="close" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
-    {% endif %}
+    <button type="button" class="close touring-on" aria-label="Close" onclick="tour.closeRefocus('#tourStart');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <button type="button" class="close touring-off" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
     <div class="popover-header">
         <span class="h3">
         {% if name == "settings" %}
@@ -156,20 +154,17 @@
     <div class="popover-arrow"></div>
     {% endif %}
 </div>
+{% endfor %}
+{% if tours %}
 <script>
 $(window).ready(function() {
-    tour.prepare('[data-clusive-tip-id="{{ name }}"]');
-
-    {% if tours|length == 1 %}
-    var tip_control = document.querySelector('[data-clusive-tip-id="{{ name }}"]');
-    if (tip_control) {
-        var $tip_control = $(tip_control);
-        $tip_control.one('afterShow.cfw.popover', function() {
-            document.querySelector('#tour_{{ name }}').focus();
-        });
-        $tip_control.CFW_Popover('show');
-    }
+    {% for name in tours %}
+    tour.prepare('{{ name }}');
+    {% endfor %}
+    {% if tour_singleton %}
+    tour.singleton('{{ tour_singleton }}');
     {% endif %}
+
 });
 </script>
-{% endfor %}
+{% endif %}

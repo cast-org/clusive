@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load array_helpers %}
-<div id="tip" class="tooltip tooltip-feature{% if tip_name == "tour" %} tooltip-tour{% endif %}">
+<div id="tip" class="tooltip tooltip-feature{% if tip_name == "tour" %} tooltip-tour{% endif %} ">
     <div class="tooltip-body">
         {% if tip_name == "settings" %}
         <p><strong>Settings:</strong> Change the font, colors, and more!</p>
@@ -73,7 +73,7 @@
                 <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#activityFeature0" data-cfw-collapse-animate="false">Previous</span>
             </div>
         </div>
-        {% elif tip_name == "tour" %}
+        {% elif tip_name == "cluey" %}
         <p>To get a tour of this page, click on me in the lower right anytime!</p>
         <div class="tooltip-action">
             <button type="button" class="btn btn-secondary me-0_5" onclick="$('#tip').CFW_Tooltip('hide'); tour.chain('#tour_{{ tours|get_index:0 }}');">Start tour now</button>

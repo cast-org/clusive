@@ -2,30 +2,27 @@
 {% load array_helpers %}
 
 <div class="row gx-0_5 flex-items-center">
-<div class="col">
-    {% if resource_id %}
-    <a href="{% url 'res_reader' resource_id=resource_id %}">Learn more<span class="sr-only"> about {{ resource_name }}</span></a>
+    <div class="col">
+        {% if resource_id %}
+        <a href="{% url 'res_reader' resource_id=resource_id %}">Learn more<span class="sr-only"> about {{ resource_name }}</span></a>
+        {% endif %}
+    </div>
+    {% if tours|get_index_prev:forloop.counter0 %}
+    <div class="col-auto touring-on">
+        <button type="button" class="btn btn-primary" onclick="tour.chain('#tour_{{ tours|get_index_prev:forloop.counter0 }}');"><span class="fa fa-chevron-left" aria-hidden="true"></span> <span aria-hidden="true">Prev</span><span class="sr-only">Previous</span></button>
+    </div>
     {% endif %}
-</div>
-{% if tours|length > 1 %}
-{% if tours|get_index_prev:forloop.counter0 %}
-<div class="col-auto">
-    <button type="button" class="btn btn-primary" onclick="tour.chain('#tour_{{ tours|get_index_prev:forloop.counter0 }}');"><span class="fa fa-chevron-left" aria-hidden="true"></span> <span aria-hidden="true">Prev</span><span class="sr-only">Previous</span></button>
-</div>
-{% endif %}
-<div class="col-auto">
-    {{ forloop.counter }}/{{ tours|length }}
-</div>
-<div class="col-auto">
-    {% if tours|get_index_next:forloop.counter0 %}
-    <button type="button" class="btn btn-secondary" onclick="tour.chain('#tour_{{ tours|get_index_next:forloop.counter0 }}');">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></button>
-    {% else %}
-    <button type="button" class="btn btn-secondary" onclick="tour.closeRefocus('#tourStart');">End</button>
-    {% endif %}
-</div>
-{% else %}
-<div class="col-auto">
-    <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
-</div>
-{% endif %}
+    <div class="col-auto touring-on">
+        {{ forloop.counter }}/{{ tours|length }}
+    </div>
+    <div class="col-auto touring-on">
+        {% if tours|get_index_next:forloop.counter0 %}
+        <button type="button" class="btn btn-secondary" onclick="tour.chain('#tour_{{ tours|get_index_next:forloop.counter0 }}');">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></button>
+        {% else %}
+        <button type="button" class="btn btn-secondary" onclick="tour.closeRefocus('#tourStart');">End</button>
+        {% endif %}
+    </div>
+    <div class="col-auto touring-off">
+        <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+    </div>
 </div>

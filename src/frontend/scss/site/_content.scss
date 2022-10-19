@@ -720,3 +720,14 @@ h2,
         animation-duration: $loader-circle-animation-speed * 2;
     }
 }
+
+body:not(.touring) {
+    .touring-on {
+        display: none;
+    }
+}
+body.touring {
+    .touring-off {
+        display: none;
+    }
+}
