@@ -26,12 +26,8 @@
             Activities
         {% elif tour_name == "student_reactions" %}
             Your students&apos; reactions
-        {% elif tour_name == "reading_details" %}
-            Active Reading Time and Student Reading Details
         {% elif tour_name == "reading_data" %}
             Student reading data
-        {% elif tour_name == "cluey" %}
-            Cluey
         {% elif tour_name == "thoughts" %}
             Your thoughts
         {% elif tour_name == "manage" %}
@@ -226,24 +222,6 @@
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
             </div>
         </div>
-        {% elif tour_name == "reading_details" %}
-<!-- reading_details -->
-        {% if clusive_user.role == 'TE' %}
-        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
-            <iframe id="readingDetailsIframe" src="https://videos.sproutvideo.com/embed/ac9ed9b61c1be4c425/cba560baf17ff6d4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Student Active Reading Time data video"></iframe>
-        </div>
-        {% endif %}
-        <p>Check student reading, reading time, and click <strong>More details</strong> for info on tool use. See recent activity, or check activity from last month or overall. Clicking on a horizontal bar section shows you readings students have in common.</p>
-        <div class="row gx-0_5 flex-items-center">
-            <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' 'READDTL' %}">Learn more<span class="sr-only"> about students&apos; reactions</span></a>
-                {% endif %}
-            </div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
-            </div>
-        </div>
         {% elif tour_name == "reading_data" %}
 <!-- reading_data -->
         {% if clusive_user.role == 'TE' %}
@@ -257,19 +235,6 @@
                 {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
                 <a href="{% url 'res_reader' 'SREADP' %}">Learn more<span class="sr-only"> about students&apos; reactions</span></a>
                 {% endif %}
-            </div>
-            <div class="col-auto">
-                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
-            </div>
-        </div>
-        {% elif tour_name == "cluey" %}
-<!-- cluey -->
-        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
-            <iframe id="clueyIframe" src="https://videos.sproutvideo.com/embed/ea9ed4bf1c1ee2c563/bca55d4a7fbf44c7?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Cluey video"></iframe>
-        </div>
-        <p>Click on me to see all the tooltips on this page.</p>
-        <div class="row gx-0_5 flex-items-center">
-            <div class="col">
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
