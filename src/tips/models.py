@@ -24,7 +24,6 @@ DASHBOARD_TIPS = [
     'reading_data',
     'thoughts',
     'manage',
-    'resources',
 ]
 
 LIBRARY_TIPS = [
@@ -60,9 +59,6 @@ class TipType(models.Model):
         # Teacher/parent-only tips
         if user.role == Roles.STUDENT and self.name in TEACHER_ONLY_TIPS:
             return False
-        # Cluey is on every page
-        if self.name == 'cluey':
-            return True
         # Switch tooltip requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1
@@ -73,6 +69,12 @@ class TipType(models.Model):
             return page == 'Library'
         if self.name in READING_TIPS:
             return page == 'Reading'
+        if self.name == 'resources':
+            return page == 'Resources'
+        if self.name == 'manage':
+            return page == 'Manage'
+        if self.name == 'wordbank':
+            return page == 'WordBank'
         # Unknown tip never shown
         return False
 
