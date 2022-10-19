@@ -5,6 +5,7 @@ npm install
 pip install -r requirements.txt
 python -m nltk.downloader wordnet
 python -m nltk.downloader omw-1.4
+python -m nltk.downloader averaged_perceptron_tagger
 grunt build
 cd target
 python manage.py migrate

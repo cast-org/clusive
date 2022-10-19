@@ -71,11 +71,13 @@ Run in the Clusive directory:
 * For instance, as suggested in the answers on that page, you might need to use:
   * `LDFLAGS="-L/usr/local/opt/openssl/lib" pip install -r requirements.txt`
 
-### Download WordNet Data
+### Download Natural Language Toolkit and Wordnet Data
 
 Run in the Clusive directory:
 * `python -m nltk.downloader wordnet`
 * `python -m nltk.downloader omw-1.4`
+* `python -m nltk.downloader averaged_perceptron_tagger`
+
 * If you run into problems here, review possible solutions for [certificate issues](https://stackoverflow.com/questions/38916452/nltk-download-ssl-certificate-verify-failed) on Mac
 
 ### Initialize Local Database
