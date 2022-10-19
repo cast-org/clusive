@@ -21,7 +21,6 @@ TEACHER_ONLY_TIPS = [
 DASHBOARD_TIPS = [
     'activity',
     'student_reactions',
-    'reading_details',
     'reading_data',
     'thoughts',
     'manage',
