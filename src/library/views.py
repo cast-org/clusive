@@ -424,9 +424,15 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
     page_name = 'Resources'
 
     def get(self, request, *args, **kwargs):
+        self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, self.page_name)
         self.extra_context = {
             'categories': EducatorResourceCategory.objects.all()
-                .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order')))
+                .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order'))),
+            'tip_name': None,
+            'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
+            'tip_shown': self.tip_shown,
+            'has_teacher_resource': False,  # "Learn more" link is circular in this case.
+            'clusive_user': request.clusive_user,
         }
         return super().get(request, *args, **kwargs)
 

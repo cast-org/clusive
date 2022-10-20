@@ -18,28 +18,58 @@ TEACHER_ONLY_TIPS = [
     'resources',
 ]
 
+# The order of popovers for a given page matches the tour order.  See:
+# https://castudl.atlassian.net/browse/CSL-2040?focusedCommentId=36802
 DASHBOARD_TIPS = [
-    'activity',
     'student_reactions',
-    'reading_data',
     'thoughts',
+    'reading_data',
+    'activity',
     'manage',
+]
+
+READING_TIPS = [
+    'switch',   # Note: special case requires versions, see TipType.can_show()
+    'settings',
+    'readaloud',
+    'context',
+    'wordbank',
 ]
 
 LIBRARY_TIPS = [
     'view',
-    'book_actions',
     'filters',
     'search',
+    'book_actions',
 ]
 
-READING_TIPS = [
-    'context',
-    'settings',
-    'readaloud',
+WORD_BANK_TIPS = [
     'wordbank',
-    'switch',   # Note: special case requires versions -- see TipType.can_show()
 ]
+
+MANAGE_TIPS = [
+    'manage',
+]
+
+RESOURCES_TIPS = [
+    'resources',
+]
+
+PAGES_WITH_OWN_TIP = [
+    'Wordbank',
+    'Manage',
+    'Resources',
+]
+
+# Keys -- page names -- must match `page` values passed into TipType.can_show()
+PAGE_TIPS_MAP = {
+    'Dashboard': DASHBOARD_TIPS,
+    'Reading': READING_TIPS,
+    'Library': LIBRARY_TIPS,
+    'WordBank': WORD_BANK_TIPS,
+    'Manage': MANAGE_TIPS,
+    'Resources': RESOURCES_TIPS,
+}
 
 
 class TipType(models.Model):
@@ -59,9 +89,23 @@ class TipType(models.Model):
         # Teacher/parent-only tips
         if user.role == Roles.STUDENT and self.name in TEACHER_ONLY_TIPS:
             return False
-        # Switch tooltip requires multiple versions
+        # Switch TipType requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1
+        # Thoughts TipType is only for students
+        if self.name == 'thoughts' and user.role != Roles.STUDENT:
+            return False
+
+        # 'wordbank', 'manage', and 'reources' TipTypes appear on multiple pages.
+        # Check first whether the `page` parameter is 'WordBank', 'Manage', or
+        # 'Resources'.
+        # TODO: check if this code ever runs.  A rule is that if a tool
+        # is used, its associated tip is not shown; hence, this function,
+        # self.can_show(), won't be called.  And, if it is called, it will be
+        # because this TipType might show on another page, e.g. the Dashboard.
+        if self.check_page_with_own_tip(page):
+            return True
+
         # Most tooltips need to check if on correct page
         if self.name in DASHBOARD_TIPS:
             return page == 'Dashboard'
@@ -69,14 +113,17 @@ class TipType(models.Model):
             return page == 'Library'
         if self.name in READING_TIPS:
             return page == 'Reading'
-        if self.name == 'resources':
-            return page == 'Resources'
-        if self.name == 'manage':
-            return page == 'Manage'
-        if self.name == 'wordbank':
-            return page == 'WordBank'
         # Unknown tip never shown
         return False
+
+    def check_page_with_own_tip(self, page: str):
+        # Function for logging if this logic is ever used
+        match = 'matches' if page in PAGES_WITH_OWN_TIP else 'does not match'
+        logger.debug(f"Checking pages with their own tip, {page} {match} those in {PAGES_WITH_OWN_TIP}")
+        if page in PAGES_WITH_OWN_TIP and self.name in PAGE_TIPS_MAP[page]:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return '<TipType %s>' % self.name

@@ -32,6 +32,8 @@
             Your thoughts
         {% elif tour_name == "manage" %}
             Manage
+        {% elif tour_name == "resources" %}
+            Resources
         {% elif tour_name == "filters" %}
             Filters
         {% elif tour_name == "search" %}
@@ -67,8 +69,10 @@
         <p>Change the font, colors, and more! Settings let you choose the look, supports, and reading tools to make Clusive all your own.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' resource_id='SSETTINGS' %}">Learn more<span class="sr-only"> about settings</span></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <a href="{% url 'res_reader' resource_id='SSETTINGS' %}">Learn more<span class="sr-only"> about settings</span></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="tooltip-action">
@@ -83,9 +87,11 @@
         <p>Click the page read aloud icon to hear the entire page. Select text and click read aloud in the context menu to hear a smaller selection or a single word read aloud.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <!-- 'readaloud' type popovers do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#" tabindex="-1"></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <!-- 'readaloud' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                        <a href="#" tabindex="-1"></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -100,9 +106,11 @@
         <p>The Word bank collects words you’ve looked up or rated. Check out how you’ve rated words. Change ratings as your word knowledge grows. Get back to your previous page by clicking on the back button.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <!-- 'wordbank' type popovers do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#" tabindex="-1"></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <!-- 'wordbank' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                        <a href="#" tabindex="-1"></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -117,8 +125,10 @@
         <p>Switch gives three challenge options for some texts. Open Switch, check out the vocabulary in each version, and choose to stay, or change challenge levels. It’s up to you!</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' resource_id='SWITCH' %}">Learn more<span class="sr-only"> about switch</span></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <a href="{% url 'res_reader' resource_id='SWITCH' %}">Learn more<span class="sr-only"> about switch</span></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto tooltip-action">
@@ -139,9 +149,11 @@
         </ul>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <!-- 'context' type popovers do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#" tabindex="-1"></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <!-- 'context' type popovers do not have a "Learn more" resource link yet, so this is blank -->
+                        <a href="#" tabindex="-1"></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto tooltip-action">
@@ -156,9 +168,11 @@
         <p>View the Clusive library by all readings, or in smaller groupings like class readings, readings you’ve starred, public readings, or readings you’ve uploaded.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <!-- 'view' type popovers currently do not have a "Learn more" resource link yet, so this is blank -->
-                <a href="#" tabindex="-1"></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <!-- 'view' type popovers currently do not have a "Learn more" resource link yet, so this is blank -->
+                        <a href="#" tabindex="-1"></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -175,8 +189,10 @@
         <p>Click “More actions” (three dots) to assign or customize any book, and for books you uploaded to Clusive, to edit information or delete a book.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' 'CREAD' %}">Learn more<span class="sr-only"> about book actions</span></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <a href="{% url 'res_reader' 'CREAD' %}">Learn more<span class="sr-only"> about book actions</span></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -194,8 +210,10 @@
         <p>Select timeframe and sort by hours, books, or student name.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' 'READDTL' %}">Learn more<span class="sr-only"> about student activities data</span></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <a href="{% url 'res_reader' 'READDTL' %}">Learn more<span class="sr-only"> about student activities data</span></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -212,8 +230,10 @@
         <p>Click on a reaction word and see a list of Clusive readings that have inspired your students, and other Clusive readers, to react with that word.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' 'SREACT' %}">Learn more<span class="sr-only"> about students&apos; reactions</span></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                    <a href="{% url 'res_reader' 'SREACT' %}">Learn more<span class="sr-only"> about students&apos; reactions</span></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -230,8 +250,10 @@
         <p>Get a quick view of student reading interests and learning. Check out reading data on assigned and popular readings. Get a summary of student self-rating of learning, and see answers to prompts you have customized.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' 'SREADP' %}">Learn more<span class="sr-only"> about students&apos; reactions</span></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <a href="{% url 'res_reader' 'SREADP' %}">Learn more<span class="sr-only"> about students&apos; reactions</span></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">
@@ -240,11 +262,9 @@
         </div>
         {% elif tour_name == "thoughts" %}
 <!-- thoughts -->
-        {% if clusive_user.role == 'ST' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="thoughtsIframe" src="https://videos.sproutvideo.com/embed/449ed4bf1c1ee2cbcd/7eeb1eb5c62a2389?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Your thoughts video"></iframe>
         </div>
-        {% endif %}
         <p>Click on a reaction word and see Clusive readings that inspired you and others to react with that word.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
@@ -263,8 +283,30 @@
         <p>Import, add or edit classes and student information in Clusive.</p>
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
-                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' and has_teacher_resource %}
-                <a href="{% url 'res_reader' 'CCLASS' %}">Learn more<span class="sr-only"> about manage</span></a>
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <a href="{% url 'res_reader' 'CCLASS' %}">Learn more<span class="sr-only"> about manage</span></a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+            </div>
+        </div>
+        {% elif tour_name == "resources" %}
+<!-- resources -->
+        {% if clusive_user.role == 'TE' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="resourcesIframe" src="https://videos.sproutvideo.com/embed/ac9ed4bf1c1ee2c325/8c2089ffd2b063c4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Resources video"></iframe>
+        </div>
+        {% endif %}
+        <p>Get tips, resources and videos for getting you and your students started in Clusive, and for building teaching skills with Clusive tools and features.</p>
+        <div class="row gx-0_5 flex-items-center">
+            <div class="col">
+                {% if has_teacher_resource %}
+                    {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                        <a href="{% url 'resources' %}">Learn more<span class="sr-only"> about resources</span></a>
+                    {% endif %}
                 {% endif %}
             </div>
             <div class="col-auto">

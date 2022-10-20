@@ -29,7 +29,7 @@ Expects context:
     <li class="nav-item">
         {% url 'resources' as link_url %}
         {% if request.path == link_url or page_group_main == 'resources' %}
-        <span class="nav-link current" aria-current="true">Resources</span>
+        <span class="nav-link current" aria-current="true" data-clusive-tip-id="resources">Resources</span>
         {% else %}
         <a href="{{ link_url }}" class="nav-link{% if page_group == 'resources' %} current{% endif %}" data-clusive-tip-id="resources">Resources</a>
         {% endif %}
@@ -40,7 +40,7 @@ Expects context:
     <li class="nav-item">
         {% url 'manage' as link_url %}
         {% if request.path == link_url or page_group_main == 'manage' %}
-        <span class="nav-link current" aria-current="true">Manage</span>
+        <span class="nav-link current" aria-current="true" data-clusive-tip-id="manage">Manage</span>
         {% else %}
         <a href="{{ link_url }}" class="nav-link{% if page_group == 'manage' %} current{% endif %}" data-clusive-tip-id="manage">Manage</a>
         {% endif %}
