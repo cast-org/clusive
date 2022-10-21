@@ -745,8 +745,17 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPage
     template_name = 'pages/wordbank.html'
 
     def get(self, request, *args, **kwargs):
+        # Check for Tip
+        clusive_user = request.clusive_user
+        tip_shown = TipHistory.get_tip_to_show(clusive_user, page='Wordbank')
+
         self.extra_context = {
-            'words': WordModel.objects.filter(user=request.clusive_user, interest__gt=0).order_by('word')
+            'words': WordModel.objects.filter(user=request.clusive_user, interest__gt=0).order_by('word'),
+            'clusive_user': clusive_user,
+            'tip_name': None,
+            'tours': [{'name': tip_shown.name, 'robust': True }] if tip_shown else None,
+            'tip_shown': tip_shown,
+            'has_teacher_resource': False,
         }
         return super().get(request, *args, **kwargs)
 

@@ -66,7 +66,7 @@ PAGE_TIPS_MAP = {
     'Dashboard': DASHBOARD_TIPS,
     'Reading': READING_TIPS,
     'Library': LIBRARY_TIPS,
-    'WordBank': WORD_BANK_TIPS,
+    'Wordbank': WORD_BANK_TIPS,
     'Manage': MANAGE_TIPS,
     'Resources': RESOURCES_TIPS,
 }
