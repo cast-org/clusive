@@ -354,7 +354,10 @@ $(window).ready(function() {
     if (tip_control) {
         var $tip_control = $(tip_control);
         $tip_control.one('afterShow.cfw.popover', function() {
-            document.querySelector('#tour_{{ tour_name }}').focus();
+            popoverHelpDialog = $('#tour_{{ tour_name }}').focus();
+            if (popoverHelpDialog.is(':visible')) {
+                window.parent.clusiveEvents.addTipViewToQueue('{{ tour_name }}');
+            }
         });
         $tip_control.CFW_Popover('show');
     }
