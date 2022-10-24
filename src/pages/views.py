@@ -689,7 +689,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
 
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
-        self.tours = TourList(clusive_user, page=self.page_name)
+        self.tours = TourList(clusive_user, page=self.page_name, version_count=len(versions))
 
         # See if there's a custom question
         customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \

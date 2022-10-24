@@ -371,7 +371,7 @@ class CTAHistory(models.Model):
                 and h.ready_to_show(user_stats)]
 
 
-def TourList(user: ClusiveUser, page: str):
+def TourList(user: ClusiveUser, page: str, version_count=0):
     # See rules in TipType.can_show()
     full = PAGE_TIPS_MAP[page]
     available = []
@@ -379,6 +379,9 @@ def TourList(user: ClusiveUser, page: str):
     for name in full:
         # Teacher/parent-only tips
         if user.role == Roles.STUDENT and name in TEACHER_ONLY_TIPS:
+            continue
+        # Switch TipType requires multiple versions
+        if name == 'switch' and not version_count > 1:
             continue
         # Thoughts TipType is only for students
         if name == 'thoughts' and user.role != Roles.STUDENT:

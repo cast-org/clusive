@@ -542,19 +542,13 @@ h2,
 }
 .feature-context {
     position: absolute;
-    //top: 33%;
-    //left: 50%;
-    top: 66%;
-    left: $sidebar-width;
+    top: 25%;
+    left: 50%;
     margin-right: ($grid-gutter-width / -2);
     margin-left: ($grid-gutter-width / -2);
     pointer-events: none;
     outline: 0;
     @include sr-only();
-
-    @include media-breakpoint-up(md) {
-        left: $sidebar-md-width;
-    }
 }
 
 .feature-list {
