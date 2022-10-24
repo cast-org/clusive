@@ -720,3 +720,19 @@ h2,
         animation-duration: $loader-circle-animation-speed * 2;
     }
 }
+
+// stylelint-disable selector-no-qualifying-type
+// Conditionally show/hide content in tour popovers depending on if
+// state is singleton (auto-shown) or part of the tour started from
+// the tour/mascot button
+body:not(.touring) {
+    .touring-on {
+        display: none;
+    }
+}
+body.touring {
+    .touring-off {
+        display: none;
+    }
+}
+// stylelint-enable selector-no-qualifying-type

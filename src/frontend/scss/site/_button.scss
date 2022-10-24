@@ -6,7 +6,8 @@
 .btn-nav,
 .btn-setting,
 .btn-tool,
-.btn-tts {
+.btn-tts,
+.btn-mascot-tipped {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -134,4 +135,22 @@
     margin-bottom: $tag-margin-y;
     @include font-size($tag-font-size);
     font-weight: $tag-font-weight;
+}
+
+.btn-mascot-tipped {
+    position: relative;
+
+    &::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: block;
+        width: 1.75rem;
+        height: calc(1.75rem * #{$img-ratio-mascot-tipped});
+        content: "";
+        background-image: var(--CT_imgMascotTipped);
+        background-repeat: no-repeat;
+        background-size: contain;
+        transform: translate(-50%, -50%);
+    }
 }

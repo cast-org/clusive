@@ -369,3 +369,20 @@ class CTAHistory(models.Model):
         return [h for h in histories
                 if h.type.can_show(page)
                 and h.ready_to_show(user_stats)]
+
+
+def TourList(user: ClusiveUser, page: str):
+    # See rules in TipType.can_show()
+    full = PAGE_TIPS_MAP[page]
+    available = []
+
+    for name in full:
+        # Teacher/parent-only tips
+        if user.role == Roles.STUDENT and name in TEACHER_ONLY_TIPS:
+            continue
+        # Thoughts TipType is only for students
+        if name == 'thoughts' and user.role != Roles.STUDENT:
+            continue
+        available.append(name)
+
+    return available if len(available) > 1 else None

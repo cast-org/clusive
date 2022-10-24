@@ -49,7 +49,7 @@ from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationFor
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, \
     RosterDataSource
 from roster.signals import user_registered
-from tips.models import TipHistory
+from tips.models import TipHistory, TourList
 
 logger = logging.getLogger(__name__)
 
@@ -472,6 +472,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         user = request.clusive_user
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(user, page="Manage")
+        self.tours = TourList(user, page="Manage")
         if not user.can_manage_periods:
             self.handle_no_permission()
         return super().get(request, *args, **kwargs)
@@ -481,12 +482,9 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         if self.current_period is not None:
             context['people'] = self.make_people_info_list(self.request.user)
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
-        # BEGIN: Sample Tour
-        # Sample tour with single item list
         context['tip_name'] = None
-        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
-        # END: Sample Tour
-        context['tip_shown'] = self.tip_shown
+        context['tip_shown'] = [self.tip_shown.name] if self.tip_shown else None
+        context['tours'] = self.tours
         context['has_teacher_resource'] = False # "Learn more" link would be circular
         context['clusive_user'] = self.request.clusive_user
         return context
