@@ -22,17 +22,17 @@ TEACHER_ONLY_TIPS = [
 # https://castudl.atlassian.net/browse/CSL-2040?focusedCommentId=36802
 DASHBOARD_TIPS = [
     'student_reactions',
-    'thoughts',
     'reading_data',
     'activity',
     'manage',
 ]
 
 READING_TIPS = [
-    'switch',   # Note: special case requires versions, see TipType.can_show()
+    'switch',
     'settings',
     'readaloud',
     'context',
+    'thoughts',
     'wordbank',
 ]
 
@@ -137,7 +137,7 @@ class TipHistory(models.Model):
     last_attempt = models.DateTimeField(null=True)
     # A "show" is when the user actually saw the tip.
     last_show = models.DateTimeField(null=True)
-    # This is when the use took some related action.
+    # This is when the user took some related action.
     # Tips should not be shown if the user recently did the action so doesn't need reminding.
     last_action = models.DateTimeField(null=True)
 
