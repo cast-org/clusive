@@ -305,7 +305,7 @@
             <div class="col">
                 {% if has_teacher_resource %}
                     {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
-                        <a href="{% url 'resources' %}">Learn more<span class="sr-only"> about resources</span></a>
+                        <a href="{% url 'resources' %}" data-clusive-tip-action="resources">Learn more<span class="sr-only"> about resources</span></a>
                     {% endif %}
                 {% endif %}
             </div>
