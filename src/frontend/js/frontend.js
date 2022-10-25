@@ -1298,6 +1298,34 @@ function setUpDeferredLoadOfCompDetails() {
     });
 }
 
+function dialogMediaStop() {
+    'use strict';
+
+    function dialogTarget(evt) {
+        if (evt.namespace.includes('popover')) {
+            return $(evt.target).data('cfw.popover').$target[0];
+        }
+        if (evt.namespace.includes('modal')) {
+            return $(evt.target).data('cfw.modal').$target[0];
+        }
+        return null;
+    }
+
+    $(document.body).on('beforeHide.cfw.popover beforeHide.cfw.modal', function(evt) {
+        var target = dialogTarget(evt);
+        if (target === null) { return; }
+
+        var $iframes = $(target).find('iframe[src]');
+        $iframes.each(function() {
+            var source = this.src;
+            if (source.includes('youtube.com') || source.includes('sproutvideo.com')) {
+                this.src = '';
+                this.src = source;
+            }
+        });
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -1328,6 +1356,7 @@ $(window).ready(function() {
     shareForm();
     dashboardStudentReadingViewButtons();
     toolboxHandleUpdate();
+    dialogMediaStop();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

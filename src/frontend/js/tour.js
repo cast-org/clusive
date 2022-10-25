@@ -42,7 +42,9 @@
             $control.one('afterShow.cfw.popover', function() {
                 document.querySelector('#tour_' + name).focus();
             });
-            $control.CFW_Popover('show');
+            setTimeout(function() {
+                $control.CFW_Popover('show');
+            }, 2000);
         },
 
         // Chain animations for tour items together
@@ -51,15 +53,18 @@
             var $curr = $(document).find(SELECTOR_TOUR_VISIBLE);
             var $next = $(selector);
 
-            document.body.classList.add(CLASS_TOUR);
+            // Hide tip/tour tooltip if showing
+            $('#tip').CFW_Tooltip('hide');
 
             if ($curr.length) {
                 // Wait until hide animation is complete before callling show
                 $curr.CFW_Popover('hide').CFW_transition(null, function() {
+                    document.body.classList.add(CLASS_TOUR);
                     $next.CFW_Popover('show');
                     $next[0].focus();
                 });
             } else {
+                document.body.classList.add(CLASS_TOUR);
                 $next.CFW_Popover('show');
                 $next[0].focus();
             }

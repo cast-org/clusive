@@ -21,6 +21,7 @@ TEACHER_ONLY_TIPS = [
 # The order of popovers for a given page matches the tour order.  See:
 # https://castudl.atlassian.net/browse/CSL-2040?focusedCommentId=36802
 DASHBOARD_TIPS = [
+    'tour',
     'student_reactions',
     'reading_data',
     'activity',
@@ -377,6 +378,9 @@ def TourList(user: ClusiveUser, page: str, version_count=0):
     available = []
 
     for name in full:
+        # Tooltip version of tips are not part of tour
+        if name == 'tour':
+            continue
         # Teacher/parent-only tips
         if user.role == Roles.STUDENT and name in TEACHER_ONLY_TIPS:
             continue

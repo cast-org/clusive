@@ -1,4 +1,8 @@
 <div class="box box-mascot-tipped" {% if is_teacher %} data-clusive-tip-id="reading_data" {% endif %}>
+    {% if tip_name == "tour" %}
+    <span class="tip-mascot feature-novis" data-clusive-tip-id="tour" data-clusive-tip-action="tour"></span>
+    {% endif %}
+
     {% if is_teacher %}
         <h2>Student reading</h2>
     {% else %}

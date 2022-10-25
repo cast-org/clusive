@@ -225,8 +225,9 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['panels'] = self.panels
         context['data'] = self.data
         context['clusive_user'] = self.clusive_user
-        context['tip_name'] = None
-        context['tip_shown'] = self.tip_shown.name if self.tip_shown else None
+        # 'tour' is a special case and uses the older tooltip functionality
+        context['tip_name'] = 'tour' if self.tip_shown and self.tip_shown.name == 'tour' else None # tour tooltip
+        context['tip_shown'] = self.tip_shown.name if self.tip_shown and self.tip_shown.name != 'tour' else None # Singleton tour item
         context['tours'] = self.tours
         context['has_teacher_resource'] = True
         return context
