@@ -42,7 +42,7 @@ Expects context:
         {% if request.path == link_url or page_group_main == 'manage' %}
         <span class="nav-link current" aria-current="true" data-clusive-tip-id="manage">Manage</span>
         {% else %}
-        <a href="{{ link_url }}" class="nav-link{% if page_group == 'manage' %} current{% endif %}" data-clusive-tip-id="manage">Manage</a>
+        <a href="{{ link_url }}" class="nav-link{% if page_group == 'manage' %} current{% endif %}" data-clusive-tip-id="manage" data-clusive-tip-action="manage" data-cfw-popover-placement="bottom auto">Manage</a>
         {% endif %}
     </li>
     {% endif %}
