@@ -1312,6 +1312,8 @@ function dialogMediaStop() {
     }
 
     $(document.body).on('beforeHide.cfw.popover beforeHide.cfw.modal', function(evt) {
+        if (evt.isDefaultPrevented()) { return; }
+
         var target = dialogTarget(evt);
         if (target === null) { return; }
 
