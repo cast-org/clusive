@@ -20,7 +20,8 @@
                      style="--dim: {{ w.value|default:0 }}%;"></div>
                 <a href="#" class="react-label react-label-{{ forloop.counter0 }}"
                    data-cfw="modal" data-cfw-modal-target="#react-detail-{{w.word}}"
-                   data-cle-handler="click" data-cle-control="dash_affect_detail" data-cle-value="{{w.word}}">
+                   data-cle-handler="click" data-cle-control="dash_affect_detail" data-cle-value="{{w.word}}"
+                   {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %} data-clusive-tip-action="student_reactions" {% endif %}>
                     {% if w.value %}<strong>{{ w.word }}</strong>{% else %}{{ w.word }}{% endif %}
                 </a>
             </div>
