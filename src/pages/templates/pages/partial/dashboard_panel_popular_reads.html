@@ -20,7 +20,7 @@
             You haven't created any student accounts, yet.
             Set up your classes by clicking the "Manage" link in the navigation bar.
         </p>
-        <a href="{% url 'manage' %}" class="btn btn-primary">Manage</a>
+        <a href="{% url 'manage' %}" class="btn btn-primary" data-clusive-tip-id="manage" data-clusive-tip-action="manage">Manage</a>
     {% else %}
         <div id="DashboardPopularReads">
             {% include 'pages/partial/dashboard_panel_popular_reads_data.html' %}

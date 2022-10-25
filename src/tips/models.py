@@ -100,11 +100,7 @@ class TipType(models.Model):
         # 'wordbank', 'manage', and 'reources' TipTypes appear on multiple pages.
         # Check first whether the `page` parameter is 'WordBank', 'Manage', or
         # 'Resources'.
-        # TODO: check if this code ever runs.  A rule is that if a tool
-        # is used, its associated tip is not shown; hence, this function,
-        # self.can_show(), won't be called.  And, if it is called, it will be
-        # because this TipType might show on another page, e.g. the Dashboard.
-        if self.check_page_with_own_tip(page):
+        if page in PAGES_WITH_OWN_TIP and self.name in PAGE_TIPS_MAP[page]:
             return True
 
         # Most tooltips need to check if on correct page
@@ -116,15 +112,6 @@ class TipType(models.Model):
             return page == 'Reading'
         # Unknown tip never shown
         return False
-
-    def check_page_with_own_tip(self, page: str):
-        # Function for logging if this logic is ever used
-        match = 'matches' if page in PAGES_WITH_OWN_TIP else 'does not match'
-        logger.debug(f"Checking pages with their own tip, {page} {match} those in {PAGES_WITH_OWN_TIP}")
-        if page in PAGES_WITH_OWN_TIP and self.name in PAGE_TIPS_MAP[page]:
-            return True
-        else:
-            return False
 
     def __str__(self):
         return '<TipType %s>' % self.name
