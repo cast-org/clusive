@@ -5,7 +5,7 @@
     <div class="col">
         {% if has_teacher_resource and resource_id %}
             {% if resource_id == 'RESOURCES' %}
-            <a href="{% url 'resources' %}">Learn more<span class="sr-only"> about {{ resource_name }}</span></a>
+            <a href="{% url 'resources' %}" data-clusive-tip-action="resource_id">Learn more<span class="sr-only"> about {{ resource_name }}</span></a>
             {% else %}
             <a href="{% url 'res_reader' resource_id=resource_id %}">Learn more<span class="sr-only"> about {{ resource_name }}</span></a>
             {% endif %}
