@@ -391,6 +391,4 @@ def TourList(user: ClusiveUser, page: str, version_count=0):
             continue
         available.append(name)
 
-    logger.debug('AVAILABLE: %s', repr(available))
-
     return available if len(available) > 1 else None
