@@ -40,10 +40,8 @@
 
             document.body.classList.remove(CLASS_TOUR);
             $control.one('afterShow.cfw.popover', function() {
-                popoverHelpDialog = $('#tour_' + name).focus();
-                if (popoverHelpDialog.is(':visible')) {
-                    window.parent.clusiveEvents.addTipViewToQueue(name);
-                }
+                document.querySelector('#tour_' + name).focus();
+                window.parent.clusiveEvents.addTipViewToQueue(name);
             });
             setTimeout(function() {
                 $control.CFW_Popover('show');
