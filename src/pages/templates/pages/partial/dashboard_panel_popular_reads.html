@@ -1,4 +1,4 @@
-<div class="box box-mascot-tipped" {% if is_teacher %} data-clusive-tip-id="reading_data" {% endif %}>
+<div class="box box-mascot-tipped" data-clusive-tip-id="reading_data">
     {% if is_teacher %}
         <h2>Student reading</h2>
     {% else %}
@@ -6,8 +6,8 @@
     {% endif %}
 
     <div class="dashboard-reading-btns">
-        <a href="{% url 'upload' %}" class="btn btn-primary btn-small"><span aria-hidden="true">+ </span>Upload a new reading</a>
-        <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small">Go to library</a>
+        <a href="{% url 'upload' %}" class="btn btn-primary btn-small" data-clusive-tip-action="reading_data"><span aria-hidden="true">+ </span>Upload a new reading</a>
+        <a href="{% url 'reader_index' %}" class="btn btn-primary btn-small" data-clusive-tip-action="reading_data">Go to library</a>
     </div>
 
     {% if is_teacher and periods.count == 0 %}

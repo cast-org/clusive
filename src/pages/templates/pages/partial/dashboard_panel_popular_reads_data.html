@@ -3,7 +3,7 @@
     <li class="nav-item">
         <button type="button" data-clusive-view="assigned"
             class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}"
-            {% if is_teacher %} data-clusive-tip-action="reading_data"{% endif %}>
+            data-clusive-tip-action="reading_data">
             Assigned
         </button>
     </li>
@@ -11,7 +11,8 @@
     {% if not is_teacher %}
     <li class="nav-item">
         <button type="button" data-clusive-view="recent"
-            class="nav-link popular-read-view-button{% if data.view == 'recent' %} active{% endif %}">
+            class="nav-link popular-read-view-button{% if data.view == 'recent' %} active{% endif %}"
+            data-clusive-tip-action="reading_data">
             Recent
         </button>
     </li>
@@ -19,7 +20,7 @@
     <li class="nav-item">
         <button type="button" data-clusive-view="popular" 
             class="nav-link popular-read-view-button{% if data.view == 'popular' %} active{% endif %}"
-            {% if is_teacher %} data-clusive-tip-action="reading_data"{% endif %}>
+            data-clusive-tip-action="reading_data">
             Popular
         </button>
     </li>

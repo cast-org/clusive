@@ -31,7 +31,11 @@
                 Your thoughts
             {% endif %}
         {% elif tour_name == "reading_data" %}
-            Student reading data
+            {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                Student reading data
+            {% else %}
+                Your reading
+            {% endif %}
         {% elif tour_name == "thoughts" %}
             Your thoughts
         {% elif tour_name == "manage" %}
@@ -251,12 +255,17 @@
         </div>
         {% elif tour_name == "reading_data" %}
 <!-- reading_data -->
-        {% if clusive_user.role == 'TE' %}
+        {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="readingDataIframe" src="https://videos.sproutvideo.com/embed/449ed9b61c1aecc5cd/5993d5016938853d?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Student Reading data video"></iframe>
         </div>
-        {% endif %}
         <p>Get a quick view of student reading interests and learning. Check out reading data on assigned and popular readings. Get a summary of student self-rating of learning, and see answers to prompts you have customized.</p>
+        {% else %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="readingDataIframe" src="https://videos.sproutvideo.com/embed/ea9ed4b41b15e2c263/bd13498e66ded346?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Student Reading data video"></iframe>
+        </div>
+        <p>See assigned readings your recent readings, and popular readings to check out. Go to the library to find more things to read. Have a document you want to upload? Click Upload a new reading to get started!</p>
+        {% endif %}
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
                 {% if has_teacher_resource %}
