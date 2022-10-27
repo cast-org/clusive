@@ -126,9 +126,10 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.panels = dict()  # This will hold info on which panels are to be displayed.
         self.data = dict()    # This will hold panel-specific data
         self.dashboard_popular_view = self.clusive_user.dashboard_popular_view
+        self.page_name = 'Dashboard'
 
-        self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
-        self.tours = TourList(self.clusive_user, page='Dashboard')
+        self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page=self.page_name)
+        self.tours = TourList(self.clusive_user, page=self.page_name)
 
         # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
@@ -230,6 +231,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['tip_shown'] = self.tip_shown.name if self.tip_shown and self.tip_shown.name != 'tour' else None # Singleton tour item
         context['tours'] = self.tours
         context['has_teacher_resource'] = True
+        context['page_name'] = self.page_name
         return context
 
     def should_show_star_results(self, request):
@@ -722,6 +724,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'tip_shown': self.tip_shown.name if self.tip_shown else None,
             'tours': self.tours,
             'has_teacher_resource': True,
+            'page_name': self.page_name,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
             'book_id': book.id,

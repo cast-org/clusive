@@ -171,11 +171,19 @@
             {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
         {% endif %}
         {% elif tour_name == "thoughts" %}
+        <p>Page is {{ page_name }}</p>
 <!-- thoughts -->
+        {% if page_name == 'Dashboard' %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="thoughtsIframe" src="https://videos.sproutvideo.com/embed/449ed4bf1c1ee2cbcd/7eeb1eb5c62a2389?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Your thoughts video"></iframe>
+        </div>
+        <p>Click on a reaction word and see Clusive readings that inspired you and others to react with that word.</p>
+        {% elif page_name == 'Reading' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="thoughtsIframe" src="https://videos.sproutvideo.com/embed/449ed4bb1811edcbcd/145a8ba8f5a0ded5?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Your thoughts video"></iframe>
         </div>
         <p>Reflect on how a reading made you feel, answer questions your teacher has posted, and mark how much you’ve learned. Your thoughts on how the reading made you feel are collected on your student dashboard.</p>
+        {% endif %}
         {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
         {% elif tour_name == "manage" %}
 <!-- manage -->

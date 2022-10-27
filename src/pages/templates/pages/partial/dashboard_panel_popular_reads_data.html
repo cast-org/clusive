@@ -1,11 +1,28 @@
 <ul class="nav box-tabs mb-0">
     {% if is_guest or current_period %}
-    <li class="nav-item"><button type="button" data-clusive-view="assigned" class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}">Assigned</button></li>
+    <li class="nav-item">
+        <button type="button" data-clusive-view="assigned"
+            class="nav-link popular-read-view-button{% if data.view == 'assigned' %} active{% endif %}"
+            {% if is_teacher %} data-clusive-tip-action="reading_data"{% endif %}>
+            Assigned
+        </button>
+    </li>
     {% endif %}
     {% if not is_teacher %}
-    <li class="nav-item"><button type="button" data-clusive-view="recent" class="nav-link popular-read-view-button{% if data.view == 'recent' %} active{% endif %}">Recent</button></li>
+    <li class="nav-item">
+        <button type="button" data-clusive-view="recent"
+            class="nav-link popular-read-view-button{% if data.view == 'recent' %} active{% endif %}">
+            Recent
+        </button>
+    </li>
     {% endif %}
-    <li class="nav-item"><button type="button" data-clusive-view="popular" class="nav-link popular-read-view-button{% if data.view == 'popular' %} active{% endif %}">Popular</button></li>
+    <li class="nav-item">
+        <button type="button" data-clusive-view="popular" 
+            class="nav-link popular-read-view-button{% if data.view == 'popular' %} active{% endif %}"
+            {% if is_teacher %} data-clusive-tip-action="reading_data"{% endif %}>
+            Popular
+        </button>
+    </li>
 </ul>
 
 <div class="box-divider"></div>
