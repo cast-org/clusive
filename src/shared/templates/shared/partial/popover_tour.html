@@ -25,7 +25,11 @@
         {% elif tour_name == "activity" %}
             Activities
         {% elif tour_name == "student_reactions" %}
-            Your students&apos; reactions
+            {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                Your students&apos; reactions
+            {% else %}
+                Your thoughts
+            {% endif %}
         {% elif tour_name == "reading_data" %}
             Student reading data
         {% elif tour_name == "thoughts" %}
@@ -222,12 +226,17 @@
         </div>
         {% elif tour_name == "student_reactions" %}
 <!-- student_reactions -->
-        {% if clusive_user.role == 'TE' %}
+        {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="studentReactionsIframe" src="https://videos.sproutvideo.com/embed/119ed9b21f1aeac598/961f727539a6dc9b?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Your students reactions video"></iframe>
         </div>
-        {% endif %}
         <p>Click on a reaction word and see a list of Clusive readings that have inspired your students, and other Clusive readers, to react with that word.</p>
+        {% else %}
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="studentReactionsIframe" src="https://videos.sproutvideo.com/embed/449ed4bf1c1ee2cbcd/7eeb1eb5c62a2389?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Your students reactions video"></iframe>
+        </div>
+        <p>Click on a reaction word and see Clusive readings that inspired you and others to react with that word.</p>
+        {% endif %}
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
                 {% if has_teacher_resource %}
@@ -261,19 +270,11 @@
             </div>
         </div>
         {% elif tour_name == "thoughts" %}
-        <p>Page is {{ page_name }}</p>
 <!-- thoughts -->
-        {% if page_name == 'Dashboard' %}
-        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
-            <iframe id="thoughtsIframe" src="https://videos.sproutvideo.com/embed/449ed4bf1c1ee2cbcd/7eeb1eb5c62a2389?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Your thoughts video"></iframe>
-        </div>
-        <p>Click on a reaction word and see Clusive readings that inspired you and others to react with that word.</p>
-        {% elif page_name == 'Reading' %}
         <div class="embed-fluid embed-fluid-16x9 mb-0_5">
             <iframe id="thoughtsIframe" src="https://videos.sproutvideo.com/embed/449ed4bb1811edcbcd/145a8ba8f5a0ded5?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Your thoughts video"></iframe>
         </div>
         <p>Reflect on how a reading made you feel, answer questions your teacher has posted, and mark how much you’ve learned. Your thoughts on how the reading made you feel are collected on your student dashboard.</p>
-        {% endif %}
         <div class="row gx-0_5 flex-items-center">
             <div class="col">
             </div>

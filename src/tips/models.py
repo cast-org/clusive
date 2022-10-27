@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 TEACHER_ONLY_TIPS = [
     'book_actions',
     'activity',
-    'student_reactions',
     'reading_details',
     'manage',
     'resources',
@@ -19,20 +18,11 @@ TEACHER_ONLY_TIPS = [
 
 # The order of popovers for a given page matches the tour order.  See:
 # https://castudl.atlassian.net/browse/CSL-2040?focusedCommentId=36802
-TEACHER_DASHBOARD_TIPS = [
+DASHBOARD_TIPS = [
     'student_reactions',
     'reading_data',
     'activity',
     'manage',
-]
-
-STUDENT_DASHBOARD_TIPS = [
-    'thoughts',
-    'reading_data',
-]
-
-ALL_DASHBOARD_TIPS = [
-    TEACHER_DASHBOARD_TIPS + STUDENT_DASHBOARD_TIPS
 ]
 
 READING_TIPS = [
@@ -71,7 +61,7 @@ PAGES_WITH_OWN_TIP = [
 
 # Keys -- page names -- must match `page` values passed into TipType.can_show()
 PAGE_TIPS_MAP = {
-    'Dashboard': ALL_DASHBOARD_TIPS,
+    'Dashboard': DASHBOARD_TIPS,
     'Reading': READING_TIPS,
     'Library': LIBRARY_TIPS,
     'Wordbank': WORD_BANK_TIPS,
@@ -99,13 +89,9 @@ class TipType(models.Model):
         # Switch TipType requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1
-        # Thoughts TipType is only for students, and appears on both
-        # the Dashboard and the Reader pages
-        if self.name == 'thoughts':
-            if user.role != Roles.STUDENT:
+        # Thoughts TipType is only for students
+        if self.name == 'thoughts' and user.role != Roles.STUDENT:
                 return False
-            else:
-                return page == 'Dashboard' or page == 'Reading'
 
         # 'wordbank', 'manage', and 'reources' TipTypes appear on multiple pages.
         # Check first whether the `page` parameter is 'WordBank', 'Manage', or
@@ -114,7 +100,7 @@ class TipType(models.Model):
             return True
 
         # Most tooltips need to check if on correct page
-        if self.name in ALL_DASHBOARD_TIPS:
+        if self.name in DASHBOARD_TIPS:
             return page == 'Dashboard'
         if self.name in LIBRARY_TIPS:
             return page == 'Library'
