@@ -100,7 +100,7 @@ class TipType(models.Model):
             return True
 
         # Most tooltips need to check if on correct page
-        if self.name in PAGE_TIPS_MAP[page]:
+        if self.name in PAGE_TIPS_MAP.get(page, []):
             return True
         # Unknown tip never shown
         return False
