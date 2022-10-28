@@ -34,7 +34,7 @@ from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected
     get_access_keys, is_organization_sponsor, is_organization_member
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
-from tips.models import TipHistory
+from tips.models import TipHistory, TourList
 
 
 logger = logging.getLogger(__name__)
@@ -385,17 +385,15 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, 'Library')
+        self.tours = TourList(request.clusive_user, page='Library')
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
-        # BEGIN: Sample Tour
-        # Sample tour with single item list
         context['tip_name'] = None
-        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
-        # END: Sample Tour
-        context['tip_shown'] = self.tip_shown
+        context['tip_shown'] = self.tip_shown.name if self.tip_shown else None
+        context['tours'] = self.tours
         context['has_teacher_resource'] = False
         context['has_bookshare_account'] = has_bookshare_account(self.request)
         return context
@@ -425,12 +423,13 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, self.page_name)
+        self.tours = TourList(request.clusive_user, page=self.page_name)
         self.extra_context = {
             'categories': EducatorResourceCategory.objects.all()
                 .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order'))),
             'tip_name': None,
-            'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
-            'tip_shown': self.tip_shown,
+            'tip_shown': self.tip_shown.name if self.tip_shown else None,
+            'tours': self.tours,
             'has_teacher_resource': False,  # "Learn more" link is circular in this case.
             'clusive_user': request.clusive_user,
         }

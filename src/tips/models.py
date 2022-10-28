@@ -19,6 +19,7 @@ TEACHER_ONLY_TIPS = [
 # The order of popovers for a given page matches the tour order.  See:
 # https://castudl.atlassian.net/browse/CSL-2040?focusedCommentId=36802
 DASHBOARD_TIPS = [
+    'tour',
     'student_reactions',
     'reading_data',
     'activity',
@@ -349,3 +350,26 @@ class CTAHistory(models.Model):
         return [h for h in histories
                 if h.type.can_show(page)
                 and h.ready_to_show(user_stats)]
+
+
+def TourList(user: ClusiveUser, page: str, version_count=0):
+    # See rules in TipType.can_show()
+    full = PAGE_TIPS_MAP[page]
+    available = []
+
+    for name in full:
+        # Tooltip version of tips are not part of tour
+        if name == 'tour':
+            continue
+        # Teacher/parent-only tips
+        if user.role == Roles.STUDENT and name in TEACHER_ONLY_TIPS:
+            continue
+        # Switch TipType requires multiple versions
+        if name == 'switch' and not version_count > 1:
+            continue
+        # Thoughts TipType is only for students
+        if name == 'thoughts' and user.role != Roles.STUDENT:
+            continue
+        available.append(name)
+
+    return available if len(available) > 1 else None

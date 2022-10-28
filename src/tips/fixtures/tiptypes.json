@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "name": "settings",
-      "priority": 1,
+      "priority": 2,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -14,7 +14,7 @@
     "pk": 2,
     "fields": {
       "name": "readaloud",
-      "priority": 2,
+      "priority": 3,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -24,7 +24,7 @@
     "pk": 3,
     "fields": {
       "name": "context",
-      "priority": 3,
+      "priority": 4,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -34,7 +34,7 @@
     "pk": 4,
     "fields": {
       "name": "switch",
-      "priority": 4,
+      "priority": 5,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -44,7 +44,7 @@
     "pk": 5,
     "fields": {
       "name": "wordbank",
-      "priority": 5,
+      "priority": 6,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -54,7 +54,7 @@
     "pk": 6,
     "fields": {
       "name": "view",
-      "priority": 6,
+      "priority": 7,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -64,7 +64,7 @@
     "pk": 7,
     "fields": {
       "name": "book_actions",
-      "priority": 7,
+      "priority": 8,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -74,7 +74,7 @@
     "pk": 8,
     "fields": {
       "name": "activity",
-      "priority": 8,
+      "priority": 9,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -84,7 +84,7 @@
     "pk": 9,
     "fields": {
       "name": "student_reactions",
-      "priority": 9,
+      "priority": 10,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -94,7 +94,7 @@
     "pk": 10,
     "fields": {
       "name": "reading_data",
-      "priority": 10,
+      "priority": 11,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -104,7 +104,7 @@
     "pk": 11,
     "fields": {
       "name": "thoughts",
-      "priority": 11,
+      "priority": 12,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -114,7 +114,7 @@
     "pk": 12,
     "fields": {
       "name": "manage",
-      "priority": 12,
+      "priority": 13,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -124,7 +124,7 @@
     "pk": 13,
     "fields": {
       "name": "resources",
-      "priority": 13,
+      "priority": 14,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -134,7 +134,7 @@
     "pk": 14,
     "fields": {
       "name": "filters",
-      "priority": 14,
+      "priority": 15,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -144,7 +144,17 @@
     "pk": 15,
     "fields": {
       "name": "search",
-      "priority": 15,
+      "priority": 16,
+      "max": 3,
+      "interval": "7 00:00:00"
+    }
+  },
+  {
+    "model": "tips.tiptype",
+    "pk": 16,
+    "fields": {
+      "name": "tour",
+      "priority": 1,
       "max": 3,
       "interval": "7 00:00:00"
     }

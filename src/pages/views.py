@@ -28,7 +28,7 @@ from glossary.views import choose_words_to_cue
 from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, \
     Customization, BookAssignment
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
-from tips.models import TipHistory, CTAHistory, CompletionType
+from tips.models import TipHistory, CTAHistory, CompletionType, TourList
 from translation.util import TranslateApiManager
 
 logger = logging.getLogger(__name__)
@@ -128,6 +128,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.dashboard_popular_view = self.clusive_user.dashboard_popular_view
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
+        self.tours = TourList(self.clusive_user, page='Dashboard')
 
         # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
@@ -224,12 +225,10 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['panels'] = self.panels
         context['data'] = self.data
         context['clusive_user'] = self.clusive_user
-        # BEGIN: Sample Tour
-        # Sample tour with single item list
-        context['tip_name'] = None
-        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
-        # END: Sample Tour
-        context['tip_shown'] = self.tip_shown
+        # 'tour' is a special case and uses the older tooltip functionality
+        context['tip_name'] = 'tour' if self.tip_shown and self.tip_shown.name == 'tour' else None # tour tooltip
+        context['tip_shown'] = self.tip_shown.name if self.tip_shown and self.tip_shown.name != 'tour' else None # Singleton tour item
+        context['tours'] = self.tours
         context['has_teacher_resource'] = self.clusive_user.role == Roles.TEACHER or self.clusive_user.role == Roles.PARENT
         return context
 
@@ -691,6 +690,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
 
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
+        self.tours = TourList(clusive_user, page=self.page_name, version_count=len(versions))
 
         # See if there's a custom question
         customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
@@ -718,12 +718,9 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'annotations': annotationList,
             'cuelist': json.dumps(cuelist),
             'hide_cues': hide_cues,
-            # BEGIN: Sample Tour
-            # Sample tour with single item list
             'tip_name': None,
-            'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
-            # END: Sample Tour
-            'tip_shown': self.tip_shown,
+            'tip_shown': self.tip_shown.name if self.tip_shown else None,
+            'tours': self.tours,
             'has_teacher_resource': True,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
@@ -748,13 +745,14 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPage
         # Check for Tip
         clusive_user = request.clusive_user
         tip_shown = TipHistory.get_tip_to_show(clusive_user, page='Wordbank')
+        tours = TourList(clusive_user, page='Wordbank')
 
         self.extra_context = {
             'words': WordModel.objects.filter(user=request.clusive_user, interest__gt=0).order_by('word'),
             'clusive_user': clusive_user,
             'tip_name': None,
-            'tours': [{'name': tip_shown.name, 'robust': True }] if tip_shown else None,
-            'tip_shown': tip_shown,
+            'tip_shown': tip_shown.name if tip_shown else None,
+            'tours': tours,
             'has_teacher_resource': False,
         }
         return super().get(request, *args, **kwargs)

@@ -542,19 +542,13 @@ h2,
 }
 .feature-context {
     position: absolute;
-    //top: 33%;
-    //left: 50%;
-    top: 66%;
-    left: $sidebar-width;
+    top: 25%;
+    left: 50%;
     margin-right: ($grid-gutter-width / -2);
     margin-left: ($grid-gutter-width / -2);
     pointer-events: none;
     outline: 0;
     @include sr-only();
-
-    @include media-breakpoint-up(md) {
-        left: $sidebar-md-width;
-    }
 }
 
 .feature-list {
@@ -720,3 +714,19 @@ h2,
         animation-duration: $loader-circle-animation-speed * 2;
     }
 }
+
+// stylelint-disable selector-no-qualifying-type
+// Conditionally show/hide content in tour popovers depending on if
+// state is singleton (auto-shown) or part of the tour started from
+// the tour/mascot button
+body:not(.touring) {
+    .touring-on {
+        display: none;
+    }
+}
+body.touring {
+    .touring-off {
+        display: none;
+    }
+}
+// stylelint-enable selector-no-qualifying-type
