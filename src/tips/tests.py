@@ -191,20 +191,16 @@ class TipHistoryTestCase(TestCase):
                 history = TipHistory.objects.get(user=clusive_user, type=tip)
                 self.assertEquals(history.show_count, 1, "Check show_count for {history}")
                 # The actual timestamp set by `TipHistory.register_show()` is
-                # _not_ the timestamp passed in but `now()`, which is likely
-                #  microseconds later.  The tests considers the `last_show` time
-                # correct if is are within `START_DELTA` msec of the expected
-                # timestamp
+                # _not_ the timestamp passed in but `now()`, which is possibly
+                # seconds later.  The tests consider the `last_show` time is
+                # set properly if it is the same timestamp within a minute.
                 expected_last_show = start_time + delta
-                # Test equality ignoring the microseconds
+                # Test equality ignoring seconds and microseconds.
                 self.assertEquals(
-                    history.last_show.replace(microsecond=0),
-                    expected_last_show.replace(microsecond=0),
-                    f"Check last_show for {history} ignoring microsecond field"
+                    history.last_show.replace(second=0, microsecond=0),
+                    expected_last_show.replace(second=0, microsecond=0),
+                    f"Check last_show for {history} ignoring seconds"
                 )
-                # Test that ths microseconds difference is within START_DELTA
-                diff = abs(history.last_show.microsecond - expected_last_show.microsecond)/1000
-                self.assertTrue(diff < START_DELTA, f"Check last_show microsecond field for {history}")
                 # Test that a time earlier than what is stored in the history
                 # will not change the time.
                 current_last_show = history.last_show
