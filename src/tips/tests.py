@@ -168,20 +168,19 @@ class TipHistoryTestCase(TestCase):
             self.assertEqual(len(histories), len(TIP_TYPE_NAMES), 'One-to-one mapping of tip histories and tip types')
 
     def test_register_show(self):
-        tips = TipType.objects.all()
-        now = timezone.now()
         START_DELTA = 250 # msec
+        tips = TipType.objects.all()
         for clusive_user in ClusiveUser.objects.all():
             TipHistory.initialize_histories(clusive_user)
-
             # Loop to set the `last_show` times for the user.  The `last_show`
-            # time will constantly be increased by `add_delta` msec so that
-            # the times will be different across users and tips, but in a
-            # predictable way.
+            # has a base `start_time` of `now()` and is constantly increased by
+            # `add_delta` msec so that the times will be different across users
+            # and tips, but in a predictable way.
+            start_time = timezone.now()
             add_delta = START_DELTA
             for tip in tips:
                 delta = timedelta(milliseconds=add_delta)
-                TipHistory.register_show(clusive_user, tip.name, now + delta)
+                TipHistory.register_show(clusive_user, tip.name, start_time + delta)
                 add_delta += START_DELTA
 
             # Loop again to test that the `show_count` and `last_show` times are
@@ -196,7 +195,7 @@ class TipHistoryTestCase(TestCase):
                 #  microseconds later.  The tests considers the `last_show` time
                 # correct if is are within `START_DELTA` msec of the expected
                 # timestamp
-                expected_last_show = now + delta
+                expected_last_show = start_time + delta
                 # Test equality ignoring the microseconds
                 self.assertEquals(
                     history.last_show.replace(microsecond=0),
@@ -206,3 +205,11 @@ class TipHistoryTestCase(TestCase):
                 # Test that ths microseconds difference is within START_DELTA
                 diff = abs(history.last_show.microsecond - expected_last_show.microsecond)/1000
                 self.assertTrue(diff < START_DELTA, f"Check last_show microsecond field for {history}")
+                # Test that a time earlier than what is stored in the history
+                # will not change the time.
+                current_last_show = history.last_show
+                TipHistory.register_show(clusive_user, tip.name, start_time)
+                self.assertEquals(
+                    history.last_show, current_last_show,
+                    f"Check last_show for {history} when setting to an earlier time than recorded in the history"
+                )
