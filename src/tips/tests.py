@@ -193,7 +193,7 @@ class TipHistoryTestCase(TestCase):
                 self.assertEquals(history.show_count, 1, "Check show_count for {history}")
                 # The actual timestamp set by `TipHistory.register_show()` is
                 # _not_ the timestamp passed in but `now()`, which is likely
-                #  microseconds later.  The test considers the `last_show` time
+                #  microseconds later.  The tests considers the `last_show` time
                 # correct if is are within `START_DELTA` msec of the expected
                 # timestamp
                 expected_last_show = now + delta
