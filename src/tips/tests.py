@@ -53,6 +53,8 @@ TEACHER_CAN_SHOW = {
 PARENT_CAN_SHOWN = TEACHER_CAN_SHOW
 
 NO_SUCH_PAGE = 'My backyard'
+START_DELTA = 250 # msec
+
 
 def set_up_users():
     # Users - a student, a teacher, and a parent
@@ -168,7 +170,6 @@ class TipHistoryTestCase(TestCase):
             self.assertEqual(len(histories), len(TIP_TYPE_NAMES), 'One-to-one mapping of tip histories and tip types')
 
     def test_register_show(self):
-        START_DELTA = 250 # msec
         tips = TipType.objects.all()
         for clusive_user in ClusiveUser.objects.all():
             TipHistory.initialize_histories(clusive_user)
@@ -208,4 +209,41 @@ class TipHistoryTestCase(TestCase):
                 self.assertEquals(
                     history.last_show, current_last_show,
                     f"Check last_show for {history} when setting to an earlier time than recorded in the history"
+                )
+
+    def test_register_action(self):
+        tips = TipType.objects.all()
+        for clusive_user in ClusiveUser.objects.all():
+            TipHistory.initialize_histories(clusive_user)
+            # Loop to set the `last_show` times for the user.  The `last_show`
+            # has a base `start_time` of `now()` and is constantly increased by
+            # `add_delta` msec so that the times will be different across users
+            # and tips, but in a predictable way.
+            start_time = timezone.now()
+            add_delta = START_DELTA
+            for tip in tips:
+                delta = timedelta(milliseconds=add_delta)
+                TipHistory.register_action(clusive_user, tip.name, start_time + delta)
+                add_delta += START_DELTA
+
+            # Loop again to test that the `last_action` times are as expected
+            # Unlike `last_show`, they should match the timestamp passsed to
+            # `TipHistory.register_action()` above.
+            # as expected.
+            add_delta = START_DELTA
+            for tip in tips:
+                delta = timedelta(milliseconds=add_delta)
+                history = TipHistory.objects.get(user=clusive_user, type=tip)
+                self.assertEquals(
+                    history.last_action, start_time + delta,
+                    f"Check last_action for {history}"
+                )
+                add_delta += START_DELTA
+                # Test that a time earlier than what is stored in the history
+                # will not change the time.
+                current_last_action = history.last_action
+                TipHistory.register_action(clusive_user, tip.name, start_time)
+                self.assertEquals(
+                    history.last_action, current_last_action,
+                    f"Check last_action for {history} when setting to an earlier time than recorded in the history"
                 )
