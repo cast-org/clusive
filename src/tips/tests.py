@@ -1,15 +1,17 @@
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils import timezone
 
 from roster.models import ClusiveUser, Roles
 
 from .models import TipType, TEACHER_ONLY_TIPS, DASHBOARD_TIPS, READING_TIPS, \
     LIBRARY_TIPS, WORD_BANK_TIPS, MANAGE_TIPS, RESOURCES_TIPS, \
-    PAGES_WITH_OWN_TIP, PAGE_TIPS_MAP
+    PAGES_WITH_OWN_TIP, PAGE_TIPS_MAP, TipHistory
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -50,36 +52,38 @@ TEACHER_CAN_SHOW = {
 
 PARENT_CAN_SHOWN = TEACHER_CAN_SHOW
 
+NO_SUCH_PAGE = 'My backyard'
 
-class TipTypeTestCase(TestCase):
-    def setUp(self):
-        # Users - a student, a teacher, and a parent
-        student = User.objects.create_user(username="student", password="student_pass")
-        student.save()
-        ClusiveUser.objects.create(
-            anon_id="Student", user=student, role=Roles.STUDENT
-        ).save()
+def set_up_users():
+    # Users - a student, a teacher, and a parent
+    student = User.objects.create_user(username="student", password="student_pass")
+    student.save()
+    ClusiveUser.objects.create(
+        anon_id="Student", user=student, role=Roles.STUDENT
+    ).save()
 
-        teacher = User.objects.create_user(username="teacher", password="teacher_pass")
-        teacher.save()
-        ClusiveUser.objects.create(
-            anon_id="Teacher", user=teacher, role=Roles.TEACHER
-        ).save()
+    teacher = User.objects.create_user(username="teacher", password="teacher_pass")
+    teacher.save()
+    ClusiveUser.objects.create(
+        anon_id="Teacher", user=teacher, role=Roles.TEACHER
+    ).save()
 
-        parent = User.objects.create_user(username="parent", password="parent_pass")
-        parent.save()
-        ClusiveUser.objects.create(
-            anon_id="Parent", user=parent, role=Roles.PARENT
-        ).save()
+    parent = User.objects.create_user(username="parent", password="parent_pass")
+    parent.save()
+    ClusiveUser.objects.create(
+        anon_id="Parent", user=parent, role=Roles.PARENT
+    ).save()
 
-        # Pages
-        self.no_such_page = 'MyBackyard'
-        self.page_names = [
-            'Dashboard', 'Reading', 'Library', 'Wordbank', 'Manage', 'Resources',
-            self.no_such_page
-        ]
+def set_up_pages():
+    # Pages
+    page_names = [
+        'Dashboard', 'Reading', 'Library', 'Wordbank', 'Manage', 'Resources',
+        NO_SUCH_PAGE
+    ]
+    return (NO_SUCH_PAGE, page_names)
 
-        # TipTypes
+def set_up_tip_types():
+        # TipType
         priority = 1
         interval = timedelta(days=7)
         for tip_name in TIP_TYPE_NAMES:
@@ -87,6 +91,12 @@ class TipTypeTestCase(TestCase):
                 name=tip_name, priority=priority, interval=interval, max=3
             ).save()
             priority += 1
+
+class TipTypeTestCase(TestCase):
+    def setUp(self):
+        set_up_users()
+        set_up_tip_types()
+        self.no_such_page, self.page_names = set_up_pages()
 
     def look_up_expected(self, clusive_user, page_name, tip):
         role = clusive_user.role
@@ -134,3 +144,65 @@ class TipTypeTestCase(TestCase):
                 actual,
                 f"Can show 'switch' tip for {clusive_user.user.username} on Reading page"
             )
+
+
+class TipHistoryTestCase(TestCase):
+
+    def setUp(self):
+        set_up_users()
+        set_up_tip_types()
+        self.no_such_page, self.page_names = set_up_pages()
+
+    def test_initialize_histories(self):
+        """ Test initializaion of TipHistory objects for all users """
+        for clusive_user in ClusiveUser.objects.all():
+            TipHistory.initialize_histories(clusive_user)
+            histories = TipHistory.objects.filter(user=clusive_user)
+            for history in histories:
+                self.assertTrue(history.type.name in TIP_TYPE_NAMES, 'Check tip type')
+                self.assertEqual(history.show_count, 0, 'Check initial history show_count')
+                self.assertEqual(history.last_attempt, None, 'Check initial last_attempt')
+                self.assertEqual(history.last_show, None, 'Check initial last_show')
+                self.assertEqual(history.last_action, None, 'Check initial last_action')
+            # Check that there is one history per tip type
+            self.assertEqual(len(histories), len(TIP_TYPE_NAMES), 'One-to-one mapping of tip histories and tip types')
+
+    def test_register_show(self):
+        tips = TipType.objects.all()
+        now = timezone.now()
+        START_DELTA = 250 # msec
+        for clusive_user in ClusiveUser.objects.all():
+            TipHistory.initialize_histories(clusive_user)
+
+            # Loop to set the `last_show` times for the user.  The `last_show`
+            # time will constantly be increased by `add_delta` msec so that
+            # the times will be different across users and tips, but in a
+            # predictable way.
+            add_delta = START_DELTA
+            for tip in tips:
+                delta = timedelta(milliseconds=add_delta)
+                TipHistory.register_show(clusive_user, tip.name, now + delta)
+                add_delta += START_DELTA
+
+            # Loop again to test that the `show_count` and `last_show` times are
+            # as expected.
+            add_delta = START_DELTA
+            for tip in tips:
+                delta = timedelta(milliseconds=add_delta)
+                history = TipHistory.objects.get(user=clusive_user, type=tip)
+                self.assertEquals(history.show_count, 1, "Check show_count for {history}")
+                # The actual timestamp set by `TipHistory.register_show()` is
+                # _not_ the timestamp passed in but `now()`, which is likely
+                #  microseconds later.  The test considers the `last_show` time
+                # correct if is are within `START_DELTA` msec of the expected
+                # timestamp
+                expected_last_show = now + delta
+                # Test equality ignoring the microseconds
+                self.assertEquals(
+                    history.last_show.replace(microsecond=0),
+                    expected_last_show.replace(microsecond=0),
+                    f"Check last_show for {history} ignoring microsecond field"
+                )
+                # Test that ths microseconds difference is within START_DELTA
+                diff = abs(history.last_show.microsecond - expected_last_show.microsecond)/1000
+                self.assertTrue(diff < START_DELTA, f"Check last_show microsecond field for {history}")
