@@ -8,7 +8,7 @@ from tips.models import TipType
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
-    help = 'Beginnig with the TipType with the greatest priority, loop\n' \
+    help = 'Beginning with the TipType with the greatest priority, loop\n' \
             'through all TipTypes increasing their priority by 1 (one).\n'
 
     def handle(self, *args, **options):

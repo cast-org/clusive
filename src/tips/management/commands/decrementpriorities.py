@@ -8,9 +8,10 @@ from tips.models import TipType
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
-    help = 'Beginnig with the TipType with the least priority, loop\n' \
-            'through all TipTypes decreassing their priority by 1 (one).\n' \
-            'Only do this if you have prefiously increased the priority.\n' \
+    help = 'This acts as a reset to reverse the situation due to running the' \
+            '`incrementpriorities` command.\n' \
+            'Beginning with the TipType with the least priority, loop\n' \
+            'through all TipTypes decreasing their priority by 1 (one).\n' \
 
     def handle(self, *args, **options):
         tip_types = TipType.objects.all().order_by('priority')
