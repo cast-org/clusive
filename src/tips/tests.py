@@ -15,7 +15,6 @@ import pdb
 
 logger = logging.getLogger(__name__)
 
-# TODO: Load these from tooltips.json?
 TIP_TYPE_NAMES = [
     'student_reactions',
     'reading_data',
@@ -54,7 +53,9 @@ PARENT_CAN_SHOWN = TEACHER_CAN_SHOW
 
 NO_SUCH_PAGE = 'My backyard'
 START_DELTA = 250 # msec
-
+ONE_WEEK = timedelta(days=7)
+LESS_THAN_A_WEEK = timedelta(days=6, hours=23, minutes=55)
+SIX_MINUTES = timedelta(minutes=6)
 
 def set_up_users():
     # Users - a student, a teacher, and a parent
@@ -93,6 +94,20 @@ def set_up_tip_types():
                 name=tip_name, priority=priority, interval=interval, max=3
             ).save()
             priority += 1
+
+def init_history_as_ready_to_show(tip_history):
+    """
+    Configure the given TipHistory with reasonable values but so that its
+    `ready_to_show()` still returns True.  The `show_count` is set to one less
+    than the maximum count, `last_attempt` to more than five minutes ago (six
+    minutes ago), and `last_show` and `last_action` to a week ago.
+    """
+    now = timezone.now()
+    tip_history.show_count = tip_history.type.max - 1
+    tip_history.last_attempt = now - SIX_MINUTES
+    tip_history.last_show = tip_history.last_action = now - ONE_WEEK
+    return tip_history
+
 
 class TipTypeTestCase(TestCase):
     def setUp(self):
@@ -247,3 +262,40 @@ class TipHistoryTestCase(TestCase):
                     history.last_action, current_last_action,
                     f"Check last_action for {history} when setting to an earlier time than recorded in the history"
                 )
+
+    def test_ready_to_show(self):
+        tips = TipType.objects.all()
+        for clusive_user in ClusiveUser.objects.all():
+            TipHistory.initialize_histories(clusive_user)
+            # All tips should be ready_to_show() at this point
+            for history in TipHistory.objects.filter(user=clusive_user):
+                self.assertTrue(history.ready_to_show(), f"Check just initialized history {history}")
+
+        # Using the teacher user, configure thier 'activity' TipHistory with
+        # values such that it will show.
+        teacher = ClusiveUser.objects.get(role=Roles.TEACHER)
+        tip = TipType.objects.get(name='activity')
+        history = init_history_as_ready_to_show(
+            TipHistory.objects.get(type=tip, user=teacher)
+        )
+        self.assertTrue(history.ready_to_show(), f"Check {history} configured as ready to show")
+        # Set each of `history`'s fields in turn such that ready_to_show() will
+        # return False
+        # Test `show_count`
+        history.show_count = tip.max
+        self.assertFalse(history.ready_to_show(), f"Check {history} maximum number of times to show")
+
+        # Test `last_attempt`
+        history = init_history_as_ready_to_show(history)
+        history.last_attempt = timezone.now() - timedelta(minutes=4)
+        self.assertFalse(history.ready_to_show(), f"Check {history} last attempt less than five minutes ago")
+
+        # Test `last_show`
+        history = init_history_as_ready_to_show(history)
+        history.last_show = timezone.now() - LESS_THAN_A_WEEK
+        self.assertFalse(history.ready_to_show(), f"Check {history} last shown less than a week ago")
+
+        # Test `last_action`
+        history = init_history_as_ready_to_show(history)
+        history.last_action = timezone.now() - LESS_THAN_A_WEEK
+        self.assertFalse(history.ready_to_show(), f"Check {history} last action less than a week ago")
