@@ -38,7 +38,7 @@ jobs:
 
       - name: Update Staging site
         run: |- 
-          kubectl set image statefulset/clusive web=castudl/clusive:${{ github.sha }}
+          kubectl set image statefulset/clusive-stage web=castudl/clusive:${{ github.sha }}
 
       - name: Slack Notification
         uses: tokorom/action-slack-incoming-webhook@v1.1.0
