@@ -53,6 +53,13 @@
         chain: function(selector) {
             var $curr = $(document).find(SELECTOR_TOUR_VISIBLE);
             var $next = $(selector);
+            var $trigger = $next.data('cfw.popover').$element;
+
+            var showComplete = function() {
+                $next[0].focus();
+                var name = $next.attr('id').replace('tour_', '');
+                window.parent.clusiveEvents.addTipViewToQueue(name);
+            }
 
             // Hide tip/tour tooltip if showing
             $('#tip').CFW_Tooltip('hide');
@@ -61,13 +68,13 @@
                 // Wait until hide animation is complete before callling show
                 $curr.CFW_Popover('hide').CFW_transition(null, function() {
                     document.body.classList.add(CLASS_TOUR);
-                    $next.CFW_Popover('show');
-                    $next[0].focus();
+                    $trigger.one('afterShow.cfw.popover', showComplete);
+                    $trigger.CFW_Popover('show');
                 });
             } else {
                 document.body.classList.add(CLASS_TOUR);
-                $next.CFW_Popover('show');
-                $next[0].focus();
+                $trigger.one('afterShow.cfw.popover', showComplete);
+                $trigger.CFW_Popover('show');
             }
 
             return false;
