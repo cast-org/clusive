@@ -84,13 +84,13 @@ class TipType(models.Model):
     def can_show(self, page: str, version_count: int, user: ClusiveUser):
         """Test whether this tip can be shown on a particular page"""
         # Teacher/parent-only tips
-        if user.role == Roles.STUDENT and self.name in TEACHER_ONLY_TIPS:
+        if (user.role == Roles.STUDENT or user.role == Roles.GUEST) and self.name in TEACHER_ONLY_TIPS:
             return False
         # Switch TipType requires multiple versions
         if self.name == 'switch':
             return page == 'Reading' and version_count > 1
         # Thoughts TipType is only for students
-        if self.name == 'thoughts' and user.role != Roles.STUDENT:
+        if self.name == 'thoughts' and user.role != Roles.STUDENT and user.role != Roles.GUEST:
                 return False
 
         # 'wordbank', 'manage', and 'reources' TipTypes appear on multiple pages.

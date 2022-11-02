@@ -33,14 +33,17 @@ TIP_TYPE_NAMES = [
     'resources'
 ]
 
-STUDENT_CAN_SHOW = {
+# For testing TipType.can_show().  Also, the tip types that can show for guest
+# users is the same as for students.  Similarly for which tips typs can show
+# for teachers and parents
+STUDENT_OR_GUEST_CAN_SHOW = {
     'Dashboard': ['student_reactions', 'reading_data'],
     'Reading': ['switch', 'settings', 'readaloud', 'context', 'thoughts', 'wordbank'],
     'Library': ['view', 'filters', 'search'],
     'Wordbank': ['wordbank'],
 }
 
-TEACHER_CAN_SHOW = {
+TEACHER_OR_PARENT_CAN_SHOW = {
     'Dashboard': ['student_reactions', 'reading_data', 'activity', 'manage'],
     'Reading': ['switch', 'settings', 'readaloud', 'context', 'wordbank'],
     'Library': ['view', 'filters', 'search', 'book_actions'],
@@ -48,8 +51,6 @@ TEACHER_CAN_SHOW = {
     'Resources': ['resources'],
     'Manage': ['manage'],
 }
-
-PARENT_CAN_SHOWN = TEACHER_CAN_SHOW
 
 NO_SUCH_PAGE = 'My backyard'
 START_DELTA = 250 # msec
@@ -75,6 +76,12 @@ def set_up_users():
     parent.save()
     ClusiveUser.objects.create(
         anon_id="Parent", user=parent, role=Roles.PARENT
+    ).save()
+
+    guest = User.objects.create_user(username="guest", password="guest_pass")
+    guest.save()
+    ClusiveUser.objects.create(
+        anon_id="Guest", user=guest, role=Roles.GUEST
     ).save()
 
 def set_up_pages():
@@ -117,10 +124,10 @@ class TipTypeTestCase(TestCase):
 
     def look_up_expected(self, clusive_user, page_name, tip):
         role = clusive_user.role
-        if role == Roles.STUDENT:
-            return tip.name in STUDENT_CAN_SHOW.get(page_name, [])
+        if role == Roles.STUDENT or role == Roles.GUEST:
+            return tip.name in STUDENT_OR_GUEST_CAN_SHOW.get(page_name, [])
         elif role == Roles.TEACHER or role == Roles.PARENT:
-            return tip.name in TEACHER_CAN_SHOW.get(page_name, [])
+            return tip.name in TEACHER_OR_PARENT_CAN_SHOW.get(page_name, [])
         else:
             return False
 
