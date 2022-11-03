@@ -102,8 +102,8 @@ function libraryMasonryEnable() {
         }, 150);
 
         libraryMasonryApi = new Masonry(grid, {
-            itemSelector: hasResource ? '.card-resource, .card-important' : '.card-library, .card-special',
-            columnWidth: hasResource ? '.card-resource' : '.card-library',
+            itemSelector: hasResource ? '.card-resource, .card-important' : '.card-library, .card-special, .card-details',
+            columnWidth: hasResource ? '.card-resource' : '.card-library, .card-details',
             percentPosition: true,
             transitionDuration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '0' : '0.4s'
         });

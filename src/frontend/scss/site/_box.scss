@@ -7,7 +7,7 @@
     @include border-radius($box-border-radius);
 
     .list {
-        border-color: var(--CT_boxDivderColor);
+        border-color: var(--CT_boxDividerColor);
     }
     //.list-divided > .list-item, .list-ruled > .list-item {
     //    border-top-width: 2px;
@@ -18,7 +18,7 @@
     //}
     hr {
         //height: 2px;
-        background-color: var(--CT_boxDivderColor);
+        background-color: var(--CT_boxDividerColor);
         opacity: 1;
     }
 }
@@ -27,10 +27,14 @@
     padding-top: $box-padding-y;
     margin: 0 #{-$box-padding-x};
     line-height: 1;
-    border-top: 3px solid var(--CT_boxDivderColor);
+    border-top: 3px solid var(--CT_boxDividerColor);
 
     & + & {
         margin-top: -1rem;
+    }
+
+    .box-secondary & {
+        border-color: var(--CT_boxSecondaryDividerColor);
     }
 }
 
@@ -38,7 +42,7 @@
     padding-top: $box-padding-y;
     margin: 0 #{-$box-padding-x};
     line-height: 1;
-    border-top: 1px solid var(--CT_boxDivderColor);
+    border-top: 1px solid var(--CT_boxDividerColor);
 
     & + & {
         margin-top: -1rem;
