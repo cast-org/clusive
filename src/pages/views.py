@@ -224,13 +224,10 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['panels'] = self.panels
         context['data'] = self.data
         context['clusive_user'] = self.clusive_user
-        # BEGIN: Sample Tour
-        # Sample tour with single item list
         context['tip_name'] = None
         context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
-        # END: Sample Tour
         context['tip_shown'] = self.tip_shown
-        context['has_teacher_resource'] = self.clusive_user.role == Roles.TEACHER or self.clusive_user.role == Roles.PARENT
+        context['show_teacher_resource_link'] = self.clusive_user.can_manage_periods
         return context
 
     def should_show_star_results(self, request):
@@ -659,7 +656,6 @@ class ReaderChooseVersionView(RedirectView):
         kwargs['version'] = v
         return super().get_redirect_url(*args, **kwargs)
 
-
 class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
@@ -691,6 +687,14 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
 
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
+        # Not completely correct: if reading a resource page AND
+        # the teacher resource is for Settings AND the tip type is 'settings'
+        # then the "Learn more" link is circular and shouldn't be shown.  Ditto
+        # when reading the read-aloud resource and the tip is "readaloud", the
+        # switch resource and 'switch' tip, context, thoughts, and wordbank
+        # In general if the "Learn more" link points to the current page, don't
+        # show the link.
+        show_teacher_resource_link = clusive_user.can_manage_periods
 
         # See if there's a custom question
         customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
@@ -718,13 +722,10 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'annotations': annotationList,
             'cuelist': json.dumps(cuelist),
             'hide_cues': hide_cues,
-            # BEGIN: Sample Tour
-            # Sample tour with single item list
             'tip_name': None,
             'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
-            # END: Sample Tour
             'tip_shown': self.tip_shown,
-            'has_teacher_resource': True,
+            'show_teacher_resource_link': clusive_user.can_manage_periods,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
             'book_id': book.id,
@@ -755,7 +756,7 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPage
             'tip_name': None,
             'tours': [{'name': tip_shown.name, 'robust': True }] if tip_shown else None,
             'tip_shown': tip_shown,
-            'has_teacher_resource': False,
+            'show_teacher_resource_link': clusive_user.can_manage_periods,
         }
         return super().get(request, *args, **kwargs)
 

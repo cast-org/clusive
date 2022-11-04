@@ -481,13 +481,10 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         if self.current_period is not None:
             context['people'] = self.make_people_info_list(self.request.user)
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
-        # BEGIN: Sample Tour
-        # Sample tour with single item list
         context['tip_name'] = None
         context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
-        # END: Sample Tour
         context['tip_shown'] = self.tip_shown
-        context['has_teacher_resource'] = False # "Learn more" link would be circular
+        context['show_teacher_resource_link'] = self.request.clusive_user.can_manage_periods
         context['clusive_user'] = self.request.clusive_user
         return context
 

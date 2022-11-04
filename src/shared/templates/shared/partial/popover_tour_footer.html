@@ -1,0 +1,10 @@
+<div class="row gx-0_5 flex-items-center">
+    <div class="col">
+        {% if show_teacher_resource_link and resource_id != None %}
+            <a href="{% url 'res_reader' resource_id=resource_id %}">Learn more<span class="sr-only"> about {{ resource_name }}</span></a>
+        {% endif %}
+    </div>
+    <div class="tooltip-action">
+        <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
+    </div>
+</div>
