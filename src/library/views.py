@@ -422,7 +422,8 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, self.page_name)
-        if request.clusive_user.can_manage_periods and not self.tip_shown.name == 'resources':
+        tip_name = self.tip_shown.name if self.tip_shown else ''
+        if request.clusive_user.can_manage_periods and tip_name != 'resources':
             show_teacher_resource_link = True
         else:
             show_teacher_resource_link = False
