@@ -11,7 +11,6 @@ from roster.models import ClusiveUser, Roles
 from .models import TipType, TEACHER_ONLY_TIPS, DASHBOARD_TIPS, READING_TIPS, \
     LIBRARY_TIPS, WORD_BANK_TIPS, MANAGE_TIPS, RESOURCES_TIPS, \
     PAGES_WITH_OWN_TIP, PAGE_TIPS_MAP, TipHistory
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +29,19 @@ TIP_TYPE_NAMES = [
     'filters',
     'search',
     'book_actions',
-    'resources'
+    'resources',
+]
+
+NO_SUCH_PAGE = 'My backyard'
+PAGE_NAMES = [
+    'Dashboard',
+    'Reading',
+    'Library',
+    'Wordbank',
+    'Manage',
+    'Resources',
+    'ResourceReading',
+    NO_SUCH_PAGE,
 ]
 
 # For testing TipType.can_show().  Also, the tip types that can show for guest
@@ -50,9 +61,9 @@ TEACHER_OR_PARENT_CAN_SHOW = {
     'Wordbank': ['wordbank'],
     'Resources': ['resources'],
     'Manage': ['manage'],
+    'ResourceReading': ['switch', 'settings', 'readaloud', 'context', 'wordbank'],
 }
 
-NO_SUCH_PAGE = 'My backyard'
 START_DELTA = 250 # msec
 ONE_WEEK = timedelta(days=7)
 LESS_THAN_A_WEEK = timedelta(days=6, hours=23, minutes=55)
@@ -84,14 +95,6 @@ def set_up_users():
         anon_id="Guest", user=guest, role=Roles.GUEST
     ).save()
 
-def set_up_pages():
-    # Pages
-    page_names = [
-        'Dashboard', 'Reading', 'Library', 'Wordbank', 'Manage', 'Resources',
-        NO_SUCH_PAGE
-    ]
-    return (NO_SUCH_PAGE, page_names)
-
 def set_up_tip_types():
         # TipType
         priority = 1
@@ -120,7 +123,6 @@ class TipTypeTestCase(TestCase):
     def setUp(self):
         set_up_users()
         set_up_tip_types()
-        self.no_such_page, self.page_names = set_up_pages()
 
     def look_up_expected(self, clusive_user, page_name, tip):
         role = clusive_user.role
@@ -139,7 +141,7 @@ class TipTypeTestCase(TestCase):
             - TipType.can_show(page: str, version_count: int, user: ClusiveUser)
         """
         version_count = 3
-        for page_name in self.page_names:
+        for page_name in PAGE_NAMES:
             for tip in TipType.objects.all():
                 actual = tip.can_show(page_name, version_count, clusive_user)
                 expected = self.look_up_expected(clusive_user, page_name, tip)
@@ -175,7 +177,6 @@ class TipHistoryTestCase(TestCase):
     def setUp(self):
         set_up_users()
         set_up_tip_types()
-        self.no_such_page, self.page_names = set_up_pages()
 
     def test_initialize_histories(self):
         """ Test initializaion of TipHistory objects for all users """
