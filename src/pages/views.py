@@ -687,13 +687,18 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
 
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
-        # Not completely correct: if reading a resource page AND
-        # the teacher resource is for Settings AND the tip type is 'settings'
-        # then the "Learn more" link is circular and shouldn't be shown.  Ditto
-        # when reading the read-aloud resource and the tip is "readaloud", the
-        # switch resource and 'switch' tip, context, thoughts, and wordbank
-        # In general if the "Learn more" link points to the current page, don't
-        # show the link.
+
+        # Whether to show the "Learn more" link is at least dependant on
+        # whether the user is a teacher or parent.  But, that's not the
+        # complete story: if reading the "Settings" Resources page AND the tip
+        # type is 'settings' then the "Learn more" link is circular and
+        # shouldn't be shown.  Ditto when reading the read-aloud resource and
+        # the tip is "readaloud", the switch resource and 'switch' tip, and the
+        # context, thoughts, and wordbank resource/tip combinations. In general
+        # if the "Learn more" link points to the current page, don't show the
+        # link.
+        # The decision is ultimately made in the popover dialog's footer
+        # template, since that is where the link is set.
         show_teacher_resource_link = clusive_user.can_manage_periods
 
         # See if there's a custom question
