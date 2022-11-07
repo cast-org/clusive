@@ -129,7 +129,13 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.dashboard_popular_view = self.clusive_user.dashboard_popular_view
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
-        self.tour_properties = TOUR_PROPERTIES.get(self.tip_shown.name, None) if self.tip_shown else None
+        if self.tip_shown:
+            if self.clusive_user.can_manage_periods:
+                self.tour_properties = TOUR_PROPERTIES.get(self.tip_shown.name, None)
+            else:
+                self.tour_properties = TOUR_PROPERTIES.get('ST_' + self.tip_shown.name, None)
+        else:
+            self.tour_properties = None
 
         # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
