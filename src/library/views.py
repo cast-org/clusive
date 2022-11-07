@@ -34,6 +34,7 @@ from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected
     get_access_keys, is_organization_sponsor, is_organization_member
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
+from tips.fixtures.tour_properties import TOUR_PROPERTIES
 from tips.models import TipHistory
 
 
@@ -385,6 +386,7 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, 'Library')
+        self.tour_properties = TOUR_PROPERTIES.get(self.tip_shown.name, None) if self.tip_shown else None
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -393,6 +395,7 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
         context['tip_name'] = None
         context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
         context['tip_shown'] = self.tip_shown
+        context['tour_properties'] = self.tour_properties
         context['show_teacher_resource_link'] = self.request.clusive_user.can_manage_periods
         context['has_bookshare_account'] = has_bookshare_account(self.request)
         return context
@@ -422,7 +425,13 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, self.page_name)
-        tip_name = self.tip_shown.name if self.tip_shown else ''
+        if self.tip_shown:
+            tip_name = self.tip_shown.name
+            self.tour_properties = TOUR_PROPERTIES.get(tip_name, None)
+        else:
+            tip_name = ''
+            self.tour_properties = None
+
         if request.clusive_user.can_manage_periods and tip_name != 'resources':
             show_teacher_resource_link = True
         else:
@@ -434,6 +443,7 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
             'tip_name': None,
             'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
             'tip_shown': self.tip_shown,
+            'tour_properites': self.tour_properties,
             'show_teacher_resource_link': show_teacher_resource_link,
             'clusive_user': request.clusive_user,
         }

@@ -28,6 +28,7 @@ from glossary.views import choose_words_to_cue
 from library.models import Book, BookVersion, Paradata, Annotation, BookTrend, \
     Customization, BookAssignment
 from roster.models import ClusiveUser, Period, Roles, UserStats, Preference
+from tips.fixtures.tour_properties import TOUR_PROPERTIES
 from tips.models import TipHistory, CTAHistory, CompletionType
 from translation.util import TranslateApiManager
 
@@ -128,6 +129,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         self.dashboard_popular_view = self.clusive_user.dashboard_popular_view
 
         self.tip_shown = TipHistory.get_tip_to_show(self.clusive_user, page='Dashboard')
+        self.tour_properties = TOUR_PROPERTIES.get(self.tip_shown.name, None) if self.tip_shown else None
 
         # Decision-making data
         user_stats = UserStats.objects.get(user=request.clusive_user)
@@ -227,6 +229,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['tip_name'] = None
         context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
         context['tip_shown'] = self.tip_shown
+        context['tour_properties'] = self.tour_properties
         context['show_teacher_resource_link'] = self.clusive_user.can_manage_periods
         return context
 
@@ -687,6 +690,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
 
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
+        self.tour_properties = TOUR_PROPERTIES.get(self.tip_shown.name, None) if self.tip_shown else None
 
         # Whether to show the "Learn more" link is at least dependant on
         # whether the user is a teacher or parent.  But, that's not the
@@ -730,6 +734,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'tip_name': None,
             'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
             'tip_shown': self.tip_shown,
+            'tour_properties': self.tour_properties,
             'show_teacher_resource_link': clusive_user.can_manage_periods,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,

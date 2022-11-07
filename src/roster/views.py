@@ -49,6 +49,7 @@ from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationFor
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, \
     RosterDataSource
 from roster.signals import user_registered
+from tips.fixtures.tour_properties import TOUR_PROPERTIES
 from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
@@ -472,6 +473,8 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         user = request.clusive_user
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(user, page="Manage")
+        self.tour_properties = TOUR_PROPERTIES.get(self.tip_shown.name, None) if self.tip_shown else None
+
         if not user.can_manage_periods:
             self.handle_no_permission()
         return super().get(request, *args, **kwargs)
@@ -484,6 +487,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         context['tip_name'] = None
         context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
         context['tip_shown'] = self.tip_shown
+        context['tour_properties'] = self.tour_properties
         context['show_teacher_resource_link'] = self.request.clusive_user.can_manage_periods
         context['clusive_user'] = self.request.clusive_user
         return context
