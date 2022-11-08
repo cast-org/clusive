@@ -68,6 +68,7 @@ START_DELTA = 250 # msec
 ONE_WEEK = timedelta(days=7)
 LESS_THAN_A_WEEK = timedelta(days=6, hours=23, minutes=55)
 SIX_MINUTES = timedelta(minutes=6)
+MINUTE_TOLERANCE = timedelta(minutes=1)
 
 def set_up_users():
     # Users - a student, a teacher, and a parent
@@ -219,11 +220,9 @@ class TipHistoryTestCase(TestCase):
                 # seconds later.  The tests consider the `last_show` time is
                 # set properly if it is the same timestamp within a minute.
                 expected_last_show = start_time + delta
-                # Test equality ignoring seconds and microseconds.
-                self.assertEquals(
-                    history.last_show.replace(second=0, microsecond=0),
-                    expected_last_show.replace(second=0, microsecond=0),
-                    f"Check last_show for {history} ignoring seconds"
+                self.assertTrue(
+                    (history.last_show - expected_last_show) < MINUTE_TOLERANCE,
+                    f"Check last_show for {history} is within a minute of expected; actual: {history.last_show}, expected: {expected_last_show}"
                 )
                 # Test that a time earlier than what is stored in the history
                 # will not change the time.
@@ -279,7 +278,7 @@ class TipHistoryTestCase(TestCase):
             for history in TipHistory.objects.filter(user=clusive_user):
                 self.assertTrue(history.ready_to_show(), f"Check just initialized history {history}")
 
-        # Using the teacher user, configure thier 'activity' TipHistory with
+        # Using the teacher user, configure their 'activity' TipHistory with
         # values such that it will show.
         teacher = ClusiveUser.objects.get(role=Roles.TEACHER)
         tip = TipType.objects.get(name='activity')
