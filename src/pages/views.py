@@ -482,6 +482,13 @@ class DashboardActivityDetailView(LoginRequiredMixin, TemplateView):
             data['book'] = book
             data['book_has_versions'] = book.versions.count() > 1
 
+            # Is there a custom question?
+            customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
+                if clusive_user.current_period else None
+            if customizations:
+                data['custom_question'] = customizations[0].question
+
+            # Student's Paradata
             paras = Paradata.objects.filter(user=clusive_user, book=book)
             # Annotate with the time total from the last week
             start_date = date.today()-timedelta(days=7)
