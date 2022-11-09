@@ -18,5 +18,5 @@ class Command(BaseCommand):
         for tip in tip_types:
             tip.priority -= 1
             tip.save()
-            logger.debug(f"Updated {tip}'s priority to {tip.priority}")
-        logger.debug("Done")
+            logger.info(f"Updated {tip}'s priority to {tip.priority}")
+        logger.info("Done")
