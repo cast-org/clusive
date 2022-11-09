@@ -1,11 +1,4 @@
-<div class="sidebar-region sidebar-tool" role="region" aria-label="User preferences">
-    <button id="settingsButton" type="button" data-clusive-tip-id="settings" data-clusive-tip-action="settings" class="btn btn-setting" aria-label="Settings" title="Settings" data-cfw="modal" data-cfw-modal-target="#modalSettings" data-cle-handler="click" data-cle-control="settings-sidebar" data-cle-value="opened">
-        <span class="icon-settings" aria-hidden="true"></span>
-        <span class="sr-only">Settings</span>
-    </button>
-</div>
-{% if read_aloud %}
-<div class="sidebar-region sidebar-tts" role="region" aria-label="Read aloud controls"{% if read_aloud == 'Readium' %} data-tts-mode="Readium"{% endif %} data-clusive-tip-id="readaloud" data-clusive-tip-action="readaloud" tabindex="-1">
+<div class="dialog-tts" role="region" aria-label="Read aloud controls" data-tts-mode="dialog">
     <div class="tts-inactive">
         <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
             <span class="icon-play" aria-hidden="true"></span>
@@ -23,4 +16,3 @@
         </button>
     </div>
 </div>
-{% endif %}

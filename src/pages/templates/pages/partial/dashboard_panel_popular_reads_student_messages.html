@@ -15,7 +15,7 @@
         and get started in Clusive!
     {% else %}
         Revisit something you've read, or head to the
-        <a href="{% url 'library_style_redirect' view='period' %}">library</a>
+        <a href="{% url 'library_style_redirect' view='period' %}" data-clusive-tip-action="reading_data">library</a>
         for something new.
     {% endif %}
 {% elif data.view == 'popular' %}

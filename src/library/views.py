@@ -36,6 +36,7 @@ from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
 from tips.models import TipHistory
 
+
 logger = logging.getLogger(__name__)
 
 # The library page requires a lot of parameters, which interact in rather complex ways.
@@ -389,7 +390,10 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
-        context['tip_name'] = self.tip_shown.name if self.tip_shown else None
+        context['tip_name'] = None
+        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
+        context['tip_shown'] = self.tip_shown
+        context['show_teacher_resource_link'] = self.request.clusive_user.can_manage_periods
         context['has_bookshare_account'] = has_bookshare_account(self.request)
         return context
 
@@ -417,9 +421,21 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
     page_name = 'Resources'
 
     def get(self, request, *args, **kwargs):
+        self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, self.page_name)
+        tip_name = self.tip_shown.name if self.tip_shown else ''
+        if request.clusive_user.can_manage_periods and tip_name != 'resources':
+            show_teacher_resource_link = True
+        else:
+            show_teacher_resource_link = False
+
         self.extra_context = {
             'categories': EducatorResourceCategory.objects.all()
-                .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order')))
+                .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order'))),
+            'tip_name': None,
+            'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
+            'tip_shown': self.tip_shown,
+            'show_teacher_resource_link': show_teacher_resource_link,
+            'clusive_user': request.clusive_user,
         }
         return super().get(request, *args, **kwargs)
 

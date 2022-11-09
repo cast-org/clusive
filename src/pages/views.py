@@ -223,7 +223,11 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['query'] = None
         context['panels'] = self.panels
         context['data'] = self.data
-        context['tip_name'] = self.tip_shown.name if self.tip_shown else None
+        context['clusive_user'] = self.clusive_user
+        context['tip_name'] = None
+        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
+        context['tip_shown'] = self.tip_shown
+        context['show_teacher_resource_link'] = self.clusive_user.can_manage_periods
         return context
 
     def should_show_star_results(self, request):
@@ -659,7 +663,6 @@ class ReaderChooseVersionView(RedirectView):
         kwargs['version'] = v
         return super().get_redirect_url(*args, **kwargs)
 
-
 class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     """Reader page showing a page of a book"""
     template_name = 'pages/reader.html'
@@ -692,6 +695,19 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
 
+        # Whether to show the "Learn more" link is at least dependant on
+        # whether the user is a teacher or parent.  But, that's not the
+        # complete story: if reading the "Settings" Resources page AND the tip
+        # type is 'settings' then the "Learn more" link is circular and
+        # shouldn't be shown.  Ditto when reading the read-aloud resource and
+        # the tip is "readaloud", the switch resource and 'switch' tip, and the
+        # context, thoughts, and wordbank resource/tip combinations. In general
+        # if the "Learn more" link points to the current page, don't show the
+        # link.
+        # The decision is ultimately made in the popover dialog's footer
+        # template, since that is where the link is set.
+        show_teacher_resource_link = clusive_user.can_manage_periods
+
         # See if there's a custom question
         customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
             if clusive_user.current_period else None
@@ -706,6 +722,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             logger.debug('No pre-calculated positions or weight')
 
         self.extra_context = {
+            'clusive_user': clusive_user,
             'pub': book,
             'version_number': self.book_version.sortOrder,
             'version_id': self.book_version.id,
@@ -717,7 +734,10 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'annotations': annotationList,
             'cuelist': json.dumps(cuelist),
             'hide_cues': hide_cues,
-            'tip_name': self.tip_shown.name if self.tip_shown else None,
+            'tip_name': None,
+            'tours': [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None,
+            'tip_shown': self.tip_shown,
+            'show_teacher_resource_link': clusive_user.can_manage_periods,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
             'book_id': book.id,
@@ -738,8 +758,17 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPage
     template_name = 'pages/wordbank.html'
 
     def get(self, request, *args, **kwargs):
+        # Check for Tip
+        clusive_user = request.clusive_user
+        tip_shown = TipHistory.get_tip_to_show(clusive_user, page='Wordbank')
+
         self.extra_context = {
-            'words': WordModel.objects.filter(user=request.clusive_user, interest__gt=0).order_by('word')
+            'words': WordModel.objects.filter(user=request.clusive_user, interest__gt=0).order_by('word'),
+            'clusive_user': clusive_user,
+            'tip_name': None,
+            'tours': [{'name': tip_shown.name, 'robust': True }] if tip_shown else None,
+            'tip_shown': tip_shown,
+            'show_teacher_resource_link': clusive_user.can_manage_periods,
         }
         return super().get(request, *args, **kwargs)
 

@@ -1,0 +1,280 @@
+{% load i18n %}
+<div id="tour_{{ tour_name }}" class="popover popover-tour popover-scrollable">
+    {% if tour_robust %}
+    {% if tours|length > 1 %}
+    <button type="button" class="close" aria-label="Close" onclick="tour.closeRefocus('#tourStart');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    {% else %}
+    <button type="button" class="close" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    {% endif %}
+
+<!-- settings -->
+    {% if tour_name == "settings" %}
+    <div class="popover-header">
+        <span class="h3">Settings</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="settingsIframe" src="https://videos.sproutvideo.com/embed/a79edbb41414e7c72e/96f3dfacf85e2603?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Settings video"></iframe>
+        </div>
+        <p>Change the font, colors, and more! Settings let you choose the look, supports, and reading tools to make Clusive all your own.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id="SSETTINGS" resource_name="settings" %}
+    </div>
+
+<!-- readaloud -->
+    {% elif tour_name == "readaloud" %}
+    <div class="popover-header">
+        <span class="h3">Read-aloud</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="readaloudIframe" src="https://videos.sproutvideo.com/embed/449edbb51c1ae6cecd/90717ea3b61bbdd3?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Read aloud video"></iframe>
+        </div>
+        <p>Click the page read aloud icon to hear the entire page. Select text and click read aloud in the context menu to hear a smaller selection or a single word read aloud.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+
+<!-- wordbank -->
+    {% elif tour_name == "wordbank" %}
+    <div class="popover-header">
+        <span class="h3">Word Bank</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="wordbankIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb161fe1c025/5cb0b244a6a441c9?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Word bank video"></iframe>
+        </div>
+        <p>The Word bank collects words you’ve looked up or rated. Check out how you’ve rated words. Change ratings as your word knowledge grows. Get back to your previous page by clicking on the back button.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+
+<!-- switch -->
+    {% elif tour_name == "switch" %}
+    <div class="popover-header">
+        <span class="h3">Switch</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="switchIframe" src="https://videos.sproutvideo.com/embed/d39edbbb161ae0c75a/7acc94350bf3dd31?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Switch video"></iframe>
+        </div>
+        <p>Switch gives three challenge options for some texts. Open Switch, check out the vocabulary in each version, and choose to stay, or change challenge levels. It’s up to you!</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id="SWITCH" resource_name="switch" %}
+    </div>
+
+<!-- context -->
+    {% elif tour_name == "context" %}
+    <div class="popover-header">
+        <span class="h3">Context</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="contextIframe" src="https://videos.sproutvideo.com/embed/799edbb41410e3c1f0/10056e5843bb7d55?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Context tools video"></iframe>
+        </div>
+        <p>Select some text to see things you can do with it.</p>
+        <ul class="list feature-list">
+            <li><span class="feature-icon icon-edit" aria-hidden="true"></span> Highlight the passage</li>
+            <li><span class="feature-icon icon-book" aria-hidden="true"></span> Look up a definition</li>
+            <li><span class="feature-icon icon-switch" aria-hidden="true"></span> Translate or simplify</li>
+            <li><span class="feature-icon icon-play-circled2" aria-hidden="true"></span> Hear the words read aloud</li>
+        </ul>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+
+<!-- view -->
+    {% elif tour_name == "view" %}
+    <div class="popover-header">
+        <span class="h3">Library Views</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="viewIframe" src="https://videos.sproutvideo.com/embed/ac9edbbb141fe6c525/86b0cbe36e2ab800?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Library Views video"></iframe>
+        </div>
+        <p>View the Clusive library by all readings, or in smaller groupings like class readings, readings you’ve starred, public readings, or readings you’ve uploaded.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+
+<!-- book_actions -->
+    {% elif tour_name == "book_actions" %}
+    <div class="popover-header">
+        <span class="h3">Book Actions</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="book_actionsIframe" src="https://videos.sproutvideo.com/embed/799edbb41512e5c4f0/ba8fab36c9170dc4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Book actions video"></iframe>
+        </div>
+        <p>Click “More actions” (three dots) to assign or customize any book, and for books you uploaded to Clusive, to edit information or delete a book.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id="CREAD" resource_name="book actions" %}
+    </div>
+
+<!-- activity -->
+    {% elif tour_name == "activity" %}
+    <div class="popover-header">
+        <span class="h3">Activities</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="activityIframe" src="https://videos.sproutvideo.com/embed/ac9ed9b61c1be4c425/cba560baf17ff6d4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Student active reading time data video"></iframe>
+        </div>
+        <p>Get a quick overview of student activity. Hover over active reading time bars for titles and reading time. Click a bar to see readings students have in common. Triangles show readings you have assigned.</p>
+        <p>Select timeframe and sort by hours, books, or student name.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id="READDTL" resource_name="student activities data" %}
+    </div>
+
+<!-- student_reactions -->
+    {% elif tour_name == "student_reactions" %}
+        {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+            <div class="popover-header">
+                <span class="h3">Your students&apos; reactions</span>
+                {% include "shared/partial/popover_tour_header_controls.html" %}
+            </div>
+            <div class="popover-body">
+                <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+                    <iframe id="studentReactionsIframe" src="https://videos.sproutvideo.com/embed/119ed9b21f1aeac598/961f727539a6dc9b?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Your students reactions video"></iframe>
+                </div>
+                <p>Click on a reaction word and see a list of Clusive readings that have inspired your students, and other Clusive readers, to react with that word.</p>
+                {% include "shared/partial/popover_tour_footer.html" with resource_id="SREACT" resource_name="your students&apos; reactions" %}       
+            </div>
+        {% else %}
+            <div class="popover-header">
+                <span class="h3">Your thoughts</span>
+                {% include "shared/partial/popover_tour_header_controls.html" %}
+            </div>
+            <div class="popover-body">
+                <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+                    <iframe id="studentReactionsIframe" src="https://videos.sproutvideo.com/embed/449ed4bf1c1ee2cbcd/7eeb1eb5c62a2389?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Your thoughts video"></iframe>
+                </div>
+                <p>Click on a reaction word and see Clusive readings that inspired you and others to react with that word.</p>
+                {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+            </div>
+        {% endif %}
+
+<!-- reading_data -->
+    {% elif tour_name == "reading_data" %}
+        {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+            <div class="popover-header">
+                <span class="h3">Student reading data</span>
+                {% include "shared/partial/popover_tour_header_controls.html" %}
+            </div>
+            <div class="popover-body">
+                <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+                    <iframe id="readingDataIframe" src="https://videos.sproutvideo.com/embed/449ed9b61c1aecc5cd/5993d5016938853d?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="How to find and use Student Reading data video"></iframe>
+                </div>
+                <p>Get a quick view of student reading interests and learning. Check out reading data on assigned and popular readings. Get a summary of student self-rating of learning, and see answers to prompts you have customized.</p>
+                {% include "shared/partial/popover_tour_footer.html" with resource_id="SREADP" resource_name="student reading data" %}
+            </div>
+        {% else %}
+            <div class="popover-header">
+                <span class="h3">Your reading</span>
+                {% include "shared/partial/popover_tour_header_controls.html" %}
+            </div>
+            <div class="popover-body">
+                <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+                    <iframe id="readingDataIframe" src="https://videos.sproutvideo.com/embed/ea9ed4b41b15e2c263/bd13498e66ded346?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Your Reading video"></iframe>
+                </div>
+                <p>See assigned readings your recent readings, and popular readings to check out. Go to the library to find more things to read. Have a document you want to upload? Click Upload a new reading to get started!</p>
+                {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+            </div>
+        {% endif %}
+
+<!-- thoughts -->
+    {% elif tour_name == "thoughts" %}
+    <div class="popover-header">
+        <span class="h3">Your thoughts</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="thoughtsIframe" src="https://videos.sproutvideo.com/embed/449ed4bb1811edcbcd/145a8ba8f5a0ded5?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Your thoughts video"></iframe>
+        </div>
+        <p>Reflect on how a reading made you feel, answer questions your teacher has posted, and mark how much you’ve learned. Your thoughts on how the reading made you feel are collected on your student dashboard.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+
+<!-- manage -->
+    {% elif tour_name == "manage" %}
+    <div class="popover-header">
+        <span class="h3">Manage</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="manageIframe" src="https://videos.sproutvideo.com/embed/d39ed4bf1c1ee2c05a/f6ed60e66ef37628?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Manage video"></iframe>
+        </div>
+        <p>Import, add or edit classes and student information in Clusive.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id="CCLASS" resource_name="about manage" %}
+    </div>
+
+<!-- resources -->
+    {% elif tour_name == "resources" %}
+    <div class="popover-header">
+        <span class="h3">Resources</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="resourcesIframe" src="https://videos.sproutvideo.com/embed/ac9ed4bf1c1ee2c325/8c2089ffd2b063c4?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Resources video"></iframe>
+        </div>
+        <p>Get tips, resources and videos for getting you and your students started in Clusive, and for building teaching skills with Clusive tools and features.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+
+<!-- filters -->
+    {% elif tour_name == "filters" %}
+    <div class="popover-header">
+        <span class="h3">Filters</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="filtersIframe" src="https://videos.sproutvideo.com/embed/a79ed4bf1c1ee2c42e/ed4f87afb4202c31?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Filters video"></iframe>
+        </div>
+        <p>Use filters to find readings based on topics, reading levels, and word count. Click on one or more topics or filters and get readings that match any of your selections.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+
+<!-- search -->
+    {% elif tour_name == "search" %}
+    <div class="popover-header">
+        <span class="h3">Search</span>
+        {% include "shared/partial/popover_tour_header_controls.html" %}
+    </div>
+    <div class="popover-body">
+        <div class="embed-fluid embed-fluid-16x9 mb-0_5">
+            <iframe id="searchIframe" src="https://videos.sproutvideo.com/embed/709ed4bf1c1ee2c7f9/9df1a9c8d1be124a?type=hd" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Search video"></iframe>
+        </div>
+        <p>Search for readings by part of all of a title, author name, publisher, even words that are included in the descriptions on reading tiles. Looking for topic or subject areas? Use the Library filters instead!.</p>
+        {% include "shared/partial/popover_tour_footer.html" with resource_id=None %}
+    </div>
+    {% endif %}
+
+    {% if tour_name != "context" and tour_name != "activity" %}
+    <div class="popover-arrow"></div>
+    {% endif %}
+    {% endif %}
+</div>
+
+<script>
+$(window).ready(function() {
+    tour.prepare('[data-clusive-tip-id="{{ tour_name }}"]');
+
+    {% if tours|length == 1 %}
+    var tip_control = document.querySelector('[data-clusive-tip-id="{{ tour_name }}"]');
+    if (tip_control) {
+        var $tip_control = $(tip_control);
+        $tip_control.one('afterShow.cfw.popover', function() {
+            popoverHelpDialog = $('#tour_{{ tour_name }}').focus();
+            if (popoverHelpDialog.is(':visible')) {
+                window.parent.clusiveEvents.addTipViewToQueue('{{ tour_name }}');
+            }
+        });
+        $tip_control.CFW_Popover('show');
+    }
+    {% endif %}
+});
+</script>

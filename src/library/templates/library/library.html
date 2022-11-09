@@ -20,12 +20,12 @@
             <h1>Library</h1>
         </div>
         <div class="col-md-auto">
-            <form method="get">
+            <form method="get" data-clusive-tip-id="search">
                 <div class="input-group library-search">
                     <div class="stt-wrapper">
                         {{ search_form.query }}
                     </div>
-                    <button class="btn btn-primary" type="submit">Search</button>
+                    <button class="btn btn-primary" type="submit" data-clusive-tip-action="search">Search</button>
                 </div>
             </form>
         </div>
@@ -54,6 +54,11 @@
 </main>
 
 {% include "shared/partial/modal_vocab_check.html" %}
-{% include "shared/partial/popover_tip.html" %}
+{% for tour in tours %}
+{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
+{% endfor %}
+{% if tip_name %}
+{% include "shared/partial/tooltip_tip.html" %}
+{% endif %}
 {% include "shared/partial/modal_confirm.html" %}
 {% endblock %}

@@ -40,6 +40,11 @@
                         {% include "pages/partial/dashboard_panel_class_affect.html" with data=data.class_affect %}
                     </div>
                 {% endif %}
+                {% if clusive_user.role == 'TE' or clusive_user.role == 'PA' %}
+                    <div class="col-md-6 col-lg-12">
+                        {% include "pages/partial/dashboard_panel_teacher_resources.html" %}
+                    </div>
+                {% endif %}
                 {% if panels.star_results %}
                     <div class="col-md-6 col-lg-12">
                     {% include "pages/partial/dashboard_panel_star_rating_results.html" with data=data.star_results %}
@@ -61,7 +66,12 @@
 
 </main>
 {% include "shared/partial/modal_vocab_check.html" %}
-{% include "shared/partial/popover_tip.html" %}
+{% for tour in tours %}
+{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
+{% endfor %}
+{% if tip_name %}
+{% include "shared/partial/tooltip_tip.html" %}
+{% endif %}
 {% include "shared/partial/modal_confirm.html" %}
 
 {% endblock %}

@@ -8,6 +8,67 @@ from roster.models import ClusiveUser, UserStats, Roles
 
 logger = logging.getLogger(__name__)
 
+TEACHER_ONLY_TIPS = [
+    'book_actions',
+    'activity',
+    'reading_details',
+    'manage',
+    'resources',
+]
+
+# The order of popovers for a given page matches the tour order.  See:
+# https://castudl.atlassian.net/browse/CSL-2040?focusedCommentId=36802
+DASHBOARD_TIPS = [
+    'student_reactions',
+    'reading_data',
+    'activity',
+    'manage',
+]
+
+READING_TIPS = [
+    'switch',
+    'settings',
+    'readaloud',
+    'context',
+    'thoughts',
+    'wordbank',
+]
+
+LIBRARY_TIPS = [
+    'view',
+    'filters',
+    'search',
+    'book_actions',
+]
+
+WORD_BANK_TIPS = [
+    'wordbank',
+]
+
+MANAGE_TIPS = [
+    'manage',
+]
+
+RESOURCES_TIPS = [
+    'resources',
+]
+
+PAGES_WITH_OWN_TIP = [
+    'Wordbank',
+    'Manage',
+    'Resources',
+]
+
+# Keys -- page names -- must match `page` values passed into TipType.can_show()
+PAGE_TIPS_MAP = {
+    'Dashboard': DASHBOARD_TIPS,
+    'Reading': READING_TIPS,
+    'ResourceReading': READING_TIPS,
+    'Library': LIBRARY_TIPS,
+    'Wordbank': WORD_BANK_TIPS,
+    'Manage': MANAGE_TIPS,
+    'Resources': RESOURCES_TIPS,
+}
 
 class TipType(models.Model):
     """
@@ -23,19 +84,25 @@ class TipType(models.Model):
 
     def can_show(self, page: str, version_count: int, user: ClusiveUser):
         """Test whether this tip can be shown on a particular page"""
+        is_student_or_guest = user.role == Roles.STUDENT or user.role == Roles.GUEST
         # Teacher/parent-only tips
-        if user.role == Roles.STUDENT and self.name in ['book_actions', 'activity']:
+        if (self.name in TEACHER_ONLY_TIPS or page == 'ResourceReading') and is_student_or_guest:
             return False
-        # Switch tooltip requires multiple versions
+        # Switch TipType requires multiple versions
         if self.name == 'switch':
-            return page == 'Reading' and version_count > 1
+            return (page == 'Reading' or page == 'ResourceReading') and version_count > 1
+        # Thoughts TipType is only for students or guests
+        if self.name == 'thoughts' and not is_student_or_guest:
+            return False
+
+        # 'wordbank', 'manage', and 'reources' TipTypes appear on multiple pages.
+        # Check first whether the `page` parameter is 'WordBank', 'Manage', or
+        # 'Resources'.
+        if page in PAGES_WITH_OWN_TIP and self.name in PAGE_TIPS_MAP[page]:
+            return True
         # Most tooltips need to check if on correct page
-        if self.name == 'activity':
-            return page == 'Dashboard'
-        if self.name in ['view', 'book_actions']:
-            return page == 'Library'
-        if self.name in ['context', 'settings', 'readaloud', 'wordbank']:
-            return page == 'Reading'
+        if self.name in PAGE_TIPS_MAP.get(page, []):
+            return True
         # Unknown tip never shown
         return False
 
@@ -51,7 +118,7 @@ class TipHistory(models.Model):
     last_attempt = models.DateTimeField(null=True)
     # A "show" is when the user actually saw the tip.
     last_show = models.DateTimeField(null=True)
-    # This is when the use took some related action.
+    # This is when the user took some related action.
     # Tips should not be shown if the user recently did the action so doesn't need reminding.
     last_action = models.DateTimeField(null=True)
 
