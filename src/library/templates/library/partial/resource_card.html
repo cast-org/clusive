@@ -4,14 +4,14 @@
         <div class="card-header">
             <h3 class="card-title"><a href="{% url 'res_reader' resource_id=resource.resource_identifier %}" class="link-stretch">{{ resource.title }}</a></h3>
         </div>
-        {% if use_col %}
+        {% if use_col and resource.featured %}
         <div class="row">
             <div class="col-md-6">
         {% endif %}
         <div class="card-img">
             <img class="img-fluid" src="{% get_media_prefix %}{{ resource.cover_path }}" alt="Cover image for {{ resource.title }}"/>
         </div>
-        {% if use_col %}
+        {% if use_col and resource.featured %}
             </div>
             <div class="col-md-6">
         {% endif %}
@@ -25,7 +25,7 @@
             </p>
         </div>
         {% endif %}
-        {% if use_col %}
+        {% if use_col and resource.featured %}
             </div>
         </div>
         {% endif %}

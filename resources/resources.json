@@ -73,6 +73,11 @@
         "tags": ["15 min"]
       },
       {
+        "identifier": "UPLOAD",
+        "file": "find-create-upload.epub",
+        "tags": ["15 min"]
+      },
+      {
         "identifier": "BOOKSHARE",
         "file": "clusive-and-bookshare.epub",
         "tags": ["15 min"]
@@ -88,6 +93,15 @@
         "tags": ["5 min"]
       }
     ]
+  },
+  {
+    "name": "UDL Resources",
+    "resources": [
+      {
+        "identifier": "UDLG",
+        "file": "udl-guidelines.epub",
+        "tags": [ "5 min" ]
+      }
+    ]
   }
-
 ]
