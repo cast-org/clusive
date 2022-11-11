@@ -1466,3 +1466,44 @@ def remove_social_account(request, *args, **kwargs):
         logger.debug('User %s does not have a %s account', request.user.username, social_app_name)
 
     return HttpResponseRedirect(reverse('my_account'))
+
+class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+    template_name='roster/student-details.html'
+
+    def __init__(self):
+        super().__init__()
+
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        if not self.clusive_user.can_manage_periods:
+            self.handle_no_permission()
+
+        period = self.clusive_user.current_period
+        try:
+            self.clusive_student = ClusiveUser.objects.get(
+                user__username=kwargs['username'],
+                periods__in=[period]
+            )
+        except ClusiveUser.DoesNotExist:
+            messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
+            self.clusive_student = None
+
+        self.roster = []
+        for clusive_user in period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name'):
+            self.roster.append(clusive_user.user)
+
+        # Dictionaries for the individual panels to be displayed and the data
+        # for those panels
+        # TODO: (JS) not sure the panels dict is nccessary.
+        self.panels = dict()
+        self.panel_data = dict()
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_student'] = self.clusive_student
+        context['current_student_username'] = kwargs['username']
+        context['current_student_name'] = self.clusive_student.user.first_name if self.clusive_student else "No student"
+        context['teacher'] = self.clusive_user
+        context['roster'] = self.roster
+        return context
