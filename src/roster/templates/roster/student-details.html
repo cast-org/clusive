@@ -1,0 +1,240 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block title %}Student Details{% endblock %}
+{% block header %}
+{% include "shared/partial/site_header.html" with page_group="manage" %}
+{% endblock %}
+
+{% block sidebar_start %}
+{% endblock %}
+
+{% block content %}
+<main id="content" tabindex="-1">
+    {% include "shared/partial/alerts.html" %}
+    <div class="link-back">
+        <a href="{% url 'dashboard' %}" class="link-prev">Back to Dashboard</a>
+    </div>
+    <div class="row">
+        <div class="col-auto">
+            <h1>Student Details:</h1>
+        </div>
+        {# Place holder for student popop menu for choosing students #}
+        {# include actual popover template here #}
+        <div class="col-md dropdown ms-md-n1">
+            <button type="button" class="btn btn-primary mt-md-n0_25" data-cfw="dropdown">{{ current_student_name }}<span class="caret" aria-hidden="true"></span></button>
+            <ul class="dropdown-menu">
+                {% for student in roster %}
+                    {% if student.username == current_student.user.username %}
+                        <li><a href="#" class="active" aria-current="true">{{ current_student_name }}</a></li>
+                    {% else %}
+                        <li><a href="#">{{ student.first_name }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {# Place holder for view statisics for the student #}
+        {# include actual view stats template here #}
+        <div class="col-md-auto mt-1 mt-md-0">
+            <span class="text-muted">View:</span>
+            <ul class="list list-horizontal list-divided readtime-list-view">
+                <li class="list-item"><span class="active" aria-current="true">Past week</span></li>
+                <li class="list-item"><a href="#">Month</a></li>
+                <li class="list-item"><a href="#">Overall</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="library-grid"">
+        <div class="card card-details">
+            {# Placeholder for "Activity" panel #}
+            {# include Activity panel template here #}
+            <div class="box box-secondary">
+                <h4 class="h2">Activity</h4>
+                <div class="box-divider"></div>
+                <div class="row mb-1 ">
+                    <div class="col">
+                        {% if current_student == None %}
+                            Hours read: <span class="h5">N/A</span>
+                        {% else %}
+                            Hours read: <span class="h5">5.0</span>
+                        {% endif %}
+                    </div>
+                    <div class="col">
+                        {% if current_student == None %}
+                            # of readings: <span class="h5">N/A</span>
+                        {% else %}
+                            # of readings: <span class="h5">7</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <p>
+                    {% if current_student == None %}
+                        Last login: N/A
+                    {% else %}
+                        Last login: 2 days ago, 10:45 &ndash; 11:05 A.M.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="card card-details">
+            {# Placeholder for "Words looked up" panel #}
+            {# include Words panel template here #}
+            <div class="box box-secondary">
+                <h4 class="h2">Words looked up</h4>
+                <div class="box-divider"></div>
+                <p>
+                    {% if current_student == None %}
+                        N/A
+                    {% else %}
+                        Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, elit, Vestibulum, vel, velit, vitae, enim, maximus, sollicitudin, quis
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="card card-details">
+            {# Placeholder for "Reactions" panel #}
+            {# include Reactions panel template here #}
+            <div class="box box-secondary">
+                <h4 class="h2">Reactions</h4>
+                <div class="box-divider"></div>
+                Strike up a class conversation based on what students are feeling about a reading.
+                {# The reaction pallete is included from its existing template #}
+                {% include 'shared/partial/affect_wheel_display.html' with data=data.totals %}
+            </div>
+        </div>
+        {# Placeholder for "Topics" panel #}
+        {# include Topics panel template here #}
+        <div class="card card-details">
+            <div class="box box-secondary">
+                <h4 class="h2">Topics</h4>
+                <div class="box-divider"></div>
+                <p>
+                    {% if current_student == None %}
+                        N/A
+                    {% else %}
+                        Biography, Mystery, Science, Young adult, History, Comedy, Fiction, Non-fiction
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="box box-secondary">
+        {# Placeholder for "Reading details" panel #}
+        <div class="row gx-1 flex-items-center mb-0_5">
+            <div class="col-auto">
+                <h4 class="h2 mb-0">Reading details</h4>
+            </div>
+            <div class="col-auto ms-n0_5">
+                <a href="#">export<span class="sr-only"> reading details for {{ current_student.user.first_name }}</span></a>
+            </div>
+            <div class="col-md-auto ms-md-auto">
+                <section aria-label="Legend">
+                    <span class="readtime-legend-mark">
+                        <span class="readtime-mark-shared"></span>
+                    </span>
+                    <span class="readtime-legend-label">Assigned</span>
+                </section>
+            </div>
+        </div>
+        <div class="box-divider"></div>
+        <div class="table-scroll datatable-scroll">
+            <table class="table datatable">
+                <thead>
+                    <!-- Available sort indicators for table header anchors:
+                          - `.sort-up`
+                          - `.sort-down`
+                    -->
+                    <tr>
+                        <th><a href="#">Title/author</a></th>
+                        <th><a href="#">Active time</a></th>
+                        <th><a href="#" class="sort-down">Last read</a></th>
+                        <th class="d-sm-down-none">Words looked up</th>
+                        <th class="d-sm-down-none">Learning</th>
+                        <th class="d-md-down-none">Custom</th>
+                        <th class="d-md-down-none">Reading level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            <a href="#">A Midsummer Night's Dream</a>
+                            <div class="muted">William Shakespeare</div>
+                        </th>
+                        <td>2.2 <span aria-hidden="true">hrs</span><span class="sr-only">hours</span> (2 visits)</td>
+                        <td>Thu, Feb 10</td>
+                        <td class="d-sm-down-none">Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, elit</td>
+                        <td class="d-sm-down-none">A little</td>
+                        <td class="d-md-down-none">
+                            <span class="muted">(Which character do you most relate to?)</span>
+                            I'm most like Lysander
+                        </td>
+                        <td class="d-md-down-none">
+                            High school
+                            <span class="muted">(Challenge 3/switched from 2)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <a href="#">You've Got the Power</a>
+                            <span class="datatable-mark"><span class="sr-only">Assigned</span></span>
+                            <div class="muted">STARI by SERP Institute</div>
+                        </th>
+                        <td>0.5 <span aria-hidden="true">hrs</span><span class="sr-only">hours</span> (2 visits)</td>
+                        <td>Wed, Feb 9</td>
+                        <td class="d-sm-down-none">consectetur, adipiscing, elit</td>
+                        <td class="d-sm-down-none">A lot / I will try to speak up more</td>
+                        <td class="d-md-down-none">
+                            <span class="muted">(What most suprised you?)</span>
+                            That words have power
+                        </td>
+                        <td class="d-md-down-none">
+                            Middle school
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <a href="#">Amelia Earhart: Meet Amazing Americans</a>
+                            <span class="datatable-mark"><span class="sr-only">Assigned</span></span>
+                            <div class="muted">Library of Congress</div>
+                        </th>
+                        <td>0.3 <span aria-hidden="true">hrs</span><span class="sr-only">hours</span> (1 visit)</td>
+                        <td>Tue, Feb 8</td>
+                        <td class="d-sm-down-none">Lorem, ipsum, dolor</td>
+                        <td class="d-sm-down-none">Nothing / I will try to speak up more</td>
+                        <td class="d-md-down-none">
+                        </td>
+                        <td class="d-md-down-none">
+                            Middle school
+                            <span class="muted">(Challenge 3)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <a href="#">All About Coyotes</a>
+                            <div class="muted">Lauren Poniatowski</div>
+                        </th>
+                        <td>0.1 <span aria-hidden="true">hrs</span><span class="sr-only">hours</span> (1 visit)</td>
+                        <td>Tue, Feb 8</td>
+                        <td class="d-sm-down-none">Lorem, ipsum, dolor</td>
+                        <td class="d-sm-down-none">A little</td>
+                        <td class="d-md-down-none">
+                        </td>
+                        <td class="d-md-down-none">
+                            High school
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+{# Unsure if the tour or tips are available on the student detail page #}
+{# Leaving in place for now #}
+{% for tour in tours %}
+{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
+{% endfor %}
+{% if tip_name %}
+{% include "shared/partial/tooltip_tip.html" %}
+{% endif %}
+
+{% endblock %}
