@@ -1482,19 +1482,17 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         try:
             self.clusive_student = ClusiveUser.objects.get(
                 user__username=kwargs['username'],
-                periods__in=[period]
+                periods__in=[period],
+                role__in=[Roles.STUDENT, Roles.GUEST]
             )
         except ClusiveUser.DoesNotExist:
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
 
-        self.roster = []
-        for clusive_user in period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name'):
-            self.roster.append(clusive_user.user)
-
+        self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
         # Dictionaries for the individual panels to be displayed and the data
         # for those panels
-        # TODO: (JS) not sure the panels dict is nccessary.
+        # TODO: (JS) fill these in as necessary.
         self.panels = dict()
         self.panel_data = dict()
         return super().get(request, *args, **kwargs)

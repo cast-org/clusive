@@ -24,10 +24,10 @@
             <button type="button" class="btn btn-primary mt-md-n0_25" data-cfw="dropdown">{{ current_student_name }}<span class="caret" aria-hidden="true"></span></button>
             <ul class="dropdown-menu">
                 {% for student in roster %}
-                    {% if student.username == current_student.user.username %}
-                        <li><a href="{% url 'student_details' username=student.username %}" class="active" aria-current="true">{{ current_student_name }}</a></li>
+                    {% if student.user.username == current_student.user.username %}
+                        <li><a href="{% url 'student_details' username=student.user.username %}" class="active" aria-current="true">{{ current_student_name }}</a></li>
                     {% else %}
-                        <li><a href="{% url 'student_details' username=student.username %}">{{ student.first_name }}</a></li>
+                        <li><a href="{% url 'student_details' username=student.user.username %}">{{ student.user.first_name }}</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>
