@@ -19,16 +19,15 @@
         <div class="col-auto">
             <h1>Student Details:</h1>
         </div>
-        {# Place holder for student popop menu for choosing students #}
-        {# include actual popover template here #}
+        {# Student popop menu for choosing students #}
         <div class="col-md dropdown ms-md-n1">
             <button type="button" class="btn btn-primary mt-md-n0_25" data-cfw="dropdown">{{ current_student_name }}<span class="caret" aria-hidden="true"></span></button>
             <ul class="dropdown-menu">
                 {% for student in roster %}
                     {% if student.username == current_student.user.username %}
-                        <li><a href="#" class="active" aria-current="true">{{ current_student_name }}</a></li>
+                        <li><a href="{% url 'student_details' username=student.username %}" class="active" aria-current="true">{{ current_student_name }}</a></li>
                     {% else %}
-                        <li><a href="#">{{ student.first_name }}</a></li>
+                        <li><a href="{% url 'student_details' username=student.username %}">{{ student.first_name }}</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>
@@ -110,7 +109,7 @@
                 <div class="box-divider"></div>
                 <p>
                     {% if current_student == None %}
-                        N/A
+                        &emdash;
                     {% else %}
                         Biography, Mystery, Science, Young adult, History, Comedy, Fiction, Non-fiction
                     {% endif %}
