@@ -229,7 +229,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
         context['tip_name'] = 'tour' if self.tip_shown and self.tip_shown.name == 'tour' else None # tour tooltip
         context['tip_shown'] = self.tip_shown.name if self.tip_shown and self.tip_shown.name != 'tour' else None # Singleton tour item
         context['tours'] = self.tours
-        context['has_teacher_resource'] = self.clusive_user.role == Roles.TEACHER or self.clusive_user.role == Roles.PARENT
+        context['show_teacher_resource_link'] = self.clusive_user.can_manage_periods
         return context
 
     def should_show_star_results(self, request):
@@ -488,6 +488,13 @@ class DashboardActivityDetailView(LoginRequiredMixin, TemplateView):
             data['book'] = book
             data['book_has_versions'] = book.versions.count() > 1
 
+            # Is there a custom question?
+            customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
+                if clusive_user.current_period else None
+            if customizations:
+                data['custom_question'] = customizations[0].question
+
+            # Student's Paradata
             paras = Paradata.objects.filter(user=clusive_user, book=book)
             # Annotate with the time total from the last week
             start_date = date.today()-timedelta(days=7)
@@ -692,6 +699,19 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
         self.tours = TourList(clusive_user, page=self.page_name, version_count=len(versions))
 
+        # Whether to show the "Learn more" link is at least dependant on
+        # whether the user is a teacher or parent.  But, that's not the
+        # complete story: if reading the "Settings" Resources page AND the tip
+        # type is 'settings' then the "Learn more" link is circular and
+        # shouldn't be shown.  Ditto when reading the read-aloud resource and
+        # the tip is "readaloud", the switch resource and 'switch' tip, and the
+        # context, thoughts, and wordbank resource/tip combinations. In general
+        # if the "Learn more" link points to the current page, don't show the
+        # link.
+        # The decision is ultimately made in the popover dialog's footer
+        # template, since that is where the link is set.
+        show_teacher_resource_link = clusive_user.can_manage_periods
+
         # See if there's a custom question
         customizations = Customization.objects.filter(book=book, periods=clusive_user.current_period) \
             if clusive_user.current_period else None
@@ -721,7 +741,7 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             'tip_name': None,
             'tip_shown': self.tip_shown.name if self.tip_shown else None,
             'tours': self.tours,
-            'has_teacher_resource': True,
+            'show_teacher_resource_link': clusive_user.can_manage_periods,
             'customization': customizations[0] if customizations else None,
             'starred': pdata.starred,
             'book_id': book.id,
@@ -753,7 +773,7 @@ class WordBankView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPage
             'tip_name': None,
             'tip_shown': tip_shown.name if tip_shown else None,
             'tours': tours,
-            'has_teacher_resource': False,
+            'show_teacher_resource_link': clusive_user.can_manage_periods,
         }
         return super().get(request, *args, **kwargs)
 

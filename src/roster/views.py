@@ -485,7 +485,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         context['tip_name'] = None
         context['tip_shown'] = self.tip_shown.name if self.tip_shown else None
         context['tours'] = self.tours
-        context['has_teacher_resource'] = False # "Learn more" link would be circular
+        context['show_teacher_resource_link'] = self.request.clusive_user.can_manage_periods
         context['clusive_user'] = self.request.clusive_user
         return context
 

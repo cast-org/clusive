@@ -394,7 +394,7 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
         context['tip_name'] = None
         context['tip_shown'] = self.tip_shown.name if self.tip_shown else None
         context['tours'] = self.tours
-        context['has_teacher_resource'] = False
+        context['show_teacher_resource_link'] = self.request.clusive_user.can_manage_periods
         context['has_bookshare_account'] = has_bookshare_account(self.request)
         return context
 
@@ -424,13 +424,19 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, self.page_name)
         self.tours = TourList(request.clusive_user, page=self.page_name)
+        tip_name = self.tip_shown.name if self.tip_shown else ''
+        if request.clusive_user.can_manage_periods and tip_name != 'resources':
+            show_teacher_resource_link = True
+        else:
+            show_teacher_resource_link = False
+
         self.extra_context = {
             'categories': EducatorResourceCategory.objects.all()
                 .prefetch_related(Prefetch('resources', queryset=Book.objects.order_by('resource_sort_order'))),
             'tip_name': None,
             'tip_shown': self.tip_shown.name if self.tip_shown else None,
             'tours': self.tours,
-            'has_teacher_resource': False,  # "Learn more" link is circular in this case.
+            'show_teacher_resource_link': show_teacher_resource_link,
             'clusive_user': request.clusive_user,
         }
         return super().get(request, *args, **kwargs)

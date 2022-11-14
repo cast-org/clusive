@@ -64,6 +64,7 @@ PAGES_WITH_OWN_TIP = [
 PAGE_TIPS_MAP = {
     'Dashboard': DASHBOARD_TIPS,
     'Reading': READING_TIPS,
+    'ResourceReading': READING_TIPS,
     'Library': LIBRARY_TIPS,
     'Wordbank': WORD_BANK_TIPS,
     'Manage': MANAGE_TIPS,
@@ -84,22 +85,22 @@ class TipType(models.Model):
 
     def can_show(self, page: str, version_count: int, user: ClusiveUser):
         """Test whether this tip can be shown on a particular page"""
+        is_student_or_guest = user.role == Roles.STUDENT or user.role == Roles.GUEST
         # Teacher/parent-only tips
-        if user.role == Roles.STUDENT and self.name in TEACHER_ONLY_TIPS:
+        if (self.name in TEACHER_ONLY_TIPS or page == 'ResourceReading') and is_student_or_guest:
             return False
         # Switch TipType requires multiple versions
         if self.name == 'switch':
-            return page == 'Reading' and version_count > 1
-        # Thoughts TipType is only for students
-        if self.name == 'thoughts' and user.role != Roles.STUDENT:
-                return False
+            return (page == 'Reading' or page == 'ResourceReading') and version_count > 1
+        # Thoughts TipType is only for students or guests
+        if self.name == 'thoughts' and not is_student_or_guest:
+            return False
 
         # 'wordbank', 'manage', and 'reources' TipTypes appear on multiple pages.
         # Check first whether the `page` parameter is 'WordBank', 'Manage', or
         # 'Resources'.
         if page in PAGES_WITH_OWN_TIP and self.name in PAGE_TIPS_MAP[page]:
             return True
-
         # Most tooltips need to check if on correct page
         if self.name in PAGE_TIPS_MAP.get(page, []):
             return True

@@ -24,10 +24,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 ALLOWED_HOSTS = ['clusive.cast.org',
                  'clusive.qa.cast.org',
-                 'cisl-demo.qa.cast.org',
+                 'clusive.stage.cast.org',
                  'localhost',
                  '127.0.0.1',
-                 '10.*',
                  '[::1]']
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'

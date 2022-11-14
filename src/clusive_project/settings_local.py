@@ -2,6 +2,7 @@
 Django settings for Clusive local development.  Not to be used in production.
 """
 import os
+from socket import gethostname, gethostbyname, gethostbyname_ex
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -17,10 +18,9 @@ MEDIA_URL = '/uploads/'
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '10.*',
     '[::1]',
-    '10.21.12.86'
-]
+    gethostname(),
+] + list(set(gethostbyname_ex(gethostname())[2]))
 
 INTERNAL_IPS = [
     '127.0.0.1',

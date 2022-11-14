@@ -53,25 +53,49 @@ def lookup(book, word, priority_lookup):
     return defs
 
 
-def base_form(word, return_word_if_not_found=True):
+def penn_pos_to_upos(penn):
+    """
+    Convert part-of-speech tag from the Penn standard (used by NLTK taggers) to Universal Dependencies.
+    Only handles the 4 basic parts of speech that we attempt to simplify and inflect.
+    :return: upos tag
+    """
+    if penn is None or len(penn)<2:
+        return None
+    penn_stem = penn[0:2]
+    if penn_stem == 'NN':
+        return 'NOUN'
+    if penn_stem == 'VB':
+        return 'VERB'
+    if penn_stem == 'JJ':
+        return 'ADJ'
+    if penn_stem == 'RB':
+        return 'ADV'
+    return None
+
+def base_form(word, return_word_if_not_found=True, pos=None):
     """
     Return the base form of the given word.
-    In the case where the word can be seen as different parts of speech with different base forms,
+    If a part of speech is given it will return the base form for that POS.
+    If no POS is given and the word can be seen as different parts of speech with different base forms,
     this returns the shortest. If they are the same length, it chooses the alphabetically first one.
     For example, "outing" is base form of noun, but also the inflected form of the verb "out", so
     this method will return "out".
 
     If word is not found in Wordnet, will normally return the given word unchanged.
     But if return_word_if_not_found is set to False, returns None instead.
-    :param word:
+    :param word: word, possibly inflected
+    :param return_word_if_not_found: if True will return unchnaged if no base form is found
+    :param pos: part of speech, using Penn Treebank tags
     :return: base form
     """
     wl = word.lower()
     all_forms = set()
-    for pos, lemmas in getAllLemmas(wl).items():
+    # logger.debug('Looking for base forms for %s/%s->%s', wl, pos, penn_pos_to_upos(pos))
+    for pos, lemmas in getAllLemmas(wl, upos=penn_pos_to_upos(pos)).items():
         # getAllLemmas can return multiple possible baseforms for each POS, eg british and american versions.
         # The first listed form is supposed to be the most common so that is the only one we consider.
         all_forms.add(lemmas[0])
+    # logger.debug('possible base forms for %s/%s: %s', word, pos, all_forms)
     if all_forms:
         return min(all_forms, key=base_form_sort_key)
     else:

@@ -32,6 +32,14 @@
         <br>
         <em>{{ comp_check.comprehension_free_response }}</em>
     </li>
+    {% if custom_question %}
+    <li class="list-item">
+        <strong>Custom:</strong>
+        {{ custom_question }}
+        <br>
+        <em>{{ comp_check.custom_response | default:"&mdash;" }}</em>
+    </li>
+    {% endif %}
     <li class="list-item">
         <strong>Highlights:</strong>
         {{ highlight_count | default:"&mdash;" }}

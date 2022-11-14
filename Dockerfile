@@ -31,7 +31,9 @@ RUN python -m pip wheel -r /requirements.txt --no-cache-dir --no-deps --wheel-di
 # Download this in builder so that it's more likely cached; data doesn't change often.
 # Outputs a warning message when it runs.
 RUN python -m pip install nltk
-RUN python -m nltk.downloader -d /usr/local/share/nltk_data wordnet
+RUN python -m nltk.downloader -d /usr/local/share/nltk_data wordnet &&  \
+    python -m nltk.downloader -d /usr/local/share/nltk_data omw-1.4 && \
+    python -m nltk.downloader -d /usr/local/share/nltk_data averaged_perceptron_tagger
 
 WORKDIR /app
 COPY package*.json ./
