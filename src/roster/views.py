@@ -1506,4 +1506,5 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['current_student_name'] = self.clusive_student.user.first_name if self.clusive_student else "No student"
         context['teacher'] = self.clusive_user
         context['roster'] = self.roster
+        context['data'] = { 'days': 7 }
         return context
