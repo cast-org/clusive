@@ -34,8 +34,7 @@ from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected
     get_access_keys, is_organization_sponsor, is_organization_member
 from pages.views import ThemedPageMixin, SettingsPageMixin
 from roster.models import ClusiveUser, Period, LibraryViews, LibraryStyles, check_valid_choice
-from tips.models import TipHistory, TourList
-
+from tips.models import TipHistory
 
 logger = logging.getLogger(__name__)
 
@@ -385,7 +384,7 @@ class LibraryView(EventMixin, ThemedPageMixin, SettingsPageMixin, LibraryDataVie
 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, 'Library')
-        self.tours = TourList(request.clusive_user, page='Library')
+        self.tours = TipHistory.tour_list(request.clusive_user, page='Library')
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -423,7 +422,7 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
 
     def get(self, request, *args, **kwargs):
         self.tip_shown = TipHistory.get_tip_to_show(request.clusive_user, self.page_name)
-        self.tours = TourList(request.clusive_user, page=self.page_name)
+        self.tours = TipHistory.tour_list(request.clusive_user, page=self.page_name)
         tip_name = self.tip_shown.name if self.tip_shown else ''
         if request.clusive_user.can_manage_periods and tip_name != 'resources':
             show_teacher_resource_link = True

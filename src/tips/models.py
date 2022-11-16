@@ -193,7 +193,7 @@ class TipHistory(models.Model):
         """Return all tips that are currently available to show this user."""
 
         # All tips are currently disallowed on the user's FIRST reading page view
-        if page == 'Reading':
+        if page == 'Reading' or page == 'ResourceReading':
             stats: UserStats
             stats = UserStats.for_clusive_user(user)
             if stats.reading_views < 1:
@@ -204,6 +204,17 @@ class TipHistory(models.Model):
         return [h for h in histories
                 if h.type.can_show(page=page, version_count=version_count, user=user)
                 and h.ready_to_show()]
+
+    @classmethod
+    def tour_list(cls, user: ClusiveUser, page: str, version_count: int = 0):
+        """Return names of all tips that should make up the tour for the given user and page."""
+        histories = TipHistory.objects.filter(user=user).order_by('type__priority')
+        can_show = [h.type.name for h in histories if h.type.can_show(page=page, version_count=version_count, user=user)]
+        # Showing the 'tour' tip during a tour would be weirdly recursive.
+        if 'tour' in can_show:
+            can_show.remove('tour')
+        logger.debug('Tour list: %s', can_show)
+        return can_show if len(can_show) > 1 else None
 
     @classmethod
     def get_tip_to_show(cls, clusive_user: ClusiveUser, page: str, version_count=0):
@@ -353,24 +364,3 @@ class CTAHistory(models.Model):
                 and h.ready_to_show(user_stats)]
 
 
-def TourList(user: ClusiveUser, page: str, version_count=0):
-    # See rules in TipType.can_show()
-    full = PAGE_TIPS_MAP[page]
-    available = []
-
-    for name in full:
-        # Tooltip version of tips are not part of tour
-        if name == 'tour':
-            continue
-        # Teacher/parent-only tips
-        if user.role == Roles.STUDENT and name in TEACHER_ONLY_TIPS:
-            continue
-        # Switch TipType requires multiple versions
-        if name == 'switch' and not version_count > 1:
-            continue
-        # Thoughts TipType is only for students
-        if name == 'thoughts' and user.role != Roles.STUDENT:
-            continue
-        available.append(name)
-
-    return available if len(available) > 1 else None
