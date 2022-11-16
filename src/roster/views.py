@@ -1495,6 +1495,25 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         # TODO: (JS) fill these in as necessary.
         self.panels = dict()
         self.panel_data = dict()
+        # Fake reactions panel data, for now
+        self.panel_data['affect'] = {
+            'totals': [
+                {'word': 'surprised', 'value': 100},
+                {'word': 'interested', 'value': 100},
+                {'word': 'happy', 'value': 0},
+                {'word': 'curious', 'value': 100},
+                {'word': 'calm', 'value': 0},
+                {'word': 'okay', 'value': 100},
+                {'word': 'bored', 'value': 0},
+                {'word': 'sad', 'value': 0},
+                {'word': 'disappointed', 'value': 0},
+                {'word': 'confused', 'value': 0},
+                {'word': 'frustrated', 'value': 0},
+                {'word': 'annoyed', 'value': 0}
+            ],
+            'empty': False,
+        }
+        self.data = {'days': 7}
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -1504,5 +1523,5 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['current_student_name'] = self.clusive_student.user.first_name if self.clusive_student else "No student"
         context['teacher'] = self.clusive_user
         context['roster'] = self.roster
-        context['data'] = { 'days': 7 }
+        context['data'] = self.panel_data
         return context
