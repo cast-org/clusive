@@ -5,6 +5,7 @@
     "fields": {
       "name": "settings",
       "priority": 1,
+      "tour_position": 1,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -15,6 +16,7 @@
     "fields": {
       "name": "readaloud",
       "priority": 2,
+      "tour_position": 2,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -25,6 +27,7 @@
     "fields": {
       "name": "context",
       "priority": 3,
+      "tour_position": 3,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -35,6 +38,7 @@
     "fields": {
       "name": "switch",
       "priority": 4,
+      "tour_position": 0,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -45,6 +49,7 @@
     "fields": {
       "name": "wordbank",
       "priority": 5,
+      "tour_position": 5,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -55,6 +60,7 @@
     "fields": {
       "name": "view",
       "priority": 6,
+      "tour_position": 0,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -65,6 +71,7 @@
     "fields": {
       "name": "book_actions",
       "priority": 7,
+      "tour_position": 3,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -75,6 +82,7 @@
     "fields": {
       "name": "activity",
       "priority": 8,
+      "tour_position": 3,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -85,6 +93,7 @@
     "fields": {
       "name": "student_reactions",
       "priority": 9,
+      "tour_position": 1,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -95,6 +104,7 @@
     "fields": {
       "name": "reading_data",
       "priority": 10,
+      "tour_position": 2,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -105,6 +115,7 @@
     "fields": {
       "name": "thoughts",
       "priority": 11,
+      "tour_position": 4,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -115,6 +126,7 @@
     "fields": {
       "name": "manage",
       "priority": 12,
+      "tour_position": 4,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -125,6 +137,7 @@
     "fields": {
       "name": "resources",
       "priority": 13,
+      "tour_position": 0,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -135,6 +148,7 @@
     "fields": {
       "name": "filters",
       "priority": 14,
+      "tour_position": 1,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -145,6 +159,7 @@
     "fields": {
       "name": "search",
       "priority": 15,
+      "tour_position": 2,
       "max": 3,
       "interval": "7 00:00:00"
     }
@@ -155,6 +170,7 @@
     "fields": {
       "name": "tour",
       "priority": 0,
+      "tour_position": 0,
       "max": 3,
       "interval": "7 00:00:00"
     }

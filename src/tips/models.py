@@ -79,7 +79,10 @@ class TipType(models.Model):
     we don't need to remind users of features they have recently used.
     """
     name = models.CharField(max_length=20, unique=True)
+    # Priority is the order in which these are shown as singleton pop-ups
     priority = models.PositiveSmallIntegerField(unique=True)
+    # Tour position is the order shown for the tour. Should be unique within tips shown on a particular page.
+    tour_position = models.PositiveSmallIntegerField(default=0)
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
 
@@ -208,7 +211,7 @@ class TipHistory(models.Model):
     @classmethod
     def tour_list(cls, user: ClusiveUser, page: str, version_count: int = 0):
         """Return names of all tips that should make up the tour for the given user and page."""
-        histories = TipHistory.objects.filter(user=user).order_by('type__priority')
+        histories = TipHistory.objects.filter(user=user).order_by('type__tour_position')
         can_show = [h.type.name for h in histories if h.type.can_show(page=page, version_count=version_count, user=user)]
         # Showing the 'tour' tip during a tour would be weirdly recursive.
         if 'tour' in can_show:
