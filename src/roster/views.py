@@ -1500,12 +1500,17 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         # Student Activity panel
         self.panels['activity'] = self.clusive_student
         if self.panels['activity']:
-            reading_data = Paradata.reading_data_for_period(self.clusive_user.current_period, days=self.clusive_user.student_activity_days, sort='name')
+            students_reading_data = Paradata.reading_data_for_period(self.clusive_user.current_period, days=self.clusive_user.student_activity_days, sort='name')
+            target_reading_data = {}
+            for one_reading_data in students_reading_data:
+                if (one_reading_data['clusive_user'] == self.clusive_student):
+                    target_reading_data = one_reading_data
+                    break
             user = User.objects.get(pk=self.clusive_student.user_id)
             self.panel_data['activity'] = {
-                'hours': round(reading_data[0]['hours'], 1),
-                'book_count': reading_data[0]['book_count'],
-                'last_login': user.last_login.strftime('%Y-%m-%d %I:%M %p')
+                'hours': round(target_reading_data['hours'], 1),
+                'book_count': target_reading_data['book_count'],
+                'last_login': user.last_login
             }
 
         return super().get(request, *args, **kwargs)

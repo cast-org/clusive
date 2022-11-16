@@ -1,3 +1,4 @@
+{% load humanize %}
 <div id="activity" class="box box-secondary">
     <h4 class="h2">Activity</h4>
     <div class="box-divider"></div>
@@ -21,7 +22,7 @@
         {% if current_student == None %}
             Last login: &mdash;
         {% else %}
-            Last login: {{ data.last_login }}
+            Last login: {{ data.last_login | naturalday }}
         {% endif %}
     </p>
 </div>
