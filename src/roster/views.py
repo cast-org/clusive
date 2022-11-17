@@ -1492,6 +1492,15 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.clusive_student = None
 
         self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
+
+        # Get the reading data for the current student. This data will be shared by all panels on the student details page
+        students_reading_data = Paradata.reading_data_for_period(self.clusive_user.current_period, days=self.days, sort='name')
+        target_reading_data = {}
+        for one_reading_data in students_reading_data:
+            if (one_reading_data['clusive_user'] == self.clusive_student):
+                target_reading_data = one_reading_data
+                break
+
         # Dictionaries for the individual panels to be displayed and the data
         # for those panels
         # TODO: (JS) fill these in as necessary.
@@ -1499,20 +1508,13 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         self.panel_data = dict()
 
         # Student Activity panel
-        self.panels['activity'] = self.clusive_student
-        if self.panels['activity']:
-            students_reading_data = Paradata.reading_data_for_period(self.clusive_user.current_period, days=self.days, sort='name')
-            target_reading_data = {}
-            for one_reading_data in students_reading_data:
-                if (one_reading_data['clusive_user'] == self.clusive_student):
-                    target_reading_data = one_reading_data
-                    break
-            user = User.objects.get(pk=self.clusive_student.user_id)
-            self.panel_data['activity'] = {
-                'hours': round(target_reading_data['hours'], 1),
-                'book_count': target_reading_data['book_count'],
-                'last_login': user.last_login
-            }
+        self.panels['activity'] = True
+        user = User.objects.get(pk=self.clusive_student.user_id)
+        self.panel_data['activity'] = {
+            'hours': round(target_reading_data['hours'], 1),
+            'book_count': target_reading_data['book_count'],
+            'last_login': user.last_login
+        }
 
         return super().get(request, *args, **kwargs)
 
