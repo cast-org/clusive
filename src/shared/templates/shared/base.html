@@ -50,7 +50,10 @@
                     {% block sidebar_bottom_start %}
                     {% include "shared/partial/sidebar_bottom_start.html" with show_reading_feedback=False %}
                     {% endblock%}
+                </div>
+                <div class="sidebar sidebar-end">
                     {% block sidebar_bottom_end %}
+                    {% include "shared/partial/sidebar_bottom_end.html" %}
                     {% endblock%}
                 </div>
             </div>
@@ -68,15 +71,18 @@
         </button>
     {% endif %}
 
+    {% if tours %}
+    {% include "shared/partial/popover_tour.html" %}
+    {% endif %}
+    {% if tip_name %}
+    {% include "shared/partial/tooltip_tip.html" %}
+    {% endif %}
+
     <div id="tourContainer" class="tour-container" >
     {% comment %}<!-- touring popovers to use this element for their `container` and `viewport` options -->{% endcomment %}
     </div>
     <div id="features" class="features" aria-live="assertive" aria-atomic="true">
-    </div>
-    <div class="content-container container-xl">
-        <div class="content">
-            <span data-clusive-tip-id="context" data-cfw-popover-placement="right auto" class="feature-context feature-novis"></span>
-        </div>
+        <span data-clusive-tip-id="context" data-cfw-popover-placement="bottom auto" class="feature-context feature-novis"></span>
     </div>
 
     <div id="notifyContainer" class="notify-container" aria-live="assertive"></div>

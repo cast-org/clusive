@@ -19,6 +19,7 @@ TEACHER_ONLY_TIPS = [
 # The order of popovers for a given page matches the tour order.  See:
 # https://castudl.atlassian.net/browse/CSL-2040?focusedCommentId=36802
 DASHBOARD_TIPS = [
+    'tour',
     'student_reactions',
     'reading_data',
     'activity',
@@ -31,6 +32,13 @@ READING_TIPS = [
     'readaloud',
     'context',
     'thoughts',
+    'wordbank',
+]
+
+RES_READING_TIPS = [
+    'settings',
+    'readaloud',
+    'context',
     'wordbank',
 ]
 
@@ -63,7 +71,7 @@ PAGES_WITH_OWN_TIP = [
 PAGE_TIPS_MAP = {
     'Dashboard': DASHBOARD_TIPS,
     'Reading': READING_TIPS,
-    'ResourceReading': READING_TIPS,
+    'ResourceReading': RES_READING_TIPS,
     'Library': LIBRARY_TIPS,
     'Wordbank': WORD_BANK_TIPS,
     'Manage': MANAGE_TIPS,
@@ -78,33 +86,35 @@ class TipType(models.Model):
     we don't need to remind users of features they have recently used.
     """
     name = models.CharField(max_length=20, unique=True)
+    # Priority is the order in which these are shown as singleton pop-ups
     priority = models.PositiveSmallIntegerField(unique=True)
+    # Tour position is the order shown for the tour. Should be unique within tips shown on a particular page.
+    tour_position = models.PositiveSmallIntegerField(default=0)
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
 
-    def can_show(self, page: str, version_count: int, user: ClusiveUser):
+    def can_show(self, page: str, version_count: int, user: ClusiveUser, stats: UserStats):
         """Test whether this tip can be shown on a particular page"""
-        is_student_or_guest = user.role == Roles.STUDENT or user.role == Roles.GUEST
-        # Teacher/parent-only tips
-        if (self.name in TEACHER_ONLY_TIPS or page == 'ResourceReading') and is_student_or_guest:
-            return False
-        # Switch TipType requires multiple versions
-        if self.name == 'switch':
-            return (page == 'Reading' or page == 'ResourceReading') and version_count > 1
-        # Thoughts TipType is only for students or guests
-        if self.name == 'thoughts' and not is_student_or_guest:
+        is_student_or_guest = not user.can_manage_periods
+
+        # Check for proper role
+        if self.name in TEACHER_ONLY_TIPS and is_student_or_guest:
             return False
 
-        # 'wordbank', 'manage', and 'reources' TipTypes appear on multiple pages.
-        # Check first whether the `page` parameter is 'WordBank', 'Manage', or
-        # 'Resources'.
-        if page in PAGES_WITH_OWN_TIP and self.name in PAGE_TIPS_MAP[page]:
-            return True
-        # Most tooltips need to check if on correct page
-        if self.name in PAGE_TIPS_MAP.get(page, []):
-            return True
-        # Unknown tip never shown
-        return False
+        # Check for proper page
+        if not self.name in PAGE_TIPS_MAP.get(page, []):
+            return False
+
+        # Switch TipType requires multiple versions
+        if self.name == 'switch' and version_count == 1:
+            return False
+
+        # student_reactions TipType, for students, requires that they have read at least one book
+        if self.name == 'student_reactions' and is_student_or_guest and stats and stats.reading_views == 0:
+            return False
+
+        # Passed all tests
+        return True
 
     def __str__(self):
         return '<TipType %s>' % self.name
@@ -191,18 +201,33 @@ class TipHistory(models.Model):
     def available_tips(cls, user: ClusiveUser, page: str, version_count: int):
         """Return all tips that are currently available to show this user."""
 
+        stats: UserStats
+        stats = UserStats.for_clusive_user(user)
+
         # All tips are currently disallowed on the user's FIRST reading page view
-        if page == 'Reading':
-            stats: UserStats
-            stats = UserStats.for_clusive_user(user)
+        if page == 'Reading' or page == 'ResourceReading':
             if stats.reading_views < 1:
                 return []
 
         # Check tip history to see which are ready to be shown
         histories = TipHistory.objects.filter(user=user).order_by('type__priority')
+
         return [h for h in histories
-                if h.type.can_show(page=page, version_count=version_count, user=user)
+                if h.type.can_show(page=page, version_count=version_count, user=user, stats=stats)
                 and h.ready_to_show()]
+
+    @classmethod
+    def tour_list(cls, user: ClusiveUser, page: str, version_count: int = 0):
+        """Return names of all tips that should make up the tour for the given user and page."""
+        histories = TipHistory.objects.filter(user=user).order_by('type__tour_position')
+        stats = UserStats.for_clusive_user(user)
+        can_show = [h.type.name for h in histories if
+                    h.type.can_show(page=page, version_count=version_count, user=user, stats=stats)]
+        # Showing the 'tour' tip during a tour would be weirdly recursive.
+        if 'tour' in can_show:
+            can_show.remove('tour')
+        logger.debug('Tour list: %s', can_show)
+        return can_show if len(can_show) > 0 else None
 
     @classmethod
     def get_tip_to_show(cls, clusive_user: ClusiveUser, page: str, version_count=0):
@@ -350,3 +375,5 @@ class CTAHistory(models.Model):
         return [h for h in histories
                 if h.type.can_show(page)
                 and h.ready_to_show(user_stats)]
+
+

@@ -6,7 +6,7 @@ from tips.models import TipType, TipHistory, CallToAction, CTAHistory
 @admin.register(TipType)
 class TipTypeAdmin(admin.ModelAdmin):
     model = TipType
-    list_display = ('name', 'priority', 'max', 'interval',)
+    list_display = ('name', 'priority', 'tour_position', 'max', 'interval',)
     ordering = ('priority',)
 
 
