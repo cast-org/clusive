@@ -1,5 +1,6 @@
 {% load i18n %}
-<div id="tip" class="tooltip tooltip-feature">
+{% load list_helpers %}
+<div id="tip" class="tooltip tooltip-feature{% if tip_name == "tour" %} tooltip-tour{% endif %}">
     <div class="tooltip-body">
         {% if tip_name == "settings" %}
         <p><strong>Settings:</strong> Change the font, colors, and more!</p>
@@ -71,6 +72,12 @@
                 </div>
                 <span class="d-none open" data-cfw="collapse" data-cfw-collapse-target="#activityFeature0" data-cfw-collapse-animate="false">Previous</span>
             </div>
+        </div>
+         {% elif tip_name == "tour" %}
+        <p>To get a tour of this page, click on me in the lower right anytime!</p>
+        <div class="tooltip-action">
+            <button type="button" class="btn btn-secondary me-0_5" onclick="tour.chain('#tour_{{ tours|list_index:0 }}');">Start tour now</button>
+            <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
         </div>
         {% endif %}
     </div>

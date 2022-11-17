@@ -388,11 +388,5 @@ var simplificationTool = "{{ simplification_tool }}";
 </div>
 
 {% include "shared/partial/modal_toc.html" %}
-{% for tour in tours %}
-{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
-{% endfor %}
-{% if tip_name %}
-{% include "shared/partial/tooltip_tip.html" %}
-{% endif %}
 {% include "shared/partial/popover_simplify.html" %}
 {% endblock %}
