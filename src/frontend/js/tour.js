@@ -59,13 +59,13 @@
                 $next[0].focus();
                 var name = $next.attr('id').replace('tour_', '');
                 window.parent.clusiveEvents.addTipViewToQueue(name);
-            }
+            };
 
             // Hide tip/tour tooltip if showing
             $('#tip').CFW_Tooltip('hide');
 
             if ($curr.length) {
-                // Wait until hide animation is complete before callling show
+                // Wait until hide animation is complete before calling show
                 $curr.CFW_Popover('hide').CFW_transition(null, function() {
                     document.body.classList.add(CLASS_TOUR);
                     $trigger.one('afterShow.cfw.popover', showComplete);
