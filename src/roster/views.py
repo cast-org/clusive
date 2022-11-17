@@ -1501,7 +1501,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         # Student Activity panel
         self.panels['activity'] = self.clusive_student
         if self.panels['activity']:
-            students_reading_data = Paradata.reading_data_for_period(self.clusive_user.current_period, days=self.clusive_user.student_activity_days, sort='name')
+            students_reading_data = Paradata.reading_data_for_period(self.clusive_user.current_period, days=self.days, sort='name')
             target_reading_data = {}
             for one_reading_data in students_reading_data:
                 if (one_reading_data['clusive_user'] == self.clusive_student):
