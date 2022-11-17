@@ -25,43 +25,15 @@
             <ul class="dropdown-menu">
                 {% for student in roster %}
                     {% if student.user.username == current_student.user.username %}
-                        <li><a href="{% url 'student_details' username=student.user.username %}" class="active" aria-current="true">{{ current_student_name }}</a></li>
+                        <li><a href="{% url 'student_details' username=student.user.username days=days %}" class="active" aria-current="true">{{ current_student_name }}</a></li>
                     {% else %}
-                        <li><a href="{% url 'student_details' username=student.user.username %}">{{ student.user.first_name }}</a></li>
+                        <li><a href="{% url 'student_details' username=student.user.username days=days %}">{{ student.user.first_name }}</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>
         </div>
         {# Place holder for view statisics for the student #}
-        <div class="col-md-auto mt-1 mt-md-0">
-            <span class="text-muted">View:</span>
-            <ul class="list list-horizontal list-divided readtime-list-view">
-                <li class="list-item">
-                    {% if data.days == 7 %}
-                    <span class="active" aria-current="true">Past week</span>
-                    {% else %}
-                    <a href="#" class="activity-panel-days" data-days="7" data-clusive-tip-action="activity"
-                       data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="7">Past week</a>
-                    {% endif %}
-                </li>
-                <li class="list-item">
-                    {% if data.days == 30 %}
-                    <span class="active" aria-current="true">Month</span>
-                    {% else %}
-                    <a href="#" class="activity-panel-days" data-days="30" data-clusive-tip-action="activity"
-                       data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="30">Month</a>
-                    {% endif %}
-                </li>
-                <li class="list-item">
-                    {% if data.days == 0 %}
-                    <span class="active" aria-current="true">Overall</span>
-                    {% else %}
-                    <a href="#" class="activity-panel-days" data-days="0" data-clusive-tip-action="activity"
-                       data-cle-handler="click" data-cle-control="dash_active_reading_days" data-cle-value="all">Overall</a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
+        {% include "roster/partial/student_details_time_scale.html" with target='student_details' %}
     </div>
     <div class="library-grid"">
         <div class="card card-details">

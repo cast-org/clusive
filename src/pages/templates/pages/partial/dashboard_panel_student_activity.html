@@ -82,7 +82,7 @@
                 </tr>
                 {% for info in data.reading_data %}
                 <tr class="real-data">
-                    <td><a href="{% url 'student_details' username=info.clusive_user.user.username %}">{{ info.clusive_user.user.first_name }}</a></td>
+                    <td><a href="{% url 'student_details' username=info.clusive_user.user.username days=data.days %}">{{ info.clusive_user.user.first_name }}</a></td>
                     <td class="d-xs-down-none">
                         <div class="readtime-progress">
                             {% for p in info.books %}
