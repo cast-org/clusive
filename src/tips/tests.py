@@ -1,16 +1,12 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Roles
-
-from .models import TipType, TEACHER_ONLY_TIPS, DASHBOARD_TIPS, READING_TIPS, \
-    LIBRARY_TIPS, WORD_BANK_TIPS, MANAGE_TIPS, RESOURCES_TIPS, \
-    PAGES_WITH_OWN_TIP, PAGE_TIPS_MAP, TipHistory
+from .models import TipType, TipHistory
 
 logger = logging.getLogger(__name__)
 
@@ -52,16 +48,18 @@ STUDENT_OR_GUEST_CAN_SHOW = {
     'Reading': ['switch', 'settings', 'readaloud', 'context', 'thoughts', 'wordbank'],
     'Library': ['view', 'filters', 'search'],
     'Wordbank': ['wordbank'],
+    # can_show() is true, but doesn't really matter since student shouldn't ever end up on the ResourceReading page:
+    'ResourceReading': ['settings', 'readaloud', 'context', 'wordbank'],
 }
 
 TEACHER_OR_PARENT_CAN_SHOW = {
     'Dashboard': ['student_reactions', 'reading_data', 'activity', 'manage'],
-    'Reading': ['switch', 'settings', 'readaloud', 'context', 'wordbank'],
+    'Reading': ['switch', 'settings', 'readaloud', 'context', 'thoughts', 'wordbank'],
     'Library': ['view', 'filters', 'search', 'book_actions'],
     'Wordbank': ['wordbank'],
     'Resources': ['resources'],
     'Manage': ['manage'],
-    'ResourceReading': ['switch', 'settings', 'readaloud', 'context', 'wordbank'],
+    'ResourceReading': ['settings', 'readaloud', 'context', 'wordbank'],
 }
 
 START_DELTA = 250 # msec
@@ -144,7 +142,7 @@ class TipTypeTestCase(TestCase):
         version_count = 3
         for page_name in PAGE_NAMES:
             for tip in TipType.objects.all():
-                actual = tip.can_show(page_name, version_count, clusive_user)
+                actual = tip.can_show(page_name, version_count, clusive_user, None)
                 expected = self.look_up_expected(clusive_user, page_name, tip)
                 self.assertEqual(
                     actual, expected,
@@ -166,7 +164,7 @@ class TipTypeTestCase(TestCase):
         """
         for clusive_user in ClusiveUser.objects.all():
             switch_tip = TipType.objects.get(name='switch')
-            actual = switch_tip.can_show('Reading', 1, clusive_user)
+            actual = switch_tip.can_show('Reading', 1, clusive_user, None)
             self.assertFalse(
                 actual,
                 f"Can show 'switch' tip for {clusive_user.user.username} on Reading page"
