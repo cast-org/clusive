@@ -1,0 +1,7 @@
+<div class="box box-secondary">
+    <h4 class="h2">Reactions</h4>
+    <div class="box-divider"></div>
+    Strike up a class conversation based on what students are feeling about a reading.<br>
+    {# The reaction pallete is included from its existing template #}
+    {% include 'shared/partial/affect_wheel_display.html' with data=data.affect.totals %}
+</div>
