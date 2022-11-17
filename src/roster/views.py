@@ -1476,6 +1476,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+        self.days = kwargs['days']
         if not self.clusive_user.can_manage_periods:
             self.handle_no_permission()
 
@@ -1522,7 +1523,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['current_student_name'] = self.clusive_student.user.first_name if self.clusive_student else "No student"
         context['teacher'] = self.clusive_user
         context['roster'] = self.roster
-        context['data'] = { 'days': 7 }
+        context['data'] = { 'days': self.days }
         context['panels'] = self.panels
         context['panel_data'] = self.panel_data
         return context
