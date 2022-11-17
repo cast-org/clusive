@@ -97,3 +97,12 @@
 .tooltip-step {
     margin-right: auto;
 }
+
+.tooltip-tour {
+    .tooltip-body {
+        max-width: 15.5rem;
+    }
+    .tooltip-action {
+        justify-content: space-between;
+    }
+}

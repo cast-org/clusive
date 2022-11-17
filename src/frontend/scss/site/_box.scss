@@ -83,6 +83,16 @@
         background-repeat: no-repeat;
         background-size: contain;
     }
+
+    .tip-mascot {
+        position: absolute;
+        top: calc(var(--CT_boxMascotSize) * -.375);
+        left: calc(1rem + var(--CT_boxMascotSize));
+        display: block;
+        width: 1px;
+        height: 1px;
+        content: "";
+    }
 }
 
 .clusive-reduced-motion {

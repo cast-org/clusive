@@ -1,6 +1,5 @@
 import json
 import logging
-import math
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
 
@@ -18,8 +17,8 @@ from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
@@ -473,6 +472,7 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         user = request.clusive_user
         # See if there's a Tip that should be shown
         self.tip_shown = TipHistory.get_tip_to_show(user, page="Manage")
+        self.tours = TipHistory.tour_list(user, page="Manage")
         if not user.can_manage_periods:
             self.handle_no_permission()
         return super().get(request, *args, **kwargs)
@@ -483,8 +483,8 @@ class ManageView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
             context['people'] = self.make_people_info_list(self.request.user)
             context['period_name_form'] = PeriodNameForm(instance=self.current_period)
         context['tip_name'] = None
-        context['tours'] = [{'name': self.tip_shown.name, 'robust': True }] if self.tip_shown else None
-        context['tip_shown'] = self.tip_shown
+        context['tip_shown'] = self.tip_shown.name if self.tip_shown else None
+        context['tours'] = self.tours
         context['show_teacher_resource_link'] = self.request.clusive_user.can_manage_periods
         context['clusive_user'] = self.request.clusive_user
         return context

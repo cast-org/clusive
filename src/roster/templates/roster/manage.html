@@ -87,13 +87,7 @@
     <p>
         If you have made changes to your Google Classroom class roster (e.g., you added or removed a student), use this option to update your class list in Clusive.
     </p>
-    {% endif %}    
+    {% endif %}
     {% endif %}
 </main>
-{% for tour in tours %}
-{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
-{% endfor %}
-{% if tip_name %}
-{% include "shared/partial/tooltip_tip.html" %}
-{% endif %}
 {% endblock %}

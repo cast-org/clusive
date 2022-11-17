@@ -580,6 +580,9 @@ class UserStats (models.Model):
     # Total active time using Clusive
     active_duration = models.DurationField(null=True)
 
+    def __str__(self):
+        return '<Stats for %s>' % (self.user)
+
     class Meta:
         verbose_name = 'user stats'
         verbose_name_plural = 'user stats'

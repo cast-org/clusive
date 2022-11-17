@@ -1,3 +1,5 @@
+{% load list_helpers %}
+
 <div class="row gx-0_5 flex-items-center">
     <div class="col">
         {% if show_teacher_resource_link and resource_id != None %}
@@ -7,7 +9,24 @@
             {% endif %}
         {% endif %}
     </div>
-    <div class="tooltip-action">
+    {% if tours|list_index_prev:forloop.counter0 %}
+    <div class="col-auto touring-on">
+        <button type="button" class="btn btn-primary" onclick="tour.chain('#tour_{{ tours|list_index_prev:forloop.counter0 }}');"><span class="fa fa-chevron-left" aria-hidden="true"></span> <span aria-hidden="true">Prev</span><span class="sr-only">Previous</span></button>
+    </div>
+    {% endif %}
+    {% if tours|length > 1 %}
+    <div class="col-auto touring-on">
+        {{ forloop.counter }}/{{ tours|length }}
+    </div>
+    {% endif %}
+    <div class="col-auto touring-on">
+        {% if tours|list_index_next:forloop.counter0 %}
+        <button type="button" class="btn btn-secondary" onclick="tour.chain('#tour_{{ tours|list_index_next:forloop.counter0 }}');">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></button>
+        {% else %}
+        <button type="button" class="btn btn-secondary" onclick="tour.closeRefocus('#tourStart');">End</button>
+        {% endif %}
+    </div>
+    <div class="col-auto touring-off">
         <button type="button" class="btn btn-primary" data-cfw-dismiss="popover">Got it!</button>
     </div>
 </div>
