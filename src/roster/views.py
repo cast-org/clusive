@@ -37,6 +37,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from assessment.models import AffectiveCheckResponse, AffectiveUserTotal
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
@@ -50,6 +51,7 @@ from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPer
     RosterDataSource
 from roster.signals import user_registered
 from tips.models import TipHistory
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -1495,25 +1497,13 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         # TODO: (JS) fill these in as necessary.
         self.panels = dict()
         self.panel_data = dict()
-        # Fake reactions panel data, for now
-        self.panel_data['affect'] = {
-            'totals': [
-                {'word': 'surprised', 'value': 100},
-                {'word': 'interested', 'value': 100},
-                {'word': 'happy', 'value': 0},
-                {'word': 'curious', 'value': 100},
-                {'word': 'calm', 'value': 0},
-                {'word': 'okay', 'value': 100},
-                {'word': 'bored', 'value': 0},
-                {'word': 'sad', 'value': 0},
-                {'word': 'disappointed', 'value': 0},
-                {'word': 'confused', 'value': 0},
-                {'word': 'frustrated', 'value': 0},
-                {'word': 'annoyed', 'value': 0}
-            ],
-            'empty': False,
-        }
         self.data = {'days': 7}
+        # Reaction data for "all time" for now
+        affect_responses = AffectiveUserTotal.objects.filter(user=self.clusive_student).first()
+        self.panel_data['affect'] = {
+            'totals': AffectiveUserTotal.scale_values(affect_responses),
+            'empty': affect_responses is None,
+        }
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
