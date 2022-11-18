@@ -49,9 +49,12 @@
 {% endfor %}
 <script>
 $('.modal-react-detail').one('beforeShow.cfw.modal', function(e) {
+    var requestUserName = "{{ request.user.username }}";
+    var userName = "{{ student.user.username }}";
+    var userForRequest = ( userName === '' || requestUserName === userName ? '' : `/${userName}`);
     var word = $(this).data('word');
     var target = $(this).find('.modal-body');
-    $.get('/assessment/affect_detail/'+ word)
+    $.get('/assessment/affect_detail/'+ word + userForRequest)
         .done(function(data, status) {
             target.html(data);
             target.CFW_Init();

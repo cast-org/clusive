@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 
 from eventlog.signals import affect_check_completed, comprehension_check_completed
 from library.models import Book, Customization
-from roster.models import Roles
+from roster.models import Roles, ClusiveUser
 from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheckResponse, \
     AffectiveUserTotal, AffectiveBookTotal
 
@@ -160,7 +160,18 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         self.word = kwargs['word']
-        clusive_user = request.clusive_user
+
+        # If a username is provided by kwargs['for_user'], set the clusive_user
+        # to that user. If there is no such user, or if for_user in kwargs, use
+        # the request.clusive_user
+        self.for_user = kwargs.get('for_user')
+        try:
+            clusive_user = ClusiveUser.objects.get(user__username=self.for_user)
+            self.for_user_name = clusive_user.user.first_name
+        except:
+            clusive_user = request.clusive_user
+            self.for_user_name = None
+
         self.teacher_view = False
         self.class_popular = None
         self.any_unauthorized_book = False
@@ -216,6 +227,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
         context['class_popular'] = self.class_popular
         context['popular'] = self.popular
         context['any_unauthorized_book'] = self.any_unauthorized_book
+        context['for_user_name'] = self.for_user_name
         return context
 
 
