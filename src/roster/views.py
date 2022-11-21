@@ -51,7 +51,6 @@ from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPer
     RosterDataSource
 from roster.signals import user_registered
 from tips.models import TipHistory
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -1498,14 +1497,13 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         # TODO: (JS) fill these in as necessary.
         self.panels = dict()
         self.panel_data = dict()
-        self.data = {'days': 7}
+        self.data = {'days': 30}
         # Reaction data for "all time" for now
-        affect_responses = AffectiveUserTotal.objects.filter(user=self.clusive_student).first()
+        affect_totals = self.affect_data_for_time_frame(30)
         self.panel_data['affect'] = {
-            'totals': AffectiveUserTotal.scale_values(affect_responses),
-            'empty': affect_responses is None,
+            'totals': AffectiveUserTotal.scale_values(affect_totals),
+            'empty': affect_totals is None,
         }
-        test_affect_data_for_time_frame = self.affect_data_for_time_frame(30)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -1520,18 +1518,19 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
 
     def affect_data_for_time_frame(self, time_frame):
         logger.debug('StudentDetailsView.affect_data_for_time_frame()')
-        #pdb.set_trace()
         date_time_frame = timezone.now() - timedelta(days=time_frame)
-        relevant_events = Event.objects.filter(
-            Q(control='affect_check_words') | Q(control='affect_check_free_response'),
-            actor = self.clusive_student,
-            group = self.clusive_user.current_period,
-            event_time__gte = date_time_frame
+        # Note: no way to confine these to the current period.  The
+        # AffectiveCheckResponse does not store that information.
+        affect_check_responses = AffectiveCheckResponse.objects.filter(
+            user = self.clusive_student,
+            created__gte = date_time_frame,
+            updated__gte = date_time_frame
         )
-        for event in relevant_events:
-            if event.control == 'affect_check_free_response':
-                logger.debug(f"Event affect_check_free_response value is: {event.value}")
-        
-        # Not the correct return type, it should distilled from an 
-        # AffectCheckResponse and a sum thereof.
-        return relevant_events
+        # Create a new AffectiveUserTotal for these affect check responses,
+        # but do not save it to the database.  That would overwrite the actual
+        # totals for the student, the one that has the totals for "all time"
+        time_frame_totals = AffectiveUserTotal(user=self.clusive_student)
+        for acr in affect_check_responses:
+            time_frame_totals.update(None, acr.to_list())
+
+        return time_frame_totals
