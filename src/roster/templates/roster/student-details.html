@@ -65,20 +65,8 @@
                 {% include 'shared/partial/affect_wheel_display.html' with data=data.totals %}
             </div>
         </div>
-        {# Placeholder for "Topics" panel #}
-        {# include Topics panel template here #}
         <div class="card card-details">
-            <div class="box box-secondary">
-                <h4 class="h2">Topics</h4>
-                <div class="box-divider"></div>
-                <p>
-                    {% if current_student == None %}
-                        N/A
-                    {% else %}
-                        Biography, Mystery, Science, Young adult, History, Comedy, Fiction, Non-fiction
-                    {% endif %}
-                </p>
-            </div>
+            {% include "roster/partial/student_details_topics.html" with data=panel_data.topics %}
         </div>
     </div>
     <div class="box box-secondary">

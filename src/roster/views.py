@@ -39,7 +39,7 @@ from googleapiclient.errors import HttpError
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
-from library.models import Paradata
+from library.models import Paradata, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
@@ -1514,6 +1514,17 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             'hours': round(target_reading_data['hours'], 1),
             'book_count': target_reading_data['book_count'],
             'last_login': user.last_login
+        }
+
+        # Topics panel
+        self.panels['topics'] = True
+        books = []
+        # Get all books for the current student
+        for one_book in target_reading_data['books']:
+            books.append(one_book['book_id'])
+        subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
+        self.panel_data['topics'] = {
+            'topics': ', '.join(subjects)
         }
 
         return super().get(request, *args, **kwargs)
