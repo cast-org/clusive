@@ -22,6 +22,7 @@ from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
@@ -1504,6 +1505,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             'totals': AffectiveUserTotal.scale_values(affect_responses),
             'empty': affect_responses is None,
         }
+        test_affect_data_for_time_frame = self.affect_data_for_time_frame(30)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -1515,3 +1517,21 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['roster'] = self.roster
         context['data'] = self.panel_data
         return context
+
+    def affect_data_for_time_frame(self, time_frame):
+        logger.debug('StudentDetailsView.affect_data_for_time_frame()')
+        #pdb.set_trace()
+        date_time_frame = timezone.now() - timedelta(days=time_frame)
+        relevant_events = Event.objects.filter(
+            Q(control='affect_check_words') | Q(control='affect_check_free_response'),
+            actor = self.clusive_student,
+            group = self.clusive_user.current_period,
+            event_time__gte = date_time_frame
+        )
+        for event in relevant_events:
+            if event.control == 'affect_check_free_response':
+                logger.debug(f"Event affect_check_free_response value is: {event.value}")
+        
+        # Not the correct return type, it should distilled from an 
+        # AffectCheckResponse and a sum thereof.
+        return relevant_events
