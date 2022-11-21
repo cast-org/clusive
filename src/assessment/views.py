@@ -157,6 +157,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
     """
     student_template_name = 'shared/partial/modal_affect_detail.html'
     teacher_template_name = 'shared/partial/modal_class_affect_detail.html'
+    student_details_template_name = 'shared/partial/modal_student_details_affect.html'
 
     def get(self, request, *args, **kwargs):
         self.word = kwargs['word']
@@ -217,6 +218,8 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
     def get_template_names(self):
         if self.teacher_view:
             return [self.teacher_template_name]
+        elif self.for_user_name:
+            return [self.student_details_template_name]
         else:
             return [self.student_template_name]
 
