@@ -1480,6 +1480,14 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         if not self.clusive_user.can_manage_periods:
             self.handle_no_permission()
 
+        if 'days' in kwargs:
+            self.days = kwargs.get('days')
+            logger.debug('Setting student activity days = %d', self.days)
+            self.clusive_user.student_activity_days = self.days
+            self.clusive_user.save()
+        else:
+            self.days = self.clusive_user.student_activity_days
+
         period = self.clusive_user.current_period
         try:
             self.clusive_student = ClusiveUser.objects.get(
@@ -1496,10 +1504,11 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         # for those panels
         self.panels = dict()
         self.panel_data = dict()
+        self.panel_data['days'] = self.days
 
         # Student reaction data
         self.affect_totals = dict()
-        affect_totals = self.affect_data_for_time_frame(self.clusive_user.student_activity_days)
+        affect_totals = self.affect_data_for_time_frame(self.days)
         self.panel_data['affect'] = {
             'totals': AffectiveUserTotal.scale_values(affect_totals),
             'empty': affect_totals is None,
@@ -1518,32 +1527,24 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
 
     def affect_data_for_time_frame(self, time_frame):
         # If the time frame is "Overall", return the AffectiveUserTotal for the
-        # user. Zero means "Overall".
+        # user. Zero means "Overall".  Also, it is possible that there may be
+        # no AffectiveUserTotal instance for the user; otherwise, there is only
+        # one.
         if time_frame == 0:
-            return AffectiveUserTotal.objects.get(user=self.clusive_student)
-
-        # Check if this has been calculated before.
-        if time_frame == 7 and self.affect_totals.get('week') != None:
-            return self.affect_totals['week']
-        elif time_frame == 30 and self.affect_totals.get('month') != None:
-            return self.affect_totals['month']
+            return AffectiveUserTotal.objects.filter(user=self.clusive_student).first()
 
         date_time_frame = timezone.now() - timedelta(days=time_frame)
         affect_check_responses = AffectiveCheckResponse.objects.filter(
             user = self.clusive_student,
             updated__gte = date_time_frame
         )
-        # Create a new AffectiveUserTotal for these affect check responses,
+        if len(affect_check_responses) == 0:
+            return None
+
+        # Create a new AffectiveUserTotal for the user's affect check responses,
         # but do not save it to the database.  That would overwrite the actual
-        # totals for the student, the one that has the totals for "all time"
+        # overall totals for the student.
         time_frame_totals = AffectiveUserTotal(user=self.clusive_student)
         for acr in affect_check_responses:
             time_frame_totals.update(None, acr.to_list())
-
-        # Track the new AffectiveUserTotal
-        if time_frame == 7:
-            self.affect_totals['week'] = time_frame_totals
-        elif time_frame == 30:
-            self.affect_totals['month'] = time_frame_totals
-
         return time_frame_totals
