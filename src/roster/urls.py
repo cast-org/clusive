@@ -67,4 +67,5 @@ urlpatterns = [
     path('my_account', views.MyAccountView.as_view(), name='my_account'),
     path('my_account/remove/<str:provider>', views.remove_social_account, name='remove_social_account'),
     path('details/<username>', views.StudentDetailsView.as_view(), name='student_details'),
+    path('details/<username>/<int:days>', views.StudentDetailsView.as_view(), name='student_details'),
 ]
