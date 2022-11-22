@@ -84,7 +84,7 @@
         </div>
         {# Student Reactions panel #}
         <div class="card card-details">
-            {% include "roster/partial/student-details-reactions.html" with data=data.affect student=current_student %}
+            {% include "roster/partial/student-details-reactions.html" with data=data.affect student=current_student days=data.days %}
         </div>
         {# Placeholder for "Topics" panel #}
         {# include Topics panel template here #}

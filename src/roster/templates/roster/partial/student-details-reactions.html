@@ -2,8 +2,15 @@
     <h4 class="h2">Reactions</h4>
     <div class="box-divider"></div>
     Strike up a class conversation based on what students are feeling about a reading.<br>
-    {% if data.empty %}
-        {{ student_user.first_name }} hasn’t reacted, yet.
+    {% if data.empty and student %}
+        {{ student.user.first_name }} hasn’t reacted
+        {% if days == 7 %}
+            in the past week.
+        {% elif days == 30 %}
+            in the past month.
+        {% else %}
+            yet.
+        {% endif %}
     {% endif %}
     {% include 'shared/partial/affect_wheel_display.html' with data=data.totals %}
 </div>
