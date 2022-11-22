@@ -235,6 +235,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
         context['popular'] = self.popular
         context['any_unauthorized_book'] = self.any_unauthorized_book
         context['for_user_name'] = self.for_user_name
+        context['time_scale'] = self.request.clusive_user.student_activity_days
         return context
 
 

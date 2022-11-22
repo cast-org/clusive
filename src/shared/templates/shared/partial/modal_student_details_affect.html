@@ -15,5 +15,12 @@
     {% endfor %}
     </ul>
 {% else %}
-    <p>No readings have made {{ for_user_name }} feel {{word}} yet.</p>
+    <p>No readings have made {{ for_user_name }} feel {{ word }}
+        {% if time_scale == 7 %}
+            in the past week.</p>
+        {% elif time_scale == 30 %}
+            in the past month.</p>
+        {% else %}
+            yet.</p>
+        {% endif %}
 {% endif %}
