@@ -163,7 +163,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
         self.word = kwargs['word']
 
         # If a username is provided by kwargs['for_user'], set the clusive_user
-        # to that user. If there is no such user, or if for_user in kwargs, use
+        # to that user. If there is no such user, or no for_user in kwargs, use
         # the request.clusive_user
         self.for_user = kwargs.get('for_user')
         try:
@@ -207,7 +207,11 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
                 if p['unauthorized']:
                     self.any_unauthorized_book = True
         else:
-            self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
+            if self.for_user:
+                self.my_recent = AffectiveCheckResponse.recent_with_word(
+                    clusive_user, self.word, request.clusive_user.student_activity_days)[0:10]
+            else:
+                self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
         # Globally-ranked books with particular ratings (public library only):
         self.popular = AffectiveBookTotal.most_with_word(self.word).filter(book__owner=None)[0:5]
         # Make it easier to access the correct count from template.

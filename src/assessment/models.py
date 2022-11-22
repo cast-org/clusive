@@ -1,8 +1,10 @@
+from datetime import timedelta
 import logging
 import math
 
 from django.db import models
 from django.db.models import Count, Sum
+from django.utils import timezone
 
 from library.models import Book
 from roster.models import ClusiveUser, ResearchPermissions, Roles
@@ -199,11 +201,17 @@ class AffectiveCheckResponse(CheckResponse):
         return '<ACResp %s/%d>' % (self.user.anon_id, self.book.id)
 
     @classmethod
-    def recent_with_word(cls, user: ClusiveUser, word):
-        """Construct QuerySet for the most-recent responses by a user that include a true value for the given affect word."""
+    def recent_with_word(cls, user: ClusiveUser, word, time_scale=0):
+        """
+        Construct QuerySet for the most-recent responses by a user that include
+        a true value for the given affect word.  If `time_scale` is provided and
+        non-zero, it is the most recent number of days (zero means "all time").
+        """
         field = word + '_option_response'
         filters = { 'user': user,
                    field: True }
+        if time_scale != 0:
+            filters['updated__gte'] = timezone.now() - timedelta(days=time_scale)
         return cls.objects.filter(**filters).order_by('-updated')
 
 

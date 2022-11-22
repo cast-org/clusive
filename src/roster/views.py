@@ -1494,12 +1494,12 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
         # Dictionaries for the individual panels to be displayed and the data
         # for those panels
-        # TODO: (JS) fill these in as necessary.
         self.panels = dict()
         self.panel_data = dict()
-        self.data = {'days': 30}
-        # Reaction data for "all time" for now
-        affect_totals = self.affect_data_for_time_frame(30)
+
+        # Student reaction data
+        self.affect_totals = dict()
+        affect_totals = self.affect_data_for_time_frame(self.clusive_user.student_activity_days)
         self.panel_data['affect'] = {
             'totals': AffectiveUserTotal.scale_values(affect_totals),
             'empty': affect_totals is None,
@@ -1517,13 +1517,20 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         return context
 
     def affect_data_for_time_frame(self, time_frame):
-        logger.debug('StudentDetailsView.affect_data_for_time_frame()')
+        # If the time frame is "Overall", return the AffectiveUserTotal for the
+        # user. Zero means "Overall".
+        if time_frame == 0:
+            return AffectiveUserTotal.objects.get(user=self.clusive_student)
+
+        # Check if this has been calculated before.
+        if time_frame == 7 and self.affect_totals.get('week') != None:
+            return self.affect_totals['week']
+        elif time_frame == 30 and self.affect_totals.get('month') != None:
+            return self.affect_totals['month']
+
         date_time_frame = timezone.now() - timedelta(days=time_frame)
-        # Note: no way to confine these to the current period.  The
-        # AffectiveCheckResponse does not store that information.
         affect_check_responses = AffectiveCheckResponse.objects.filter(
             user = self.clusive_student,
-            created__gte = date_time_frame,
             updated__gte = date_time_frame
         )
         # Create a new AffectiveUserTotal for these affect check responses,
@@ -1532,5 +1539,11 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         time_frame_totals = AffectiveUserTotal(user=self.clusive_student)
         for acr in affect_check_responses:
             time_frame_totals.update(None, acr.to_list())
+
+        # Track the new AffectiveUserTotal
+        if time_frame == 7:
+            self.affect_totals['week'] = time_frame_totals
+        elif time_frame == 30:
+            self.affect_totals['month'] = time_frame_totals
 
         return time_frame_totals
