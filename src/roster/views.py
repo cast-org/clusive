@@ -1502,21 +1502,20 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
 
         # Get the reading data for the current student. This data will be shared by all panels on the student details page
-        reading_data = Paradata.reading_books_for_period_student(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])[0]
+        reading_data_list = Paradata.get_truncated_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
+        reading_data = None
+        if (len(reading_data_list) > 0):
+            reading_data = reading_data_list[0]
 
-        # Dictionaries for the individual panels to be displayed and the data
-        # for those panels
-        # TODO: (JS) fill these in as necessary.
-        self.panels = dict()
+        # Dictionaries for the individual panel data
         self.panel_data = dict()
         self.panel_data['days'] = self.days
 
         # Student Activity panel
-        self.panels['activity'] = True
         user = User.objects.get(pk=self.clusive_student.user_id)
         self.panel_data['activity'] = {
-            'hours': round(reading_data['hours'], 1),
-            'book_count': reading_data['book_count'],
+            'hours': round(reading_data['hours'], 1) if reading_data else 0,
+            'book_count': reading_data['book_count'] if reading_data else 0,
             'last_login': user.last_login
         }
 
@@ -1529,6 +1528,5 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['current_student_name'] = self.clusive_student.user.first_name if self.clusive_student else "No student"
         context['teacher'] = self.clusive_user
         context['roster'] = self.roster
-        context['panels'] = self.panels
         context['panel_data'] = self.panel_data
         return context
