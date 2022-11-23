@@ -1507,7 +1507,6 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         self.panel_data['days'] = self.days
 
         # Student reaction data
-        self.affect_totals = dict()
         affect_totals = self.affect_data_for_time_frame(self.days)
         self.panel_data['affect'] = {
             'totals': AffectiveUserTotal.scale_values(affect_totals),
@@ -1526,6 +1525,9 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         return context
 
     def affect_data_for_time_frame(self, time_frame):
+        if self.clusive_student == None:
+            return None
+
         # If the time frame is "Overall", return the AffectiveUserTotal for the
         # user. Zero means "Overall".  Also, it is possible that there may be
         # no AffectiveUserTotal instance for the user; otherwise, there is only
