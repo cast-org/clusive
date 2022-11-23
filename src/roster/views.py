@@ -1540,7 +1540,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             user = self.clusive_student,
             updated__gte = date_time_frame
         )
-        if len(affect_check_responses) == 0:
+        if affect_check_responses.count() == 0:
             return None
 
         # Create a new AffectiveUserTotal for the user's affect check responses,
