@@ -51,7 +51,7 @@
 $('.modal-react-detail').one('beforeShow.cfw.modal', function(e) {
     var requestUserName = "{{ request.user.username }}";
     var userName = "{{ student.user.username }}";
-    var userForRequest = ( userName === '' || requestUserName === userName ? '' : `/${userName}`);
+    var userForRequest = (userName === '' || requestUserName === userName ? '' : `/${userName}`);
     var word = $(this).data('word');
     var target = $(this).find('.modal-body');
     $.get('/assessment/affect_detail/'+ word + userForRequest)
