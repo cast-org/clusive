@@ -1489,48 +1489,46 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.days = self.clusive_user.student_activity_days
 
         period = self.clusive_user.current_period
+        self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
+        # Dictionary for the individual panel data
+        self.panel_data = dict()
+        self.panel_data['days'] = self.days
         try:
             self.clusive_student = ClusiveUser.objects.get(
                 user__username=kwargs['username'],
                 periods__in=[period],
                 role__in=[Roles.STUDENT, Roles.GUEST]
             )
+            # Get the reading data for the current student. This data will be shared by all panels on the student details page
+            reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
+            reading_data = None
+            if (len(reading_data_list) > 0):
+                reading_data = reading_data_list[0]
+
+            # Student Activity panel
+            user = User.objects.get(pk=self.clusive_student.user_id)
+            self.panel_data['activity'] = {
+                'hours': round(reading_data['hours'], 1) if reading_data else 0,
+                'book_count': reading_data['book_count'] if reading_data else 0,
+                'last_login': user.last_login
+            }
+
+            # Topics panel
+            books = []
+            # Get all books for the current student
+            if reading_data:
+                for one_book in reading_data['books']:
+                    books.append(one_book['book_id'])
+            subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
+            self.panel_data['topics'] = {
+                'topics': ', '.join(subjects)
+            }
+
         except ClusiveUser.DoesNotExist:
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
-
-        self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
-
-        # Get the reading data for the current student. This data will be shared by all panels on the student details page
-        reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
-        reading_data = None
-        if (len(reading_data_list) > 0):
-            reading_data = reading_data_list[0]
-
-        # Dictionaries for the individual panel data
-        self.panel_data = dict()
-        self.panel_data['days'] = self.days
-
-        # Student Activity panel
-        user = None
-        if self.clusive_student:
-            user = User.objects.get(pk=self.clusive_student.user_id)
-        self.panel_data['activity'] = {
-            'hours': round(reading_data['hours'], 1) if reading_data else 0,
-            'book_count': reading_data['book_count'] if reading_data else 0,
-            'last_login': user.last_login if user else None
-        }
-
-        # Topics panel
-        books = []
-        # Get all books for the current student
-        if reading_data:
-            for one_book in reading_data['books']:
-                books.append(one_book['book_id'])
-        subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
-        self.panel_data['topics'] = {
-            'topics': ', '.join(subjects)
-        }
+            self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            self.panel_data['topics'] = { 'topics': None }
 
         return super().get(request, *args, **kwargs)
 
