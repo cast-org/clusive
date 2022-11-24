@@ -1516,17 +1516,20 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'book_count': reading_data['book_count'] if reading_data else 0,
                 'last_login': user.last_login
             }
+            # Student Reactions panel
+            affect_totals = self.affect_data_for_time_frame(self.days)
+            self.panel_data['affect'] = {
+                'totals': AffectiveUserTotal.scale_values(affect_totals),
+                'empty': affect_totals is None,
+            }
         except ClusiveUser.DoesNotExist:
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
-
-        # Student reaction data
-        affect_totals = self.affect_data_for_time_frame(self.days)
-        self.panel_data['affect'] = {
-            'totals': AffectiveUserTotal.scale_values(affect_totals),
-            'empty': affect_totals is None,
-        }
+            self.panel_data['affect'] = {
+                'totals': AffectiveUserTotal.scale_values(None),
+                'empty': True,
+            }
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -1540,9 +1543,6 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         return context
 
     def affect_data_for_time_frame(self, time_frame):
-        if self.clusive_student == None:
-            return None
-
         # If the time frame is "Overall", return the AffectiveUserTotal for the
         # user. Zero means "Overall".  Also, it is possible that there may be
         # no AffectiveUserTotal instance for the user; otherwise, there is only
