@@ -33,39 +33,11 @@
             </ul>
         </div>
         {# Place holder for view statisics for the student #}
-        {% include "roster/partial/student_details_time_scale.html" with target='student_details' %}
+        {% include "roster/partial/student_details_time_scale.html" with target='student_details' days=panel_data.days %}
     </div>
     <div class="library-grid"">
         <div class="card card-details">
-            {# Placeholder for "Activity" panel #}
-            {# include Activity panel template here #}
-            <div class="box box-secondary">
-                <h4 class="h2">Activity</h4>
-                <div class="box-divider"></div>
-                <div class="row mb-1 ">
-                    <div class="col">
-                        {% if current_student == None %}
-                            Hours read: <span class="h5">&mdash;</span>
-                        {% else %}
-                            Hours read: <span class="h5">5.0</span>
-                        {% endif %}
-                    </div>
-                    <div class="col">
-                        {% if current_student == None %}
-                            # of readings: <span class="h5">&mdash;</span>
-                        {% else %}
-                            # of readings: <span class="h5">7</span>
-                        {% endif %}
-                    </div>
-                </div>
-                <p>
-                    {% if current_student == None %}
-                        Last login: &mdash;
-                    {% else %}
-                        Last login: 2 days ago, 10:45 &ndash; 11:05 A.M.
-                    {% endif %}
-                </p>
-            </div>
+            {% include "roster/partial/student_details_activity.html" with data=panel_data.activity %}
         </div>
         <div class="card card-details">
             {# Placeholder for "Words looked up" panel #}
@@ -84,7 +56,7 @@
         </div>
         {# Student Reactions panel #}
         <div class="card card-details">
-            {% include "roster/partial/student-details-reactions.html" with data=data.affect student=current_student days=data.days %}
+            {% include "roster/partial/student-details-reactions.html" with data=panel_data.affect student=current_student days=panel_data.days %}
         </div>
         {# Placeholder for "Topics" panel #}
         {# include Topics panel template here #}
