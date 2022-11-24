@@ -1512,18 +1512,21 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         self.panel_data['days'] = self.days
 
         # Student Activity panel
-        user = User.objects.get(pk=self.clusive_student.user_id)
+        user = None
+        if self.clusive_student:
+            user = User.objects.get(pk=self.clusive_student.user_id)
         self.panel_data['activity'] = {
             'hours': round(reading_data['hours'], 1) if reading_data else 0,
             'book_count': reading_data['book_count'] if reading_data else 0,
-            'last_login': user.last_login
+            'last_login': user.last_login if user else None
         }
 
         # Topics panel
         books = []
         # Get all books for the current student
-        for one_book in reading_data['books']:
-            books.append(one_book['book_id'])
+        if reading_data:
+            for one_book in reading_data['books']:
+                books.append(one_book['book_id'])
         subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
         self.panel_data['topics'] = {
             'topics': ', '.join(subjects)
