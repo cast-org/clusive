@@ -1,0 +1,28 @@
+{% load humanize %}
+<div id="activity" class="box box-secondary">
+    <h4 class="h2">Activity</h4>
+    <div class="box-divider"></div>
+    <div class="row mb-1 ">
+        <div class="col">
+            {% if current_student == None %}
+                Hours read: <span class="h5">&mdash;</span>
+            {% else %}
+                Hours read: <span class="h5">{{ data.hours }}</span>
+            {% endif %}
+        </div>
+        <div class="col">
+            {% if current_student == None %}
+                # of readings: <span class="h5">&mdash;</span>
+            {% else %}
+                # of readings: <span class="h5">{{ data.book_count }}</span>
+            {% endif %}
+        </div>
+    </div>
+    <p>
+        {% if current_student == None %}
+            Last login: &mdash;
+        {% else %}
+            Last login: {{ data.last_login | naturalday }}
+        {% endif %}
+    </p>
+</div>
