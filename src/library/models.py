@@ -651,14 +651,21 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def reading_data_for_period(cls, period: Period, days=0, sort='name'):
+    def get_reading_data(cls, period: Period, days=0, sort='name', username=None):
         """
-        Calculate time, number of books, and individual book stats for each user in the given Period.
+        Calculate time, number of books, and individual books for each user in the given Period.
+        If a user name is given, calculate only for this user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
+        :param sort: name of field to sort results. The default value is 'name'.
+        :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
-        students = period.users.filter(role=Roles.STUDENT)
+        if username == None:
+            students = period.users.filter(role=Roles.STUDENT)
+        else:
+            students = period.users.filter(role=Roles.STUDENT, user__username=username)
+
         assigned_books = [a.book for a in period.bookassignment_set.all()]
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'books': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
@@ -689,11 +696,35 @@ class Paradata(models.Model):
                 'hours': p.recent_time/one_hour,
                 'is_assigned': p.book in assigned_books,
             })
+
+        # Return value is a sorted list for display.
+        result = list(map.values())
+        # First sort by name, even if something else is the primary sort, so that zeros are alphabetical
+        result.sort(key=lambda item: item['clusive_user'].user.first_name.lower())
+        if sort == StudentActivitySort.COUNT:
+            result.sort(reverse=True, key=lambda item: item['book_count'])
+        elif sort == StudentActivitySort.TIME:
+            result.sort(reverse=True, key=lambda item: item['hours'])
+
+        return result
+
+    @classmethod
+    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', username=None):
+        """
+        Perform further calculation based on get_reading_data() by moving low-time books
+        to an "other" item for each user.
+        :param period: group of students to consider
+        :param days: number of days before and including today. If 0 or omitted, include all time.
+        :param sort: name of field to sort results. The default value is 'name'.
+        :param username: user name to find reading books for. If None, return all students in the given Period.
+        :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
+        """
+        books_for_students = cls.get_reading_data(period, days, sort, username)
         # Add a percent_time field to each item.
         # This is the fraction of the largest total # of hours for any student.
-        if map:
-            max_hours = max([e['hours'] for e in map.values()])
-            for s, entry in map.items():
+        if len(books_for_students) > 0:
+            max_hours = max([e['hours'] for e in books_for_students])
+            for entry in books_for_students:
                 for p in entry['books']:
                     if p['hours']:
                         p['percent_time'] = round(100*p['hours']/max_hours)
@@ -718,17 +749,7 @@ class Paradata(models.Model):
                             'is_assigned': False,
                             'is_other': True,
                         })
-
-        # Return value is a sorted list for display.
-        result = list(map.values())
-        # First sort by name, even if something else is the primary sort, so that zeros are alphabetical
-        result.sort(key=lambda item: item['clusive_user'].user.first_name.lower())
-        if sort == StudentActivitySort.COUNT:
-            result.sort(reverse=True, key=lambda item: item['book_count'])
-        elif sort == StudentActivitySort.TIME:
-            result.sort(reverse=True, key=lambda item: item['hours'])
-
-        return result
+        return books_for_students
 
     class Meta:
         constraints = [
@@ -854,4 +875,3 @@ class CustomVocabularyWord(models.Model):
 
     def __str__(self):
         return '[CustomVocabularyWord %s for %s]' % (self.word, self.customization)
-
