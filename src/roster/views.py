@@ -1502,7 +1502,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
 
         # Get the reading data for the current student. This data will be shared by all panels on the student details page
-        reading_data_list = Paradata.get_truncated_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
+        reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
         reading_data = None
         if (len(reading_data_list) > 0):
             reading_data = reading_data_list[0]

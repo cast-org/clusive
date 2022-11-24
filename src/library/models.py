@@ -651,7 +651,7 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_reading_data(cls, period: Period, days=0, sort='name', username=None):
         """
         Calculate time, number of books, and individual books for each user in the given Period.
         If a user name is given, calculate only for this user.
@@ -709,9 +709,9 @@ class Paradata(models.Model):
         return result
 
     @classmethod
-    def get_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', username=None):
         """
-        Perform further calculation based on get_truncated_reading_data() by moving low-time books
+        Perform further calculation based on get_reading_data() by moving low-time books
         to an "other" item for each user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
@@ -719,7 +719,7 @@ class Paradata(models.Model):
         :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
-        books_for_students = cls.get_truncated_reading_data(period, days, sort, username)
+        books_for_students = cls.get_reading_data(period, days, sort, username)
         # Add a percent_time field to each item.
         # This is the fraction of the largest total # of hours for any student.
         if len(books_for_students) > 0:
