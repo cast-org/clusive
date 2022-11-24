@@ -1520,10 +1520,9 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         }
 
         # Topics panel
-        self.panels['topics'] = True
         books = []
         # Get all books for the current student
-        for one_book in target_reading_data['books']:
+        for one_book in reading_data['books']:
             books.append(one_book['book_id'])
         subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
         self.panel_data['topics'] = {
