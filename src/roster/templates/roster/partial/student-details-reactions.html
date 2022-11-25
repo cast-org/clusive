@@ -2,6 +2,9 @@
     <h4 class="h2">Reactions</h4>
     <div class="box-divider"></div>
     Strike up a class conversation based on what students are feeling about a reading.<br>
+    {% if student is None %}
+        &quot;{{ current_student_username }}&quot; is not in this period. Below are the reactions of the students that are.<br>
+    {% endif %}
     {% if data.empty and student %}
         {{ student.user.first_name }} hasn’t reacted
         {% if days == 7 %}

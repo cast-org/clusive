@@ -1526,9 +1526,12 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            # For the affect panel, give the class version so as to provide
+            # hints about all students' reactions.
+            all_students_affect = AffectiveUserTotal.objects.filter(user__periods=period, user__role=Roles.STUDENT)
             self.panel_data['affect'] = {
-                'totals': AffectiveUserTotal.scale_values(None),
-                'empty': True,
+                'totals': AffectiveUserTotal.aggregate_and_scale(all_students_affect),
+                'empty': all_students_affect is None,
             }
         return super().get(request, *args, **kwargs)
 
