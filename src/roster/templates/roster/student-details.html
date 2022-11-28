@@ -40,19 +40,7 @@
             {% include "roster/partial/student_details_activity.html" with data=panel_data.activity %}
         </div>
         <div class="card card-details">
-            {# Placeholder for "Words looked up" panel #}
-            {# include Words panel template here #}
-            <div class="box box-secondary">
-                <h4 class="h2">Words looked up</h4>
-                <div class="box-divider"></div>
-                <p>
-                    {% if current_student == None %}
-                        N/A
-                    {% else %}
-                        Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, elit, Vestibulum, vel, velit, vitae, enim, maximus, sollicitudin, quis
-                    {% endif %}
-                </p>
-            </div>
+            {% include "roster/partial/student_details_words.html" with data=panel_data.words %}
         </div>
         <div class="card card-details">
             {# Placeholder for "Reactions" panel #}

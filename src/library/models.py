@@ -618,7 +618,7 @@ class Paradata(models.Model):
 
     @classmethod
     def record_word_looked_up(cls, book, user, word):
-        """Update Paradata and ParaDataDaily with the new lookup"""
+        """Update Paradata and ParadataDaily with the new lookup"""
         para, created = cls.objects.get_or_create(book=book, user=user)
         if para.words_looked_up:
             words = json.loads(para.words_looked_up)
@@ -772,6 +772,18 @@ class Paradata(models.Model):
                             'is_other': True,
                         })
         return books_for_students
+    
+    @classmethod
+    def get_words_looked_up(cls, user: ClusiveUser):
+        paradatas = Paradata.objects.filter(user=user)
+        all_words = set()
+        for paradata in paradatas:
+            word_list = json.loads(paradata.words_looked_up or '[]')
+            all_words = all_words.union(set(word_list))
+        
+        all_words_list = list(all_words)
+        all_words_list.sort()
+        return all_words_list
 
     class Meta:
         constraints = [
@@ -790,6 +802,25 @@ class ParadataDaily(models.Model):
     view_count = models.SmallIntegerField(default=0, verbose_name='View count on date')
     total_time = models.DurationField(null=True, verbose_name='Reading time on date')
     words_looked_up = models.TextField(null=True, blank=True, verbose_name='JSON list of words looked up')
+
+    @classmethod
+    def get_words_looked_up(cls, user: ClusiveUser, days=0):
+        if days == 0:
+            return Paradata.get_words_looked_up(user)
+
+        start_date = date.today() - timedelta(days=days)
+        paradata_dailies = ParadataDaily.objects.filter(
+            paradata__user=user,
+            date__gte=start_date
+        )
+        all_words = set()
+        for paradata_daily in paradata_dailies:
+            word_list = json.loads(paradata_daily.words_looked_up or '[]')
+            all_words = all_words.union(set(word_list))
+        
+        all_words_list = list(all_words)
+        all_words_list.sort()
+        return all_words_list
 
 
 class Annotation(models.Model):
