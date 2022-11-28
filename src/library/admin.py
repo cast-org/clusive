@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 from library.models import Book, BookVersion, Paradata, BookAssignment, Annotation, Subject, ParadataDaily, BookTrend, \
-    Customization, CustomVocabularyWord, EducatorResourceCategory, DailyWordList
+    Customization, CustomVocabularyWord, EducatorResourceCategory, DailyWordsLookedUp
 from library.parsing import scan_all_books
 
 logger = logging.getLogger(__name__)
@@ -111,7 +111,7 @@ class CustomVocabularyWordAdmin(admin.ModelAdmin):
     sortable_by = ('id', 'word', 'customization')
 
 
-@admin.register(DailyWordList)
-class DailyWordListAdmin(admin.ModelAdmin):
-    list_display = ['user', 'period', 'words_looked_up', 'date']
-    sortable_by = ('user', 'period', 'date')
+@admin.register(DailyWordsLookedUp)
+class DailyWordsLookedUpAdmin(admin.ModelAdmin):
+    list_display = ['user', 'period', 'words_looked_up', 'day_looked_up', 'created']
+    sortable_by = ('user', 'period', 'day_looked_up', 'created')

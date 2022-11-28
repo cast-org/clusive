@@ -878,8 +878,9 @@ class CustomVocabularyWord(models.Model):
         return '[CustomVocabularyWord %s for %s]' % (self.word, self.customization)
 
 
-class DailyWordList(models.Model):
+class DailyWordsLookedUp(models.Model):
     user = models.ForeignKey(to=ClusiveUser, on_delete=models.CASCADE, db_index=True)
     period = models.ForeignKey(to=Period, null=True, on_delete=models.CASCADE, db_index=True)
-    date = models.DateTimeField(default=timezone.now)
+    day_looked_up = models.DateTimeField(default=timezone.now)
     words_looked_up = models.TextField(null=True, blank=True, verbose_name='JSON list of words looked up')
+    created = models.DateTimeField(auto_now_add=True)
