@@ -253,6 +253,7 @@ $box-color:                             $body-color;
 $box-divider-color:                     #d4c8b7;
 $box-secondary-bg:                      #ebe3d5;
 $box-secondary-color:                   $body-color;
+$box-secondary-divider-color:           #d4c8b7;
 
 $box-resource-bg:                       #e4dacb;
 $box-resource-color:                    $body-color;
@@ -636,6 +637,8 @@ $readtime-bar-bg:                       #a0abfd;
 $readtime-bar-active-bg:                #ff554d;
 $readtime-bar-striped-bg:               $box-bg;
 $readtime-filter-active-border-color:   #ff554d;
+
+$datatable-mark-color:                  #0d36ab;
 
 // Alerts
 $alert-primary-bg:                      $popover-header-bg;

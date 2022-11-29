@@ -10,7 +10,7 @@
     @include clearfix();
 
     hr {
-        color: var(--CT_boxResourceDivderColor);
+        color: var(--CT_boxResourceDividerColor);
         opacity: 1;
     }
 
@@ -25,7 +25,7 @@
     border: $box-border-width solid var(--CT_boxResourceSecondaryBorderColor);
 
     hr {
-        color: var(--CT_boxResourceSecondaryDivderColor);
+        color: var(--CT_boxResourceSecondaryDividerColor);
     }
 }
 
