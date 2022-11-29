@@ -27,6 +27,7 @@
     display: flex;
     flex: 0 0 $sidebar-width;
     height: calc(100vh - #{$header-height + $body-padding-y});
+    height: calc((var(--vh, 1vh) * 100) - #{$header-height + $body-padding-y});
     pointer-events: none;
 
     > * {
@@ -36,6 +37,7 @@
     @include media-breakpoint-up(md) {
         flex-basis: $sidebar-md-width;
         height: calc(100vh - #{$header-md-height + $body-padding-y});
+        height: calc((var(--vh, 1vh) * 100) - #{$header-md-height + $body-padding-y});
     }
 }
 

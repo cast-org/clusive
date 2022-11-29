@@ -51,6 +51,26 @@ function clusiveDebounce(func, wait, immediate) {
     };
 }
 
+function clusiveThrottle(func, limit) {
+    var timeout;
+    var lastRan;
+    return function() {
+        var context = this;
+        var args = arguments;
+        if (!lastRan) {
+            func.apply(context, args)
+            lastRan = Date.now();
+        } else {
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                if ((Date.now() - lastRan) >= limit) {
+                    func.apply(context, args);
+                    lastRan = Date.now();
+                }
+            }, limit - (Date.now() - lastRan));
+        }
+    }
+}
 
 /*
   Easing functions
@@ -450,6 +470,11 @@ var updateCSSVars = clusiveDebounce(function() {
     body.style.setProperty('--CT_lineHeight', lineHeight);
 }, 10);
 
+var updateVHVar = clusiveThrottle(function() {
+    // Use viewport height to create a vh unit in equivalent pixels
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}, 50);
 
 function formUseThisLinks() {
     'use strict';
@@ -1341,7 +1366,11 @@ $(window).ready(function() {
     document.addEventListener('update.cisl.prefs', updateCSSVars, {
         passive: true
     });
+    window.addEventListener('resize', updateVHVar, {
+        passive: true
+    });
     updateCSSVars();
+    updateVHVar();
 
     formFileText();
     starsSelectedText();
