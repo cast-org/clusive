@@ -81,7 +81,7 @@
             </div>
         </div>
     </div>
-    <div class="box box-secondary">
+    <div class="box box-secondary mt-1">
         {# Placeholder for "Reading details" panel #}
         <div class="row gx-1 flex-items-center mb-0_5">
             <div class="col-auto">
@@ -103,11 +103,12 @@
                     <!-- Available sort indicators for table header anchors:
                           - `.sort-up`
                           - `.sort-down`
+                          - `.sort-active`
                     -->
                     <tr>
-                        <th><a href="#">Title/author</a></th>
+                        <th><a href="#" class="sort-active">Title</a>/author</th>
                         <th><a href="#">Active time</a></th>
-                        <th><a href="#" class="sort-down">Last read</a></th>
+                        <th><a href="#" class="sort-active">Last read</a></th>
                         <th class="d-sm-down-none">Words looked up</th>
                         <th class="d-sm-down-none">Learning</th>
                         <th class="d-md-down-none">Custom</th>
