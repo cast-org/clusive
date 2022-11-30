@@ -1519,7 +1519,6 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             if reading_data and reading_data['books']:
                 for one_book in reading_data['books']:
                     book = Book.objects.get(pk=one_book['book_id'])
-                    paras = Paradata.objects.filter(user=self.clusive_student, book=book)
                     customizations = Customization.objects.filter(book=book, periods=self.clusive_user.current_period)
                     comp_checks = ComprehensionCheckResponse.objects.filter(user=self.clusive_student, book=book)
                     custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=self.clusive_user.current_period)
@@ -1533,17 +1532,17 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                         'title': one_book['title'],
                         'author': book.author,
                         'hours': round(one_book['hours'], 1),
-                        'last_view': paras[0].last_view,
-                        'view_count': paras[0].view_count,
-                        'words_looked_up': paras[0].words_looked_up,
-                        'first_version': paras[0].first_version,
-                        'last_version': paras[0].last_version,
+                        'last_view': one_book['last_view'],
+                        'view_count': one_book['view_count'],
+                        'words_looked_up': one_book['words_looked_up'],
+                        'first_version': one_book['first_version'],
+                        'last_version': one_book['last_version'],
                         'custom_question': '(' + customizations[0].question + ')' if customizations else None,
                         'custom_response': custom_response[0].custom_response if custom_response else None,
                         'learning': comp_checks[0].get_answer if comp_checks else None,
                         'reading_level': ', '.join(category_names),
                         'is_assigned': one_book['is_assigned'],
-                        'version_switched': True if paras[0].first_version and paras[0].first_version != paras[0].last_version else False
+                        'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False
                     })
         except ClusiveUser.DoesNotExist:
             messages.error(request, "Student '{kwargs['username']}' not in this class ({period.name})")

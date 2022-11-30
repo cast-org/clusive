@@ -694,6 +694,11 @@ class Paradata(models.Model):
                 'book_id': p.book.id,
                 'title': p.book.title,
                 'hours': p.recent_time/one_hour,
+                'last_view': p.last_view,
+                'view_count': p.view_count,
+                'words_looked_up': p.words_looked_up,
+                'first_version': p.first_version,
+                'last_version': p.last_version,
                 'is_assigned': p.book in assigned_books,
             })
 
