@@ -68,5 +68,5 @@ urlpatterns = [
     path('my_account/remove/<str:provider>', views.remove_social_account, name='remove_social_account'),
     path('details/<username>', views.StudentDetailsView.as_view(), name='student_details'),
     path('details/<username>/<int:days>', views.StudentDetailsView.as_view(), name='student_details'),
-    path('reading-details-panel-sort/<username>/<days>/<sort>', views.ReadingDetailsPanelView.as_view(), name='reading_details_panel_sort'),
+    path('reading-details-panel-sort/<username>/<int:days>/<sort>', views.ReadingDetailsPanelView.as_view(), name='reading_details_panel_sort'),
 ]

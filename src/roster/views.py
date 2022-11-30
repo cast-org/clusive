@@ -1501,7 +1501,49 @@ def get_book_details(books, period, clusiveStudent):
             })
     return book_details    
 
-class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+class ReadingDetailsPanelView(TemplateView):
+    """Shows just the reading details panel, for AJAX updates"""
+    template_name = 'roster/partial/student_details_reading_details.html'
+
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.current_period = request.clusive_user.current_period
+        self.username = kwargs.get('username')
+        self.days = kwargs.get('days') if 'days' in kwargs else self.clusive_user.student_activity_days
+        
+        if 'sort' in kwargs:
+            self.sort = kwargs.get('sort')
+            logger.debug('Setting reading details sort = %s', self.sort)
+            self.clusive_user.reading_details_sort = self.sort
+            self.clusive_user.save()
+        else:
+            self.sort = self.clusive_user.reading_details_sort
+
+        try:
+            clusive_student = ClusiveUser.objects.get(
+                user__username=self.username,
+                periods__in=[self.current_period],
+                role__in=[Roles.STUDENT, Roles.GUEST]
+            )
+            # Get the reading data for the current student. This data will be shared by all panels on the student details page
+            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
+            self.book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student)
+        except ClusiveUser.DoesNotExist:
+            messages.error(request, "Student '{kwargs['username']}' not in this class ({self.current_period.name})")
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = {
+            'sort': self.sort,
+            'username': self.username,
+            'days': self.days,
+            'book_details': self.book_details
+        }
+        return context
+
+class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, ReadingDetailsPanelView):
     template_name='roster/student-details.html'
 
     def __init__(self):
@@ -1542,18 +1584,10 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'book_count': reading_data['book_count'] if reading_data else 0,
                 'last_login': user.last_login
             }
-
-            # Student Reading Details panel
-            self.panel_data['reading_details'] = {
-                'username': kwargs['username'],
-                'days': self.days,
-                'book_details': get_book_details(reading_data['books'], self.clusive_user.current_period, self.clusive_student)
-            }
         except ClusiveUser.DoesNotExist:
             messages.error(request, "Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
-            self.panel_data['reading_details'] = { 'book_details': [] }
 
         return super().get(request, *args, **kwargs)
 
@@ -1565,39 +1599,4 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['teacher'] = self.clusive_user
         context['roster'] = self.roster
         context['panel_data'] = self.panel_data
-        return context
-
-class ReadingDetailsPanelView(TemplateView):
-    """Shows just the reading details panel, for AJAX updates"""
-    template_name = 'roster/partial/student_details_reading_details.html'
-
-    def get(self, request, *args, **kwargs):
-        self.clusive_user = request.clusive_user
-        self.current_period = request.clusive_user.current_period
-        self.username = kwargs.get('username')
-        self.days = int(kwargs.get('days'))
-        self.sort = kwargs.get('sort')
-
-        try:
-            clusive_student = ClusiveUser.objects.get(
-                user__username=self.username,
-                periods__in=[self.current_period],
-                role__in=[Roles.STUDENT, Roles.GUEST]
-            )
-            # Get the reading data for the current student. This data will be shared by all panels on the student details page
-            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
-            self.book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student)
-        except ClusiveUser.DoesNotExist:
-            messages.error(request, "Student '{kwargs['username']}' not in this class ({self.current_period.name})")
-
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['data'] = {
-            'sort': self.sort,
-            'username': self.username,
-            'days': self.days,
-            'book_details': self.book_details
-        }
         return context

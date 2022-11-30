@@ -269,6 +269,10 @@ class ClusiveUser(models.Model):
     student_activity_sort = models.CharField(max_length=10, default=StudentActivitySort.NAME,
                                              choices=StudentActivitySort.CHOICES)
 
+    # How the user has chosen to sort the 'Reading details' display. This choice is persistent.
+    reading_details_sort = models.CharField(max_length=10, default=ReadingDetailsSort.TITLE,
+                                             choices=ReadingDetailsSort.CHOICES)
+
     # How the user has chosen to simplify or translate text
     transform_tool = models.CharField(max_length=10, default=TransformTool.TRANSLATE,
                                       choices=TransformTool.CHOICES)
