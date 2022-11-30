@@ -191,6 +191,17 @@ class StudentActivitySort:
         (COUNT, 'count'),
     ]
 
+class ReadingDetailsSort:
+    TITLE = 'title'
+    TIME = 'time'
+    LASTVIEW = 'lastview'
+
+    CHOICES = [
+        (TITLE, 'title'),
+        (TIME, 'time'),
+        (LASTVIEW, 'lastview'),
+    ]
+
 class TransformTool:
     SIMPLIFY = 'simplify'
     TRANSLATE = 'translate'

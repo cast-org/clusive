@@ -13,7 +13,7 @@ from django.db import models
 from django.db.models import Sum, Q, QuerySet
 from django.utils import timezone
 
-from roster.models import ClusiveUser, Period, Roles, StudentActivitySort
+from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
 from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
@@ -651,13 +651,14 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def get_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_reading_data(cls, period: Period, days=0, sort='name', books_sort='title', username=None):
         """
         Calculate time, number of books, and individual books for each user in the given Period.
         If a user name is given, calculate only for this user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
         :param sort: name of field to sort results. The default value is 'name'.
+        :param books_sort: name of field to sort the book list in every result. The default value is 'title'.
         :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
@@ -710,17 +711,27 @@ class Paradata(models.Model):
             result.sort(reverse=True, key=lambda item: item['book_count'])
         elif sort == StudentActivitySort.TIME:
             result.sort(reverse=True, key=lambda item: item['hours'])
+        
+        if (books_sort):
+            for reading_data_for_one_user in result:
+                if books_sort == ReadingDetailsSort.TITLE:
+                    reading_data_for_one_user['books'].sort(key=lambda item: item['title'])
+                if books_sort == ReadingDetailsSort.TIME:
+                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['hours'])
+                if books_sort == ReadingDetailsSort.LASTVIEW:
+                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['last_view'])
 
         return result
 
     @classmethod
-    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', books_sort='title', username=None):
         """
         Perform further calculation based on get_reading_data() by moving low-time books
         to an "other" item for each user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
         :param sort: name of field to sort results. The default value is 'name'.
+        :param books_sort: name of field to sort the book list in every result. The default value is 'title'.
         :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """

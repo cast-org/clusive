@@ -23,9 +23,9 @@
                       - `.sort-active`
                 -->
                 <tr>
-                    <th><a href="#" class="sort-active">Title</a>/author</th>
-                    <th><a href="#">Active time</a></th>
-                    <th><a href="#" class="sort-active">Last read</a></th>
+                    <th><a href="#" data-sort="title" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-sort{% if data.sort == 'title' %} sort-active{% endif %}">Title</a>/author</th>
+                    <th><a href="#" data-sort="time" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-sort{% if data.sort == 'time' %} sort-active{% endif %}">Active time</a></th>
+                    <th><a href="#" data-sort="lastview" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-sort{% if data.sort == 'lastview' %} sort-active{% endif %}">Last read</a></th>
                     <th class="d-sm-down-none">Words looked up</th>
                     <th class="d-sm-down-none">Learning</th>
                     <th class="d-md-down-none">Custom</th>
@@ -33,7 +33,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for book in data %}
+                {% for book in data.book_details %}
                 <tr>
                     <th scope="row">
                         <a href="{% url 'reader_default' book_id=book.book_id %}">{{ book.title }}</a>

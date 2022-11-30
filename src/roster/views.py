@@ -1469,6 +1469,38 @@ def remove_social_account(request, *args, **kwargs):
 
     return HttpResponseRedirect(reverse('my_account'))
 
+def get_book_details(books, period, clusiveStudent):
+    book_details = []
+    if books:
+        for one_book in books:
+            book = Book.objects.get(pk=one_book['book_id'])
+            customizations = Customization.objects.filter(book=book, periods=period)
+            comp_checks = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book)
+            custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=period)
+            custom_response = custom_responses.filter(user=clusiveStudent)
+            category_names = []
+            for category in book.reading_level_categories:
+                category_names.append(category.tag_name)
+
+            book_details.append({
+                'book_id': one_book['book_id'],
+                'title': one_book['title'],
+                'author': book.author,
+                'hours': round(one_book['hours'], 1),
+                'last_view': one_book['last_view'],
+                'view_count': one_book['view_count'],
+                'words_looked_up': one_book['words_looked_up'],
+                'first_version': one_book['first_version'],
+                'last_version': one_book['last_version'],
+                'custom_question': '(' + customizations[0].question + ')' if customizations else None,
+                'custom_response': custom_response[0].custom_response if custom_response else None,
+                'learning': comp_checks[0].get_answer if comp_checks else None,
+                'reading_level': ', '.join(category_names),
+                'is_assigned': one_book['is_assigned'],
+                'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False
+            })
+    return book_details    
+
 class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
     template_name='roster/student-details.html'
 
@@ -1501,10 +1533,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 role__in=[Roles.STUDENT, Roles.GUEST]
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
-            reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
-            reading_data = None
-            if (len(reading_data_list) > 0):
-                reading_data = reading_data_list[0]
+            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, username=kwargs['username'])[0]
 
             # Student Activity panel
             user = User.objects.get(pk=self.clusive_student.user_id)
@@ -1515,39 +1544,16 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             }
 
             # Student Reading Details panel
-            self.panel_data['reading_details'] = []
-            if reading_data and reading_data['books']:
-                for one_book in reading_data['books']:
-                    book = Book.objects.get(pk=one_book['book_id'])
-                    customizations = Customization.objects.filter(book=book, periods=self.clusive_user.current_period)
-                    comp_checks = ComprehensionCheckResponse.objects.filter(user=self.clusive_student, book=book)
-                    custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=self.clusive_user.current_period)
-                    custom_response = custom_responses.filter(user=self.clusive_student)
-                    category_names = []
-                    for category in book.reading_level_categories:
-                        category_names.append(category.tag_name)
-
-                    self.panel_data['reading_details'].append({
-                        'book_id': one_book['book_id'],
-                        'title': one_book['title'],
-                        'author': book.author,
-                        'hours': round(one_book['hours'], 1),
-                        'last_view': one_book['last_view'],
-                        'view_count': one_book['view_count'],
-                        'words_looked_up': one_book['words_looked_up'],
-                        'first_version': one_book['first_version'],
-                        'last_version': one_book['last_version'],
-                        'custom_question': '(' + customizations[0].question + ')' if customizations else None,
-                        'custom_response': custom_response[0].custom_response if custom_response else None,
-                        'learning': comp_checks[0].get_answer if comp_checks else None,
-                        'reading_level': ', '.join(category_names),
-                        'is_assigned': one_book['is_assigned'],
-                        'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False
-                    })
+            self.panel_data['reading_details'] = {
+                'username': kwargs['username'],
+                'days': self.days,
+                'book_details': get_book_details(reading_data['books'], self.clusive_user.current_period, self.clusive_student)
+            }
         except ClusiveUser.DoesNotExist:
             messages.error(request, "Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            self.panel_data['reading_details'] = { 'book_details': [] }
 
         return super().get(request, *args, **kwargs)
 
@@ -1559,4 +1565,39 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['teacher'] = self.clusive_user
         context['roster'] = self.roster
         context['panel_data'] = self.panel_data
+        return context
+
+class ReadingDetailsPanelView(TemplateView):
+    """Shows just the reading details panel, for AJAX updates"""
+    template_name = 'roster/partial/student_details_reading_details.html'
+
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        self.current_period = request.clusive_user.current_period
+        self.username = kwargs.get('username')
+        self.days = int(kwargs.get('days'))
+        self.sort = kwargs.get('sort')
+
+        try:
+            clusive_student = ClusiveUser.objects.get(
+                user__username=self.username,
+                periods__in=[self.current_period],
+                role__in=[Roles.STUDENT, Roles.GUEST]
+            )
+            # Get the reading data for the current student. This data will be shared by all panels on the student details page
+            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
+            self.book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student)
+        except ClusiveUser.DoesNotExist:
+            messages.error(request, "Student '{kwargs['username']}' not in this class ({self.current_period.name})")
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = {
+            'sort': self.sort,
+            'username': self.username,
+            'days': self.days,
+            'book_details': self.book_details
+        }
         return context
