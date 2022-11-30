@@ -94,10 +94,11 @@
 
         --CT_boxBg: #{$box-bg};
         --CT_boxColor: #{$box-color};
-        --CT_boxDivderColor: #{$box-divider-color};
+        --CT_boxDividerColor: #{$box-divider-color};
         --CT_boxMascotSize: #{$box-mascot-size};
         --CT_boxSecondaryBg: #{$box-secondary-bg};
         --CT_boxSecondaryColor: #{$box-secondary-color};
+        --CT_boxSecondaryDividerColor: #{$box-secondary-divider-color};
 
         --CT_boxTabBg: #{$box-tab-bg};
         --CT_boxTabColor: #{$box-tab-color};
@@ -542,6 +543,8 @@
         --CT_readTimeBarActiveBg: #{$readtime-bar-active-bg};
         --CT_readTimeBarStripedBg: #{$readtime-bar-striped-bg};
         --CT_readTimeFilterActiveBorderColor: #{$readtime-filter-active-border-color};
+
+        --CT_dataTableMarkColor: #{$datatable-mark-color};
 
         // Alerts
         --CT_alertPrimaryBg: #{$alert-primary-bg};

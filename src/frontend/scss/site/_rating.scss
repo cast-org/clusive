@@ -295,7 +295,7 @@
     background-position: top right;
     background-size: 1.625rem 1.625rem, auto;
 
-    .box & {
+    .box:not(.box-secondary) & {
         background: var(--CT_reactBoxQ0Bg);
         background-repeat: no-repeat, no-repeat;
         background-position: top right;
@@ -310,7 +310,7 @@
     background-position: bottom right;
     background-size: 1.625rem 1.625rem, auto;
 
-    .box & {
+    .box:not(.box-secondary) & {
         background: var(--CT_reactBoxQ1Bg);
         background-repeat: no-repeat, no-repeat;
         background-position: bottom right;
@@ -325,7 +325,7 @@
     background-position: bottom left;
     background-size: 1.625rem 1.625rem, auto;
 
-    .box & {
+    .box:not(.box-secondary) & {
         background: var(--CT_reactBoxQ2Bg);
         background-repeat: no-repeat, no-repeat;
         background-position: bottom left;
@@ -335,12 +335,12 @@
 .react-quad-3 {
     right: 50%;
     bottom: 50%;
-    background: var(--CT_reactQ3Bg);
+    background-image: var(--CT_reactQ3Bg);
     background-repeat: no-repeat, no-repeat;
     background-position: top left;
     background-size: 1.625rem 1.625rem, auto;
 
-    .box & {
+    .box:not(.box-secondary) & {
         background: var(--CT_reactBoxQ3Bg);
         background-repeat: no-repeat, no-repeat;
         background-position: top left;
@@ -509,7 +509,7 @@
     transform: translate3d(0, -100%, 0) rotate(-330deg) translateX(-100%);
 }
 
-.box .react {
+.box:not(.box-secondary) .react {
     --reactLine: var(--CT_reactBoxLine);
     --reactIcon: var(--CT_reactBoxIcon);
 }

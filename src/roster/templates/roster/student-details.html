@@ -74,14 +74,11 @@
             </div>
         </div>
     </div>
-    <div class="box box-secondary">
+    <div class="box box-secondary mt-1">
         {# Placeholder for "Reading details" panel #}
         <div class="row gx-1 flex-items-center mb-0_5">
             <div class="col-auto">
                 <h4 class="h2 mb-0">Reading details</h4>
-            </div>
-            <div class="col-auto ms-n0_5">
-                <a href="#">export<span class="sr-only"> reading details for {{ current_student.user.first_name }}</span></a>
             </div>
             <div class="col-md-auto ms-md-auto">
                 <section aria-label="Legend">
@@ -99,11 +96,12 @@
                     <!-- Available sort indicators for table header anchors:
                           - `.sort-up`
                           - `.sort-down`
+                          - `.sort-active`
                     -->
                     <tr>
-                        <th><a href="#">Title/author</a></th>
+                        <th><a href="#" class="sort-active">Title</a>/author</th>
                         <th><a href="#">Active time</a></th>
-                        <th><a href="#" class="sort-down">Last read</a></th>
+                        <th><a href="#" class="sort-active">Last read</a></th>
                         <th class="d-sm-down-none">Words looked up</th>
                         <th class="d-sm-down-none">Learning</th>
                         <th class="d-md-down-none">Custom</th>
@@ -184,13 +182,4 @@
         </div>
     </div>
 </main>
-{# Unsure if the tour or tips are available on the student detail page #}
-{# Leaving in place for now #}
-{% for tour in tours %}
-{% include "shared/partial/popover_tour.html" with tour_name=tour.name tour_robust=tour.robust %}
-{% endfor %}
-{% if tip_name %}
-{% include "shared/partial/tooltip_tip.html" %}
-{% endif %}
-
 {% endblock %}
