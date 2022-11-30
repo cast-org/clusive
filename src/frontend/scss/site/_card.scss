@@ -298,3 +298,8 @@
         @include border-bottom-radius($card-border-radius);
     }
 }
+
+.card-details {
+    background-color: transparent;
+    border: 0;
+}
