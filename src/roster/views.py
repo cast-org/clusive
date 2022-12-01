@@ -1507,8 +1507,8 @@ class ReadingDetailsPanelView(TemplateView):
     template_name = 'roster/partial/student_details_reading_details.html'
 
     def get(self, request, *args, **kwargs):
-        paginate_by = 1
-        paginate_orphans = 0
+        paginate_by = 10
+        paginate_orphans = 2
 
         self.clusive_user = request.clusive_user
         self.current_period = request.clusive_user.current_period
