@@ -1490,7 +1490,7 @@ def get_book_details(books, period, clusiveStudent):
                 'hours': round(one_book['hours'], 1),
                 'last_view': one_book['last_view'],
                 'view_count': one_book['view_count'],
-                'words_looked_up': one_book['words_looked_up'],
+                'words_looked_up': ', '.join(json.loads(one_book['words_looked_up'])) if one_book['words_looked_up'] else None,
                 'first_version': one_book['first_version'],
                 'last_version': one_book['last_version'],
                 'custom_question': '(' + customizations[0].question + ')' if customizations else None,
