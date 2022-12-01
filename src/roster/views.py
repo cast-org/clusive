@@ -32,6 +32,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView, RedirectView
+from django.core.paginator import Paginator
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -1506,10 +1507,14 @@ class ReadingDetailsPanelView(TemplateView):
     template_name = 'roster/partial/student_details_reading_details.html'
 
     def get(self, request, *args, **kwargs):
+        paginate_by = 1
+        paginate_orphans = 0
+
         self.clusive_user = request.clusive_user
         self.current_period = request.clusive_user.current_period
         self.username = kwargs.get('username')
         self.days = kwargs.get('days') if 'days' in kwargs else self.clusive_user.student_activity_days
+        self.page_num = kwargs.get('page_num') if 'page_num' in kwargs else 1
         
         if 'sort' in kwargs:
             self.sort = kwargs.get('sort')
@@ -1519,6 +1524,8 @@ class ReadingDetailsPanelView(TemplateView):
         else:
             self.sort = self.clusive_user.reading_details_sort
 
+        self.paginator = {}
+        self.page_obj = {}
         try:
             clusive_student = ClusiveUser.objects.get(
                 user__username=self.username,
@@ -1527,9 +1534,12 @@ class ReadingDetailsPanelView(TemplateView):
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
-            self.book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student)
+            book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student)
+
+            self.paginator = Paginator(book_details, paginate_by, paginate_orphans)
+            self.page_obj = self.paginator.get_page(self.page_num)
         except ClusiveUser.DoesNotExist:
-            messages.error(request, "Student '{kwargs['username']}' not in this class ({self.current_period.name})")
+            logger.warning("Reading details panel: Student '" + self.username + "' not in this class (" + self.current_period.name + ")")
 
         return super().get(request, *args, **kwargs)
 
@@ -1539,7 +1549,8 @@ class ReadingDetailsPanelView(TemplateView):
             'sort': self.sort,
             'username': self.username,
             'days': self.days,
-            'book_details': self.book_details
+            'paginator': self.paginator,
+            'page_obj': self.page_obj
         }
         return context
 
@@ -1585,7 +1596,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'last_login': user.last_login
             }
         except ClusiveUser.DoesNotExist:
-            messages.error(request, "Student '{kwargs['username']}' not in this class ({period.name})")
+            messages.error(request, "Student '" + kwargs['username'] + "' not in this class (" + period.name + ")")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
 

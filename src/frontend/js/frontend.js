@@ -1333,10 +1333,10 @@ function studentDetailsSetup() {
     'use strict';
 
     var $body = $('body');
-    $body.on('click', 'a.reading-details-sort', function(e) {
+    $body.on('click', 'a.reading-details-link', function(e) {
         e.preventDefault();
         var $readingDetailsPanel = $('#readingDetailsPanel');
-        $.get('/account/reading-details-panel-sort/' + $(this).data('username') + '/' + $(this).data('days') + '/' + $(this).data('sort'))
+        $.get('/account/reading-details/' + $(this).data('username') + '/' + $(this).data('days') + '/' + $(this).data('sort') + '/' + $(this).data('pagenum'))
             .done(function(result) {
                 $readingDetailsPanel.replaceWith(result);
                 $('#readingDetailsPanel').CFW_Init();
@@ -1344,7 +1344,7 @@ function studentDetailsSetup() {
             .fail(function(err) {
                 console.error('Failed fetching replacement reading details panel: ', err);
             });
-    });    
+    });
 }
 
 $(window).ready(function() {
