@@ -39,7 +39,7 @@ from googleapiclient.errors import HttpError
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
-from library.models import Paradata
+from library.models import Paradata, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
@@ -1512,10 +1512,23 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'book_count': reading_data['book_count'] if reading_data else 0,
                 'last_login': user.last_login
             }
+
+            # Topics panel
+            books = []
+            # Get all books for the current student
+            if reading_data:
+                for one_book in reading_data['books']:
+                    books.append(one_book['book_id'])
+            subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
+            self.panel_data['topics'] = {
+                'topics': ', '.join(subjects)
+            }
+
         except ClusiveUser.DoesNotExist:
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            self.panel_data['topics'] = { 'topics': None }
 
         return super().get(request, *args, **kwargs)
 
