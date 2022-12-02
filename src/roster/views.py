@@ -41,7 +41,7 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from assessment.models import ComprehensionCheckResponse
-from library.models import Book, Customization, Paradata
+from library.models import Book, Customization, Paradata, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
@@ -1577,7 +1577,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.days = self.clusive_user.student_activity_days
 
         period = self.clusive_user.current_period
-        self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
+        self.roster = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
         # Dictionary for the individual panel data
         self.panel_data = dict()
         self.panel_data['days'] = self.days
@@ -1585,7 +1585,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.clusive_student = ClusiveUser.objects.get(
                 user__username=kwargs['username'],
                 periods__in=[period],
-                role__in=[Roles.STUDENT, Roles.GUEST]
+                role__in=[Roles.STUDENT]
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, username=kwargs['username'])[0]
@@ -1597,10 +1597,23 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'book_count': reading_data['book_count'] if reading_data else 0,
                 'last_login': user.last_login
             }
+
+            # Topics panel
+            books = []
+            # Get all books for the current student
+            if reading_data:
+                for one_book in reading_data['books']:
+                    books.append(one_book['book_id'])
+            subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
+            self.panel_data['topics'] = {
+                'topics': ', '.join(subjects)
+            }
+
         except ClusiveUser.DoesNotExist:
             messages.error(request, "Student '" + kwargs['username'] + "' not in this class (" + period.name + ")")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            self.panel_data['topics'] = { 'topics': None }
 
         return super().get(request, *args, **kwargs)
 
