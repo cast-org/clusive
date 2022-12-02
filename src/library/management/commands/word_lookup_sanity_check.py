@@ -7,7 +7,6 @@ from django.core.management.base import BaseCommand, CommandError
 
 from roster.models import ClusiveUser
 from library.models import Paradata, ParadataDaily
-from eventlog import Event
 
 logger = logging.getLogger(__name__)
 
