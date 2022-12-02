@@ -41,7 +41,7 @@ from assessment.models import AffectiveCheckResponse, AffectiveUserTotal
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
-from library.models import Paradata
+from library.models import Paradata, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
@@ -1471,7 +1471,7 @@ def remove_social_account(request, *args, **kwargs):
     return HttpResponseRedirect(reverse('my_account'))
 
 class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
-    template_name='roster/student-details.html'
+    template_name='roster/student_details.html'
 
     def __init__(self):
         super().__init__()
@@ -1493,7 +1493,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.days = self.clusive_user.student_activity_days
 
         period = self.clusive_user.current_period
-        self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
+        self.roster = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
         # Dictionary for the individual panel data
         self.panel_data = dict()
         self.panel_data['days'] = self.days
@@ -1501,7 +1501,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.clusive_student = ClusiveUser.objects.get(
                 user__username=kwargs['username'],
                 periods__in=[period],
-                role__in=[Roles.STUDENT, Roles.GUEST]
+                role__in=[Roles.STUDENT]
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
@@ -1522,6 +1522,16 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'totals': AffectiveUserTotal.scale_values(affect_totals),
                 'empty': affect_totals is None,
             }
+            # Topics panel
+            books = []
+            # Get all books for the current student
+            if reading_data:
+                for one_book in reading_data['books']:
+                    books.append(one_book['book_id'])
+            subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
+            self.panel_data['topics'] = {
+                'topics': ', '.join(subjects)
+            }
         except ClusiveUser.DoesNotExist:
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
@@ -1533,6 +1543,8 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'totals': AffectiveUserTotal.aggregate_and_scale(all_students_affect),
                 'empty': all_students_affect is None,
             }
+            self.panel_data['topics'] = { 'topics': None }
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
