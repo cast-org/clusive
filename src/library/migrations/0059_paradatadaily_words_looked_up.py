@@ -24,7 +24,7 @@ def batch_load_daily_word_lists(apps, schema_editor):
         word_events = Event.objects.filter(
             actor=clusive_user,
             control__icontains='lookup'
-        )
+        ).exclude(book_id=None)
         # Loop thru the word events and construct a dictionary mapping
         # (book, date) tuples to a set of words gathered from the events
         # for the book and date.
