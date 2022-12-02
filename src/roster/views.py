@@ -1557,7 +1557,7 @@ class ReadingDetailsPanelView(TemplateView):
         return context
 
 class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, ReadingDetailsPanelView):
-    template_name='roster/student-details.html'
+    template_name='roster/student_details.html'
 
     def __init__(self):
         super().__init__()
