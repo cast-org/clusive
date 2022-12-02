@@ -1469,7 +1469,7 @@ def remove_social_account(request, *args, **kwargs):
     return HttpResponseRedirect(reverse('my_account'))
 
 class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
-    template_name='roster/student-details.html'
+    template_name='roster/student_details.html'
 
     def __init__(self):
         super().__init__()
