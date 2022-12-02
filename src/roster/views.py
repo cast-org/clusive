@@ -1489,7 +1489,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.days = self.clusive_user.student_activity_days
 
         period = self.clusive_user.current_period
-        self.roster = period.users.exclude(user=request.user, role=Roles.TEACHER).order_by('user__first_name')
+        self.roster = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
         # Dictionary for the individual panel data
         self.panel_data = dict()
         self.panel_data['days'] = self.days
@@ -1497,7 +1497,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.clusive_student = ClusiveUser.objects.get(
                 user__username=kwargs['username'],
                 periods__in=[period],
-                role__in=[Roles.STUDENT, Roles.GUEST]
+                role__in=[Roles.STUDENT]
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
