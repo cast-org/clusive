@@ -1470,7 +1470,7 @@ def remove_social_account(request, *args, **kwargs):
 
     return HttpResponseRedirect(reverse('my_account'))
 
-def get_book_details(books, period, clusiveStudent):
+def get_book_details(books, period, clusiveStudent, clusiveUser):
     book_details = []
     if books:
         for one_book in books:
@@ -1498,8 +1498,10 @@ def get_book_details(books, period, clusiveStudent):
                 'learning': comp_checks[0].get_answer if comp_checks else None,
                 'reading_level': ', '.join(category_names),
                 'is_assigned': one_book['is_assigned'],
-                'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False
+                'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,
+                'unauthorized': not book.is_visible_to(clusiveUser)
             })
+    print('=== book_details: ', book_details)
     return book_details    
 
 class ReadingDetailsPanelView(TemplateView):
@@ -1530,11 +1532,11 @@ class ReadingDetailsPanelView(TemplateView):
             clusive_student = ClusiveUser.objects.get(
                 user__username=self.username,
                 periods__in=[self.current_period],
-                role__in=[Roles.STUDENT, Roles.GUEST]
+                role__in=[Roles.STUDENT]
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
-            book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student)
+            book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student, self.clusive_user)
 
             self.paginator = Paginator(book_details, paginate_by, paginate_orphans)
             self.page_obj = self.paginator.get_page(self.page_num)

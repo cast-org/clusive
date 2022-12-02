@@ -24,9 +24,27 @@
                         - `.sort-active`
                     -->
                     <tr>
-                        <th><a href="#" data-sort="title" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link{% if data.sort == 'title' %} sort-active{% endif %}">Title</a>/author</th>
-                        <th><a href="#" data-sort="time" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link{% if data.sort == 'time' %} sort-active{% endif %}">Active time</a></th>
-                        <th><a href="#" data-sort="lastview" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link{% if data.sort == 'lastview' %} sort-active{% endif %}">Last read</a></th>
+                        <th>
+                            {% if data.sort == 'title' %}
+                            <span class="sort-active">Title</span>/author
+                            {% else %}
+                            <a href="#" data-sort="title" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link">Title</a>/author
+                            {% endif %}
+                        </th>
+                        <th>
+                            {% if data.sort == 'time' %}
+                            <span class="sort-active">Active time</span>
+                            {% else %}
+                            <a href="#" data-sort="time" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link">Active time</a>
+                            {% endif %}
+                        </th>
+                        <th>
+                            {% if data.sort == 'lastview' %}
+                            <span class="sort-active">Last read</span>
+                            {% else %}
+                            <a href="#" data-sort="lastview" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link">Last read</a>
+                            {% endif %}
+                        </th>
                         <th class="d-sm-down-none">Words looked up</th>
                         <th class="d-sm-down-none">Learning</th>
                         <th class="d-md-down-none">Custom</th>
@@ -37,9 +55,15 @@
                     {% for book in data.page_obj %}
                     <tr>
                         <th scope="row">
+                            {% if book.unauthorized %}
+                            <span class="icon-block" title="Not authorized to view"></span>
+                            {{ book.title }}
+                            <div class="muted">{{ book.author }}</div>
+                            {% else %}
                             <a href="{% url 'reader_default' book_id=book.book_id %}">{{ book.title }}</a>
                             {% if book.is_assigned %}<span class="datatable-mark"><span class="sr-only">Assigned</span></span>{% endif %}
                             <div class="muted">{{ book.author }}</div>
+                            {% endif %}
                         </th>
                         <td>{{ book.hours }} <span aria-hidden="true">hrs</span><span class="sr-only">hours</span> ({{ book.view_count }} visits)</td>
                         <td>{{ book.last_view | naturalday }}</td>
