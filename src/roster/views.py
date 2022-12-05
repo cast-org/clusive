@@ -1501,7 +1501,6 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,
                 'unauthorized': not book.is_visible_to(clusiveUser)
             })
-    print('=== book_details: ', book_details)
     return book_details    
 
 class ReadingDetailsPanelView(TemplateView):
