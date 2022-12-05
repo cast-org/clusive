@@ -1584,7 +1584,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.clusive_student = ClusiveUser.objects.get(
                 user__username=kwargs['username'],
                 periods__in=[period],
-                role__in=[Roles.STUDENT]
+                role=Roles.STUDENT
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, username=kwargs['username'])[0]
