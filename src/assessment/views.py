@@ -166,12 +166,17 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
         # to that user. If there is no such user, or no for_user in kwargs, use
         # the request.clusive_user
         self.for_user = kwargs.get('for_user')
-        try:
-            clusive_user = ClusiveUser.objects.get(user__username=self.for_user)
-            self.for_user_name = clusive_user.user.first_name
-        except:
+        if self.for_user == None:
             clusive_user = request.clusive_user
             self.for_user_name = None
+        else:
+            try:
+                clusive_user = ClusiveUser.objects.get(user__username=self.for_user)
+                self.for_user_name = clusive_user.user.first_name
+            except:
+                clusive_user = request.clusive_user
+                self.for_user = None
+                self.for_user_name = None
 
         self.teacher_view = False
         self.class_popular = None
@@ -206,12 +211,11 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
             for p in self.class_popular:
                 if p['unauthorized']:
                     self.any_unauthorized_book = True
+        elif self.for_user:
+            self.my_recent = AffectiveCheckResponse.recent_with_word(
+                clusive_user, self.word, request.clusive_user.student_activity_days)[0:10]
         else:
-            if self.for_user:
-                self.my_recent = AffectiveCheckResponse.recent_with_word(
-                    clusive_user, self.word, request.clusive_user.student_activity_days)[0:10]
-            else:
-                self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
+            self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
         # Globally-ranked books with particular ratings (public library only):
         self.popular = AffectiveBookTotal.most_with_word(self.word).filter(book__owner=None)[0:5]
         # Make it easier to access the correct count from template.
@@ -222,7 +226,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
     def get_template_names(self):
         if self.teacher_view:
             return [self.teacher_template_name]
-        elif self.for_user_name:
+        elif self.for_user:
             return [self.student_details_template_name]
         else:
             return [self.student_template_name]
