@@ -1497,7 +1497,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.clusive_student = ClusiveUser.objects.get(
                 user__username=kwargs['username'],
                 periods__in=[period],
-                role__in=[Roles.STUDENT]
+                role=Roles.STUDENT
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
@@ -1511,7 +1511,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'hours': round(reading_data['hours'], 1) if reading_data else 0,
                 'book_count': reading_data['book_count'] if reading_data else 0,
                 'last_login': user.last_login
-            }            
+            }
             # Words looked up panel
             word_list = ParadataDaily.get_words_looked_up(self.clusive_student, self.days)
             self.panel_data['words'] = ', '.join(word_list)
