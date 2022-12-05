@@ -143,7 +143,6 @@
 
         getCurrentChain : function() {
             var $curr = $(document).find(SELECTOR_TOUR_VISIBLE);
-console.log($curr[0]);
             if ($curr.length) {
                 return {
                     elm: $curr[0],
@@ -159,8 +158,14 @@ console.log($curr[0]);
                 // Show first in chain
                 this.chain(available[0]);
             } else {
-                // Show tooltip message?
-console.log('no visible tips');
+                // Show tooltip message
+                var msg = "There are currently no tool tips available on this page.";
+                $(SELECTOR_START_BTN).CFW_Tooltip({
+                    title: msg,
+                    container: "body",
+                    placement: "reverse",
+                    dispose: true
+                }).CFW_Tooltip('show');
             }
         },
 
@@ -168,7 +173,6 @@ console.log('no visible tips');
             var curr = this.getCurrentChain();
             var available = this.getAvailableChain();
             var step = available.indexOf(curr.name);
-console.log('CHAINPREV', step, curr.name);
             this.chain(available[step - 1]);
         },
 
@@ -176,7 +180,6 @@ console.log('CHAINPREV', step, curr.name);
             var curr = this.getCurrentChain();
             var available = this.getAvailableChain();
             var step = available.indexOf(curr.name);
-console.log('CHAINNEXT', step, curr.name);
             this.chain(available[step + 1]);
         },
 
