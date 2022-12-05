@@ -44,6 +44,7 @@
 
         // Show a singleton from the tour
         singleton: function(name) {
+            console.debug('TIP singleton: ', name);
             var $control = $('[data-clusive-tip-id="' + name + '"]');
             if (!$control.length) { return; }
 

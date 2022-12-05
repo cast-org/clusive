@@ -512,6 +512,7 @@ function showTooltip(name) {
         return;
     }
     $(window).ready(function() {
+        console.debug('TIP showTooltip: ', name);
         var tip_control = $('[data-clusive-tip-id="' + name + '"]');
         var tip_tooltip = $('#tip');
         var tip_placement = tip_control.attr('data-cfw-tooltip-placement');
@@ -539,7 +540,7 @@ function showTooltip(name) {
                     block: 'center',
                     behavior: cisl.prefs.userPrefersReducedMotion() ? 'auto' : 'smooth'
                 });
-                if (typeof window.parent.clusiveEvents === 'object' && window.parent.clusiveEvents.addTipViewToQueue === 'function') {
+                if (typeof window.parent.clusiveEvents === 'object' && typeof window.parent.clusiveEvents.addTipViewToQueue === 'function') {
                     window.parent.clusiveEvents.addTipViewToQueue(name);
                 }
             }
