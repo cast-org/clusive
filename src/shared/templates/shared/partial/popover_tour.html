@@ -1,7 +1,7 @@
 {% load i18n %}
 {% for tour_name in tours %}
 <div id="tour_{{ tour_name }}" class="popover popover-tour popover-scrollable">
-    <button type="button" class="close touring-on" aria-label="Close" onclick="tour.closeRefocus('#tourStart');"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
+    <button type="button" class="close touring-on" aria-label="Close" onclick="tour.chainEnd();"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
     <button type="button" class="close touring-off" aria-label="Close" data-cfw-dismiss="popover"><span class="icon-cancel-circled2" aria-hidden="true"></span></button>
 
 <!-- settings -->

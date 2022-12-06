@@ -51,6 +51,26 @@ function clusiveDebounce(func, wait, immediate) {
     };
 }
 
+function clusiveThrottle(func, limit) {
+    var timeout;
+    var lastRan;
+    return function() {
+        var context = this;
+        var args = arguments;
+        if (!lastRan) {
+            func.apply(context, args)
+            lastRan = Date.now();
+        } else {
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                if ((Date.now() - lastRan) >= limit) {
+                    func.apply(context, args);
+                    lastRan = Date.now();
+                }
+            }, limit - (Date.now() - lastRan));
+        }
+    }
+}
 
 /*
   Easing functions
@@ -450,6 +470,11 @@ var updateCSSVars = clusiveDebounce(function() {
     body.style.setProperty('--CT_lineHeight', lineHeight);
 }, 10);
 
+var updateVHVar = clusiveThrottle(function() {
+    // Use viewport height to create a vh unit in equivalent pixels
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}, 50);
 
 function formUseThisLinks() {
     'use strict';
@@ -487,6 +512,7 @@ function showTooltip(name) {
         return;
     }
     $(window).ready(function() {
+        console.debug('TIP showTooltip: ', name);
         var tip_control = $('[data-clusive-tip-id="' + name + '"]');
         var tip_tooltip = $('#tip');
         var tip_placement = tip_control.attr('data-cfw-tooltip-placement');
@@ -510,7 +536,11 @@ function showTooltip(name) {
                 });
                 tip_control.CFW_Tooltip('show');
                 tip_tooltip.trigger('focus');
-                if (typeof window.parent.clusiveEvents === 'object' && window.parent.clusiveEvents.addTipViewToQueue === 'function') {
+                tip_control[0].scrollIntoView({
+                    block: 'center',
+                    behavior: cisl.prefs.userPrefersReducedMotion() ? 'auto' : 'smooth'
+                });
+                if (typeof window.parent.clusiveEvents === 'object' && typeof window.parent.clusiveEvents.addTipViewToQueue === 'function') {
                     window.parent.clusiveEvents.addTipViewToQueue(name);
                 }
             }
@@ -1360,7 +1390,11 @@ $(window).ready(function() {
     document.addEventListener('update.cisl.prefs', updateCSSVars, {
         passive: true
     });
+    window.addEventListener('resize', updateVHVar, {
+        passive: true
+    });
     updateCSSVars();
+    updateVHVar();
 
     formFileText();
     starsSelectedText();
