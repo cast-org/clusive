@@ -1540,7 +1540,7 @@ class ReadingDetailsPanelView(TemplateView):
             self.paginator = Paginator(book_details, paginate_by, paginate_orphans)
             self.page_obj = self.paginator.get_page(self.page_num)
         except ClusiveUser.DoesNotExist:
-            logger.warning("Reading details panel: Student '" + self.username + "' not in this class (" + self.current_period.name + ")")
+            logger.warning(f"Reading details panel: Student '{self.username}' not in this class ({self.current_period.name})")
 
         return super().get(request, *args, **kwargs)
 
@@ -1609,7 +1609,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             }
 
         except ClusiveUser.DoesNotExist:
-            messages.error(request, "Student '" + kwargs['username'] + "' not in this class (" + period.name + ")")
+            messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
             self.panel_data['topics'] = { 'topics': None }
