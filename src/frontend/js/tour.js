@@ -194,7 +194,7 @@
             var step = available.indexOf(name) + 1;
             var total = available.length;
 
-            elm.querySelector(SELECTOR_NAV_STEP).innerHTML = step + '/' + total;
+            elm.querySelector(SELECTOR_NAV_STEP).innerHTML = step > 1 ? step + '/' + total : '';
             elm.querySelector(SELECTOR_NAV_PREV).innerHTML = step > 1 ? BTN_PREV : '';
             elm.querySelector(SELECTOR_NAV_NEXT).innerHTML = step >= total ? BTN_END : BTN_NEXT;
         }
