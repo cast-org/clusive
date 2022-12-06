@@ -76,7 +76,7 @@
          {% elif tip_name == "tour" %}
         <p>To get a tour of this page, click on me in the lower right anytime!</p>
         <div class="tooltip-action">
-            <button type="button" class="btn btn-secondary me-0_5" onclick="tour.chainStart();">Start tour now</button>
+            <button type="button" class="btn btn-secondary me-0_5" onclick="tour.chainStart();" data-cle-handler="click" data-cle-control="tour_start" data-cle-value="start">Start tour now</button>
             <button type="button" class="btn btn-primary" data-cfw-dismiss="tooltip">Got it!</button>
         </div>
         {% endif %}
