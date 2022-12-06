@@ -7,7 +7,7 @@
     <ul class="list-unstyled">
     {% for reaction in my_recent %}
         <li class="mb-0_5">
-            <a href="#" onclick="vocabCheck.start(this, '{{resp.book.id}}'); return false;">
+            <a href="#" onclick="vocabCheck.start(this, '{{reaction.book.id}}'); return false;">
                 <strong>{{ reaction.book.title }}</strong>
             </a><br>
             <em>{{ reaction.affect_free_response }}</em>

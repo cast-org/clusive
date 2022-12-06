@@ -151,9 +151,10 @@ class CustomQuestionDetailView(LoginRequiredMixin, TemplateView):
 class AffectDetailView(LoginRequiredMixin, TemplateView):
     """
     Show a list of what readings inspired particular affective responses.
-    Slightly different for teachers and students:
-    Students see: my own responses / global responses
-    Parents/teachers see: my class responses / global responses
+    There are three versions of this display:
+    Students and guests see: my own responses / global responses
+    Parents/teachers on their dashboard: my class responses / global responses
+    Parents/teachers in student detail view: one chosen student's responses
     """
     student_template_name = 'shared/partial/modal_affect_detail.html'
     teacher_template_name = 'shared/partial/modal_class_affect_detail.html'
@@ -166,7 +167,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
         # to that user. If there is no such user, or no for_user in kwargs, use
         # the request.clusive_user
         self.for_user = kwargs.get('for_user')
-        if self.for_user == None:
+        if self.for_user is None:
             clusive_user = request.clusive_user
             self.for_user_name = None
         else:
@@ -179,6 +180,7 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
                 self.for_user_name = None
 
         self.teacher_view = False
+        self.popular = None
         self.class_popular = None
         self.any_unauthorized_book = False
         self.my_recent = None
@@ -212,15 +214,18 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
                 if p['unauthorized']:
                     self.any_unauthorized_book = True
         elif self.for_user:
+            # Find responses for the specific user and time period
             self.my_recent = AffectiveCheckResponse.recent_with_word(
                 clusive_user, self.word, request.clusive_user.student_activity_days)[0:10]
         else:
+            # Find responses my the currently logged-in user
             self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
-        # Globally-ranked books with particular ratings (public library only):
-        self.popular = AffectiveBookTotal.most_with_word(self.word).filter(book__owner=None)[0:5]
-        # Make it easier to access the correct count from template.
-        for abt in self.popular:
-            abt.count = getattr(abt, self.word)
+        # Find public library books that commonly elicit this reaction (for dashboard views):
+        if not self.for_user:
+            self.popular = AffectiveBookTotal.most_with_word(self.word).filter(book__owner=None)[0:5]
+            # Make it easier to access the correct count from template.
+            for abt in self.popular:
+                abt.count = getattr(abt, self.word)
         return super().get(request, *args, **kwargs)
 
     def get_template_names(self):
