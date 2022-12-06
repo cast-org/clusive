@@ -3,10 +3,11 @@
     {% if tours %}
     <button id="tourStart" type="button" class="btn btn-tool btn-mascot-tipped mt-0_75"
             data-clusive-tip-action="tour"
-            onclick="tour.chain('#tour_{{ tours|list_index:0 }}');"><span class="sr-only">Start tour of features</span></button>
+            data-cle-handler="click" data-cle-control="tour_start" data-cle-value="start"
+            onclick="tour.chainStart();"><span class="sr-only">Start tour of features</span></button>
     {% else %}
-    <span class="d-inline-block mt-0_75" tabindex="0" title="There are currently no tool tips on this page." data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="reverse">
-        <button type="button" class="btn btn-tool btn-mascot-tipped" disabled><span class="sr-only">There are currently no tool tips on this page.</span></button>
+    <span class="d-inline-block mt-0_75" tabindex="0" title="There are currently no tool tips available on this page." data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="reverse">
+        <button type="button" class="btn btn-tool btn-mascot-tipped" disabled><span class="sr-only">There are currently no tool tips available on this page.</span></button>
     </span>
     {% endif %}
 </div>

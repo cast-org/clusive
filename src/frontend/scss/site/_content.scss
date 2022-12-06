@@ -730,3 +730,7 @@ body.touring {
     }
 }
 // stylelint-enable selector-no-qualifying-type
+
+.chain-prev:empty {
+    display: none;
+}

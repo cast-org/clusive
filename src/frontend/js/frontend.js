@@ -536,6 +536,10 @@ function showTooltip(name) {
                 });
                 tip_control.CFW_Tooltip('show');
                 tip_tooltip.trigger('focus');
+                tip_control[0].scrollIntoView({
+                    block: 'center',
+                    behavior: cisl.prefs.userPrefersReducedMotion() ? 'auto' : 'smooth'
+                });
                 if (typeof window.parent.clusiveEvents === 'object' && typeof window.parent.clusiveEvents.addTipViewToQueue === 'function') {
                     window.parent.clusiveEvents.addTipViewToQueue(name);
                 }
