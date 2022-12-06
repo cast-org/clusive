@@ -42,16 +42,9 @@
         <div class="card card-details">
             {% include "roster/partial/student_details_words.html" with data=panel_data.words %}
         </div>
+        {# Student Reactions panel #}
         <div class="card card-details">
-            {# Placeholder for "Reactions" panel #}
-            {# include Reactions panel template here #}
-            <div class="box box-secondary">
-                <h4 class="h2">Reactions</h4>
-                <div class="box-divider"></div>
-                Strike up a class conversation based on what students are feeling about a reading.
-                {# The reaction pallete is included from its existing template #}
-                {% include 'shared/partial/affect_wheel_display.html' with data=data.totals %}
-            </div>
+            {% include "roster/partial/student_details_reactions.html" with data=panel_data.affect student=current_student days=panel_data.days %}
         </div>
         <div class="card card-details">
             {% include "roster/partial/student_details_topics.html" with data=panel_data.topics %}

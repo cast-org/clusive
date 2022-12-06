@@ -22,6 +22,7 @@ from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
@@ -37,6 +38,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from assessment.models import AffectiveCheckResponse, AffectiveUserTotal
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
@@ -1563,6 +1565,8 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
 
     def get(self, request, *args, **kwargs):
         self.clusive_user = request.clusive_user
+        if not self.clusive_user.can_manage_periods:
+            self.handle_no_permission()
 
         if not self.clusive_user.can_manage_periods:
             self.handle_no_permission()
@@ -1596,6 +1600,12 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'book_count': reading_data['book_count'] if reading_data else 0,
                 'last_login': user.last_login
             }
+            # Student Reactions panel
+            affect_totals = self.affect_data_for_time_frame(self.days)
+            self.panel_data['affect'] = {
+                'totals': AffectiveUserTotal.scale_values(affect_totals),
+                'empty': affect_totals is None,
+            }
             # Words looked up panel
             word_list = ParadataDaily.get_words_looked_up(self.clusive_student, self.days)
             self.panel_data['words'] = ', '.join(word_list)
@@ -1614,6 +1624,13 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            # For the affect panel, give the class version so as to provide
+            # hints about all students' reactions.
+            all_students_affect = AffectiveUserTotal.objects.filter(user__periods=period, user__role=Roles.STUDENT)
+            self.panel_data['affect'] = {
+                'totals': AffectiveUserTotal.aggregate_and_scale(all_students_affect),
+                'empty': all_students_affect is None,
+            }
             self.panel_data['words'] = 'N/A'
             self.panel_data['topics'] = { 'topics': None }
 
@@ -1628,3 +1645,27 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         context['roster'] = self.roster
         context['panel_data'] = self.panel_data
         return context
+
+    def affect_data_for_time_frame(self, time_frame):
+        # If the time frame is "Overall", return the AffectiveUserTotal for the
+        # user. Zero means "Overall".  Also, it is possible that there may be
+        # no AffectiveUserTotal instance for the user; otherwise, there is only
+        # one.
+        if time_frame == 0:
+            return AffectiveUserTotal.objects.filter(user=self.clusive_student).first()
+
+        date_time_frame = timezone.now() - timedelta(days=time_frame)
+        affect_check_responses = AffectiveCheckResponse.objects.filter(
+            user = self.clusive_student,
+            updated__gte = date_time_frame
+        )
+        if affect_check_responses.count() == 0:
+            return None
+
+        # Create a new AffectiveUserTotal for the user's affect check responses,
+        # but do not save it to the database.  That would overwrite the actual
+        # overall totals for the student.
+        time_frame_totals = AffectiveUserTotal(user=self.clusive_student)
+        for acr in affect_check_responses:
+            time_frame_totals.update(None, acr.to_list())
+        return time_frame_totals

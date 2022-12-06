@@ -1,0 +1,26 @@
+<p>
+    <span class="ci ci-2x ci-mascot-tipped"></span>
+    <strong>{{ for_user_name }} felt {{ word }} reading&hellip;</strong>
+</p>
+
+{% if my_recent %}
+    <ul class="list-unstyled">
+    {% for reaction in my_recent %}
+        <li class="mb-0_5">
+            <a href="#" onclick="vocabCheck.start(this, '{{reaction.book.id}}'); return false;">
+                <strong>{{ reaction.book.title }}</strong>
+            </a><br>
+            <em>{{ reaction.affect_free_response }}</em>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No readings have made {{ for_user_name }} feel {{ word }}
+        {% if time_scale == 7 %}
+            in the past week.</p>
+        {% elif time_scale == 30 %}
+            in the past month.</p>
+        {% else %}
+            yet.</p>
+        {% endif %}
+{% endif %}
