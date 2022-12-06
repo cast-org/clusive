@@ -1,0 +1,128 @@
+{% load humanize formatting %}
+<div id="readingDetailsPanel">
+    <div class="box box-secondary mt-1">
+        <div class="row gx-1 flex-items-center mb-0_5">
+            <div class="col-auto">
+                <h4 class="h2 mb-0">Reading details</h4>
+            </div>
+            <div class="col-md-auto ms-md-auto">
+                <section aria-label="Legend">
+                    <span class="readtime-legend-mark">
+                        <span class="readtime-mark-shared"></span>
+                    </span>
+                    <span class="readtime-legend-label">Assigned</span>
+                </section>
+            </div>
+        </div>
+        <div class="box-divider"></div>
+        <div class="table-scroll datatable-scroll">
+            <table class="table datatable">
+                <thead>
+                    <!-- Available sort indicators for table header anchors:
+                        - `.sort-up`
+                        - `.sort-down`
+                        - `.sort-active`
+                    -->
+                    <tr>
+                        <th>
+                            {% if data.sort == 'title' %}
+                            <span class="sort-active">Title</span>/author
+                            {% else %}
+                            <a href="#" data-sort="title" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link">Title</a>/author
+                            {% endif %}
+                        </th>
+                        <th>
+                            {% if data.sort == 'time' %}
+                            <span class="sort-active">Active time</span>
+                            {% else %}
+                            <a href="#" data-sort="time" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link">Active time</a>
+                            {% endif %}
+                        </th>
+                        <th>
+                            {% if data.sort == 'lastview' %}
+                            <span class="sort-active">Last read</span>
+                            {% else %}
+                            <a href="#" data-sort="lastview" data-pagenum="{{ data.page_obj.number }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="reading-details-link">Last read</a>
+                            {% endif %}
+                        </th>
+                        <th class="d-sm-down-none">Words looked up</th>
+                        <th class="d-sm-down-none">Learning</th>
+                        <th class="d-md-down-none">Custom</th>
+                        <th class="d-md-down-none">Reading level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in data.page_obj %}
+                    <tr>
+                        <th scope="row">
+                            {% if book.unauthorized %}
+                            <span class="icon-block" title="Not authorized to view"></span>
+                            {{ book.title }}
+                            <div class="muted">{{ book.author }}</div>
+                            {% else %}
+                            <a href="{% url 'reader_default' book_id=book.book_id %}">{{ book.title }}</a>
+                            {% if book.is_assigned %}<span class="datatable-mark"><span class="sr-only">Assigned</span></span>{% endif %}
+                            <div class="muted">{{ book.author }}</div>
+                            {% endif %}
+                        </th>
+                        <td>{{ book.hours }} <span aria-hidden="true">hrs</span><span class="sr-only">hours</span> ({{ book.view_count }} visits)</td>
+                        <td>{{ book.last_view | naturalday }}</td>
+                        <td class="d-sm-down-none">{{ book.words_looked_up | default:"&mdash;" }}</td>
+                        <td class="d-sm-down-none">{{ book.learning | default:"&mdash;" }}</td>
+                        <td class="d-md-down-none">
+                            <span class="muted">{{ book.custom_question | default:"&mdash;" }}</span>
+                            {% if book.custom_response %}{{ book.custom_response }}{% endif %}
+                        </td>
+                        <td class="d-md-down-none">
+                            {{ book.reading_level | default:"&mdash;" }}
+                            {% if book.last_version %}
+                            <span class="muted">
+                                (Challenge {{ book.last_version.sortOrder | add:1 }}{% if book.version_switched %}/switched from {{ book.first_version.sortOrder | add:1 }}{% endif %})
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if data.page_obj.has_other_pages %}
+    <nav aria-label="page">
+        <div class="library-pagination-wrapper">
+            <div class="pagination library-pagination">
+                {% if data.page_obj.has_previous %}
+                <a href="#" data-pagenum="{{ data.page_obj.previous_page_number }}" data-sort="{{ data.sort }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="page-link reading-details-link">
+                    <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                    Previous
+                </a>
+                {% else %}
+                <span class="page-link disabled">
+                    <span class="icon-angle-left me-0_25" aria-hidden="true"></span>
+                    Previous
+                </span>
+                {% endif %}
+                {% for pg in data.paginator.page_range %}
+                    {% if pg == data.page_obj.number %}
+                    <span class="page-link active" aria-current="page">{{pg}}</span>
+                    {% else %}
+                    <a href="#" data-pagenum="{{ pg }}" data-sort="{{ data.sort }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="page-link reading-details-link">{{pg}}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if data.page_obj.has_next %}
+                <a href="#" data-pagenum="{{ data.page_obj.next_page_number }}" data-sort="{{ data.sort }}" data-username="{{ data.username }}" data-days="{{ data.days }}" class="page-link reading-details-link">
+                    Next
+                    <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                </a>
+                {% else %}
+                <span class="page-link disabled">
+                    Next
+                    <span class="icon-angle-right ms-0_25" aria-hidden="true"></span>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+</div>

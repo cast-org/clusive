@@ -83,7 +83,7 @@ class ParadataAdmin(admin.ModelAdmin):
 
 @admin.register(ParadataDaily)
 class ParadataDailyAdmin(admin.ModelAdmin):
-    list_display = ('paradata', 'date', 'view_count', 'total_time')
+    list_display = ('paradata', 'date', 'view_count', 'total_time', 'words_looked_up')
     sortable_by = ('paradata__book', 'paradata__user', 'date')
 
 

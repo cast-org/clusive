@@ -13,10 +13,24 @@ from django.db import models
 from django.db.models import Sum, Q, QuerySet
 from django.utils import timezone
 
-from roster.models import ClusiveUser, Period, Roles, StudentActivitySort
+from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
 from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
+
+def update_word_list(word_list, word):
+    """
+    Utility to take an existing list of words, add a new one to it, without
+    duplication, and return the new list sorted.  This first converts the list
+    to a set to handle duplicates.
+    """
+    word_set = set(word_list) if word_list else set()
+    if word:
+        word_set.add(word)
+    new_list = list(word_set)
+    new_list.sort()
+    return new_list
+
 
 class Subject(models.Model):
     subject = models.CharField(max_length=256, unique=True)
@@ -604,18 +618,26 @@ class Paradata(models.Model):
 
     @classmethod
     def record_word_looked_up(cls, book, user, word):
-        """Update Paradata with the new lookup"""
+        """Update Paradata and ParadataDaily with the new lookup"""
         para, created = cls.objects.get_or_create(book=book, user=user)
         if para.words_looked_up:
             words = json.loads(para.words_looked_up)
         else:
             words = []
-        if not word in words:
-            words.append(word)
-            words.sort()
-            para.words_looked_up = json.dumps(words)
-            logger.debug('Updated %s with new words_looked_up list: %s', para, para.words_looked_up)
-            para.save()
+        words = update_word_list(words, word)
+        para.words_looked_up = json.dumps(words)
+        logger.debug('Updated %s with new words_looked_up list: %s', para, para.words_looked_up)
+        para.save()
+
+        paradaily, pd_created = ParadataDaily.objects.get_or_create(paradata=para, date=date.today())
+        if paradaily.words_looked_up:
+            words = json.loads(paradaily.words_looked_up)
+        else:
+            words = []
+        words = update_word_list(words, word)
+        paradaily.words_looked_up = json.dumps(words)
+        logger.debug('Updated %s with new words_looked_up list: %s', paradaily, para.words_looked_up)
+        paradaily.save()
 
     @classmethod
     def record_starred(cls, book_id, clusive_user_id, starred):
@@ -651,13 +673,14 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def get_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_reading_data(cls, period: Period, days=0, sort='name', books_sort='title', username=None):
         """
         Calculate time, number of books, and individual books for each user in the given Period.
         If a user name is given, calculate only for this user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
         :param sort: name of field to sort results. The default value is 'name'.
+        :param books_sort: name of field to sort the book list in every result. The default value is 'title'.
         :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
@@ -693,7 +716,13 @@ class Paradata(models.Model):
             entry['books'].append({
                 'book_id': p.book.id,
                 'title': p.book.title,
+                'sort_title': p.book.sort_title,
                 'hours': p.recent_time/one_hour,
+                'last_view': p.last_view,
+                'view_count': p.view_count,
+                'words_looked_up': p.words_looked_up,
+                'first_version': p.first_version,
+                'last_version': p.last_version,
                 'is_assigned': p.book in assigned_books,
             })
 
@@ -705,21 +734,33 @@ class Paradata(models.Model):
             result.sort(reverse=True, key=lambda item: item['book_count'])
         elif sort == StudentActivitySort.TIME:
             result.sort(reverse=True, key=lambda item: item['hours'])
+        
+        # sort the list of books
+        if (books_sort):
+            for reading_data_for_one_user in result:
+                if books_sort == ReadingDetailsSort.TITLE:
+                    reading_data_for_one_user['books'].sort(key=lambda item: item['sort_title'])
+                if books_sort == ReadingDetailsSort.TIME:
+                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['hours'])
+                if books_sort == ReadingDetailsSort.LASTVIEW:
+                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['last_view'])
 
         return result
 
     @classmethod
-    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', books_sort="title", username=None):
         """
         Perform further calculation based on get_reading_data() by moving low-time books
         to an "other" item for each user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
         :param sort: name of field to sort results. The default value is 'name'.
+        :param books_sort: name of field to sort the book list in every result. The default value is 'title'.
         :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
-        books_for_students = cls.get_reading_data(period, days, sort, username)
+        # Sort book entries by time
+        books_for_students = cls.get_reading_data(period, days, sort, books_sort, username)
         # Add a percent_time field to each item.
         # This is the fraction of the largest total # of hours for any student.
         if len(books_for_students) > 0:
@@ -730,8 +771,6 @@ class Paradata(models.Model):
                         p['percent_time'] = round(100*p['hours']/max_hours)
                     else:
                         p['percent_time'] = 0
-                # Sort book entries by time
-                entry['books'].sort(reverse=True, key=lambda p: p['hours'])
                 # Combine low-time items into an "other" item.
                 # First item is never considered "other".
                 if len(entry['books']) > 2:
@@ -750,6 +789,18 @@ class Paradata(models.Model):
                             'is_other': True,
                         })
         return books_for_students
+    
+    @classmethod
+    def get_words_looked_up(cls, user: ClusiveUser):
+        paradatas = Paradata.objects.filter(user=user)
+        all_words = set()
+        for paradata in paradatas:
+            word_list = json.loads(paradata.words_looked_up or '[]')
+            all_words = all_words.union(set(word_list))
+        
+        all_words_list = list(all_words)
+        all_words_list.sort()
+        return all_words_list
 
     class Meta:
         constraints = [
@@ -767,6 +818,26 @@ class ParadataDaily(models.Model):
 
     view_count = models.SmallIntegerField(default=0, verbose_name='View count on date')
     total_time = models.DurationField(null=True, verbose_name='Reading time on date')
+    words_looked_up = models.TextField(null=True, blank=True, verbose_name='JSON list of words looked up')
+
+    @classmethod
+    def get_words_looked_up(cls, user: ClusiveUser, days=0):
+        if days == 0:
+            return Paradata.get_words_looked_up(user)
+
+        start_date = date.today() - timedelta(days=days)
+        paradata_dailies = ParadataDaily.objects.filter(
+            paradata__user=user,
+            date__gte=start_date
+        )
+        all_words = set()
+        for paradata_daily in paradata_dailies:
+            word_list = json.loads(paradata_daily.words_looked_up or '[]')
+            all_words = all_words.union(set(word_list))
+        
+        all_words_list = list(all_words)
+        all_words_list.sort()
+        return all_words_list
 
 
 class Annotation(models.Model):

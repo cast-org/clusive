@@ -210,7 +210,7 @@ class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Even
                 'days': sa_days,
                 'sort': sa_sort,
                 'reading_data':
-                    Paradata.get_truncated_reading_data(self.current_period, days=sa_days, sort=sa_sort)
+                    Paradata.get_truncated_reading_data(self.current_period, days=sa_days, sort=sa_sort, books_sort="time")
                     if self.current_period else None
             }
 
@@ -468,7 +468,7 @@ class DashboardActivityPanelView(TemplateView):
         context['data'] = {
             'days': self.days,
             'sort': self.sort,
-            'reading_data': Paradata.get_truncated_reading_data(self.current_period, days=self.days, sort=self.sort),
+            'reading_data': Paradata.get_truncated_reading_data(self.current_period, days=self.days, sort=self.sort, books_sort="time"),
         }
         return context
 
