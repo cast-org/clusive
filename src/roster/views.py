@@ -41,7 +41,7 @@ from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
 from assessment.models import ComprehensionCheckResponse
-from library.models import Book, Customization, Paradata, Subject
+from library.models import Book, Customization, Paradata, ParadataDaily, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
@@ -1596,6 +1596,9 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 'book_count': reading_data['book_count'] if reading_data else 0,
                 'last_login': user.last_login
             }
+            # Words looked up panel
+            word_list = ParadataDaily.get_words_looked_up(self.clusive_student, self.days)
+            self.panel_data['words'] = ', '.join(word_list)
 
             # Topics panel
             books = []
@@ -1607,11 +1610,11 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.panel_data['topics'] = {
                 'topics': ', '.join(subjects)
             }
-
         except ClusiveUser.DoesNotExist:
             messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            self.panel_data['words'] = 'N/A'
             self.panel_data['topics'] = { 'topics': None }
 
         return super().get(request, *args, **kwargs)
