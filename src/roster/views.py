@@ -32,6 +32,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView, RedirectView
+from django.core.paginator import Paginator
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -39,7 +40,8 @@ from googleapiclient.errors import HttpError
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
-from library.models import Paradata, ParadataDaily, Subject
+from assessment.models import ComprehensionCheckResponse
+from library.models import Book, Customization, Paradata, ParadataDaily, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
@@ -1468,7 +1470,92 @@ def remove_social_account(request, *args, **kwargs):
 
     return HttpResponseRedirect(reverse('my_account'))
 
-class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, TemplateView):
+def get_book_details(books, period, clusiveStudent, clusiveUser):
+    book_details = []
+    if books:
+        for one_book in books:
+            book = Book.objects.get(pk=one_book['book_id'])
+            customizations = Customization.objects.filter(book=book, periods=period)
+            comp_checks = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book)
+            custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=period)
+            custom_response = custom_responses.filter(user=clusiveStudent)
+            category_names = []
+            for category in book.reading_level_categories:
+                category_names.append(category.tag_name)
+
+            book_details.append({
+                'book_id': one_book['book_id'],
+                'title': one_book['title'],
+                'author': book.author,
+                'hours': round(one_book['hours'], 1),
+                'last_view': one_book['last_view'],
+                'view_count': one_book['view_count'],
+                'words_looked_up': ', '.join(json.loads(one_book['words_looked_up'])) if one_book['words_looked_up'] else None,
+                'first_version': one_book['first_version'],
+                'last_version': one_book['last_version'],
+                'custom_question': '(' + customizations[0].question + ')' if customizations else None,
+                'custom_response': custom_response[0].custom_response if custom_response else None,
+                'learning': comp_checks[0].get_answer if comp_checks else None,
+                'reading_level': ', '.join(category_names),
+                'is_assigned': one_book['is_assigned'],
+                'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,
+                'unauthorized': not book.is_visible_to(clusiveUser)
+            })
+    return book_details    
+
+class ReadingDetailsPanelView(TemplateView):
+    """Shows just the reading details panel, for AJAX updates"""
+    template_name = 'roster/partial/student_details_reading_details.html'
+
+    def get(self, request, *args, **kwargs):
+        paginate_by = 10
+        paginate_orphans = 2
+
+        self.clusive_user = request.clusive_user
+        self.current_period = request.clusive_user.current_period
+        self.username = kwargs.get('username')
+        self.days = kwargs.get('days') if 'days' in kwargs else self.clusive_user.student_activity_days
+        self.page_num = kwargs.get('page_num') if 'page_num' in kwargs else 1
+        
+        if 'sort' in kwargs:
+            self.sort = kwargs.get('sort')
+            logger.debug('Setting reading details sort = %s', self.sort)
+            self.clusive_user.reading_details_sort = self.sort
+            self.clusive_user.save()
+        else:
+            self.sort = self.clusive_user.reading_details_sort
+
+        self.paginator = {}
+        self.page_obj = {}
+        try:
+            clusive_student = ClusiveUser.objects.get(
+                user__username=self.username,
+                periods__in=[self.current_period],
+                role__in=[Roles.STUDENT]
+            )
+            # Get the reading data for the current student. This data will be shared by all panels on the student details page
+            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
+            book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student, self.clusive_user)
+
+            self.paginator = Paginator(book_details, paginate_by, paginate_orphans)
+            self.page_obj = self.paginator.get_page(self.page_num)
+        except ClusiveUser.DoesNotExist:
+            logger.warning(f"Reading details panel: Student '{self.username}' not in this class ({self.current_period.name})")
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = {
+            'sort': self.sort,
+            'username': self.username,
+            'days': self.days,
+            'paginator': self.paginator,
+            'page_obj': self.page_obj
+        }
+        return context
+
+class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, ReadingDetailsPanelView):
     template_name='roster/student_details.html'
 
     def __init__(self):
@@ -1500,10 +1587,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                 role=Roles.STUDENT
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
-            reading_data_list = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, sort='name', username=kwargs['username'])
-            reading_data = None
-            if (len(reading_data_list) > 0):
-                reading_data = reading_data_list[0]
+            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, username=kwargs['username'])[0]
 
             # Student Activity panel
             user = User.objects.get(pk=self.clusive_student.user_id)

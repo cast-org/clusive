@@ -1328,6 +1328,25 @@ function dialogMediaStop() {
     });
 }
 
+function studentDetailsSetup() {
+    // Sort links in the reading details panel on the student details page
+    'use strict';
+
+    var $body = $('body');
+    $body.on('click', 'a.reading-details-link', function(e) {
+        e.preventDefault();
+        var $readingDetailsPanel = $('#readingDetailsPanel');
+        $.get('/account/reading-details/' + $(this).data('username') + '/' + $(this).data('days') + '/' + $(this).data('sort') + '/' + $(this).data('pagenum'))
+            .done(function(result) {
+                $readingDetailsPanel.replaceWith(result);
+                $('#readingDetailsPanel').CFW_Init();
+            })
+            .fail(function(err) {
+                console.error('Failed fetching replacement reading details panel: ', err);
+            });
+    });
+}
+
 $(window).ready(function() {
     'use strict';
 
@@ -1359,6 +1378,7 @@ $(window).ready(function() {
     dashboardStudentReadingViewButtons();
     toolboxHandleUpdate();
     dialogMediaStop();
+    studentDetailsSetup();
 
     var settingFontSize = document.querySelector('#set-size');
     if (settingFontSize !== null) {

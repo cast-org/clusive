@@ -13,7 +13,7 @@ from django.db import models
 from django.db.models import Sum, Q, QuerySet
 from django.utils import timezone
 
-from roster.models import ClusiveUser, Period, Roles, StudentActivitySort
+from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
 from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
@@ -673,13 +673,14 @@ class Paradata(models.Model):
         return Paradata.objects.filter(user=user, last_view__isnull=False).order_by('-last_view')
 
     @classmethod
-    def get_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_reading_data(cls, period: Period, days=0, sort='name', books_sort='title', username=None):
         """
         Calculate time, number of books, and individual books for each user in the given Period.
         If a user name is given, calculate only for this user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
         :param sort: name of field to sort results. The default value is 'name'.
+        :param books_sort: name of field to sort the book list in every result. The default value is 'title'.
         :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
@@ -715,7 +716,13 @@ class Paradata(models.Model):
             entry['books'].append({
                 'book_id': p.book.id,
                 'title': p.book.title,
+                'sort_title': p.book.sort_title,
                 'hours': p.recent_time/one_hour,
+                'last_view': p.last_view,
+                'view_count': p.view_count,
+                'words_looked_up': p.words_looked_up,
+                'first_version': p.first_version,
+                'last_version': p.last_version,
                 'is_assigned': p.book in assigned_books,
             })
 
@@ -727,21 +734,33 @@ class Paradata(models.Model):
             result.sort(reverse=True, key=lambda item: item['book_count'])
         elif sort == StudentActivitySort.TIME:
             result.sort(reverse=True, key=lambda item: item['hours'])
+        
+        # sort the list of books
+        if (books_sort):
+            for reading_data_for_one_user in result:
+                if books_sort == ReadingDetailsSort.TITLE:
+                    reading_data_for_one_user['books'].sort(key=lambda item: item['sort_title'])
+                if books_sort == ReadingDetailsSort.TIME:
+                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['hours'])
+                if books_sort == ReadingDetailsSort.LASTVIEW:
+                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['last_view'])
 
         return result
 
     @classmethod
-    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', username=None):
+    def get_truncated_reading_data(cls, period: Period, days=0, sort='name', books_sort="title", username=None):
         """
         Perform further calculation based on get_reading_data() by moving low-time books
         to an "other" item for each user.
         :param period: group of students to consider
         :param days: number of days before and including today. If 0 or omitted, include all time.
         :param sort: name of field to sort results. The default value is 'name'.
+        :param books_sort: name of field to sort the book list in every result. The default value is 'title'.
         :param username: user name to find reading books for. If None, return all students in the given Period.
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
-        books_for_students = cls.get_reading_data(period, days, sort, username)
+        # Sort book entries by time
+        books_for_students = cls.get_reading_data(period, days, sort, books_sort, username)
         # Add a percent_time field to each item.
         # This is the fraction of the largest total # of hours for any student.
         if len(books_for_students) > 0:
@@ -752,8 +771,6 @@ class Paradata(models.Model):
                         p['percent_time'] = round(100*p['hours']/max_hours)
                     else:
                         p['percent_time'] = 0
-                # Sort book entries by time
-                entry['books'].sort(reverse=True, key=lambda p: p['hours'])
                 # Combine low-time items into an "other" item.
                 # First item is never considered "other".
                 if len(entry['books']) > 2:
