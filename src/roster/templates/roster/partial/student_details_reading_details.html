@@ -76,7 +76,7 @@
                             </td>
                             <td class="d-md-down-none">
                                 {{ book.reading_level | default:"&mdash;" }}
-                                {% if book.last_version %}
+                                {% if num_versions > 1 and book.last_version %}
                                 <span class="muted">
                                     (Challenge {{ book.last_version.sortOrder | add:1 }}{% if book.version_switched %}/switched from {{ book.first_version.sortOrder | add:1 }}{% endif %})
                                 </span>

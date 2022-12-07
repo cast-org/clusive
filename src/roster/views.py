@@ -1477,7 +1477,8 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
     if books:
         for one_book in books:
             book = Book.objects.get(pk=one_book['book_id'])
-            customizations = Customization.objects.filter(book=book, periods=period)
+            num_versions = book.versions.all().count()
+            customization = Customization.objects.filter(book=book, periods=period).first()
             comp_check = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book).first()
             custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=period)
             custom_response = custom_responses.filter(user=clusiveStudent).first()
@@ -1505,7 +1506,8 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'words_looked_up': ', '.join(json.loads(one_book['words_looked_up'])) if one_book['words_looked_up'] else None,
                 'first_version': one_book['first_version'],
                 'last_version': one_book['last_version'],
-                'custom_question': '(' + customizations[0].question + ')' if customizations else None,
+                'num_versions': num_versions,
+                'custom_question': '(' + customization.question + ')' if customization else None,
                 'custom_response': custom_response.custom_response if custom_response else None,
                 'learning': learning,
                 'reading_level': ', '.join(category_names),
