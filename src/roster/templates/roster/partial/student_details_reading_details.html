@@ -67,7 +67,7 @@
                                 {% endif %}
                             </th>
                             <td>{{ book.hours }} <span aria-hidden="true">hrs</span><br><span class="sr-only">hours</span> ({{ book.view_count }} visits)</td>
-                            <td>{{ book.last_view | naturalday }}</td>
+                            <td style="white-space:nowrap;">{{ book.last_view | naturalday:"D, M d" }}</td>
                             <td class="d-sm-down-none">{{ book.words_looked_up | default:"&mdash;" }}</td>
                             <td class="d-sm-down-none">{{ book.learning | default:"&mdash;" }}</td>
                             <td class="d-md-down-none">
