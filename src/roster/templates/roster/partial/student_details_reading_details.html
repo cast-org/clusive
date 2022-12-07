@@ -52,37 +52,43 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for book in data.page_obj %}
-                    <tr>
-                        <th scope="row">
-                            {% if book.unauthorized %}
-                            <span class="icon-block" title="Not authorized to view"></span>
-                            {{ book.title }}
-                            <div class="muted">{{ book.author }}</div>
-                            {% else %}
-                            <a href="{% url 'reader_default' book_id=book.book_id %}">{{ book.title }}</a>
-                            {% if book.is_assigned %}<span class="datatable-mark"><span class="sr-only">Assigned</span></span>{% endif %}
-                            <div class="muted">{{ book.author }}</div>
-                            {% endif %}
-                        </th>
-                        <td>{{ book.hours }} <span aria-hidden="true">hrs</span><br><span class="sr-only">hours</span> ({{ book.view_count }} visits)</td>
-                        <td>{{ book.last_view | naturalday }}</td>
-                        <td class="d-sm-down-none">{{ book.words_looked_up | default:"&mdash;" }}</td>
-                        <td class="d-sm-down-none">{{ book.learning | default:"&mdash;" }}</td>
-                        <td class="d-md-down-none">
-                            <span class="muted">{{ book.custom_question | default:"&mdash;" }}</span>
-                            {% if book.custom_response %}{{ book.custom_response }}{% endif %}
-                        </td>
-                        <td class="d-md-down-none">
-                            {{ book.reading_level | default:"&mdash;" }}
-                            {% if book.last_version %}
-                            <span class="muted">
-                                (Challenge {{ book.last_version.sortOrder | add:1 }}{% if book.version_switched %}/switched from {{ book.first_version.sortOrder | add:1 }}{% endif %})
-                            </span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
+                    {% if data.paginator.count %}
+                        {% for book in data.page_obj %}
+                        <tr>
+                            <th scope="row">
+                                {% if book.unauthorized %}
+                                <span class="icon-block" title="Not authorized to view"></span>
+                                {{ book.title }}
+                                <div class="muted">{{ book.author }}</div>
+                                {% else %}
+                                <a href="{% url 'reader_default' book_id=book.book_id %}">{{ book.title }}</a>
+                                {% if book.is_assigned %}<span class="datatable-mark"><span class="sr-only">Assigned</span></span>{% endif %}
+                                <div class="muted">{{ book.author }}</div>
+                                {% endif %}
+                            </th>
+                            <td>{{ book.hours }} <span aria-hidden="true">hrs</span><br><span class="sr-only">hours</span> ({{ book.view_count }} visits)</td>
+                            <td>{{ book.last_view | naturalday }}</td>
+                            <td class="d-sm-down-none">{{ book.words_looked_up | default:"&mdash;" }}</td>
+                            <td class="d-sm-down-none">{{ book.learning | default:"&mdash;" }}</td>
+                            <td class="d-md-down-none">
+                                <span class="muted">{{ book.custom_question | default:"&mdash;" }}</span>
+                                {% if book.custom_response %}{{ book.custom_response }}{% endif %}
+                            </td>
+                            <td class="d-md-down-none">
+                                {{ book.reading_level | default:"&mdash;" }}
+                                {% if book.last_version %}
+                                <span class="muted">
+                                    (Challenge {{ book.last_version.sortOrder | add:1 }}{% if book.version_switched %}/switched from {{ book.first_version.sortOrder | add:1 }}{% endif %})
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% elif current_student %}
+                        <td colspan="7">No readings{% if data.days == 7 %} in the past week{% elif data.days == 30 %} in the past month{% endif %}.</td>
+                    {% else %}
+                        <td colspan="7">N/A</td>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

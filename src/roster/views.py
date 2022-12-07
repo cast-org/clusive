@@ -1478,12 +1478,22 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
         for one_book in books:
             book = Book.objects.get(pk=one_book['book_id'])
             customizations = Customization.objects.filter(book=book, periods=period)
-            comp_checks = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book)
+            comp_check = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book).first()
             custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=period)
-            custom_response = custom_responses.filter(user=clusiveStudent)
+            custom_response = custom_responses.filter(user=clusiveStudent).first()
             category_names = []
             for category in book.reading_level_categories:
                 category_names.append(category.tag_name)
+
+            learning = None
+            if comp_check:
+                answer = comp_check.get_answer()
+                if answer and len(answer):
+                    free_response = comp_check.comprehension_free_response
+                    if free_response and len(free_response):
+                        learning = answer + '/' + free_response
+                    else:
+                        learning = answer
 
             book_details.append({
                 'book_id': one_book['book_id'],
@@ -1496,8 +1506,8 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'first_version': one_book['first_version'],
                 'last_version': one_book['last_version'],
                 'custom_question': '(' + customizations[0].question + ')' if customizations else None,
-                'custom_response': custom_response[0].custom_response if custom_response else None,
-                'learning': comp_checks[0].get_answer if comp_checks else None,
+                'custom_response': custom_response.custom_response if custom_response else None,
+                'learning': learning,
                 'reading_level': ', '.join(category_names),
                 'is_assigned': one_book['is_assigned'],
                 'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,
@@ -1618,10 +1628,10 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
                     books.append(one_book['book_id'])
             subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
             self.panel_data['topics'] = {
-                'topics': ', '.join(subjects)
+                'topics': ', '.join(subjects) if subjects.count() else None
             }
         except ClusiveUser.DoesNotExist:
-            messages.error(request, f"Student '{kwargs['username']}' not in this class ({period.name})")
+            messages.error(request, f"'{kwargs['username']}' is not in this class ({period.name})")
             self.clusive_student = None
             self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
             # For the affect panel, give the class version so as to provide
