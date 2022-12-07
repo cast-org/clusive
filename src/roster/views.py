@@ -1496,6 +1496,11 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                     else:
                         learning = answer
 
+            if customization and customization.question and len(customization.question):
+                custom_question = '(' + customization.question + ')'
+            else:
+                custom_question = None
+
             book_details.append({
                 'book_id': one_book['book_id'],
                 'title': one_book['title'],
@@ -1507,7 +1512,7 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'first_version': one_book['first_version'],
                 'last_version': one_book['last_version'],
                 'num_versions': num_versions,
-                'custom_question': '(' + customization.question + ')' if customization else None,
+                'custom_question': custom_question,
                 'custom_response': custom_response.custom_response if custom_response else None,
                 'learning': learning,
                 'reading_level': ', '.join(category_names),
