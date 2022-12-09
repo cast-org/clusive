@@ -1527,14 +1527,16 @@ class ReadingDetailsPanelView(TemplateView):
     template_name = 'roster/partial/student_details_reading_details.html'
 
     def get(self, request, *args, **kwargs):
-        paginate_by = 10
-        paginate_orphans = 2
-
+        paginate = {
+            'page_num': 1,  # default, set below based on kwargs
+            'paginate_by': 10,
+            'paginate_orphans': 3,
+        }
         self.clusive_user = request.clusive_user
         self.current_period = request.clusive_user.current_period
         self.username = kwargs.get('username')
         self.days = kwargs.get('days') if 'days' in kwargs else self.clusive_user.student_activity_days
-        self.page_num = kwargs.get('page_num') if 'page_num' in kwargs else 1
+        paginate['page_num'] = kwargs.get('page_num') if 'page_num' in kwargs else 1
         
         if 'sort' in kwargs:
             self.sort = kwargs.get('sort')
@@ -1553,15 +1555,28 @@ class ReadingDetailsPanelView(TemplateView):
                 role__in=[Roles.STUDENT]
             )
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
-            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
-            book_details = get_book_details(reading_data['books'], self.clusive_user.current_period, clusive_student, self.clusive_user)
-
-            self.paginator = Paginator(book_details, paginate_by, paginate_orphans)
-            self.page_obj = self.paginator.get_page(self.page_num)
+            reading_data = Paradata.get_reading_data(self.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
+            self.paginator = self.setup_paginator(
+                reading_data, paginate, clusive_student, self.clusive_user
+            )
+            self.page_obj = self.paginator.get_page(paginate['page_num'])
         except ClusiveUser.DoesNotExist:
             logger.warning(f"Reading details panel: Student '{self.username}' not in this class ({self.current_period.name})")
 
         return super().get(request, *args, **kwargs)
+
+    def setup_paginator(self, reading_data, paginate, student, teacher):
+        total_books = reading_data['book_count']
+        last_book = paginate['page_num'] * paginate['paginate_by']
+        first_book = last_book - paginate['paginate_by']
+        if last_book + paginate['paginate_orphans'] >= total_books:
+            last_book = total_books
+        books_on_page = reading_data['books'][first_book:last_book]
+        book_details = get_book_details(books_on_page, teacher.current_period, student, teacher)
+        paginator_obj = [None] * total_books
+        paginator_obj[first_book:last_book] = book_details
+        logger.debug(f"ReadingDetailsPanelView showing books {first_book} thru {last_book}")
+        return Paginator(paginator_obj, paginate['paginate_by'], paginate['paginate_orphans'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1570,7 +1585,7 @@ class ReadingDetailsPanelView(TemplateView):
             'username': self.username,
             'days': self.days,
             'paginator': self.paginator,
-            'page_obj': self.page_obj
+            'page_obj': self.page_obj,
         }
         return context
 
