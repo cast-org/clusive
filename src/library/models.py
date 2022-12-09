@@ -15,6 +15,7 @@ from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
 from .util import sort_words_by_frequency
+import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -688,12 +689,12 @@ class Paradata(models.Model):
             students = period.users.filter(role=Roles.STUDENT)
         else:
             students = period.users.filter(role=Roles.STUDENT, user__username=username)
+        # Query for all Paradata records showing book views for these students
+        paradatas = Paradata.objects.filter(user__in=students).prefetch_related('book')
 
         assigned_books = [a.book for a in period.bookassignment_set.all()]
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'books': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
-        # Query for all Paradata records showing book views for these students
-        paradatas = Paradata.objects.filter(user__in=students)
         # If we're date limited, annotate this query with information from ParadataDaily
         if days:
             start_date = date.today()-timedelta(days=days)
