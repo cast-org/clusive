@@ -1529,8 +1529,8 @@ class ReadingDetailsPanelView(TemplateView):
     def get(self, request, *args, **kwargs):
         paginate = {
             'page_num': 1,  # default, set below based on kwargs
-            'paginate_by': 10,
-            'paginate_orphans': 3,
+            'paginate_by': settings.PAGINATE_BY,
+            'paginate_orphans': settings.PAGINATE_ORPHANS,
         }
         self.clusive_user = request.clusive_user
         self.current_period = request.clusive_user.current_period
