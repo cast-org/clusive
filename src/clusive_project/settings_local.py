@@ -2,7 +2,7 @@
 Django settings for Clusive local development.  Not to be used in production.
 """
 import os
-from socket import gethostname, gethostbyname, gethostbyname_ex
+from socket import gethostname, gethostbyname_ex
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -35,7 +35,7 @@ DATABASES = {
 
 # Don't actually send email, just log to console.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'cisl@cast.org'
+DEFAULT_FROM_EMAIL = 'clusive@cast.org'
 
 # Set more QA-friendly values than the live config.
 AXES_FAILURE_LIMIT = 10

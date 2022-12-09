@@ -49,8 +49,8 @@ DATABASES = {
 if os.environ.get('DJANGO_ADMIN_EMAIL'):
     ADMINS = [os.environ.get('DJANGO_ADMIN_NAME'), os.environ.get('DJANGO_ADMIN_EMAIL')]
 
-DEFAULT_FROM_EMAIL  = os.environ.get('DJANGO_DEFAULT_EMAIL', 'cisl@cast.org')
-SERVER_EMAIL        = os.environ.get('DJANGO_SERVER_EMAIL', 'cisl@cast.org')
+DEFAULT_FROM_EMAIL  = os.environ.get('DJANGO_DEFAULT_EMAIL', 'clusive@cast.org')
+SERVER_EMAIL        = os.environ.get('DJANGO_SERVER_EMAIL', 'clusive@cast.org')
 
 EMAIL_HOST          = os.environ.get('DJANGO_EMAIL_HOST', 'localhost')
 EMAIL_PORT          = os.environ.get('DJANGO_EMAIL_PORT', '25')
