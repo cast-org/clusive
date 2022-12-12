@@ -10,7 +10,7 @@ from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
 from django.db import models
-from django.db.models import Sum, Q, QuerySet
+from django.db.models import Sum, Q, QuerySet, Prefetch
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
@@ -690,8 +690,10 @@ class Paradata(models.Model):
             students = period.users.filter(role=Roles.STUDENT, user__username=username)
         # Query for all Paradata records showing book views for these students
         paradatas = Paradata.objects.filter(user__in=students).prefetch_related('book')
-
-        assigned_books = [a.book for a in period.bookassignment_set.all()]
+        assignments = BookAssignment.objects.filter(period=period)\
+            .prefetch_related('book')\
+            .prefetch_related(Prefetch('book__paradata_set', queryset=paradatas, to_attr='paradata_list'))
+        assigned_books = [a.book for a in assignments]
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'books': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
         # If we're date limited, annotate this query with information from ParadataDaily
