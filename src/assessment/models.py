@@ -324,7 +324,7 @@ class AffectiveBookTotal(AffectiveSummary):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, db_index=True)
 
     def __str__(self):
-        return '<AffBookTotal: %s>' % self.user
+        return '<AffBookTotal: %s>' % self.book
 
 
 class StarRatingScale:

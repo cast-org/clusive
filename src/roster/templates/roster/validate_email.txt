@@ -8,7 +8,7 @@ As one last step, you need to verify that this is your email address by clicking
 
 {% trans "This link will expire in 3 days" %}
 
-{% trans "Need help? Email us cisl@cast.org." %}
+{% trans "Need help? Email us clusive@cast.org." %}
 
 {% trans "Thanks for using Clusive!" %}
 
