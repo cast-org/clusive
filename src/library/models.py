@@ -15,7 +15,6 @@ from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
 from .util import sort_words_by_frequency
-import pdb
 
 logger = logging.getLogger(__name__)
 
