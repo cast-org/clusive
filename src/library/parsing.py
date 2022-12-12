@@ -9,6 +9,7 @@ from os.path import basename
 from pathlib import Path
 from tempfile import mkstemp
 from urllib.parse import urlparse
+from uuid import uuid4
 from zipfile import ZipFile
 
 import dawn
@@ -20,7 +21,8 @@ from nltk import RegexpTokenizer
 from textstat import textstat
 
 from glossary.util import base_form
-from library.models import Book, BookVersion, Subject
+from library.models import Book, BookVersion, Subject, Format
+from roster.models import ClusiveUser
 from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
@@ -36,6 +38,69 @@ class BookNotUnique(Exception):
 
 class BookMalformed(Exception):
     pass
+
+
+def upload_pdf_file(clusive_user: ClusiveUser, file: str, filename: str):
+    """
+    Process an uploadedPDF file. Stores data and creates a Readium manifest.
+    :param clusive_user: user that will own the resulting Book.
+    :param file: File, which should be a PDF.
+    :param filename: user's original filename, used as a default for the title
+    :return: a new BookVersion
+    """
+    book = Book(owner=clusive_user,
+                format=Format.PDF,
+                title=filename,
+                author='',
+                sort_author='',
+                description='',
+                cover=None)
+    book.save()
+    logger.debug('Created new book for import: %s', book)
+    mod_date = timezone.now()
+    book_version = BookVersion(book=book, mod_date=mod_date, sortOrder=0, filename=filename)
+    book_version.save()
+    bv_dir = book_version.storage_dir
+    os.makedirs(bv_dir)
+    pdf_filename = os.path.join(bv_dir, 'content.pdf')
+    shutil.copyfile(file, pdf_filename)
+    manifest = make_pdf_manifest('content.pdf', filename)
+    with open(book_version.manifest_file, 'w') as mf:
+        mf.write(json.dumps(manifest, indent=4))
+    logger.debug('Completed import of: %s', book_version)
+    return book_version, True
+
+
+def make_pdf_manifest(filename: str, title: str):
+    return {
+        "context": "https://readium.org/webpub-manifest/context.jsonld",
+        "metadata": {
+            "@type": "https://schema.org/Book",
+            "title": title,
+            "identifier": uuid4().hex,
+            "conformsTo": "https://readium.org/webpub-manifest/profiles/pdf"
+        },
+        "readingOrder": [
+            {
+                "href": filename,
+                "title": title,
+                "type": "application/pdf"
+            }
+        ],
+        "resources": [
+            {
+                "href": filename,
+                "type": "application/pdf"
+            }
+        ],
+        "toc": [
+            {
+                "href": filename,
+                "title": title
+            }
+        ]
+    }
+
 
 
 def convert_and_unpack_docx_file(clusive_user, file, filename):

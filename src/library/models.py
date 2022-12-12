@@ -15,7 +15,6 @@ from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
 from .util import sort_words_by_frequency
-import pdb
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +30,17 @@ def update_word_list(word_list, word):
     new_list = list(word_set)
     new_list.sort()
     return new_list
+
+
+
+class Format:
+    EPUB = 'E'
+    PDF  = 'P'
+
+    CHOICES = [
+        (EPUB, 'EPUB'),
+        (PDF, 'PDF'),
+    ]
 
 
 class Subject(models.Model):
@@ -134,6 +144,7 @@ class Book(models.Model):
     description = models.TextField(default="", blank=True, db_index=True)
     cover = models.CharField(max_length=256, null=True)
     featured = models.BooleanField(default=False)
+    format = models.CharField(max_length=1, choices=Format.CHOICES, default=Format.EPUB)
     word_count = models.PositiveIntegerField(null=True, db_index=True)
     picture_count = models.PositiveIntegerField(null=True)
     subjects = models.ManyToManyField(Subject, db_index=True)
@@ -735,7 +746,7 @@ class Paradata(models.Model):
             result.sort(reverse=True, key=lambda item: item['book_count'])
         elif sort == StudentActivitySort.TIME:
             result.sort(reverse=True, key=lambda item: item['hours'])
-        
+
         # sort the list of books
         if (books_sort):
             for reading_data_for_one_user in result:
@@ -790,7 +801,7 @@ class Paradata(models.Model):
                             'is_other': True,
                         })
         return books_for_students
-    
+
     @classmethod
     def get_words_looked_up(cls, user: ClusiveUser):
         paradatas = Paradata.objects.filter(user=user)
@@ -798,7 +809,7 @@ class Paradata(models.Model):
         for paradata in paradatas:
             word_list = json.loads(paradata.words_looked_up or '[]')
             all_words = all_words.union(set(word_list))
-        
+
         all_words_list = list(all_words)
         all_words_list.sort()
         return all_words_list
@@ -835,7 +846,7 @@ class ParadataDaily(models.Model):
         for paradata_daily in paradata_dailies:
             word_list = json.loads(paradata_daily.words_looked_up or '[]')
             all_words = all_words.union(set(word_list))
-        
+
         all_words_list = list(all_words)
         all_words_list.sort()
         return all_words_list
