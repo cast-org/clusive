@@ -22,6 +22,7 @@ from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
@@ -32,13 +33,17 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView, RedirectView
+from django.core.paginator import Paginator
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from assessment.models import AffectiveCheckResponse, AffectiveUserTotal
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
+from assessment.models import ComprehensionCheckResponse
+from library.models import Book, Customization, Paradata, ParadataDaily, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
@@ -1466,3 +1471,233 @@ def remove_social_account(request, *args, **kwargs):
         logger.debug('User %s does not have a %s account', request.user.username, social_app_name)
 
     return HttpResponseRedirect(reverse('my_account'))
+
+def get_book_details(books, period, clusiveStudent, clusiveUser):
+    book_details = []
+    if books:
+        for one_book in books:
+            book = Book.objects.get(pk=one_book['book_id'])
+            num_versions = book.versions.all().count()
+            customization = Customization.objects.filter(book=book, periods=period).first()
+            comp_check = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book).first()
+            custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=period)
+            custom_response = custom_responses.filter(user=clusiveStudent).first()
+            category_names = []
+            for category in book.reading_level_categories:
+                category_names.append(category.tag_name)
+
+            learning = None
+            if comp_check:
+                answer = comp_check.get_answer()
+                if answer and len(answer):
+                    free_response = comp_check.comprehension_free_response
+                    if free_response and len(free_response):
+                        learning = answer + '/' + free_response
+                    else:
+                        learning = answer
+
+            if customization and customization.question and len(customization.question):
+                custom_question = '(' + customization.question + ')'
+            else:
+                custom_question = None
+
+            book_details.append({
+                'book_id': one_book['book_id'],
+                'title': one_book['title'],
+                'author': book.author,
+                'hours': round(one_book['hours'], 1),
+                'last_view': one_book['last_view'],
+                'view_count': one_book['view_count'],
+                'words_looked_up': ', '.join(json.loads(one_book['words_looked_up'])) if one_book['words_looked_up'] else None,
+                'first_version': one_book['first_version'],
+                'last_version': one_book['last_version'],
+                'num_versions': num_versions,
+                'custom_question': custom_question,
+                'custom_response': custom_response.custom_response if custom_response else None,
+                'learning': learning,
+                'reading_level': ', '.join(category_names),
+                'is_assigned': one_book['is_assigned'],
+                'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,
+                'unauthorized': not book.is_visible_to(clusiveUser)
+            })
+    return book_details    
+
+class ReadingDetailsPanelView(TemplateView):
+    """Shows just the reading details panel, for AJAX updates"""
+    template_name = 'roster/partial/student_details_reading_details.html'
+
+    def get(self, request, *args, **kwargs):
+        paginate = {
+            'page_num': 1,  # default, set below based on kwargs
+            'paginate_by': settings.PAGINATE_BY,
+            'paginate_orphans': settings.PAGINATE_ORPHANS,
+        }
+        self.clusive_user = request.clusive_user
+        self.current_period = request.clusive_user.current_period
+        self.username = kwargs.get('username')
+        self.days = kwargs.get('days') if 'days' in kwargs else self.clusive_user.student_activity_days
+        paginate['page_num'] = kwargs.get('page_num') if 'page_num' in kwargs else 1
+        
+        if 'sort' in kwargs:
+            self.sort = kwargs.get('sort')
+            logger.debug('Setting reading details sort = %s', self.sort)
+            self.clusive_user.reading_details_sort = self.sort
+            self.clusive_user.save()
+        else:
+            self.sort = self.clusive_user.reading_details_sort
+
+        self.paginator = {}
+        self.page_obj = {}
+        try:
+            clusive_student = ClusiveUser.objects.get(
+                user__username=self.username,
+                periods__in=[self.current_period],
+                role__in=[Roles.STUDENT]
+            )
+            # Get the reading data for the current student. This data will be shared by all panels on the student details page
+            reading_data = Paradata.get_reading_data(self.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
+            self.paginator = self.setup_paginator(
+                reading_data, paginate, clusive_student, self.clusive_user
+            )
+            self.page_obj = self.paginator.get_page(paginate['page_num'])
+        except ClusiveUser.DoesNotExist:
+            logger.warning(f"Reading details panel: Student '{self.username}' not in this class ({self.current_period.name})")
+
+        return super().get(request, *args, **kwargs)
+
+    def setup_paginator(self, reading_data, paginate, student, teacher):
+        total_books = reading_data['book_count']
+        last_book = paginate['page_num'] * paginate['paginate_by']
+        first_book = last_book - paginate['paginate_by']
+        if last_book + paginate['paginate_orphans'] >= total_books:
+            last_book = total_books
+        books_on_page = reading_data['books'][first_book:last_book]
+        book_details = get_book_details(books_on_page, teacher.current_period, student, teacher)
+        paginator_obj = [None] * total_books
+        paginator_obj[first_book:last_book] = book_details
+        logger.debug(f"ReadingDetailsPanelView showing books {first_book} thru {last_book}")
+        return Paginator(paginator_obj, paginate['paginate_by'], paginate['paginate_orphans'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data'] = {
+            'sort': self.sort,
+            'username': self.username,
+            'days': self.days,
+            'paginator': self.paginator,
+            'page_obj': self.page_obj,
+        }
+        return context
+
+class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, ReadingDetailsPanelView):
+    template_name='roster/student_details.html'
+
+    def __init__(self):
+        super().__init__()
+
+    def get(self, request, *args, **kwargs):
+        self.clusive_user = request.clusive_user
+        if not self.clusive_user.can_manage_periods:
+            self.handle_no_permission()
+
+        if not self.clusive_user.can_manage_periods:
+            self.handle_no_permission()
+
+        if 'days' in kwargs:
+            self.days = kwargs.get('days')
+            logger.debug('Setting student activity days = %d', self.days)
+            self.clusive_user.student_activity_days = self.days
+            self.clusive_user.save()
+        else:
+            self.days = self.clusive_user.student_activity_days
+
+        period = self.clusive_user.current_period
+        self.roster = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+        # Dictionary for the individual panel data
+        self.panel_data = dict()
+        self.panel_data['days'] = self.days
+        try:
+            self.clusive_student = ClusiveUser.objects.get(
+                user__username=kwargs['username'],
+                periods__in=[period],
+                role=Roles.STUDENT
+            )
+            # Get the reading data for the current student. This data will be shared by all panels on the student details page
+            reading_data = Paradata.get_reading_data(self.clusive_user.current_period, days=self.days, username=kwargs['username'])[0]
+
+            # Student Activity panel
+            user = User.objects.get(pk=self.clusive_student.user_id)
+            self.panel_data['activity'] = {
+                'hours': round(reading_data['hours'], 1) if reading_data else 0,
+                'book_count': reading_data['book_count'] if reading_data else 0,
+                'last_login': user.last_login
+            }
+            # Student Reactions panel
+            affect_totals = self.affect_data_for_time_frame(self.days)
+            self.panel_data['affect'] = {
+                'totals': AffectiveUserTotal.scale_values(affect_totals),
+                'empty': affect_totals is None,
+            }
+            # Words looked up panel
+            word_list = ParadataDaily.get_words_looked_up(self.clusive_student, self.days)
+            self.panel_data['words'] = ', '.join(word_list)
+
+            # Topics panel
+            books = []
+            # Get all books for the current student
+            if reading_data:
+                for one_book in reading_data['books']:
+                    books.append(one_book['book_id'])
+            subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
+            self.panel_data['topics'] = {
+                'topics': ', '.join(subjects) if subjects.count() else None
+            }
+        except ClusiveUser.DoesNotExist:
+            messages.error(request, f"'{kwargs['username']}' is not in this class ({period.name})")
+            self.clusive_student = None
+            self.panel_data['activity'] = { 'hours': 0, 'book_count': 0, 'last_login': 0 }
+            # For the affect panel, give the class version so as to provide
+            # hints about all students' reactions.
+            all_students_affect = AffectiveUserTotal.objects.filter(user__periods=period, user__role=Roles.STUDENT)
+            self.panel_data['affect'] = {
+                'totals': AffectiveUserTotal.aggregate_and_scale(all_students_affect),
+                'empty': all_students_affect is None,
+            }
+            self.panel_data['words'] = 'N/A'
+            self.panel_data['topics'] = { 'topics': None }
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_student'] = self.clusive_student
+        context['current_student_username'] = kwargs['username']
+        context['current_student_name'] = self.clusive_student.user.first_name if self.clusive_student else "No student"
+        context['teacher'] = self.clusive_user
+        context['roster'] = self.roster
+        context['panel_data'] = self.panel_data
+        return context
+
+    def affect_data_for_time_frame(self, time_frame):
+        # If the time frame is "Overall", return the AffectiveUserTotal for the
+        # user. Zero means "Overall".  Also, it is possible that there may be
+        # no AffectiveUserTotal instance for the user; otherwise, there is only
+        # one.
+        if time_frame == 0:
+            return AffectiveUserTotal.objects.filter(user=self.clusive_student).first()
+
+        date_time_frame = timezone.now() - timedelta(days=time_frame)
+        affect_check_responses = AffectiveCheckResponse.objects.filter(
+            user = self.clusive_student,
+            updated__gte = date_time_frame
+        )
+        if affect_check_responses.count() == 0:
+            return None
+
+        # Create a new AffectiveUserTotal for the user's affect check responses,
+        # but do not save it to the database.  That would overwrite the actual
+        # overall totals for the student.
+        time_frame_totals = AffectiveUserTotal(user=self.clusive_student)
+        for acr in affect_check_responses:
+            time_frame_totals.update(None, acr.to_list())
+        return time_frame_totals

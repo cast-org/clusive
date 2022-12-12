@@ -155,7 +155,7 @@
         margin-left: auto;
         @include font-size(1.25rem, true);
         font-style: italic;
-        border-left: 4px solid var(--CT_boxResourceDivderColor);
+        border-left: 4px solid var(--CT_boxResourceDividerColor);
 
         p {
             @include font-size(inherit, true);
