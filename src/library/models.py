@@ -173,6 +173,14 @@ class Book(models.Model):
     def is_bookshare(self):
         return self.bookshare_id is not None
 
+    @property
+    def is_pdf(self):
+        return self.format == Format.PDF
+
+    @property
+    def is_epub(self):
+        return self.format == Format.EPUB
+
     def is_visible_to(self, user : ClusiveUser):
         if self.is_public:
             return True

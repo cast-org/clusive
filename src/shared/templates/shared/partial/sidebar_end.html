@@ -5,9 +5,10 @@
     </button>
 </div>
 {% if read_aloud %}
+{% if pub.is_epub %}
 <div class="sidebar-region sidebar-tts" role="region" aria-label="Read aloud controls"{% if read_aloud == 'Readium' %} data-tts-mode="Readium"{% endif %} data-clusive-tip-id="readaloud" data-clusive-tip-action="readaloud" tabindex="-1">
     <div class="tts-inactive">
-        <button type="button" class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
+        <button type="button" {% if pub.is_pdf %}disabled {% endif %}class="btn btn-tool tts-play" aria-label="Read aloud" title="Read aloud" data-cle-handler="click" data-cle-control="tts-play" data-cle-value="clicked">
             <span class="icon-play" aria-hidden="true"></span>
         </button>
     </div>
@@ -23,4 +24,15 @@
         </button>
     </div>
 </div>
+{% else %}
+<div class="sidebar-region sidebar-tts" role="region" aria-label="Read aloud controls" tabindex="-1">
+    <span class="d-inline-block mt-0_75" tabindex="0" title="Read-aloud not available for PDF content."
+                data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="reverse">
+        <button id="noTTSButton" type="button" disabled class="btn btn-tool tts-play">
+            <span class="icon-play" aria-hidden="true"></span>
+            <span class="sr-only">Read-aloud not available for PDF content.</span>
+        </button>
+    </span>
+</div>
+{% endif %}
 {% endif %}

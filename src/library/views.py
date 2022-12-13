@@ -465,11 +465,10 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
                 (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
                 event_control = 'upload_epub'
             if changed:
-                logger.debug('Uploaded file name = %s', upload.name)
                 self.bv.filename = upload.name
                 self.bv.save()
-                logger.debug('Updating word lists')
                 if self.bv.book.format != Format.PDF:
+                    logger.debug('Updating word lists')
                     scan_book(self.bv.book)
                 event = Event.build(session=self.request.session,
                                     type='TOOL_USE_EVENT',
