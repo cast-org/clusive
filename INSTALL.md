@@ -11,7 +11,7 @@ Note: all steps between **Create/Activitate Virtual Environment** and **Create a
 ### Prerequisites
 
 * [Python 3](https://www.python.org/downloads/)
-  * Version 3.7.4 up to 3.9. (3.10+ not tested yet). On Mac, Homebrew is the easiest way to install.
+  * Version 3.8.16 up to 3.9. (3.10+ not tested yet). On Mac, Homebrew is the easiest way to install.
 * Django
   * Version 3.2, installed with other Python dependencies as documented in
     section [Install Python Dependencies](#install-python-dependencies).
