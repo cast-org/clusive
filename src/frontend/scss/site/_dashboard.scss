@@ -53,7 +53,7 @@
     th {
         @include font-size(1rem);
         font-weight: 700;
-        border-bottom: 3px solid var(--CT_boxDivderColor);
+        border-bottom: 3px solid var(--CT_boxDividerColor);
 
         .active {
             border-bottom: 4px solid var(--CT_readTimeFilterActiveBorderColor);
@@ -92,7 +92,7 @@
             font-weight: 700;
             line-height: 1;
             text-align: center;
-            border-left: 3px solid var(--CT_boxDivderColor);
+            border-left: 3px solid var(--CT_boxDividerColor);
         }
         &:nth-child(4) {
             padding-left: 1rem;

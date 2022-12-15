@@ -13,3 +13,70 @@
         color: var(--CT_tableRosterHeadColor);
     }
 }
+
+.datatable-mark {
+    @include caret(up, .375rem, var(--CT_dataTableMarkColor));
+    margin-top: 0;
+    transform: translateY(50%) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.datatable-scroll {
+    margin: -1rem #{-$box-padding-x} 0;
+}
+
+// stylelint-disable selector-max-type, selector-max-compound-selectors
+// 1 - work around Chrome's issue with non-fixed width table in overflow container
+.datatable {
+    position: relative; // 1
+    margin-bottom: 0;
+    @include calc-line-height(1.375);
+
+    > tbody > tr {
+        border-bottom: 1px solid var(--CT_boxSecondaryDividerColor);
+
+        &:nth-of-type(odd) > * {
+            background-color: var(--CT_bodyBg);
+        }
+    }
+
+    th {
+        @include font-size(1rem);
+        font-weight: $font-weight-bold;
+        border-bottom: 3px solid var(--CT_boxSecondaryDividerColor);
+        white-space: nowrap;
+    }
+    td {
+        @include font-size(.9375rem);
+        font-weight: $font-weight-normal;
+        vertical-align: top;
+    }
+    tbody th {
+        position: relative;
+        @include font-size(.9375rem);
+        font-weight: $font-weight-bold;
+        white-space: normal;
+        vertical-align: top;
+        border-bottom: 0;
+    }
+
+    th:first-child,
+    td:first-child {
+        padding-left: $box-padding-x;
+    }
+    th:last-child,
+    td:last-child {
+        padding-right: $box-padding-x;
+    }
+
+    .muted {
+        @include font-size(.825rem);
+        font-weight: $font-weight-normal;
+        color: var(--CT_textMuted);
+    }
+    .datatable-mark {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}

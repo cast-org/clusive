@@ -194,6 +194,13 @@
                 width: calc(#{percentage(1 / 2)} - #{$library-grid-gutter});
             }
         }
+        &.card-details {
+            margin-bottom: 2rem;
+
+            .box {
+                margin-bottom: 0;
+            }
+        }
     }
 }
 

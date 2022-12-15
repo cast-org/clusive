@@ -303,6 +303,10 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 AXES_DISABLE_ACCESS_LOG = True
 CLUSIVE_LOGIN_FAILURES_WARNING_THRESHOLD = 4
 
+# Student details panignation settings
+PAGINATE_BY = 10
+PAGINATE_ORPHANS = 3
+
 # Load appropriate specific settings file
 # This is specified by the value of environment variable DJANGO_CONFIG, defaults to settings_local.py
 settingsFileName = os.environ.get('DJANGO_CONFIG', 'local')

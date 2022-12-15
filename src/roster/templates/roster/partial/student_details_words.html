@@ -1,0 +1,6 @@
+{% load humanize %}
+<div id="words" class="box box-secondary">
+    <h4 class="h2">Words looked up</h4>
+    <div class="box-divider"></div>
+    <p>{{ data | default:"&mdash;" }}</p>
+</div>

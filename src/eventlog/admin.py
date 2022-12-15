@@ -33,7 +33,7 @@ class EventAdmin(admin.ModelAdmin):
                        'parent_event_id', 'session', )
     list_display = ('event_time', 'actor', 'type', 'action', 'object', 'page', 'control', 'value',
                     'book_id', 'book_version_id')
-    list_filter = ('actor__permission', 'event_time', 'actor')
+    list_filter = ('actor__permission', 'event_time', 'actor', 'control')
     ordering = ('-event_time',)
     change_list_template = 'eventlog/event_changelist.html'
 
