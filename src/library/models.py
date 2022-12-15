@@ -10,7 +10,7 @@ from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
 from django.db import models
-from django.db.models import Sum, Q, QuerySet, Prefetch
+from django.db.models import Sum, Q, QuerySet
 from django.utils import timezone
 
 from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, ReadingDetailsSort
@@ -685,14 +685,13 @@ class Paradata(models.Model):
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
         if username == None:
-            students = period.users.filter(role=Roles.STUDENT)
+            students = list(period.users.filter(role=Roles.STUDENT))
         else:
-            students = period.users.filter(role=Roles.STUDENT, user__username=username)
+            students = list(period.users.filter(role=Roles.STUDENT, user__username=username))
         # Query for all Paradata records showing book views for these students
         paradatas = Paradata.objects.filter(user__in=students).prefetch_related('book')
         assignments = BookAssignment.objects.filter(period=period)\
-            .prefetch_related('book')\
-            .prefetch_related(Prefetch('book__paradata_set', queryset=paradatas, to_attr='paradata_list'))
+            .prefetch_related('book')
         assigned_books = [a.book for a in assignments]
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'books': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
@@ -701,7 +700,7 @@ class Paradata(models.Model):
             start_date = date.today()-timedelta(days=days)
             logger.debug('Query dailies since %s', start_date)
             paradatas = paradatas.annotate(recent_time=Sum('paradatadaily__total_time',
-                                                        filter=Q(paradatadaily__date__gt=start_date)))
+                                                        filter=Q(paradatadaily__date__gte=start_date)))
         for p in paradatas:
             # Skip if time is zero.
             if days:
@@ -736,7 +735,7 @@ class Paradata(models.Model):
             result.sort(reverse=True, key=lambda item: item['book_count'])
         elif sort == StudentActivitySort.TIME:
             result.sort(reverse=True, key=lambda item: item['hours'])
-        
+
         # sort the list of books
         if (books_sort):
             for reading_data_for_one_user in result:
@@ -791,7 +790,7 @@ class Paradata(models.Model):
                             'is_other': True,
                         })
         return books_for_students
-    
+
     @classmethod
     def get_words_looked_up(cls, user: ClusiveUser):
         paradatas = Paradata.objects.filter(user=user)
@@ -799,7 +798,7 @@ class Paradata(models.Model):
         for paradata in paradatas:
             word_list = json.loads(paradata.words_looked_up or '[]')
             all_words = all_words.union(set(word_list))
-        
+
         all_words_list = list(all_words)
         all_words_list.sort()
         return all_words_list
@@ -836,7 +835,7 @@ class ParadataDaily(models.Model):
         for paradata_daily in paradata_dailies:
             word_list = json.loads(paradata_daily.words_looked_up or '[]')
             all_words = all_words.union(set(word_list))
-        
+
         all_words_list = list(all_words)
         all_words_list.sort()
         return all_words_list

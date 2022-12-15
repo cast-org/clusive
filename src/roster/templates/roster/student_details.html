@@ -32,7 +32,6 @@
                 {% endfor %}
             </ul>
         </div>
-        {# Place holder for view statisics for the student #}
         {% include "roster/partial/student_details_time_scale.html" with target='student_details' days=panel_data.days %}
     </div>
     <div class="library-grid"">
@@ -50,9 +49,9 @@
             {% include "roster/partial/student_details_topics.html" with data=panel_data.topics %}
         </div>
     </div>
+    {% include "roster/partial/student_details_reading_details.html" %}
     <script>
         libraryMasonryEnable();
     </script>
-    {% include "roster/partial/student_details_reading_details.html" %}
 </main>
 {% endblock %}
