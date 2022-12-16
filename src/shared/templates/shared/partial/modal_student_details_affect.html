@@ -7,13 +7,25 @@
     <ul class="list-unstyled">
     {% for reaction in my_recent %}
         <li class="mb-0_5">
+            {% if reaction.unauthorized %}
+            <a href="#" data-cfw="tooltip" title="Not authorized to view">
+                <span class="icon-block" title="Not authorized to view"></span>
+                <strong>{{ reaction.book.title }}</strong>
+            </a>
+            {% else %}
             <a href="#" onclick="vocabCheck.start(this, '{{reaction.book.id}}'); return false;">
                 <strong>{{ reaction.book.title }}</strong>
-            </a><br>
-            <em>{{ reaction.affect_free_response }}</em>
+            </a>
+            {% endif %}
+            {% if reaction.affect_free_response and reaction.affect_free_response.strip %}
+                <br><em>{{ reaction.affect_free_response }}</em>
+            {% endif %}
         </li>
     {% endfor %}
     </ul>
+    {% if any_unauthorized_book %}
+    <p class="form-text"><em>Readings with the symbol <span class="icon-block" title="Not authorized to view"></span> were uploaded by the student.</em></p>
+    {% endif %}
 {% else %}
     <p>No readings have made {{ for_user_name }} feel {{ word }}
         {% if time_scale == 7 %}

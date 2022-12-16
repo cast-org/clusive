@@ -15,6 +15,7 @@ from roster.models import Roles, ClusiveUser
 from .models import ComprehensionCheck, ComprehensionCheckResponse, AffectiveCheckResponse, \
     AffectiveUserTotal, AffectiveBookTotal
 
+
 logger = logging.getLogger(__name__)
 
 class AffectCheckView(LoginRequiredMixin, View):
@@ -217,6 +218,10 @@ class AffectDetailView(LoginRequiredMixin, TemplateView):
             # Find responses for the specific user and time period
             self.my_recent = AffectiveCheckResponse.recent_with_word(
                 clusive_user, self.word, request.clusive_user.student_activity_days)[0:10]
+            for recent in self.my_recent:
+                if not recent.book.is_visible_to(request.clusive_user):
+                    recent.unauthorized = True
+                    self.any_unauthorized_book = True
         else:
             # Find responses my the currently logged-in user
             self.my_recent = AffectiveCheckResponse.recent_with_word(clusive_user, self.word)[0:5]
