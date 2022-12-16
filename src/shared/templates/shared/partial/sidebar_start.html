@@ -4,7 +4,7 @@
         <span class="icon-th-list" aria-hidden="true"></span>
     </button>
 
-    {% if not pub.is_educator_resource %}
+    {% if not pub.is_educator_resource and not pub.is_pdf %}
     {% if version_count == 1 %}
     <span class="d-inline-block mt-0_75" tabindex="0" title="Can't switch: there is only one version of this content."
           data-cfw="tooltip" data-cfw-tooltip-container="body" data-cfw-tooltip-placement="forward">
@@ -44,5 +44,14 @@
     <button id="nextResourceButton" onclick="d2reader.nextPage();" type="button" class="btn btn-nav btn-icon btn-nav-next" aria-label="Next page" title="Next page" data-cle-handler="click" data-cle-control="reader-navigation-pagination" data-cle-value="next-page">
         <span class="icon-chevron-right" aria-hidden="true"></span>
     </button>
+
+    {% if pub.is_pdf %}
+    <button id="zoomInButton" onclick="d2reader.zoomIn();" type="button" class="btn btn-nav btn-icon btn-nav-next" aria-label="Zoom in" title="Zoom in">
+        <span class="icon-plus" aria-hidden="true"></span>
+    </button>
+    <button id="zoomOutButton" onclick="d2reader.zoomOut();" type="button" class="btn btn-nav btn-icon btn-nav-next" aria-label="Zoom out" title="Zoom out">
+        <span class="icon-minus" aria-hidden="true"></span>
+    </button>
+    {% endif %}
 </nav>
 {% endif %}
