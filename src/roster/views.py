@@ -1484,15 +1484,15 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
             for category in book.reading_level_categories:
                 category_names.append(category.tag_name)
 
-            learning = None
+            learned = None
+            free_response = None
             if comp_check:
                 answer = comp_check.get_answer()
-                if answer and len(answer):
-                    free_response = comp_check.comprehension_free_response
-                    if free_response and len(free_response):
-                        learning = answer + '/' + free_response
-                    else:
-                        learning = answer
+                if answer and len(answer.strip()):
+                    learned = answer
+                    fresp = comp_check.comprehension_free_response
+                    if fresp and len(fresp.strip()):
+                        free_response = fresp
 
             if customization and customization.question and len(customization.question):
                 custom_question = '(' + customization.question + ')'
@@ -1512,7 +1512,8 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'num_versions': num_versions,
                 'custom_question': custom_question,
                 'response': response.custom_response if response else None,
-                'learning': learning,
+                'learned': learned,
+                'free_response': free_response,
                 'reading_level': ', '.join(category_names),
                 'is_assigned': one_book['is_assigned'],
                 'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,

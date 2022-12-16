@@ -69,7 +69,13 @@
                             <td>{{ book.hours }} <span aria-hidden="true">hrs</span><br><span class="sr-only">hours</span> ({{ book.view_count }} visits)</td>
                             <td style="white-space:nowrap;">{{ book.last_view | naturalday:"D, M d" }}</td>
                             <td class="d-sm-down-none">{{ book.words_looked_up | default:"&mdash;" }}</td>
-                            <td class="d-sm-down-none">{{ book.learning | default:"&mdash;" }}</td>
+                            <td class="d-sm-down-none">
+                                {% if book.learned %}
+                                    {{ book.learned }} / {{ book.free_response | default:"&mdash;" }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </td>
                             <td class="d-md-down-none">
                                 <span class="muted">{{ book.custom_question | default:"&mdash;" }}</span>
                                 {% if book.custom_response %}{{ book.custom_response }}{% endif %}
