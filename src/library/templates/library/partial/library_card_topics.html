@@ -8,6 +8,7 @@
         {% for category in book.reading_level_categories %}
             <a href="{% search_args query '' category.value %}" class="btn btn-tag {% if category in reading_levels_filter %}active{% endif %}">{{ category.tag_name }}</a>
         {% endfor %}
+        {% if book.is_epub %}
         <span class="badge badge-count" tabindex="0" data-cfw="tooltip"
               title="{{book.word_count}} word{{book.word_count|pluralize}}, {{book.picture_count}} picture{{book.picture_count|pluralize}}">
             <span class="badge-item">
@@ -19,6 +20,9 @@
                 {{ book.picture_count|intcomma }} <span class="sr-only">picture{{book.picture_count|pluralize}}</span>
             </span>
         </span>
+        {% else %}
+        <span class="badge badge-count">PDF</span>
+        {% endif %}
         {% if book.owner == request.clusive_user %}
         <span class="badge badge-count">
             <span class="icon-user-o" aria-hidden="true"></span>

@@ -35,33 +35,40 @@
     </div>
 
     <hr class="my-2" />
-    <h2>New!</h2>
-    <p>
-        If you have a Bookshare account, you can search for and add Bookshare books right here in Clusive.
-        {% if request.clusive_user.can_upload %}
-          Go to <a href="{% url 'my_account' %}">My Account</a>
-          and click <strong>Connect to a Bookshare account</strong> to get started.</p>
-        {% endif %}
-    <hr class="my-2" />
     <h2>How to upload readings</h2>
-    <p>Content needs to be in EPUB or Word format to be uploaded into Clusive.</p>
+    <p>Content in EPUB, Word, or PDF formats can be uploaded directly to Clusive.</p>
 
-    <p>If you have a <strong>Microsoft Word</strong> file, upload it here directly.
-        Make sure it is saved in the latest Word format (.docx).</p>
-
-    <p>If you have a <strong>Google Doc</strong>, use the <em>File - Download - Microsoft Word</em> menu item
-        to get a .docx file to upload here.</p>
-
-    <p><strong>EPUB</strong> is a common format for electronic books. You can find EPUBs at
+    <h3>✓ EPUB</h3>
+    <p>EPUB is a common format for electronic books. You can find EPUBs at
         <a href="https://standardebooks.org/">Standard eBooks</a>,
         <a href="https://tarheelreader.org/">Tar Heel Reader</a>, or other sites.
-        These can also be uploaded here directly.</p>
-
-    <p>You can also <strong>create EPUBs</strong> from Word documents with the free
+        You can also create EPUBs from Word documents with the free
         <a href="https://daisy.org/activities/software/wordtoepub/">DAISY WordToEpub Converter</a>
         (Windows only), or from open resources using
-        <a href="https://www.oercommons.org/authoring-overview">OER Commons OpenAuthor</a>.</p>
-    <p><strong>Learn more</strong> about accessible formats at the
-        <a href="http://aem.cast.org/creating/getting-started-with-epub.html">AEM Center</a>.</p>
+        <a href="https://www.oercommons.org/authoring-overview">OER Commons</a> OpenAuthor.</p>
+
+    <h3>✓ Microsoft Word</h3>
+    <p>Make sure it is saved in the latest Word format (.docx).</p>
+
+    <p>If you have a <strong>Google Doc</strong>, use the <em>File - Download - Microsoft Word</em> menu item
+        to get a .docx file to upload.</p>
+
+    <h3><span class="icon-warning"/> PDF</h3>
+    <p>You can upload a PDF file directly. Note, however, that many of Clusive's adaptive features are not supported
+    in PDF readings. For full access to all Clusive has to offer, consider converting your PDF into an EPUB or
+    Word document. Just 5 minutes of effort can make a huge difference in the reading experience!</p>
+    <p>If you have the desktop version of Microsoft Word, open your PDF with it for a one-step conversion
+        to a flexible format.</p>
+
+    <hr />
+    <h2>Add from Bookshare</h2>
+    <p>If you have a Bookshare account, you can search for and add Bookshare books right here in Clusive.
+    {% if request.clusive_user.can_upload %}
+    Go to <a href="{% url 'my_account' %}">My Account</a> and click <strong>Connect to a Bookshare account</strong>
+    to get started.</p>
+    {% endif %}
+
+    <p>Learn more about accessible formats at the
+        <a href="https://aem.cast.org/create/creating-accessible-publications-epub">AEM Center</a>.</p>
 </main>
 {% endblock %}
