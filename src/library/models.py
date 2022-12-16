@@ -744,7 +744,14 @@ class Paradata(models.Model):
                 if books_sort == ReadingDetailsSort.TIME:
                     reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['hours'])
                 if books_sort == ReadingDetailsSort.LASTVIEW:
-                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['last_view'])
+                    book_list = reading_data_for_one_user['books']
+                    last_view_null = []
+                    for abook in book_list:
+                        if abook['last_view'] is None:
+                            last_view_null.append(abook)
+                            book_list.remove(abook)
+                    book_list.sort(reverse=True, key=lambda item: item['last_view'])
+                    book_list.extend(last_view_null)
 
         return result
 
