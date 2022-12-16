@@ -22,7 +22,7 @@ from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Q
+from django.core.paginator import Paginator
 from django.db.models.functions import Lower
 from django.dispatch import receiver
 from django.http import JsonResponse, HttpResponseRedirect
@@ -33,16 +33,15 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.views import View
 from django.views.generic import TemplateView, UpdateView, CreateView, FormView, RedirectView
-from django.core.paginator import Paginator
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from assessment.models import AffectiveCheckResponse, AffectiveUserTotal
+from assessment.models import ComprehensionCheckResponse
 from eventlog.models import Event
 from eventlog.signals import preference_changed
 from eventlog.views import EventMixin
-from assessment.models import ComprehensionCheckResponse
 from library.models import Book, Customization, Paradata, ParadataDaily, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
@@ -1480,8 +1479,7 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
             num_versions = book.versions.all().count()
             customization = Customization.objects.filter(book=book, periods=period).first()
             comp_check = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book).first()
-            custom_responses = ComprehensionCheckResponse.get_class_details_custom_responses(book=book, period=period)
-            custom_response = custom_responses.filter(user=clusiveStudent).first()
+            response = ComprehensionCheckResponse.objects.filter(book=book, user=clusiveStudent).first()
             category_names = []
             for category in book.reading_level_categories:
                 category_names.append(category.tag_name)
@@ -1513,14 +1511,14 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'last_version': one_book['last_version'],
                 'num_versions': num_versions,
                 'custom_question': custom_question,
-                'custom_response': custom_response.custom_response if custom_response else None,
+                'response': response.custom_response if response else None,
                 'learning': learning,
                 'reading_level': ', '.join(category_names),
                 'is_assigned': one_book['is_assigned'],
                 'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,
                 'unauthorized': not book.is_visible_to(clusiveUser)
             })
-    return book_details    
+    return book_details
 
 class ReadingDetailsPanelView(TemplateView):
     """Shows just the reading details panel, for AJAX updates"""
@@ -1537,7 +1535,7 @@ class ReadingDetailsPanelView(TemplateView):
         self.username = kwargs.get('username')
         self.days = kwargs.get('days') if 'days' in kwargs else self.clusive_user.student_activity_days
         paginate['page_num'] = kwargs.get('page_num') if 'page_num' in kwargs else 1
-        
+
         if 'sort' in kwargs:
             self.sort = kwargs.get('sort')
             logger.debug('Setting reading details sort = %s', self.sort)
@@ -1612,7 +1610,7 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.days = self.clusive_user.student_activity_days
 
         period = self.clusive_user.current_period
-        self.roster = period.users.filter(role=Roles.STUDENT).order_by('user__first_name')
+        self.roster = period.users.filter(role=Roles.STUDENT).order_by('user__first_name').prefetch_related('user')
         # Dictionary for the individual panel data
         self.panel_data = dict()
         self.panel_data['days'] = self.days
@@ -1643,14 +1641,11 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
             self.panel_data['words'] = ', '.join(word_list)
 
             # Topics panel
-            books = []
-            # Get all books for the current student
-            if reading_data:
-                for one_book in reading_data['books']:
-                    books.append(one_book['book_id'])
-            subjects = Subject.objects.filter(book__id__in=books).only('subject').values_list('subject', flat=True).distinct()
+            # Get topics for all books in the reading_data list
+            book_ids = [ data['book_id'] for data in reading_data['books']]
+            subjects = Subject.objects.filter(book__id__in=book_ids).only('subject').values_list('subject', flat=True).distinct()
             self.panel_data['topics'] = {
-                'topics': ', '.join(subjects) if subjects.count() else None
+                'topics': ', '.join(subjects)
             }
         except ClusiveUser.DoesNotExist:
             messages.error(request, f"'{kwargs['username']}' is not in this class ({period.name})")

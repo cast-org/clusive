@@ -705,13 +705,14 @@ class Paradata(models.Model):
         :return: a list of {clusive_user: u, book_count: n, total_time: t, books: [bookinfo, bookinfo,...] }
         """
         if username == None:
-            students = period.users.filter(role=Roles.STUDENT)
+            students = list(period.users.filter(role=Roles.STUDENT))
         else:
-            students = period.users.filter(role=Roles.STUDENT, user__username=username)
+            students = list(period.users.filter(role=Roles.STUDENT, user__username=username))
         # Query for all Paradata records showing book views for these students
         paradatas = Paradata.objects.filter(user__in=students).prefetch_related('book')
-
-        assigned_books = [a.book for a in period.bookassignment_set.all()]
+        assignments = BookAssignment.objects.filter(period=period)\
+            .prefetch_related('book')
+        assigned_books = [a.book for a in assignments]
         map = {s:{'clusive_user': s, 'book_count': 0, 'hours':0, 'books': []} for s in students}
         one_hour: timedelta = timedelta(hours=1)
         # If we're date limited, annotate this query with information from ParadataDaily
@@ -719,7 +720,7 @@ class Paradata(models.Model):
             start_date = date.today()-timedelta(days=days)
             logger.debug('Query dailies since %s', start_date)
             paradatas = paradatas.annotate(recent_time=Sum('paradatadaily__total_time',
-                                                        filter=Q(paradatadaily__date__gt=start_date)))
+                                                        filter=Q(paradatadaily__date__gte=start_date)))
         for p in paradatas:
             # Skip if time is zero.
             if days:

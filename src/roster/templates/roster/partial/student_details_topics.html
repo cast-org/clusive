@@ -5,7 +5,7 @@
         {% if current_student == None %}
             N/A
         {% else %}
-            {{ data.topics }}
+            {{ data.topics | default:"&mdash;" }}
         {% endif %}
     </p>
 </div>
