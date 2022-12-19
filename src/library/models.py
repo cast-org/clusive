@@ -5,7 +5,7 @@ import math
 import os
 import textwrap
 from base64 import b64encode
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime, MINYEAR
 from json import JSONDecodeError
 
 from django.core.files.storage import default_storage
@@ -17,6 +17,8 @@ from roster.models import ClusiveUser, Period, Roles, StudentActivitySort, Readi
 from .util import sort_words_by_frequency
 
 logger = logging.getLogger(__name__)
+
+VERY_LONG_TIME_AGO = timezone.make_aware(datetime(year=MINYEAR, month=1, day=1))
 
 def update_word_list(word_list, word):
     """
@@ -744,15 +746,7 @@ class Paradata(models.Model):
                 if books_sort == ReadingDetailsSort.TIME:
                     reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['hours'])
                 if books_sort == ReadingDetailsSort.LASTVIEW:
-                    book_list = reading_data_for_one_user['books']
-                    last_view_null = []
-                    for abook in book_list:
-                        if abook['last_view'] is None:
-                            last_view_null.append(abook)
-                            book_list.remove(abook)
-                    book_list.sort(reverse=True, key=lambda item: item['last_view'])
-                    book_list.extend(last_view_null)
-
+                    reading_data_for_one_user['books'].sort(reverse=True, key=lambda item: item['last_view'] or VERY_LONG_TIME_AGO)
         return result
 
     @classmethod
