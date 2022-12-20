@@ -1557,6 +1557,7 @@ class ReadingDetailsPanelView(TemplateView):
                 periods__in=[self.current_period],
                 role__in=[Roles.STUDENT]
             )
+            self.clusive_student = clusive_student
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data = Paradata.get_reading_data(self.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
             self.paginator, self.any_unauthorized = self.setup_paginator(
@@ -1589,6 +1590,7 @@ class ReadingDetailsPanelView(TemplateView):
             'days': self.days,
             'paginator': self.paginator,
             'page_obj': self.page_obj,
+            'current_student': self.clusive_student,
             'any_unauthorized': self.any_unauthorized,
         }
         return context
