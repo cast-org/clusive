@@ -92,7 +92,7 @@
                             </td>
                         </tr>
                         {% endfor %}
-                    {% elif current_student %}
+                    {% elif data.current_student %}
                         <td colspan="7">No readings{% if data.days == 7 %} in the past week{% elif data.days == 30 %} in the past month{% endif %}.</td>
                     {% else %}
                         <td colspan="7">N/A</td>
