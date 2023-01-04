@@ -1473,6 +1473,7 @@ def remove_social_account(request, *args, **kwargs):
 
 def get_book_details(books, period, clusiveStudent, clusiveUser):
     book_details = []
+    any_unauthorized = False
     if books:
         for one_book in books:
             book = Book.objects.get(pk=one_book['book_id'])
@@ -1484,21 +1485,22 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
             for category in book.reading_level_categories:
                 category_names.append(category.tag_name)
 
-            learning = None
+            learned = None
+            free_response = None
             if comp_check:
                 answer = comp_check.get_answer()
-                if answer and len(answer):
-                    free_response = comp_check.comprehension_free_response
-                    if free_response and len(free_response):
-                        learning = answer + '/' + free_response
-                    else:
-                        learning = answer
+                if answer and len(answer.strip()):
+                    learned = answer
+                    fresp = comp_check.comprehension_free_response
+                    if fresp and len(fresp.strip()):
+                        free_response = fresp
 
             if customization and customization.question and len(customization.question):
                 custom_question = '(' + customization.question + ')'
             else:
                 custom_question = None
 
+            unauthorized = not book.is_visible_to(clusiveUser)
             book_details.append({
                 'book_id': one_book['book_id'],
                 'title': one_book['title'],
@@ -1512,13 +1514,15 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'num_versions': num_versions,
                 'custom_question': custom_question,
                 'response': response.custom_response if response else None,
-                'learning': learning,
+                'learned': learned,
+                'free_response': free_response,
                 'reading_level': ', '.join(category_names),
                 'is_assigned': one_book['is_assigned'],
                 'version_switched': True if one_book['first_version'] and one_book['first_version'] != one_book['last_version'] else False,
-                'unauthorized': not book.is_visible_to(clusiveUser)
+                'unauthorized': unauthorized,
             })
-    return book_details
+            any_unauthorized = any_unauthorized or unauthorized
+    return book_details, any_unauthorized
 
 class ReadingDetailsPanelView(TemplateView):
     """Shows just the reading details panel, for AJAX updates"""
@@ -1534,6 +1538,7 @@ class ReadingDetailsPanelView(TemplateView):
         self.current_period = request.clusive_user.current_period
         self.username = kwargs.get('username')
         self.days = kwargs.get('days') if 'days' in kwargs else self.clusive_user.student_activity_days
+        self.any_unauthorized = False
         paginate['page_num'] = kwargs.get('page_num') if 'page_num' in kwargs else 1
 
         if 'sort' in kwargs:
@@ -1552,9 +1557,10 @@ class ReadingDetailsPanelView(TemplateView):
                 periods__in=[self.current_period],
                 role__in=[Roles.STUDENT]
             )
+            self.clusive_student = clusive_student
             # Get the reading data for the current student. This data will be shared by all panels on the student details page
             reading_data = Paradata.get_reading_data(self.current_period, days=self.days, books_sort=self.sort, username=self.username)[0]
-            self.paginator = self.setup_paginator(
+            self.paginator, self.any_unauthorized = self.setup_paginator(
                 reading_data, paginate, clusive_student, self.clusive_user
             )
             self.page_obj = self.paginator.get_page(paginate['page_num'])
@@ -1570,11 +1576,11 @@ class ReadingDetailsPanelView(TemplateView):
         if last_book + paginate['paginate_orphans'] >= total_books:
             last_book = total_books
         books_on_page = reading_data['books'][first_book:last_book]
-        book_details = get_book_details(books_on_page, teacher.current_period, student, teacher)
+        book_details, any_unauthorized = get_book_details(books_on_page, teacher.current_period, student, teacher)
         paginator_obj = [None] * total_books
         paginator_obj[first_book:last_book] = book_details
         logger.debug(f"ReadingDetailsPanelView showing books {first_book} thru {last_book}")
-        return Paginator(paginator_obj, paginate['paginate_by'], paginate['paginate_orphans'])
+        return Paginator(paginator_obj, paginate['paginate_by'], paginate['paginate_orphans']), any_unauthorized
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1584,6 +1590,8 @@ class ReadingDetailsPanelView(TemplateView):
             'days': self.days,
             'paginator': self.paginator,
             'page_obj': self.page_obj,
+            'current_student': self.clusive_student,
+            'any_unauthorized': self.any_unauthorized,
         }
         return context
 

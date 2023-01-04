@@ -67,9 +67,17 @@
                                 {% endif %}
                             </th>
                             <td>{{ book.hours }} <span aria-hidden="true">hrs</span><br><span class="sr-only">hours</span> ({{ book.view_count }} visits)</td>
-                            <td style="white-space:nowrap;">{{ book.last_view | naturalday:"D, M d" }}</td>
+                            <td style="white-space:nowrap;">
+                                {{ book.last_view | naturalday:"D, M d" | default:"Unknown" }}
+                            </td>
                             <td class="d-sm-down-none">{{ book.words_looked_up | default:"&mdash;" }}</td>
-                            <td class="d-sm-down-none">{{ book.learning | default:"&mdash;" }}</td>
+                            <td class="d-sm-down-none">
+                                {% if book.learned %}
+                                    {{ book.learned }} / {{ book.free_response | default:"&mdash;" }}
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </td>
                             <td class="d-md-down-none">
                                 <span class="muted">{{ book.custom_question | default:"&mdash;" }}</span>
                                 {% if book.custom_response %}{{ book.custom_response }}{% endif %}
@@ -84,12 +92,21 @@
                             </td>
                         </tr>
                         {% endfor %}
-                    {% elif current_student %}
+                    {% elif data.current_student %}
                         <td colspan="7">No readings{% if data.days == 7 %} in the past week{% elif data.days == 30 %} in the past month{% endif %}.</td>
                     {% else %}
                         <td colspan="7">N/A</td>
                     {% endif %}
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">
+                            {% if data.any_unauthorized %}
+                            <p class="form-text"><em>Readings with the symbol <span class="icon-block" title="Not authorized to view"></span> were uploaded by the student.</em></p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
