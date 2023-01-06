@@ -1480,7 +1480,6 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
             num_versions = book.versions.all().count()
             customization = Customization.objects.filter(book=book, periods=period).first()
             comp_check = ComprehensionCheckResponse.objects.filter(user=clusiveStudent, book=book).first()
-            response = ComprehensionCheckResponse.objects.filter(book=book, user=clusiveStudent).first()
             category_names = []
             for category in book.reading_level_categories:
                 category_names.append(category.tag_name)
@@ -1513,7 +1512,7 @@ def get_book_details(books, period, clusiveStudent, clusiveUser):
                 'last_version': one_book['last_version'],
                 'num_versions': num_versions,
                 'custom_question': custom_question,
-                'response': response.custom_response if response else None,
+                'custom_response': comp_check.custom_response if comp_check else None,
                 'learned': learned,
                 'free_response': free_response,
                 'reading_level': ', '.join(category_names),
