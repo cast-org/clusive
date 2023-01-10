@@ -1594,7 +1594,7 @@ class ReadingDetailsPanelView(TemplateView):
         }
         return context
 
-class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, ReadingDetailsPanelView):
+class StudentDetailsView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMixin, ReadingDetailsPanelView):
     template_name='roster/student_details.html'
 
     def __init__(self):
@@ -1703,3 +1703,6 @@ class StudentDetailsView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin,
         for acr in affect_check_responses:
             time_frame_totals.update(None, acr.to_list())
         return time_frame_totals
+
+    def configure_event(self, event: Event):
+        event.page = 'StudentDetails'
