@@ -78,6 +78,9 @@ var simplificationTool = "{{ simplification_tool }}";
         <div id="reader-info-top" class="info top">
             <span class="book-title"></span>
         </div>
+        {% if pub.is_pdf %}
+        <div id="pdf-container" style="height: calc(100vh - 10px);overflow:auto;display: flex;align-items: center;"></div>
+        {% endif %}
     </main>
 
 
