@@ -30,7 +30,7 @@
 
             .tooltip-arrow {
                 &::before {
-                    border-width: $tooltip-feature-arrow-height ($tooltip-feature-arrow-width / 2) 0;
+                    border-width: $tooltip-feature-arrow-height ($tooltip-feature-arrow-width * .5) 0;
                     border-top-color: $tooltip-feature-arrow-color;
                 }
             }
@@ -44,7 +44,7 @@
                 height: $tooltip-feature-arrow-width;
 
                 &::before {
-                    border-width: ($tooltip-feature-arrow-width / 2) $tooltip-feature-arrow-height ($tooltip-feature-arrow-width / 2) 0;
+                    border-width: ($tooltip-feature-arrow-width * .5) $tooltip-feature-arrow-height ($tooltip-feature-arrow-width * .5) 0;
                     border-right-color: $tooltip-feature-arrow-color;
                 }
             }
@@ -55,7 +55,7 @@
 
             .tooltip-arrow {
                 &::before {
-                    border-width: 0 ($tooltip-feature-arrow-width / 2) $tooltip-feature-arrow-height;
+                    border-width: 0 ($tooltip-feature-arrow-width * .5) $tooltip-feature-arrow-height;
                     border-bottom-color: $tooltip-feature-arrow-color;
                 }
             }
@@ -69,7 +69,7 @@
                 height: $tooltip-feature-arrow-width;
 
                 &::before {
-                    border-width: ($tooltip-feature-arrow-width / 2) 0 ($tooltip-feature-arrow-width / 2) $tooltip-feature-arrow-height;
+                    border-width: ($tooltip-feature-arrow-width * .5) 0 ($tooltip-feature-arrow-width * .5) $tooltip-feature-arrow-height;
                     border-left-color: $tooltip-feature-arrow-color;
                 }
             }
@@ -92,7 +92,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-top: $paragraph-spacer-y / -2;
+    margin-top: $paragraph-spacer-y * -.5;
 }
 .tooltip-step {
     margin-right: auto;

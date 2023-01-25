@@ -560,8 +560,8 @@ h2,
     position: absolute;
     top: 25%;
     left: 50%;
-    margin-right: ($grid-gutter-width / -2);
-    margin-left: ($grid-gutter-width / -2);
+    margin-right: ($grid-gutter-width * -.5);
+    margin-left: ($grid-gutter-width * -.5);
     pointer-events: none;
     outline: 0;
     @include sr-only();

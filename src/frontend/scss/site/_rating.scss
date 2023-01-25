@@ -72,7 +72,7 @@
         flex-grow: 1;
         width: var(--starSize);
         height: var(--starSize);
-        padding: #{$star-spacing-x / 2};
+        padding: #{$star-spacing-x * .5};
         margin: 0;
         line-height: 1;
         cursor: pointer;
@@ -223,7 +223,7 @@
     //min-width: 20rem;
     // Use `Max` in place of `max` to work around Sass/CSS collision, see: https://css-tricks.com/when-sass-and-new-css-features-collide/
     // stylelint-disable-next-line function-name-case
-    padding: 1rem Max(2rem, calc((100 - 56.25) / 2 * 1%)); // try to keep 16:9
+    padding: 1rem Max(2rem, calc((100 - 56.25) * .5 * 1%)); // try to keep 16:9
     //overflow: hidden; // CSL-1645
 }
 .react-chart {
@@ -445,7 +445,7 @@
 .react-btn {
     position: absolute;
     top: 0;
-    left: calc((50 + var(--sideLen) / 2) * 1%);
+    left: calc((50 + var(--sideLen) * .5) * 1%);
     white-space: nowrap;
     pointer-events: auto;
     transform-origin: left center;
