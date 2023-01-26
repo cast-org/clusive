@@ -162,6 +162,7 @@ h2,
     display: block !important; // stylelint-disable-line declaration-no-important
     height: calc(100vh - #{$header-height + $body-padding-y}) !important; // stylelint-disable-line declaration-no-important
     outline: 0;
+    overflow: auto;
 
     canvas {
         display: block;
