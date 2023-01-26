@@ -15,12 +15,19 @@ DEBUG = True
 MEDIA_ROOT = BASE_DIR + '/uploads'
 MEDIA_URL = '/uploads/'
 
+try:
+    ip_addresses = list(set(gethostbyname_ex(gethostname())[2]))
+except OSError as e:
+    # Could not determine IP addresses
+    # For example in local development if host name is not resolvable
+    ip_addresses = []
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '[::1]',
     gethostname(),
-] + list(set(gethostbyname_ex(gethostname())[2]))
+] + ip_addresses
 
 INTERNAL_IPS = [
     '127.0.0.1',
