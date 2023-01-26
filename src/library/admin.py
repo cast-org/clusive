@@ -25,8 +25,9 @@ class subjectBookAdmin(admin.ModelAdmin):
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count', 'reading_levels')
-    sortable_by = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count')
+    list_display = ('id', 'owner', 'resource_identifier', 'format', 'title', 'author', 'word_count', 'reading_levels',)
+    sortable_by = ('id', 'owner', 'resource_identifier', 'title', 'author', 'word_count',)
+    list_filter = ('format',)
     inlines = [VersionsInline]
 
     change_list_template = 'library/book_changelist.html'

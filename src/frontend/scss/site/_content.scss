@@ -138,7 +138,7 @@ h2,
 
 // stylelint-disable selector-max-id
 #iframe-wrapper {
-    height: calc(100vh - #{$header-height + $body-padding-y});
+    height: calc(100vh - #{$header-height + $body-padding-y}) !important; // stylelint-disable-line declaration-no-important
     outline: 0;
 
     iframe {
@@ -146,7 +146,7 @@ h2,
     }
 
     @include media-breakpoint-up(md) {
-        height: calc(100vh - #{$header-md-height + $body-padding-y});
+        height: calc(100vh - #{$header-md-height + $body-padding-y}) !important; // stylelint-disable-line declaration-no-important
 
         iframe {
             min-height: calc(100vh - #{$header-md-height + $body-padding-y});
@@ -155,6 +155,23 @@ h2,
 }
 #divBefore + #iframe-wrapper {
     overflow: hidden !important; // stylelint-disable-line declaration-no-important
+}
+
+// PDF zoomable container
+#pdf-container {
+    display: block !important; // stylelint-disable-line declaration-no-important
+    height: calc(100vh - #{$header-height + $body-padding-y}) !important; // stylelint-disable-line declaration-no-important
+    outline: 0;
+    overflow: auto;
+
+    canvas {
+        display: block;
+        margin: 1px auto !important; // stylelint-disable-line declaration-no-important
+    }
+
+    @include media-breakpoint-up(md) {
+        height: calc(100vh - #{$header-md-height + $body-padding-y}) !important; // stylelint-disable-line declaration-no-important
+    }
 }
 // stylelint-enable selector-max-id
 
@@ -544,8 +561,8 @@ h2,
     position: absolute;
     top: 25%;
     left: 50%;
-    margin-right: ($grid-gutter-width / -2);
-    margin-left: ($grid-gutter-width / -2);
+    margin-right: ($grid-gutter-width * -.5);
+    margin-left: ($grid-gutter-width * -.5);
     pointer-events: none;
     outline: 0;
     @include sr-only();

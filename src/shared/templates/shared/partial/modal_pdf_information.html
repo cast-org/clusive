@@ -1,0 +1,41 @@
+<div id="modalPDF" class="modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5">
+                    About PDF files in Clusive
+                </h2>
+                {% include "shared/partial/dialog_tts.html" %}
+                <button type="button" class="close" data-cfw-dismiss="modal" aria-label="Close" title="Close">
+                    <span class="icon-cancel" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This reading is a PDF.
+                    PDF files are not flexible like other readings in Clusive;
+                    so many Clusive features will not work with this reading.</p>
+                <p>Clusive <strong>features that work with this PDF</strong> are:</p>
+                <ul>
+                    <li>Page navigation</li>
+                    <li>Your thoughts</li>
+                    <li>Marking a reading with a star</li>
+                </ul>
+                <p>There are also two buttons in the left toolbar, to
+                    <span class="icon-plus" aria-hidden="true"/> zoom in and
+                    <span class="icon-minus" aria-hidden="true"/> zoom out.</p>
+                <p>Clusive features that <strong>do not work with this PDF</strong> are:</p>
+                <ul>
+                    <li>Text size</li>
+                    <li>Line spacing</li>
+                    <li>Letter spacing</li>
+                    <li>Font choice</li>
+                    <li>Color choice</li>
+                    <li>Read aloud</li>
+                    <li>Transform (including Translate, Simplify text, and Show pictures)</li>
+                    <li>Highlight &amp; notes</li>
+                    <li>Dictionary lookup</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

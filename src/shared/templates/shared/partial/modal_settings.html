@@ -25,9 +25,17 @@
                             <a href="{% url 'sign_up_role' %}" class="btn btn-primary btn-small">Create an account to save your settings</a>
                         </div>
                         {% endif %}
+                        {% if pub.is_pdf %}
+                        <div class="highlight-action mx-0_5">
+                            <button class="btn btn-primary btn-small" href="#" data-cfw="modal" data-cfw-modal-target="#modalPDF">
+                                <span class="icon-warning"/>
+                                PDF: Settings that are greyed out are unavailable. Learn more.
+                            </button>
+                        </div>
+                        {% endif %}
                         <form>
                             <div class="setting">
-                                <fieldset>
+                                <fieldset {%if pub.is_pdf %}disabled{% endif %}>
                                     <legend class="setting-title mb-0">Text size</legend>
                                     <div class="option-font-size">
                                         <label for="set-size" class="sr-only">Text size</label>
@@ -36,7 +44,7 @@
                                 </fieldset>
                             </div>
                             <div class="setting">
-                                <fieldset>
+                                <fieldset {%if pub.is_pdf %}disabled{% endif %}>
                                     <legend class="setting-title">Line spacing</legend>
                                     <div class="setting-btn-row">
                                         <div class="btn-check">
@@ -64,7 +72,7 @@
                                 </fieldset>
                             </div>
                             <div class="setting">
-                                <fieldset>
+                                <fieldset {%if pub.is_pdf %}disabled{% endif %}>
                                     <legend class="setting-title">Letter spacing</legend>
                                     <div class="setting-btn-row">
                                         <div class="btn-check">
@@ -92,7 +100,7 @@
                                 </fieldset>
                             </div>
                             <div class="setting">
-                                <fieldset data-cy="preference-fontFamily">
+                                <fieldset data-cy="preference-fontFamily" {%if pub.is_pdf %}disabled{% endif %}>
                                     <legend class="setting-title">Font</legend>
                                     <div class="form-check form-checkradio">
                                         <input id="option-font-family-0" name="option-font-family" class="form-check-input cislc-modalSettings-font" value="default" type="radio" checked>
@@ -149,7 +157,7 @@
                                 </fieldset>
                             </div>
                             <div class="setting">
-                                <fieldset>
+                                <fieldset {%if pub.is_pdf %}disabled{% endif %}>
                                     <legend class="setting-title">Word lookup links</legend>
                                     <div class="form-switch-dual">
                                         <label for="option-lookup-links" class="form-check-label-pre" aria-hidden="true">Hide</label>
@@ -173,7 +181,7 @@
                                 </fieldset>
                             </div>
                             <div class="setting">
-                                <fieldset>
+                                <fieldset {%if pub.is_pdf %}disabled{% endif %}>
                                     <legend class="setting-title">Content navigation</legend>
                                     <div class="setting-btn-row">
                                         <div class="btn-check option-page-view">

@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     var autoprefixer = require('autoprefixer');
     var flexbugs = require('postcss-flexbugs-fixes');
     var calc = require('postcss-calc');
-    var sass = require('node-sass');
+    var sass = require('sass');
 
     "use strict";
 

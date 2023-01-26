@@ -3,6 +3,7 @@
 
 // Clusive specific functions (some mixins too)
 @import "mixins/line-height";
+@import "mixins/override-functions";
 
 // Settings variables
 @import "site/site-pre";
@@ -12,6 +13,7 @@
 
 // Mixins
 @import "../../../node_modules/figuration/scss/mixins";
+@import "mixins/override-mixins";
 @import "mixins/site-theme";
 
 // Core CSS items - extend on the base HTML

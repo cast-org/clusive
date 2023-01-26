@@ -1,0 +1,7 @@
+// Figuration overrides to support node-sass to sass switch without pushing a new upstream release
+
+// Opaque color
+// color-get-opaque(rgba(0, 0, 0, .5), #fff) => #808080
+@function color-get-opaque($colorfore, $colorback) {
+    @return mix(rgba($colorfore, 1), $colorback, opacity($colorfore) * 100%);
+}

@@ -28,8 +28,8 @@ from eventlog.signals import annotation_action, book_starred
 from eventlog.views import EventMixin
 from library.forms import UploadForm, MetadataForm, ShareForm, SearchForm, BookshareSearchForm, EditCustomizationForm
 from library.models import Paradata, Book, Annotation, BookVersion, BookAssignment, Subject, BookTrend, Customization, \
-    CustomVocabularyWord, EducatorResourceCategory, ReadingLevel
-from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file
+    CustomVocabularyWord, EducatorResourceCategory, ReadingLevel, Format
+from library.parsing import scan_book, convert_and_unpack_docx_file, unpack_epub_file, upload_pdf_file
 from oauth2.bookshare.views import has_bookshare_account, is_bookshare_connected, \
     get_access_keys, is_organization_sponsor, is_organization_member
 from pages.views import ThemedPageMixin, SettingsPageMixin
@@ -445,7 +445,7 @@ class ResourcesPageView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, 
 
 
 class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, FormView):
-    """Parent class for several pages that allow uploading of EPUBs."""
+    """Parent class for several pages that allow uploading of books."""
     form_class = UploadForm
 
     def form_valid(self, form):
@@ -458,15 +458,18 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
             if upload.name.endswith('.docx'):
                 (self.bv, changed) = convert_and_unpack_docx_file(self.request.clusive_user, tempfile, upload.name)
                 event_control = 'upload_docx'
+            elif upload.name.endswith('.pdf'):
+                (self.bv, changed) = upload_pdf_file(self.request.clusive_user, tempfile, upload.name)
+                event_control = 'upload_pdf'
             else:
                 (self.bv, changed) = unpack_epub_file(self.request.clusive_user, tempfile)
                 event_control = 'upload_epub'
             if changed:
-                logger.debug('Uploaded file name = %s', upload.name)
                 self.bv.filename = upload.name
                 self.bv.save()
-                logger.debug('Updating word lists')
-                scan_book(self.bv.book)
+                if self.bv.book.format != Format.PDF:
+                    logger.debug('Updating word lists')
+                    scan_book(self.bv.book)
                 event = Event.build(session=self.request.session,
                                     type='TOOL_USE_EVENT',
                                     action='USED',
@@ -482,7 +485,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
             logger.warning('Could not process uploaded file, filename=%s, error=%s',
                            str(upload), e)
             logger.warning(traceback.format_exc())
-            form.add_error('file', 'Could not process uploaded file. Only DOCX and EPUB are allowed.')
+            form.add_error('file', 'Could not process uploaded file. Only DOCX, EPUB, and PDF are allowed.')
             return super().form_invalid(form)
 
         finally:
@@ -491,7 +494,7 @@ class UploadFormView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, Eve
 
 
 class UploadCreateFormView(UploadFormView):
-    """Upload an EPUB file as a new Book."""
+    """Upload an EPUB or PDF file as a new Book."""
     template_name = 'library/upload_create.html'
     page_name = 'UploadNew'
 

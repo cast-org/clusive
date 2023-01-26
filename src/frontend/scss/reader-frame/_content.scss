@@ -2,7 +2,7 @@
     //// Update base font
     //--RS__baseFontFamily: #{$font-family-sans-serif};
     // Add margin top/bottom spacing
-    --RS__paraSpacing: #{$paragraph-spacer-y / 2};
+    --RS__paraSpacing: #{$paragraph-spacer-y * .5};
     // Remove text indent
     --RS__paraIndent: 0;
     // Decrease header spacing (default: 1.5rem)

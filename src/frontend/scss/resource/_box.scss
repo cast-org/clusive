@@ -93,7 +93,7 @@
         left: -1rem;
         display: block;
         width: $twitter-width;
-        height: $twitter-width * (204 / 248);
+        height: $twitter-width * divide(204, 248);
         content: "";
         background-image: var(--CT_imgTwitter);
         background-repeat: no-repeat;

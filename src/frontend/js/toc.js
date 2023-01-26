@@ -169,8 +169,11 @@ function getCurrentTocElement() {
     'use strict';
 
     var current = d2reader.mostRecentNavigatedTocItem;
+    if (!current) {
+        return null;
+    }
     if (current.startsWith('/')) {
-        current = current.substr(1);
+        current = current.substring(1);
     }
 
     var $top = $(TOC_CONTAINER);
@@ -200,13 +203,14 @@ function markTocItemActive() {
     'use strict';
 
     var $elt = getCurrentTocElement();
+    if ($elt) {
+        // Add active class to current element and any related 'parent' sections
+        $elt.addClass('active').attr('aria-current', true);
+        $elt.parents('li').children('.nav-link').addClass('active');
 
-    // Add active class to current element and any related 'parent' sections
-    $elt.addClass('active').attr('aria-current', true);
-    $elt.parents('li').children('.nav-link').addClass('active');
-
-    // Open collapsers to show the current section
-    $elt.parents('li').children('a[data-cfw="collapse"]').attr('aria-current', true).CFW_Collapse('show');
+        // Open collapsers to show the current section
+        $elt.parents('li').children('a[data-cfw="collapse"]').attr('aria-current', true).CFW_Collapse('show');
+    }
 }
 
 // Scroll the TOC display so that the active item can be seen.
@@ -276,7 +280,9 @@ function buildTableOfContents() {
     if (typeof d2reader === 'object') {
         var items = getTocItems();
 
-        var out = buildTocLevel(items, 0, 'toc');
+        if (items) {
+            var out = buildTocLevel(items, 0, 'toc');
+        }
         $(TOC_EMPTY).hide();
         $(TOC_CONTAINER).html(out).CFW_Init();
 
@@ -542,7 +548,6 @@ function setUpNotes() {
     // Show edit area
     $area.on('click', 'a.note-edit-button', function(e) {
         e.preventDefault();
-        console.debug('note EDIT');
         var $container = $(this).closest('.annotation-container');
         $container.find('.note-display').hide();
         $container.find('.note-edit').show();
@@ -552,7 +557,6 @@ function setUpNotes() {
     // Hide edit area and show static display
     $area.on('click', '.note button[type=submit]', function(e) {
         e.preventDefault();
-        console.debug('note DONE');
         var $container = $(this).closest('.annotation-container');
         $container.find('.note-display').show();
         $container.find('.note-edit').hide();
@@ -568,7 +572,6 @@ function setUpNotes() {
     // Delete note by setting it to empty, but stash previous value for use by undo.
     $area.on('click', '.note a.note-delete-button', function(e) {
         e.preventDefault();
-        console.debug('note DELETE');
         var $container = $(this).closest('.annotation-container');
         var $textarea = $container.find('textarea');
         $container.data('deleted-note', $textarea.val());
@@ -582,7 +585,6 @@ function setUpNotes() {
     // Undelete note by restoring old value
     $area.on('click', '.note a.link-undelete-note', function(e) {
         e.preventDefault();
-        console.debug('note UNDELETE');
         var $container = $(this).closest('.annotation-container');
         var $textarea = $container.find('textarea');
         $textarea.val($container.data('deleted-note'));

@@ -34,6 +34,17 @@ def update_word_list(word_list, word):
     return new_list
 
 
+
+class Format:
+    EPUB = 'E'
+    PDF  = 'P'
+
+    CHOICES = [
+        (EPUB, 'EPUB'),
+        (PDF, 'PDF'),
+    ]
+
+
 class Subject(models.Model):
     subject = models.CharField(max_length=256, unique=True)
     # a way to sort or order, especially to separate fiction/non-fiction
@@ -135,6 +146,7 @@ class Book(models.Model):
     description = models.TextField(default="", blank=True, db_index=True)
     cover = models.CharField(max_length=256, null=True)
     featured = models.BooleanField(default=False)
+    format = models.CharField(max_length=1, choices=Format.CHOICES, default=Format.EPUB)
     word_count = models.PositiveIntegerField(null=True, db_index=True)
     picture_count = models.PositiveIntegerField(null=True)
     subjects = models.ManyToManyField(Subject, db_index=True)
@@ -162,6 +174,14 @@ class Book(models.Model):
     @property
     def is_bookshare(self):
         return self.bookshare_id is not None
+
+    @property
+    def is_pdf(self):
+        return self.format == Format.PDF
+
+    @property
+    def is_epub(self):
+        return self.format == Format.EPUB
 
     def is_visible_to(self, user : ClusiveUser):
         if self.is_public:
