@@ -696,8 +696,8 @@ class ReaderView(LoginRequiredMixin, EventMixin, ThemedPageMixin, SettingsPageMi
         hide_cues = not Preference.get_glossary_pref_for_user(clusive_user)
 
         # See if there's a Tip that should be shown
-        self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions))
-        self.tours = TipHistory.tour_list(clusive_user, page=self.page_name, version_count=len(versions))
+        self.tip_shown = TipHistory.get_tip_to_show(clusive_user, page=self.page_name, version_count=len(versions), is_pdf=book.is_pdf)
+        self.tours = TipHistory.tour_list(clusive_user, page=self.page_name, version_count=len(versions), is_pdf=book.is_pdf)
 
         # Whether to show the "Learn more" link is at least dependant on
         # whether the user is a teacher or parent.  But, that's not the
