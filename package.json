@@ -20,7 +20,7 @@
     "@d-i-t-a/reader": "^2.2.0-beta.6",
     "canvas-confetti": "^1.5.1",
     "figuration": "^4.3.4",
-    "fluid-binder": "^1.1.2",
+    "fluid-binder": "^2.0.0",
     "hotkeys-js": "^3.9.2",
     "infusion": "^3.0.0",
     "interactjs": "^1.10.11",
