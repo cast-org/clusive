@@ -93,7 +93,7 @@ class TipType(models.Model):
     max = models.PositiveSmallIntegerField(verbose_name='Maximum times to show')
     interval = models.DurationField(verbose_name='Interval between shows')
 
-    def can_show(self, page: str, version_count: int, user: ClusiveUser, stats: UserStats):
+    def can_show(self, page: str, is_pdf: bool, version_count: int, user: ClusiveUser, stats: UserStats):
         """Test whether this tip can be shown on a particular page"""
         is_student_or_guest = not user.can_manage_periods
 
@@ -104,6 +104,11 @@ class TipType(models.Model):
         # Check for proper page
         if not self.name in PAGE_TIPS_MAP.get(page, []):
             return False
+
+        # Remove TipTypes that do not apply to PDF reading pages
+        if is_pdf:
+            if self.name == 'context' or self.name == 'readaloud':
+                return False
 
         # Switch TipType requires multiple versions
         if self.name == 'switch' and version_count == 1:
@@ -198,7 +203,7 @@ class TipHistory(models.Model):
             logger.error('Could not find TipHistory object for user %s, type %s', user, action)
 
     @classmethod
-    def available_tips(cls, user: ClusiveUser, page: str, version_count: int):
+    def available_tips(cls, user: ClusiveUser, page: str, version_count: int, is_pdf: bool = False):
         """Return all tips that are currently available to show this user."""
 
         stats: UserStats
@@ -213,16 +218,16 @@ class TipHistory(models.Model):
         histories = TipHistory.objects.filter(user=user).order_by('type__priority')
 
         return [h for h in histories
-                if h.type.can_show(page=page, version_count=version_count, user=user, stats=stats)
+                if h.type.can_show(page=page, is_pdf=is_pdf, version_count=version_count, user=user, stats=stats)
                 and h.ready_to_show()]
 
     @classmethod
-    def tour_list(cls, user: ClusiveUser, page: str, version_count: int = 0):
+    def tour_list(cls, user: ClusiveUser, page: str, version_count: int = 0, is_pdf: bool = False):
         """Return names of all tips that should make up the tour for the given user and page."""
         histories = TipHistory.objects.filter(user=user).order_by('type__tour_position')
         stats = UserStats.for_clusive_user(user)
         can_show = [h.type.name for h in histories if
-                    h.type.can_show(page=page, version_count=version_count, user=user, stats=stats)]
+                    h.type.can_show(page=page, is_pdf=is_pdf, version_count=version_count, user=user, stats=stats)]
         # Showing the 'tour' tip during a tour would be weirdly recursive.
         if 'tour' in can_show:
             can_show.remove('tour')
@@ -230,7 +235,7 @@ class TipHistory(models.Model):
         return can_show if len(can_show) > 0 else None
 
     @classmethod
-    def get_tip_to_show(cls, clusive_user: ClusiveUser, page: str, version_count=0):
+    def get_tip_to_show(cls, clusive_user: ClusiveUser, page: str, version_count=0, is_pdf: bool = False):
         available = TipHistory.available_tips(clusive_user, page, version_count)
         if available:
             first_available = available[0]

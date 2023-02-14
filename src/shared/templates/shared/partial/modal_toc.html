@@ -10,7 +10,7 @@
                 </button>
                 <ul class="nav nav-tabs-toc">
                     <li class="nav-item"><button id="tocTab" class="nav-link" data-cfw="tab" data-cfw-tab-target="#tocPanel" data-cle-handler="click" data-cle-control="toc-sidebar-contents-tab" data-cle-value="opened" data-tts-stop>Contents</button></li>
-                    <li class="nav-item"><button id="notesTab" class="nav-link" data-cfw="tab" data-cfw-tab-target="#notesPanel" data-cle-handler="click" data-cle-control="toc-sidebar-highlights-and-notes-tab" data-cle-value="opened" data-tts-stop>Highlights &amp; Notes</button></li>
+                    <li class="nav-item"><button id="notesTab" class="nav-link" data-cfw="tab" data-cfw-tab-target="#notesPanel"{% if pub.is_pdf %} disabled{% endif %} data-cle-handler="click" data-cle-control="toc-sidebar-highlights-and-notes-tab" data-cle-value="opened" data-tts-stop>Highlights &amp; Notes</button></li>
                 </ul>
             </div>
             <div class="modal-body">

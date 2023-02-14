@@ -101,6 +101,7 @@
     var SELECTOR_SHORTCUTS_DIALOG = '#shortcutsPop';
 
     var SELECTOR_READER_FRAME = '#frameReader';
+    var SELECTOR_READER_PDF = '#pdf-container';
 
     var SELECTOR_TOC_BTN = '#tocButton';
     var SELECTOR_TOC_MODAL = '#modalToc';
@@ -128,6 +129,7 @@
         this.readerFound = false;
         this.readerFrame = null;
         this.readerOwner = null;
+        this.readerIsPdf = false;
     };
 
     shortcutModule.ROUTINE = {
@@ -162,6 +164,10 @@
 
         // Highlight dialog
         highlightDialog : function(event, keys) {
+            if (shortcut.readerIsPdf) {
+                if (event) { event.preventDefault(); }
+                return;
+            }
             if (shortcut.readerFound && shortcut.hasReaderSelection()) {
                 // Create highlight
                 if (typeof d2reader === 'object') {
@@ -208,6 +214,10 @@
 
         // Read-aloud - play/stop
         ttsToggle : function(event, keys) {
+            if (shortcut.readerIsPdf) {
+                if (event) { event.preventDefault(); }
+                return;
+            }
             // Check for selection within reader
             if (shortcut.readerFound && shortcut.hasReaderSelection()) {
                 // Read only selected text
@@ -341,6 +351,10 @@
 
         // Context menu - word lookup (definition)
         contextLookup: function(event, keys) {
+            if (shortcut.readerIsPdf) {
+                if (event) { event.preventDefault(); }
+                return;
+            }
             if (shortcut.readerFound) {
                 if (shortcut.hasReaderSelection()) {
                     // Do lookup
@@ -361,6 +375,10 @@
 
         // Context menu - transform (simplifiy, translate, ...)
         contextTransform: function(event, keys) {
+            if (shortcut.readerIsPdf) {
+                if (event) { event.preventDefault(); }
+                return;
+            }
             if (shortcut.readerFound) {
                 if (shortcut.hasReaderSelection()) {
                     // Do transform
@@ -449,6 +467,11 @@
                     .on('keydown.clusive.shortcut', function(event) {
                         that.ownerDispatchEvent(event);
                     });
+            }
+            this.readerFrame = document.querySelector(SELECTOR_READER_PDF);
+            if (this.readerFrame !== null) {
+                this.readerFound = true;
+                this.readerIsPdf = true;
             }
         },
 
@@ -592,7 +615,12 @@
                 $(modalBtn).CFW_Modal('show');
             };
 
+            this.popoverCloseShortcuts();
             this.modalCloseOther(modalDialog, modalOpenCallback);
+        },
+
+        popoverCloseShortcuts() {
+            $(SELECTOR_SHORTCUTS_DIALOG).CFW_Popover('hide');
         },
 
         popoverOpen : function(popoverBtn, popoverDialog, callback) {
@@ -619,8 +647,16 @@
 
         getReaderBody : function() {
             var readerFrame = document.querySelector(SELECTOR_READER_FRAME);
-            var readerDocument = readerFrame.contentDocument || readerFrame.contentWindow.document;
-            return readerDocument.body;
+            var readerPdf = document.querySelector(SELECTOR_READER_PDF);
+
+            if (readerFrame !== null) {
+                var readerDocument = readerFrame.contentDocument || readerFrame.contentWindow.document;
+                return readerDocument.body;
+            }
+            if (readerPdf !== null) {
+                return readerPdf;
+            }
+            return null;
         },
 
         focusReaderBody : function() {
@@ -632,12 +668,15 @@
 
             var focusReaderCallback = function() {
                 var readerBody = that.getReaderBody();
-                that.updateTabIndex(readerBody);
-                setTimeout(function() {
-                    readerBody.focus();
-                });
+                if (readerBody !== null) {
+                    that.updateTabIndex(readerBody);
+                    setTimeout(function() {
+                        readerBody.focus();
+                    });
+                }
             };
 
+            this.popoverCloseShortcuts();
             this.modalCloseOther(null, focusReaderCallback);
         },
 

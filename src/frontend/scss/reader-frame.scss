@@ -1,6 +1,5 @@
 // Functions
 @import "../../../node_modules/figuration/scss/functions";
-@import "mixins/override-functions";
 
 // Settings variables
 @import "site/site-pre";
@@ -10,7 +9,6 @@
 
 // Mixins
 @import "../../../node_modules/figuration/scss/mixins";
-@import "mixins/override-mixins";
 @import "mixins/readium-theme";
 
 // Readium frame specific items

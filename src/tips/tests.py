@@ -142,7 +142,7 @@ class TipTypeTestCase(TestCase):
         version_count = 3
         for page_name in PAGE_NAMES:
             for tip in TipType.objects.all():
-                actual = tip.can_show(page_name, version_count, clusive_user, None)
+                actual = tip.can_show(page=page_name, is_pdf=False, version_count=version_count, user=clusive_user, stats=None)
                 expected = self.look_up_expected(clusive_user, page_name, tip)
                 self.assertEqual(
                     actual, expected,
@@ -164,7 +164,7 @@ class TipTypeTestCase(TestCase):
         """
         for clusive_user in ClusiveUser.objects.all():
             switch_tip = TipType.objects.get(name='switch')
-            actual = switch_tip.can_show('Reading', 1, clusive_user, None)
+            actual = switch_tip.can_show(page='Reading', is_pdf=False, version_count=1, user=clusive_user, stats=None)
             self.assertFalse(
                 actual,
                 f"Can show 'switch' tip for {clusive_user.user.username} on Reading page"
