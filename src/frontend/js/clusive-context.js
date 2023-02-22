@@ -18,6 +18,13 @@ $(document).ready(function() {
                 }
                 return readerWindow;
             },
+            get pdf() {
+                var readerPDF = $('#D2Reader-Container').find('#pdf-container');
+                if (readerPDF.length > 0) {
+                    return readerPDF;
+                }
+                return;
+            },
             get info() {
                 return getReaderInfo();
             },
@@ -32,12 +39,24 @@ $(document).ready(function() {
 
     var getReaderInfo = function() {
         var readerInfo = {};
+        // Include info from the HTML document
         if (clusiveContext.reader.window) {
-            // Include info from the HTML document
             readerInfo.document = {};
             readerInfo.document.title = clusiveContext.reader.window.document.title;
             readerInfo.document.baseURI = clusiveContext.reader.window.document.baseURI;
-            // Include info from variables in reader.html
+        }
+
+        // PDF publication needs to construct the document info from various sources
+        if (clusiveContext.reader.pdf && typeof d2reader !== 'undefined' && d2reader !== null) {
+            readerInfo.document = {};
+            var fname = d2reader.navigator.publication.Metadata.Title;
+            var href = d2reader.navigator.publication.manifestUrl.href;
+            readerInfo.document.title = document.querySelector('#tocPubTitle').innerHTML;
+            readerInfo.document.baseURI = href.replace('manifest.json', fname);
+        }
+
+        // Include info from variables in reader.html
+        if (clusiveContext.reader.window || clusiveContext.reader.pdf) {
             readerInfo.publication = {};
             if (pub_id) {
                 readerInfo.publication.id = pub_id;
