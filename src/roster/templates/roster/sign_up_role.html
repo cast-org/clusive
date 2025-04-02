@@ -12,9 +12,10 @@
 {% endblock %}
 
 {% block form %}
-<h2>Who are you?</h2>
-<p>Which best describes your role?</p>
-<form method="post">
+<h2 class="lh-1_25">Who are you?</h2>
+<p class="lh-1_25 mb-0_5">Which best describes your role?</p>
+<p class="lh-1_25"><strong>Note:</strong> You must select Teacher or Parent to access the UDL: Theory &amp; Practice book.</p>
+<form method="post" class="mb-0_5">
     {% csrf_token %}
     <div class="form-group">
         {% for radio in form.role %}
@@ -28,8 +29,7 @@
         </div>
         {% endfor %}
     </div>
-    <input type="submit" class="btn btn-secondary" value="Continue"/>
+    <input type="submit" class="btn btn-secondary" value="Continue" />
     <a class="btn btn-link" href="/account/cancel_registration">Cancel</a>
 </form>
 {% endblock %}
-

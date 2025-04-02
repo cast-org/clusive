@@ -271,6 +271,7 @@ FLATICON_API_KEY = os.environ.get('FLATICON_API_KEY', None)
 MAILCHIMP_API_KEY = os.environ.get('MAILCHIMP_API_KEY', None)
 MAILCHIMP_SERVER = os.environ.get('MAILCHIMP_SERVER', None)
 MAILCHIMP_EMAIL_LIST_ID = os.environ.get('MAILCHIMP_EMAIL_LIST_ID', None)
+MAILCHIMP_MARKETING_PERMISSION_ID = os.environ.get('MAILCHIMP_MARKETING_PERMISSION_ID', None)
 
 # To use Google Translate, set this to the pathname to a Google Cloud service account key in JSON format.
 GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None)

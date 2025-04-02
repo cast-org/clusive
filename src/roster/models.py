@@ -282,6 +282,11 @@ class ClusiveUser(models.Model):
                                         verbose_name='Education levels',
                                         blank=True, default=[])
 
+    # User agrees to be added to marketing list.
+    # Asked of teacher/parents at registration if marketing permission id is set.
+    agree_to_marketing = models.BooleanField(default=False)
+
+
     # Site that this user is connected to. Although users can have multiple Periods,
     # these are generally assumed to be all part of one Site.
     # If this assumption is changed, then the Manage pages will need updates
@@ -683,6 +688,13 @@ class MailingListMember (models.Model):
                         "MMERGE5": member.user.get_role_display()
                     }
                 }
+                if settings.MAILCHIMP_MARKETING_PERMISSION_ID:
+                    member_info["marketing_permissions"] = [
+                        {
+                            "marketing_permission_id": settings.MAILCHIMP_MARKETING_PERMISSION_ID,
+                            "enabled": member.user.agree_to_marketing
+                        }
+                    ]
                 try:
                     response = mailchimp.lists.add_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member_info)
                     logger.debug("response: %s", response)
@@ -706,6 +718,13 @@ class MailingListMember (models.Model):
                     "merge_fields": {"FNAME": member.user.user.first_name,
                                      "MMERGE5": member.user.get_role_display()}
                 }
+                if settings.MAILCHIMP_MARKETING_PERMISSION_ID:
+                    member_info["marketing_permissions"] = [
+                        {
+                            "marketing_permission_id": settings.MAILCHIMP_MARKETING_PERMISSION_ID,
+                            "enabled": member.user.agree_to_marketing
+                        }
+                    ]
                 messages.append('Added: %s' % member.user.user.email)
                 logger.debug('Would send to MailChimp: %s', member_info)
         return messages
