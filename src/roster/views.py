@@ -202,7 +202,7 @@ class SignUpView(EventMixin, ThemedPageMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['role'] = self.role
         context['isSSO'] = self.request.session.get('sso', False)
-        context['doMarketingPermission'] = settings.MAILCHIMP_MARKETING_PERMISSION
+        context['doMarketingPermission'] = strtobool(settings.MAILCHIMP_MARKETING_PERMISSION)
         return context
 
     def form_valid(self, form):
@@ -1710,3 +1710,17 @@ class StudentDetailsView(LoginRequiredMixin, EventMixin, ThemedPageMixin, Settin
 
     def configure_event(self, event: Event):
         event.page = 'StudentDetails'
+
+def strtobool (val):
+    """Convert a string representation of truth to true (1) or false (0).
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
+    'val' is anything else.
+    """
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return 1
+    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
+        return 0
+    else:
+        raise ValueError("invalid truth value %r" % (val,))
