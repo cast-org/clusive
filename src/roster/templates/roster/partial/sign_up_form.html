@@ -37,17 +37,29 @@
         <div class="form-text">We will not share your email with anyone.</div>
     </div>
     {% if role != 'ST' %}
-    <div class="form-group">
+    <div class="form-group pb-0_25">
         {{ form.education_levels.label_tag | formlabel }}
         {{ form.education_levels.errors }}
         {% for value, text in form.education_levels.field.choices %}
-        <div class="form-check">
-            <input id="id_education_levels_{{ forloop.counter0 }}" name="{{ form.education_levels.name }}" type="checkbox" value="{{ value }}"{% if value in checked_education_levels %} checked="checked"{% endif %}>
+        <div class="form-check form-checkradio">
+            <input id="id_education_levels_{{ forloop.counter0 }}" name="{{ form.education_levels.name }}" type="checkbox" class="form-check-input" value="{{ value }}" {% if value in checked_education_levels %} checked="checked" {% endif %}>
             <label class="form-check-label" for="id_education_levels_{{ forloop.counter0 }}">{{ text }}</label>
         </div>
         {% endfor %}
     </div>
     {% endif %}
+
+    {% if doMarketingPermission and role != 'ST' %}
+    <div class="form-group my-1">
+        <div class="form-check form-checkradio">
+            {{ form.agree_to_marketing }}
+            <label class="form-check-label" for="{{ form.agree_to_marketing.id_for_label }}">
+                Sign up for CAST's monthly newsletter, and occasional updates on our free webinars, courses/events, and books.
+            </label>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="form-group my-1">
         {{ form.terms.errors }}
         <div class="form-check form-checkradio">
@@ -59,6 +71,6 @@
             </label>
         </div>
     </div>
-    <input type="submit" class="btn btn-secondary" value="Continue"/>
+    <input type="submit" class="btn btn-secondary" value="Continue" />
     <a class="btn btn-link" href="/account/cancel_registration">Cancel</a>
 </form>

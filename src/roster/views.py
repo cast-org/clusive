@@ -202,6 +202,7 @@ class SignUpView(EventMixin, ThemedPageMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['role'] = self.role
         context['isSSO'] = self.request.session.get('sso', False)
+        context['doMarketingPermission'] = settings.MAILCHIMP_MARKETING_PERMISSION
         return context
 
     def form_valid(self, form):
@@ -221,7 +222,8 @@ class SignUpView(EventMixin, ThemedPageMixin, CreateView):
                                 self.role,
                                 ResearchPermissions.SELF_CREATED,
                                 isSSO,
-                                form.cleaned_data['education_levels'])
+                                form.cleaned_data['education_levels'],
+                                form.cleaned_data['agree_to_marketing'])
             user = clusive_user.user
             user.first_name = target.first_name
             # If the user is already logged in via SSO, these fields are already
@@ -254,7 +256,7 @@ class SignUpView(EventMixin, ThemedPageMixin, CreateView):
                                                       permission=ResearchPermissions.SELF_CREATED,
                                                       anon_id=ClusiveUser.next_anon_id(),
                                                       education_levels = form.cleaned_data['education_levels'],
-                                                      )
+                                                      agree_to_marketing = form.cleaned_data['agree_to_marketing'])
             send_validation_email(self.current_site, clusive_user)
         return HttpResponseRedirect(reverse('validate_sent', kwargs={'user_id' : user.id}))
 
@@ -695,7 +697,7 @@ def finish_login(request):
         return HttpResponseRedirect(reverse('dashboard'))
 
 
-def update_clusive_user(current_clusive_user, role, permissions, isSSO, edu_levels=None):
+def update_clusive_user(current_clusive_user, role, permissions, isSSO, edu_levels=None, agree_to_marketing=None):
     clusive_user: ClusiveUser
     clusive_user = current_clusive_user
     logger.debug('Updating %s from %s to %s', clusive_user, clusive_user.role, role)
@@ -705,6 +707,8 @@ def update_clusive_user(current_clusive_user, role, permissions, isSSO, edu_leve
         clusive_user.unconfirmed_email = False
     if edu_levels:
         clusive_user.education_levels = edu_levels
+    if agree_to_marketing is not None:
+        clusive_user.agree_to_marketing = agree_to_marketing
     clusive_user.save()
 
 

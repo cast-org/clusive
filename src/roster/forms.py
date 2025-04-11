@@ -35,6 +35,7 @@ class UserForm(ModelForm):
         self.fields['first_name'].required = True
         self.fields['first_name'].label = 'Display name'
         self.fields['username'].required = True
+        self.fields['username'].widget.attrs.update({'autofocus': False})
 
     def _post_clean(self):
         super()._post_clean()
@@ -111,6 +112,12 @@ class UserRegistrationForm(UserCreationForm):
         required=False,
     )
 
+    agree_to_marketing = forms.BooleanField(
+        label='Agree to marketing emails',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].label = '*Display name'
@@ -118,6 +125,7 @@ class UserRegistrationForm(UserCreationForm):
         self.fields['email'].required = True
         self.fields['username'].label = '*Username'
         self.fields['username'].required = True
+        self.fields['username'].widget.attrs.update({'autofocus': False})
         #  Potential SSO user already logged in
         self.user = kwargs['initial'].get('user', None)
         if self.user:
