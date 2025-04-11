@@ -202,7 +202,7 @@ class SignUpView(EventMixin, ThemedPageMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['role'] = self.role
         context['isSSO'] = self.request.session.get('sso', False)
-        context['hasMarketingId'] = settings.MAILCHIMP_MARKETING_PERMISSION_ID
+        context['doMarketingPermission'] = settings.MAILCHIMP_MARKETING_PERMISSION
         return context
 
     def form_valid(self, form):

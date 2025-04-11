@@ -685,21 +685,28 @@ class MailingListMember (models.Model):
                     "status": "subscribed",
                     "merge_fields": {
                         "FNAME": member.user.user.first_name,
-                        "MMERGE5": member.user.get_role_display()
+                        settings.MAILCHIMP_MERGE_FIELD_ROLE: member.user.get_role_display()  # "MMERGE5: member.user.get_role_display()
                     }
                 }
-                if settings.MAILCHIMP_MARKETING_PERMISSION_ID:
-                    member_info["marketing_permissions"] = [
-                        {
-                            "marketing_permission_id": settings.MAILCHIMP_MARKETING_PERMISSION_ID,
-                            "enabled": member.user.agree_to_marketing
-                        }
-                    ]
                 try:
                     response = mailchimp.lists.add_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member_info)
                     logger.debug("response: %s", response)
                     member.update_sync_date()
                     messages.append('Added: %s' % member.user.user.email)
+
+                    # Update the marketing permissions if user agreed
+                    if settings.MAILCHIMP_MARKETING_PERMISSION and member.user.agree_to_marketing:
+                        marketing_permissions = response['marketing_permissions']
+                        new_marketing_permissions = []
+                        for mp in marketing_permissions:
+                            new_marketing_permissions.append({
+                                "marketing_permission_id": mp['marketing_permission_id'],
+                                "enabled": True
+                            })
+                        member_info["marketing_permissions"] = new_marketing_permissions
+                        responseMP = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info)
+                        logger.debug("responseMP: %s", responseMP)
+                        messages.append('Marketing Permissions Added: %s' % member.user.user.email)
                 except ApiClientError as error:
                     member.failures += 1
                     if member.failures >= cls.MAX_FAILURES:
@@ -716,15 +723,8 @@ class MailingListMember (models.Model):
                     "email_address": member.user.user.email,
                     "status": "subscribed",
                     "merge_fields": {"FNAME": member.user.user.first_name,
-                                     "MMERGE5": member.user.get_role_display()}
+                                     settings.MAILCHIMP_MERGE_FIELD_ROLE: member.user.get_role_display()}
                 }
-                if settings.MAILCHIMP_MARKETING_PERMISSION_ID:
-                    member_info["marketing_permissions"] = [
-                        {
-                            "marketing_permission_id": settings.MAILCHIMP_MARKETING_PERMISSION_ID,
-                            "enabled": member.user.agree_to_marketing
-                        }
-                    ]
                 messages.append('Added: %s' % member.user.user.email)
                 logger.debug('Would send to MailChimp: %s', member_info)
         return messages
