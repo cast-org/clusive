@@ -275,7 +275,6 @@ MAILCHIMP_MERGE_FIELD_ROLE = os.environ.get('MAILCHIMP_MERGE_FIELD_ROLE', 'MMERG
 # If email marketing permission should be asked and updated on mailchimp with user's choice.
 MAILCHIMP_MARKETING_PERMISSION = os.environ.get('MAILCHIMP_MARKETING_PERMISSION', False)
 
-GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', None)
 GOOGLE_TAG_MANAGER_ID = os.environ.get('GOOGLE_TAG_MANAGER_ID', None)
 
 # To use Google Translate, set this to the pathname to a Google Cloud service account key in JSON format.

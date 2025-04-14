@@ -115,7 +115,6 @@ class GoogleAnalyticsMixin(ContextMixin):
     """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['google_analytics_id'] = settings.GOOGLE_ANALYTICS_ID
         context['google_tag_manager_id'] = settings.GOOGLE_TAG_MANAGER_ID
         return context
 
