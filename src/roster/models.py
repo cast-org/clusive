@@ -680,19 +680,53 @@ class MailingListMember (models.Model):
             # loop through all users that have not been synchronized
             member: MailingListMember
             for member in members_to_synch:
+                memberExists = False
+
+                # Check if email exists on MailChimp list
+                try:
+                    response = mailchimp.lists.get_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email)
+                    if response['status'] == 'subscribed':
+                        logger.debug("Subscribed, updating: %s", response)
+                        memberExists = True
+                    else:
+                        # Don't update list member as they have status of "unsubscribed", "cleaned", "pending", "transactional", or "archived"
+                        member.update_sync_date()
+                        break;
+                except ApiClientError as error:
+                    if error.text.status == 404: # title=="Resource Not Found" aka list member does not exist
+                        memberExists = False
+                    else:
+                        member.failures += 1
+                        if member.failures >= cls.MAX_FAILURES:
+                            member.update_sync_date()
+                        break
+
+                # Don't overwrite existing member info
                 member_info = {
                     "email_address": member.user.user.email,
-                    "status": "subscribed",
+                    "status_if_new": "subscribed",
                     "merge_fields": {
-                        "FNAME": member.user.user.first_name,
-                        settings.MAILCHIMP_MERGE_FIELD_ROLE: member.user.get_role_display()  # "MMERGE5: member.user.get_role_display()
+                        "FNAME": member.user.user.first_name if not memberExists else response['merge_fields']['FNAME'],
+                        settings.MAILCHIMP_MERGE_FIELD_ROLE: member.user.get_role_display() if not memberExists else response['merge_fields'][settings.MAILCHIMP_MERGE_FIELD_ROLE]
                     }
                 }
+
                 try:
-                    response = mailchimp.lists.add_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member_info)
+                    response = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info)
                     logger.debug("response: %s", response)
-                    member.update_sync_date()
-                    messages.append('Added: %s' % member.user.user.email)
+                    messages.append('Add/Update: %s' % member.user.user.email)
+
+                    # Add role tag
+                    responseTag = mailchimp.lists.update_list_member_tags(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, {
+                        "tags": [
+                            {
+                                "name": "Clusive " + member.user.get_role_display(),
+                                "status": "active"
+                            }
+                        ]
+                    })
+                    # logger.debug("response: %s", responseTag)
+                    messages.append('Added tag for: %s' % member.user.user.email)
 
                     # Update the marketing permissions if user agreed
                     if settings.MAILCHIMP_MARKETING_PERMISSION and member.user.agree_to_marketing:
@@ -705,8 +739,11 @@ class MailingListMember (models.Model):
                             })
                         member_info["marketing_permissions"] = new_marketing_permissions
                         responseMP = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info)
-                        logger.debug("responseMP: %s", responseMP)
+                        # logger.debug("responseMP: %s", responseMP)
                         messages.append('Marketing Permissions Added: %s' % member.user.user.email)
+
+                    # Mark user as synchronized
+                    member.update_sync_date()
                 except ApiClientError as error:
                     member.failures += 1
                     if member.failures >= cls.MAX_FAILURES:
