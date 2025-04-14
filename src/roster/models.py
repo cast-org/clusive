@@ -691,9 +691,10 @@ class MailingListMember (models.Model):
                     else:
                         # Don't update list member as they have status of "unsubscribed", "cleaned", "pending", "transactional", or "archived"
                         member.update_sync_date()
-                        break;
+                        break
                 except ApiClientError as error:
-                    if error.text.status == 404: # title=="Resource Not Found" aka list member does not exist
+                    errorJson = json.loads(error.text)
+                    if errorJson['status'] == 404: # title=="Resource Not Found" aka list member does not exist
                         memberExists = False
                     else:
                         member.failures += 1
