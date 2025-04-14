@@ -46,7 +46,7 @@ from library.models import Book, Customization, Paradata, ParadataDaily, Subject
 from messagequeue.models import Message, client_side_prefs_change
 from oauth2.bookshare.views import is_bookshare_connected, get_organization_name, \
     GENERIC_BOOKSHARE_ACCOUNT_NAMES
-from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin
+from pages.views import ThemedPageMixin, SettingsPageMixin, PeriodChoiceMixin, GoogleAnalyticsMixin
 from roster.forms import SimpleUserCreateForm, UserEditForm, UserRegistrationForm, \
     AccountRoleForm, AgeCheckForm, ClusiveLoginForm, GoogleCoursesForm, PeriodCreateForm, PeriodNameForm
 from roster.models import ClusiveUser, Period, PreferenceSet, Roles, ResearchPermissions, MailingListMember, \
@@ -62,7 +62,7 @@ def guest_login(request):
     return redirect('dashboard')
 
 
-class LoginView(auth_views.LoginView):
+class LoginView(GoogleAnalyticsMixin, auth_views.LoginView):
     template_name='roster/login.html'
     form_class = ClusiveLoginForm
 

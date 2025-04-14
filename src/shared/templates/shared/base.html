@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load static %}
     <title>{% block title %}Clusive{% endblock %}</title>
@@ -10,10 +11,13 @@
     For injection of additional markup into the head area
     {% endcomment %}
     {% block head_additional %}{% endblock %}
+    {% include "shared/partial/google_analytics.html" %}
 </head>
+
 <body class="{% block bodyClass %}{% endblock %} {{theme_class}}">
+    {% include "shared/partial/google_tag_manager_frame.html" %}
     {% if request.user.is_authenticated %}
-        {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=False %} {% endblock %}
+    {% block preference_panel %} {% include "shared/partial/preference-panel.html" with prefs_is_reader=False %} {% endblock %}
     {% endif %}
     <a class="skiplink sr-only-focusable" href="#content">Skip to main content</a>
     <button id="shortcutsLocator" class="skiplink sr-only-focusable">Keyboard shortcuts</button>
@@ -66,10 +70,10 @@
     {% include "shared/partial/popover_glossary.html" %}
     {% include "shared/partial/popover_shortcuts.html" %}
     {% if not user.is_anonymous %}
-        {% include "shared/partial/modal_timeout.html" %}
-        <button id="modalTimeoutTrigger" type="button" data-cfw="modal" data-cfw-modal-target="#modalTimeout" class="d-none fixed-center">
-            Timeout warning
-        </button>
+    {% include "shared/partial/modal_timeout.html" %}
+    <button id="modalTimeoutTrigger" type="button" data-cfw="modal" data-cfw-modal-target="#modalTimeout" class="d-none fixed-center">
+        Timeout warning
+    </button>
     {% endif %}
 
     {% if tours %}
@@ -79,8 +83,8 @@
     {% include "shared/partial/tooltip_tip.html" %}
     {% endif %}
 
-    <div id="tourContainer" class="tour-container" >
-    {% comment %}<!-- touring popovers to use this element for their `container` and `viewport` options -->{% endcomment %}
+    <div id="tourContainer" class="tour-container">
+        {% comment %}<!-- touring popovers to use this element for their `container` and `viewport` options -->{% endcomment %}
     </div>
     <div id="features" class="features" aria-live="assertive" aria-atomic="true">
         <span data-clusive-tip-id="context" data-cfw-popover-placement="bottom auto" class="feature-context feature-novis"></span>
@@ -88,4 +92,5 @@
 
     <div id="notifyContainer" class="notify-container" aria-live="assertive"></div>
 </body>
+
 </html>

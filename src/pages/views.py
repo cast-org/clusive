@@ -3,6 +3,7 @@ import logging
 from datetime import date, timedelta
 from os.path import exists
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Sum, Q, Prefetch, QuerySet
@@ -107,6 +108,16 @@ class PeriodChoiceMixin(ContextMixin):
         context['current_period'] = self.current_period
         return context
 
+
+class GoogleAnalyticsMixin(ContextMixin):
+    """
+    Add this to views that need to include Google Analytics.
+    """
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['google_analytics_id'] = settings.GOOGLE_ANALYTICS_ID
+        context['google_tag_manager_id'] = settings.GOOGLE_TAG_MANAGER_ID
+        return context
 
 class DashboardView(LoginRequiredMixin, ThemedPageMixin, SettingsPageMixin, EventMixin, PeriodChoiceMixin, TemplateView):
     template_name='pages/dashboard.html'

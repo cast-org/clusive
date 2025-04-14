@@ -2,6 +2,7 @@
 {% load i18n static figuration %}
 
 {% block bodyClass %}home sidebar-no-start sidebar-no-end{% endblock %}
+{% block title %}About | Clusive{% endblock %}
 
 {% block header %}
 {% include "shared/partial/site_header_home.html" with home_link=True %}
@@ -29,12 +30,14 @@
                 <strong>Choice of reading materials.</strong>
                 Students can choose to read assigned books and articles,
                 choose their own material and build personalized libraries,
-                and take advantage of Clusive’s growing public library.</li>
+                and take advantage of Clusive’s growing public library.
+            </li>
             <li>
                 <strong>Flexible display options.</strong>
                 Students can discover settings that work best for their reading needs,
                 such as adjustable text size, line and letter spacing, font choice, and color and contrast.
-                Students build agency by finding their just-right-fit by testing and setting their own preferences.</li>
+                Students build agency by finding their just-right-fit by testing and setting their own preferences.
+            </li>
             <li>
                 <strong>Read- aloud capabilities.</strong>
                 All of Clusive’s content can be read aloud by text-to-speech software.
@@ -100,10 +103,11 @@
 
         <h2>Free, really.</h2>
         <p>Clusive is free to use. The public library content is free to read, copy, or modify.
-        And the software itself is free if you want to see how things are built or run your own server.
-        We are supported by a grant from the US Department of Education.
-        More information on the project can be found on the CAST web site:
-        <a href="https://www.cast.org/our-work/projects/cisl-high-quality-digital-learning?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=about">Center on Inclusive Software for Learning</a>.</p>
+            And the software itself is free if you want to see how things are built or run your own server.
+            We are supported by a grant from the US Department of Education.
+            More information on the project can be found on the CAST web site:
+            <a href="https://www.cast.org/our-work/projects/cisl-high-quality-digital-learning?utm_source=clusive&utm_medium=web&utm_campaign=none&utm_content=about">Center on Inclusive Software for Learning</a>.
+        </p>
 
         <p class="my-1">
             <a href="{% url 'dashboard' %}" class="btn btn-primary">Ready to get in Clusive?</a>
