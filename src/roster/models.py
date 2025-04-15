@@ -685,13 +685,7 @@ class MailingListMember (models.Model):
                 # Check if email exists on MailChimp list
                 try:
                     response = mailchimp.lists.get_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email)
-                    if response['status'] == 'subscribed':
-                        logger.debug("Subscribed, updating: %s", response)
-                        memberExists = True
-                    else:
-                        # Don't update list member as they have status of "unsubscribed", "cleaned", "pending", "transactional", or "archived"
-                        member.update_sync_date()
-                        break
+                    memberExists = True
                 except ApiClientError as error:
                     errorJson = json.loads(error.text)
                     if errorJson['status'] == 404: # title=="Resource Not Found" aka list member does not exist
@@ -702,15 +696,21 @@ class MailingListMember (models.Model):
                             member.update_sync_date()
                         break
 
-                # Don't overwrite existing member info
                 member_info = {
                     "email_address": member.user.user.email,
                     "status_if_new": "subscribed",
-                    "merge_fields": {
-                        "FNAME": member.user.user.first_name if not memberExists else response['merge_fields']['FNAME'],
-                        settings.MAILCHIMP_MERGE_FIELD_ROLE: member.user.get_role_display() if not memberExists else response['merge_fields'][settings.MAILCHIMP_MERGE_FIELD_ROLE]
-                    }
+                    "status": "subscribed",
+                    "skip_merge_validation": True
                 }
+                # Don't overwrite existing member info
+                if not memberExists:
+                    member_info['merge_fields'] = {
+                        "FNAME": member.user.user.first_name,
+                        "LNAME": "clusive_lastname",
+                        settings.MAILCHIMP_MERGE_FIELD_ROLE: "Clusive " + member.user.get_role_display()
+                    }
+                messages.append("MEMINFO %s" % member_info)
+
 
                 try:
                     response = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info)
