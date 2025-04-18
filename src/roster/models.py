@@ -709,22 +709,27 @@ class MailingListMember (models.Model):
                         "LNAME": "clusive_lastname",
                         settings.MAILCHIMP_MERGE_FIELD_ROLE: "Clusive " + member.user.get_role_display()
                     }
-                messages.append("MEMINFO %s" % member_info)
-
 
                 try:
                     response = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info)
                     logger.debug("response: %s", response)
                     messages.append('Add/Update: %s' % member.user.user.email)
 
-                    # Add role tag
-                    responseTag = mailchimp.lists.update_list_member_tags(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, {
-                        "tags": [
+                    # Add tags for role and marketing opt-in
+                    new_tags = [
                             {
                                 "name": "Clusive " + member.user.get_role_display(),
                                 "status": "active"
                             }
                         ]
+                    if settings.MAILCHIMP_MARKETING_PERMISSION and member.user.agree_to_marketing:
+                        new_tags.append({
+                            "name": "Clusive Opt-in",
+                            "status": "active"
+                        })
+
+                    responseTag = mailchimp.lists.update_list_member_tags(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, {
+                        "tags": new_tags
                     })
                     # logger.debug("response: %s", responseTag)
                     messages.append('Added tag for: %s' % member.user.user.email)
