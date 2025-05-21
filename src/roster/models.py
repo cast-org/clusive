@@ -687,14 +687,16 @@ class MailingListMember (models.Model):
                     response = mailchimp.lists.get_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email)
                     memberExists = True
                 except ApiClientError as error:
-                    errorJson = json.loads(error.text)
-                    if errorJson['status'] == 404: # title=="Resource Not Found" aka list member does not exist
-                        memberExists = False
-                    else:
+                    try:
+                        errorJson = json.loads(error.text)
+                        if errorJson['status'] == 404: # title=="Resource Not Found" aka list member does not exist
+                            memberExists = False
+                    except:
                         member.failures += 1
                         if member.failures >= cls.MAX_FAILURES:
                             member.update_sync_date()
-                        break
+                        member.save()
+                        continue
 
                 member_info = {
                     "email_address": member.user.user.email,
