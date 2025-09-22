@@ -701,8 +701,7 @@ class MailingListMember (models.Model):
                 member_info = {
                     "email_address": member.user.user.email,
                     "status_if_new": "subscribed",
-                    "status": "subscribed",
-                    "skip_merge_validation": True
+                    "status": "subscribed"
                 }
                 # Don't overwrite existing member info
                 if not memberExists:
@@ -713,7 +712,7 @@ class MailingListMember (models.Model):
                     }
 
                 try:
-                    response = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info)
+                    response = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info, skip_merge_validation=True)
                     logger.debug("response: %s", response)
                     messages.append('Add/Update: %s' % member.user.user.email)
 
@@ -746,7 +745,7 @@ class MailingListMember (models.Model):
                                 "enabled": True
                             })
                         member_info["marketing_permissions"] = new_marketing_permissions
-                        responseMP = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info)
+                        responseMP = mailchimp.lists.set_list_member(settings.MAILCHIMP_EMAIL_LIST_ID, member.user.user.email, member_info, skip_merge_validation=True)
                         # logger.debug("responseMP: %s", responseMP)
                         messages.append('Marketing Permissions Added: %s' % member.user.user.email)
 
