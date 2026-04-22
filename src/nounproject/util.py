@@ -38,20 +38,13 @@ class NounProjectManager:
         # Sets pro_account flag if the limits are in that range - means we can also get non-public-domain icons
         usage: UsageModel
         usage = self.api.get_usage()
-        if usage.limits.monthly > 5000:
+        if usage.monthly.limit > 5000:
             self.pro_account = True
-        logger.debug('Noun Project API usage. Hourly %s/%s, Daily %s/%s, Monthly %s/%s',
-                     usage.usage.hourly, usage.limits.hourly,
-                     usage.usage.daily, usage.limits.daily,
-                     usage.usage.monthly, usage.limits.monthly)
+        logger.debug('Noun Project API monthly usage. Limit %s/%s',
+                     usage.monthly.limit,
+                     usage.monthly.usage)
         ok = True
-        if usage.limits.hourly and usage.usage.hourly >= usage.limits.hourly:
-            logger.warning('Noun Project API hourly usage is too high')
-            ok = False
-        if usage.limits.daily and usage.usage.daily >= usage.limits.daily:
-            logger.warning('Noun Project API daily usage is too high')
-            ok = False
-        if usage.limits.monthly and usage.usage.monthly >= usage.limits.monthly:
+        if usage.monthly.limit and usage.monthly.usage >= usage.monthly.limit:
             logger.warning('Noun Project API monthly usage is too high')
             ok = False
         return ok
@@ -75,7 +68,7 @@ class NounProjectManager:
             return (None, None)
         try:
             pub_domain_only = not self.pro_account
-            icons = self.api.get_icons_by_term(word, public_domain_only=pub_domain_only, limit=1)
+            icons = self.api.get_icons_by_term(word, public_domain_only=pub_domain_only, include_svg=True, limit=1)
             if len(icons) > 0:
                 icon = icons[0]
                 logger.debug('Retrieved icon: %s -> %s', word, icon.term)
